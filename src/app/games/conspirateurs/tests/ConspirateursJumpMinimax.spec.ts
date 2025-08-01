@@ -1,11 +1,11 @@
 import { ConspirateursMove } from '../ConspirateursMove';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
 import { ConspirateursRules } from '../ConspirateursRules';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursJumpMinimax } from '../ConspirateursJumpMinimax';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
 
 describe('ConspirateursJumpMinimax', () => {
 

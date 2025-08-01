@@ -2,13 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 import { GipfState } from '../GipfState';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { Table } from '../../../../app/jscaip/TableUtils';
+import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../../app/jscaip/Player';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
 import { GipfRules } from '../GipfRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;

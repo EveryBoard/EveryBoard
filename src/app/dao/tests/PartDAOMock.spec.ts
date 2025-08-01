@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 
-import { Part, PartDocument } from 'src/app/domain/Part';
+import { Part, PartDocument } from '../../../app/domain/Part';
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
-import { Debug } from 'src/app/utils/Debug';
+import { Debug } from '../../../app/utils/Debug';
 
 type PartOS = ObservableSubject<MGPOptional<PartDocument>>;
 

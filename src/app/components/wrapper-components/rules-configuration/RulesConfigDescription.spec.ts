@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { RulesConfigDescription } from './RulesConfigDescription';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
-import { DefaultConfigDescription, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DefaultConfigDescription, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
 
 describe(`RulesConfigDescriptions`, () => {
 

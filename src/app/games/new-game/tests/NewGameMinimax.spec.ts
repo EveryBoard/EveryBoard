@@ -1,11 +1,11 @@
 import { NewGameState } from '../NewGameState';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameMinimax } from '../NewGameMinimax';
-import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { EmptyRulesConfig, NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
 
 /**
  * These are the tests for the minimax.

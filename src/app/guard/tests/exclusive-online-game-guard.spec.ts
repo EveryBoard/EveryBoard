@@ -2,22 +2,22 @@
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { BlankComponent } from '../../../app/utils/tests/TestUtils.spec';
 import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
 import { MGPOptional } from '@everyboard/lib';
-import { PartDocument } from 'src/app/domain/Part';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { GameService } from 'src/app/services/GameService';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ServerTimeService } from 'src/app/services/ServerTimeService';
-import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { PartDocument } from '../../../app/domain/Part';
+import { PartMocks } from '../../../app/domain/PartMocks.spec';
+import { CurrentGameService } from '../../../app/services/CurrentGameService';
+import { CurrentGameServiceMock } from '../../../app/services/tests/CurrentGameService.spec';
+import { ConnectedUserService } from '../../../app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../../app/services/tests/ConnectedUserService.spec';
+import { UserMocks } from '../../../app/domain/UserMocks.spec';
+import { GameService } from '../../../app/services/GameService';
+import { ConfigRoomService } from '../../../app/services/ConfigRoomService';
+import { ServerTimeService } from '../../../app/services/ServerTimeService';
+import { ServerTimeServiceMock } from '../../../app/services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from '../../../app/services/tests/ConfigRoomServiceMock.spec';
+import { GameServiceMock } from '../../../app/services/tests/GameServiceMock.spec';
 
 describe('ExclusiveOnlineGameGuard', () => {
 

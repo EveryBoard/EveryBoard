@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { DemoPageComponent } from './demo-page.component';
 
 describe('DemoPageComponent', () => {

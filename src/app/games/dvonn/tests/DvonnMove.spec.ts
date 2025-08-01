@@ -2,7 +2,7 @@
 import { EncoderTestUtils } from '@everyboard/lib';
 
 import { DvonnMove } from '../DvonnMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../app/jscaip/Coord';
 
 describe('DvonnMove', () => {
 

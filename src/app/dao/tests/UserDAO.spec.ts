@@ -3,11 +3,11 @@ import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@firebase/auth';
 import { MGPOptional } from '@everyboard/lib';
 
-import { User } from 'src/app/domain/User';
+import { User } from '../../../app/domain/User';
 import { UserDAO } from '../UserDAO';
-import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { UserService } from 'src/app/services/UserService';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { createConnectedGoogleUser, createDisconnectedGoogleUser } from '../../../app/services/tests/ConnectedUserService.spec';
+import { UserService } from '../../../app/services/UserService';
+import { expectPermissionToBeDenied, setupEmulators } from '../../../app/utils/tests/TestUtils.spec';
 
 describe('UserDAO', () => {
 

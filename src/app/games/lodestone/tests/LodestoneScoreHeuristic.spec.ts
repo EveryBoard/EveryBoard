@@ -3,9 +3,9 @@ import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../../app/jscaip/Player';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
 import { LodestoneRules } from '../LodestoneRules';
 
 describe('LodestoneScoreHeuristic', () => {

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
 import { TeekoConfig, TeekoRules } from '../TeekoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { TeekoMinimax } from '../TeekoMinimax';
 

@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { DvonnComponent } from '../dvonn.component';
-import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { DvonnState } from 'src/app/games/dvonn/DvonnState';
-import { Player } from 'src/app/jscaip/Player';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { DvonnMove } from '../../../../app/games/dvonn/DvonnMove';
+import { DvonnPieceStack } from '../../../../app/games/dvonn/DvonnPieceStack';
+import { DvonnState } from '../../../../app/games/dvonn/DvonnState';
+import { Player } from '../../../../app/jscaip/Player';
 import { fakeAsync } from '@angular/core/testing';
-import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { DvonnFailure } from '../../../../app/games/dvonn/DvonnFailure';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { Table } from '../../../../app/jscaip/TableUtils';
 
 describe('DvonnComponent', () => {
 

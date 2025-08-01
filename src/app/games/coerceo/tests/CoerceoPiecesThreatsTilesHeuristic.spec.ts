@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { PieceThreat } from 'src/app/jscaip/PieceThreat';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { PieceThreat } from '../../../../app/jscaip/PieceThreat';
+import { Player } from '../../../../app/jscaip/Player';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../../../app/jscaip/PlayerNumberTable';
+import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { CoordSet } from '../../../../app/jscaip/CoordSet';
 
 describe('CoerceoPiecesThreatTilesHeuristic', () => {
 

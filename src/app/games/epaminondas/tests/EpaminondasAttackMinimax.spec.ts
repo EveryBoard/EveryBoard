@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Ordinal } from '../../../../app/jscaip/Ordinal';
+import { PlayerOrNone } from '../../../../app/jscaip/Player';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasAttackMinimax } from '../EpaminondasAttackMinimax';
 import { MGPOptional } from '@everyboard/lib';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,21 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../../../app/utils/tests/TestUtils.spec';
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MoveGenerator } from '../../../../../app/jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
-import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { Cell, Table } from 'src/app/jscaip/TableUtils';
+import { RulesConfigUtils } from '../../../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { MoveTestUtils } from '../../../../../app/jscaip/tests/Move.spec';
+import { Cell, Table } from '../../../../../app/jscaip/TableUtils';
 import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
 import { MancalaDropResult, MancalaRules } from '../MancalaRules';
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaState } from '../MancalaState';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../../app/jscaip/Coord';
 import { MancalaFailure } from '../MancalaFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../../app/jscaip/Player';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 

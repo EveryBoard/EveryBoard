@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../app/jscaip/Coord';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../app/jscaip/Player';
 import { DiamFailure } from '../DiamFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
 
 describe('DiamRules', () => {
 

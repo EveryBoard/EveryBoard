@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../app/jscaip/Player';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;

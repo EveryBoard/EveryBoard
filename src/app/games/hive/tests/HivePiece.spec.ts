@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../app/jscaip/Player';
 import { HivePiece, HivePieceStack } from '../HivePiece';
 
 const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');

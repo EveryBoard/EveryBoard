@@ -8,12 +8,12 @@ import { serverTimestamp } from 'firebase/firestore';
 
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserDAO } from '../../../app/dao/UserDAO';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { UserMocks } from '../../../app/domain/UserMocks.spec';
 import { UserService } from '../UserService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { MinimalUser } from '../../../app/domain/MinimalUser';
+import { setupEmulators } from '../../../app/utils/tests/TestUtils.spec';
 
 @Injectable()
 export class ConnectedUserServiceMock {

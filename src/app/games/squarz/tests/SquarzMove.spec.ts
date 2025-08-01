@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { SquarzMove } from '../SquarzMove';
 import { MGPFallible, MGPFallibleTestUtils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 
 describe('SquarzMove', () => {
 

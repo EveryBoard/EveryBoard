@@ -1,11 +1,11 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { P4Component } from 'src/app/games/p4/p4.component';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { UserMocks } from '../../../../app/domain/UserMocks.spec';
+import { P4Component } from '../../../../app/games/p4/p4.component';
+import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
+import { ErrorLoggerService } from '../../../../app/services/ErrorLoggerService';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 
 describe('LocalGameWrapperComponent (rules config phase)', () => {

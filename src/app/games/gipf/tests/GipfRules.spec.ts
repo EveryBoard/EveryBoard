@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { HexaDirection } from '../../../../app/jscaip/HexaDirection';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfState } from '../GipfState';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
 import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
 import { GipfFailure } from '../GipfFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Player } from '../../../../app/jscaip/Player';
+import { Table } from '../../../../app/jscaip/TableUtils';
+import { GipfCapture } from '../../../../app/jscaip/GipfProjectHelper';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 
 describe('GipfRules', () => {
 

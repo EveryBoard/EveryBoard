@@ -1,20 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoMoveGenerator } from 'src/app/games/quarto/QuartoMoveGenerator';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { QuartoConfig, QuartoNode, QuartoRules } from 'src/app/games/quarto/QuartoRules';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { QuartoMove } from '../../../../app/games/quarto/QuartoMove';
+import { QuartoMoveGenerator } from '../../../../app/games/quarto/QuartoMoveGenerator';
+import { QuartoPiece } from '../../../../app/games/quarto/QuartoPiece';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../../../../app/games/quarto/QuartoRules';
+import { QuartoState } from '../../../../app/games/quarto/QuartoState';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { AITimeLimitOptions } from '../AI';
 import { Coord } from '../../Coord';
 import { MCTS } from '../MCTS';
-import { MancalaNode } from 'src/app/games/mancala/common/MancalaRules';
-import { AwaleMoveGenerator } from 'src/app/games/mancala/awale/AwaleMoveGenerator';
-import { AwaleRules } from 'src/app/games/mancala/awale/AwaleRules';
-import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { MancalaConfig } from 'src/app/games/mancala/common/MancalaConfig';
-import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
+import { MancalaNode } from '../../../../app/games/mancala/common/MancalaRules';
+import { AwaleMoveGenerator } from '../../../../app/games/mancala/awale/AwaleMoveGenerator';
+import { AwaleRules } from '../../../../app/games/mancala/awale/AwaleRules';
+import { MancalaState } from '../../../../app/games/mancala/common/MancalaState';
+import { MancalaConfig } from '../../../../app/games/mancala/common/MancalaConfig';
+import { MancalaMove } from '../../../../app/games/mancala/common/MancalaMove';
 
 describe('MCTS', () => {
 
@@ -42,10 +42,10 @@ describe('MCTS', () => {
         // Then it should not give the win to the opponent
         if (move.coord.equals(new Coord(3, 0))) {
             // MCTS blocked the opponent's only possible win
-            expect(true).toBe(true);
+            expect(true).toEqual(true);
         } else {
             // MCTS gave the opponent a piece with which they cannot win
-            expect(move.piece).not.toBe(QuartoPiece.AABA);
+            expect(move.piece).not.toEqual(QuartoPiece.AABA);
         }
     });
 

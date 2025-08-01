@@ -2,13 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { QuartoMove } from '../QuartoMove';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
+import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../../app/jscaip/Player';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { BoardValue } from '../../../../app/jscaip/AI/BoardValue';
 
 describe('QuartoHeuristic', () => {
 

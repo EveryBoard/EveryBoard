@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Player } from '../../../../app/jscaip/Player';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { MGPMap } from '@everyboard/lib';
 import { LodestoneFailure } from '../LodestoneFailure';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';
 import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
 
 describe('LodestoneRules', () => {
 

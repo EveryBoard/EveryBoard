@@ -1,13 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { DiamPiece } from 'src/app/games/diam/DiamPiece';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { HivePiece } from 'src/app/games/hive/HivePiece';
-import { SiamMove } from 'src/app/games/siam/SiamMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { DiamPiece } from '../../../../app/games/diam/DiamPiece';
+import { EncapsulePiece } from '../../../../app/games/encapsule/EncapsulePiece';
+import { HivePiece } from '../../../../app/games/hive/HivePiece';
+import { SiamMove } from '../../../../app/games/siam/SiamMove';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
+import { Ordinal } from '../../../../app/jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
 
 export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[]; }; } = {
     Abalone: {

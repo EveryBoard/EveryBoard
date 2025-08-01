@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Coord } from '../../../../../app/jscaip/Coord';
+import { ComponentTestUtils } from '../../../../../app/utils/tests/TestUtils.spec';
 import { InternationalCheckersComponent } from '../international-checkers.component';
 import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { InternationalCheckersRules } from '../InternationalCheckersRules';
-import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { DirectionFailure } from 'src/app/jscaip/Direction';
+import { PlayerMap, PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { DirectionFailure } from '../../../../../app/jscaip/Direction';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
 
 const zero: CheckersPiece = CheckersPiece.ZERO;

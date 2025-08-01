@@ -6,7 +6,7 @@ import { FirestoreJSONObject, FirestoreJSONValue, MGPMap, MGPOptional, Observabl
 
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
-import { Debug } from 'src/app/utils/Debug';
+import { Debug } from '../../../app/utils/Debug';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 
@@ -75,7 +75,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         }
         return update as UpdateData<N>;
     }
-
     private hasFieldValue(element: FirestoreJSONObject): boolean {
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
@@ -121,12 +120,12 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         return Promise.resolve();
     }
     public async update(id: string, update: UpdateData<T>): Promise<void> {
-        const localUpdate: UpdateData<T> = this.replaceFieldValueWith(update, null);
-        await this.internalUpdate(id, localUpdate);
-        if (this.hasFieldValue(update)) {
-            const serverUpdate: UpdateData<T> =
-                this.replaceFieldValueWith(update, FirestoreDAOMock.mockServerTime());
-            await this.internalUpdate(id, serverUpdate);
+        const localUpdate: FirestoreJSONObject = this.replaceFieldValueWith(update as FirestoreJSONObject, null);
+        await this.internalUpdate(id, localUpdate as UpdateData<T>);
+        if (this.hasFieldValue(update as FirestoreJSONObject)) {
+            const serverUpdate: FirestoreJSONObject =
+                this.replaceFieldValueWith(update as FirestoreJSONObject, FirestoreDAOMock.mockServerTime());
+            await this.internalUpdate(id, serverUpdate as UpdateData<T>);
         }
     }
     private async internalUpdate(id: string, update: UpdateData<T>): Promise<void> {

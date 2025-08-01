@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
+import { FirestoreDocument } from '../../../app/dao/FirestoreDAO';
 import { JSONValue, MGPOptional } from '@everyboard/lib';
 import { ErrorLoggerService } from '../ErrorLoggerService';
 import { RouterTestingModule } from '@angular/router/testing';
 import { serverTimestamp } from 'firebase/firestore';
-import { ErrorDAO, MGPError } from 'src/app/dao/ErrorDAO';
-import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
+import { ErrorDAO, MGPError } from '../../../app/dao/ErrorDAO';
+import { ErrorDAOMock } from '../../../app/dao/tests/ErrorDAOMock.spec';
 import { MessageDisplayer } from '../MessageDisplayer';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { BlankComponent } from '../../../app/utils/tests/TestUtils.spec';
 
 describe('ErrorLoggerService', () => {
 

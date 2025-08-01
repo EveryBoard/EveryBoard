@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
 import { ReversiConfig, ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { MGPOptional } from '@everyboard/lib';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
 
 describe('ReversiMinimax', () => {
 

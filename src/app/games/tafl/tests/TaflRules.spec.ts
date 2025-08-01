@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
+import { Player } from '../../../../app/jscaip/Player';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { TaflFailure } from '../TaflFailure';
 import { TaflPawn } from '../TaflPawn';

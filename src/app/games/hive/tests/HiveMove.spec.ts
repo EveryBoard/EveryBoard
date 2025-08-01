@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Player } from '../../../../app/jscaip/Player';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';

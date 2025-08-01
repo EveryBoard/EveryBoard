@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
 import { P4State } from '../P4State';
 import { P4Move } from '../P4Move';
 import { P4Failure } from '../P4Failure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Table, TableUtils } from '../../../../app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();

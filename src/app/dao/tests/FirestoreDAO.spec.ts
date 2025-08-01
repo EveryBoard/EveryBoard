@@ -6,7 +6,7 @@ import { FirestoreJSONObject, MGPOptional } from '@everyboard/lib';
 
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+import { setupEmulators } from '../../../app/utils/tests/TestUtils.spec';
 
 type Foo = {
     value: string,

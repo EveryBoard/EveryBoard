@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from '../../../../../app/jscaip/tests/RulesUtils.spec';
 import { MancalaState } from '../MancalaState';
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaFailure } from '../MancalaFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../../app/jscaip/Player';
 import { MancalaConfig } from '../MancalaConfig';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { GameNode } from '../../../../../app/jscaip/AI/GameNode';
 import { MancalaNode, MancalaRules } from '../MancalaRules';
 import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../../app/jscaip/TableUtils';
 
 export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc

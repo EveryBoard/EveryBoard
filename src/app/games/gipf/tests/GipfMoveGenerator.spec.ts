@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { GipfState } from '../GipfState';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
 import { GipfNode, GipfRules } from '../GipfRules';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;

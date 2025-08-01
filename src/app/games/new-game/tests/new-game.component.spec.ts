@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { GameInfo } from 'src/src/app/components/normal-component/pick-game/game-info';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { NewGameComponent } from '../new-game.component';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
@@ -13,7 +13,7 @@ describe('NewGameComponent', () => {
         // This next statement *should be removed for any real game*.
         // Instead, you should look at the README at how to add your game to the project.
         spyOn(GameInfo, 'getAllGames').and.returnValue([
-            new GameInfo('New Game', 'NewGame', NewGameComponent, new NewGameTutorial(), NewGameRules.get(), new Date('2018-08-28'), 'This is the one-line description of the game'),
+            new GameInfo('New Game', 'NewGame', new NewGameTutorial(), NewGameRules.get(), new Date('2018-08-28'), 'This is the one-line description of the game'),
         ]);
         // This `testUtils` will be used throughout the test suites as a matcher for various test conditions
         testUtils = await ComponentTestUtils.forGame<NewGameComponent>('NewGame');

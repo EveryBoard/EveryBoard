@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { P4Move } from 'src/app/games/p4/P4Move';
+import { P4Move } from '../../../app/games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { Rules } from '../Rules';
 import { GameStateWithTable } from '../state/GameStateWithTable';

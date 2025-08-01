@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { UserService } from '../UserService';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
+import { UserDAO } from '../../../app/dao/UserDAO';
+import { UserDAOMock } from '../../../app/dao/tests/UserDAOMock.spec';
 import { serverTimestamp } from 'firebase/firestore';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';

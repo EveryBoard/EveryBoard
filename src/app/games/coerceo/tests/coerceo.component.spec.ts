@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 import { CoerceoComponent } from '../coerceo.component';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../../../../app/games/coerceo/CoerceoMove';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { CoerceoFailure } from '../../../../app/games/coerceo/CoerceoFailure';
+import { CoerceoState } from '../../../../app/games/coerceo/CoerceoState';
+import { Table } from '../../../../app/jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 
 describe('CoerceoComponent', () => {
 

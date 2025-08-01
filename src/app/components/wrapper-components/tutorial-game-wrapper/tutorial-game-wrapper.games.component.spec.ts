@@ -6,102 +6,102 @@ import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component'
 import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
 import { TutorialStepMessage } from './TutorialStepMessage';
 
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { GameWrapper } from '../GameWrapper';
-import { Move } from 'src/app/jscaip/Move';
-import { Coord } from 'src/app/jscaip/Coord';
-import { AbstractRules, SuperRules } from 'src/app/jscaip/Rules';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Move } from '../../../../app/jscaip/Move';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { AbstractRules, SuperRules } from '../../../../app/jscaip/Rules';
+import { Ordinal } from '../../../../app/jscaip/Ordinal';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { GameState } from '../../../../app/jscaip/state/GameState';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
+import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { HexaDirection } from '../../../../app/jscaip/HexaDirection';
 
-import { AbaloneMove } from 'src/app/games/abalone/AbaloneMove';
-import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
-import { AbaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
-import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
-import { ApagosRules } from 'src/app/games/apagos/ApagosRules';
-import { ApagosTutorial } from 'src/app/games/apagos/ApagosTutorial';
+import { AbaloneMove } from '../../../../app/games/abalone/AbaloneMove';
+import { AbaloneRules } from '../../../../app/games/abalone/AbaloneRules';
+import { AbaloneTutorial } from '../../../../app/games/abalone/AbaloneTutorial';
+import { ApagosMove } from '../../../../app/games/apagos/ApagosMove';
+import { ApagosRules } from '../../../../app/games/apagos/ApagosRules';
+import { ApagosTutorial } from '../../../../app/games/apagos/ApagosTutorial';
 
-import { CheckersMove } from 'src/app/games/checkers/common/CheckersMove';
+import { CheckersMove } from '../../../../app/games/checkers/common/CheckersMove';
 
-import { ConspirateursMoveSimple, ConspirateursMoveJump } from 'src/app/games/conspirateurs/ConspirateursMove';
-import { ConspirateursRules } from 'src/app/games/conspirateurs/ConspirateursRules';
-import { ConspirateursTutorial } from 'src/app/games/conspirateurs/ConspirateursTutorial';
+import { ConspirateursMoveSimple, ConspirateursMoveJump } from '../../../../app/games/conspirateurs/ConspirateursMove';
+import { ConspirateursRules } from '../../../../app/games/conspirateurs/ConspirateursRules';
+import { ConspirateursTutorial } from '../../../../app/games/conspirateurs/ConspirateursTutorial';
 
-import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnTutorial } from 'src/app/games/dvonn/DvonnTutorial';
+import { DvonnMove } from '../../../../app/games/dvonn/DvonnMove';
+import { DvonnRules } from '../../../../app/games/dvonn/DvonnRules';
+import { DvonnTutorial } from '../../../../app/games/dvonn/DvonnTutorial';
 
-import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleTutorial } from 'src/app/games/encapsule/EncapsuleTutorial';
-import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EncapsuleMove } from '../../../../app/games/encapsule/EncapsuleMove';
+import { EncapsulePiece } from '../../../../app/games/encapsule/EncapsulePiece';
+import { EncapsuleRules } from '../../../../app/games/encapsule/EncapsuleRules';
+import { EncapsuleTutorial } from '../../../../app/games/encapsule/EncapsuleTutorial';
+import { EpaminondasMove } from '../../../../app/games/epaminondas/EpaminondasMove';
+import { EpaminondasRules } from '../../../../app/games/epaminondas/EpaminondasRules';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
 
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfTutorial } from 'src/app/games/gipf/GipfTutorial';
+import { GipfCapture } from '../../../../app/jscaip/GipfProjectHelper';
+import { GipfMove, GipfPlacement } from '../../../../app/games/gipf/GipfMove';
+import { GipfRules } from '../../../../app/games/gipf/GipfRules';
+import { GipfTutorial } from '../../../../app/games/gipf/GipfTutorial';
 
-import { HiveMove } from 'src/app/games/hive/HiveMove';
-import { HiveRules } from 'src/app/games/hive/HiveRules';
-import { HiveTutorial } from 'src/app/games/hive/HiveTutorial';
+import { HiveMove } from '../../../../app/games/hive/HiveMove';
+import { HiveRules } from '../../../../app/games/hive/HiveRules';
+import { HiveTutorial } from '../../../../app/games/hive/HiveTutorial';
 
-import { InternationalCheckersRules } from 'src/app/games/checkers/international-checkers/InternationalCheckersRules';
-import { InternationalCheckersTutorial } from 'src/app/games/checkers/international-checkers/InternationalCheckersTutorial';
+import { InternationalCheckersRules } from '../../../../app/games/checkers/international-checkers/InternationalCheckersRules';
+import { InternationalCheckersTutorial } from '../../../../app/games/checkers/international-checkers/InternationalCheckersTutorial';
 
-import { KalahRules } from 'src/app/games/mancala/kalah/KalahRules';
-import { KalahTutorial } from 'src/app/games/mancala/kalah/KalahTutorial';
+import { KalahRules } from '../../../../app/games/mancala/kalah/KalahRules';
+import { KalahTutorial } from '../../../../app/games/mancala/kalah/KalahTutorial';
 
-import { LinesOfActionMove } from 'src/app/games/lines-of-action/LinesOfActionMove';
-import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
-import { LinesOfActionTutorial } from 'src/app/games/lines-of-action/LinesOfActionTutorial';
-import { LodestoneMove } from 'src/app/games/lodestone/LodestoneMove';
-import { LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
-import { LodestoneTutorial } from 'src/app/games/lodestone/LodestoneTutorial';
+import { LinesOfActionMove } from '../../../../app/games/lines-of-action/LinesOfActionMove';
+import { LinesOfActionRules } from '../../../../app/games/lines-of-action/LinesOfActionRules';
+import { LinesOfActionTutorial } from '../../../../app/games/lines-of-action/LinesOfActionTutorial';
+import { LodestoneMove } from '../../../../app/games/lodestone/LodestoneMove';
+import { LodestoneRules } from '../../../../app/games/lodestone/LodestoneRules';
+import { LodestoneTutorial } from '../../../../app/games/lodestone/LodestoneTutorial';
 
-import { MancalaDistribution } from 'src/app/games/mancala/common/MancalaMove';
-import { MancalaMove } from 'src/app/games/mancala/common/MancalaMove';
-import { MartianChessMove } from 'src/app/games/martian-chess/MartianChessMove';
-import { MartianChessRules } from 'src/app/games/martian-chess/MartianChessRules';
-import { MartianChessTutorial } from 'src/app/games/martian-chess/MartianChessTutorial';
+import { MancalaDistribution } from '../../../../app/games/mancala/common/MancalaMove';
+import { MancalaMove } from '../../../../app/games/mancala/common/MancalaMove';
+import { MartianChessMove } from '../../../../app/games/martian-chess/MartianChessMove';
+import { MartianChessRules } from '../../../../app/games/martian-chess/MartianChessRules';
+import { MartianChessTutorial } from '../../../../app/games/martian-chess/MartianChessTutorial';
 
-import { PentagoMove } from 'src/app/games/pentago/PentagoMove';
-import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
-import { PentagoTutorial } from 'src/app/games/pentago/PentagoTutorial';
-import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { PylosMove } from 'src/app/games/pylos/PylosMove';
-import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosTutorial } from 'src/app/games/pylos/PylosTutorial';
+import { PentagoMove } from '../../../../app/games/pentago/PentagoMove';
+import { PentagoRules } from '../../../../app/games/pentago/PentagoRules';
+import { PentagoTutorial } from '../../../../app/games/pentago/PentagoTutorial';
+import { PylosCoord } from '../../../../app/games/pylos/PylosCoord';
+import { PylosMove } from '../../../../app/games/pylos/PylosMove';
+import { PylosRules } from '../../../../app/games/pylos/PylosRules';
+import { PylosTutorial } from '../../../../app/games/pylos/PylosTutorial';
 
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
-import { QuartoTutorial } from 'src/app/games/quarto/QuartoTutorial';
+import { QuartoMove } from '../../../../app/games/quarto/QuartoMove';
+import { QuartoPiece } from '../../../../app/games/quarto/QuartoPiece';
+import { QuartoRules } from '../../../../app/games/quarto/QuartoRules';
+import { QuartoTutorial } from '../../../../app/games/quarto/QuartoTutorial';
 
-import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
-import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
+import { SaharaMove } from '../../../../app/games/sahara/SaharaMove';
+import { SaharaRules } from '../../../../app/games/sahara/SaharaRules';
 import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
-import { SixMove } from 'src/app/games/six/SixMove';
-import { SixRules } from 'src/app/games/six/SixRules';
+import { SixMove } from '../../../../app/games/six/SixMove';
+import { SixRules } from '../../../../app/games/six/SixRules';
 import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial';
-import { SquarzMove } from 'src/app/games/squarz/SquarzMove';
-import { SquarzRules } from 'src/app/games/squarz/SquarzRules';
-import { SquarzTutorial } from 'src/app/games/squarz/SquarzTutorial';
+import { SquarzMove } from '../../../../app/games/squarz/SquarzMove';
+import { SquarzRules } from '../../../../app/games/squarz/SquarzRules';
+import { SquarzTutorial } from '../../../../app/games/squarz/SquarzTutorial';
 
-import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
-import { TrexoRules } from 'src/app/games/trexo/TrexoRules';
-import { TrexoTutorial } from 'src/app/games/trexo/TrexoTutorial';
+import { TrexoMove } from '../../../../app/games/trexo/TrexoMove';
+import { TrexoRules } from '../../../../app/games/trexo/TrexoRules';
+import { TrexoTutorial } from '../../../../app/games/trexo/TrexoTutorial';
 
-import { YinshCapture, YinshMove } from 'src/app/games/yinsh/YinshMove';
-import { YinshRules } from 'src/app/games/yinsh/YinshRules';
-import { YinshTutorial, YinshTutorialMessages } from 'src/app/games/yinsh/YinshTutorial';
+import { YinshCapture, YinshMove } from '../../../../app/games/yinsh/YinshMove';
+import { YinshRules } from '../../../../app/games/yinsh/YinshRules';
+import { YinshTutorial, YinshTutorialMessages } from '../../../../app/games/yinsh/YinshTutorial';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 

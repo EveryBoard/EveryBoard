@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Table } from '../../../../app/jscaip/TableUtils';
+import { Ordinal } from '../../../../app/jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from '../../../../app/jscaip/Coord';
 
 describe('EpaminondasRules', () => {
 

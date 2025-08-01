@@ -3,13 +3,13 @@ import { MGPOptional } from '@everyboard/lib';
 import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Table } from '../../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../../../app/jscaip/Coord';
 import { GoConfig, GoRules } from '../GoRules';
 import { GoFailure } from '../../GoFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { RulesUtils } from '../../../../../app/jscaip/tests/RulesUtils.spec';
+import { Player } from '../../../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
 import { GoNode } from '../../AbstractGoRules';
 
 describe('GoRules', () => {

@@ -1,14 +1,14 @@
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Action, GameEvent, MGPResult, Part, RequestType } from 'src/app/domain/Part';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { ConfigRoomDAO } from '../../../app/dao/ConfigRoomDAO';
+import { MinimalUser } from '../../../app/domain/MinimalUser';
+import { Action, GameEvent, MGPResult, Part, RequestType } from '../../../app/domain/Part';
+import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
-import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
-import { PartDAO } from 'src/app/dao/PartDAO';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ConfigRoom, FirstPlayer, PartStatus, PartType } from '../../../app/domain/ConfigRoom';
+import { PartDAO } from '../../../app/dao/PartDAO';
+import { ChatDAO } from '../../../app/dao/ChatDAO';
 import { GameService } from '../GameService';
 
 @Injectable({ providedIn: 'root' })

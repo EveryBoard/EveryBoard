@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { SquarzComponent } from '../squarz.component';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 import { SquarzState } from '../SquarzState';
 import { SquarzConfig, SquarzRules } from '../SquarzRules';
 import { SquarzMove } from '../SquarzMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { PlayerOrNone } from '../../../../app/jscaip/Player';
 import { SquarzFailure } from '../SquarzFailure';
 import { MGPOptional } from '@everyboard/lib';
 

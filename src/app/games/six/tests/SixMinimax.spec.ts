@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { SixConfig, SixLegalityInformation, SixNode, SixRules } from '../SixRules';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
 import { SixMinimax } from '../SixMinimax';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

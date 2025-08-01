@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/HexaLine';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { HexaDirection } from '../../../../app/jscaip/HexaDirection';
+import { HexaLine } from '../../../../app/jscaip/HexaLine';
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from '../GipfMove';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfCapture } from '../../../../app/jscaip/GipfProjectHelper';
 
 describe('GipfCapture', () => {
 

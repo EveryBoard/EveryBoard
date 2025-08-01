@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../app/jscaip/Coord';
 import { Table, TableUtils, TableWithPossibleNegativeIndices } from '../TableUtils';
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 

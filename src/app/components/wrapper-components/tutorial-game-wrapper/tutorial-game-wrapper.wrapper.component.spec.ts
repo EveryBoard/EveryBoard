@@ -5,21 +5,21 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard
 
 import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
 import { TutorialStep } from './TutorialStep';
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
+import { QuartoMove } from '../../../../app/games/quarto/QuartoMove';
+import { QuartoState } from '../../../../app/games/quarto/QuartoState';
+import { QuartoPiece } from '../../../../app/games/quarto/QuartoPiece';
+import { ComponentTestUtils, expectValidRouting } from '../../../../app/utils/tests/TestUtils.spec';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { TutorialFailure } from './TutorialFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { QuartoConfig, QuartoRules } from 'src/app/games/quarto/QuartoRules';
+import { Player } from '../../../../app/jscaip/Player';
+import { RulesConfig, RulesConfigUtils } from '../../../../app/jscaip/RulesConfigUtil';
+import { QuartoConfig, QuartoRules } from '../../../../app/games/quarto/QuartoRules';
 import { TutorialStepMessage } from './TutorialStepMessage';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {

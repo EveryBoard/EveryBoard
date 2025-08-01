@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Coord, CoordFailure } from '../../../../app/jscaip/Coord';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { GobanConfig } from '../../../../app/jscaip/GobanConfig';
 import { MGPOptional, TestUtils } from '@everyboard/lib';
 
 describe('ConnectSixRules', () => {

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Player } from 'src/app/jscaip/Player';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Player } from '../../../../app/jscaip/Player';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { ApagosComponent } from '../apagos.component';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';

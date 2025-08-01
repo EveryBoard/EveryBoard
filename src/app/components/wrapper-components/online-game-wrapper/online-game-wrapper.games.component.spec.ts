@@ -2,15 +2,15 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { MGPValidation } from '@everyboard/lib';
 
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { MinimalUser } from '../../../../app/domain/MinimalUser';
+import { UserMocks } from '../../../../app/domain/UserMocks.spec';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from '../../../../app/jscaip/Player';
 
 describe('OnlineGameWrapperComponent (games)', () => {
 

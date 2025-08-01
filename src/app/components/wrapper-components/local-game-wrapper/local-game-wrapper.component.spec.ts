@@ -4,32 +4,32 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils, expectValidRouting } from '../../../../app/utils/tests/TestUtils.spec';
 
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { UserMocks } from '../../../../app/domain/UserMocks.spec';
 
-import { P4State } from 'src/app/games/p4/P4State';
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { P4Component } from 'src/app/games/p4/p4.component';
-import { P4Config } from 'src/app/games/p4/P4Rules';
+import { P4State } from '../../../../app/games/p4/P4State';
+import { P4Move } from '../../../../app/games/p4/P4Move';
+import { P4Component } from '../../../../app/games/p4/p4.component';
+import { P4Config } from '../../../../app/games/p4/P4Rules';
 
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
+import { ErrorLoggerService } from '../../../../app/services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from '../../../../app/services/tests/ErrorLoggerServiceMock.spec';
+import { AuthUser } from '../../../../app/services/ConnectedUserService';
 
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { P4Minimax } from 'src/app/games/p4/P4Minimax';
-import { GipfComponent } from 'src/app/games/gipf/gipf.component';
+import { GameStatus } from '../../../../app/jscaip/GameStatus';
+import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { Minimax } from '../../../../app/jscaip/AI/Minimax';
+import { P4Minimax } from '../../../../app/games/p4/P4Minimax';
+import { GipfComponent } from '../../../../app/games/gipf/gipf.component';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

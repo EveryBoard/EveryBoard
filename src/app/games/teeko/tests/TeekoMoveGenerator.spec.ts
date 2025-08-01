@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from '../../../../app/jscaip/Player';
 import { TeekoMove } from '../TeekoMove';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
 

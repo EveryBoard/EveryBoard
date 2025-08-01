@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
 import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { AbaloneState } from '../AbaloneState';

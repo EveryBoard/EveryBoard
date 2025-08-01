@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
+import { PlayerOrNone } from '../../../../app/jscaip/Player';
 import { QuixoConfig, QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMove } from '../QuixoMove';
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 
 describe('QuixoMove', () => {

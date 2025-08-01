@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../../app/jscaip/TableUtils';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { HeuristicUtils } from '../../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
 import { TrigoConfig, TrigoRules } from '../TrigoRules';
 import { TrigoHeuristic } from '../TrigoHeuristic';
 

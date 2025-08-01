@@ -16,9 +16,13 @@ import { GameNode } from '../app/jscaip/AI/GameNode';
 import { Move } from '../app/jscaip/Move';
 import { GameInfo } from '../app/components/normal-component/pick-game/game-info';
 import { RulesConfig } from '../app/jscaip/RulesConfigUtil';
-import { AI, AIDepthLimitOptions, AIOptions, MoveGenerator } from '../app/jscaip/AI/AI';
+import { AI, AIOptions, MoveGenerator } from '../app/jscaip/AI/AI';
 import { AwaleMoveGenerator } from '../app/games/mancala/awale/AwaleMoveGenerator';
 import { AIInfo } from '../app/components/normal-component/pick-game/ai-info';
+import { QuartoMove } from '../app/games/quarto/QuartoMove';
+import { QuartoMoveGenerator } from '../app/games/quarto/QuartoMoveGenerator';
+import { QuartoState } from '../app/games/quarto/QuartoState';
+import { QuartoPiece } from '../app/games/quarto/QuartoPiece';
 
 // compile with "npx tsc -p tsconfig.jscaip.json"
 
@@ -33,7 +37,7 @@ interface Input {
     action: ActionType;
     gameName: string;
     gameState?: JSONValue;
-    move?: JSONValue;
+    move_index?: number;
 }
 
 function getP4State(input: Input): P4State {
@@ -52,6 +56,12 @@ function getMancalaState(input: Input): MancalaState {
     const scores: PlayerNumberMap = PlayerNumberMap.of(playerZeroValue, playerOneValue);
     return new MancalaState(board, turn, scores);
 }
+function getQuartoState(input: Input): QuartoState {
+    const board: QuartoPiece[][] = input.gameState?.['board'];
+    const turn: number = input.gameState?.['turn'];
+    const pieceInHand: QuartoPiece = input.gameState?.['pieceInHand'];
+    return new QuartoState(board, turn, pieceInHand);
+}
 
 // Create readline interface for persistent communication
 const rl: readline.Interface = readline.createInterface({
@@ -61,7 +71,6 @@ const rl: readline.Interface = readline.createInterface({
 });
 
 type GenericAI = AI<Move, GameState, AIOptions, RulesConfig>;
-
 class ProcessApplier<S extends GameState, M extends Move> {
 
     public readonly gameInfo: GameInfo;
@@ -76,14 +85,35 @@ class ProcessApplier<S extends GameState, M extends Move> {
         this.aiInfo = AIInfo.getByUrlName(gameName).get();
     }
 
+    private mapMoveToIndex(move: Move): number {
+        if (move instanceof P4Move) {
+            return move.x;
+        } else {
+            throw Error('CDCTDTC');
+        }
+    }
+
+    private mapIndexToMove(move: number): Move {
+        return P4Move.of(move);
+    }
+
+    private getLegalMovesIndex(input: Input): number[] {
+        const gameState: S = this.gameStateMapper(input);
+        const node: GameNode<M, S> = new GameNode<M, S>(gameState);
+        const moveGenerator: MoveGenerator<M, S, RulesConfig> = this.moveGenerator;
+        const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
+        return moveGenerator.getListMoves(node, defaultConfig).map(this.mapMoveToIndex);
+    }
+
     private getResponse(input: Input): Record<string, any> { // TODO: CHANGE return name
         if (input.action === 'applyMove') {
             const gameState: S = this.gameStateMapper(input);
-            let node: GameNode<M, S> = new GameNode<M, S>(gameState);
-            const move: M = this.moveEncoder.decode(input.move as JSONValue);
+            let node: GameNode<Move, S> = new GameNode<Move, S>(gameState);
+            const moveIndex: number = input.move_index as number;
+            const move: Move = this.mapIndexToMove(moveIndex);
             const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
-            const result: MGPFallible<GameNode<M, S>> =
-                this.gameInfo.rules.choose(node, move, defaultConfig) as MGPFallible<GameNode<M, S>>;
+            const result: MGPFallible<GameNode<Move, S>> =
+                this.gameInfo.rules.choose(node, move, defaultConfig) as MGPFallible<GameNode<Move, S>>;
             if (result.isSuccess()) {
                 node = result.get();
             }
@@ -98,13 +128,8 @@ class ProcessApplier<S extends GameState, M extends Move> {
             const status: GameStatus = this.gameInfo.rules.getGameStatus(node, defaultConfig);
             return { status };
         } else if (input.action === 'getLegalMoves') {
-            const gameState: S = this.gameStateMapper(input);
-            const node: GameNode<M, S> = new GameNode<M, S>(gameState);
-            const moveGenerator: MoveGenerator<M, S, RulesConfig> = this.moveGenerator;
-            const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
-            const legalMoves: M[] = moveGenerator.getListMoves(node, defaultConfig);
-            const legalEncodedMoves: JSONValue[] = legalMoves.map(this.moveEncoder.encode);
-            return { legalMoves: legalEncodedMoves };
+            const legalMovesIndexes: number[] = this.getLegalMovesIndex(input);
+            return { legalMovesIndexes };
         } else if (input.action === 'getInitialState') {
             const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
             const initialState: GameState = this.gameInfo.rules.getInitialState(defaultConfig);
@@ -127,10 +152,12 @@ class ProcessApplier<S extends GameState, M extends Move> {
             const defaultConfig: MGPOptional<RulesConfig> = this.gameInfo.rules.getDefaultRulesConfig();
             const aiMove: Move = ai.chooseNextMove(node, input['aiOptions'], defaultConfig);
             const result: MGPFallible<GameNode<M, S>> =
-                this.gameInfo.rules.choose(node, aiMove, defaultConfig) as MGPFallible<GameNode<M, S>>;
+            this.gameInfo.rules.choose(node, aiMove, defaultConfig) as MGPFallible<GameNode<M, S>>;
+            const action: number = this.mapMoveToIndex(aiMove);
             if (result.isSuccess()) {
                 return {
-                    board: result.get().gameState,
+                    game_state: result.get().gameState,
+                    action: action,
                 };
             } else {
                 return {
@@ -139,6 +166,7 @@ class ProcessApplier<S extends GameState, M extends Move> {
             }
         }
     }
+
     public getRequestReponse(input: Input): string {
         // Always send response as single line
         const response: Record<string, any> = this.getResponse(input);
@@ -152,7 +180,7 @@ rl.on('line', (line: string) => {
         switch (input.gameName) {
             case 'P4': {
                 const processApplier: ProcessApplier<P4State, P4Move> = new ProcessApplier(
-                    'P4',
+                    input.gameName,
                     P4Move.encoder,
                     getP4State,
                     new P4MoveGenerator(),
@@ -163,10 +191,21 @@ rl.on('line', (line: string) => {
             }
             case 'Awale': {
                 const processApplier: ProcessApplier<MancalaState, MancalaMove> = new ProcessApplier(
-                    'Awale',
+                    input.gameName,
                     MancalaMove.encoder,
                     getMancalaState,
                     new AwaleMoveGenerator(),
+                );
+                const response: string = processApplier.getRequestReponse(input);
+                console.log(response);
+                break;
+            }
+            case 'Quarto': {
+                const processApplier: ProcessApplier<QuartoState, QuartoMove> = new ProcessApplier(
+                    input.gameName,
+                    QuartoMove.encoder,
+                    getQuartoState,
+                    new QuartoMoveGenerator(),
                 );
                 const response: string = processApplier.getRequestReponse(input);
                 console.log(response);

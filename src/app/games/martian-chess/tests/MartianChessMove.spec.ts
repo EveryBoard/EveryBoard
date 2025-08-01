@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { DirectionFailure } from 'src/app/jscaip/Direction';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { DirectionFailure } from '../../../../app/jscaip/Direction';
+import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
 import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
 
 describe('MartianChessMove', () => {
 

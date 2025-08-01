@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { P4State } from '../P4State';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Table } from '../../../../app/jscaip/TableUtils';
+import { PlayerOrNone } from '../../../../app/jscaip/Player';
 import { P4MoveGenerator } from '../P4MoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
 

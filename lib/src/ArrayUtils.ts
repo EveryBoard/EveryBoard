@@ -39,7 +39,6 @@ export class ArrayUtils {
         return true;
     }
 
-
     public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, list: ReadonlyArray<T>): boolean {
         if (prefix.length > list.length) return false;
         return ArrayUtils.equals(prefix, list.slice(0, prefix.length));

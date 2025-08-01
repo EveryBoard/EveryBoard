@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../app/jscaip/TableUtils';
 import { SixConfig, SixNode, SixRules } from '../SixRules';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
 

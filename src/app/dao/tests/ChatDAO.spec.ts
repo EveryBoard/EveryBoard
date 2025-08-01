@@ -6,14 +6,14 @@ import { Subscription } from 'rxjs';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ChatDAO } from '../ChatDAO';
-import { Message, MessageDocument } from 'src/app/domain/Message';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { Message, MessageDocument } from '../../../app/domain/Message';
+import { MinimalUser } from '../../../app/domain/MinimalUser';
 import { IFirestoreDAO } from '../FirestoreDAO';
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { createConnectedUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ChatService } from 'src/app/services/ChatService';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
-import { Chat } from 'src/app/domain/Chat';
+import { createConnectedUser } from '../../../app/services/tests/ConnectedUserService.spec';
+import { ChatService } from '../../../app/services/ChatService';
+import { expectPermissionToBeDenied, setupEmulators } from '../../../app/utils/tests/TestUtils.spec';
+import { Chat } from '../../../app/domain/Chat';
 
 describe('ChatDAO', () => {
 

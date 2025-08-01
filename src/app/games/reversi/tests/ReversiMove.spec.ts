@@ -2,7 +2,7 @@
 import { ReversiRules } from '../ReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { EncoderTestUtils } from '@everyboard/lib';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../../app/jscaip/tests/Move.spec';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
 describe('ReversiMove', () => {

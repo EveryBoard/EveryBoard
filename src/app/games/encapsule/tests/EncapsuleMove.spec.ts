@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { EncapsuleRules } from '../EncapsuleRules';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncoderTestUtils } from '@everyboard/lib';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../../app/jscaip/tests/Move.spec';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../app/jscaip/Player';
 
 describe('EncapsuleMove', () => {
 

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
-import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
-import { P4State } from 'src/app/games/p4/P4State';
+import { P4Heuristic } from '../../../../app/games/p4/P4Heuristic';
+import { P4Move } from '../../../../app/games/p4/P4Move';
+import { P4MoveGenerator } from '../../../../app/games/p4/P4MoveGenerator';
+import { P4Config, P4Node, P4Rules } from '../../../../app/games/p4/P4Rules';
+import { P4State } from '../../../../app/games/p4/P4State';
 import { AIDepthLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';

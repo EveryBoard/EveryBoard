@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { EncapsuleComponent } from '../encapsule.component';
-import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
-import { Player } from 'src/app/jscaip/Player';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { EncapsuleMove } from '../../../../app/games/encapsule/EncapsuleMove';
+import { Coord } from '../../../../app/jscaip/Coord';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../../../app/games/encapsule/EncapsuleState';
+import { Player } from '../../../../app/jscaip/Player';
+import { EncapsulePiece } from '../../../../app/games/encapsule/EncapsulePiece';
+import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerMap } from '../../../../app/jscaip/PlayerMap';
 import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
 import { MGPOptional } from 'lib/dist';
 import { DebugElement } from '@angular/core';

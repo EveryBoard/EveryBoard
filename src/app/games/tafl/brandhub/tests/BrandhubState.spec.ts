@@ -1,4 +1,4 @@
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from '../../../../../app/jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
 import { BrandhubRules } from '../BrandhubRules';
