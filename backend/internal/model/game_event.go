@@ -29,42 +29,61 @@ func (p *Proposition) UnmarshalJSON(data []byte) error {
 	}
 }
 
-type Request struct {
+type RequestPayload struct {
 	RequestType Proposition `json:"requestType"`
 }
 
-type Reply struct {
+type ReplyPayload struct {
 	RequestType Proposition     `json:"requestType"`
 	Accept      bool            `json:"accept"`
 	Data        json.RawMessage `json:"data,omitempty"`
 }
 
-type Action struct {
-	Action string `json:"action"`
+type Action string
+
+const (
+	ActionStartGame   Action = "StartGame"
+	ActionEndGame     Action = "EndGame"
+	ActionSync        Action = "Sync"
+	ActionAddMoveTime Action = "AddMoveTime"
+	ActionAddGameTime Action = "AddGameTime"
+)
+
+func (a *Action) UnmarshalJSON(data []byte) error {
+	var s string
+	err := json.Unmarshal(data, &s)
+	if err != nil {
+		return err
+	}
+	switch Action(s) {
+	case ActionStartGame, ActionEndGame, ActionSync, ActionAddMoveTime, ActionAddGameTime:
+		*a = Action(s)
+		return nil
+	default:
+		return fmt.Errorf("invalid Action: %s", s)
+	}
 }
 
-var (
-	ActionStartGame Action = Action{Action: "StartGame"}
-	ActionEndGame   Action = Action{Action: "EndGame"}
-	ActionSync      Action = Action{Action: "Sync"}
-)
+type ActionPayload struct {
+	Action Action `json:"action"`
+}
 
 type AddTimeKind string
 
 const (
-	AddTimeMove = "Move"
-	AddTimeGame = "Game"
+	AddTimeMove AddTimeKind = "Move"
+	AddTimeGame AddTimeKind = "Game"
 )
 
-func ActionAddTime(kind AddTimeKind) Action {
+func ActionAddTime(kind AddTimeKind) ActionPayload {
 	if kind == AddTimeMove {
-		return Action{Action: "AddMoveTime"}
+		return ActionPayload{Action: ActionAddMoveTime}
 	} else {
-		return Action{Action: "AddGameTime"}
+		return ActionPayload{Action: ActionAddGameTime}
 	}
 }
 
-type Move struct {
+type MovePayload struct {
 	Move json.RawMessage `json:"move"`
 }
 
@@ -83,22 +102,22 @@ type EventData struct {
 }
 
 var (
-	EventDataSync      = EventData{Type: EventTypeAction, Payload: ActionSync}
-	EventDataEndGame   = EventData{Type: EventTypeAction, Payload: ActionEndGame}
-	EventDataStartGame = EventData{Type: EventTypeAction, Payload: ActionStartGame}
+	EventDataSync      = EventData{Type: EventTypeAction, Payload: ActionPayload{Action: ActionSync}}
+	EventDataEndGame   = EventData{Type: EventTypeAction, Payload: ActionPayload{Action: ActionEndGame}}
+	EventDataStartGame = EventData{Type: EventTypeAction, Payload: ActionPayload{Action: ActionStartGame}}
 )
 
 func EventDataRequest(proposition Proposition) EventData {
 	return EventData{
 		Type:    EventTypeRequest,
-		Payload: Request{RequestType: proposition},
+		Payload: RequestPayload{RequestType: proposition},
 	}
 }
 
 func EventDataReplyReject(proposition Proposition) EventData {
 	return EventData{
 		Type: EventTypeReply,
-		Payload: Reply{
+		Payload: ReplyPayload{
 			RequestType: proposition,
 			Accept:      false,
 			Data:        nil,
@@ -109,7 +128,7 @@ func EventDataReplyReject(proposition Proposition) EventData {
 func EventDataReplyAccept(proposition Proposition, data json.RawMessage) EventData {
 	return EventData{
 		Type: EventTypeReply,
-		Payload: Reply{
+		Payload: ReplyPayload{
 			RequestType: proposition,
 			Accept:      true,
 			Data:        data,
@@ -127,7 +146,7 @@ func EventDataAddTime(kind AddTimeKind) EventData {
 func EventDataMove(move json.RawMessage) EventData {
 	return EventData{
 		Type:    EventTypeMove,
-		Payload: Move{Move: move},
+		Payload: MovePayload{Move: move},
 	}
 }
 
@@ -155,7 +174,6 @@ func (e EventData) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 	if payloadFields == nil {
-		payloadFields = make(map[string]json.RawMessage)
 		return nil, fmt.Errorf("empty payload")
 	}
 
@@ -191,25 +209,25 @@ func (e *EventData) UnmarshalJSON(data []byte) error {
 
 	switch e.Type {
 	case EventTypeRequest:
-		var p Request
+		var p RequestPayload
 		if err := json.Unmarshal(payloadBytes, &p); err != nil {
 			return err
 		}
 		e.Payload = p
 	case EventTypeReply:
-		var p Reply
+		var p ReplyPayload
 		if err := json.Unmarshal(payloadBytes, &p); err != nil {
 			return err
 		}
 		e.Payload = p
 	case EventTypeAction:
-		var p Action
+		var p ActionPayload
 		if err := json.Unmarshal(payloadBytes, &p); err != nil {
 			return err
 		}
 		e.Payload = p
 	case EventTypeMove:
-		var p Move
+		var p MovePayload
 		if err := json.Unmarshal(payloadBytes, &p); err != nil {
 			return err
 		}
@@ -232,6 +250,16 @@ type GameEvent struct {
 func (e GameEvent) MarshalJSON() ([]byte, error) {
 	dataBytes, err := json.Marshal(e.Data)
 	if err != nil {
+		// TODO FOR REVIEW: this error should not be reachable. We can't define
+		// an e.Data that cannot be converted to JSON. Similarly for other
+		// errors in this function. But it is safer to propagate the errors
+		// instead of ignoring them or making the server crash. How do we deal
+		// with coverage in this case? For comparison, this would be like trying
+		// to cover every exception that can be raised by any function in
+		// JavaScript. We don't do this in the frontend because it is
+		// unfeasible. But in Go, there is no notion of exceptions, all errors
+		// are explicit. I would be for aiming for a high coverage, but not
+		// 100%.
 		return nil, err
 	}
 

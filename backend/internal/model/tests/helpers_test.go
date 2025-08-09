@@ -19,7 +19,7 @@ func ExpectMarshallingToWork[T any](t *testing.T, object T, expectedJSON string)
 	// When mashalling it
 	data, err := json.Marshal(object)
 	if err != nil {
-		t.Fatalf("failed to marshal: %v", err)
+		t.Errorf("failed to marshal: %v", err)
 	}
 
 	// Then it should provide the expected JSON
@@ -34,7 +34,7 @@ func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) 
 	var objectAgain T
 	err := json.Unmarshal([]byte(validJSON), &objectAgain)
 	if err != nil {
-		t.Fatalf("deserialization failed: %v", err)
+		t.Errorf("deserialization failed: %v", err)
 	}
 
 	// Then it should match the expected object

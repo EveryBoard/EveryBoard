@@ -369,7 +369,7 @@ func (h *Handlers) unsubscribe() error {
 		if configRoom.Status.IsUnstarted() {
 			if configRoom.Creator.ID == h.user.ID {
 				// Creator is leaving its unstarted game, remove it
-				err = model.DeleteConfigRoom(*configRoom)
+				err = configRoom.Delete()
 				if err != nil {
 					return err
 				}
@@ -502,7 +502,7 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 	return h.broadcastToLobby(update)
 }
 
-func (h *Handlers) proposeConfig(config *model.ConfigProposal) error {
+func (h *Handlers) proposeConfig(config model.ConfigProposal) error {
 	configRoom, err := h.getSubscribedConfigRoom()
 	if err != nil {
 		return err
@@ -815,7 +815,7 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 			return err
 		}
 		// Create the new config room
-		rematchConfigRoom, err := model.CreateRematchConfigRoom(h.user, *configRoom, *game)
+		rematchConfigRoom, err := configRoom.CreateRematch(h.user, *game)
 		if err != nil {
 			return err
 		}
@@ -944,7 +944,7 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 		if err != nil {
 			return h.error(model.ErrorInvalidData)
 		}
-		return h.proposeConfig(config)
+		return h.proposeConfig(*config)
 	case "ReviewConfig":
 		return h.reviewConfig()
 	case "AcceptConfig":

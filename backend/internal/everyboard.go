@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 
+	"gorm.io/driver/sqlite"
 	"github.com/EveryBoard/EveryBoard/internal/auth"
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
@@ -111,7 +112,7 @@ func cors(origin string, next http.Handler) http.Handler {
 func Run(config Configuration) {
 	log.Println("Starting EveryBoard...")
 	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
-	model.InitDatabase(config.Database)
+	model.InitDatabase(sqlite.Open(config.Database)) // TODO: change to postgres
 	subscriptionManager = NewSubscriptionManager[*websocket.Conn]()
 	connectionManager = newConnectionManager()
 

@@ -3,7 +3,6 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 
 	"github.com/sqids/sqids-go"
 )
@@ -76,9 +75,7 @@ func DecodeID(gameId string) (GameID, error) {
 
 func (id GameID) MarshalJSON() ([]byte, error) {
 	stringId, err := EncodeID(id)
-	log.Printf("string, err: %s, %v", stringId, err)
 	if err != nil {
-		log.Printf("err is not nil!")
 		return nil, err
 	}
 	return json.Marshal(stringId)
@@ -86,14 +83,11 @@ func (id GameID) MarshalJSON() ([]byte, error) {
 
 func (id *GameID) UnmarshalJSON(data []byte) error {
 	var s string
-	log.Printf("unmarshalling %v", data)
 	err := json.Unmarshal(data, &s)
-	log.Printf("unmarshalled json is %s and error is %s", s, err)
 	if err != nil {
 		return err
 	}
 	*id, err = DecodeID(s)
-	log.Printf("id is %d and error is %s", *id, err)
 	if err != nil {
 		return err
 	}
