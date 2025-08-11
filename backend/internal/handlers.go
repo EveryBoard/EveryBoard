@@ -54,7 +54,7 @@ func (h *Handlers) send(message model.OutgoingMessage) error {
 }
 
 func (h *Handlers) broadcastToUser(user model.MinimalUser, message model.OutgoingMessage) error {
-	for connection := range connectionManager.allUserConnections(user) {
+	for connection := range connectionManager.AllUserConnections(user) {
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err

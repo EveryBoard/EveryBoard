@@ -44,8 +44,8 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer connection.Close()
 	log.Println("Upgraded connection")
 
-	connectionManager.addConnection(minimalUser, connection)
-	defer connectionManager.removeConnection(minimalUser, connection)
+	connectionManager.AddConnection(minimalUser, connection)
+	defer connectionManager.RemoveConnection(minimalUser, connection)
 
 	handlers := Handlers{connection: connection, user: minimalUser}
 	currentGame, err := model.GetCurrentGame(minimalUser)
@@ -90,7 +90,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 }
 
 var subscriptionManager SubscriptionManager[*websocket.Conn]
-var connectionManager ConnectionManager
+var connectionManager ConnectionManager[*websocket.Conn]
 
 func cors(origin string, next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -114,7 +114,7 @@ func Run(config Configuration) {
 	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
 	model.InitDatabase(sqlite.Open(config.Database)) // TODO: change to postgres
 	subscriptionManager = NewSubscriptionManager[*websocket.Conn]()
-	connectionManager = newConnectionManager()
+	connectionManager = NewConnectionManager[*websocket.Conn]()
 
 	config.upgrader = websocket.Upgrader{
 		CheckOrigin:  func(r *http.Request) bool {

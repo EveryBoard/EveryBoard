@@ -5,56 +5,55 @@ import (
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
-	"github.com/gorilla/websocket"
 )
 
-type ConnectionManager struct {
-	clientToUser map[*websocket.Conn]model.MinimalUser
-	userToClients map[model.MinimalUser]utils.Set[*websocket.Conn]
+type ConnectionManager[Connection comparable] struct {
+	clientToUser  map[Connection]model.MinimalUser
+	userToClients map[model.MinimalUser]utils.Set[Connection]
 	lock          sync.RWMutex
 }
 
-func newConnectionManager() ConnectionManager {
-	return ConnectionManager{
-		clientToUser: make(map[*websocket.Conn]model.MinimalUser),
-		userToClients: make(map[model.MinimalUser]utils.Set[*websocket.Conn]),
+func NewConnectionManager[Connection comparable]() ConnectionManager[Connection] {
+	return ConnectionManager[Connection]{
+		clientToUser:  make(map[Connection]model.MinimalUser),
+		userToClients: make(map[model.MinimalUser]utils.Set[Connection]),
 	}
 }
 
-func (cm *ConnectionManager) addConnection(user model.MinimalUser, client *websocket.Conn) {
-	cm.lock.Lock()
-	defer cm.lock.Unlock()
+func (connectionManager *ConnectionManager[Connection]) AddConnection(user model.MinimalUser, client Connection) {
+	connectionManager.lock.Lock()
+	defer connectionManager.lock.Unlock()
 
-	_, exists := cm.userToClients[user]
+	_, exists := connectionManager.userToClients[user]
 	if !exists {
-		cm.userToClients[user] = utils.NewSet[*websocket.Conn]()
+		connectionManager.userToClients[user] = utils.NewSet[Connection]()
 	}
 
-	set := cm.userToClients[user]
+	set := connectionManager.userToClients[user]
 	set.Add(client)
 
-	cm.clientToUser[client] = user
+	connectionManager.clientToUser[client] = user
 }
 
-func (cm *ConnectionManager) removeConnection(user model.MinimalUser, client *websocket.Conn) {
-	cm.lock.Lock()
-	defer cm.lock.Unlock()
+func (connectionManager *ConnectionManager[Connection]) RemoveConnection(user model.MinimalUser, client Connection) {
+	connectionManager.lock.Lock()
+	defer connectionManager.lock.Unlock()
 
-	clients, exists := cm.userToClients[user]
+	clients, exists := connectionManager.userToClients[user]
 	if exists {
 		delete(clients, client)
 		if len(clients) == 0 {
-			delete(cm.userToClients, user)
+			delete(connectionManager.userToClients, user)
 		}
 	}
 
-	delete(cm.clientToUser, client)
+	delete(connectionManager.clientToUser, client)
 }
 
-func (cm *ConnectionManager) allUserConnections(user model.MinimalUser) utils.Set[*websocket.Conn] {
-	cm.lock.RLock()
-	defer cm.lock.RUnlock()
+func (connectionManager *ConnectionManager[Connection]) AllUserConnections(user model.MinimalUser) utils.Set[Connection] {
+	connectionManager.lock.RLock()
+	defer connectionManager.lock.RUnlock()
 
-	clients := cm.userToClients[user]
+	clients := connectionManager.userToClients[user]
 	return clients
 }
