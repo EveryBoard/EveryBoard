@@ -1,26 +1,85 @@
 package internal
 
 import (
+	"fmt"
 	"io"
 	"log"
 	"net/http"
+	"os"
 
-	"gorm.io/driver/sqlite"
 	"github.com/EveryBoard/EveryBoard/internal/auth"
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
 	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
+	"gorm.io/driver/sqlite"
+	"gorm.io/driver/postgres"
 )
 
 type Configuration struct {
-	GameListFile string
-	UseEmulator bool
-	ServiceAccountFile string
-	ProjectID string
-	Database string
+	Firebase auth.FirebaseLike
+	IDEncoder model.IDEncoder
+	Database gorm.Dialector
+
 	ListenAddr string
 	Origin string
 	upgrader websocket.Upgrader
+}
+
+// ReadConfiguration reads the configuration of the server through environment
+// variables. Does sanity checks and stops if any configuration is invalid. Some
+// more checks will be done when the components are initialized.
+func ReadConfiguration() (*Configuration, error) {
+	firebase := &auth.Firebase{
+		UseEmulator: os.Getenv("USE_EMULATOR") != "no",
+		ProjectID: os.Getenv("PROJECT_ID"),
+		ServiceAccountFile: os.Getenv("SERVICE_ACCOUNT"),
+	}
+	var database gorm.Dialector
+	if os.Getenv("DATABASE_TYPE") == "postgres" {
+		databaseDsn := os.Getenv("DATABASE_DSN")
+		if databaseDsn == "" {
+			return nil, fmt.Errorf("For postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
+		}
+		database = postgres.Open(databaseDsn)
+	} else {
+		// defaults to sqlite with everyboard.db
+		databaseDsn := os.Getenv("DATABASE_DSN")
+		if databaseDsn == "" {
+			databaseDsn = "everyboard.db"
+		}
+		database = sqlite.Open(databaseDsn)
+	}
+
+
+	config := &Configuration{
+		Firebase: firebase,
+		IDEncoder: &model.SqidsEncoder{},
+		Origin: os.Getenv("ALLOW_ORIGIN"),
+		ListenAddr: os.Getenv("LISTEN_ADDR"),
+		Database: database,
+	}
+	err := config.Validate()
+	if err != nil {
+		return nil, fmt.Errorf("Invalid configuration: %v", err)
+	}
+
+	return config, nil
+}
+
+func (config Configuration) Validate() error {
+	if config.ListenAddr == "" {
+		// No listen address provided, default to :8081
+		config.ListenAddr = ":8081"
+	}
+
+	if config.Origin == "" {
+		fmt.Errorf("Origin is not set. Use ALLOW_ORIGIN environment variable")
+	}
+
+	// The other elements of the config will be checked by the respective packages that need them
+
+	return nil // All good
 }
 
 func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -109,25 +168,21 @@ func cors(origin string, next http.Handler) http.Handler {
     })
 }
 
-func Run(config Configuration) {
+func Run(config Configuration) error {
 	log.Println("Starting EveryBoard...")
-	auth.SetFirebaseClient(&auth.Firebase{
-		UseEmulator: config.UseEmulator,
-		ProjectID: config.ProjectID,
-		ServiceAccountFile: config.ServiceAccountFile,
-	})
+	auth.SetFirebaseClient(config.Firebase)
 	err := auth.InitFirebase()
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		fmt.Errorf("error initializing firebase: %v", err)
 	}
-	model.SetIDEncoder(&model.SqidsEncoder{})
+	model.SetIDEncoder(config.IDEncoder)
 	err = model.InitEncoder()
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		fmt.Errorf("error initializing encoder: %v", err)
 	}
-	err = model.InitDatabase(sqlite.Open(config.Database)) // TODO: change to postgres
+	err = model.InitDatabase(config.Database)
 	if err != nil {
-		log.Fatalf("error: %v", err)
+		fmt.Errorf("error initializing database: %v", err)
 	}
 	subscriptionManager = NewSubscriptionManager[*websocket.Conn]()
 	connectionManager = NewConnectionManager[*websocket.Conn]()
@@ -140,5 +195,5 @@ func Run(config Configuration) {
 	}
 	http.Handle("/ws", cors(config.Origin, config))
 	log.Println("All good, ready to play games?")
-	log.Fatal(http.ListenAndServe(config.ListenAddr, nil))
+	return http.ListenAndServe(config.ListenAddr, nil)
 }

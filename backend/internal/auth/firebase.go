@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
+	"os"
 	"strings"
 
 	"cloud.google.com/go/firestore"
@@ -50,6 +50,30 @@ type Firebase struct {
 }
 
 func (f *Firebase) Initialize() error {
+	if f.UseEmulator {
+		if f.ProjectID == "" {
+			return fmt.Errorf("Project ID is not set but emulator needs it. Use PROJECT_ID environment variable")
+		}
+
+		// Need to prepare the environment variable otherwise the firebase lib will not like it
+		err := os.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
+		if err != nil {
+			return fmt.Errorf("Cannot set environment variable?! %v", err)
+		}
+		err = os.Setenv("FIREBASE_AUTH_EMULATOR_HOST", "localhost:9099")
+		if err != nil {
+			return fmt.Errorf("Cannot set environment variable?! %v", err)
+		}
+	} else {
+		if f.ServiceAccountFile == "" {
+			return fmt.Errorf("Service account file is not set. Use SERVICE_ACCOUNT environment variable")
+		}
+		_, err := os.Stat(f.ServiceAccountFile)
+		if err != nil {
+			return fmt.Errorf("Cannot access service account file %s: %v", f.ServiceAccountFile, err)
+		}
+	}
+
 	var app *firebase.App
 	var err error
 	if f.UseEmulator {
