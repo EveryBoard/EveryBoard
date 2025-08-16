@@ -52,7 +52,7 @@ func SetIDEncoder(encoder IDEncoder) {
 	idEncoder = encoder
 }
 // Initializes the encoder for ids
-func InitializeEncoder() error {
+func InitEncoder() error {
 	return idEncoder.Initialize()
 }
 

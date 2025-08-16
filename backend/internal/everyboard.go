@@ -25,7 +25,7 @@ type Configuration struct {
 
 func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	log.Println("Got a request")
-	uid, user, err := auth.VerifyTokenAndGetUserFromHeader(r)
+	uid, user, err := auth.VerifyTokenAndGetUser(r)
 	if err != nil {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
@@ -111,8 +111,24 @@ func cors(origin string, next http.Handler) http.Handler {
 
 func Run(config Configuration) {
 	log.Println("Starting EveryBoard...")
-	auth.InitFirebase(config.UseEmulator, config.ServiceAccountFile, config.ProjectID)
-	model.InitDatabase(sqlite.Open(config.Database)) // TODO: change to postgres
+	auth.SetFirebaseClient(&auth.Firebase{
+		UseEmulator: config.UseEmulator,
+		ProjectID: config.ProjectID,
+		ServiceAccountFile: config.ServiceAccountFile,
+	})
+	err := auth.InitFirebase()
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+	model.SetIDEncoder(&model.SqidsEncoder{})
+	err = model.InitEncoder()
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
+	err = model.InitDatabase(sqlite.Open(config.Database)) // TODO: change to postgres
+	if err != nil {
+		log.Fatalf("error: %v", err)
+	}
 	subscriptionManager = NewSubscriptionManager[*websocket.Conn]()
 	connectionManager = NewConnectionManager[*websocket.Conn]()
 

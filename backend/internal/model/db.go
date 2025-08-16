@@ -21,19 +21,19 @@ func wrapError(ctx string, err error) error {
 
 // Initialize the database given a dialector, which will either be in-memory
 // SQLite for testing (sqlite.Open(":memory:")) or another DB for production (e.g., postgres.Open("some-dsn").)
-func InitDatabase(dialector gorm.Dialector) {
+func InitDatabase(dialector gorm.Dialector) error {
 	var err error
 
 	db, err = gorm.Open(dialector, &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent), // we will log errors ourselves
 	})
 	if err != nil {
-		log.Fatalf("Failed to connect to DB: %v", err)
+		return fmt.Errorf("Failed to connect to DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
 
 	// Create first config room, which is actually the lobby
@@ -53,39 +53,40 @@ func InitDatabase(dialector gorm.Dialector) {
 		}
 		result := db.Create(&lobby)
 		if result.Error != nil {
-			log.Fatalf("Cannot initialize DB: %v", err)
+			return fmt.Errorf("Cannot initialize DB: %v", err)
 		}
 	}
 
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&Elo{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&Candidate{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&Game{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&GameEvent{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
 
 	err = db.AutoMigrate(&CurrentGame{})
 	if err != nil {
-		log.Fatalf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v", err)
 	}
+	return nil
 }
 
 func GetConfigRoom(gameId GameID) (*ConfigRoom, error) {

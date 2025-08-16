@@ -10,7 +10,7 @@ import (
 
 func InitializeSqidsEncoder(t *testing.T) {
 	model.SetIDEncoder(&model.SqidsEncoder{})
-	err := model.InitializeEncoder()
+	err := model.InitEncoder()
 	if err != nil {
 		t.Fatalf("cannot initialize encoder: %v", err)
 	}
@@ -120,15 +120,16 @@ func TestEncoderInitiliazationFailIsPropagated(t *testing.T) {
 		errorOnEncode: false,
 		errorOnDecode: false,
 	})
+	// Restore the sqids encoder when done
+	defer InitializeSqidsEncoder(t)
+
 	// When initializing it
-	err := model.InitializeEncoder()
+	err := model.InitEncoder()
 	// Then it should fail
 	if err == nil {
 		t.Fatalf("failure in encoder initialization should propagate")
 	}
 
-	// Restore the sqids encoder
-	InitializeSqidsEncoder(t)
 }
 
 func TestEncoderEncodeFailureIsPropagated(t *testing.T) {
@@ -138,7 +139,10 @@ func TestEncoderEncodeFailureIsPropagated(t *testing.T) {
 		errorOnEncode: true,
 		errorOnDecode: false,
 	})
-	err := model.InitializeEncoder()
+	// Restore the sqids encoder when done
+	defer InitializeSqidsEncoder(t)
+
+	err := model.InitEncoder()
 	if err != nil {
 		t.Fatalf("encoder should be properly initialized")
 	}
@@ -149,9 +153,6 @@ func TestEncoderEncodeFailureIsPropagated(t *testing.T) {
 	if err == nil {
 		t.Fatalf("broken encoder should propagate the failure")
 	}
-
-	// Restore the sqids encoder
-	InitializeSqidsEncoder(t)
 }
 
 func TestEncoderDecodeFailureIsPropagated(t *testing.T) {
@@ -161,7 +162,10 @@ func TestEncoderDecodeFailureIsPropagated(t *testing.T) {
 		errorOnEncode: false,
 		errorOnDecode: true,
 	})
-	err := model.InitializeEncoder()
+	// Restore the sqids encoder when done
+	defer InitializeSqidsEncoder(t)
+
+	err := model.InitEncoder()
 	if err != nil {
 		t.Fatalf("encoder should be properly initialized")
 	}
@@ -174,8 +178,6 @@ func TestEncoderDecodeFailureIsPropagated(t *testing.T) {
 		t.Fatalf("broken decoder should propagate the failure")
 	}
 
-	// Restore the sqids encoder
-	InitializeSqidsEncoder(t)
 }
 
 func TestEncoderMarshalingFailureToBePropagated(t *testing.T) {
@@ -185,7 +187,10 @@ func TestEncoderMarshalingFailureToBePropagated(t *testing.T) {
 		errorOnEncode: true,
 		errorOnDecode: false,
 	})
-	err := model.InitializeEncoder()
+	// Restore the sqids encoder when done
+	defer InitializeSqidsEncoder(t)
+
+	err := model.InitEncoder()
 	if err != nil {
 		t.Fatalf("encoder should be properly initialized")
 	}
@@ -194,6 +199,4 @@ func TestEncoderMarshalingFailureToBePropagated(t *testing.T) {
 	const gameId model.GameID = 42
 	ExpectMarshallingToFail(t, gameId)
 
-	// Restore the sqids encoder
-	InitializeSqidsEncoder(t)
 }

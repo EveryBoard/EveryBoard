@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -14,14 +13,12 @@ type User struct {
 	// User may have other fields, but we don't care about them
 }
 
-func fetchUserDocument(uid string) (*User, error) {
-	docRef := firestoreClient.Collection("users").Doc(uid)
-	docSnapshot, err := docRef.Get(context.Background())
+func fetchUserDocument(context context.Context, uid string) (*User, error) {
+	doc, err := firebaseClient.Fetch(context, "users", uid)
 	if err != nil {
-		return nil, fmt.Errorf("failed to fetch user document: %v", err)
+		return nil, err
 	}
-
-	data, err := json.Marshal(docSnapshot.Data())
+	data, err := json.Marshal(doc)
 	if err != nil {
 		return nil, fmt.Errorf("cannot encode user: %v", err)
 	}
@@ -33,7 +30,7 @@ func fetchUserDocument(uid string) (*User, error) {
 	return &user, nil
 }
 
-func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
+func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {
 	authorizationHeader := r.Header.Get("Sec-WebSocket-Protocol")
 	if authorizationHeader == "" {
 		return "", nil, fmt.Errorf("no authorization header")
@@ -45,41 +42,11 @@ func VerifyTokenAndGetUserFromHeader(r *http.Request) (string, *User, error) {
 	}
 	token := strings.TrimSpace(parts[1])
 
-	var uid string
-	if useEmulator {
-		tokenParts := strings.Split(token, ".")
-		if len(tokenParts) != 3 {
-			return "", nil, fmt.Errorf("invalid token format")
-		}
-
-		payloadBytes, err := base64.RawURLEncoding.DecodeString(tokenParts[1])
-		if err != nil {
-			return "", nil, err
-		}
-
-		var claims map[string]interface{}
-		if err := json.Unmarshal(payloadBytes, &claims); err != nil {
-			return "", nil, err
-		}
-
-		sub, ok := claims["sub"].(string)
-		if !ok {
-			return "", nil, fmt.Errorf("missing 'sub' part of token")
-		}
-
-		uid = sub
-	} else {
-		verifiedToken, err := authClient.VerifyIDToken(r.Context(), token)
-		if err != nil {
-			return "", nil, err
-		}
-		user_id, ok := verifiedToken.Claims["user_id"].(string)
-		if !ok {
-			return "", nil, fmt.Errorf("missing 'user_id' part of token")
-		}
-		uid = user_id
+	uid, err := firebaseClient.VerifyToken(r.Context(), token)
+	if err != nil {
+		return "", nil, err
 	}
 
-	user, err := fetchUserDocument(uid)
+	user, err := fetchUserDocument(r.Context(), uid)
 	return uid, user, err
 }
