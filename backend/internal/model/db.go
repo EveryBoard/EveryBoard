@@ -57,6 +57,7 @@ func InitDatabase(dialector gorm.Dialector) error {
 		}
 	}
 
+	log.Println("creating message table")
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
 		return fmt.Errorf("Cannot initialize DB: %v", err)

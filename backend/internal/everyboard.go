@@ -51,7 +51,6 @@ func ReadConfiguration() (*Configuration, error) {
 		database = sqlite.Open(databaseDsn)
 	}
 
-
 	config := &Configuration{
 		Firebase: firebase,
 		IDEncoder: &model.SqidsEncoder{},
@@ -59,27 +58,17 @@ func ReadConfiguration() (*Configuration, error) {
 		ListenAddr: os.Getenv("LISTEN_ADDR"),
 		Database: database,
 	}
-	err := config.Validate()
-	if err != nil {
-		return nil, fmt.Errorf("Invalid configuration: %v", err)
-	}
-
-	return config, nil
-}
-
-func (config Configuration) Validate() error {
 	if config.ListenAddr == "" {
 		// No listen address provided, default to :8081
 		config.ListenAddr = ":8081"
 	}
 
 	if config.Origin == "" {
-		fmt.Errorf("Origin is not set. Use ALLOW_ORIGIN environment variable")
+		return nil, fmt.Errorf("Origin is not set. Use ALLOW_ORIGIN environment variable")
 	}
 
 	// The other elements of the config will be checked by the respective packages that need them
-
-	return nil // All good
+	return config, nil
 }
 
 func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
@@ -103,8 +92,8 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	defer connection.Close()
 	log.Println("Upgraded connection")
 
-	connectionManager.AddConnection(minimalUser, connection)
-	defer connectionManager.RemoveConnection(minimalUser, connection)
+	Connections.AddConnection(minimalUser, connection)
+	defer Connections.RemoveConnection(minimalUser, connection)
 
 	handlers := Handlers{connection: connection, user: minimalUser}
 	currentGame, err := model.GetCurrentGame(minimalUser)
@@ -118,8 +107,11 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	})
 
 	for {
+		log.Println("[server] reading message")
 		_, msg, err := connection.ReadMessage()
+		log.Printf("[server] message: %s, error: %v", msg, err)
 		if err != nil {
+			log.Printf("[server] error: %v", err)
 			if err == io.EOF || websocket.IsUnexpectedCloseError(err) {
 				// WebSocket closed, stop this handler after disconnecting client
 				log.Printf("[%v] Disconnect", user.Username)
@@ -134,7 +126,9 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("<<< [%v] %v", user.Username, string(msg))
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
+		log.Printf("messageType: [%s], messageData: [%v]", messageType, messageData)
 		if err != nil {
+			log.Printf("error: %v", err)
 			err = handlers.error(model.ErrorUnknownMessage)
 			if err != nil {
 				utils.Errorf("Error when sending error to client: %v", err)
@@ -148,8 +142,9 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-var subscriptionManager SubscriptionManager[*websocket.Conn]
-var connectionManager ConnectionManager[*websocket.Conn]
+// Public for testing purposes
+var Subscriptions SubscriptionManager[*websocket.Conn]
+var Connections ConnectionManager[*websocket.Conn]
 
 func cors(origin string, next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -168,24 +163,24 @@ func cors(origin string, next http.Handler) http.Handler {
     })
 }
 
-func Run(config Configuration) error {
-	log.Println("Starting EveryBoard...")
+func Prepare(config Configuration) (*http.Server, error) {
 	auth.SetFirebaseClient(config.Firebase)
 	err := auth.InitFirebase()
 	if err != nil {
-		fmt.Errorf("error initializing firebase: %v", err)
+		return nil, fmt.Errorf("error initializing firebase: %v", err)
 	}
 	model.SetIDEncoder(config.IDEncoder)
 	err = model.InitEncoder()
 	if err != nil {
-		fmt.Errorf("error initializing encoder: %v", err)
+		return nil, fmt.Errorf("error initializing encoder: %v", err)
 	}
 	err = model.InitDatabase(config.Database)
 	if err != nil {
-		fmt.Errorf("error initializing database: %v", err)
+		return nil, fmt.Errorf("error initializing database: %v", err)
 	}
-	subscriptionManager = NewSubscriptionManager[*websocket.Conn]()
-	connectionManager = NewConnectionManager[*websocket.Conn]()
+	log.Println("DB successfully updated")
+	Subscriptions = NewSubscriptionManager[*websocket.Conn]()
+	Connections = NewConnectionManager[*websocket.Conn]()
 
 	config.upgrader = websocket.Upgrader{
 		CheckOrigin:  func(r *http.Request) bool {
@@ -193,7 +188,10 @@ func Run(config Configuration) error {
 		},
 		Subprotocols: []string{"access_token"},
 	}
-	http.Handle("/ws", cors(config.Origin, config))
-	log.Println("All good, ready to play games?")
-	return http.ListenAndServe(config.ListenAddr, nil)
+	mux := http.NewServeMux()
+	mux.Handle("/ws", cors(config.Origin, config))
+	return &http.Server{
+		Addr: config.ListenAddr,
+		Handler: mux,
+	}, nil
 }

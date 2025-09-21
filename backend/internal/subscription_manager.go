@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"fmt"
 	"sync"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
@@ -105,6 +106,10 @@ func (manager *SubscriptionManager[Connection]) SubscriptionsTo(kind Subscriptio
 
 // Checks if a user is already subscribed to a game.
 func (manager *SubscriptionManager[Connection]) IsSubscribed(user string) bool {
+	fmt.Println("subscriptions: ", user)
+	for k := range(manager.userToClient) {
+		fmt.Println(k)
+	}
 	manager.lock.RLock()
 	defer manager.lock.RUnlock()
 	_, exists := manager.userToClient[user]

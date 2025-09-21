@@ -12,23 +12,23 @@ import (
 	model "github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-func NowImpl() int64 {
+func nowImpl() int64 {
 	return time.Now().Unix()
 }
 
-var Now = NowImpl
+var Now = nowImpl
 
-func NowFloatImpl() float64 {
+func nowFloatImpl() float64 {
 	return float64(time.Now().UnixNano()) / 1e9
 }
 
-var NowFloat = NowFloatImpl
+var NowFloat = nowFloatImpl
 
-func RandBoolImpl() bool {
+func randBoolImpl() bool {
 	return rand.Intn(2) == 1
 }
 
-var RandBool = RandBoolImpl
+var RandBool = randBoolImpl
 
 type Handlers struct {
 	connection          *websocket.Conn
@@ -54,7 +54,7 @@ func (h *Handlers) send(message model.OutgoingMessage) error {
 }
 
 func (h *Handlers) broadcastToUser(user model.MinimalUser, message model.OutgoingMessage) error {
-	for connection := range connectionManager.AllUserConnections(user) {
+	for connection := range Connections.AllUserConnections(user) {
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err
@@ -69,7 +69,7 @@ func (h *Handlers) error(reason model.Error) error {
 
 // Broadcast sends a message to all clients subscribed to kind, gameId
 func (h *Handlers) broadcast(kind SubscriptionKind, gameId model.GameID, message model.OutgoingMessage) error {
-	for connection := range subscriptionManager.SubscriptionsTo(kind, gameId) {
+	for connection := range Subscriptions.SubscriptionsTo(kind, gameId) {
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err
@@ -91,6 +91,7 @@ func (h *Handlers) broadcastToGame(gameId model.GameID, message model.OutgoingMe
 }
 
 func (h *Handlers) sendChatMessages(gameId model.GameID) error {
+	log.Println("sending chat messages")
 	return model.ApplyToMessagesOfGame(gameId, func(message *model.Message) error {
 		return h.send(model.ChatMessage{Message: *message})
 	})
@@ -113,31 +114,37 @@ func (h *Handlers) sendActiveConfigRooms() error {
 
 func (h *Handlers) subscribeToLobby() error {
 	uid := h.user.ID
-	if subscriptionManager.IsSubscribed(uid) {
+	if Subscriptions.IsSubscribed(uid) {
+		fmt.Println("already subscribed")
 		return h.error(model.ErrorAlreadySubscribed)
 	}
+	fmt.Println("not subscribed")
 
-	subscriptionManager.Subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
+	Subscriptions.Subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
+	fmt.Println("now subscribed", uid)
 	err := h.sendChatMessages(model.GameIDLobby)
 	if err != nil {
 		return err
 	}
 
+	fmt.Println("finished")
 	return h.sendActiveConfigRooms()
 }
 
 func (h *Handlers) chatSend(content string) error {
-	kind, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
+	kind, gameId, subscribed := Subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
-		return h.error(model.ErrorUnknownMessage)
+		return h.error(model.ErrorNotSubscribed)
 	}
 
+	log.Printf("now is %d", Now())
 	message := model.Message{
 		Sender:    h.user,
 		Timestamp: Now(),
 		Content:   content,
 	}
 	err := model.AddChatMessage(gameId, &message)
+	log.Printf("message is posted at %d", message.Timestamp)
 	if err != nil {
 		return err
 	}
@@ -172,7 +179,7 @@ func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
 }
 
 func (h *Handlers) createGame(gameName string) error {
-	if subscriptionManager.IsSubscribed(h.user.ID) {
+	if Subscriptions.IsSubscribed(h.user.ID) {
 		return h.error(model.ErrorAlreadySubscribed)
 	}
 
@@ -214,7 +221,7 @@ func (h *Handlers) createGame(gameName string) error {
 
 func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 	uid := h.user.ID
-	if subscriptionManager.IsSubscribed(uid) {
+	if Subscriptions.IsSubscribed(uid) {
 		return h.error(model.ErrorAlreadySubscribed)
 	}
 
@@ -226,7 +233,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 		return h.error(model.ErrorGameDoesNotExist)
 	}
 
-	subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
+	Subscriptions.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToConfigRoom)
 	switch configRoom.Status {
 	case model.StatusCreated, model.StatusConfigProposed:
 		// This is a config room in progress
@@ -281,7 +288,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 }
 
 func (h *Handlers) subscribeToGame(gameId model.GameID) error {
-	if subscriptionManager.IsSubscribed(h.user.ID) {
+	if Subscriptions.IsSubscribed(h.user.ID) {
 		return h.error(model.ErrorAlreadySubscribed)
 	}
 
@@ -293,7 +300,7 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 		return h.error(model.ErrorGameDoesNotExist)
 	}
 
-	subscriptionManager.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
+	Subscriptions.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
 
 	// Let the observers know their current game. The players already know it from game creation
 	if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
@@ -331,12 +338,12 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 }
 
 func (h *Handlers) unsubscribe() error {
-	subscriptionKind, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
+	subscriptionKind, gameId, subscribed := Subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		// They're not subscribed, there's nothing to do
 		return nil
 	}
-	subscriptionManager.Unsubscribe(h.connection)
+	Subscriptions.Unsubscribe(h.connection)
 
 	switch subscriptionKind {
 	case SubscriptionToLobby:
@@ -443,7 +450,7 @@ func (h *Handlers) unsubscribe() error {
 }
 
 func (h *Handlers) getSubscribedConfigRoom() (*model.ConfigRoom, error) {
-	_, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
+	_, gameId, subscribed := Subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		return nil, h.error(model.ErrorNotSubscribed)
 	}
@@ -761,7 +768,7 @@ func (h *Handlers) gameEnd(winner model.PlayerOrNone) error {
 }
 
 func (h *Handlers) addEvent(eventData model.EventData) error {
-	_, gameId, subscribed := subscriptionManager.SubscriptionOf(h.connection)
+	_, gameId, subscribed := Subscriptions.SubscriptionOf(h.connection)
 	if !subscribed {
 		return h.error(model.ErrorNotSubscribed)
 	}
@@ -996,6 +1003,7 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 		return h.move(*move)
 
 	default:
+		log.Printf("unknown message type: %s", messageType)
 		return h.error(model.ErrorUnknownMessage)
 	}
 }

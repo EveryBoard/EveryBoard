@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -14,6 +15,7 @@ type User struct {
 }
 
 func fetchUserDocument(context context.Context, uid string) (*User, error) {
+	log.Println("OK SO FAR")
 	doc, err := firebaseClient.Fetch(context, "users", uid)
 	if err != nil {
 		return nil, err
@@ -42,8 +44,10 @@ func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {
 	}
 	token := strings.TrimSpace(parts[1])
 
+	log.Println("OK SO FAR")
 	uid, err := firebaseClient.VerifyToken(r.Context(), token)
 	if err != nil {
+	log.Println(err)
 		return "", nil, err
 	}
 

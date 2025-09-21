@@ -12,7 +12,10 @@ import (
 
 func TestInitializeDB(t *testing.T) {
 	// When initializing the DB
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 
 	// We should have a config room for the lobby
 	lobby, err := model.GetConfigRoom(model.GameIDLobby)
@@ -26,7 +29,10 @@ func TestInitializeDB(t *testing.T) {
 
 func TestConfigRoomFlow(t *testing.T) {
 	// Given a DB
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 
 	// When we perform the usual config room flow
 	// Then there should be no errors
@@ -160,7 +166,10 @@ func TestConfigRoomFlow(t *testing.T) {
 
 func TestRematchForCreator(t *testing.T) {
 	// Given a db with a config room and a game
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
@@ -197,7 +206,11 @@ func TestRematchForCreator(t *testing.T) {
 
 func TestRematchForOpponent(t *testing.T) {
 	// Given a db with a config room and a game
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
+
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
@@ -248,7 +261,10 @@ func TestIterateOverConfigrooms(t *testing.T) {
 	}
 	gameName := "Go"
 	// Given an empty database
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 
 	// When we iterate over the config rooms
 	// Then there should be none
@@ -256,7 +272,7 @@ func TestIterateOverConfigrooms(t *testing.T) {
 
 	// And when we add one and iterate again
 	creator1 := model.MinimalUser{ID: "foo", Name: "foo"}
-	_, err := model.CreateConfigRoom(creator1, gameName)
+	_, err = model.CreateConfigRoom(creator1, gameName)
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
@@ -275,7 +291,10 @@ func TestIterateOverConfigrooms(t *testing.T) {
 
 func TestCandidatesFlow(t *testing.T) {
 	// Given a database with a config room
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	configRoom, err := model.CreateConfigRoom(creator, gameName)
@@ -321,7 +340,11 @@ func TestCandidatesFlow(t *testing.T) {
 
 func TestGameFlow(t *testing.T) {
 	// Given a db with a game
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
+
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
@@ -397,7 +420,10 @@ func TestGameFlow(t *testing.T) {
 
 func TestGameCreationWithOpponentStarting(t *testing.T) {
 	// Given a db with a config room where opponent will start
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
@@ -435,7 +461,10 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 
 func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	// Given a db with a config room where a random player (set to false) will start
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
@@ -473,7 +502,10 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 
 func TestGameCreationWithoutOpponentFails(t *testing.T) {
 	// Given a db with a config room without opponent
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	configRoom, err := model.CreateConfigRoom(creator, gameName)
@@ -502,7 +534,10 @@ func TestGameCreationWithoutOpponentFails(t *testing.T) {
 
 func TestUnexistingGame(t *testing.T) {
 	// Given a db
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	// When retrieving an unexisting game
 	game, err := model.GetGame(42)
 	// Then should return nil but no error
@@ -516,7 +551,10 @@ func TestUnexistingGame(t *testing.T) {
 
 func TestGetEloEmptyDB(t *testing.T) {
 	// Given a empty db
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	// When retrieving an Elo which does not exists
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
@@ -532,7 +570,10 @@ func TestGetEloEmptyDB(t *testing.T) {
 
 func TestUpdateElos(t *testing.T) {
 	// Given a db with some Elo
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	winner := model.MinimalUser{ID: "foo", Name: "foo"}
 	loser := model.MinimalUser{ID: "bar", Name: "bar"}
 	gameName := "Go"
@@ -579,7 +620,10 @@ func TestUpdateElos(t *testing.T) {
 
 func TestGetCurrentGameWhenNone(t *testing.T) {
 	// Given an empty db
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	// When getting the current game of a user who doesn't have one
 	currentGame, err := model.GetCurrentGame(user)
@@ -594,7 +638,10 @@ func TestGetCurrentGameWhenNone(t *testing.T) {
 
 func TestSetCurrentGame(t *testing.T) {
 	// Given an empty db
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	// When setting the current game of the user
 	gameName := "Go"
@@ -605,7 +652,7 @@ func TestSetCurrentGame(t *testing.T) {
 		Opponent: nil,
 		Role: role,
 	}
-	err := model.SetCurrentGame(user, *currentGame)
+	err = model.SetCurrentGame(user, *currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -625,7 +672,10 @@ func TestSetCurrentGame(t *testing.T) {
 
 func TestUpdateCurrentGame(t *testing.T) {
 	// Given a db with a current game
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 	role := model.UserRoleCreator
@@ -635,7 +685,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 		Opponent: nil,
 		Role: role,
 	}
-	err := model.SetCurrentGame(user, *currentGame)
+	err = model.SetCurrentGame(user, *currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -664,7 +714,10 @@ func TestUpdateCurrentGame(t *testing.T) {
 
 func TestRemoveCurrentGame(t *testing.T) {
 	// Given a db with a current game
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 	role := model.UserRoleCreator
@@ -674,7 +727,7 @@ func TestRemoveCurrentGame(t *testing.T) {
 		Opponent: nil,
 		Role: role,
 	}
-	err := model.SetCurrentGame(user, *currentGame)
+	err = model.SetCurrentGame(user, *currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -697,7 +750,10 @@ func TestRemoveCurrentGame(t *testing.T) {
 
 func TestApplyToObservers(t *testing.T) {
 	// Given a db with two users observing the same game
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	user1 := model.MinimalUser{ID: "foo", Name: "foo"}
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
@@ -706,7 +762,7 @@ func TestApplyToObservers(t *testing.T) {
 		Opponent: nil,
 		Role: model.UserRoleObserver,
 	}
-	err := model.SetCurrentGame(user1, *currentGame)
+	err = model.SetCurrentGame(user1, *currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -735,7 +791,10 @@ func TestApplyToObservers(t *testing.T) {
 
 func TestChatMessageFlow(t *testing.T) {
 	// Given a db
-	model.InitDatabase(sqlite.Open(":memory:"))
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	message1 := model.Message{
 		Sender: user,
@@ -748,7 +807,7 @@ func TestChatMessageFlow(t *testing.T) {
 		Content: "world",
 	}
 	// When adding messages
-	err := model.AddChatMessage(42, &message1)
+	err = model.AddChatMessage(42, &message1)
 	if err != nil {
 		t.Fatalf("cannot add chat message: %v", err)
 	}
