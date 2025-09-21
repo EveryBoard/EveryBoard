@@ -1,4 +1,3 @@
-// TODO: rename file to Game.ts
 import { JSONValue } from '@everyboard/lib';
 import { MinimalUser } from './MinimalUser';
 
@@ -12,7 +11,7 @@ export type Game = {
 
 export type GameEventBase = {
     readonly eventType: string;
-    readonly timestamp: number;
+    readonly time: number;
     readonly user: MinimalUser;
 }
 

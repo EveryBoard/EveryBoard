@@ -122,7 +122,7 @@ export class OGWCTimeManagerService {
     public onReceivedMove(move: GameEventMove): void {
         const player: Player = this.playerOfMinimalUser(move.user);
 
-        const moveTime: number = move.timestamp;
+        const moveTime: number = move.time;
         const takenMoveTime: number = this.getSecondsElapsedSinceLastMoveStart(moveTime);
         this.lastMoveStart = MGPOptional.of(moveTime);
         this.takenGameTime.add(player, takenMoveTime);

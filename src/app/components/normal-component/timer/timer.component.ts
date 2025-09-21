@@ -51,11 +51,13 @@ export class TimerComponent implements OnDestroy {
 
     public changeDuration(seconds: number): void {
         Utils.assert(this.isPaused, 'Should not change duration of a clock while it is running');
+        console.log('timer.changeDuration', seconds)
         this.remainingSeconds = seconds;
         this.displayDuration();
     }
 
     public subtract(seconds: number): void {
+        console.log('timer.subtract with ' + seconds)
         this.changeDuration(this.remainingSeconds - seconds);
     }
 
