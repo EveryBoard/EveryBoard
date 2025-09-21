@@ -14,6 +14,9 @@ tidy:
 run: build
 	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' go run cmd/backend/main.go
 
+run-postgres: build
+	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' DATABASE_TYPE=postgres DATABASE_DSN="postgresql://everyboard_test:TODO@localhost:5432/everyboard_test?sslmode=disable" go run cmd/backend/main.go
+
 format:
 	go fmt ./...
 

@@ -83,7 +83,7 @@ func (gt *GameType) UnmarshalJSON(data []byte) error {
 }
 
 type ConfigRoom struct {
-	ID             GameID          `gorm:"primaryKey;autoIncrement" json:"-"`
+	ID             GameID          `gorm:"primaryKey;autoIncrement;type:bigserial" json:"-"`
 	Creator        MinimalUser     `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
 	CreatorElo     float64         `gorm:"not null" json:"creatorElo"`
 	ChosenOpponent *MinimalUser    `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
@@ -97,7 +97,7 @@ type ConfigRoom struct {
 }
 
 type Candidate struct {
-	ID     uint64      `gorm:"primaryKey;autoincrement" json:"-"`
+	ID     uint64      `gorm:"primaryKey;autoIncrement;type:bigserial" json:"-"`
 	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
 	User   MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null"`
 	Elo    float64     `gorm:"not null" json:"elo"`

@@ -240,7 +240,7 @@ func (e *EventData) UnmarshalJSON(data []byte) error {
 }
 
 type GameEvent struct {
-	ID        uint64      `gorm:"primaryKey;autoIncrement" json:"-"`
+	ID        uint64      `gorm:"primaryKey;autoIncrement;type:bigserial" json:"-"`
 	GameID    GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
 	Timestamp int64       `gorm:"not null" json:"timestamp"`
 	User      MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
