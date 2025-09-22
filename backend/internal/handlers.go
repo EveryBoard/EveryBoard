@@ -41,7 +41,7 @@ func sendMessage(connection *websocket.Conn, message model.OutgoingMessage) erro
 		return err
 	}
 
-	log.Printf(">>> [%s] %v", Connections.GetUserOfClient(connection).Name, string(toSend))
+	log.Printf("\033[32m>>> [%s] %v\033[0m", Connections.GetUserOfClient(connection).Name, string(toSend))
 	err = connection.WriteMessage(websocket.TextMessage, toSend)
 	if websocket.IsCloseError(err) || err == websocket.ErrCloseSent {
 		return nil // in case the connection has been closed, we will continue with the rest but ignore sent messages

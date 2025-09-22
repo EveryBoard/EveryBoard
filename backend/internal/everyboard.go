@@ -127,7 +127,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			// Not a major error, continue receiving messages after ignoring this one
 			continue
 		}
-		log.Printf("<<< [%v] %v", user.Username, string(msg))
+		log.Printf("\033[33m<<< [%v] %v\033[0m", user.Username, string(msg))
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		log.Printf("messageType: [%s], messageData: [%v]", messageType, messageData)
 		if err != nil {
