@@ -57,3 +57,15 @@ func (connectionManager *ConnectionManager[Connection]) AllUserConnections(user 
 	clients := connectionManager.userToClients[user]
 	return clients
 }
+
+func (connectionManager ConnectionManager[Connection]) GetUserOfClient(client Connection) *model.MinimalUser {
+	connectionManager.lock.Lock()
+	defer connectionManager.lock.Unlock()
+
+	user, exists := connectionManager.clientToUser[client]
+	if !exists {
+		return nil
+	} else {
+		return &user
+	}
+}
