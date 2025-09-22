@@ -57,6 +57,9 @@ func TestConfigRoomFlow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot re-get config room: %v", err)
 	}
+	if configRoom == nil {
+		t.Fatalf("config room does not exist anymore")
+	}
 	if configRoom.ChosenOpponent == nil || *configRoom.ChosenOpponent != opponent {
 		t.Fatalf("selected opponent is not as expected: %v", configRoom.ChosenOpponent)
 	}
