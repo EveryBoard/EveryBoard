@@ -38,12 +38,21 @@ lint:
 clean:
 	go clean -testcache
 
-# Build for deploying. We can't build a static binary because sqlite needs a dynamic one. And we need musl-gcc because we use alpine for the docker image
+# Build for deploying.
 prod:
-	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-s -w' -o backend cmd/backend/main.go
+#	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
 
 docker: prod
-	docker build -t "backend-$(target)" --build-arg USE_EMULATOR="$$USE_EMULATOR" --build-arg PROJECT_ID="$$PROJECT_ID" --build-arg ALLOW_ORIGIN="$$ALLOW_ORIGIN" .
+	docker build -t "backend-$(target)" \
+		--build-arg USE_EMULATOR="$$USE_EMULATOR" \
+		--build-arg PROJECT_ID="$$PROJECT_ID" \
+		--build-arg ALLOW_ORIGIN="$$ALLOW_ORIGIN" \
+		--build-arg DATABASE_HOST="$$DATABASE_HOST" \
+		--build-arg DATABASE_USERNAME="$$DATABASE_USERNAME" \
+		--build-arg DATABASE_PASSWORD="$$DATABASE_PASSWORD" \
+		--build-arg DATABASE_NAME="$$DATABASE_NAME" \
+		.
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker

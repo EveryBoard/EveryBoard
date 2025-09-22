@@ -311,7 +311,10 @@ jobs:
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
                 chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-                cd backend && make deploy target=master user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8003 args="-no-emulator -project firestore-c9d47 -origin 'https://everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+                cd backend && \
+                    USE_EMULATOR=no PROJECT_ID=firestore-c9d47 ALLOW_ORIGIN='https://everyboard.org' \
+                    DATABASE_HOST=everyboard-master DATABASE_USERNAME=everyboard-master DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8003
               fi
           fi
         env:
@@ -322,6 +325,7 @@ jobs:
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_MASTER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_MASTER }}
       - name: Deploy develop on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
@@ -337,7 +341,10 @@ jobs:
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
                 chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-                cd backend && make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8002 args="-no-emulator -project everyboard-dev -origin 'https://dev.everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+                cd backend && \
+                    USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='https://dev.everyboard.org' \
+                    DATABASE_HOST=everyboard-dev DATABASE_USERNAME=everyboard-test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8002
             fi
           fi
         env:
@@ -348,10 +355,11 @@ jobs:
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_DEV }}
 
   deployment-netlify:
     runs-on: ubuntu-24.04
-    needs: [ build-front ]
+    needs: [build-front]
     environment: netlify
     steps:
       - name: Checkout the repository
@@ -410,7 +418,8 @@ jobs:
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
                 cd backend && \
                   USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='*' \
-                    make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8011
+                    DATABASE_HOST=everyboard-test DATABASE_USERNAME=everyboard-test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8011 # 8011 because new backend, old one is on 8001
             fi
           fi
         env:
@@ -422,3 +431,4 @@ jobs:
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_TEST }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
