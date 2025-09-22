@@ -152,6 +152,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.configRoomSubscription = await this.configRoomService.join(
             this.gameId,
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
+            (): Promise<void> => this.onGameCancelled(),
             (candidate: MinimalUser): void => this.onCandidateJoined(candidate),
             (candidate: MinimalUser): void => this.onCandidateLeft(candidate),
             (error: string): void => void this.onError(error),
@@ -174,6 +175,11 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 await this.router.navigate(['/']);
                 break;
         }
+    }
+
+    private async onGameCancelled(): Promise<void> {
+        this.messageDisplayer.infoMessage($localize`The game has been cancelled.`);
+        await this.router.navigate(['/']);
     }
 
     private getForm(name: string): AbstractControl {

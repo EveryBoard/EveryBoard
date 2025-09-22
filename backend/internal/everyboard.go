@@ -38,6 +38,7 @@ func ReadConfiguration() (*Configuration, error) {
 	var database gorm.Dialector
 	if os.Getenv("DATABASE_TYPE") == "postgres" {
 		databaseDsn := os.Getenv("DATABASE_DSN")
+		log.Printf("using postgres with %s", databaseDsn)
 		if databaseDsn == "" {
 			return nil, fmt.Errorf("For postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
 		}
@@ -45,6 +46,7 @@ func ReadConfiguration() (*Configuration, error) {
 	} else {
 		// defaults to sqlite with everyboard.db
 		databaseDsn := os.Getenv("DATABASE_DSN")
+		log.Printf("using sqlite with %s", databaseDsn)
 		if databaseDsn == "" {
 			databaseDsn = "everyboard.db"
 		}

@@ -14,6 +14,7 @@ export class ConfigRoomServiceFailure {
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
                          configRoomUpdate: (configRoom: ConfigRoom) => void,
+                         configRoomDeleted: () => void,
                          candidateJoined: (candidate: MinimalUser) => void,
                          candidateLeft: (candidate: MinimalUser) => void,
                          error: (reason: string) => void)
@@ -40,6 +41,7 @@ export class ConfigRoomService extends AbstractConfigRoomService {
 
     public override async join(gameId: string,
                                configRoomUpdate: (configRoom: ConfigRoom) => void,
+                               configRoomDeleted: () => void,
                                candidateJoined: (candidate: MinimalUser) => void,
                                candidateLeft: (candidate: MinimalUser) => void,
                                error: (reason: string) => void)
@@ -49,6 +51,10 @@ export class ConfigRoomService extends AbstractConfigRoomService {
         const configRoomSubscription: Subscription =
             this.backendService.setCallback('ConfigRoomUpdate', (message: BackendMessage): void => {
                 configRoomUpdate(message.getArgument('configRoom'));
+            });
+        const configRoomDeletionSubscription: Subscription =
+            this.backendService.setCallback('ConfigRoomDeleted', (_message: BackendMessage): void => {
+                configRoomDeleted();
             });
         const candidateJoinedSubscription: Subscription =
             this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
@@ -64,6 +70,7 @@ export class ConfigRoomService extends AbstractConfigRoomService {
             });
         return new Subscription(() => {
             configRoomSubscription.unsubscribe();
+            configRoomDeletionSubscription.unsubscribe();
             candidateJoinedSubscription.unsubscribe();
             candidateLeftSubscription.unsubscribe();
             errorSubscription.unsubscribe();
