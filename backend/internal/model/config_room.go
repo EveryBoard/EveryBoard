@@ -83,7 +83,7 @@ func (gt *GameType) UnmarshalJSON(data []byte) error {
 }
 
 type ConfigRoom struct {
-	ID             GameID          `gorm:"primaryKey;autoIncrement;type:bigserial" json:"-"`
+	ID             GameID          `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
 	Creator        MinimalUser     `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
 	CreatorElo     float64         `gorm:"not null" json:"creatorElo"`
 	ChosenOpponent *MinimalUser    `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`

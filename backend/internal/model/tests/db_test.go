@@ -22,7 +22,7 @@ func TestInitializeDB(t *testing.T) {
 	if err != nil {
 		t.Errorf("error when accessing lobby: %v", err)
 	}
-	if lobby.ID != model.GameIDLobby || lobby.GameName != "lobby" {
+	if lobby == nil || lobby.ID != model.GameIDLobby || lobby.GameName != "lobby" {
 		t.Errorf("lobby doesn't exist upon db initialization")
 	}
 }
@@ -49,6 +49,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	}
 
 	// Select an opponent
+	t.Logf("config room is: %v", configRoom)
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		t.Fatalf("cannot select opponent: %v", err)
