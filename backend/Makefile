@@ -15,7 +15,9 @@ run: build
 	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' go run cmd/backend/main.go
 
 run-postgres: build
-	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' DATABASE_TYPE=postgres DATABASE_DSN="postgresql://everyboard_test:TODO@localhost:5432/everyboard_test?sslmode=disable" go run cmd/backend/main.go
+	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' \
+		DATABASE_TYPE=postgres DATABASE_DSN="postgresql://$$DB_USERNAME:$$DB_PASSWORD@$$DB_HOST:5432/$$DB_NAME?sslmode=disable" \
+		go run cmd/backend/main.go
 
 format:
 	go fmt ./...
@@ -38,10 +40,10 @@ lint:
 clean:
 	go clean -testcache
 
-# Build for deploying.
+# Build for deploying. sqlite requires non-static build
 prod:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-s -w' -o backend cmd/backend/main.go
-#	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
+	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
+#	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-s -w' -o backend cmd/backend/main.go
 
 docker: prod
 	docker build -t "backend-$(target)" \
