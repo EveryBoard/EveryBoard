@@ -33,7 +33,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
-    public stepIndex: number = -1;
+    public stepIndex: number = 0;
     public currentMessage: string = ''; // Initially empty, will always be set once tutorial has started
     public currentReason: MGPOptional<string> = MGPOptional.empty();
     public moveAttemptMade: boolean = false;
@@ -254,7 +254,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public override getConfig(): MGPOptional<RulesConfig> {
-        if (this.stepIndex < 0) {
+        if (this.steps.length === 0) {
             return super.getConfig();
         }
         const step: TutorialStep = this.steps[this.stepIndex];

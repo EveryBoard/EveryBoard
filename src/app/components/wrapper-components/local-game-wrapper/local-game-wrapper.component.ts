@@ -340,23 +340,4 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return localStorage.getItem('displayAIInfo') === 'true';
     }
 
-    // COMMENTED OUT: my change
-    // private setConfigDemo(config: RulesConfig): void {
-    //     const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
-    //     if (stateProvider.isPresent()) {
-    //         const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
-    //         this.configDemo = {
-    //             click: MGPOptional.empty(),
-    //             name: this.getGameUrlName(),
-    //             title: this.getGameUrlName(),
-    //             node,
-    //         };
-    //         this.cdr.detectChanges();
-    //     }
-    // }
-
-    // public getConfigDemo(): DemoNodeInfo {
-    //     return this.configDemo;
-    // }
-
 }

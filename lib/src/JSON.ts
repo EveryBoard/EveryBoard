@@ -11,8 +11,6 @@ export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray
 export type JSONValueWithoutArray = JSONPrimitive | JSONObject;
 export type JSONObject = { [member: string]: JSONValue };
 
-export type FullJSONValue = JSONPrimitive | FullJSONObject | Array<FullJSONValue>;
-export type FullJSONObject = { [member: string]: FullJSONValue };
 export function isJSONPrimitive(value: unknown): value is JSONPrimitive {
     if (typeof value === 'string') return true;
     if (typeof value === 'number') return true;

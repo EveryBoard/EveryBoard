@@ -136,11 +136,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public getErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
-        // Commented: mine
-        // const validator: MGPValidator<RulesConfig> = this.rulesConfigDescription.getValidator(field);
-        // const config: RulesConfig = this.rulesConfigForm.value;
-        // const validity: MGPValidation = validator(fieldValue, config);
-        // return validity.getReason();
         return this.rulesConfigDescription.getValidityError(field, fieldValue);
     }
 
