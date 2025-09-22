@@ -313,7 +313,7 @@ jobs:
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
                 cd backend && \
                     USE_EMULATOR=no PROJECT_ID=firestore-c9d47 ALLOW_ORIGIN='https://everyboard.org' \
-                    DATABASE_HOST=db DATABASE_USERNAME=everyboard-master DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    DATABASE_HOST=db DATABASE_USERNAME=everyboard_master DATABASE_PASSWORD="$DATABASE_PASSWORD" \
                     make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8003
               fi
           fi
@@ -343,7 +343,7 @@ jobs:
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
                 cd backend && \
                     USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='https://dev.everyboard.org' \
-                    DATABASE_HOST=db DATABASE_USERNAME=everyboard-test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    DATABASE_HOST=db DATABASE_USERNAME=everyboard_dev DATABASE_PASSWORD="$DATABASE_PASSWORD" \
                     make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8002
             fi
           fi
@@ -418,7 +418,7 @@ jobs:
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
                 cd backend && \
                   USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='*' \
-                    DATABASE_HOST=db DATABASE_USERNAME=everyboard-test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    DATABASE_HOST=db DATABASE_USERNAME=everyboard_test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
                     make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8011 # 8011 because new backend, old one is on 8001
             fi
           fi
