@@ -36,6 +36,7 @@ func ReadConfiguration() (*Configuration, error) {
 		ServiceAccountFile: os.Getenv("SERVICE_ACCOUNT"),
 	}
 	var database gorm.Dialector
+	log.Printf("database type is: %s", os.Getenv("DATABASE_TYPE"))
 	if os.Getenv("DATABASE_TYPE") == "postgres" {
 		databaseDsn := os.Getenv("DATABASE_DSN")
 		log.Printf("using postgres with %s", databaseDsn)

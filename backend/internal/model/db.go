@@ -130,7 +130,7 @@ func (configRoom ConfigRoom) Delete() error {
 }
 
 func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
-	result := db.Model(configRoom).Updates(ConfigRoom{ChosenOpponent: &opponent})
+	result := db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent})
 	configRoom.ChosenOpponent = &opponent
 	return wrapError("SelectOpponent", result.Error)
 }
