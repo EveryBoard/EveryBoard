@@ -66,8 +66,8 @@ export class EnumConfig<R extends RulesConfig = EmptyRulesConfig> extends Config
         super(value, title);
     }
 
-    public override checkValidity(value: JSONPrimitive, config: R): MGPValidation {
-        return MGPValidation.SUCCESS; // TODO
+    public override checkValidity(fieldValue: JSONPrimitive, config: R): MGPValidation {
+        return this.validator(fieldValue as number, config);
     }
 }
 

@@ -15,19 +15,6 @@ describe('RulesConfigurationComponent', () => {
 
     let component: RulesConfigurationComponent;
 
-    // Commented: mine
-    // async function chooseConfig(configName: string): Promise<void> {
-    //     const selectElement: HTMLSelectElement = testUtils.findElement('#ruleSelect').nativeElement;
-    //     const option: HTMLOptionElement | undefined = Array.from(selectElement.options)
-    //         .find((opt: HTMLOptionElement) => {
-    //             return opt.value === configName;
-    //         });
-    //     expect(option).withContext('No config found with name "' + configName + '"').toBeDefined();
-    //     selectElement.value = option?.value as string;
-    //     selectElement.dispatchEvent(new Event('change'));
-    //     testUtils.detectChanges();
-    // }
-
     function expectConfigToBeSelected(selectedConfigName: string): void {
         testUtils.expectDropdownOptionToBeSelected('#ruleSelect', selectedConfigName);
     }
@@ -90,18 +77,30 @@ describe('RulesConfigurationComponent', () => {
         {
             name: (): string => 'config name',
             config: {
-                difficulty: new EnumConfig('EASY', () => 'difficulty', { 'EASY': () => 'EASY', 'MEDIUM': () => 'MEDIUM' }, (_: string | number | null) => {
-                    // TODO FOR REVIEW: ux question: si la validité d'un champs N dépend de la validité d'un champ M,
-                    //  ---> alors l'inverse devrais être vrai également pour des raisons UX ?
-                    return MGPValidation.SUCCESS;
-                }),
-                harderDifficulty: new EnumConfig('MEDIUM', () => 'difficulty', { 'MEDIUM': () => 'MEDIUM', 'HARD': () => 'HARD' }, (v: string | number | null, r: RulesConfig) => {
-                    if (v === r.difficulty) {
-                        return MGPValidation.failure('harder difficulty should be harder than difficulty, who would guess');
-                    } else {
-                        return MGPValidation.SUCCESS;
-                    }
-                }),
+                difficulty: new EnumConfig(
+                    'EASY',
+                    () => 'difficulty',
+                    { 'EASY': () => 'EASY', 'MEDIUM': () => 'MEDIUM' },
+                    (newDifficulty: string | number | null, r: RulesConfig) => {
+                        if (newDifficulty === 'MEDIUM' && r.harderDifficulty === 'MEDIUM') {
+                            return MGPValidation.failure('harder difficulty should be harder than difficulty, who would guess');
+                        } else {
+                            return MGPValidation.SUCCESS;
+                        }
+                    },
+                ),
+                harderDifficulty: new EnumConfig(
+                    'MEDIUM',
+                    () => 'harderDifficulty',
+                    { 'MEDIUM': () => 'MEDIUM', 'HARD': () => 'HARD' },
+                    (newHarderDifficulty: string | number | null, r: RulesConfig) => {
+                        if (newHarderDifficulty === 'MEDIUM' && r.difficulty === 'MEDIUM') {
+                            return MGPValidation.failure('harder difficulty should be harder than difficulty, who would guess');
+                        } else {
+                            return MGPValidation.SUCCESS;
+                        }
+                    },
+                ),
             },
         },
     );

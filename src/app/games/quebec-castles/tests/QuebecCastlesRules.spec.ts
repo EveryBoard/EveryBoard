@@ -54,7 +54,7 @@ describe('QuebecCastlesRules', () => {
 
             it('should allow first player to drop its throne when mentionned in config', () => {
                 // Given a custom config were you must place the throne yourself
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     placeThroneYourself: true,
                 });
@@ -83,7 +83,7 @@ describe('QuebecCastlesRules', () => {
 
             it('should allow second player to drop its throne when mentionned in config', () => {
                 // Given a custom config were you must place the throne yourself
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     placeThroneYourself: true,
                 });
@@ -128,7 +128,7 @@ describe('QuebecCastlesRules', () => {
 
             it('should refuse placing thrones outside territory', () => {
                 // Given a custom config were throne are to be place yourself
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     placeThroneYourself: true,
                     dropMode: DropModeEnum.BY_BATCH,
@@ -146,7 +146,7 @@ describe('QuebecCastlesRules', () => {
 
             it('should refuse multiple dropping instead of one throne', () => {
                 // Given a board with config "drop piece by piece"
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     placeThroneYourself: true,
                     dropMode: DropModeEnum.BY_BATCH,
@@ -461,9 +461,9 @@ describe('QuebecCastlesRules', () => {
 
         it('should recognize draw (in drop phase)', () => {
             // Given any state in drop phase for player for Player.ONE
-            const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+            const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                 ...defaultConfig.get(),
-                defender: 3,
+                defenders: 3,
                 dropMode: DropModeEnum.PIECE_BY_PIECE,
             });
             const state: QuebecCastlesState = new QuebecCastlesState([
@@ -494,7 +494,7 @@ describe('QuebecCastlesRules', () => {
 
                 it('should not drop piece after placing throne when "drop piece by piece" is chosen', () => {
                     // Given any state where throne AND piece are to be placed
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.PIECE_BY_PIECE,
                         placeThroneYourself: true,
@@ -528,11 +528,11 @@ describe('QuebecCastlesRules', () => {
 
             describe('drop piece by piece', () => {
 
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: DropModeEnum.PIECE_BY_PIECE,
-                    defender: 3,
-                    invader: 5,
+                    defenders: 3,
+                    invaders: 5,
                 });
 
                 it('should refuse any move', () => {
@@ -764,11 +764,11 @@ describe('QuebecCastlesRules', () => {
                 it('should allow second player to drop all its remaining soldier once opponent is out of soldier to drop', () => {
                     // Given a board on which current player is the only one that has piece to drop
                     // and a drop piece by piece config
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.PIECE_BY_PIECE,
-                        defender: 5,
-                        invader: 3,
+                        defenders: 5,
+                        invaders: 3,
                     });
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, X, _, _, _, _, _, _, _],
@@ -807,12 +807,12 @@ describe('QuebecCastlesRules', () => {
 
                 it('should includes thrones in calculation', () => {
                     // Given any state two turn away from last drop
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.PIECE_BY_PIECE,
                         placeThroneYourself: true,
-                        defender: 3,
-                        invader: 5,
+                        defenders: 3,
+                        invaders: 5,
                     });
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, _, _, _, _, _, _, _, _],
@@ -848,12 +848,12 @@ describe('QuebecCastlesRules', () => {
 
             describe('drop by batch & place throne', () => {
 
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: DropModeEnum.BY_BATCH,
                     placeThroneYourself: true,
-                    defender: 2,
-                    invader: 2,
+                    defenders: 2,
+                    invaders: 2,
                 });
 
                 it('should allow dropping all piece after dropping throne', () => {
@@ -893,11 +893,11 @@ describe('QuebecCastlesRules', () => {
 
             describe('drop by batch', () => {
 
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: DropModeEnum.BY_BATCH,
-                    defender: 2,
-                    invader: 2,
+                    defenders: 2,
+                    invaders: 2,
                 });
 
                 it('should refuse putting soldier outside territory (Player.ZERO)', () => {
@@ -1035,7 +1035,7 @@ describe('QuebecCastlesRules', () => {
 
                 it('should refuse putting soldier outside territory (Player.ZERO)', () => {
                     // Given the initial state
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.PIECE_BY_PIECE,
                         isRhombic: false,
@@ -1056,10 +1056,10 @@ describe('QuebecCastlesRules', () => {
 
                 it('should have 5 pieces in two lines', () => {
                     // Given a custom config with 5 pieces to drop
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        defender: 5,
-                        invader: 5,
+                        defenders: 5,
+                        invaders: 5,
                     });
 
                     // When generating initial state
@@ -1086,7 +1086,7 @@ describe('QuebecCastlesRules', () => {
 
         it('should fill board for rectangular version', () => {
             // Given a rectangular config
-            const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+            const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                 ...defaultConfig.get(),
                 isRhombic: false,
             });

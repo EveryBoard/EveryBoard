@@ -57,6 +57,7 @@ export class DropMode {
     public static readonly PIECE_BY_PIECE: Localized = () => $localize`Piece by piece`;
     public static readonly BY_BATCH: Localized = () => $localize`By batch`;
 }
+
 export const DropModes: { [key: string]: Localized } = {
     'AUTO': DropMode.AUTO,
     'PIECE_BY_PIECE': DropMode.PIECE_BY_PIECE,
@@ -97,31 +98,42 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                 config: {
                     width: new NumberConfig(9, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 20)),
                     height: new NumberConfig(9, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(2, 20)),
-                    linesForTerritory: new NumberConfig(4, () => $localize`Lines for territory`, (value: number, config: QuebecCastlesConfig) => {
-                        let height: number;
-                        if (config.isRhombic) {
-                            height = config.width + config.height - 2;
-                        } else {
-                            height = config.height;
-                        }
-                        if (value < (height / 2)) {
-                            return MGPValidation.SUCCESS;
-                        } else {
-                            return MGPValidation.failure(QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY());
-                        }
-                    }),
-                    invaders: new NumberConfig<QuebecCastlesConfig>(14, () => $localize`Number of invader`, (value: number, config: QuebecCastlesConfig) => {
-                        return QuebecCastlesRules.isThereEnoughPlaceForPiece(Player.ZERO, config, value);
-                    }),
-                    defenders: new NumberConfig(9, () => $localize`Number of defender`, (value: number, config: QuebecCastlesConfig) => {
-                        return QuebecCastlesRules.isThereEnoughPlaceForPiece(Player.ONE, config, value);
-                    }),
+                    linesForTerritory: new NumberConfig(4, () => $localize`Lines for territory`, MGPValidators.range(1, 10)),
+                    invaders: new NumberConfig<QuebecCastlesConfig>(14, () => $localize`Number of invader`, MGPValidators.range(1, 123456)),
+                    defenders: new NumberConfig(9, () => $localize`Number of defender`, MGPValidators.range(1, 123456)),
                     isRhombic: new BooleanConfig(true, () => $localize`Is Rhombic`),
                     placeThroneYourself: new BooleanConfig(false, () => $localize`Place throne yourself`),
                     dropMode: new EnumConfig(DropModeEnum.AUTO.valueOf(), () => $localize`Drop mode`, DropModes),
                 },
+                validators: [
+                    QuebecCastlesRules.enoughLineForTerritory,
+                    QuebecCastlesRules.enoughPlaceForDefenders,
+                    QuebecCastlesRules.enoughPlaceForInvaders, // TODO UT, and also just making it work
+                ],
             },
         );
+
+    public static enoughLineForTerritory(config: QuebecCastlesConfig): MGPValidation {
+        let height: number;
+        if (config.isRhombic) {
+            height = config.width + config.height - 2;
+        } else {
+            height = config.height;
+        }
+        if (config.linesForTerritory < (height / 2)) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure(QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY());
+        }
+    }
+
+    public static enoughPlaceForInvaders(config: QuebecCastlesConfig): MGPValidation {
+        return QuebecCastlesRules.isThereEnoughPlaceForPiece(Player.ZERO, config, config.invaders);
+    }
+
+    public static enoughPlaceForDefenders(config: QuebecCastlesConfig): MGPValidation {
+        return QuebecCastlesRules.isThereEnoughPlaceForPiece(Player.ONE, config, config.defenders);
+    }
 
     public static get(): QuebecCastlesRules {
         if (QuebecCastlesRules.singleton.isAbsent()) {
@@ -590,7 +602,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             const throneCoord: Coord = move.coords.getAnyElement().get();
             thrones.put(currentPlayer, MGPOptional.of(throneCoord));
             if (config.dropMode === DropModeEnum.AUTO) {
-                const adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+                const adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...this.getDefaultRulesConfig().get(),
                     width: config.width,
                     height: config.height,

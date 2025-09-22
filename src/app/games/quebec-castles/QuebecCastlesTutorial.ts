@@ -13,30 +13,30 @@ const defaultThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
     MGPOptional.of(new Coord(0, 0)),
 );
 defaultThrones.makeImmutable();
-const rectangularWidthHeightConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+const rectangularWidthHeightConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     height: 12,
     width: 14,
     isRhombic: false,
 });
-const placeThroneYourselfConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+const placeThroneYourselfConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     placeThroneYourself: true,
 });
-const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     dropMode: DropModeEnum.BY_BATCH,
 });
-const dropPieceByPieceConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+const dropPieceByPieceConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     dropMode: DropModeEnum.PIECE_BY_PIECE,
 });
-const numberOfPieceAndTerritorySizeConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of({
+const numberOfPieceAndTerritorySizeConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     linesForTerritory: 3,
     dropMode: DropModeEnum.PIECE_BY_PIECE,
-    defender: 2,
-    invader: 5,
+    defenders: 2,
+    invaders: 5,
 });
 
 export class QuebecCastlesTutorial extends Tutorial {

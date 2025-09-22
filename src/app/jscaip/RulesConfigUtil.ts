@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
 import { ConfigLine } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -15,6 +15,7 @@ export type NamedRulesConfig<R extends RulesConfig = EmptyRulesConfig> = {
 export type DefaultConfigDescription<R extends RulesConfig = EmptyRulesConfig> = {
     name: Localized,
     config: Record<keyof R, ConfigLine<R>>,
+    validators?: ((config: R) => MGPValidation)[],
 }
 
 export type RulesConfig = {

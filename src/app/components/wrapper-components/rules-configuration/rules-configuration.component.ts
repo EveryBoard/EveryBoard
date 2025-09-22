@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -16,6 +16,7 @@ type ConfigFormJSON = {
 @Component({
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 
@@ -42,8 +43,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private chosenConfigName: string = '';
 
-    public constructor(activatedRoute: ActivatedRoute)
-    {
+    public constructor(activatedRoute: ActivatedRoute) {
         super(activatedRoute);
     }
 
@@ -131,18 +131,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isValid(field: string): boolean {
-        // COMMENTED OUT: mine
-        // const typeofField: string = this.typeOfConfig(field);
-        // if (typeofField === 'number' || typeofField === 'string') {
-        //     const fieldValue: number = this.rulesConfigForm.controls[field].value;
-        //     const validator: MGPValidator<RulesConfig> = this.rulesConfigDescription.getValidator(field);
-        //     const validity: MGPValidation = validator(fieldValue, this.rulesConfigForm.value);
-        //     return validity.isSuccess();
-        // } else {
-        //     Utils.expectToBe(typeofField, 'boolean');
-        //     // Angular makes those controls invalid when they are booleans, not sure why
-        //     return true; // So we return true because they are always valid
-        // }
         return this.rulesConfigDescription.isValid(field, this.rulesConfigForm.controls[field].value);
     }
 
