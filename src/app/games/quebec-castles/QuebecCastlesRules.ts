@@ -38,7 +38,7 @@ export class QuebecCastlesFailure {
 
     public static readonly MUST_DROP_ONE_BY_ONE: Localized = () => $localize`You must drop pieces one by one`;
 
-    public static readonly CANNOT_LAND_IN_YOUR_THRONE: Localized = () => $localize`You cannot land on your throne`;
+    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_THRONE: Localized = () => $localize`You cannot land or drop on your throne`;
 
     public static readonly PLACE_ONLY_ONE_THRONE: Localized = () => $localize`You must only place your throne`;
 
@@ -442,9 +442,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
         const player: Player = state.getCurrentPlayer();
         if (state.thrones.get(player).equalsValue(coord) && isThrone === false) {
-            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_IN_YOUR_THRONE());
+            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE());
         }
-        if (this.isValidDropCoord(coord, player, config)) {
+        if (this.isDropInPlayerTerritory(coord, player, config)) {
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure(QuebecCastlesFailure.MUST_DROP_IN_YOUR_TERRITORY());
@@ -456,7 +456,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         for (let y: number = 0; y < config.height; y++) {
             for (let x: number = 0; x < config.width; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isValidDropCoord(coord, player, config)) {
+                if (this.isDropInPlayerTerritory(coord, player, config)) {
                     drops.push(coord);
                 }
             }
@@ -465,13 +465,14 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     public isValidDrop(state: QuebecCastlesState, coord: Coord, player: Player, config: QuebecCastlesConfig): boolean {
-        if (this.isValidDropCoord(coord, player, config) === false) {
+        if (this.isDropInPlayerTerritory(coord, player, config)) {
+            return state.getPieceAt(coord).isNone() && state.isThroneAt(coord) === false;
+        } else {
             return false;
         }
-        return state.getPieceAt(coord).isNone();
     }
 
-    public isValidDropCoord(coord: Coord, player: Player, config: QuebecCastlesConfig): boolean {
+    public isDropInPlayerTerritory(coord: Coord, player: Player, config: QuebecCastlesConfig): boolean {
         const y: number = coord.y;
         let metric: number = 0;
         if (config.isRhombic) {
@@ -550,7 +551,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
         const playerThrone: Coord = state.thrones.get(currentPlayer).get();
         if (landing.equals(playerThrone)) {
-            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_IN_YOUR_THRONE());
+            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE());
         }
         return MGPValidation.SUCCESS;
     }

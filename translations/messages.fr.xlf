@@ -3838,7 +3838,7 @@
         <source>You cannot drop in move phase</source>
         <target>Vous ne pouvez pas déposer de pièce dans la phase de déplacement</target>
       </trans-unit>
-      <trans-unit id="2217807164571312113" datatype="html">
+      <trans-unit id="6838858844517047193" datatype="html">
         <source>You cannot move in drop phase</source>
         <target>Vous ne pouvez pas déplacer de pièce en phrase de dépose</target>
       </trans-unit>
@@ -3850,16 +3850,16 @@
         <source>You must drop all your remaining pieces, not more not less</source>
         <target>Vous devez déposez toutes vos pièces restantes, ni plus ni moins</target>
       </trans-unit>
-      <trans-unit id="190045616212498032" datatype="html">
-        <source>Cannot drop that many pieces</source>
+      <trans-unit id="8012565028574700911" datatype="html">
+        <source>You cannot drop that many pieces</source>
         <target>Vous ne pouvez déposer autant de pièces</target>
       </trans-unit>
       <trans-unit id="8952465701867689047" datatype="html">
         <source>You must drop pieces one by one</source>
         <target>Vous devez déposer les pièces une par une</target>
       </trans-unit>
-      <trans-unit id="4497796084315768977" datatype="html">
-        <source>You cannot land on your throne</source>
+      <trans-unit id="5857719380879830870" datatype="html">
+        <source>You cannot land or drop on your throne</source>
         <target>Vous ne pouvez atterrir sur votre trône</target>
       </trans-unit>
       <trans-unit id="9041250493266709397" datatype="html">

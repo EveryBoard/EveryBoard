@@ -249,7 +249,7 @@ describe('QuebecCastlesRules', () => {
             const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(8, 8));
 
             // Then it should be illegal
-            const reason: string = QuebecCastlesFailure.CANNOT_LAND_IN_YOUR_THRONE();
+            const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -604,40 +604,6 @@ describe('QuebecCastlesRules', () => {
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
-                it('should allow first player to drop all its remaining soldier once opponent is out of soldier to drop', () => {
-                    // Given a board on which current player is the only one that has piece to drop
-                    // and a drop piece by piece config
-                    const state: QuebecCastlesState = new QuebecCastlesState([
-                        [_, X, _, _, _, _, _, _, _],
-                        [X, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, O, O],
-                        [_, _, _, _, _, _, _, O, _],
-                    ], 5, defaultThrones);
-
-                    // When dropping all its remaining piece at once
-                    const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2)];
-                    const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
-
-                    // Then the move should succeed
-                    const expectedState: QuebecCastlesState = new QuebecCastlesState([
-                        [_, X, X, _, _, _, _, _, _],
-                        [X, _, _, _, _, _, _, _, _],
-                        [X, _, X, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, O, O],
-                        [_, _, _, _, _, _, _, O, _],
-                    ], 6, defaultThrones);
-                    RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
-                });
-
                 it('should allow player to play normally after last batch-drop', () => {
                     // Given a board on which current player is to do the first move (after drop phase)
                     // and a drop piece by piece config
@@ -671,9 +637,8 @@ describe('QuebecCastlesRules', () => {
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
-                it('should forbid player to drop less than all its remaining soldier once opponent is out of soldier to drop', () => {
-                    // Given a board on which current player is the only one that has piece to drop
-                    // and a drop piece by piece config
+                describe('opponent is out of soldier to drop', () => {
+
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, X, _, _, _, _, _, _, _],
                         [X, _, _, _, _, _, _, _, _],
@@ -686,36 +651,67 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, O, _],
                     ], 5, defaultThrones);
 
-                    // When dropping less than the awaited number of piece
-                    const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 2)]);
+                    it('should allow first player to drop all its remaining soldier', () => {
+                        // Given a board on which current player is the only one that has piece to drop
+                        // and a drop piece by piece config
 
-                    // Then the move should be illegal
-                    const reason: string = QuebecCastlesFailure.MUST_DROP_ALL_YOUR_REMAINING_PIECES();
-                    RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
-                });
+                        // When dropping all its remaining piece at once
+                        const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2)];
+                        const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
 
-                it('should forbid player to drop more than all its remaining soldier once opponent is out of soldier to drop', () => {
-                    // Given a board on which current player is the only one that has piece to drop
-                    // and a drop piece by piece config
-                    const state: QuebecCastlesState = new QuebecCastlesState([
-                        [_, X, _, _, _, _, _, _, _],
-                        [X, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, _, _],
-                        [_, _, _, _, _, _, _, O, O],
-                        [_, _, _, _, _, _, _, O, _],
-                    ], 5, defaultThrones);
+                        // Then the move should succeed
+                        const expectedState: QuebecCastlesState = new QuebecCastlesState([
+                            [_, X, X, _, _, _, _, _, _],
+                            [X, _, _, _, _, _, _, _, _],
+                            [X, _, X, _, _, _, _, _, _],
+                            [_, _, _, _, _, _, _, _, _],
+                            [_, _, _, _, _, _, _, _, _],
+                            [_, _, _, _, _, _, _, _, _],
+                            [_, _, _, _, _, _, _, _, _],
+                            [_, _, _, _, _, _, _, O, O],
+                            [_, _, _, _, _, _, _, O, _],
+                        ], 6, defaultThrones);
+                        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+                    });
 
-                    // When dropping more than the awaited number of piece
-                    const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2), new Coord(1, 1)];
-                    const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
+                    it('should forbid player to drop less than all its remaining soldier', () => {
+                        // Given a board on which current player is the only one that has piece to drop
+                        // and a drop piece by piece config
 
-                    // Then the move should be illegal
-                    const reason: string = QuebecCastlesFailure.MUST_DROP_ALL_YOUR_REMAINING_PIECES();
-                    RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+                        // When dropping less than the awaited number of piece
+                        const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 2)]);
+
+                        // Then the move should be illegal
+                        const reason: string = QuebecCastlesFailure.MUST_DROP_ALL_YOUR_REMAINING_PIECES();
+                        RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+                    });
+
+                    it('should forbid player to drop more than all its remaining soldier', () => {
+                        // Given a board on which current player is the only one that has piece to drop
+                        // and a drop piece by piece config
+
+                        // When dropping more than the awaited number of piece
+                        const coords: Coord[] = [new Coord(0, 2), new Coord(2, 0), new Coord(2, 2), new Coord(1, 1)];
+                        const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
+
+                        // Then the move should be illegal
+                        const reason: string = QuebecCastlesFailure.MUST_DROP_ALL_YOUR_REMAINING_PIECES();
+                        RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+                    });
+
+                    it('should forbid player to drop on the throne', () => {
+                        // Given a board on which current player is the only one that has piece to drop
+                        // and a drop piece by piece config
+
+                        // When dropping a piece on the throne
+                        const coords: Coord[] = [new Coord(0, 0), new Coord(2, 0), new Coord(2, 2)];
+                        const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
+
+                        // Then the move should be illegal
+                        const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE();
+                        RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+                    });
+
                 });
 
                 it('should forbid putting soldier on another soldier', () => {
@@ -741,7 +737,7 @@ describe('QuebecCastlesRules', () => {
                     const move: QuebecCastlesMove = QuebecCastlesMove.drop([state.thrones.get(Player.ZERO).get()]);
 
                     // Then it should be illegal
-                    const reason: string = QuebecCastlesFailure.CANNOT_LAND_IN_YOUR_THRONE();
+                    const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE();
                     RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
                 });
 

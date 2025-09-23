@@ -126,6 +126,9 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             return this.cancelMove(clickValidity.getReason());
         }
         const config: QuebecCastlesConfig = this.getConfig().get();
+        if (this.isPlayerDropping() && this.getNumberOfAwaitedDrop() === 0) {
+            return MGPValidation.SUCCESS;
+        }
         if (this.rules.isDropPhase(this.constructedState, config)) {
             return this.onDrop(coord, config);
         } else {
@@ -243,9 +246,9 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const classes: string[] = [];
         const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.rules.isDropPhase(this.constructedState, config)) {
-            if (this.rules.isValidDropCoord(coord, Player.ZERO, config)) {
+            if (this.rules.isDropInPlayerTerritory(coord, Player.ZERO, config)) {
                 classes.push(Player.ZERO.getHTMLClass('-fill'), 'territory-opacity');
-            } else if (this.rules.isValidDropCoord(coord, Player.ONE, config)) {
+            } else if (this.rules.isDropInPlayerTerritory(coord, Player.ONE, config)) {
                 classes.push(Player.ONE.getHTMLClass('-fill'), 'territory-opacity');
             }
         } else {

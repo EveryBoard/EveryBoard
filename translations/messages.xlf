@@ -2817,8 +2817,8 @@
       <trans-unit id="8952465701867689047" datatype="html">
         <source>You must drop pieces one by one</source>
       </trans-unit>
-      <trans-unit id="4497796084315768977" datatype="html">
-        <source>You cannot land on your throne</source>
+      <trans-unit id="5857719380879830870" datatype="html">
+        <source>You cannot land or drop on your throne</source>
       </trans-unit>
       <trans-unit id="9041250493266709397" datatype="html">
         <source>You must only place your throne</source>

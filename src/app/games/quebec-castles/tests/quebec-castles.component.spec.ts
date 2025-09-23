@@ -424,6 +424,67 @@ describe('QuebecCastlesComponent', () => {
                 await testUtils.expectMoveSuccess('#drop-validator', move);
             }));
 
+            it('should not mix translation and drop', fakeAsync(async() => {
+                // Given a board on which current player is the only one that has piece to drop
+                // and a drop piece by piece config
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: DropModeEnum.PIECE_BY_PIECE,
+                    defenders: 3,
+                    invaders: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 5, defaultThrones);
+                await testUtils.setupState(state, { config: customConfig });
+
+                // When dropping all its remaining piece at once then clicking on a piece
+                await testUtils.expectClickSuccess('#click-0-2');
+                await testUtils.expectClickSuccess('#click-2-0');
+                await testUtils.expectClickSuccess('#click-2-2');
+                await testUtils.expectClickSuccess('#click-0-1');
+
+                // Then the last click should not have interfered with the drop
+                testUtils.expectElementNotToHaveClass('#piece-0-1', 'selected-stroke');
+            }));
+
+            it('should forbid player to drop on the throne', fakeAsync(async() => {
+                // Given a board on which current player is the only one that has piece to drop
+                // and a drop piece by piece config
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: DropModeEnum.PIECE_BY_PIECE,
+                    defenders: 3,
+                    invaders: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 5, defaultThrones);
+                await testUtils.setupState(state, { config: customConfig });
+
+                // When dropping a piece on the throne
+                await testUtils.expectClickSuccess('#click-0-0');
+
+                // Then no piece should have been dropped
+                testUtils.expectElementNotToExist('#piece-0-0');
+            }));
+
             it('should allow player to play normally after last batch-drop', fakeAsync(async() => {
                 // Given a board on which current player is to do the first move (after drop phase)
                 // and a drop piece by piece config
