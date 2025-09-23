@@ -626,7 +626,6 @@ func (h *Handlers) acceptConfig() error {
 }
 
 func (h *Handlers) getSubscribedConfigRoomAndGame() (*model.ConfigRoom, *model.Game, error) {
-	// TODO: could be done in one transaction
 	configRoom, err := h.getSubscribedConfigRoom()
 	if err != nil {
 		return nil, nil, err

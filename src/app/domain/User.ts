@@ -1,6 +1,5 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from './MinimalUser';
-import { FirestoreTime } from './Time';
 
 export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent' | 'Candidate';
 
@@ -16,7 +15,6 @@ export type CurrentGame = {
 
 export type User = {
     username?: string; // may not be set initially for google users
-    lastUpdateTime?: FirestoreTime, // TODO: remove, we don't need it anymore!
     verified: boolean,
 };
 

@@ -51,8 +51,7 @@ type GameCreationViewInfo = {
 }
 @Component({
     selector: 'app-game-creation',
-    // TODO: rename file to game-creation?!
-    templateUrl: './part-creation.component.html',
+    templateUrl: './game-creation.component.html',
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {

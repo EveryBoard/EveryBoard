@@ -3,7 +3,7 @@ import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 
-import { GameCreationComponent, GameCreationComponentMessages } from './part-creation.component';
+import { GameCreationComponent, GameCreationComponentMessages } from './game-creation.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
 import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';

@@ -107,7 +107,6 @@ func readMessage[T interface{}](t *testing.T, c *websocket.Conn, tag string, nam
 }
 
 // Wait one second for a message, fail the test if nothing is received
-// TODO: doesn't really seem to wait one second and instead it hangs
 func expectMessage(t *testing.T, c *websocket.Conn, expected string) {
 	done := make(chan struct{})
 	var msgType int

@@ -134,7 +134,7 @@ import { BlankGobanComponent } from './components/game-components/goban-game-com
 import { LocaleUtils } from './utils/LocaleUtils';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
-import { GameCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
+import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
 
 registerLocaleData(localeFr);
 
