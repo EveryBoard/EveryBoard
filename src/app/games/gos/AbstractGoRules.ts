@@ -168,8 +168,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                (state.phase.isCounting() || state.phase.isAccept());
     }
 
-    private isLegalNormalMove(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
-
+    private isLegalTranslation(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         if (this.isKo(move, state)) {
             return MGPFallible.failure(GoFailure.ILLEGAL_KO());
@@ -373,7 +372,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             }
         } else {
             Debug.display('GoRules', 'isLegal', 'move is normal stuff: ' + move.toString());
-            return this.isLegalNormalMove(move, state);
+            return this.isLegalTranslation(move, state);
         }
     }
 

@@ -2398,14 +2398,14 @@
       <trans-unit id="1086558575410854374" datatype="html">
         <source>Feed original house</source>
       </trans-unit>
-      <trans-unit id="1571603835358328677" datatype="html">
-        <source>Must feed</source>
+      <trans-unit id="5863215957559063071" datatype="html">
+        <source>You must feed</source>
       </trans-unit>
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
       </trans-unit>
-      <trans-unit id="8576122948092687879" datatype="html">
-        <source>Must continue distribution after last seed ends in store</source>
+      <trans-unit id="5302957168498438243" datatype="html">
+        <source>You must continue distribution after last seed ends in store</source>
       </trans-unit>
       <trans-unit id="356626260857129297" datatype="html">
         <source>Continue distribution until capture or empty house</source>
@@ -2796,26 +2796,26 @@
       <trans-unit id="4809301322027947242" datatype="html">
         <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
       </trans-unit>
-      <trans-unit id="2959814997167125267" datatype="html">
-        <source>Must drop in your own territory</source>
+      <trans-unit id="941976348970067109" datatype="html">
+        <source>You must drop in your own territory</source>
       </trans-unit>
-      <trans-unit id="2475404961590913083" datatype="html">
-        <source>Cannot drop in move phase</source>
+      <trans-unit id="2561363337853886115" datatype="html">
+        <source>You cannot drop in move phase</source>
       </trans-unit>
-      <trans-unit id="2217807164571312113" datatype="html">
-        <source>Cannot move in drop phase</source>
+      <trans-unit id="6838858844517047193" datatype="html">
+        <source>You cannot move in drop phase</source>
       </trans-unit>
-      <trans-unit id="404272838313740209" datatype="html">
-        <source>Must drop all your pieces</source>
+      <trans-unit id="4933773936312573082" datatype="html">
+        <source>You must drop all your pieces</source>
       </trans-unit>
-      <trans-unit id="6659641459805346810" datatype="html">
-        <source>Must drop all your remaining pieces, not more not less</source>
+      <trans-unit id="1577452622903571200" datatype="html">
+        <source>You must drop all your remaining pieces, not more not less</source>
       </trans-unit>
-      <trans-unit id="190045616212498032" datatype="html">
-        <source>Cannot drop that many pieces</source>
+      <trans-unit id="8012565028574700911" datatype="html">
+        <source>You cannot drop that many pieces</source>
       </trans-unit>
-      <trans-unit id="5513539435671245592" datatype="html">
-        <source>Must drop pieces one by one</source>
+      <trans-unit id="8952465701867689047" datatype="html">
+        <source>You must drop pieces one by one</source>
       </trans-unit>
       <trans-unit id="4497796084315768977" datatype="html">
         <source>You cannot land on your throne</source>
@@ -2841,11 +2841,11 @@
       <trans-unit id="7732765787483081988" datatype="html">
         <source>Lines for territory</source>
       </trans-unit>
-      <trans-unit id="2486177343036470230" datatype="html">
-        <source>Number of invader</source>
+      <trans-unit id="6952700396277252102" datatype="html">
+        <source>Number of invaders</source>
       </trans-unit>
-      <trans-unit id="6786719847987867536" datatype="html">
-        <source>Number of defender</source>
+      <trans-unit id="8136810909201933801" datatype="html">
+        <source>Number of defenders</source>
       </trans-unit>
       <trans-unit id="859693719600901508" datatype="html">
         <source>Is Rhombic</source>

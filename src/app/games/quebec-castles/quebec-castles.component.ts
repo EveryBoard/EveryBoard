@@ -134,7 +134,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
-        Utils.assert(config.dropMode !== DropModeEnum.AUTO || config.placeThroneYourself, 'enterred "onDrop" on a non-dropping-config');
+        Utils.assert(config.dropMode !== DropModeEnum.AUTO || config.playersPlaceThrone, 'enterred "onDrop" on a non-dropping-config');
         const expectedDropThisTurn: number =
             this.rules.getExpectedDropsThisTurn(this.getState(), this.getConfig().get());
         if (expectedDropThisTurn === 1) {

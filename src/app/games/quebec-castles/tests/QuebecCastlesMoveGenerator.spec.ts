@@ -155,7 +155,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: DropModeEnum.PIECE_BY_PIECE,
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                     defenders: 3,
                     invaders: 5,
                 });
@@ -213,7 +213,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.BY_BATCH,
-                        placeThroneYourself: true,
+                        playersPlaceThrone: true,
                         defenders: 3,
                         invaders: 5,
                     });

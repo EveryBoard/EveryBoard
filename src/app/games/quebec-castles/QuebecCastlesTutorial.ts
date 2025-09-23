@@ -19,9 +19,9 @@ const rectangularWidthHeightConfig: MGPOptional<QuebecCastlesConfig> = MGPOption
     width: 14,
     isRhombic: false,
 });
-const placeThroneYourselfConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+const playersPlaceThroneConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
-    placeThroneYourself: true,
+    playersPlaceThrone: true,
 });
 const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
@@ -70,10 +70,10 @@ export class QuebecCastlesTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Custom config: place throne yourself`,
             $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.<br/><br/>You're playing Dark/Defender, place your throne.`,
-            QuebecCastlesRules.get().getInitialState(placeThroneYourselfConfig),
+            QuebecCastlesRules.get().getInitialState(playersPlaceThroneConfig),
             QuebecCastlesMove.drop([new Coord(7, 7)]),
             TutorialStepMessage.CONGRATULATIONS(),
-            placeThroneYourselfConfig,
+            playersPlaceThroneConfig,
         ),
         TutorialStep.anyMove(
             $localize`Custom config: Drop Mode: By Batch`,

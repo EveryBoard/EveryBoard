@@ -492,7 +492,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig.get(),
                     width: 7,
                     height: 7,
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
                 await testUtils.setupState(state, { config: customConfig });

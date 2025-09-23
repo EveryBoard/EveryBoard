@@ -56,7 +56,7 @@ describe('QuebecCastlesRules', () => {
                 // Given a custom config were you must place the throne yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
@@ -85,7 +85,7 @@ describe('QuebecCastlesRules', () => {
                 // Given a custom config were you must place the throne yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                 });
                 const firstThrone: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
                     MGPOptional.of(new Coord(7, 7)),
@@ -130,7 +130,7 @@ describe('QuebecCastlesRules', () => {
                 // Given a custom config were throne are to be place yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                     dropMode: DropModeEnum.BY_BATCH,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
@@ -148,7 +148,7 @@ describe('QuebecCastlesRules', () => {
                 // Given a board with config "drop piece by piece"
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                     dropMode: DropModeEnum.BY_BATCH,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
@@ -497,7 +497,7 @@ describe('QuebecCastlesRules', () => {
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.PIECE_BY_PIECE,
-                        placeThroneYourself: true,
+                        playersPlaceThrone: true,
                     });
                     const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
@@ -810,7 +810,7 @@ describe('QuebecCastlesRules', () => {
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: DropModeEnum.PIECE_BY_PIECE,
-                        placeThroneYourself: true,
+                        playersPlaceThrone: true,
                         defenders: 3,
                         invaders: 5,
                     });
@@ -851,7 +851,7 @@ describe('QuebecCastlesRules', () => {
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: DropModeEnum.BY_BATCH,
-                    placeThroneYourself: true,
+                    playersPlaceThrone: true,
                     defenders: 2,
                     invaders: 2,
                 });
@@ -992,7 +992,7 @@ describe('QuebecCastlesRules', () => {
                     const move: QuebecCastlesMove = QuebecCastlesMove.drop(drops);
 
                     // Then the move should be illegal
-                    const reason: string = QuebecCastlesFailure.CANNOT_DROP_THAT_MUCH();
+                    const reason: string = QuebecCastlesFailure.CANNOT_DROP_THAT_MANY_PIECES();
                     RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
                 });
 
