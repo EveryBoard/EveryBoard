@@ -36,10 +36,8 @@ func ReadConfiguration() (*Configuration, error) {
 		ServiceAccountFile: os.Getenv("SERVICE_ACCOUNT"),
 	}
 	var database gorm.Dialector
-	log.Printf("database type is: %s", os.Getenv("DATABASE_TYPE"))
 	if os.Getenv("DATABASE_TYPE") == "postgres" {
 		databaseDsn := os.Getenv("DATABASE_DSN")
-		log.Printf("using postgres with %s", databaseDsn)
 		if databaseDsn == "" {
 			return nil, fmt.Errorf("For postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
 		}
@@ -47,7 +45,6 @@ func ReadConfiguration() (*Configuration, error) {
 	} else {
 		// defaults to sqlite with everyboard.db
 		databaseDsn := os.Getenv("DATABASE_DSN")
-		log.Printf("using sqlite with %s", databaseDsn)
 		if databaseDsn == "" {
 			databaseDsn = "everyboard.db"
 		}
@@ -75,13 +72,11 @@ func ReadConfiguration() (*Configuration, error) {
 }
 
 func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	log.Println("Got a request")
 	uid, user, err := auth.VerifyTokenAndGetUser(r)
 	if err != nil {
 		http.Error(w, "Invalid token", http.StatusUnauthorized)
 		return
 	}
-	log.Println("Got a token")
 	minimalUser := model.MinimalUser{
 		ID: uid,
 		Name: user.Username,
@@ -93,7 +88,6 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer connection.Close()
-	log.Println("Upgraded connection")
 
 	Connections.AddConnection(minimalUser, connection)
 	defer Connections.RemoveConnection(minimalUser, connection)
@@ -104,22 +98,18 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		utils.Errorf("cannot get current game: %v", err)
 		return
 	}
-	log.Println("Sending first message!")
 	handlers.broadcastToUser(minimalUser, model.CurrentGameUpdateMessage{
 		CurrentGame: currentGame,
 	})
 
 	for {
-		log.Println("[server] reading message")
 		_, msg, err := connection.ReadMessage()
-		log.Printf("[server] message: %s, error: %v", msg, err)
 		if err != nil {
-			log.Printf("[server] error: %v", err)
 			if err == io.EOF || websocket.IsUnexpectedCloseError(err) {
 				// WebSocket closed, stop this handler after disconnecting client
 				log.Printf("[%v] Disconnect", user.Username)
 				err = handlers.ClientLeft()
-				if err != nil  {
+				if err != nil {
 					utils.Errorf("Error when disconnecting client: %w", err)
 				}
 				break
@@ -129,9 +119,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		log.Printf("\033[33m<<< [%v] %v\033[0m", user.Username, string(msg))
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
-		log.Printf("messageType: [%s], messageData: [%v]", messageType, messageData)
 		if err != nil {
-			log.Printf("error: %v", err)
 			err = handlers.error(model.ErrorUnknownMessage)
 			if err != nil {
 				utils.Errorf("Error when sending error to client: %v", err)
@@ -177,11 +165,11 @@ func Prepare(config Configuration) (*http.Server, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error initializing encoder: %v", err)
 	}
+	log.Println("Initializing DB")
 	err = model.InitDatabase(config.Database)
 	if err != nil {
 		return nil, fmt.Errorf("error initializing database: %v", err)
 	}
-	log.Println("DB successfully updated")
 	Subscriptions = NewSubscriptionManager[*websocket.Conn]()
 	Connections = NewConnectionManager[*websocket.Conn]()
 

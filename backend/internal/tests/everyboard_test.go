@@ -227,7 +227,7 @@ func PrepareServer(t *testing.T) func () {
 	setenv(t, "USE_EMULATOR", "yes")
 	setenv(t, "PROJECT_ID", "my-project")
 	setenv(t, "DATABASE_TYPE", "sqlite")
-	setenv(t, "DATABASE_DSN", "file::memory:?cache=shared")
+	setenv(t, "DATABASE_DSN", "file::memory:")
 	setenv(t, "ALLOW_ORIGIN", "*")
 	config, err := everyboard.ReadConfiguration()
 	config.Firebase = FirebaseMock{}

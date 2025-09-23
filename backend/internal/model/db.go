@@ -1,10 +1,11 @@
 package model
 
 import (
-	"fmt"
 	"errors"
+	"fmt"
 	"log"
 
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -30,6 +31,14 @@ func InitDatabase(dialector gorm.Dialector) error {
 	if err != nil {
 		return fmt.Errorf("Failed to connect to DB: %v", err)
 	}
+
+	switch dialector.(type) {
+    case sqlite.Dialector:
+		// In case we have sqlite, we only want one connection. Otherwise, this renders tests flaky.
+        sqlDB, _ := db.DB()
+        sqlDB.SetMaxOpenConns(1)
+        sqlDB.SetMaxIdleConns(1)
+    }
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {

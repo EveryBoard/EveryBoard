@@ -81,7 +81,7 @@ func readMessage[T interface{}](t *testing.T, c *websocket.Conn, tag string, nam
 
 	var data []interface{}
 	err = json.Unmarshal(message, &data)
-	if err != nil  {
+	if err != nil {
 		t.Fatalf("failed to unmarshall: %v", err)
 	}
 
@@ -175,7 +175,7 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	expectMessage(t, c, `["ConfigRoomUpdate",{"gameId":"gbHJd","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`)
 }
 
- func TestGameFlow(t *testing.T) {
+func TestGameFlow(t *testing.T) {
 	everyboard.Now = func() int64 {
 		return 42
 	}
@@ -183,26 +183,25 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		return 42.
 	}
 
-	// TODO: problem, the DB seems to be shared among all processes!
- 	stopServer := PrepareServer(t)
- 	defer stopServer()
+	stopServer := PrepareServer(t)
+	defer stopServer()
 
- 	player := EstablishWebSocketConnection(t, "player")
- 	defer player.Close()
+	player := EstablishWebSocketConnection(t, "player")
+	defer player.Close()
 
- 	opponent := EstablishWebSocketConnection(t, "opponent")
- 	defer opponent.Close()
+	opponent := EstablishWebSocketConnection(t, "opponent")
+	defer opponent.Close()
 
- 	observer := EstablishWebSocketConnection(t, "observer")
- 	defer observer.Close()
+	observer := EstablishWebSocketConnection(t, "observer")
+	defer observer.Close()
 
 	// Opponent opens lobby
- 	sendMessage(t, opponent, `["SubscribeLobby"]`)
+	sendMessage(t, opponent, `["SubscribeLobby"]`)
 	// Player creates the game and is notified, while opponent receives the update
- 	sendMessage(t, player, `["Create",{"gameName":"P4"}]`)
- 	gameId := readMessage[string](t, player, "GameCreated", "gameId")
- 	expectMessage(t, player,
- 	 	fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":null,"role":"Creator"}}]`, gameId))
+	sendMessage(t, player, `["Create",{"gameName":"P4"}]`)
+	gameId := readMessage[string](t, player, "GameCreated", "gameId")
+	expectMessage(t, player,
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":null,"role":"Creator"}}]`, gameId))
 	expectMessage(t, opponent,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 	// Player needs to subscribe to the config room
@@ -211,13 +210,13 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Opponent subscribes to the config room and gets the update. They need first to unsubscribe from the lobby
- 	sendMessage(t, opponent, `["Unsubscribe"]`)
- 	sendMessage(t, opponent, fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, gameId))
+	sendMessage(t, opponent, `["Unsubscribe"]`)
+	sendMessage(t, opponent, fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, gameId))
 	expectMessage(t, opponent,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Both see the opponent arrive
- 	expectMessage(t, player, `["CandidateJoined",{"candidate":{"id":"opponent","name":"opponent"}}]`)
+	expectMessage(t, player, `["CandidateJoined",{"candidate":{"id":"opponent","name":"opponent"}}]`)
 	expectMessage(t, opponent, `["CandidateJoined",{"candidate":{"id":"opponent","name":"opponent"}}]`)
 
 	// Opponent has their current game updated
@@ -301,4 +300,4 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	expectMessage(t, opponent, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"AgreedDrawByZero","beginning":42}}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"action":"EndGame","eventType":"Action","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"accept":true,"eventType":"Reply","requestType":"Draw","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
- }
+}

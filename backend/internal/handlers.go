@@ -115,19 +115,15 @@ func (h *Handlers) sendActiveConfigRooms() error {
 func (h *Handlers) subscribeToLobby() error {
 	uid := h.user.ID
 	if Subscriptions.IsSubscribed(uid) {
-		fmt.Println("already subscribed")
 		return h.error(model.ErrorAlreadySubscribed)
 	}
-	fmt.Println("not subscribed")
 
 	Subscriptions.Subscribe(h.connection, uid, model.GameIDLobby, SubscriptionToLobby)
-	fmt.Println("now subscribed", uid)
 	err := h.sendChatMessages(model.GameIDLobby)
 	if err != nil {
 		return err
 	}
 
-	fmt.Println("finished")
 	return h.sendActiveConfigRooms()
 }
 
