@@ -999,7 +999,6 @@ func (h *Handlers) handle(messageType string, messageData map[string]json.RawMes
 		return h.move(*move)
 
 	default:
-		log.Printf("unknown message type: %s", messageType)
 		return h.error(model.ErrorUnknownMessage)
 	}
 }

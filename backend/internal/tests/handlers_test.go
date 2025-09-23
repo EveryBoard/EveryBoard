@@ -301,3 +301,72 @@ func TestGameFlow(t *testing.T) {
 	expectMessage(t, opponent, `["GameEvent",{"event":{"action":"EndGame","eventType":"Action","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"accept":true,"eventType":"Reply","requestType":"Draw","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 }
+
+func TestInvalidMessages(t *testing.T) {
+	stopServer := PrepareServer(t)
+	defer stopServer()
+
+	client := EstablishWebSocketConnection(t, "player")
+	defer client.Close()
+
+
+	// Invalid message because tag does not exist
+	sendMessage(t, client, `["Invalid"]`)
+	expectMessage(t, client, `["Error",{"reason":"unknown-message"}]`)
+
+	// Invalid message because it's not even JSON
+	sendMessage(t, client, `Invalid`)
+	expectMessage(t, client, `["Error",{"reason":"unknown-message"}]`)
+
+	// SubscribeConfigRoom needs a gameId
+	sendMessage(t, client, `["SubscribeConfigRoom", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// SubscribeGame needs a gameId
+	sendMessage(t, client, `["SubscribeGame", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// ChatSend needs a message
+	sendMessage(t, client, `["ChatSend", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// Create needs a gameName
+	sendMessage(t, client, `["Create", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// SelectOpponent needs an opponent
+	sendMessage(t, client, `["SelectOpponent", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// ProposeConfig needs a config
+	sendMessage(t, client, `["ProposeConfig", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// NotifyTimeout needs a timeoutedPlayer
+	sendMessage(t, client, `["NotifyTimeout", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// EndGame needs a winner
+	sendMessage(t, client, `["EndGame", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// Propose needs a proposition
+	sendMessage(t, client, `["Propose", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// Reject needs a propposition
+	sendMessage(t, client, `["Reject", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// Accept needs a propposition
+	sendMessage(t, client, `["Accept", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// AddTime needs a kind
+	sendMessage(t, client, `["AddTime", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+
+	// Move needs a move
+	sendMessage(t, client, `["Move", {}]`)
+	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
+}

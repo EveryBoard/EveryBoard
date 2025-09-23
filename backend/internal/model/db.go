@@ -33,7 +33,7 @@ func InitDatabase(dialector gorm.Dialector) error {
 	}
 
 	switch dialector.(type) {
-    case sqlite.Dialector:
+    case *sqlite.Dialector:
 		// In case we have sqlite, we only want one connection. Otherwise, this renders tests flaky.
         sqlDB, _ := db.DB()
         sqlDB.SetMaxOpenConns(1)

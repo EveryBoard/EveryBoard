@@ -42,6 +42,17 @@ func TestConnectionWorkflow(t *testing.T) {
 		t.Fatalf("connection manager does not contain the expected connections, %v", connections)
 	}
 
+	// We should be able to map the connection to the user
+	actualUser := manager.GetUserOfClient(otherConnection)
+	if actualUser == nil || actualUser.ID != user.ID {
+		t.Fatalf("connection manager did not properly map connection to user: %v", actualUser)
+	}
+	// And we should get nothing if we look for an unexisting connection
+	noUser := manager.GetUserOfClient(44)
+	if noUser != nil {
+		t.Fatalf("connection manager should not have any user mapped to an unexisting connection, but it does: %v", noUser)
+	}
+
 	// When we remove a connection
 	manager.RemoveConnection(user, connection)
 	// Then it shouldn't be there
