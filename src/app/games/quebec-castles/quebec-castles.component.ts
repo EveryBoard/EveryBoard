@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
-import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
+import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
 import { QuebecCastlesState } from './QuebecCastlesState';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
@@ -137,7 +137,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
-        Utils.assert(config.dropMode !== DropModeEnum.AUTO || config.playersPlaceThrone, 'enterred "onDrop" on a non-dropping-config');
+        Utils.assert(config.dropMode !== 'AUTO' || config.playersPlaceThrone, 'enterred "onDrop" on a non-dropping-config');
         const expectedDropThisTurn: number =
             this.rules.getExpectedDropsThisTurn(this.getState(), this.getConfig().get());
         if (expectedDropThisTurn === 1) {

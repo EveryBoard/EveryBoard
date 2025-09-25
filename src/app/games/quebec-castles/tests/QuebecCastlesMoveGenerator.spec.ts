@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { QuebecCastlesDrop, QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
-import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -61,7 +61,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                     // Given a node in drop phase (hence a custom config)
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         defenders: 3,
                         invaders: 5,
                     });
@@ -89,7 +89,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                     // Given a board in  piece-by-piece mode
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         defenders: 3,
                         invaders: 5,
                     });
@@ -121,7 +121,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                     // Given a board in  piece-by-piece mode where first player has more piece
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         defenders: 5,
                         invaders: 3,
                     });
@@ -154,7 +154,7 @@ describe('QuebecCastlesMoveGenerator', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    dropMode: DropModeEnum.PIECE_BY_PIECE,
+                    dropMode: 'PIECE_BY_PIECE',
                     playersPlaceThrone: true,
                     defenders: 3,
                     invaders: 5,
@@ -192,7 +192,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                     // Given a first turn in drop-by-batch config
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.BY_BATCH,
+                        dropMode: 'BY_BATCH',
                         defenders: 3,
                         invaders: 5,
                     });
@@ -212,7 +212,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                     // Given a first turn when you need to place the throne
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.BY_BATCH,
+                        dropMode: 'BY_BATCH',
                         playersPlaceThrone: true,
                         defenders: 3,
                         invaders: 5,

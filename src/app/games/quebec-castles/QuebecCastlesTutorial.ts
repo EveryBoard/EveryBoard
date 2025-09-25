@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
+import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesMove } from './QuebecCastlesMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
@@ -25,16 +25,16 @@ const playersPlaceThroneConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.o
 });
 const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
-    dropMode: DropModeEnum.BY_BATCH,
+    dropMode: 'BY_BATCH',
 });
 const dropPieceByPieceConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
-    dropMode: DropModeEnum.PIECE_BY_PIECE,
+    dropMode: 'PIECE_BY_PIECE',
 });
 const numberOfPieceAndTerritorySizeConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     linesForTerritory: 3,
-    dropMode: DropModeEnum.PIECE_BY_PIECE,
+    dropMode: 'PIECE_BY_PIECE',
     defenders: 2,
     invaders: 5,
 });

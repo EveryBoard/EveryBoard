@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
-import { DropModeEnum, QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
 import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
@@ -131,7 +131,7 @@ describe('QuebecCastlesRules', () => {
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     playersPlaceThrone: true,
-                    dropMode: DropModeEnum.BY_BATCH,
+                    dropMode: 'BY_BATCH',
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
@@ -149,7 +149,7 @@ describe('QuebecCastlesRules', () => {
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     playersPlaceThrone: true,
-                    dropMode: DropModeEnum.BY_BATCH,
+                    dropMode: 'BY_BATCH',
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
@@ -464,7 +464,7 @@ describe('QuebecCastlesRules', () => {
             const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                 ...defaultConfig.get(),
                 defenders: 3,
-                dropMode: DropModeEnum.PIECE_BY_PIECE,
+                dropMode: 'PIECE_BY_PIECE',
             });
             const state: QuebecCastlesState = new QuebecCastlesState([
                 [_, _, _, _, _, _, _, _, _],
@@ -496,7 +496,7 @@ describe('QuebecCastlesRules', () => {
                     // Given any state where throne AND piece are to be placed
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         playersPlaceThrone: true,
                     });
                     const state: QuebecCastlesState = rules.getInitialState(customConfig);
@@ -530,7 +530,7 @@ describe('QuebecCastlesRules', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    dropMode: DropModeEnum.PIECE_BY_PIECE,
+                    dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
                 });
@@ -762,7 +762,7 @@ describe('QuebecCastlesRules', () => {
                     // and a drop piece by piece config
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         defenders: 5,
                         invaders: 3,
                     });
@@ -805,7 +805,7 @@ describe('QuebecCastlesRules', () => {
                     // Given any state two turn away from last drop
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         playersPlaceThrone: true,
                         defenders: 3,
                         invaders: 5,
@@ -846,7 +846,7 @@ describe('QuebecCastlesRules', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    dropMode: DropModeEnum.BY_BATCH,
+                    dropMode: 'BY_BATCH',
                     playersPlaceThrone: true,
                     defenders: 2,
                     invaders: 2,
@@ -891,7 +891,7 @@ describe('QuebecCastlesRules', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    dropMode: DropModeEnum.BY_BATCH,
+                    dropMode: 'BY_BATCH',
                     defenders: 2,
                     invaders: 2,
                 });
@@ -1033,7 +1033,7 @@ describe('QuebecCastlesRules', () => {
                     // Given the initial state
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
-                        dropMode: DropModeEnum.PIECE_BY_PIECE,
+                        dropMode: 'PIECE_BY_PIECE',
                         isRhombic: false,
                     });
                     const state: QuebecCastlesState = rules.getInitialState(customConfig);
