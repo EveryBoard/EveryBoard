@@ -363,6 +363,37 @@ describe('QuebecCastlesRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
+            it('should allow capture', () => {
+                // Given any state where a capture is possible
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, X, X, X, _, _, _, _],
+                    [X, X, X, X, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, O],
+                    [_, _, _, _, _, _, X, O, O],
+                    [_, _, _, _, _, _, O, O, O],
+                    [_, _, _, _, _, O, O, O, _],
+                ], 2, defaultThrones);
+                // When trying normal jump
+                const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
+
+                // Then the move should succeed
+                const expectedState: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, X, X, X, _, _, _, _],
+                    [X, X, X, X, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, O],
+                    [_, _, _, _, _, _, O, O, O],
+                    [_, _, _, _, _, _, O, _, O],
+                    [_, _, _, _, _, O, O, O, _],
+                ], 3, defaultThrones);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
+
         });
 
     });

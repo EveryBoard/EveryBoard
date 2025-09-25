@@ -217,7 +217,7 @@ class GameDescription {
 
     public static readonly QUARTO: Localized = () => $localize`Create a winning alignment. The problem: you don't pick the piece that you're placing on the board!`;
 
-    public static readonly QUEBEC_CASTLES: Localized = () => $localize`Everyboard first game: one player attack, the other defend, none have similar pieces!`;
+    public static readonly QUEBEC_CASTLES: Localized = () => $localize`EveryBoard's first game: an asymmetric game where each player moves differently. Be the first one to capture the opponent's throne!`;
 
     public static readonly QUIXO: Localized = () => $localize`Align 5 of your pieces on a board where pieces slide!`;
 

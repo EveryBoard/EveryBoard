@@ -342,9 +342,9 @@
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
         <target>Faites un alignement gagnant. La difficulté : vous ne choisissez pas la pièce que vous placez !</target>
       </trans-unit>
-      <trans-unit id="9125171545429867484" datatype="html">
-        <source>Everyboard first game: one player attack, the other defend, none have similar pieces!</source>
-        <target>Le premier jeu inventé par EveryBoard: un joueur attaque, l'autre défend, chaque joueur a des pièces différentes!</target>
+      <trans-unit id="7654735708945652840" datatype="html">
+        <source>EveryBoard&apos;s first game: an asymmetric game where each player moves differently. Be the first one to capture the opponent&apos;s throne!</source>
+        <target>Le premier jeu inventé par EveryBoard: un jeu asymétrique ou chaque joueur se déplace différemment. Soyez le premier à capturer le trône adverse !</target>
       </trans-unit>
       <trans-unit id="7277920626199847666" datatype="html">
         <source>Duplicate yourself to conquer the board!</source>
