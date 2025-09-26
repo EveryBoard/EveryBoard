@@ -34,6 +34,12 @@
           class="mt-2"
           id="{{ getChosenConfigName() }}_values">
         <fieldset class="left-border" >
+            <div *ngIf="errorMessages.length > 0"
+                 id="form-error"
+                 class="help is-danger"
+                 role="alert">
+                 <div *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</div>
+            </div>
             <div *ngFor="let configParameter of getFields()"
                  id="{{ configParameter }}_config"
                  class="mb-2">

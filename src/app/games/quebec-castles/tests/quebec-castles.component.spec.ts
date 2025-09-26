@@ -592,10 +592,10 @@ describe('QuebecCastles Custom Configs', () => {
         }
     }
 
-    function expectElementToHaveError(configLine: string, error: string): void {
-        const fakeElement: DebugElement = testUtils.findElement(`#${ configLine }-error`);
-        const content: string = fakeElement.nativeElement.innerText;
-        expect(content).toBe(error);
+    function expectElementToHaveError(expectedError: string): void {
+        testUtils.expectElementToExist('#form-error');
+        const errorElement: DebugElement = testUtils.findElement('#form-error > div');
+        expect(errorElement.nativeElement.innerHTML).toEqual(expectedError);
     }
 
     beforeEach(async() => {
@@ -617,8 +617,8 @@ describe('QuebecCastles Custom Configs', () => {
         await setCustomConfigTags(customConfig);
 
         // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE(14, 4);
-        expectElementToHaveError('defenders', error);
+        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ONE(14, 4);
+        expectElementToHaveError(error);
     }));
 
     it('should forbid config where player line cross the middle of the board (rhombic)', fakeAsync(async() => {
@@ -633,7 +633,7 @@ describe('QuebecCastles Custom Configs', () => {
 
         // Then there should be an error eh!
         const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
-        expectElementToHaveError('linesForTerritory', error);
+        expectElementToHaveError(error);
     }));
 
     it('should forbid config where player line cross the middle of the board (rectangular)', fakeAsync(async() => {
@@ -649,8 +649,7 @@ describe('QuebecCastles Custom Configs', () => {
 
         // Then there should be an error eh!
         const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
-        expectElementToHaveError('linesForTerritory', error);
+        expectElementToHaveError(error);
     }));
-
 
 });

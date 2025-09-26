@@ -37,6 +37,12 @@ describe('RulesConfigurationComponent', () => {
         tick(1);
     }
 
+    function expectErrorToBe(expectedError: string): void {
+        testUtils.expectElementToExist('#form-error');
+        const errorElement: DebugElement = testUtils.findElement('#form-error > div');
+        expect(errorElement.nativeElement.innerHTML).toEqual(expectedError);
+    }
+
     beforeEach(async() => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
@@ -47,10 +53,15 @@ describe('RulesConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    const secondConfig: RulesConfig = { nombre: 42, canailleDeBoule: 42 };
+    interface TestRulesConfig extends RulesConfig {
+        nombre: number;
+        canailleDeBoule: number;
+    }
 
-    const rulesConfigDescriptionWithNumber: RulesConfigDescription<RulesConfig> =
-        new RulesConfigDescription(
+    const secondConfig: TestRulesConfig = { nombre: 42, canailleDeBoule: 42 };
+
+    const rulesConfigDescriptionWithNumber: RulesConfigDescription<TestRulesConfig> =
+        new RulesConfigDescription<TestRulesConfig>(
             {
                 name: (): string => 'the_default_config_name',
                 config: {
@@ -81,25 +92,11 @@ describe('RulesConfigurationComponent', () => {
                     'EASY',
                     () => 'difficulty',
                     { 'EASY': () => 'EASY', 'MEDIUM': () => 'MEDIUM' },
-                    (newDifficulty: string | number | null, r: RulesConfig) => {
-                        if (newDifficulty === 'MEDIUM' && r.harderDifficulty === 'MEDIUM') {
-                            return MGPValidation.failure('harder difficulty should be harder than difficulty, who would guess');
-                        } else {
-                            return MGPValidation.SUCCESS;
-                        }
-                    },
                 ),
                 harderDifficulty: new EnumConfig(
                     'MEDIUM',
                     () => 'harderDifficulty',
                     { 'MEDIUM': () => 'MEDIUM', 'HARD': () => 'HARD' },
-                    (newHarderDifficulty: string | number | null, r: RulesConfig) => {
-                        if (newHarderDifficulty === 'MEDIUM' && r.difficulty === 'MEDIUM') {
-                            return MGPValidation.failure('harder difficulty should be harder than difficulty, who would guess');
-                        } else {
-                            return MGPValidation.SUCCESS;
-                        }
-                    },
                 ),
             },
         },
@@ -379,21 +376,6 @@ describe('RulesConfigurationComponent', () => {
                     expectConfigToBeSelected('Custom');
                 }));
 
-                it('should not emit when modification was invalid', fakeAsync(async() => {
-                    // Given an editable component with a enum config option
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithEnums);
-                    await testUtils.chooseConfig('Custom');
-
-                    // When doing invalid modification
-                    spyOn(component.updateCallback, 'emit').and.callThrough();
-                    await selectOption('difficulty', 'MEDIUM');
-
-                    // Then the resulting value should be empty, has it has failure
-                    const expectedValue: MGPOptional<RulesConfig> = MGPOptional.empty();
-                    expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(expectedValue);
-                    expectConfigToBeSelected('Custom');
-                }));
-
                 it('should have a select that you cannot change', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
                     component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithEnums);
@@ -401,11 +383,69 @@ describe('RulesConfigurationComponent', () => {
 
                     // When modifying config
                     spyOn(component.updateCallback, 'emit').and.callThrough();
-                    testUtils.expectElementToBeDisabled('#harderDifficulty_enum_config_input');
+                    testUtils.expectElementToBeDisabled('#harderDifficulty_enum_config_input'); // TODO QLB
 
                     // Then the resulting value should be updated
                     expect(component.updateCallback.emit).not.toHaveBeenCalled();
                     expectConfigToBeSelected('config name');
+                }));
+
+            });
+
+            describe('multi-field change', () => {
+
+                const rulesConfigDescriptionWithMultiFieldValidation: RulesConfigDescription<TestRulesConfig> =
+                    new RulesConfigDescription(
+                        {
+                            name: (): string => 'config name',
+                            config: {
+                                nombre: new NumberConfig(40, () => 'nombre', MGPValidators.range(1, 99)),
+                                canailleDeBoule: new NumberConfig(50, () => 'canaille', MGPValidators.range(1, 99)),
+                            },
+                            validators: [
+                                (config: TestRulesConfig): MGPValidation => {
+                                    if ((config.nombre + config.canailleDeBoule) > 100) {
+                                        return MGPValidation.failure('The sum of both fields must be <= 100');
+                                    } else {
+                                        return MGPValidation.SUCCESS;
+                                    }
+                                },
+                            ],
+                        }, [{
+                            name: (): string => 'the_other_config_name',
+                            config: { nombre: 42, canailleDeBoule: 42 },
+                        }],
+                    );
+
+                it('should not emit when a multiple field validator fails', fakeAsync(async() => {
+                    // Given a rules config description with two number fields whose sum must be <= 100
+                    component.rulesConfigDescriptionOptional =
+                        MGPOptional.of(rulesConfigDescriptionWithMultiFieldValidation);
+                    await testUtils.chooseConfig('Custom');
+                    testUtils.detectChanges();
+                    spyOn(component.updateCallback, 'emit').and.callThrough();
+
+                    // When modifying a field so that the sum of both is > 100
+                    setConfigValue('canailleDeBoule', 80);
+
+                    // Then the component should not emit anything because the multi-field validation fails
+                    expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.empty());
+                    expectConfigToBeSelected('Custom');
+                }));
+
+                it('should display multi-field failure reason', fakeAsync(async() => {
+                    // Given a rules config description with two number fields whose sum must be <= 100
+                    component.rulesConfigDescriptionOptional =
+                        MGPOptional.of(rulesConfigDescriptionWithMultiFieldValidation);
+                    await testUtils.chooseConfig('Custom');
+                    testUtils.detectChanges();
+                    spyOn(component.updateCallback, 'emit').and.callThrough();
+
+                    // When modifying a field so that the sum of both is > 100
+                    setConfigValue('canailleDeBoule', 80);
+
+                    // Then the component should not emit anything because the multi-field validation fails
+                    expectErrorToBe('The sum of both fields must be &lt;= 100');
                 }));
 
             });

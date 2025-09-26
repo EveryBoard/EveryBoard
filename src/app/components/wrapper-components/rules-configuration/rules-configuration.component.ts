@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
+import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
@@ -42,6 +42,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public urlName: string; // set in onInit
 
     private chosenConfigName: string = '';
+
+    public errorMessages: string[] = [];
 
     public constructor(activatedRoute: ActivatedRoute) {
         super(activatedRoute);
@@ -121,7 +123,25 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
                 return; // In order not to send update when form is invalid
             }
         }
-        this.updateCallback.emit(MGPOptional.of(rulesConfig));
+        return this.checkForValidators(rulesConfig);
+    }
+
+    private checkForValidators(rulesConfig: RulesConfig): void {
+        const validators: ((config: RulesConfig) => MGPValidation)[] =
+            this.rulesConfigDescription.defaultConfigDescription.validators ?? [];
+        this.errorMessages = [];
+        for (const validator of validators) {
+            const validation: MGPValidation = validator(rulesConfig);
+            if (validation.isFailure()) {
+                this.errorMessages.push(validation.getReason());
+            }
+        }
+        if (this.errorMessages.length > 0) {
+            this.updateCallback.emit(MGPOptional.empty());
+            return; // In order not to send update when form is invalid
+        } else {
+            this.updateCallback.emit(MGPOptional.of(rulesConfig));
+        }
     }
 
     public typeOfConfig(field: string): string {

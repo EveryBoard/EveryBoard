@@ -41,14 +41,14 @@ export class NumberConfig<R extends RulesConfig = EmptyRulesConfig> extends Conf
 
     public constructor(defaultValue: number,
                        title: Localized,
-                       public readonly validator: MGPValidator<R>)
+                       public readonly validator: MGPValidator)
     {
         super(defaultValue, title);
     }
 
-    public checkValidity(value: JSONPrimitive, config: R): MGPValidation {
+    public checkValidity(value: JSONPrimitive): MGPValidation {
         if (typeof(value) === 'number') {
-            return this.validator(value, config);
+            return this.validator(value);
         } else {
             return MGPValidation.failure('NumberConfig expects a number value');
         }
@@ -61,13 +61,13 @@ export class EnumConfig<R extends RulesConfig = EmptyRulesConfig> extends Config
     public constructor(value: string,
                        title: Localized,
                        public readonly possibleValues: { [key: string]: Localized },
-                       public readonly validator: MGPValidator<R> = () => MGPValidation.SUCCESS)
+                       public readonly validator: MGPValidator = () => MGPValidation.SUCCESS)
     {
         super(value, title);
     }
 
-    public override checkValidity(fieldValue: JSONPrimitive, config: R): MGPValidation {
-        return this.validator(fieldValue as number, config);
+    public override checkValidity(fieldValue: JSONPrimitive): MGPValidation {
+        return this.validator(fieldValue as number);
     }
 }
 
@@ -78,7 +78,7 @@ export class BooleanConfig<R extends RulesConfig = EmptyRulesConfig> extends Con
         super(defaultValue, title);
     }
 
-    public checkValidity(value: JSONPrimitive, config: R): MGPValidation {
+    public checkValidity(value: JSONPrimitive): MGPValidation {
         if (typeof(value) === 'boolean') {
             return MGPValidation.SUCCESS;
         } else {
