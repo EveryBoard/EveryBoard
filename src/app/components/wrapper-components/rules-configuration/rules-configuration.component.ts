@@ -97,9 +97,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             formControl.disable();
         }
         formControl.valueChanges.subscribe(() => {
-            // Since the value is not updated yet
-            // Must be called after 1ms otherwise this.rulesConfigForm has not changed value yet
-            // This implies that validators are called with the old config
             this.onUpdate();
         });
         return formControl;
@@ -113,10 +110,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         // Note: we may receive updates just because the form has changed from "editable" to "non editable"
         // (e.g., due to proposing to the opponent or clicking on "changing configuration").
         const rulesConfig: RulesConfig = {};
-        const parameterNames: string[] = this.rulesConfigDescription.getFields();
-        for (const parameterName of parameterNames) {
-            if (this.isValid(parameterName)) {
-                rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
+        const fieldNames: string[] = this.rulesConfigDescription.getFields();
+        for (const field of fieldNames) {
+            if (this.isValid(field)) {
+                rulesConfig[field] = this.rulesConfigForm.controls[field].value;
             } else {
                 // This informs the parent component that an invalid update has been done
                 this.updateCallback.emit(MGPOptional.empty());

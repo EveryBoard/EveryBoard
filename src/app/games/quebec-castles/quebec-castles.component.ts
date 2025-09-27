@@ -62,11 +62,19 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public override getViewBox(): ViewBox {
-        let viewBox: ViewBox = super.getViewBox();
+        let viewBox: ViewBox = this.getBasicViewBox();
+        if (this.isPlayerDropping()) {
+            viewBox = viewBox.expandAbove(this.SPACE_SIZE);
+            viewBox = viewBox.expandBelow(this.SPACE_SIZE);
+        }
+        return viewBox.expandAll(this.STROKE_WIDTH);
+    }
+
+    private getBasicViewBox(): ViewBox {
+        const state: QuebecCastlesState = this.constructedState;
+        const width: number = state.getWidth();
+        const height: number = state.getHeight();
         if (this.getConfig().get().isRhombic) {
-            const state: QuebecCastlesState = this.constructedState;
-            const width: number = state.getWidth();
-            const height: number = state.getHeight();
             const rotationInRadius: number = -45 * Math.PI / 180;
             const upperCoord: Coord = new Coord(0, 0);
             const leftCoord: Coord = upperCoord.getNext(new Coord(0, height), this.SPACE_SIZE);
@@ -82,17 +90,19 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             const maxX: number = this.getRotated(rightCoord, rotationCenter, rotationInRadius).x;
             this.lowerCorner = this.getRotated(lowerCoord, rotationCenter, rotationInRadius);
             const maxY: number = this.lowerCorner.y;
-            viewBox = ViewBox.fromLimits(minX, maxX, minY, maxY);
+            const viewBox: ViewBox = ViewBox.fromLimits(minX, maxX, minY, maxY);
             this.unextendedHeight = maxY;
             this.maxX = maxX;
             this.minX = minX;
             this.minY = minY;
+            return viewBox;
+        } else {
+            this.unextendedHeight = height * this.SPACE_SIZE;
+            this.minX = 0;
+            this.maxX = width * this.SPACE_SIZE;
+            this.minY = 0;
+            return super.getViewBox();
         }
-        if (this.isPlayerDropping()) {
-            viewBox = viewBox.expandAbove(this.SPACE_SIZE);
-            viewBox = viewBox.expandBelow(this.SPACE_SIZE);
-        }
-        return viewBox.expandAll(this.STROKE_WIDTH);
     }
 
     public isPlayerDropping(): boolean {
@@ -127,20 +137,15 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         }
         const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.isPlayerDropping() && this.getNumberOfAwaitedDrop() === 0) {
-            console.log('isPlayerdropping && this.getNumberOfAwaitedDrop() === 0');
             if (this.dropped.contains(coord)) {
-                console.log('hence drop')
                 return this.onDrop(coord, config);
             } else {
-                console.log('hence skip')
                 return MGPValidation.SUCCESS;
             }
         }
         if (this.rules.isDropPhase(this.constructedState, config)) {
-            console.log('onDrop');
             return this.onDrop(coord, config);
         } else {
-            console.log('onMove');
             return this.onMove(coord);
         }
     }
