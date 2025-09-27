@@ -3,7 +3,6 @@ package model
 import (
 	"errors"
 	"fmt"
-	"log"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -14,10 +13,10 @@ import (
 var db *gorm.DB
 
 func wrapError(ctx string, err error) error {
-    if err == nil {
-        return nil
-    }
-    return fmt.Errorf("error in %s: %w", ctx, err)
+	if err == nil {
+		return nil
+	}
+	return fmt.Errorf("error in %s: %w", ctx, err)
 }
 
 // Initialize the database given a dialector, which will either be in-memory
@@ -33,12 +32,12 @@ func InitDatabase(dialector gorm.Dialector) error {
 	}
 
 	switch dialector.(type) {
-    case *sqlite.Dialector:
+	case *sqlite.Dialector:
 		// In case we have sqlite, we only want one connection. Otherwise, this renders tests flaky.
-        sqlDB, _ := db.DB()
-        sqlDB.SetMaxOpenConns(1)
-        sqlDB.SetMaxIdleConns(1)
-    }
+		sqlDB, _ := db.DB()
+		sqlDB.SetMaxOpenConns(1)
+		sqlDB.SetMaxIdleConns(1)
+	}
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {
@@ -51,14 +50,14 @@ func InitDatabase(dialector gorm.Dialector) error {
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		lobby = ConfigRoom{
-			ID: GameIDLobby,
-			Creator: MinimalUser{ Name: "", ID: "" },
-			CreatorElo: 0,
-			Status: StatusFinished,
+			ID:          GameIDLobby,
+			Creator:     MinimalUser{Name: "", ID: ""},
+			CreatorElo:  0,
+			Status:      StatusFinished,
 			FirstPlayer: FirstPlayerRandom,
-			GameType: GameTypeStandard,
+			GameType:    GameTypeStandard,
 			RulesConfig: nil,
-			GameName: "lobby",
+			GameName:    "lobby",
 		}
 		result := db.Create(&lobby)
 		if result.Error != nil {
@@ -66,7 +65,6 @@ func InitDatabase(dialector gorm.Dialector) error {
 		}
 	}
 
-	log.Println("creating message table")
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
 		return fmt.Errorf("Cannot initialize DB: %v", err)
@@ -116,20 +114,19 @@ func CreateConfigRoom(creator MinimalUser, gameName string) (*ConfigRoom, error)
 	}
 
 	configRoom := ConfigRoom{
-		Creator: creator,
-		CreatorElo: creatorElo.CurrentElo,
-		FirstPlayer: FirstPlayerRandom,
+		Creator:        creator,
+		CreatorElo:     creatorElo.CurrentElo,
+		FirstPlayer:    FirstPlayerRandom,
 		ChosenOpponent: nil,
-		Status: StatusCreated,
-		GameType: GameTypeStandard,
-		MoveDuration: StandardMoveDuration,
-		GameDuration: StandardGameDuration,
-		RulesConfig: nil,
-		GameName: gameName,
+		Status:         StatusCreated,
+		GameType:       GameTypeStandard,
+		MoveDuration:   StandardMoveDuration,
+		GameDuration:   StandardGameDuration,
+		RulesConfig:    nil,
+		GameName:       gameName,
 	}
 
 	result := db.Create(&configRoom)
-	log.Println("Created config room", configRoom.ID)
 	return &configRoom, wrapError("CreateConfigRoom", result.Error)
 }
 
@@ -147,7 +144,7 @@ func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
 func (configRoom *ConfigRoom) RemoveOpponent() error {
 	// A bit ugly because setting ChosenOpponent to nil will make gorm ignore this field...
 	result := db.Model(configRoom).Updates(map[string]interface{}{
-		"chosen_opponent_id": nil,
+		"chosen_opponent_id":   nil,
 		"chosen_opponent_name": nil,
 	})
 	configRoom.ChosenOpponent = nil
@@ -156,12 +153,12 @@ func (configRoom *ConfigRoom) RemoveOpponent() error {
 
 func (configRoom *ConfigRoom) Propose(proposal ConfigProposal) error {
 	result := db.Model(configRoom).Updates(ConfigRoom{
-		GameType: proposal.GameType,
+		GameType:     proposal.GameType,
 		MoveDuration: proposal.MoveDuration,
 		GameDuration: proposal.GameDuration,
-		FirstPlayer: proposal.FirstPlayer,
-		RulesConfig: proposal.RulesConfig,
-		Status: StatusConfigProposed,
+		FirstPlayer:  proposal.FirstPlayer,
+		RulesConfig:  proposal.RulesConfig,
+		Status:       StatusConfigProposed,
 	})
 	configRoom.GameType = proposal.GameType
 	configRoom.MoveDuration = proposal.MoveDuration
@@ -208,16 +205,16 @@ func (configRoom ConfigRoom) CreateRematch(creator MinimalUser, game Game) (*Con
 	}
 
 	rematchConfigRoom := ConfigRoom{
-		Creator: creator,
-		CreatorElo: creatorElo.CurrentElo,
-		FirstPlayer: firstPlayer,
+		Creator:        creator,
+		CreatorElo:     creatorElo.CurrentElo,
+		FirstPlayer:    firstPlayer,
 		ChosenOpponent: &chosenOpponent,
-		Status: StatusStarted,
-		GameType: configRoom.GameType,
-		MoveDuration: configRoom.MoveDuration,
-		GameDuration: configRoom.GameDuration,
-		RulesConfig: configRoom.RulesConfig,
-		GameName: configRoom.GameName,
+		Status:         StatusStarted,
+		GameType:       configRoom.GameType,
+		MoveDuration:   configRoom.MoveDuration,
+		GameDuration:   configRoom.GameDuration,
+		RulesConfig:    configRoom.RulesConfig,
+		GameName:       configRoom.GameName,
 	}
 
 	result := db.Create(&rematchConfigRoom)
@@ -229,10 +226,11 @@ func ApplyToConfigRooms(action func(ConfigRoom) error) error {
 	return wrapError("ApplyToConfigRooms", ApplyToQueryResult(query, action))
 }
 
-func (configRoom ConfigRoom) AddCandidate(user MinimalUser) error {
+func (configRoom ConfigRoom) AddCandidate(user MinimalUser, elo float64) error {
 	result := db.Create(&Candidate{
 		GameID: configRoom.ID,
-		User: user,
+		User:   user,
+		Elo:    elo,
 	})
 	return wrapError("AddCandidate", result.Error)
 }
@@ -282,12 +280,12 @@ func (configRoom *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, erro
 	}
 
 	game := Game{
-		GameID: configRoom.ID,
-		GameName: configRoom.GameName,
+		GameID:     configRoom.ID,
+		GameName:   configRoom.GameName,
 		PlayerZero: playerZero,
-		PlayerOne: playerOne,
-		Result: ResultInProgress,
-		Beginning: now,
+		PlayerOne:  playerOne,
+		Result:     ResultInProgress,
+		Beginning:  now,
 	}
 	result := db.Create(&game)
 	return &game, wrapError("CreateGame", result.Error)
@@ -317,7 +315,7 @@ func GetElo(gameName string, user MinimalUser) (*Elo, error) {
 
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
 		entry = Elo{
-			User: user,
+			User:     user,
 			GameName: gameName,
 		}
 		result = db.Create(&entry)
@@ -370,7 +368,6 @@ func GetCurrentGame(user MinimalUser) (*CurrentGame, error) {
 }
 
 func SetCurrentGame(currentGame CurrentGame) error {
-	log.Printf("currentGame: %v", currentGame)
 	result := db.Create(&currentGame)
 	return wrapError("SetCurrentGame", result.Error)
 }
@@ -412,7 +409,7 @@ func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(T) error) error 
 
 func ApplyToObservers(gameId GameID, action func(MinimalUser) error) error {
 	query := db.Model(&CurrentGame{}).Where("game_id = ? and role = 'Observer'", gameId)
-	return wrapError("ApplyToObservers", ApplyToQueryResult(query, func (currentGame CurrentGame) error {
+	return wrapError("ApplyToObservers", ApplyToQueryResult(query, func(currentGame CurrentGame) error {
 		return action(currentGame.User)
 	}))
 }

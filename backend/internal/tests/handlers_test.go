@@ -104,6 +104,32 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	expectMessage(t, c, `["ConfigRoomUpdate",{"gameId":"gbHJd","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`)
 }
 
+func TestGameFlowSimpler(t *testing.T) {
+	sb := NewScenarioBuilder(t)
+	player := sb.EstablishConnection("player")
+	opponent := sb.EstablishConnection("opponent")
+
+	sb.SubscribeLobby(opponent) // opponent opens lobby
+	gameId := sb.Create(player, "P4") // player creates game
+	sb.SubscribeConfigRoom(player, gameId) // player subscribes to the config room
+	sb.Unsubscribe(opponent) // opponent unsubscribes from the lobby
+	sb.SubscribeConfigRoom(opponent, gameId) // opponent subscribes to the config room
+	// sb.SelectOpponent(gameId, player, opponent)
+	// player selects the opponent
+	// player proposes to the opponent
+	// player reviews the config
+	// player proposes the config again
+	// opponent accepts (the game starts)
+	// observer := sb.EstablishConnection("observer") // an observer joins
+	// the observer subscribes to the game
+	// player plays one move
+	// opponent proposes draw
+	// player accepts
+
+	sb.Cleanup()
+	t.Fatalf("test")
+}
+
 func TestGameFlow(t *testing.T) {
 	everyboard.Now = func() int64 {
 		return 42
@@ -357,7 +383,7 @@ func TestGameFlow(t *testing.T) {
 	expectMessage(t, observer, `["GameEvent",{"event":{"action":"StartGame","eventType":"Action","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
 	expectMessage(t, observer, `["GameEvent",{"event":{"action":"Sync","eventType":"Action","time":42,"user":{"id":"observer","name":"observer"}},"serverTime":42}]`)
 
-	// // Player plays one move
+	// Player plays one move
 	eventMove := model.GameEvent{
 		ID: 2,
 		GameID: configRoom.ID,
@@ -444,10 +470,11 @@ func TestGameFlow(t *testing.T) {
 }
 
 func TestResign(t *testing.T) {
+	// player, opponent := setupGameWithTwoPlayers()
 }
 
 // TODO: TestNotifyTimeout
-// TODO: TestEndGame
+// TODO: TestEndGame with a winner
 // TODO: TestRejectProposal
 // TODO: TestAddTime
 

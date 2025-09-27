@@ -252,27 +252,27 @@ var GameEventRows = []string{"id", "game_id", "timestamp", "user_id", "user_name
 func (e GameEvent) MarshalJSON() ([]byte, error) {
 	dataBytes, err := json.Marshal(e.Data)
 	if err != nil {
-		// TODO FOR REVIEW: this error should not be reachable. We can't define
-		// an e.Data that cannot be converted to JSON. Similarly for other
-		// errors in this function, and actually quite some more in the project.
-		// But it is safer to propagate the errors instead of ignoring them or
-		// making the server crash. How do we deal with coverage in this case?
-		// For comparison, this would be like trying to cover every exception
-		// that can be raised by any function in JavaScript. We don't do this in
-		// the frontend because it is unfeasible (e.g., JSON.parse in JS can
-		// throw, but we don't check at every place we call it if we cover the
-		// exceptional case). But in Go, there is no notion of exceptions, all
-		// errors are explicit. I would be for aiming for a high coverage, but
-		// not 100%. One trick could be to explicitly annotate such cases with
-		// e.g., a comment stating "uncoverable" (and maybe a rationale as to
-		// why it is not coverable), and having a script that checks that
-		// besides such lines, we have 100% coverage.
 		return nil, err
 	}
 
 	var dataFields map[string]json.RawMessage
 	err = json.Unmarshal(dataBytes, &dataFields)
 	if err != nil {
+		// TODO FOR REVIEW: this error should not be reachable. We can't have a
+		// marshalled object that's unmarshallable (I think). Similarly for
+		// other errors in this function, and actually quite some more in the
+		// project. But it is safer to propagate the errors instead of ignoring
+		// them or making the server crash. How do we deal with coverage in this
+		// case? For comparison, this would be like trying to cover every
+		// exception that can be raised by any function in JavaScript. We don't
+		// do this in the frontend because it is unfeasible (e.g., JSON.parse in
+		// JS can throw, but we don't check at every place we call it if we
+		// cover the exceptional case). But in Go, there is no notion of
+		// exceptions, all errors are explicit. I would be for aiming for a high
+		// coverage, but not 100%. One trick could be to explicitly annotate
+		// such cases with e.g., a comment stating "uncoverable" (and maybe a
+		// rationale as to why it is not coverable), and having a script that
+		// checks that besides such lines, we have 100% coverage.
 		return nil, err
 	}
 

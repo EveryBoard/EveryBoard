@@ -45,9 +45,7 @@ func (h *Handlers) send(message model.OutgoingMessage) error {
 }
 
 func (h *Handlers) broadcastToUser(user model.MinimalUser, message model.OutgoingMessage) error {
-	log.Printf("broadcasting to user: %s", user.Name)
 	for connection := range Connections.AllUserConnections(user) {
-		log.Printf("sending message to %s", user.Name)
 		err := sendMessage(connection, message)
 		if err != nil {
 			return err
@@ -84,7 +82,6 @@ func (h *Handlers) broadcastToGame(gameId model.GameID, message model.OutgoingMe
 }
 
 func (h *Handlers) sendChatMessages(gameId model.GameID) error {
-	log.Println("sending chat messages")
 	return model.ApplyToMessagesOfGame(gameId, func(message *model.Message) error {
 		return h.send(model.ChatMessage{Message: *message})
 	})
@@ -126,14 +123,12 @@ func (h *Handlers) chatSend(content string) error {
 		return h.error(model.ErrorNotSubscribed)
 	}
 
-	log.Printf("now is %d", Now())
 	message := model.Message{
 		Sender:    h.user,
 		Timestamp: Now(),
 		Content:   content,
 	}
 	err := model.AddChatMessage(gameId, &message)
-	log.Printf("message is posted at %d", message.Timestamp)
 	if err != nil {
 		return err
 	}
@@ -141,14 +136,11 @@ func (h *Handlers) chatSend(content string) error {
 }
 
 func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
-	log.Printf("in setCurrentGame")
 	err := model.SetCurrentGame(currentGame)
 	if err != nil {
-		log.Printf("error: %s", err)
 		return err
 	}
 
-	log.Printf("broadcasting to user %s", user.ID)
 	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: &currentGame })
 }
 
@@ -162,14 +154,11 @@ func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.C
 }
 
 func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
-	log.Printf("removing current game of %s", user.Name)
 	err := model.RemoveCurrentGame(user)
 	if err != nil {
-		log.Printf("error! %v", err)
 		return err
 	}
 
-	log.Println("done removing")
 	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: nil })
 }
 
@@ -223,7 +212,6 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 	}
 
 	configRoom, err := model.GetConfigRoom(gameId)
-	log.Printf("configRoom: %v", configRoom)
 	if err != nil {
 		return err
 	}
@@ -239,7 +227,6 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 		// For both candidates and creator, send the config room first, then the candidates.
 		// The order is important so that the client knows the config room before the candidates
-		log.Println("1")
 		err = h.send(model.ConfigRoomUpdateMessage{
 			GameID:     gameId,
 			ConfigRoom: *configRoom,
@@ -248,13 +235,20 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 			return err
 		}
 
-		log.Println("2")
 		if uid != configRoom.Creator.ID {
+			log.Printf("%s is not creator", uid)
 			// A new candidate appears!
-			err = configRoom.AddCandidate(h.user)
+			elo, err := model.GetElo(configRoom.GameName, h.user)
 			if err != nil {
 				return err
 			}
+			log.Printf("got elo!")
+
+			err = configRoom.AddCandidate(h.user, elo.CurrentElo)
+			if err != nil {
+				return err
+			}
+			log.Printf("candidate added!")
 
 			// Let the other people in the config room know about it
 			err = h.broadcastToConfigRoom(gameId, model.CandidateJoinedMessage{Candidate: h.user})
@@ -262,7 +256,6 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 				return err
 			}
 
-			log.Println("3")
 			// And set the current game of the candidate
 			err = h.setCurrentGame(h.user, model.CurrentGame{
 				GameID: gameId,
@@ -277,7 +270,6 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 			}
 		}
 
-		log.Println("4")
 		return model.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
 			if candidate.User.ID != uid { // don't send the user to itself twice
 				return h.send(model.CandidateJoinedMessage{Candidate: candidate.User})
@@ -307,15 +299,12 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 	Subscriptions.Subscribe(h.connection, h.user.ID, gameId, SubscriptionToGame)
 
 	// Let the observers know their current game. The players already know it from game creation
-	log.Printf("We have a new subscriber, with id %s and name %s, while player zero is %s and player one is %s", h.user.ID, h.user.Name, game.PlayerZero.ID, game.PlayerOne.ID)
 	if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
-		log.Printf("we are going to set their current game")
 		// Need the config room to get creator and opponent
 		configRoom, err := model.GetConfigRoom(gameId)
 		if err != nil {
 			return err
 		}
-		log.Printf("got the config room")
 		err = h.setCurrentGame(h.user, model.CurrentGame{
 			GameID: gameId,
 			GameName: game.GameName,
@@ -737,21 +726,17 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 		return err
 	}
 	err = model.ApplyToObservers(game.GameID, func (observer model.MinimalUser) error {
-		log.Printf("observer: %v", observer)
 		return h.removeCurrentGame(observer)
 	})
 	if err != nil {
-		log.Printf("error: %v", err)
 		return err
 	}
 
-	log.Println("broadcasting update")
 	err = h.broadcastToGame(game.GameID, model.GameUpdateMessage{Game: *game})
 	if err != nil {
 		return err
 	}
 
-	log.Println("broadcasting event")
 	eventMessage := model.GameEventMessage{Event: event, ServerTime: NowFloat()}
 	err = h.broadcastToGame(game.GameID, eventMessage)
 	if err != nil {

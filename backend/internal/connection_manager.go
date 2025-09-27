@@ -72,16 +72,13 @@ func (connectionManager *ConnectionManager[Connection]) SendMessage(client Conne
 		return
 	}
 
-	log.Println("sending message")
+	// This will try to enqueue the message if there is room for it
 	select {
 	case channel <- message: // enqueue the message
-		log.Println("message queued")
 	default:
 		// the buffer is full, ignore this message (the client is likely dead)
-		log.Println("buffer full")
 	}
 
-	log.Println("done")
 
 }
 

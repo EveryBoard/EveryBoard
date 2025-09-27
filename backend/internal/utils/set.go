@@ -14,3 +14,9 @@ func (set Set[T]) Exists(value T) bool {
 	_, exists := set[value]
 	return exists
 }
+
+func (set Set[T]) Remove(value T) {
+	if set.Exists(value) {
+		delete(set, value)
+	}
+}

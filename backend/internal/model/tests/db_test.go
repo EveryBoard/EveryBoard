@@ -310,11 +310,11 @@ func TestCandidatesFlow(t *testing.T) {
 	// Then it should work as expected
 	candidate1 := model.MinimalUser{ID: "bar", Name: "bar"}
 	candidate2 := model.MinimalUser{ID: "baz", Name: "baz"}
-	err = configRoom.AddCandidate(candidate1)
+	err = configRoom.AddCandidate(candidate1, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
-	err = configRoom.AddCandidate(candidate2)
+	err = configRoom.AddCandidate(candidate2, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
