@@ -2817,14 +2817,17 @@
       <trans-unit id="8952465701867689047" datatype="html">
         <source>You must drop pieces one by one</source>
       </trans-unit>
-      <trans-unit id="5857719380879830870" datatype="html">
-        <source>You cannot land or drop on your throne</source>
+      <trans-unit id="7497498388753121757" datatype="html">
+        <source>You cannot land or drop on your castle</source>
       </trans-unit>
-      <trans-unit id="9041250493266709397" datatype="html">
-        <source>You must only place your throne</source>
+      <trans-unit id="5963846295180517656" datatype="html">
+        <source>You must only place your castle</source>
       </trans-unit>
-      <trans-unit id="3075088676962429588" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces</source>
+      <trans-unit id="3655898495512904683" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (first player)</source>
+      </trans-unit>
+      <trans-unit id="3732534634894194148" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (second player)</source>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>
@@ -2850,14 +2853,14 @@
       <trans-unit id="859693719600901508" datatype="html">
         <source>Is Rhombic</source>
       </trans-unit>
-      <trans-unit id="6581099810354955272" datatype="html">
-        <source>Place throne yourself</source>
+      <trans-unit id="3155220222252009452" datatype="html">
+        <source>Place castle yourself</source>
       </trans-unit>
       <trans-unit id="5344724322380814051" datatype="html">
         <source>Drop mode</source>
       </trans-unit>
-      <trans-unit id="5488997593887097957" datatype="html">
-        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s throne. The thrones are by default on the corners.</source>
+      <trans-unit id="5026411156591848707" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s castle. The castles are by default on the corners.</source>
       </trans-unit>
       <trans-unit id="5230748384162383195" datatype="html">
         <source>Defender&apos;s move</source>
@@ -2877,11 +2880,11 @@
       <trans-unit id="2002655185364987666" datatype="html">
         <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
       </trans-unit>
-      <trans-unit id="1462347051222352728" datatype="html">
-        <source>Custom config: place throne yourself</source>
+      <trans-unit id="2289520460836999741" datatype="html">
+        <source>Custom config: place castle yourself</source>
       </trans-unit>
-      <trans-unit id="412010597484544366" datatype="html">
-        <source>You have the option to change decide yourself where you place the throne. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your throne.</source>
+      <trans-unit id="7842496462088765849" datatype="html">
+        <source>You have the option to change decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
       </trans-unit>
       <trans-unit id="7761290276414807914" datatype="html">
         <source>Custom config: Drop Mode: By Batch</source>

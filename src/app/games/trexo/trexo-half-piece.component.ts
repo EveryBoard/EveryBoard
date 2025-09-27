@@ -9,7 +9,7 @@ import { TrexoMove } from './TrexoMove';
 import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 
 @Component({
-    selector: '[mgp-trexo-half-piece]', // TODO FOR REVIEW: on remarque que c'est le seul composant à commencer par MGP et non "app"
+    selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })

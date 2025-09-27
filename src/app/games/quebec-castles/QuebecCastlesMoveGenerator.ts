@@ -29,13 +29,13 @@ export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
         const moves: QuebecCastlesMove[] = [];
         const rules: QuebecCastlesRules = QuebecCastlesRules.get();
         const nbOfDropsAwaited: number = rules.getExpectedDropsThisTurn(state, config);
-        const mustPlaceThrone: boolean = rules.mustPlaceThrone(state, config);
-        if (config.dropMode === 'PIECE_BY_PIECE' || mustPlaceThrone) {
+        const mustPlaceCastle: boolean = rules.mustPlaceCastle(state, config);
+        if (config.dropMode === 'PIECE_BY_PIECE' || mustPlaceCastle) {
             const coords: Coord[] = [];
             const validDropCoords: Coord[] = rules.getValidDropCoords(player, config);
             for (const dropCoord of validDropCoords) {
                 const piece: PlayerOrNone = state.getPieceAt(dropCoord);
-                if (piece.isNone() && state.thrones.get(player).equalsValue(dropCoord) === false) {
+                if (piece.isNone() && state.castles.get(player).equalsValue(dropCoord) === false) {
                     if (nbOfDropsAwaited === 1) {
                         moves.push(QuebecCastlesDrop.of([dropCoord]));
                     } else {

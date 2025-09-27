@@ -17,8 +17,8 @@
                   class="base"
             />
             <ng-container *ngFor="let player of Player.PLAYERS">
-                <g *ngIf="isPlayerThrone(player, coordAndContent.coord)"
-                   id="throne-{{ player.toString() }}-{{ getState().thrones.get(player).get().x }}-{{ getState().thrones.get(player).get().y }}"
+                <g *ngIf="isPlayerCastle(player, coordAndContent.coord)"
+                   id="castle-{{ player.toString() }}-{{ getState().castles.get(player).get().x }}-{{ getState().castles.get(player).get().y }}"
                    style="pointer-events: none">
                     <polyline points="0 0, 100 100, 50 50, 100 0, 0, 100, 50 50, 0 50, 100 50, 50 50, 50 0, 50 100, 50 50"
                               class="base-no-fill"/>

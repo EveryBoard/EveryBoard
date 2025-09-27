@@ -10,19 +10,19 @@ import { Table } from 'src/app/jscaip/TableUtils';
 export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
 
     public static of(oldState: QuebecCastlesState, newBoard: Table<PlayerOrNone>): QuebecCastlesState {
-        return new QuebecCastlesState(newBoard, oldState.turn, oldState.thrones);
+        return new QuebecCastlesState(newBoard, oldState.turn, oldState.castles);
     }
 
     public constructor(board: Table<PlayerOrNone>,
                        turn: number,
-                       public readonly thrones: PlayerMap<MGPOptional<Coord>>)
+                       public readonly castles: PlayerMap<MGPOptional<Coord>>)
     {
         super(board, turn);
-        this.thrones.makeImmutable();
+        this.castles.makeImmutable();
     }
 
     public incrementTurn(): QuebecCastlesState {
-        return new QuebecCastlesState(this.getCopiedBoard(), this.turn + 1, this.thrones);
+        return new QuebecCastlesState(this.getCopiedBoard(), this.turn + 1, this.castles);
     }
 
     public setPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
@@ -32,11 +32,11 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
                                              QuebecCastlesState.of);
     }
 
-    public isThroneAt(coord: Coord): boolean {
-        const throneZero: MGPOptional<Coord> = this.thrones.get(Player.ZERO);
-        const throneOne: MGPOptional<Coord> = this.thrones.get(Player.ONE);
-        return throneZero.equalsValue(coord) ||
-               throneOne.equalsValue(coord);
+    public isCastleAt(coord: Coord): boolean {
+        const castleZero: MGPOptional<Coord> = this.castles.get(Player.ZERO);
+        const castleOne: MGPOptional<Coord> = this.castles.get(Player.ONE);
+        return castleZero.equalsValue(coord) ||
+               castleOne.equalsValue(coord);
     }
 
 }

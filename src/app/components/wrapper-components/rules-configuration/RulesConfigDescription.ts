@@ -27,8 +27,9 @@ export class RulesConfigDescriptionLocalizable {
 
 export abstract class ConfigLine<R extends RulesConfig = EmptyRulesConfig> {
 
-    protected constructor(public readonly defaultValue: ConfigDescriptionType, // Previously value: TODO REMOVE COMMENT
-                          public readonly title: Localized)
+    protected constructor(public readonly defaultValue: ConfigDescriptionType,
+                          public readonly title: Localized,
+    )
     {
     }
 

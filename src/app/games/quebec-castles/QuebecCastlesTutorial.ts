@@ -8,20 +8,20 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
-const defaultThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
     MGPOptional.of(new Coord(8, 8)),
     MGPOptional.of(new Coord(0, 0)),
 );
-defaultThrones.makeImmutable();
+defaultCastles.makeImmutable();
 const rectangularWidthHeightConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     height: 12,
     width: 14,
     isRhombic: false,
 });
-const playersPlaceThroneConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+const playersPlaceCastleConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
-    playersPlaceThrone: true,
+    playersPlaceCastle: true,
 });
 const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
@@ -43,7 +43,7 @@ export class QuebecCastlesTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
-            $localize`Quebec Castles is the first board game invented by the EveryBoard Team.<br/>The goal of the game is to capture all opponent piece, or to step on the opponent's throne. The thrones are by default on the corners.`,
+            $localize`Quebec Castles is the first board game invented by the EveryBoard Team.<br/>The goal of the game is to capture all opponent piece, or to step on the opponent's castle. The castles are by default on the corners.`,
             QuebecCastlesRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
@@ -68,12 +68,12 @@ export class QuebecCastlesTutorial extends Tutorial {
             rectangularWidthHeightConfig,
         ),
         TutorialStep.anyMove(
-            $localize`Custom config: place throne yourself`,
-            $localize`You have the option to change decide yourself where you place the throne. If you don't change anything else the piece placement will be automatically done right after.<br/><br/>You're playing Dark/Defender, place your throne.`,
-            QuebecCastlesRules.get().getInitialState(playersPlaceThroneConfig),
+            $localize`Custom config: place castle yourself`,
+            $localize`You have the option to change decide yourself where you place the castle. If you don't change anything else the piece placement will be automatically done right after.<br/><br/>You're playing Dark/Defender, place your castle.`,
+            QuebecCastlesRules.get().getInitialState(playersPlaceCastleConfig),
             QuebecCastlesMove.drop([new Coord(7, 7)]),
             TutorialStepMessage.CONGRATULATIONS(),
-            playersPlaceThroneConfig,
+            playersPlaceCastleConfig,
         ),
         TutorialStep.anyMove(
             $localize`Custom config: Drop Mode: By Batch`,

@@ -23,11 +23,11 @@ describe('QuebecCastlesComponent', () => {
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = rules.getDefaultRulesConfig();
-    const defaultThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+    const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
         MGPOptional.of(new Coord(8, 8)),
         MGPOptional.of(new Coord(0, 0)),
     );
-    defaultThrones.makeImmutable();
+    defaultCastles.makeImmutable();
 
     beforeEach(fakeAsync(async() => {
         // This `testUtils` will be used throughout the test suites as a matcher for various test conditions
@@ -76,7 +76,7 @@ describe('QuebecCastlesComponent', () => {
             [_, _, _, _, _, _, _, O, O],
             [_, _, _, _, _, _, _, O, O],
             [_, _, _, _, _, O, O, O, _],
-        ], 3, defaultThrones);
+        ], 3, defaultCastles);
         await testUtils.setupState(state);
         await testUtils.expectClickSuccess('#click-2-2');
 
@@ -410,7 +410,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
-                ], 5, defaultThrones);
+                ], 5, defaultCastles);
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When dropping all its remaining piece at once
@@ -443,7 +443,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
-                ], 5, defaultThrones);
+                ], 5, defaultCastles);
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When dropping all its remaining piece at once then clicking on a piece
@@ -456,7 +456,7 @@ describe('QuebecCastlesComponent', () => {
                 testUtils.expectElementNotToHaveClass('#piece-0-1', 'selected-stroke');
             }));
 
-            it('should forbid player to drop on the throne', fakeAsync(async() => {
+            it('should forbid player to drop on the castle', fakeAsync(async() => {
                 // Given a board on which current player is the only one that has piece to drop
                 // and a drop piece by piece config
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
@@ -475,10 +475,10 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
-                ], 5, defaultThrones);
+                ], 5, defaultCastles);
                 await testUtils.setupState(state, { config: customConfig });
 
-                // When dropping a piece on the throne
+                // When dropping a piece on the castle
                 await testUtils.expectClickSuccess('#click-0-0');
 
                 // Then no piece should have been dropped
@@ -504,7 +504,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
-                ], 6, defaultThrones);
+                ], 6, defaultCastles);
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When doing the first move
@@ -533,7 +533,7 @@ describe('QuebecCastlesComponent', () => {
                     [_, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, _, O, _],
-                ], 5, defaultThrones);
+                ], 5, defaultCastles);
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When attempting to move a piece that was already dropped
@@ -545,7 +545,7 @@ describe('QuebecCastlesComponent', () => {
 
         });
 
-        describe('place throne yourself', () => {
+        describe('place castle yourself', () => {
 
             it('should have first click being king drop', fakeAsync(async() => {
                 // Given the initial board in "drop king yourself" config
@@ -553,18 +553,18 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig.get(),
                     width: 7,
                     height: 7,
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
                 await testUtils.setupState(state, { config: customConfig });
 
                 // When clicking inside territory
-                const throne: Coord = new Coord(6, 6);
-                const move: QuebecCastlesMove = QuebecCastlesMove.drop([throne]);
+                const castle: Coord = new Coord(6, 6);
+                const move: QuebecCastlesMove = QuebecCastlesMove.drop([castle]);
                 await testUtils.expectMoveSuccess('#click-6-6', move);
 
-                // Then the throne should be drawn there now
-                testUtils.expectElementToExist('#throne-PLAYER_ZERO-6-6');
+                // Then the castle should be drawn there now
+                testUtils.expectElementToExist('#castle-PLAYER_ZERO-6-6');
                 // Also, even if the default config must be used, the new configurated size must remain
                 testUtils.expectElementNotToExist('#click-7-7');
             }));

@@ -37,9 +37,9 @@ export class QuebecCastlesFailure {
 
     public static readonly MUST_DROP_ONE_BY_ONE: Localized = () => $localize`You must drop pieces one by one`;
 
-    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_THRONE: Localized = () => $localize`You cannot land or drop on your throne`;
+    public static readonly CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE: Localized = () => $localize`You cannot land or drop on your castle`;
 
-    public static readonly PLACE_ONLY_ONE_THRONE: Localized = () => $localize`You must only place your throne`;
+    public static readonly PLACE_ONLY_ONE_CASTLE: Localized = () => $localize`You must only place your castle`;
 
     public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ZERO: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (first player)`;
 
@@ -49,15 +49,14 @@ export class QuebecCastlesFailure {
 
 }
 
-type DropModeEnum = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH'
+type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH'
 
-export const DropModes: Record<DropModeEnum, Localized> = {
+export const DropModes: Record<DropMode, Localized> = {
     'AUTO': () => $localize`Automatic`,
     'PIECE_BY_PIECE': () => $localize`Piece by piece`,
     'BY_BATCH': () => $localize`By batch`,
 };
 
-// TODO show score
 export type QuebecCastlesConfig = {
 
     width: number;
@@ -72,9 +71,9 @@ export type QuebecCastlesConfig = {
 
     isRhombic: boolean;
 
-    playersPlaceThrone: boolean;
+    playersPlaceCastle: boolean;
 
-    dropMode: DropModeEnum;
+    dropMode: DropMode;
 
 }
 
@@ -95,13 +94,13 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     invaders: new NumberConfig<QuebecCastlesConfig>(14, () => $localize`Number of invaders`, MGPValidators.range(1, 123456)),
                     defenders: new NumberConfig(9, () => $localize`Number of defenders`, MGPValidators.range(1, 123456)),
                     isRhombic: new BooleanConfig(true, () => $localize`Is Rhombic`),
-                    playersPlaceThrone: new BooleanConfig(false, () => $localize`Place throne yourself`),
+                    playersPlaceCastle: new BooleanConfig(false, () => $localize`Place castle yourself`),
                     dropMode: new EnumConfig('AUTO', () => $localize`Drop mode`, DropModes),
                 },
                 validators: [
                     QuebecCastlesRules.enoughLineForTerritory,
                     QuebecCastlesRules.enoughPlaceForDefenders,
-                    QuebecCastlesRules.enoughPlaceForInvaders, // TODO UT, and also just making it work
+                    QuebecCastlesRules.enoughPlaceForInvaders,
                 ],
             },
         );
@@ -138,7 +137,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private static isThereEnoughPlaceForPiece(player: Player, config: QuebecCastlesConfig, numberOfPiece: number)
     : MGPValidation
     {
-        // Got to substract 1 as the throne is not included
+        // Got to substract 1 as the castle is not included
         const spaceForPiece: number = QuebecCastlesRules.get().getValidDropCoords(player, config).length - 1;
         if (spaceForPiece < numberOfPiece) {
             const line: number = config.linesForTerritory;
@@ -157,17 +156,17 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public override getInitialState(optionalConfig: MGPOptional<QuebecCastlesConfig>): QuebecCastlesState {
         const config: QuebecCastlesConfig = optionalConfig.get();
-        const thrones: PlayerMap<MGPOptional<Coord>> = this.getThrones(config);
+        const castles: PlayerMap<MGPOptional<Coord>> = this.getCastles(config);
         const board: Table<PlayerOrNone> = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
-        let state: QuebecCastlesState = new QuebecCastlesState(board, 0, thrones);
-        if (config.dropMode === 'AUTO' && config.playersPlaceThrone === false) {
+        let state: QuebecCastlesState = new QuebecCastlesState(board, 0, castles);
+        if (config.dropMode === 'AUTO' && config.playersPlaceCastle === false) {
             state = this.fillBoard(state, config);
         }
         return state;
     }
 
-    private getThrones(config: QuebecCastlesConfig): PlayerMap<MGPOptional<Coord>> {
-        if (config.playersPlaceThrone) {
+    private getCastles(config: QuebecCastlesConfig): PlayerMap<MGPOptional<Coord>> {
+        if (config.playersPlaceCastle) {
             const empty: MGPOptional<Coord> = MGPOptional.empty();
             return PlayerMap.ofValues(empty, empty);
         } else {
@@ -266,7 +265,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             direction = Ordinal.RIGHT;
         }
         while (defaultAvailableSpace > 0) {
-            if (state.isThroneAt(coord) === false) {
+            if (state.isCastleAt(coord) === false) {
                 coords.push(coord);
             }
             coord = coord.getNext(direction);
@@ -304,7 +303,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             case 'BY_BATCH':
                 return this.getExpectedDropsThisTurnForBatch(state, config);
             default:
-                if (this.mustPlaceThrone(state, config)) {
+                if (this.mustPlaceCastle(state, config)) {
                     return 1;
                 } else {
                     return 0;
@@ -313,7 +312,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private getExpectedDropsThisTurnForPieceByPiece(state: QuebecCastlesState, config: QuebecCastlesConfig): number {
-        if (this.mustPlaceThrone(state, config)) {
+        if (this.mustPlaceCastle(state, config)) {
             return 1;
         }
         const totalPieceToDrop: number = config.defenders + config.invaders;
@@ -326,7 +325,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         // First player: 3; second player: 5 => turn 5 ==> drop 3
         // First player: 5; second player: 3 => turn 6 ==> drop 2
         let turnOfLastDrop: number = Math.min(config.defenders, config.invaders) * 2;
-        if (config.playersPlaceThrone) {
+        if (config.playersPlaceCastle) {
             turnOfLastDrop += 2;
         }
         let dropBonus: number = 0;
@@ -344,13 +343,13 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private getExpectedDropsThisTurnForBatch(state: QuebecCastlesState, config: QuebecCastlesConfig): number {
         const toDrop: number = this.getNumberOfPieces(state.getCurrentPlayer(), config);
         if (state.turn < 2) {
-            if (config.playersPlaceThrone) {
+            if (config.playersPlaceCastle) {
                 return 1;
             } else {
                 return toDrop;
             }
         } else if (state.turn < 4) {
-            if (config.playersPlaceThrone) {
+            if (config.playersPlaceCastle) {
                 return toDrop;
             }
         }
@@ -363,24 +362,24 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (QuebecCastlesMove.isTranslation(move)) {
             return MGPValidation.failure(QuebecCastlesFailure.CANNOT_MOVE_IN_DROP_PHASE());
         }
-        if (this.mustPlaceThrone(state, config)) {
-            return this.isLegalThronePlacement(move, state, config);
+        if (this.mustPlaceCastle(state, config)) {
+            return this.isLegalCastlePlacement(move, state, config);
         } else {
             return this.isLegalPieceDrop(move, state, config);
         }
     }
 
-    public mustPlaceThrone(state: QuebecCastlesState, config: QuebecCastlesConfig): boolean {
-        return state.turn < 2 && config.playersPlaceThrone;
+    public mustPlaceCastle(state: QuebecCastlesState, config: QuebecCastlesConfig): boolean {
+        return state.turn < 2 && config.playersPlaceCastle;
     }
 
-    private isLegalThronePlacement(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
+    private isLegalCastlePlacement(move: QuebecCastlesDrop, state: QuebecCastlesState, config: QuebecCastlesConfig)
     : MGPValidation
     {
         if (move.coords.size() === 1) {
             return this.getDropLegality(move.coords.getAnyElement().get(), state, config, false);
         } else {
-            return MGPValidation.failure(QuebecCastlesFailure.PLACE_ONLY_ONE_THRONE());
+            return MGPValidation.failure(QuebecCastlesFailure.PLACE_ONLY_ONE_CASTLE());
         }
     }
 
@@ -431,7 +430,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         // Then you must now drop them all at once
     }
 
-    private getDropLegality(coord: Coord, state: QuebecCastlesState, config: QuebecCastlesConfig, isThrone: boolean)
+    private getDropLegality(coord: Coord, state: QuebecCastlesState, config: QuebecCastlesConfig, isCastle: boolean)
     : MGPValidation
     {
         if (state.isOnBoard(coord) === false) {
@@ -442,8 +441,8 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
         const player: Player = state.getCurrentPlayer();
-        if (state.thrones.get(player).equalsValue(coord) && isThrone === false) {
-            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE());
+        if (state.castles.get(player).equalsValue(coord) && isCastle === false) {
+            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE());
         }
         if (this.isDropInPlayerTerritory(coord, player, config)) {
             return MGPValidation.SUCCESS;
@@ -467,7 +466,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public isValidDrop(state: QuebecCastlesState, coord: Coord, player: Player, config: QuebecCastlesConfig): boolean {
         if (this.isDropInPlayerTerritory(coord, player, config)) {
-            return state.getPieceAt(coord).isNone() && state.isThroneAt(coord) === false;
+            return state.getPieceAt(coord).isNone() && state.isCastleAt(coord) === false;
         } else {
             return false;
         }
@@ -550,9 +549,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (landingSquare.isPlayer() && landingSquare.equals(currentPlayer)) {
             return MGPValidation.failure(RulesFailure.CANNOT_SELF_CAPTURE());
         }
-        const playerThrone: Coord = state.thrones.get(currentPlayer).get();
-        if (landing.equals(playerThrone)) {
-            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE());
+        const playerCastle: Coord = state.castles.get(currentPlayer).get();
+        if (landing.equals(playerCastle)) {
+            return MGPValidation.failure(QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE());
         }
         return MGPValidation.SUCCESS;
     }
@@ -599,13 +598,13 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     {
         const config: QuebecCastlesConfig = optionalConfig.get();
         const currentPlayer: Player = state.getCurrentPlayer();
-        if (this.mustPlaceThrone(state, config)) {
-            const thrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
-                state.thrones.get(Player.ZERO),
-                state.thrones.get(Player.ONE),
+        if (this.mustPlaceCastle(state, config)) {
+            const castles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+                state.castles.get(Player.ZERO),
+                state.castles.get(Player.ONE),
             );
-            const throneCoord: Coord = move.coords.getAnyElement().get();
-            thrones.put(currentPlayer, MGPOptional.of(throneCoord));
+            const castleCoord: Coord = move.coords.getAnyElement().get();
+            castles.put(currentPlayer, MGPOptional.of(castleCoord));
             if (config.dropMode === 'AUTO') {
                 const adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...this.getDefaultRulesConfig().get(),
@@ -615,10 +614,10 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     // TODO: defender and invader are affected TOOOOO
                 });
                 let newState: QuebecCastlesState = this.getInitialState(adaptedDefaultConfig);
-                newState = this.placeThronesAndMovePiece(state, thrones, adaptedDefaultConfig);
-                return new QuebecCastlesState(newState.board, state.turn + 1, thrones);
+                newState = this.placeCastlesAndMovePiece(state, castles, adaptedDefaultConfig);
+                return new QuebecCastlesState(newState.board, state.turn + 1, castles);
             } else {
-                return new QuebecCastlesState(state.board, state.turn + 1, thrones);
+                return new QuebecCastlesState(state.board, state.turn + 1, castles);
             }
         } else {
             let resultingState: QuebecCastlesState = state;
@@ -629,13 +628,13 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private placeThronesAndMovePiece(state: QuebecCastlesState,
-                                     thrones: PlayerMap<MGPOptional<Coord>>,
+    private placeCastlesAndMovePiece(state: QuebecCastlesState,
+                                     castles: PlayerMap<MGPOptional<Coord>>,
                                      adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig>)
     : QuebecCastlesState
     {
         const initialState: QuebecCastlesState = this.getInitialState(adaptedDefaultConfig);
-        let newState: QuebecCastlesState = this.doThronePlacement(initialState, thrones, Player.ZERO);
+        let newState: QuebecCastlesState = this.doCastlePlacement(initialState, castles, Player.ZERO);
         if (state.getCurrentPlayer() === Player.ZERO) {
             initialState.forEachCoord((coord: Coord, content: PlayerOrNone) => {
                 if (content === Player.ONE) {
@@ -643,22 +642,22 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                 }
             });
         } else {
-            newState = this.doThronePlacement(newState, thrones, Player.ONE);
+            newState = this.doCastlePlacement(newState, castles, Player.ONE);
         }
         return newState;
     }
 
-    private doThronePlacement(initialState: QuebecCastlesState, thrones: PlayerMap<MGPOptional<Coord>>, player: Player)
+    private doCastlePlacement(initialState: QuebecCastlesState, castles: PlayerMap<MGPOptional<Coord>>, player: Player)
     : QuebecCastlesState
     {
-        const actualThrone: Coord = thrones.get(player).get();
-        const defaultThrone: Coord = initialState.thrones.get(player).get();
-        if (initialState.getPieceAt(actualThrone).isPlayer()) {
-            // The throne has been placed where a piece is on initial state
-            // So we remove the "initial piece" where the actual throne is put
-            initialState = initialState.setPieceAt(actualThrone, PlayerOrNone.NONE);
-            // And move it to the place we know is by defaut empty: the default throne's spalce
-            initialState = initialState.setPieceAt(defaultThrone, player);
+        const actualCastle: Coord = castles.get(player).get();
+        const defaultCastle: Coord = initialState.castles.get(player).get();
+        if (initialState.getPieceAt(actualCastle).isPlayer()) {
+            // The castle has been placed where a piece is on initial state
+            // So we remove the "initial piece" where the actual castle is put
+            initialState = initialState.setPieceAt(actualCastle, PlayerOrNone.NONE);
+            // And move it to the place we know is by defaut empty: the default castle's spalce
+            initialState = initialState.setPieceAt(defaultCastle, player);
         }
         return initialState;
     }
@@ -673,13 +672,13 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public override getGameStatus(node: QuebecCastlesNode, config: MGPOptional<QuebecCastlesConfig>): GameStatus {
         const state: QuebecCastlesState = node.gameState;
-        const defenderThrone: MGPOptional<Coord> = state.thrones.get(Player.ONE);
-        if (defenderThrone.isPresent() && state.getPieceAt(defenderThrone.get()).equals(PlayerOrNone.ZERO)) {
-            return GameStatus.ZERO_WON; // Player.ZERO (Invader) stepped on Player.ONE (Defender)'s throne, victory
+        const defenderCastle: MGPOptional<Coord> = state.castles.get(Player.ONE);
+        if (defenderCastle.isPresent() && state.getPieceAt(defenderCastle.get()).equals(PlayerOrNone.ZERO)) {
+            return GameStatus.ZERO_WON; // Player.ZERO (Invader) stepped on Player.ONE (Defender)'s castle, victory
         }
-        const invader: MGPOptional<Coord> = state.thrones.get(Player.ZERO);
+        const invader: MGPOptional<Coord> = state.castles.get(Player.ZERO);
         if (invader.isPresent() && state.getPieceAt(invader.get()).equals(PlayerOrNone.ONE)) {
-            return GameStatus.ONE_WON; // Player.ONE (Defender) stepped on Player.ZERO (Invader)'s throne, victory
+            return GameStatus.ONE_WON; // Player.ONE (Defender) stepped on Player.ZERO (Invader)'s castle, victory
         }
         const playerZeroPieces: number = state.countPieceOnBoard(Player.ZERO);
         if (this.isDropPhase(state, config.get()) === false) {
@@ -717,7 +716,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     }
                 } else {
                     if (state.getPieceAt(step) === PlayerOrNone.NONE) {
-                        const landing: Coord = coord.getNext(direction, 2); // TODO not "2"
+                        const landing: Coord = coord.getNext(direction, 2);
                         if (this.getLandingValidity(state, landing).isSuccess()) {
                             moves.push(QuebecCastlesTranslation.of(coord, landing));
                         }

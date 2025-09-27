@@ -20,53 +20,53 @@ describe('QuebecCastlesRules', () => {
     let rules: QuebecCastlesRules;
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
 
-    const emptyThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(MGPOptional.empty(), MGPOptional.empty());
-    emptyThrones.makeImmutable();
-    const defaultThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+    const emptyCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(MGPOptional.empty(), MGPOptional.empty());
+    emptyCastles.makeImmutable();
+    const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
         MGPOptional.of(new Coord(8, 8)),
         MGPOptional.of(new Coord(0, 0)),
     );
-    defaultThrones.makeImmutable();
+    defaultCastles.makeImmutable();
 
     beforeEach(() => {
         // This is the rules instance that we will test
         rules = QuebecCastlesRules.get();
     });
 
-    describe('Throne Placement', () => {
+    describe('Castle Placement', () => {
 
-        it('shoud have the thrones placed by default', () => {
+        it('shoud have the castles placed by default', () => {
             // Given a board in default config
             const state: QuebecCastlesState = rules.getInitialState(defaultConfig);
 
-            // When checking the thrones coord
-            const zeroThrone: MGPOptional<Coord> = state.thrones.get(Player.ZERO);
-            const oneThrone: MGPOptional<Coord> = state.thrones.get(Player.ONE);
+            // When checking the castles coord
+            const zeroCastle: MGPOptional<Coord> = state.castles.get(Player.ZERO);
+            const oneCastle: MGPOptional<Coord> = state.castles.get(Player.ONE);
 
             // Then they should be upper left and lower right corner
             const maxX: number = state.getWidth() - 1;
             const maxY: number = state.getHeight() - 1;
-            expect(zeroThrone).toEqual(MGPOptional.of(new Coord(maxX, maxY)));
-            expect(oneThrone).toEqual(MGPOptional.of(new Coord(0, 0)));
+            expect(zeroCastle).toEqual(MGPOptional.of(new Coord(maxX, maxY)));
+            expect(oneCastle).toEqual(MGPOptional.of(new Coord(0, 0)));
         });
 
         describe('Custom Config', () => {
 
-            it('should allow first player to drop its throne when mentionned in config', () => {
-                // Given a custom config were you must place the throne yourself
+            it('should allow first player to drop its castle when mentionned in config', () => {
+                // Given a custom config were you must place the castle yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
-                // When dropping throne
-                const throne: Coord = new Coord(7, 7);
-                const move: QuebecCastlesMove = QuebecCastlesMove.drop([throne]);
+                // When dropping castle
+                const castle: Coord = new Coord(7, 7);
+                const move: QuebecCastlesMove = QuebecCastlesMove.drop([castle]);
 
                 // Then the move should succeed then the piece dropped by default
-                const thrones: PlayerMap<MGPOptional<Coord>> =
-                    PlayerMap.ofValues(MGPOptional.of(throne), MGPOptional.empty());
+                const castles: PlayerMap<MGPOptional<Coord>> =
+                    PlayerMap.ofValues(MGPOptional.of(castle), MGPOptional.empty());
                 const expectedState: QuebecCastlesState = new QuebecCastlesState([
                     [_, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _],
@@ -77,17 +77,17 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, O, _, O],
                     [_, _, _, _, _, O, O, O, O],
-                ], 1, thrones);
+                ], 1, castles);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             });
 
-            it('should allow second player to drop its throne when mentionned in config', () => {
-                // Given a custom config were you must place the throne yourself
+            it('should allow second player to drop its castle when mentionned in config', () => {
+                // Given a custom config were you must place the castle yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                 });
-                const firstThrone: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+                const firstCastle: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
                     MGPOptional.of(new Coord(7, 7)),
                     MGPOptional.empty(),
                 );
@@ -101,16 +101,16 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, O, _, O],
                     [_, _, _, _, _, O, O, O, O],
-                ], 1, firstThrone);
+                ], 1, firstCastle);
 
-                // When dropping throne
-                const throne: Coord = new Coord(0, 2);
-                const move: QuebecCastlesMove = QuebecCastlesMove.drop([throne]);
+                // When dropping castle
+                const castle: Coord = new Coord(0, 2);
+                const move: QuebecCastlesMove = QuebecCastlesMove.drop([castle]);
 
                 // Then the move should succeed then the piece dropped by default
-                const thrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+                const castles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
                     MGPOptional.of(new Coord(7, 7)),
-                    MGPOptional.of(throne),
+                    MGPOptional.of(castle),
                 );
                 const expectedState: QuebecCastlesState = new QuebecCastlesState([
                     [X, X, X, X, X, _, _, _, _],
@@ -122,33 +122,33 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, O, _, O],
                     [_, _, _, _, _, O, O, O, O],
-                ], 2, thrones);
+                ], 2, castles);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             });
 
-            it('should refuse placing thrones outside territory', () => {
-                // Given a custom config were throne are to be place yourself
+            it('should refuse placing castles outside territory', () => {
+                // Given a custom config were castle are to be place yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                     dropMode: 'BY_BATCH',
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
-                // When dropping throne outside of territory
-                const throne: Coord = new Coord(5, 6);
-                const move: QuebecCastlesMove = QuebecCastlesMove.drop([throne]);
+                // When dropping castle outside of territory
+                const castle: Coord = new Coord(5, 6);
+                const move: QuebecCastlesMove = QuebecCastlesMove.drop([castle]);
 
                 // Then it should be illegal
                 const reason: string = QuebecCastlesFailure.MUST_DROP_IN_YOUR_TERRITORY();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
             });
 
-            it('should refuse multiple dropping instead of one throne', () => {
+            it('should refuse multiple dropping instead of one castle', () => {
                 // Given a board with config "drop piece by piece"
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                     dropMode: 'BY_BATCH',
                 });
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
@@ -157,7 +157,7 @@ describe('QuebecCastlesRules', () => {
                 const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(7, 7), new Coord(6, 6)]);
 
                 // Then it should be illegal
-                const reason: string = QuebecCastlesFailure.PLACE_ONLY_ONE_THRONE();
+                const reason: string = QuebecCastlesFailure.PLACE_ONLY_ONE_CASTLE();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
             });
 
@@ -241,7 +241,7 @@ describe('QuebecCastlesRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid landing on your own throne', () => {
+        it('should forbid landing on your own castle', () => {
             // Given any state
             const state: QuebecCastlesState = rules.getInitialState(defaultConfig);
 
@@ -249,7 +249,7 @@ describe('QuebecCastlesRules', () => {
             const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(8, 8));
 
             // Then it should be illegal
-            const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE();
+            const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -321,7 +321,7 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, _, O, O, O],
                     [_, _, _, _, _, O, O, O, _],
-                ], 2, defaultThrones);
+                ], 2, defaultCastles);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
@@ -359,7 +359,7 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, O, O, O],
                     [_, _, _, _, _, _, _, O, O],
                     [_, _, _, _, _, O, O, O, _],
-                ], 1, defaultThrones);
+                ], 1, defaultCastles);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
@@ -375,7 +375,7 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, X, O, O],
                     [_, _, _, _, _, _, O, O, O],
                     [_, _, _, _, _, O, O, O, _],
-                ], 2, defaultThrones);
+                ], 2, defaultCastles);
                 // When trying normal jump
                 const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
 
@@ -390,7 +390,7 @@ describe('QuebecCastlesRules', () => {
                     [_, _, _, _, _, _, O, O, O],
                     [_, _, _, _, _, _, O, _, O],
                     [_, _, _, _, _, O, O, O, _],
-                ], 3, defaultThrones);
+                ], 3, defaultCastles);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
             });
 
@@ -400,8 +400,8 @@ describe('QuebecCastlesRules', () => {
 
     describe('getGameStatus', () => {
 
-        it('should recognize invader victory (throne taken)', () => {
-            // Given any state where invader has stepped on the defender throne
+        it('should recognize invader victory (castle taken)', () => {
+            // Given any state where invader has stepped on the defender castle
             const state: QuebecCastlesState = new QuebecCastlesState([
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -412,7 +412,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, X],
-            ], 10, defaultThrones);
+            ], 10, defaultCastles);
 
             // When evaluating its value
             // Then it should be a victory
@@ -420,8 +420,8 @@ describe('QuebecCastlesRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
-        it('should recognize defender victory (throne taken)', () => {
-            // Given any state where invader has stepped on the defender throne
+        it('should recognize defender victory (castle taken)', () => {
+            // Given any state where invader has stepped on the defender castle
             const state: QuebecCastlesState = new QuebecCastlesState([
                 [O, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
@@ -432,7 +432,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
-            ], 10, defaultThrones);
+            ], 10, defaultCastles);
 
             // When evaluating its value
             // Then it should be a victory
@@ -452,7 +452,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
-            ], 10, defaultThrones);
+            ], 10, defaultCastles);
 
             // When evaluating its value
             // Then it should be a victory
@@ -472,7 +472,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
-            ], 10, defaultThrones);
+            ], 10, defaultCastles);
 
             // When evaluating its value
             // Then it should be a victory
@@ -507,7 +507,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, O, O],
                 [_, _, _, _, _, _, _, O, _],
-            ], 1, defaultThrones);
+            ], 1, defaultCastles);
 
             // When evaluating its value
             // Then it should be a victory
@@ -521,24 +521,24 @@ describe('QuebecCastlesRules', () => {
 
         describe('drop phase', () => {
 
-            describe('place throne yourself', () => {
+            describe('place castle yourself', () => {
 
-                it('should not drop piece after placing throne when "drop piece by piece" is chosen', () => {
-                    // Given any state where throne AND piece are to be placed
+                it('should not drop piece after placing castle when "drop piece by piece" is chosen', () => {
+                    // Given any state where castle AND piece are to be placed
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: 'PIECE_BY_PIECE',
-                        playersPlaceThrone: true,
+                        playersPlaceCastle: true,
                     });
                     const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
-                    // When placing the throne
-                    const throneCoord: Coord = new Coord(7, 7);
-                    const move: QuebecCastlesMove = QuebecCastlesMove.drop([throneCoord]);
+                    // When placing the castle
+                    const castleCoord: Coord = new Coord(7, 7);
+                    const move: QuebecCastlesMove = QuebecCastlesMove.drop([castleCoord]);
 
-                    // Then only the throne should be present
-                    const expectedThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
-                        MGPOptional.of(throneCoord),
+                    // Then only the castle should be present
+                    const expectedCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+                        MGPOptional.of(castleCoord),
                         MGPOptional.empty(),
                     );
                     const expectedState: QuebecCastlesState = new QuebecCastlesState([
@@ -551,7 +551,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
-                    ], 1, expectedThrones);
+                    ], 1, expectedCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
@@ -578,7 +578,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, X, _],
-                    ], 2, defaultThrones);
+                    ], 2, defaultCastles);
 
                     // When doing a move while still in drop phase
                     const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(1, 1), new Coord(2, 2));
@@ -631,7 +631,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, _],
                         [_, _, _, _, _, _, _, _, _],
-                    ], 1, defaultThrones);
+                    ], 1, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
@@ -648,7 +648,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 6, defaultThrones);
+                    ], 6, defaultCastles);
 
                     // When doing the first move
                     const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
@@ -664,7 +664,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, O, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 7, defaultThrones);
+                    ], 7, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
@@ -680,7 +680,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 5, defaultThrones);
+                    ], 5, defaultCastles);
 
                     it('should allow first player to drop all its remaining soldier', () => {
                         // Given a board on which current player is the only one that has piece to drop
@@ -701,7 +701,7 @@ describe('QuebecCastlesRules', () => {
                             [_, _, _, _, _, _, _, _, _],
                             [_, _, _, _, _, _, _, O, O],
                             [_, _, _, _, _, _, _, O, _],
-                        ], 6, defaultThrones);
+                        ], 6, defaultCastles);
                         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                     });
 
@@ -730,16 +730,16 @@ describe('QuebecCastlesRules', () => {
                         RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
                     });
 
-                    it('should forbid player to drop on the throne', () => {
+                    it('should forbid player to drop on the castle', () => {
                         // Given a board on which current player is the only one that has piece to drop
                         // and a drop piece by piece config
 
-                        // When dropping a piece on the throne
+                        // When dropping a piece on the castle
                         const coords: Coord[] = [new Coord(0, 0), new Coord(2, 0), new Coord(2, 2)];
                         const move: QuebecCastlesMove = QuebecCastlesMove.drop(coords);
 
                         // Then the move should be illegal
-                        const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE();
+                        const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE();
                         RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
                     });
 
@@ -760,15 +760,15 @@ describe('QuebecCastlesRules', () => {
                     RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
                 });
 
-                it('should forbid dropping soldier on throne', () => {
+                it('should forbid dropping soldier on castle', () => {
                     // Given a state with "piece by piece"
                     const state: QuebecCastlesState = rules.getInitialState(customConfig);
 
                     // When dropping on the same coord again
-                    const move: QuebecCastlesMove = QuebecCastlesMove.drop([state.thrones.get(Player.ZERO).get()]);
+                    const move: QuebecCastlesMove = QuebecCastlesMove.drop([state.castles.get(Player.ZERO).get()]);
 
                     // Then it should be illegal
-                    const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_THRONE();
+                    const reason: string = QuebecCastlesFailure.CANNOT_LAND_OR_DROP_IN_YOUR_CASTLE();
                     RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
                 });
 
@@ -807,7 +807,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 6, defaultThrones);
+                    ], 6, defaultCastles);
 
                     // When dropping all its remaining piece at once
                     const coords: Coord[] = [new Coord(8, 6), new Coord(6, 8)];
@@ -824,20 +824,20 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, O, O, _],
-                    ], 7, defaultThrones);
+                    ], 7, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
             });
 
-            describe('drop piece by piece & place throne', () => {
+            describe('drop piece by piece & place castle', () => {
 
-                it('should includes thrones in calculation', () => {
+                it('should includes castles in calculation', () => {
                     // Given any state two turn away from last drop
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: 'PIECE_BY_PIECE',
-                        playersPlaceThrone: true,
+                        playersPlaceCastle: true,
                         defenders: 3,
                         invaders: 5,
                     });
@@ -851,7 +851,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 5, defaultThrones);
+                    ], 5, defaultCastles);
 
                     // When doing normal move
                     const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(1, 1)]);
@@ -867,23 +867,23 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 6, defaultThrones);
+                    ], 6, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
             });
 
-            describe('drop by batch & place throne', () => {
+            describe('drop by batch & place castle', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: 'BY_BATCH',
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                     defenders: 2,
                     invaders: 2,
                 });
 
-                it('should allow dropping all piece after dropping throne', () => {
+                it('should allow dropping all piece after dropping castle', () => {
                     // Given a board in turn 3
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, _, _, _, _, _, _, _, _],
@@ -895,7 +895,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
-                    ], 2, defaultThrones);
+                    ], 2, defaultCastles);
 
                     // When dropping all defender pieces
                     const drops: Coord[] = [new Coord(8, 7), new Coord(7, 8)];
@@ -912,7 +912,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 3, defaultThrones);
+                    ], 3, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
@@ -951,7 +951,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
-                    ], 1, defaultThrones);
+                    ], 1, defaultCastles);
 
                     // When dropping piece outside of territory
                     const move: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(1, 1), new Coord(3, 2)]);
@@ -980,7 +980,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 1, defaultThrones);
+                    ], 1, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
@@ -1035,7 +1035,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 1, defaultThrones);
+                    ], 1, defaultCastles);
 
                     // When dropping all your pieces
                     const drops: Coord[] = [new Coord(0, 1), new Coord(1, 0)];
@@ -1052,7 +1052,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 2, defaultThrones);
+                    ], 2, defaultCastles);
                     RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
                 });
 
@@ -1103,7 +1103,7 @@ describe('QuebecCastlesRules', () => {
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, O, O, _],
-                    ], 0, defaultThrones);
+                    ], 0, defaultCastles);
                     expect(expectedState).toEqual(state);
                 });
 
@@ -1132,7 +1132,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, O, _, _, _, _],
                 [O, O, O, O, O, O, O, O, _],
-            ], 0, defaultThrones);
+            ], 0, defaultCastles);
             expect(state).toEqual(expectedState);
         });
 

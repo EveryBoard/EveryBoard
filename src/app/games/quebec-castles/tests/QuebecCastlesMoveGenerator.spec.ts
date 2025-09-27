@@ -12,7 +12,7 @@ import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultThrones: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
+const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
     MGPOptional.of(new Coord(8, 8)),
     MGPOptional.of(new Coord(0, 0)),
 );
@@ -75,7 +75,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, _],
                         [_, _, _, _, _, _, _, _, _],
-                    ], 1, defaultThrones);
+                    ], 1, defaultCastles);
                     const node: QuebecCastlesNode = new QuebecCastlesNode(state);
 
                     // When listing the moves
@@ -105,7 +105,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 5, defaultThrones);
+                    ], 5, defaultCastles);
                     const node: QuebecCastlesNode = new QuebecCastlesNode(state);
 
                     // When listing the possible move of generator
@@ -136,7 +136,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, O, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 6, defaultThrones);
+                    ], 6, defaultCastles);
                     const node: QuebecCastlesNode = new QuebecCastlesNode(state);
 
                     // When listing the possible move of generator
@@ -150,19 +150,19 @@ describe('QuebecCastlesMoveGenerator', () => {
 
             });
 
-            describe('drop piece by piece & place throne', () => {
+            describe('drop piece by piece & place castle', () => {
 
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
                     dropMode: 'PIECE_BY_PIECE',
-                    playersPlaceThrone: true,
+                    playersPlaceCastle: true,
                     defenders: 3,
                     invaders: 5,
                 });
 
                 it('should drop last pieces by batch (invader has more piece)', () => {
                     // Given a board in  piece-by-piece mode where invader has more piece
-                    // and where you must place throne yourself
+                    // and where you must place castle yourself
                     // where current player is the last player with pieces to drop
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, _, _, _, _, _, _, _, _],
@@ -174,7 +174,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, O],
                         [_, _, _, _, _, _, _, O, _],
-                    ], 5, defaultThrones);
+                    ], 5, defaultCastles);
                     const node: QuebecCastlesNode = new QuebecCastlesNode(state);
 
                     // When listing the possible move of generator
@@ -209,11 +209,11 @@ describe('QuebecCastlesMoveGenerator', () => {
                 });
 
                 it('should drop king first when required', () => {
-                    // Given a first turn when you need to place the throne
+                    // Given a first turn when you need to place the castle
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: 'BY_BATCH',
-                        playersPlaceThrone: true,
+                        playersPlaceCastle: true,
                         defenders: 3,
                         invaders: 5,
                     });

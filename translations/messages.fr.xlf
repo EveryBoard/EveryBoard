@@ -3858,17 +3858,21 @@
         <source>You must drop pieces one by one</source>
         <target>Vous devez déposer les pièces une par une</target>
       </trans-unit>
-      <trans-unit id="5857719380879830870" datatype="html">
-        <source>You cannot land or drop on your throne</source>
-        <target>Vous ne pouvez atterrir sur votre trône</target>
+      <trans-unit id="7497498388753121757" datatype="html">
+        <source>You cannot land or drop on your castle</source>
+        <target>Vous ne pouvez atterrir sur votre château</target>
       </trans-unit>
-      <trans-unit id="9041250493266709397" datatype="html">
-        <source>You must only place your throne</source>
-        <target>Vous devez seulement placer votre trône</target>
+      <trans-unit id="5963846295180517656" datatype="html">
+        <source>You must only place your castle</source>
+        <target>Vous devez seulement placer votre château</target>
       </trans-unit>
-      <trans-unit id="3075088676962429588" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces</target>
+      <trans-unit id="3655898495512904683" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (first player)</source>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (premier joueur)</target>
+      </trans-unit>
+      <trans-unit id="3732534634894194148" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (second player)</source>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (deuxième joueur)</target>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>
@@ -3902,17 +3906,17 @@
         <source>Is Rhombic</source>
         <target>Plateau losange</target>
       </trans-unit>
-      <trans-unit id="6581099810354955272" datatype="html">
-        <source>Place throne yourself</source>
-        <target>Placer le trône vous-même</target>
+      <trans-unit id="3155220222252009452" datatype="html">
+        <source>Place castle yourself</source>
+        <target>Placer le château vous-même</target>
       </trans-unit>
       <trans-unit id="5344724322380814051" datatype="html">
         <source>Drop mode</source>
         <target>Mode de placement</target>
       </trans-unit>
-      <trans-unit id="5488997593887097957" datatype="html">
-        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s throne. The thrones are by default on the corners.</source>
-        <target>Chateaux Québecquois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de captruer toutes les pièces adverses, ou d&apos;atteindre le trône adverse. Les trônes sont par défaut dans les coins.</target>
+      <trans-unit id="5026411156591848707" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s castle. The castles are by default on the corners.</source>
+        <target>Chateaux Québecquois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de capturer toutes les pièces adverses, ou d&apos;atteindre le château adverse. Les châteaux sont par défaut dans les coins.</target>
       </trans-unit>
       <trans-unit id="5230748384162383195" datatype="html">
         <source>Defender&apos;s move</source>
@@ -3938,13 +3942,13 @@
         <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
         <target>Vous avez l&apos;option de changer la forme du plateau, si il n&apos;est pas losange, il sera rectangulaire. Vous Vous pouvez aussi en changer la taille.</target>
       </trans-unit>
-      <trans-unit id="1462347051222352728" datatype="html">
-        <source>Custom config: place throne yourself</source>
-        <target>Configuration alternative: placez le trône vous même</target>
+      <trans-unit id="2289520460836999741" datatype="html">
+        <source>Custom config: place castle yourself</source>
+        <target>Configuration alternative: placez le château vous même</target>
       </trans-unit>
-      <trans-unit id="412010597484544366" datatype="html">
-        <source>You have the option to change decide yourself where you place the throne. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your throne.</source>
-        <target>Vous avez l&apos;option de choisir vous même où placer le trône. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre trône.</target>
+      <trans-unit id="7842496462088765849" datatype="html">
+        <source>You have the option to change decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
+        <target>Vous avez l&apos;option de choisir vous même où placer le château. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre château.</target>
       </trans-unit>
       <trans-unit id="7761290276414807914" datatype="html">
         <source>Custom config: Drop Mode: By Batch</source>

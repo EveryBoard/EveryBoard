@@ -137,7 +137,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
-        Utils.assert(config.dropMode !== 'AUTO' || config.playersPlaceThrone, 'enterred "onDrop" on a non-dropping-config');
+        Utils.assert(config.dropMode !== 'AUTO' || config.playersPlaceCastle, 'enterred "onDrop" on a non-dropping-config');
         const expectedDropThisTurn: number =
             this.rules.getExpectedDropsThisTurn(this.getState(), this.getConfig().get());
         if (expectedDropThisTurn === 1) {
@@ -161,9 +161,9 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         }
     }
 
-    public isPlayerThrone(player: Player, coord: Coord): boolean {
-        const throne: MGPOptional<Coord> = this.getState().thrones.get(player);
-        return throne.equalsValue(coord);
+    public isPlayerCastle(player: Player, coord: Coord): boolean {
+        const castle: MGPOptional<Coord> = this.getState().castles.get(player);
+        return castle.equalsValue(coord);
     }
 
     private async onMove(coord: Coord): Promise<MGPValidation> {
