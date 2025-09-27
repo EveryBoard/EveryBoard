@@ -100,7 +100,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             // Since the value is not updated yet
             // Must be called after 1ms otherwise this.rulesConfigForm has not changed value yet
             // This implies that validators are called with the old config
-            setTimeout(() => this.onUpdate(), 1);
+            this.onUpdate();
         });
         return formControl;
     }

@@ -46,6 +46,9 @@ After the PR has been approved for merging:
   - Update `index.html` with the number of tests
   - Update the coverage data with `scripts/coverage.py generate`
 
+## Modify /lib
+TO BUILD: npm run build
+
 ### For the PR merger
   - Check that `src/karma.conf.js` has been updated
   - Check that `index.html` has been updated
