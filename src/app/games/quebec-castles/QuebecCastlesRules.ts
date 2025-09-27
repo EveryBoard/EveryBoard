@@ -90,7 +90,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                 config: {
                     width: new NumberConfig(9, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 20)),
                     height: new NumberConfig(9, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(2, 20)),
-                    linesForTerritory: new NumberConfig(4, () => $localize`Lines for territory`, MGPValidators.range(1, 10)),
+                    linesForTerritory: new NumberConfig(5, () => $localize`Lines for territory`, MGPValidators.range(1, 10)),
                     invaders: new NumberConfig<QuebecCastlesConfig>(14, () => $localize`Number of invaders`, MGPValidators.range(1, 123456)),
                     defenders: new NumberConfig(9, () => $localize`Number of defenders`, MGPValidators.range(1, 123456)),
                     isRhombic: new BooleanConfig(true, () => $localize`Is Rhombic`),
@@ -500,8 +500,8 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     : { min: number, max: number }
     {
         return {
-            min: player === Player.ZERO ? max - config.linesForTerritory : 0,
-            max: player === Player.ZERO ? max : config.linesForTerritory,
+            min: player === Player.ZERO ? (max + 1) - config.linesForTerritory : 0,
+            max: player === Player.ZERO ? max : config.linesForTerritory - 1,
         };
     }
 

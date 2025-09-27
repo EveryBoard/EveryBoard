@@ -127,11 +127,20 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         }
         const config: QuebecCastlesConfig = this.getConfig().get();
         if (this.isPlayerDropping() && this.getNumberOfAwaitedDrop() === 0) {
-            return MGPValidation.SUCCESS;
+            console.log('isPlayerdropping && this.getNumberOfAwaitedDrop() === 0');
+            if (this.dropped.contains(coord)) {
+                console.log('hence drop')
+                return this.onDrop(coord, config);
+            } else {
+                console.log('hence skip')
+                return MGPValidation.SUCCESS;
+            }
         }
         if (this.rules.isDropPhase(this.constructedState, config)) {
+            console.log('onDrop');
             return this.onDrop(coord, config);
         } else {
+            console.log('onMove');
             return this.onMove(coord);
         }
     }

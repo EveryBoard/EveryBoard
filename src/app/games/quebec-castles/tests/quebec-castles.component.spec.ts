@@ -424,6 +424,40 @@ describe('QuebecCastlesComponent', () => {
                 await testUtils.expectMoveSuccess('#drop-validator', move);
             }));
 
+            it('should allow player to drop all its remaining soldier once opponent is out of soldier to drop and then change some of his choices', fakeAsync(async() => {
+                // Given a board on which current player is the only one that has piece to drop
+                // and a drop piece by piece config
+                // and all pieces have been dropped but not validated
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: 'PIECE_BY_PIECE',
+                    defenders: 3,
+                    invaders: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 5, defaultCastles);
+                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.expectClickSuccess('#click-0-2');
+                await testUtils.expectClickSuccess('#click-2-0');
+                await testUtils.expectClickSuccess('#click-2-2');
+
+                // When deselecting one of the dropped piece
+                await testUtils.expectClickSuccess('#click-0-2');
+
+                // Then the piece should no longer be selected and drop-validator should not present
+                testUtils.expectElementNotToExist('#piece-0-2');
+                testUtils.expectElementNotToExist('#drop-validator');
+            }));
+
             it('should not mix translation and drop', fakeAsync(async() => {
                 // Given a board on which current player is the only one that has piece to drop
                 // and a drop piece by piece config
@@ -617,7 +651,7 @@ describe('QuebecCastles Custom Configs', () => {
         await setCustomConfigTags(customConfig);
 
         // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ONE(14, 4);
+        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ONE(14, 5);
         expectElementToHaveError(error);
     }));
 
@@ -637,6 +671,22 @@ describe('QuebecCastles Custom Configs', () => {
     }));
 
     it('should forbid config where player line cross the middle of the board (rectangular)', fakeAsync(async() => {
+        // Given a config with too much lines for territory (rectangular board)
+        const customConfig: QuebecCastlesConfig = {
+            ...defaultConfig.get(),
+            linesForTerritory: 5,
+            isRhombic: false,
+        };
+
+        // When setting up that invalid config
+        await setCustomConfigTags(customConfig);
+
+        // Then there should be an error eh!
+        const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
+        expectElementToHaveError(error);
+    }));
+
+    it('should display territory-zone', fakeAsync(async() => {
         // Given a config with too much lines for territory (rectangular board)
         const customConfig: QuebecCastlesConfig = {
             ...defaultConfig.get(),
