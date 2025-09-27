@@ -114,17 +114,16 @@ func TestGameFlowSimpler(t *testing.T) {
 	sb.SubscribeConfigRoom(player, gameId) // player subscribes to the config room
 	sb.Unsubscribe(opponent) // opponent unsubscribes from the lobby
 	sb.SubscribeConfigRoom(opponent, gameId) // opponent subscribes to the config room
-	// sb.SelectOpponent(gameId, player, opponent)
-	// player selects the opponent
-	// player proposes to the opponent
-	// player reviews the config
-	// player proposes the config again
-	// opponent accepts (the game starts)
+	sb.SelectOpponent(gameId, player, opponent) // player selects the opponent
+	// sb.ProposeConfig(player) // player proposes to the opponent
+	// sb.ReviewConfig(player) // player reviews the config
+	// sb.ProposeConfig(player) // player proposes the config again
+	// sb.AcceptConfig(opponent) // opponent accepts (the game starts)
 	// observer := sb.EstablishConnection("observer") // an observer joins
-	// the observer subscribes to the game
-	// player plays one move
-	// opponent proposes draw
-	// player accepts
+	// sb.SubscribeConfigRoom(observer, gameId) // the observer subscribes to the game
+	// sb.Move(player,  map[string]int{"x": 42}) // player plays one move
+	// sb.ProposeDraw(opponent)// opponent proposes draw
+	// sb.AcceptDraw(player) // player accepts
 
 	sb.Cleanup()
 	t.Fatalf("test")

@@ -1,8 +1,10 @@
 package model
 
 import (
+	"encoding/json"
 	"errors"
 	"fmt"
+	"log"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -137,7 +139,11 @@ func (configRoom ConfigRoom) Delete() error {
 
 func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
 	result := db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent})
+	toPrint, _ := json.Marshal(configRoom)
+	log.Printf("config room: %s", toPrint)
 	configRoom.ChosenOpponent = &opponent
+	toPrint, _ = json.Marshal(configRoom)
+	log.Printf("config room: %s", toPrint)
 	return wrapError("SelectOpponent", result.Error)
 }
 

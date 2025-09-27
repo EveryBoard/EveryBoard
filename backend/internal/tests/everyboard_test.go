@@ -5,17 +5,16 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 	"strings"
 	"testing"
 	"time"
 
+	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/gorilla/websocket"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
-    "github.com/DATA-DOG/go-sqlmock"
 
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
 )
@@ -40,7 +39,7 @@ func TestReadConfigurationSqliteWithoutDsn(t *testing.T) {
 		t.Fatalf("error when reading the configuration: %v", err)
 	}
 	// Then it should be a sqlite connection to everyboard.db
-    sqliteDialector, ok := config.Database.(*sqlite.Dialector)
+	sqliteDialector, ok := config.Database.(*sqlite.Dialector)
 	if !ok {
 		t.Fatalf("not a sqlite database")
 	}
@@ -64,7 +63,7 @@ func TestReadConfigurationSqliteWithDsn(t *testing.T) {
 		t.Fatalf("error when reading the configuration: %v", err)
 	}
 	// Then it should be a sqlite connection to everyboard.db
-    sqliteDialector, ok := config.Database.(*sqlite.Dialector)
+	sqliteDialector, ok := config.Database.(*sqlite.Dialector)
 	if !ok {
 		t.Fatalf("not a sqlite database")
 	}
@@ -95,7 +94,7 @@ func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 	setenv(t, "USE_EMULATOR", "yes")
 	setenv(t, "PROJECT_ID", "my-project")
 	setenv(t, "DATABASE_TYPE", "postgres")
-    dsn := "postgresql://postgres:secret@localhost:5432/testdb?sslmode=disable"
+	dsn := "postgresql://postgres:secret@localhost:5432/testdb?sslmode=disable"
 	setenv(t, "DATABASE_DSN", dsn)
 	setenv(t, "ALLOW_ORIGIN", "*")
 
@@ -105,7 +104,7 @@ func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 		t.Fatalf("error when reading the configuration: %v", err)
 	}
 	// Then it should be a sqlite connection to everyboard.db
-    postgresDialector, ok := config.Database.(*postgres.Dialector)
+	postgresDialector, ok := config.Database.(*postgres.Dialector)
 	if !ok {
 		t.Fatalf("not a postgres database")
 	}
@@ -205,7 +204,6 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 
 	// We only care here about the second part, which contains the payload
 	payloadBytes, err := base64.RawURLEncoding.DecodeString(tokenParts[1])
-	log.Printf("payload: %s", tokenParts[1])
 	if err != nil {
 		return "", fmt.Errorf("invalid payload encoding") // payload is not a b64 string
 	}
@@ -224,7 +222,7 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 	return sub, nil
 }
 
-func PrepareServer(t *testing.T) (func (), sqlmock.Sqlmock) {
+func PrepareServer(t *testing.T) (func(), sqlmock.Sqlmock) {
 	os.Clearenv()
 	setenv(t, "USE_EMULATOR", "yes")
 	setenv(t, "PROJECT_ID", "my-project")
@@ -233,8 +231,8 @@ func PrepareServer(t *testing.T) (func (), sqlmock.Sqlmock) {
 	setenv(t, "ALLOW_ORIGIN", "*")
 	config, err := everyboard.ReadConfiguration()
 
-    sqlDB, mock, err := sqlmock.New()
-    if err != nil {
+	sqlDB, mock, err := sqlmock.New()
+	if err != nil {
 		t.Fatalf("sqlmock: %v", err)
 	}
 	config.Database = postgres.New(postgres.Config{Conn: sqlDB})
@@ -261,15 +259,15 @@ func PrepareServer(t *testing.T) (func (), sqlmock.Sqlmock) {
 		t.Fatalf("error when preparing the server: %v", err)
 	}
 
-    go func() {
-		err := server.ListenAndServe();
-        if err != nil && err != http.ErrServerClosed {
-            t.Fatalf("ListenAndServe error: %v", err)
-        }
-    }()
-    time.Sleep(1000 * time.Millisecond) // let the server start
+	go func() {
+		err := server.ListenAndServe()
+		if err != nil && err != http.ErrServerClosed {
+			t.Fatalf("ListenAndServe error: %v", err)
+		}
+	}()
+	time.Sleep(1000 * time.Millisecond) // let the server start
 
-	stopServer := func () {
+	stopServer := func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		if err := server.Shutdown(ctx); err != nil {
@@ -290,19 +288,19 @@ func TestCors(t *testing.T) {
 		t.Fatalf("request creation failed: %v", err)
 	}
 	resp, err := http.DefaultClient.Do(req)
-    if err != nil {
-        t.Fatalf("OPTIONS request failed: %v", err)
-    }
-    defer resp.Body.Close()
+	if err != nil {
+		t.Fatalf("OPTIONS request failed: %v", err)
+	}
+	defer resp.Body.Close()
 
 	// Then it should succeed and have the Allow-Origin header set
-    if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
-        t.Errorf("Unexpected status: %d", resp.StatusCode)
-    }
+	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
+		t.Errorf("Unexpected status: %d", resp.StatusCode)
+	}
 
-    if origin := resp.Header.Get("Access-Control-Allow-Origin"); origin != "*" {
-        t.Errorf("Expected Access-Control-Allow-Origin '*', got %q", origin)
-    }
+	if origin := resp.Header.Get("Access-Control-Allow-Origin"); origin != "*" {
+		t.Errorf("Expected Access-Control-Allow-Origin '*', got %q", origin)
+	}
 }
 
 func TestWebSocketRequest(t *testing.T) {
@@ -314,15 +312,15 @@ func TestWebSocketRequest(t *testing.T) {
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJmb28ifQo.")
 	c, resp, err := websocket.DefaultDialer.Dial("ws://localhost:8081/ws", headers)
-    if err != nil {
-        t.Fatalf("Dial failed: %v (status %v)", err, resp.Status)
-    }
-    defer c.Close()
+	if err != nil {
+		t.Fatalf("Dial failed: %v (status %v)", err, resp.Status)
+	}
+	defer c.Close()
 
 	// Then it should upgrade to websocket
-    if resp.StatusCode != http.StatusSwitchingProtocols {
-        t.Errorf("Expected 101 Switching Protocols, got %d", resp.StatusCode)
-    }
+	if resp.StatusCode != http.StatusSwitchingProtocols {
+		t.Errorf("Expected 101 Switching Protocols, got %d", resp.StatusCode)
+	}
 
 	// And send a first message about current game
 	_, _, err = c.ReadMessage()
