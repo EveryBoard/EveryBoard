@@ -653,10 +653,12 @@ func TestSetCurrentGame(t *testing.T) {
 	currentGame := &model.CurrentGame{
 		GameID: 42,
 		GameName: gameName,
+		User: user,
+		Creator: user,
 		Opponent: nil,
 		Role: role,
 	}
-	err = model.SetCurrentGame(user, *currentGame)
+	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -665,7 +667,8 @@ func TestSetCurrentGame(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error when getting current game: %v", err)
 	}
-	if currentGame.GameID != 42 ||
+	if currentGame == nil ||
+		currentGame.GameID != 42 ||
 		currentGame.GameName != gameName ||
 		currentGame.Opponent != nil ||
 		currentGame.Role != role {
@@ -685,11 +688,13 @@ func TestUpdateCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID: 42,
+		User: user,
 		GameName: gameName,
+		Creator: user,
 		Opponent: nil,
 		Role: role,
 	}
-	err = model.SetCurrentGame(user, *currentGame)
+	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -707,7 +712,8 @@ func TestUpdateCurrentGame(t *testing.T) {
 	if err != nil {
 		t.Fatalf("error when getting current game: %v", err)
 	}
-	if currentGame.GameID != 42 ||
+	if currentGame == nil ||
+		currentGame.GameID != 42 ||
 		currentGame.GameName != gameName ||
 		currentGame.Opponent == nil ||
 		currentGame.Opponent.ID != opponent.ID ||
@@ -727,11 +733,13 @@ func TestRemoveCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID: 42,
+		User: user,
 		GameName: gameName,
+		Creator: user,
 		Opponent: nil,
 		Role: role,
 	}
-	err = model.SetCurrentGame(user, *currentGame)
+	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -762,16 +770,19 @@ func TestApplyToObservers(t *testing.T) {
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
 		GameID: 42,
+		User: user1,
 		GameName: "Go",
+		Creator: user1,
 		Opponent: nil,
 		Role: model.UserRoleObserver,
 	}
-	err = model.SetCurrentGame(user1, *currentGame)
+	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
 
-	err = model.SetCurrentGame(user2, *currentGame)
+	currentGame.User = user2
+	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}

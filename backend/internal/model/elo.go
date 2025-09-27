@@ -7,3 +7,11 @@ type Elo struct {
 	CurrentElo  float64     `gorm:"not null" json:"currentElo"`
 	GamesPlayed uint        `goorm:"not null" json:"gamesPlayed"`
 }
+
+var EloRows = []string{
+	"id",
+	"user_id", "user_name",
+	"game_name",
+	"current_elo",
+	"games_played",
+}

@@ -369,8 +369,8 @@ func GetCurrentGame(user MinimalUser) (*CurrentGame, error) {
 	return &currentGame, wrapError("GetCurrentGame", result.Error)
 }
 
-func SetCurrentGame(user MinimalUser, currentGame CurrentGame) error {
-	currentGame.UserID = user.ID
+func SetCurrentGame(currentGame CurrentGame) error {
+	log.Printf("currentGame: %v", currentGame)
 	result := db.Create(&currentGame)
 	return wrapError("SetCurrentGame", result.Error)
 }
@@ -412,7 +412,9 @@ func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(T) error) error 
 
 func ApplyToObservers(gameId GameID, action func(MinimalUser) error) error {
 	query := db.Model(&CurrentGame{}).Where("game_id = ? and role = 'Observer'", gameId)
-	return wrapError("ApplyToObservers", ApplyToQueryResult(query, action))
+	return wrapError("ApplyToObservers", ApplyToQueryResult(query, func (currentGame CurrentGame) error {
+		return action(currentGame.User)
+	}))
 }
 
 func AddChatMessage(gameId GameID, message *Message) error {

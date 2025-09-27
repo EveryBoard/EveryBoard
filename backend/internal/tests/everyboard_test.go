@@ -12,10 +12,12 @@ import (
 	"testing"
 	"time"
 
-	everyboard "github.com/EveryBoard/EveryBoard/internal"
 	"github.com/gorilla/websocket"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
+    "github.com/DATA-DOG/go-sqlmock"
+
+	everyboard "github.com/EveryBoard/EveryBoard/internal"
 )
 
 func setenv(t *testing.T, variable string, value string) {
@@ -222,7 +224,7 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 	return sub, nil
 }
 
-func PrepareServer(t *testing.T) func () {
+func PrepareServer(t *testing.T) (func (), sqlmock.Sqlmock) {
 	os.Clearenv()
 	setenv(t, "USE_EMULATOR", "yes")
 	setenv(t, "PROJECT_ID", "my-project")
@@ -230,6 +232,26 @@ func PrepareServer(t *testing.T) func () {
 	setenv(t, "DATABASE_DSN", "file::memory:")
 	setenv(t, "ALLOW_ORIGIN", "*")
 	config, err := everyboard.ReadConfiguration()
+
+    sqlDB, mock, err := sqlmock.New()
+    if err != nil {
+		t.Fatalf("sqlmock: %v", err)
+	}
+	config.Database = postgres.New(postgres.Config{Conn: sqlDB})
+
+	mock.ExpectExec(`CREATE TABLE "config_rooms"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE TABLE "messages"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE INDEX IF NOT EXISTS "idx_messages_game_id"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE TABLE "elos"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE TABLE "candidates"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE INDEX IF NOT EXISTS "idx_candidates_game_id"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE TABLE "games"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE INDEX IF NOT EXISTS "idx_games_game_id"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE TABLE "game_events"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE INDEX IF NOT EXISTS "idx_game_events_game_id"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE TABLE "current_games"`).WillReturnResult(sqlmock.NewResult(0, 0))
+	mock.ExpectExec(`CREATE INDEX IF NOT EXISTS "idx_current_games_game_id"`).WillReturnResult(sqlmock.NewResult(0, 0))
+
 	config.Firebase = FirebaseMock{}
 	if err != nil {
 		t.Fatalf("error when reading the configuration: %v", err)
@@ -254,12 +276,12 @@ func PrepareServer(t *testing.T) func () {
 			t.Fatalf("Shutdown failed: %v", err)
 		}
 	}
-	return stopServer
+	return stopServer, mock
 }
 
 func TestCors(t *testing.T) {
 	// Given a server
-	stopServer := PrepareServer(t)
+	stopServer, _ := PrepareServer(t)
 	defer stopServer()
 
 	// When doing a Options request
@@ -285,7 +307,7 @@ func TestCors(t *testing.T) {
 
 func TestWebSocketRequest(t *testing.T) {
 	// Given a server
-	stopServer := PrepareServer(t)
+	stopServer, _ := PrepareServer(t)
 	defer stopServer()
 
 	// When doing a websocket request

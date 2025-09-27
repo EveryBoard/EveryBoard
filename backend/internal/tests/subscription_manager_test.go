@@ -7,12 +7,19 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-type MockConnection = int
+type MockConnection struct {
+	ID int
+}
+
+func (m *MockConnection) WriteMessage(messageType int, data []byte) error {
+	return nil
+}
+
 
 func TestSubscriptionWorkflow(t *testing.T) {
 	// Given a subscription manager with no subscription for client
 	manager := everyboard.NewSubscriptionManager[MockConnection]()
-	connection := 42
+	connection := MockConnection{ID: 42}
 	user := "some-user"
 	subscriptionKind := everyboard.SubscriptionToLobby
 	const gameID model.GameID = model.GameIDLobby

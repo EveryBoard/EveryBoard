@@ -13,29 +13,43 @@ func TestMarshalMinimalUser(t *testing.T) {
 }
 
 func TestMarshalCurrentGameWithoutOpponent(t *testing.T) {
+	creator := model.MinimalUser{
+		ID: "foo",
+		Name: "foo",
+	}
 	original := model.CurrentGame{
-		// UserID and GameID are not part of the JSON
-		UserID: "",
+		// GameID is not part of the JSON
 		GameID: 42,
 
+		User: creator,
+		Creator: creator,
 		GameName: "Go",
 		Opponent: nil,
 		Role: model.UserRolePlayer,
 	}
-	json := `{"id":"JgaEB","gameName":"Go","opponent":null,"role":"Player"}`
+	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo"},"opponent":null,"role":"Player"}`
 	ExpectMarshallingToWork(t, original, json)
 }
 
 func TestMarshalCurrentGameWithOpponent(t *testing.T) {
+	creator := model.MinimalUser{
+		ID: "foo",
+		Name: "foo",
+	}
+	opponent := model.MinimalUser{
+		ID: "bar",
+		Name: "bar",
+	}
 	original := model.CurrentGame{
-		// UserID and GameID are not part of the JSON
-		UserID: "",
+		// GameID is not part of the JSON
 		GameID: 42,
 
+		User: creator,
+		Creator: creator,
+		Opponent: &opponent,
 		GameName: "Go",
-		Opponent: &model.MinimalUser{ID: "foo", Name: "bar"},
 		Role: model.UserRolePlayer,
 	}
-	json := `{"id":"JgaEB","gameName":"Go","opponent":{"id":"foo","name":"bar"},"role":"Player"}`
+	json := `{"id":"JgaEB","gameName":"Go","creator":{"id":"foo","name":"foo"},"opponent":{"id":"bar","name":"bar"},"role":"Player"}`
 	ExpectMarshallingToWork(t, original, json)
 }

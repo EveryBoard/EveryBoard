@@ -10,13 +10,13 @@ import (
 func TestConnectionWorkflow(t *testing.T) {
 	// Given a connection manager with no connection for a user
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
-	manager := everyboard.NewConnectionManager[MockConnection]()
+	manager := everyboard.NewConnectionManager[*MockConnection]()
 	if len(manager.AllUserConnections(user)) != 0 {
 		t.Fatalf("connection manager should start empty")
 	}
 
 	// When we add a connection
-	connection := 42
+	connection := &MockConnection{ID: 42}
 	manager.AddConnection(user, connection)
 
 	// Then it should be there
@@ -30,7 +30,7 @@ func TestConnectionWorkflow(t *testing.T) {
 	}
 
 	// When we add another one for the same user
-	otherConnection := 43
+	otherConnection := &MockConnection{ID: 43}
 	manager.AddConnection(user, otherConnection)
 	// Then it should be there along with the other one
 	connections = manager.AllUserConnections(user)
@@ -48,7 +48,7 @@ func TestConnectionWorkflow(t *testing.T) {
 		t.Fatalf("connection manager did not properly map connection to user: %v", actualUser)
 	}
 	// And we should get nothing if we look for an unexisting connection
-	noUser := manager.GetUserOfClient(44)
+	noUser := manager.GetUserOfClient(&MockConnection{ID: 44})
 	if noUser != nil {
 		t.Fatalf("connection manager should not have any user mapped to an unexisting connection, but it does: %v", noUser)
 	}

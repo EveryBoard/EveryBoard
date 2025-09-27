@@ -1,22 +1,32 @@
 package internal
 
 import (
+	"encoding/json"
+	"log"
 	"sync"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
+	"github.com/gorilla/websocket"
 )
 
-type ConnectionManager[Connection comparable] struct {
-	clientToUser  map[Connection]model.MinimalUser
-	userToClients map[model.MinimalUser]utils.Set[Connection]
-	lock          sync.RWMutex
+type ConnectionLike interface {
+	comparable
+	WriteMessage(messageType int, data []byte) error
 }
 
-func NewConnectionManager[Connection comparable]() ConnectionManager[Connection] {
+type ConnectionManager[Connection ConnectionLike] struct {
+	clientToUser    map[Connection]model.MinimalUser
+	userToClients   map[model.MinimalUser]utils.Set[Connection]
+	clientToChannel map[Connection]chan model.OutgoingMessage
+	lock            sync.RWMutex
+}
+
+func NewConnectionManager[Connection ConnectionLike]() ConnectionManager[Connection] {
 	return ConnectionManager[Connection]{
-		clientToUser:  make(map[Connection]model.MinimalUser),
-		userToClients: make(map[model.MinimalUser]utils.Set[Connection]),
+		clientToUser:    make(map[Connection]model.MinimalUser),
+		userToClients:   make(map[model.MinimalUser]utils.Set[Connection]),
+		clientToChannel: make(map[Connection]chan model.OutgoingMessage),
 	}
 }
 
@@ -33,6 +43,46 @@ func (connectionManager *ConnectionManager[Connection]) AddConnection(user model
 	set.Add(client)
 
 	connectionManager.clientToUser[client] = user
+	channel := make(chan model.OutgoingMessage, 4) // Will buffer at most 4 messages
+	connectionManager.clientToChannel[client] = channel
+
+	go func() {
+		for message := range channel {
+			toSend, err := json.Marshal([]any{message.Tag(), message})
+			if err != nil {
+				log.Printf("cannot send message: %v", err)
+			}
+			log.Printf("\033[32m>>> [%s] %v\033[0m", user.Name, string(toSend))
+			err = client.WriteMessage(websocket.TextMessage, toSend)
+			if err != nil && !(websocket.IsCloseError(err) || err == websocket.ErrCloseSent) {
+				// in case the connection has been closed, we will continue with the rest but ignore sent messages
+				log.Printf("error when sending message: %v", err)
+			}
+		}
+	}()
+}
+
+func (connectionManager *ConnectionManager[Connection]) SendMessage(client Connection, message model.OutgoingMessage) {
+	connectionManager.lock.RLock()
+	channel, ok := connectionManager.clientToChannel[client]
+	connectionManager.lock.RUnlock()
+
+	if !ok {
+		// Should never happen if the client has been properly added
+		return
+	}
+
+	log.Println("sending message")
+	select {
+	case channel <- message: // enqueue the message
+		log.Println("message queued")
+	default:
+		// the buffer is full, ignore this message (the client is likely dead)
+		log.Println("buffer full")
+	}
+
+	log.Println("done")
+
 }
 
 func (connectionManager *ConnectionManager[Connection]) RemoveConnection(user model.MinimalUser, client Connection) {
@@ -48,6 +98,11 @@ func (connectionManager *ConnectionManager[Connection]) RemoveConnection(user mo
 	}
 
 	delete(connectionManager.clientToUser, client)
+	channel, exists := connectionManager.clientToChannel[client]
+	if exists {
+		close(channel) // will stop the goroutine that sends messages
+		delete(connectionManager.clientToChannel, client)
+	}
 }
 
 func (connectionManager *ConnectionManager[Connection]) AllUserConnections(user model.MinimalUser) utils.Set[Connection] {
@@ -58,9 +113,9 @@ func (connectionManager *ConnectionManager[Connection]) AllUserConnections(user 
 	return clients
 }
 
-func (connectionManager ConnectionManager[Connection]) GetUserOfClient(client Connection) *model.MinimalUser {
-	connectionManager.lock.Lock()
-	defer connectionManager.lock.Unlock()
+func (connectionManager *ConnectionManager[Connection]) GetUserOfClient(client Connection) *model.MinimalUser {
+	connectionManager.lock.RLock()
+	defer connectionManager.lock.RUnlock()
 
 	user, exists := connectionManager.clientToUser[client]
 	if !exists {

@@ -15,10 +15,18 @@ const (
 	UserRoleCandidate      UserRole = "Candidate"
 )
 
+// When a player plays or observes a game, they have a current game
+// We could think that we can just deduce that from the ConfigRoom table.
+// But actually, we need this for observers, as this is the only place where this information is stored.
+// (Maybe we could deduce this from the internal data of the backend though)
 type CurrentGame struct {
-	UserID   string       `gorm:"index;not null;primaryKey" json:"-"`
+	ID       uint         `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
+	User     MinimalUser  `gorm:"embedded;embeddedPrefix:user_;not null" json:"-"`
 	GameID   GameID       `gorm:"index;not null;foreignKey:ConfigRoom" json:"id"`
 	GameName string       `gorm:"not null" json:"gameName"`
-	Opponent *MinimalUser `gorm:"embedded;embeddelPrefix:opponent_" json:"opponent"`
+	Creator  MinimalUser  `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
+	Opponent *MinimalUser `gorm:"embedded;embeddedPrefix:opponent_" json:"opponent"`
 	Role     UserRole     `gorm:"not null" json:"role"`
 }
+
+var CurrentGameRows = []string{"id", "user_id", "user_name", "game_id", "game_name", "creator_id", "creator_name", "opponent_id", "opponent_name", "role"}

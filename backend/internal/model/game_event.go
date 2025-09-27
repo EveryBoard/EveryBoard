@@ -240,12 +240,14 @@ func (e *EventData) UnmarshalJSON(data []byte) error {
 }
 
 type GameEvent struct {
-	ID        uint64      `gorm:"primaryKey;autoIncrement;type:bigserial" json:"-"`
+	ID        uint64      `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
 	GameID    GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
 	Timestamp int64       `gorm:"not null" json:"timestamp"`
 	User      MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
 	Data      EventData   `gorm:"not null;serializer:json" json:"data"`
 }
+
+var GameEventRows = []string{"id", "game_id", "timestamp", "user_id", "user_name", "data"}
 
 func (e GameEvent) MarshalJSON() ([]byte, error) {
 	dataBytes, err := json.Marshal(e.Data)

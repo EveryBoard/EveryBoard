@@ -96,9 +96,20 @@ type ConfigRoom struct {
 	GameName       string          `gorm:"not null" json:"gameName"`
 }
 
+// Needed for tests, but better placed here
+var ConfigRoomRows = []string{
+	"id",
+	"creator_id", "creator_name", "creator_elo",
+	"chosen_opponent_id", "chosen_opponent_name",
+	"status", "first_player", "game_type", "move_duration", "game_duration",
+	"rules_config", "game_name",
+}
+
 type Candidate struct {
-	ID     uint64      `gorm:"primaryKey;autoIncrement;type:bigserial" json:"-"`
+	ID     uint64      `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
 	GameID GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
 	User   MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null"`
 	Elo    float64     `gorm:"not null" json:"elo"`
 }
+
+var CandidateRows = []string{"id", "game_id", "user_id", "user_name", "elo"}

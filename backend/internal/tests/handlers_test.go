@@ -1,50 +1,18 @@
 package internal
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"log"
-	"net/http"
 	"testing"
 	"time"
 
-	"github.com/gorilla/websocket"
-
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
+	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-func b64(s string) string {
-	return base64.RawStdEncoding.EncodeToString([]byte(s))
-}
-
-func tokenForUser(uid string) string {
-	return fmt.Sprintf("Authorization, %s.%s.", b64("{}"), b64(fmt.Sprintf(`{"sub":"%s"}`, uid)))
-}
-
-func EstablishWebSocketConnection(t *testing.T, uid string) *websocket.Conn {
-	headers := http.Header{}
-	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
-	c, resp, err := websocket.DefaultDialer.Dial("ws://localhost:8081/ws", headers)
-	if err != nil {
-		t.Fatalf("Dial failed: %v (status %v)", err, resp.Status)
-	}
-
-	if resp.StatusCode != http.StatusSwitchingProtocols {
-		t.Fatalf("Expected 101 Switching Protocols, got %d", resp.StatusCode)
-	}
-
-	// We should always receive a first message (about our current game)
-	_, _, err = c.ReadMessage()
-	if err != nil {
-		t.Fatalf("cannot read message: %v", err)
-	}
-
-	return c
-}
 
 func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
-	stopServer := PrepareServer(t)
+	stopServer, _ := PrepareServer(t)
 	defer stopServer()
 
 	// Given an established connection
@@ -52,7 +20,7 @@ func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 	defer c.Close()
 
 	// When subscribing to lobby
-	c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeLobby"]`))
+	sendMessage(t, c, `["SubscribeLobby"]`)
 	time.Sleep(100 * time.Millisecond)
 
 	// Then we should should be subscribed
@@ -61,105 +29,65 @@ func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 	}
 }
 
-func sendMessage(t *testing.T, c *websocket.Conn, message string) {
-	err := c.WriteMessage(websocket.TextMessage, []byte(message))
-	if err != nil {
-		t.Fatalf("cannot send message: %v", err)
-	}
-}
-
-func debugMessage(t *testing.T, c *websocket.Conn) {
-	_, message, _ := c.ReadMessage()
-	log.Printf("!!!!!!!!!!!!!!!!!!!>>>>> %s", string(message))
-}
-
-func readMessage[T interface{}](t *testing.T, c *websocket.Conn, tag string, name string) T {
-	_, message, err := c.ReadMessage()
-	if err != nil {
-		t.Fatalf("failed to read message: %v", err)
-	}
-
-	var data []interface{}
-	err = json.Unmarshal(message, &data)
-	if err != nil {
-		t.Fatalf("failed to unmarshall: %v", err)
-	}
-
-	if len(data) < 2 {
-		t.Fatalf("not enough elements")
-	}
-
-	if gotTag, ok := data[0].(string); !ok || gotTag != tag {
-		t.Fatalf("unexpected tag: %v", data[0])
-	}
-
-	obj, ok := data[1].(map[string]interface{})
-	if !ok {
-		t.Fatalf("invalid payload")
-	}
-
-	val, ok := obj[name].(T)
-	if !ok {
-		t.Fatalf("field %q missing or not string", name)
-	}
-
-	return val
-}
-
-// Wait one second for a message, fail the test if nothing is received
-func expectMessage(t *testing.T, c *websocket.Conn, expected string) {
-	done := make(chan struct{})
-	var msgType int
-	var msg []byte
-	var err error
-
-	go func() {
-		log.Println("reading...")
-		msgType, msg, err = c.ReadMessage()
-		log.Printf("read %d", msgType)
-		close(done)
-	}()
-
-	select {
-	case <-time.After(1 * time.Second):
-		log.Println("timeout")
-		t.Fatal("timeout: no message received within 1 second")
-	case <-done:
-		log.Println("DONE")
-		if err != nil {
-			t.Fatalf("error when receiving response: %v", err)
-		}
-		if string(msg) != expected {
-			t.Fatalf("response is not the expected one:\nexpected: `%s`\ngot     : `%s`", expected, string(msg))
-		}
-		if msgType == -1 {
-			t.Fatal("invalid message type")
-		}
-	}
-}
-
-func toJSON(t *testing.T, v interface{}) string {
-	b, err := json.Marshal(v)
-	if err != nil {
-		t.Fatalf("cannot convert to JSON: %v", err)
-	}
-	return string(b)
-}
-
 func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	everyboard.Now = func() int64 {
 		return 42
 	}
-	stopServer := PrepareServer(t)
+	stopServer, mock := PrepareServer(t)
 	defer stopServer()
 
 	// Given an established connection to a server with a config room and a lobby message
 	otherConnection := EstablishWebSocketConnection(t, "foo")
 	defer otherConnection.Close()
 
+	ExpectMessageSelection(mock, 1, []model.Message{})
+	ExpectInGameConfigRoomSelection(mock, []model.ConfigRoom{})
 	sendMessage(t, otherConnection, `["SubscribeLobby"]`)
+
+	userFoo := model.MinimalUser{ID: "foo", Name: "foo"}
+	message := model.Message{
+		ID: 1,
+		GameID: model.GameIDLobby,
+		Sender: userFoo,
+		Timestamp: 42,
+		Content: "hello",
+	}
+	configRoom := model.ConfigRoom{
+		ID: 2,
+		Creator: userFoo,
+		CreatorElo: 0,
+		ChosenOpponent: nil,
+		Status: model.StatusCreated,
+		FirstPlayer: model.FirstPlayerRandom,
+		GameType: model.GameTypeStandard,
+		MoveDuration: model.StandardMoveDuration,
+		GameDuration: model.StandardGameDuration,
+		RulesConfig: json.RawMessage(`null`),
+		GameName: "P4",
+	}
+	ExpectMessageInsertion(mock, message)
 	sendMessage(t, otherConnection, `["ChatSend",{"message":"hello"}]`)
 	sendMessage(t, otherConnection, `["Unsubscribe"]`)
+
+	ExpectEloSelection(mock, "foo", "P4", nil)
+	ExpectEloInsertion(mock, model.Elo{
+		ID: 1,
+		User: userFoo,
+		GameName: "P4",
+		CurrentElo: 0,
+		GamesPlayed: 0,
+	})
+	ExpectConfigRoomInsertion(mock, configRoom)
+	currentGame := model.CurrentGame{
+		ID: 1,
+		User: userFoo,
+		GameID: configRoom.ID,
+		GameName: "P4",
+		Creator: userFoo,
+		Opponent: nil,
+		Role: model.UserRoleCreator,
+	}
+	ExpectCurrentGameInsertion(mock, currentGame)
 
 	sendMessage(t, otherConnection, `["Create", {"gameName":"P4"}]`)
 
@@ -167,6 +95,8 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	c := EstablishWebSocketConnection(t, "bar")
 	defer c.Close()
 
+	ExpectMessageSelection(mock, 1, []model.Message{message})
+	ExpectInGameConfigRoomSelection(mock, []model.ConfigRoom{configRoom})
 	sendMessage(t, c, `["SubscribeLobby"]`)
 
 	// Then we should receive one message for the chat message and one for the config room
@@ -182,7 +112,7 @@ func TestGameFlow(t *testing.T) {
 		return 42.
 	}
 
-	stopServer := PrepareServer(t)
+	stopServer, mock := PrepareServer(t)
 	defer stopServer()
 
 	player := EstablishWebSocketConnection(t, "player")
@@ -194,22 +124,94 @@ func TestGameFlow(t *testing.T) {
 	observer := EstablishWebSocketConnection(t, "observer")
 	defer observer.Close()
 
+	userPlayer := model.MinimalUser{ID: "player", Name: "player"}
+	configRoom := model.ConfigRoom{
+		ID: 2,
+		Creator: userPlayer,
+		CreatorElo: 0,
+		ChosenOpponent: nil,
+		Status: model.StatusCreated,
+		FirstPlayer: model.FirstPlayerRandom,
+		GameType: model.GameTypeStandard,
+		MoveDuration: model.StandardMoveDuration,
+		GameDuration: model.StandardGameDuration,
+		RulesConfig: json.RawMessage(`null`),
+		GameName: "P4",
+	}
+
 	// Opponent opens lobby
+	ExpectMessageSelection(mock, 1, []model.Message{})
+	ExpectInGameConfigRoomSelection(mock, []model.ConfigRoom{})
 	sendMessage(t, opponent, `["SubscribeLobby"]`)
+
 	// Player creates the game and is notified, while opponent receives the update
+	ExpectEloSelection(mock, "player", "P4", nil)
+	eloPlayer := model.Elo{
+		ID: 1,
+		User: userPlayer,
+		GameName: "P4",
+		CurrentElo: 0,
+		GamesPlayed: 0,
+	}
+	ExpectEloInsertion(mock, eloPlayer)
+	ExpectConfigRoomInsertion(mock, configRoom)
+	currentGamePlayer := model.CurrentGame{
+		ID: 1,
+		User: userPlayer,
+		GameID: configRoom.ID,
+		GameName: "P4",
+		Creator: userPlayer,
+		Opponent: nil,
+		Role: model.UserRoleCreator,
+	}
+	ExpectCurrentGameInsertion(mock, currentGamePlayer)
 	sendMessage(t, player, `["Create",{"gameName":"P4"}]`)
 	gameId := readMessage[string](t, player, "GameCreated", "gameId")
 	expectMessage(t, player,
-		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":null,"role":"Creator"}}]`, gameId))
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":null,"role":"Creator"}}]`, gameId))
 	expectMessage(t, opponent,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
+
 	// Player needs to subscribe to the config room
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	ExpectCandidateSelection(mock, 2, []model.Candidate{})
+
 	sendMessage(t, player, fmt.Sprintf(`["SubscribeConfigRoom", {"gameId":"%s"}]`, gameId))
 	expectMessage(t, player,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Opponent subscribes to the config room and gets the update. They need first to unsubscribe from the lobby
 	sendMessage(t, opponent, `["Unsubscribe"]`)
+	userOpponent := model.MinimalUser{
+		ID: "opponent",
+		Name: "opponent",
+	}
+
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	ExpectCandidateInsertion(mock, model.Candidate{
+		ID: 1,
+		GameID: configRoom.ID,
+		User: userOpponent,
+		Elo: 0,
+	})
+	currentGameOpponent := model.CurrentGame{
+		ID: 2,
+		User: userOpponent,
+		GameID: configRoom.ID,
+		GameName: "P4",
+		Creator: userPlayer,
+		Opponent: nil,
+		Role: model.UserRoleCandidate,
+	}
+	ExpectCurrentGameInsertion(mock, currentGameOpponent)
+	candidateOpponent := model.Candidate{
+		ID: 1,
+		GameID: configRoom.ID,
+		User: userOpponent,
+		Elo: 0,
+	}
+	ExpectCandidateSelection(mock, configRoom.ID, []model.Candidate{candidateOpponent})
+
 	sendMessage(t, opponent, fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, gameId))
 	expectMessage(t, opponent,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
@@ -220,94 +222,241 @@ func TestGameFlow(t *testing.T) {
 
 	// Opponent has their current game updated
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":{"id":"player","name":"player"},"role":"Candidate"}}]`, gameId))
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":null,"role":"Candidate"}}]`, gameId))
 
 	// Player selects the opponent
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	configRoom.ChosenOpponent = &userOpponent
+	ExpectConfigRoomUpdateSelectOpponent(mock, configRoom)
+	currentGamePlayer.Opponent = &userOpponent
+	ExpectCurrentGameUpdate(mock, currentGamePlayer)
+	currentGameOpponent.Opponent = &userOpponent
+	currentGameOpponent.Role = model.UserRoleChosenOpponent
+	ExpectCurrentGameUpdate(mock, currentGameOpponent)
 	sendMessage(t, player, `["SelectOpponent",{"opponent":{"id":"opponent","name":"opponent"}}]`)
 	expectMessage(t, player,
-		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":{"id":"opponent","name":"opponent"},"role":"Creator"}}]`, gameId))
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":{"id":"opponent","name":"opponent"},"role":"Creator"}}]`, gameId))
 	expectMessage(t, player,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":{"id":"player","name":"player"},"role":"ChosenOpponent"}}]`, gameId))
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":{"id":"opponent","name":"opponent"},"role":"ChosenOpponent"}}]`, gameId))
 	expectMessage(t, opponent,
 		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Player proposes to opponent
-	sendMessage(t, player, `["ProposeConfig",{"config":{"gameType":"Standard","moveDuration":30,"gameDuration":1800,"firstPlayer":"Creator","rulesConfig":{}}}]`)
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	configRoom.Status = model.StatusConfigProposed
+	configRoom.FirstPlayer = model.FirstPlayerCreator
+	ExpectConfigRoomUpdateProposeConfig(mock, configRoom)
+	sendMessage(t, player, `["ProposeConfig",{"config":{"gameType":"Standard","moveDuration":120,"gameDuration":1800,"firstPlayer":"Creator","rulesConfig":null}}]`)
 	expectMessage(t, player,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Player reviews config
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	configRoom.Status = model.StatusCreated
+	ExpectConfigRoomUpdateStatus(mock, configRoom)
 	sendMessage(t, player, `["ReviewConfig"]`)
 	expectMessage(t, player,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Created","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Created","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Created","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Created","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Player proposes config again
-	sendMessage(t, player, `["ProposeConfig",{"config":{"gameType":"Standard","moveDuration":30,"gameDuration":1800,"firstPlayer":"Creator","rulesConfig":{}}}]`)
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	configRoom.Status = model.StatusConfigProposed
+	ExpectConfigRoomUpdateProposeConfig(mock, configRoom)
+	sendMessage(t, player, `["ProposeConfig",{"config":{"gameType":"Standard","moveDuration":120,"gameDuration":1800,"firstPlayer":"Creator","rulesConfig":null}}]`)
 	expectMessage(t, player,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"ConfigProposed","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
 	// Opponent accepts and game starts, so each player has to unsubscribe to the config room and subscribe to the game
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	configRoom.Status = model.StatusStarted
+	ExpectConfigRoomUpdateStatus(mock, configRoom)
+
+	game := model.Game{
+		GameID: 2,
+		GameName: "P4",
+		PlayerZero: userPlayer,
+		PlayerOne: userOpponent,
+		Result: model.ResultInProgress,
+		Beginning: 42,
+	}
+	ExpectGameInsertion(mock, game)
+	eventStartGame := model.GameEvent{
+		ID: 1,
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: userOpponent,
+		Data: model.EventDataStartGame,
+	}
+	ExpectEventInsertion(mock, eventStartGame)
+	ExpectCandidateSelection(mock, configRoom.ID, []model.Candidate{candidateOpponent})
+	currentGamePlayer.Role = model.UserRolePlayer
+	ExpectCurrentGameUpdate(mock, currentGamePlayer)
+	currentGameOpponent.Role = model.UserRolePlayer
+	ExpectCurrentGameUpdate(mock, currentGameOpponent)
+
 	sendMessage(t, opponent, `["AcceptConfig"]`)
 	expectMessage(t, player,
-		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":{"id":"opponent","name":"opponent"},"role":"Player"}}]`, gameId))
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":{"id":"opponent","name":"opponent"},"role":"Player"}}]`, gameId))
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","opponent":{"id":"player","name":"player"},"role":"Player"}}]`, gameId))
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":{"id":"opponent","name":"opponent"},"role":"Player"}}]`, gameId))
 	expectMessage(t, player,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Started","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Started","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 	expectMessage(t, opponent,
-		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Started","firstPlayer":"Creator","gameType":"Standard","moveDuration":30,"gameDuration":1800,"rulesConfig":{},"gameName":"P4"}}]`, gameId))
+		fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":{"creator":{"id":"player","name":"player"},"creatorElo":0,"chosenOpponent":{"id":"opponent","name":"opponent"},"status":"Started","firstPlayer":"Creator","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`, gameId))
 
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
 	sendMessage(t, player, `["Unsubscribe"]`)
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
 	sendMessage(t, opponent, `["Unsubscribe"]`)
 
+	ExpectSpecificGameSelection(mock, game)
+	ExpectMessageSelection(mock, configRoom.ID, []model.Message{})
+	ExpectEventSelection(mock, configRoom.ID, []model.GameEvent{eventStartGame})
 	sendMessage(t, player, fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, gameId))
 	expectMessage(t, player, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"InProgress","beginning":42}}]`)
 	expectMessage(t, player, `["GameEvent",{"event":{"action":"StartGame","eventType":"Action","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
 	expectMessage(t, player, `["GameEvent",{"event":{"action":"Sync","eventType":"Action","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 
+	ExpectSpecificGameSelection(mock, game)
+	ExpectMessageSelection(mock, configRoom.ID, []model.Message{})
+	ExpectEventSelection(mock, configRoom.ID, []model.GameEvent{eventStartGame})
 	sendMessage(t, opponent, fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, gameId))
 	expectMessage(t, opponent, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"InProgress","beginning":42}}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"action":"StartGame","eventType":"Action","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"action":"Sync","eventType":"Action","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
 
-	// Player plays one move
+	// An observer also subscribes to the game
+	ExpectSpecificGameSelection(mock, game)
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	userObserver := model.MinimalUser{ID: "observer", Name: "observer"}
+	currentGameObserver := model.CurrentGame{
+		ID: 1,
+		User: userObserver,
+		GameID: configRoom.ID,
+		GameName: "P4",
+		Creator: userPlayer,
+		Opponent: &userOpponent,
+		Role: model.UserRoleObserver,
+	}
+	ExpectCurrentGameInsertion(mock, currentGameObserver)
+	ExpectMessageSelection(mock, configRoom.ID, []model.Message{})
+	ExpectEventSelection(mock, configRoom.ID, []model.GameEvent{eventStartGame})
+	sendMessage(t, observer, fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, gameId))
+	expectMessage(t, observer,
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":{"id":"%s","gameName":"P4","creator":{"id":"player","name":"player"},"opponent":{"id":"opponent","name":"opponent"},"role":"Observer"}}]`, gameId))
+	expectMessage(t, observer, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"InProgress","beginning":42}}]`)
+	expectMessage(t, observer, `["GameEvent",{"event":{"action":"StartGame","eventType":"Action","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
+	expectMessage(t, observer, `["GameEvent",{"event":{"action":"Sync","eventType":"Action","time":42,"user":{"id":"observer","name":"observer"}},"serverTime":42}]`)
+
+	// // Player plays one move
+	eventMove := model.GameEvent{
+		ID: 2,
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: userPlayer,
+		Data: model.EventDataMove(json.RawMessage(`{"x":42}`)),
+	}
+	ExpectEventInsertion(mock, eventMove)
 	sendMessage(t, player, `["Move",{"move":{"x":42}}]`)
 	expectMessage(t, player, `["GameEvent",{"event":{"eventType":"Move","move":{"x":42},"time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"eventType":"Move","move":{"x":42},"time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
+	expectMessage(t, observer, `["GameEvent",{"event":{"eventType":"Move","move":{"x":42},"time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 
 	// Opponent proposes draw
+	eventProposeDraw := model.GameEvent{
+		ID: 2,
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: userOpponent,
+		Data: model.EventDataRequest(model.PropositionDraw),
+	}
+	ExpectEventInsertion(mock, eventProposeDraw)
 	sendMessage(t, opponent, `["Propose",{"proposition":"Draw"}]`)
 	expectMessage(t, player, `["GameEvent",{"event":{"eventType":"Request","requestType":"Draw","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"eventType":"Request","requestType":"Draw","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
+	expectMessage(t, observer, `["GameEvent",{"event":{"eventType":"Request","requestType":"Draw","time":42,"user":{"id":"opponent","name":"opponent"}},"serverTime":42}]`)
 
 	// Player accepts, and game ends
+	ExpectSpecificConfigRoomSelection(mock, configRoom)
+	ExpectSpecificGameSelection(mock, game)
+	game.Result = model.ResultAgreedDrawByZero
+	ExpectGameUpdateSetResult(mock, game)
+	eventEndGame := model.GameEvent{
+		ID: 3,
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: userPlayer,
+		Data: model.EventDataEndGame,
+	}
+	ExpectEventInsertion(mock, eventEndGame)
+	ExpectEloSelection(mock, userPlayer.ID, configRoom.GameName, &eloPlayer)
+	ExpectEloSelection(mock, userOpponent.ID, configRoom.GameName, nil) // Elo opponent has not been created before
+	eloOpponent := model.Elo{
+		ID: 2,
+		User: userOpponent,
+		GameName: "P4",
+		CurrentElo: 0,
+		GamesPlayed: 0,
+	}
+	ExpectEloInsertion(mock, eloOpponent)
+	eloPlayer.CurrentElo = 1
+	eloPlayer.GamesPlayed = 1
+	eloOpponent.CurrentElo = 1
+	eloOpponent.GamesPlayed = 1
+	ExpectEloUpdates(mock, eloPlayer, eloOpponent)
+	configRoom.Status = model.StatusFinished
+	ExpectConfigRoomUpdateStatus(mock, configRoom)
+	ExpectCurrentGameDelete(mock, userPlayer.ID)
+	ExpectCurrentGameDelete(mock, userOpponent.ID)
+	ExpectCurrentGameSelectObservers(mock, configRoom.ID, []model.CurrentGame{currentGameObserver})
+	ExpectCurrentGameDelete(mock, userObserver.ID)
+	eventAcceptDraw := model.GameEvent{
+		ID: 4,
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: userPlayer,
+		Data: model.EventDataReplyAccept(model.PropositionDraw, nil),
+	}
+	ExpectEventInsertion(mock, eventAcceptDraw)
+	mock.ExpectBegin()
 	sendMessage(t, player, `["Accept",{"proposition":"Draw"}]`)
+	expectMessage(t, opponent, `["CurrentGameUpdate",{"currentGame":null}]`)
 	expectMessage(t, player, `["CurrentGameUpdate",{"currentGame":null}]`)
+	expectMessage(t, observer, `["CurrentGameUpdate",{"currentGame":null}]`)
+	expectMessage(t, observer, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"AgreedDrawByZero","beginning":42}}]`)
+	expectMessage(t, observer, `["GameEvent",{"event":{"action":"EndGame","eventType":"Action","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
+	expectMessage(t, observer, `["GameEvent",{"event":{"accept":true,"eventType":"Reply","requestType":"Draw","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 	expectMessage(t, player, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"AgreedDrawByZero","beginning":42}}]`)
 	expectMessage(t, player, `["GameEvent",{"event":{"action":"EndGame","eventType":"Action","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 	expectMessage(t, player, `["GameEvent",{"event":{"accept":true,"eventType":"Reply","requestType":"Draw","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
-	expectMessage(t, opponent, `["CurrentGameUpdate",{"currentGame":null}]`)
 	expectMessage(t, opponent, `["GameUpdate",{"game":{"gameName":"P4","playerZero":{"id":"player","name":"player"},"playerOne":{"id":"opponent","name":"opponent"},"result":"AgreedDrawByZero","beginning":42}}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"action":"EndGame","eventType":"Action","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 	expectMessage(t, opponent, `["GameEvent",{"event":{"accept":true,"eventType":"Reply","requestType":"Draw","time":42,"user":{"id":"player","name":"player"}},"serverTime":42}]`)
 }
 
+func TestResign(t *testing.T) {
+}
+
+// TODO: TestNotifyTimeout
+// TODO: TestEndGame
+// TODO: TestRejectProposal
+// TODO: TestAddTime
+
 func TestInvalidMessages(t *testing.T) {
-	stopServer := PrepareServer(t)
+	stopServer, _ := PrepareServer(t)
 	defer stopServer()
 
 	client := EstablishWebSocketConnection(t, "player")
 	defer client.Close()
-
 
 	// Invalid message because tag does not exist
 	sendMessage(t, client, `["Invalid"]`)

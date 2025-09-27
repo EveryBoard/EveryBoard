@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"encoding/json"
 	"fmt"
 	"io"
 	"log"
@@ -11,9 +12,9 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
 	"github.com/gorilla/websocket"
-	"gorm.io/gorm"
-	"gorm.io/driver/sqlite"
 	"gorm.io/driver/postgres"
+	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
 )
 
 type Configuration struct {
@@ -128,7 +129,8 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		err = handlers.handle(messageType, messageData)
 		if err != nil {
-			utils.Errorf("Error when handling %v (%v) message: %v", messageType, messageData, err)
+			printableData, _ := json.Marshal(messageData)
+			utils.Errorf("Error when handling %v (%s) message: %v", messageType, printableData, err)
 		}
 	}
 }
