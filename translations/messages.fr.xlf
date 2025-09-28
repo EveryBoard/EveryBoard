@@ -3866,13 +3866,13 @@
         <source>You must only place your castle</source>
         <target>Vous devez seulement placer votre château</target>
       </trans-unit>
-      <trans-unit id="3655898495512904683" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (first player)</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (premier joueur)</target>
+      <trans-unit id="5637364645971249040" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant qu'envahisseur)</target>
       </trans-unit>
-      <trans-unit id="3732534634894194148" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (second player)</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (deuxième joueur)</target>
+      <trans-unit id="984815225652827868" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant que défenseur)</target>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>

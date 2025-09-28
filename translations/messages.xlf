@@ -2823,11 +2823,11 @@
       <trans-unit id="5963846295180517656" datatype="html">
         <source>You must only place your castle</source>
       </trans-unit>
-      <trans-unit id="3655898495512904683" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (first player)</source>
+      <trans-unit id="5637364645971249040" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
       </trans-unit>
-      <trans-unit id="3732534634894194148" datatype="html">
-        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (second player)</source>
+      <trans-unit id="984815225652827868" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>

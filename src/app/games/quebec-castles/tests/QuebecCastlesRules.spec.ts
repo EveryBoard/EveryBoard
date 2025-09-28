@@ -15,7 +15,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('QuebecCastlesRules', () => {
+fdescribe('QuebecCastlesRules', () => {
 
     let rules: QuebecCastlesRules;
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();

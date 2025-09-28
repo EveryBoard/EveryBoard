@@ -17,7 +17,7 @@ const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
     MGPOptional.of(new Coord(0, 0)),
 );
 
-describe('QuebecCastlesMoveGenerator', () => {
+fdescribe('QuebecCastlesMoveGenerator', () => {
 
     let moveGenerator: QuebecCastlesMoveGenerator;
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();

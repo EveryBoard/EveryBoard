@@ -41,9 +41,9 @@ export class QuebecCastlesFailure {
 
     public static readonly PLACE_ONLY_ONE_CASTLE: Localized = () => $localize`You must only place your castle`;
 
-    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ZERO: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (first player)`;
+    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as invader)`;
 
-    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ONE: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (second player)`;
+    public static readonly CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER: (max: number, line: number) => string = (max: number, line: number) => $localize`If you have ${ line } line(s), you can only have ${ max } pieces (as defender)`;
 
     public static readonly TOO_MANY_LINES_FOR_TERRITORY: Localized = () => $localize`Too many lines for territory, your opponent lines would merge with yours!`;
 
@@ -142,8 +142,8 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         if (spaceForPiece < numberOfPiece) {
             const line: number = config.linesForTerritory;
             const failure: string = player === Player.ZERO ?
-                QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ZERO(spaceForPiece, line) :
-                QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ONE(spaceForPiece, line);
+                QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER(spaceForPiece, line) :
+                QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER(spaceForPiece, line);
             return MGPValidation.failure(failure);
         } else {
             return MGPValidation.SUCCESS;

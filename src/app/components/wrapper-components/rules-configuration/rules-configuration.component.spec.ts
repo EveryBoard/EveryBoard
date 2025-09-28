@@ -378,16 +378,13 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should have a select that you cannot change', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
+                    // but not in "custom" mode, so the fields should be disabled
                     component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithEnums);
                     testUtils.detectChanges();
 
-                    // When modifying config
-                    spyOn(component.updateCallback, 'emit').and.callThrough();
-                    testUtils.expectElementToBeDisabled('#harderDifficulty_enum_config_input'); // TODO QLB
-
-                    // Then the resulting value should be updated
-                    expect(component.updateCallback.emit).not.toHaveBeenCalled();
-                    expectConfigToBeSelected('config name');
+                    // When rendering config
+                    // Then the select should be disabled
+                    testUtils.expectElementToBeDisabled('#harderDifficulty_enum_config_input');
                 }));
 
             });

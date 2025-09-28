@@ -177,7 +177,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isSelectedEnum(configParameter: string, enumValue: string): boolean {
-        return enumValue === this.rulesConfigForm.controls[configParameter].getRawValue(); // TODO UT
+        return enumValue === this.rulesConfigForm.controls[configParameter].getRawValue();
     }
 
     public onEnumChange(field: string, event: Event): void {

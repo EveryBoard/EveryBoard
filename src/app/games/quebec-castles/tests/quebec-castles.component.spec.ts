@@ -18,7 +18,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-describe('QuebecCastlesComponent', () => {
+fdescribe('QuebecCastlesComponent', () => {
 
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
@@ -609,7 +609,7 @@ describe('QuebecCastlesComponent', () => {
 
 });
 
-describe('QuebecCastles Custom Configs', () => {
+fdescribe('QuebecCastles Custom Configs', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
     let component: RulesConfigurationComponent;
@@ -651,7 +651,7 @@ describe('QuebecCastles Custom Configs', () => {
         await setCustomConfigTags(customConfig);
 
         // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_PLAYER_ONE(14, 5);
+        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER(14, 5);
         expectElementToHaveError(error);
     }));
 

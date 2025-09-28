@@ -201,7 +201,6 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             } else if (clickedPiece === PlayerOrNone.NONE) {
                 return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
             } else {
-                this.cancelMoveAttempt(); // TODO NEEDED ?
                 this.selectedCoord(coord);
                 return MGPValidation.SUCCESS;
             }
