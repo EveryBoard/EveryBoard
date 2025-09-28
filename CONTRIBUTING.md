@@ -26,6 +26,11 @@ Run `git clone https://github.com/EveryBoard/EveryBoard`
 ## Install dependencies
 Run `npm ci`
 
+## Build library
+To build the library, go to `lib/` and run `npm run build`.
+
+When you modify the library, make sure to rerun the build, and to also run `npm ci` from the root directory to synchronize it.
+
 ## Local server
 Make sure firebase emulators are installed by running `firebase init emulators`.
 Then, run `npm run start:emulator` and navigate to `http://localhost:4200`
@@ -45,9 +50,6 @@ After the PR has been approved for merging:
   - Update the global thresholds in `src/karma.conf.js` (`coverageReporter.check.global`) to match with your latest run from `npm test`.
   - Update `index.html` with the number of tests
   - Update the coverage data with `scripts/coverage.py generate`
-
-## Modify /lib
-TO BUILD: npm run build
 
 ### For the PR merger
   - Check that `src/karma.conf.js` has been updated
