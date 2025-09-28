@@ -30,6 +30,7 @@ Run `npm ci`
 To build the library, go to `lib/` and run `npm run build`.
 
 When you modify the library, make sure to rerun the build, and to also run `npm ci` from the root directory to synchronize it.
+It is also sometimes necessary to clear the angular cache in `.angular/cache` (you can just remove the directory and rebuild the library).
 
 ## Local server
 Make sure firebase emulators are installed by running `firebase init emulators`.
