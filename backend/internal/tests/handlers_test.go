@@ -114,10 +114,17 @@ func TestGameFlowSimpler(t *testing.T) {
 	sb.SubscribeConfigRoom(player, gameId) // player subscribes to the config room
 	sb.Unsubscribe(opponent) // opponent unsubscribes from the lobby
 	sb.SubscribeConfigRoom(opponent, gameId) // opponent subscribes to the config room
-	sb.SelectOpponent(gameId, player, opponent) // player selects the opponent
-	// sb.ProposeConfig(player) // player proposes to the opponent
-	// sb.ReviewConfig(player) // player reviews the config
-	// sb.ProposeConfig(player) // player proposes the config again
+	sb.SelectOpponent(player, opponent) // player selects the opponent
+	proposal := model.ConfigProposal{
+		GameType: model.GameTypeStandard,
+		MoveDuration: 120,
+		GameDuration: 1800,
+		FirstPlayer: model.FirstPlayerRandom,
+		RulesConfig: json.RawMessage(`null`),
+	}
+	sb.ProposeConfig(player, proposal) // player proposes to the opponent
+	sb.ReviewConfig(player) // player reviews the config
+	sb.ProposeConfig(player, proposal) // player proposes the config again
 	// sb.AcceptConfig(opponent) // opponent accepts (the game starts)
 	// observer := sb.EstablishConnection("observer") // an observer joins
 	// sb.SubscribeConfigRoom(observer, gameId) // the observer subscribes to the game
@@ -199,7 +206,7 @@ func TestGameFlow(t *testing.T) {
 
 	// Player needs to subscribe to the config room
 	ExpectSpecificConfigRoomSelection(mock, configRoom)
-	ExpectCandidateSelection(mock, 2, []model.Candidate{})
+	ExpectCandidateSelection(mock, 2, []*model.Candidate{})
 
 	sendMessage(t, player, fmt.Sprintf(`["SubscribeConfigRoom", {"gameId":"%s"}]`, gameId))
 	expectMessage(t, player,
@@ -235,7 +242,7 @@ func TestGameFlow(t *testing.T) {
 		User: userOpponent,
 		Elo: 0,
 	}
-	ExpectCandidateSelection(mock, configRoom.ID, []model.Candidate{candidateOpponent})
+	ExpectCandidateSelection(mock, configRoom.ID, []*model.Candidate{&candidateOpponent})
 
 	sendMessage(t, opponent, fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, gameId))
 	expectMessage(t, opponent,
@@ -322,7 +329,7 @@ func TestGameFlow(t *testing.T) {
 		Data: model.EventDataStartGame,
 	}
 	ExpectEventInsertion(mock, eventStartGame)
-	ExpectCandidateSelection(mock, configRoom.ID, []model.Candidate{candidateOpponent})
+	ExpectCandidateSelection(mock, configRoom.ID, []*model.Candidate{&candidateOpponent})
 	currentGamePlayer.Role = model.UserRolePlayer
 	ExpectCurrentGameUpdate(mock, currentGamePlayer)
 	currentGameOpponent.Role = model.UserRolePlayer
