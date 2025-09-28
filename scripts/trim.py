@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+# This script trims an image by removing bands of auto-detected background color (light or dark) at the edge of the image
 from PIL import Image
 import sys
 
@@ -24,13 +25,13 @@ def is_dark_or_light(rgb, tolerance=26): # we currently have 0x14161a as a dark 
 
 def row_is_border(y):
     for x in range(w):
-        if is_dark_or_light(pixels[x, y]):
+        if not is_dark_or_light(pixels[x, y]):
             return False
     return True
 
 def col_is_border(x):
     for y in range(h):
-        if is_dark_or_light(pixels[x, y]):
+        if not is_dark_or_light(pixels[x, y]):
             return False
     return True
 
