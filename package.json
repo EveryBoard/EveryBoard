@@ -43,6 +43,7 @@
     "core-js": "^3.38.0",
     "firebase": "^10.12.5",
     "firebase-tools": "^13.15.1",
+    "onnxruntime-web": "^1.23.0",
     "rxjs": "^7.8.1",
     "zone.js": "^0.14.10"
   },
