@@ -25,7 +25,7 @@ export class RulesConfigDescriptionLocalizable {
 
 }
 
-export abstract class ConfigLine<R extends RulesConfig = EmptyRulesConfig> {
+export abstract class ConfigLine {
 
     protected constructor(public readonly defaultValue: ConfigDescriptionType,
                           public readonly title: Localized,
@@ -34,11 +34,11 @@ export abstract class ConfigLine<R extends RulesConfig = EmptyRulesConfig> {
     }
 
     // Should check if the value is valid
-    public abstract checkValidity(value: JSONPrimitive, config: R): MGPValidation;
+    public abstract checkValidity(value: JSONPrimitive): MGPValidation;
 
 }
 
-export class NumberConfig<R extends RulesConfig = EmptyRulesConfig> extends ConfigLine<R> {
+export class NumberConfig extends ConfigLine {
 
     public constructor(defaultValue: number,
                        title: Localized,
@@ -57,22 +57,22 @@ export class NumberConfig<R extends RulesConfig = EmptyRulesConfig> extends Conf
 
 }
 
-export class EnumConfig<R extends RulesConfig = EmptyRulesConfig> extends ConfigLine<R> {
+export class EnumConfig extends ConfigLine {
 
     public constructor(value: string,
                        title: Localized,
                        public readonly possibleValues: { [key: string]: Localized },
-                       public readonly validator: MGPValidator = () => MGPValidation.SUCCESS)
+                       public readonly validator: MGPValidator = (_: string) => MGPValidation.SUCCESS)
     {
         super(value, title);
     }
 
-    public override checkValidity(fieldValue: JSONPrimitive): MGPValidation {
-        return this.validator(fieldValue as number);
+    public override checkValidity(fieldValue: string): MGPValidation {
+        return this.validator(fieldValue);
     }
 }
 
-export class BooleanConfig<R extends RulesConfig = EmptyRulesConfig> extends ConfigLine<R> {
+export class BooleanConfig extends ConfigLine {
 
     public constructor(defaultValue: boolean, title: Localized)
     {
@@ -143,13 +143,13 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
             // no value was provided, it is invalid
             return MGPValidation.failure($localize`This value is mandatory`);
         }
-        const configLine: ConfigLine<R> | null = this.defaultConfigDescription.config[field];
+        const configLine: ConfigLine | null = this.defaultConfigDescription.config[field];
         if (configLine == null) {
             // this does not match an element from the config, it is invalid
             return MGPValidation.failure($localize`There is no such configuration element`);
+        } else {
+            return configLine.checkValidity(value);
         }
-        const config: R = this.getDefaultConfig().config;
-        return configLine.checkValidity(value, config);
     }
 
     public isValid(field: string, value: JSONPrimitive): boolean {

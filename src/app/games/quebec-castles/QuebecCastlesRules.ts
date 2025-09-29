@@ -91,7 +91,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     width: new NumberConfig(9, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 20)),
                     height: new NumberConfig(9, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(2, 20)),
                     linesForTerritory: new NumberConfig(5, () => $localize`Lines for territory`, MGPValidators.range(1, 10)),
-                    invaders: new NumberConfig<QuebecCastlesConfig>(14, () => $localize`Number of invaders`, MGPValidators.range(1, 123456)),
+                    invaders: new NumberConfig(14, () => $localize`Number of invaders`, MGPValidators.range(1, 123456)),
                     defenders: new NumberConfig(9, () => $localize`Number of defenders`, MGPValidators.range(1, 123456)),
                     isRhombic: new BooleanConfig(true, () => $localize`Is Rhombic`),
                     playersPlaceCastle: new BooleanConfig(false, () => $localize`Place castle yourself`),
@@ -137,7 +137,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     private static isThereEnoughPlaceForPiece(player: Player, config: QuebecCastlesConfig, numberOfPiece: number)
     : MGPValidation
     {
-        // Got to substract 1 as the castle is not included
+        // Got to subtract 1 as the castle is not included
         const spaceForPiece: number = QuebecCastlesRules.get().getValidDropCoords(player, config).length - 1;
         if (spaceForPiece < numberOfPiece) {
             const line: number = config.linesForTerritory;
@@ -194,16 +194,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     : { lineDirection: number, lineToFillIndex: number }
     {
         const lineToFillRange: { min: number, max: number } = this.getLegalRangeIndex(player, config);
-        let lineDirection: number;
-        let lineToFillIndex: number;
         if (player === Player.ZERO) {
-            lineDirection = -1;
-            lineToFillIndex = lineToFillRange.max;
+            return { lineDirection: -1, lineToFillIndex: lineToFillRange.max };
         } else {
-            lineDirection = 1;
-            lineToFillIndex = lineToFillRange.min;
+            return { lineDirection: 1, lineToFillIndex: lineToFillRange.min };
         }
-        return { lineDirection, lineToFillIndex };
     }
 
     private getLineFirstCoord(line: Coord[], pieceToDrop: number): { coord: Coord, skipCenter: boolean } {
@@ -613,8 +608,8 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     isRhombic: config.isRhombic,
                     // TODO: defender and invader are affected TOOOOO
                 });
-                let newState: QuebecCastlesState = this.getInitialState(adaptedDefaultConfig);
-                newState = this.placeCastlesAndMovePiece(state, castles, adaptedDefaultConfig);
+                const newState: QuebecCastlesState =
+                    this.placeCastlesAndMovePiece(state, castles, adaptedDefaultConfig);
                 return new QuebecCastlesState(newState.board, state.turn + 1, castles);
             } else {
                 return new QuebecCastlesState(state.board, state.turn + 1, castles);

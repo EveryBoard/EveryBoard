@@ -651,7 +651,7 @@
       </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
-        <target>Chateaux Québecquois</target>
+        <target>Chateaux Québecois</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -3840,7 +3840,7 @@
       </trans-unit>
       <trans-unit id="6838858844517047193" datatype="html">
         <source>You cannot move in drop phase</source>
-        <target>Vous ne pouvez pas déplacer de pièce en phrase de dépose</target>
+        <target>Vous ne pouvez pas déplacer de pièce en phase de placement</target>
       </trans-unit>
       <trans-unit id="4933773936312573082" datatype="html">
         <source>You must drop all your pieces</source>
@@ -3868,11 +3868,11 @@
       </trans-unit>
       <trans-unit id="5637364645971249040" datatype="html">
         <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant qu'envahisseur)</target>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> ligne(s), vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant qu'envahisseur)</target>
       </trans-unit>
       <trans-unit id="984815225652827868" datatype="html">
         <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
-        <target>Si vous avez <x id="PH" equiv-text="line"/> lignes, vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant que défenseur)</target>
+        <target>Si vous avez <x id="PH" equiv-text="line"/> ligne(s), vous ne pouvez avoir que <x id="PH_1" equiv-text="max"/> pièces (en tant que défenseur)</target>
       </trans-unit>
       <trans-unit id="2740099122933909931" datatype="html">
         <source>Too many lines for territory, your opponent lines would merge with yours!</source>
@@ -3884,7 +3884,7 @@
       </trans-unit>
       <trans-unit id="5830114547747897795" datatype="html">
         <source>Piece by piece</source>
-        <target>Pièces par pièces</target>
+        <target>Pièce par pièce</target>
       </trans-unit>
       <trans-unit id="410841679211120323" datatype="html">
         <source>By batch</source>
@@ -3896,7 +3896,7 @@
       </trans-unit>
       <trans-unit id="6952700396277252102" datatype="html">
         <source>Number of invaders</source>
-        <target>Nombre d&apos;envahisseur</target>
+        <target>Nombre d&apos;envahisseurs</target>
       </trans-unit>
       <trans-unit id="8136810909201933801" datatype="html">
         <source>Number of defenders</source>
@@ -3908,34 +3908,34 @@
       </trans-unit>
       <trans-unit id="3155220222252009452" datatype="html">
         <source>Place castle yourself</source>
-        <target>Placer le château vous-même</target>
+        <target>Placer le château soi-même</target>
       </trans-unit>
       <trans-unit id="5344724322380814051" datatype="html">
         <source>Drop mode</source>
         <target>Mode de placement</target>
       </trans-unit>
-      <trans-unit id="5026411156591848707" datatype="html">
-        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s castle. The castles are by default on the corners.</source>
-        <target>Chateaux Québecquois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de capturer toutes les pièces adverses, ou d&apos;atteindre le château adverse. Les châteaux sont par défaut dans les coins.</target>
+      <trans-unit id="4108446576215978761" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all the pieces of the opponent, or to step on the opponent&apos;s castle. The castles are on the corners by default.</source>
+        <target>Chateaux Québecois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de capturer toutes les pièces adverses, ou d&apos;atteindre le château adverse. Les châteaux sont par défaut dans les coins.</target>
       </trans-unit>
       <trans-unit id="5230748384162383195" datatype="html">
         <source>Defender&apos;s move</source>
         <target>Déplacement du défenseur</target>
       </trans-unit>
-      <trans-unit id="2667803404667416417" datatype="html">
-        <source>The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, move a defender piece.</source>
-        <target>Les défenseurs ont les pièces claires, ils jouent en sélectionnant une de leurs pièces et en la déplaçant sur une case voisine.&lt;br/&gt;Vous jouez les clairs, déplacez une pièce du défenseur.</target>
+      <trans-unit id="7182015855595398104" datatype="html">
+        <source>The defenders have the dark pieces, they play first by selecting one of their pieces and moving it on a neighboring square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a defender piece.</source>
+        <target>Les défenseurs ont les pièces foncées, ils jouent en sélectionnant une de leurs pièces et en la déplaçant sur une case voisine.&lt;br/&gt;Vous jouez les foncés, déplacez une pièce du défenseur.</target>
       </trans-unit>
       <trans-unit id="2155198865476397918" datatype="html">
         <source>Invader&apos;s move</source>
         <target>Déplacement de l&apos;envahisseur</target>
       </trans-unit>
-      <trans-unit id="7921385624477842024" datatype="html">
-        <source>The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
+      <trans-unit id="4107747706727630088" datatype="html">
+        <source>The invaders have the light pieces, they play second by selecting one of their piece and moving them two step in a straight line. A piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
         <target>Les envahisseurs ont les pièces Claires, ils jouent en deuxième en sélectionnant leurs pièces et les déplaçant de deux pas dans une ligne droite. Les pièces ne peuvent sauter par dessus d&apos;autres.&lt;br/&gt;Déplacez une pièce de l&apos;envahisseur.</target>
       </trans-unit>
-      <trans-unit id="8548139072476073438" datatype="html">
-        <source>Custom config: Rhombic, width, height</source>
+      <trans-unit id="2713433806060355704" datatype="html">
+        <source>Custom config: rhombic, width, height</source>
         <target>Configuration alternative: Losange, largeur, hauteur</target>
       </trans-unit>
       <trans-unit id="2002655185364987666" datatype="html">
@@ -3950,9 +3950,9 @@
         <source>You have the option to change decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
         <target>Vous avez l&apos;option de choisir vous même où placer le château. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre château.</target>
       </trans-unit>
-      <trans-unit id="7761290276414807914" datatype="html">
-        <source>Custom config: Drop Mode: By Batch</source>
-        <target>Configuration alternative: Mode de placement: par groupe</target>
+      <trans-unit id="4647263668364735204" datatype="html">
+        <source>Custom config: drop mode: by batch</source>
+        <target>Configuration alternative: mode de placement: par groupe</target>
       </trans-unit>
       <trans-unit id="4109163222082818733" datatype="html">
         <source>You have the option to decide yourself where you place your pieces.</source>

@@ -74,7 +74,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
     }
 
-    private removeAndSubstractTerritory(state: GoState): GoState {
+    private removeAndSubtractTerritory(state: GoState): GoState {
         const resultingBoard: GoPiece[][] = state.getCopiedBoard();
         const captured: PlayerNumberMap = state.getCapturedCopy();
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -327,11 +327,11 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                 }
             }
         }
-        return this.removeAndSubstractTerritory(state);
+        return this.removeAndSubtractTerritory(state);
     }
 
     private applyDeadMarkingMove(legalMove: GoMove, state: GoState): GoState {
-        const territorylessState: GoState = this.removeAndSubstractTerritory(state);
+        const territorylessState: GoState = this.removeAndSubtractTerritory(state);
         const switchedState: GoState = this.switchAliveness(legalMove.coord, territorylessState);
         const resultingState: GoState =
             new GoState(switchedState.getCopiedBoard(),

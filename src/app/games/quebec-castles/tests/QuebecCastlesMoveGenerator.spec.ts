@@ -17,7 +17,7 @@ const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
     MGPOptional.of(new Coord(0, 0)),
 );
 
-fdescribe('QuebecCastlesMoveGenerator', () => {
+describe('QuebecCastlesMoveGenerator', () => {
 
     let moveGenerator: QuebecCastlesMoveGenerator;
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
@@ -117,8 +117,8 @@ fdescribe('QuebecCastlesMoveGenerator', () => {
                     expect(move.coords.size()).toEqual(3);
                 });
 
-                it('should drop last pieces by batch (first player has more piece)', () => {
-                    // Given a board in  piece-by-piece mode where first player has more piece
+                it('should drop last pieces by batch (first player has more pieces)', () => {
+                    // Given a board in  piece-by-piece mode where first player has more pieces
                     const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                         ...defaultConfig.get(),
                         dropMode: 'PIECE_BY_PIECE',

@@ -7,7 +7,7 @@ import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
 import { Coord } from 'src/app/jscaip/Coord';
 import { QuebecCastlesRules } from '../QuebecCastlesRules';
 
-fdescribe('QuebecCastlesMove', () => {
+describe('QuebecCastlesMove', () => {
 
     const rule: QuebecCastlesRules = QuebecCastlesRules.get();
     const moveGenerator: QuebecCastlesMoveGenerator = new QuebecCastlesMoveGenerator();
@@ -34,26 +34,26 @@ fdescribe('QuebecCastlesMove', () => {
 
     describe('equals', () => {
 
-        it('should return true for identic drop', () => {
+        it('should return true for identical drop', () => {
             // Given some drop
             const drop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0)]);
 
-            // When comparing it to another identic drop
+            // When comparing it to another identical drop
             const identicDrop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0)]);
 
-            // Then it should be equals
+            // Then it should be equal
             expect(drop.equals(identicDrop)).toBeTrue();
         });
 
-        it('should return true for identic translation', () => {
+        it('should return true for identical translation', () => {
             // Given some translation
             const translation: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
 
-            // When comparing it to another identic translation
+            // When comparing it to another identical translation
             const identicTranslation: QuebecCastlesMove =
                 QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
 
-            // Then it should be equals
+            // Then it should be equal
             expect(translation.equals(identicTranslation)).toBeTrue();
         });
 
@@ -61,10 +61,10 @@ fdescribe('QuebecCastlesMove', () => {
             // Given some drop
             const drop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(0, 0), new Coord(1, 1)]);
 
-            // When comparing it to a a translation
+            // When comparing it to a translation
             const translation: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(0, 0), new Coord(1, 1));
 
-            // Then it should be equals
+            // Then it should be equal
             expect(drop.equals(translation)).toBeFalse();
             expect(translation.equals(drop)).toBeFalse();
         });
@@ -76,7 +76,7 @@ fdescribe('QuebecCastlesMove', () => {
             // When comparing it to another different drop
             const differentDrop: QuebecCastlesMove = QuebecCastlesMove.drop([new Coord(1, 1)]);
 
-            // Then it should be equals
+            // Then it should be equal
             expect(drop.equals(differentDrop)).toBeFalse();
         });
 
@@ -88,7 +88,7 @@ fdescribe('QuebecCastlesMove', () => {
             const otherTranslation: QuebecCastlesMove =
                 QuebecCastlesMove.translation(new Coord(1, 1), new Coord(0, 0));
 
-            // Then it should be equals
+            // Then it should be equal
             expect(translation.equals(otherTranslation)).toBeFalse();
         });
 

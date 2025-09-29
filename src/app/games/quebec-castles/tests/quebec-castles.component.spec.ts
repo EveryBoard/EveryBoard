@@ -18,7 +18,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-fdescribe('QuebecCastlesComponent', () => {
+describe('QuebecCastlesComponent', () => {
 
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
@@ -609,7 +609,7 @@ fdescribe('QuebecCastlesComponent', () => {
 
 });
 
-fdescribe('QuebecCastles Custom Configs', () => {
+describe('QuebecCastles Custom Configs', () => {
 
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
     let component: RulesConfigurationComponent;

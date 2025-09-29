@@ -8,7 +8,7 @@ import { QuebecCastlesMinimax } from '../QuebecCastlesMinimax';
 import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
 import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 
-fdescribe('QuebecCastlesMinimax', () => {
+describe('QuebecCastlesMinimax', () => {
 
     let minimax: Minimax<QuebecCastlesMove, QuebecCastlesState, QuebecCastlesConfig>;
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();

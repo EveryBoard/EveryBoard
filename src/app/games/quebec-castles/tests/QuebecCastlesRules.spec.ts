@@ -15,7 +15,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-fdescribe('QuebecCastlesRules', () => {
+describe('QuebecCastlesRules', () => {
 
     let rules: QuebecCastlesRules;
     const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
@@ -52,7 +52,7 @@ fdescribe('QuebecCastlesRules', () => {
 
         describe('Custom Config', () => {
 
-            it('should allow first player to drop its castle when mentionned in config', () => {
+            it('should allow first player to drop its castle when mentioned in config', () => {
                 // Given a custom config were you must place the castle yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),
@@ -81,7 +81,7 @@ fdescribe('QuebecCastlesRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             });
 
-            it('should allow second player to drop its castle when mentionned in config', () => {
+            it('should allow second player to drop its castle when mentioned in config', () => {
                 // Given a custom config were you must place the castle yourself
                 const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
                     ...defaultConfig.get(),

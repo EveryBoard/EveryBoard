@@ -2859,23 +2859,23 @@
       <trans-unit id="5344724322380814051" datatype="html">
         <source>Drop mode</source>
       </trans-unit>
-      <trans-unit id="5026411156591848707" datatype="html">
-        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all opponent piece, or to step on the opponent&apos;s castle. The castles are by default on the corners.</source>
+      <trans-unit id="4108446576215978761" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all the pieces of the opponent, or to step on the opponent&apos;s castle. The castles are on the corners by default.</source>
       </trans-unit>
       <trans-unit id="5230748384162383195" datatype="html">
         <source>Defender&apos;s move</source>
       </trans-unit>
-      <trans-unit id="2667803404667416417" datatype="html">
-        <source>The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, move a defender piece.</source>
+      <trans-unit id="7182015855595398104" datatype="html">
+        <source>The defenders have the dark pieces, they play first by selecting one of their pieces and moving it on a neighboring square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a defender piece.</source>
       </trans-unit>
       <trans-unit id="2155198865476397918" datatype="html">
         <source>Invader&apos;s move</source>
       </trans-unit>
-      <trans-unit id="7921385624477842024" datatype="html">
-        <source>The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
+      <trans-unit id="4107747706727630088" datatype="html">
+        <source>The invaders have the light pieces, they play second by selecting one of their piece and moving them two step in a straight line. A piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
       </trans-unit>
-      <trans-unit id="8548139072476073438" datatype="html">
-        <source>Custom config: Rhombic, width, height</source>
+      <trans-unit id="2713433806060355704" datatype="html">
+        <source>Custom config: rhombic, width, height</source>
       </trans-unit>
       <trans-unit id="2002655185364987666" datatype="html">
         <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
@@ -2886,8 +2886,8 @@
       <trans-unit id="7842496462088765849" datatype="html">
         <source>You have the option to change decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
       </trans-unit>
-      <trans-unit id="7761290276414807914" datatype="html">
-        <source>Custom config: Drop Mode: By Batch</source>
+      <trans-unit id="4647263668364735204" datatype="html">
+        <source>Custom config: drop mode: by batch</source>
       </trans-unit>
       <trans-unit id="4109163222082818733" datatype="html">
         <source>You have the option to decide yourself where you place your pieces.</source>

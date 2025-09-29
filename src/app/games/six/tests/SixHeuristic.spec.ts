@@ -166,7 +166,7 @@ describe('SixHeuristic', () => {
 
     describe('Custom Config', () => {
 
-        it('score after N-th turn should be a substraction of the number of piece', () => {
+        it('score after N-th turn should be a subtraction of the number of piece', () => {
             // Given a board in second phase
             // and a config with shorter phase
             const state: SixState = SixState.ofRepresentation([

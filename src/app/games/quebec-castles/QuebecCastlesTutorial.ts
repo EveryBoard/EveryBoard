@@ -43,26 +43,26 @@ export class QuebecCastlesTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
-            $localize`Quebec Castles is the first board game invented by the EveryBoard Team.<br/>The goal of the game is to capture all opponent piece, or to step on the opponent's castle. The castles are by default on the corners.`,
+            $localize`Quebec Castles is the first board game invented by the EveryBoard Team.<br/>The goal of the game is to capture all the pieces of the opponent, or to step on the opponent's castle. The castles are on the corners by default.`,
             QuebecCastlesRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
             $localize`Defender's move`,
-            $localize`The defenders have the Dark pieces, they play first by selecting one of their pieces and moving it on a neighbor square.<br/><br/>You're playing Light, move a defender piece.`,
+            $localize`The defenders have the dark pieces, they play first by selecting one of their pieces and moving it on a neighboring square.<br/><br/>You're playing Dark, move a defender piece.`,
             QuebecCastlesRules.get().getInitialState(defaultConfig),
             QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6)),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
             $localize`Invader's move`,
-            $localize`The invaders have the Light piece, they play second by selecting one of their piece and moving them two step in a straight line. The piece cannot jump over another piece.<br/><br/>Move an invader piece.`,
+            $localize`The invaders have the light pieces, they play second by selecting one of their piece and moving them two step in a straight line. A piece cannot jump over another piece.<br/><br/>Move an invader piece.`,
             QuebecCastlesRules.get().getInitialState(defaultConfig).incrementTurn(),
             QuebecCastlesMove.translation(new Coord(2, 2), new Coord(4, 4)),
             TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
         ),
         // 5.a configurations alternatives: rectangulaire & width & height
         TutorialStep.informational(
-            $localize`Custom config: Rhombic, width, height`,
+            $localize`Custom config: rhombic, width, height`,
             $localize`You have the option to change the shape of the board, if it's not rhombic, it's rectangular. You also can change the size`,
             QuebecCastlesRules.get().getInitialState(rectangularWidthHeightConfig),
             rectangularWidthHeightConfig,
@@ -76,7 +76,7 @@ export class QuebecCastlesTutorial extends Tutorial {
             playersPlaceCastleConfig,
         ),
         TutorialStep.anyMove(
-            $localize`Custom config: Drop Mode: By Batch`,
+            $localize`Custom config: drop mode: by batch`,
             $localize`You have the option to decide yourself where you place your pieces.`,
             QuebecCastlesRules.get().getInitialState(dropByBatchConfig),
             QuebecCastlesMove.drop([
