@@ -236,19 +236,16 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 		}
 
 		if uid != configRoom.Creator.ID {
-			log.Printf("%s is not creator", uid)
 			// A new candidate appears!
 			elo, err := model.GetElo(configRoom.GameName, h.user)
 			if err != nil {
 				return err
 			}
-			log.Printf("got elo!")
 
 			err = configRoom.AddCandidate(h.user, elo.CurrentElo)
 			if err != nil {
 				return err
 			}
-			log.Printf("candidate added!")
 
 			// Let the other people in the config room know about it
 			err = h.broadcastToConfigRoom(gameId, model.CandidateJoinedMessage{Candidate: h.user})

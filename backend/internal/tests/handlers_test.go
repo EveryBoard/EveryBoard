@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"testing"
 	"time"
 
@@ -125,14 +126,17 @@ func TestGameFlowSimpler(t *testing.T) {
 	sb.ProposeConfig(player, proposal) // player proposes to the opponent
 	sb.ReviewConfig(player) // player reviews the config
 	sb.ProposeConfig(player, proposal) // player proposes the config again
-	// sb.AcceptConfig(opponent) // opponent accepts (the game starts)
-	// observer := sb.EstablishConnection("observer") // an observer joins
-	// sb.SubscribeConfigRoom(observer, gameId) // the observer subscribes to the game
+	sb.AcceptConfig(opponent) // opponent accepts (the game starts)
+	sb.Unsubscribe(player) // player unsubscribes from the config room
+	sb.Unsubscribe(opponent) // opponent unsubscribes from the config room
+	observer := sb.EstablishConnection("observer") // an observer joins
+	sb.SubscribeGame(observer, gameId) // the observer subscribes to the game
 	// sb.Move(player,  map[string]int{"x": 42}) // player plays one move
 	// sb.ProposeDraw(opponent)// opponent proposes draw
 	// sb.AcceptDraw(player) // player accepts
 
 	sb.Cleanup()
+	log.Printf("hello")
 	t.Fatalf("test")
 }
 
