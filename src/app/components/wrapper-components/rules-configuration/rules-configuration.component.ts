@@ -135,7 +135,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
         if (this.errorMessages.length > 0) {
             this.updateCallback.emit(MGPOptional.empty());
-            return; // In order not to send update when form is invalid
         } else {
             this.updateCallback.emit(MGPOptional.of(rulesConfig));
         }
@@ -167,7 +166,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
         const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription.defaultConfigDescription;
-        const config: EnumConfig<RulesConfig> = defaultConfig.config[field] as EnumConfig<RulesConfig>;
+        const config: EnumConfig = defaultConfig.config[field] as EnumConfig;
         return Object.keys(config.possibleValues).map((key: string) => {
             return {
                 enumValue: key,

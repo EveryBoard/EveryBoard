@@ -1,9 +1,5 @@
 import { MGPValidation } from '@everyboard/lib';
 
-// This type of validator includes a second param: the new global config
-// This allows us to check that the change to field "v" is
-// 1. valid locally (not too big, not too small, not even, things like that)
-// 2. valid globally (v and those two other fields cannot have the same value, their sum must be 10, things like that)
 export type MGPValidator = (v: number | string | null) => MGPValidation;
 
 export class MGPValidators {

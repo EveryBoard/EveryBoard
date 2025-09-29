@@ -115,7 +115,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     }
                 }
             }
-            const areValidatorsValid: boolean = this.areConfigValidatorsValid(rulesConfigDescription, config);
+            const areValidatorsValid: boolean = this.areGlobalValidatorsValid(rulesConfigDescription, config);
             if (areValidatorsValid === false) {
                 return this.redirectToConfiguration();
             }
@@ -123,7 +123,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    private areConfigValidatorsValid(rulesConfigDescription: RulesConfigDescription<RulesConfig>, config: RulesConfig)
+    private areGlobalValidatorsValid(rulesConfigDescription: RulesConfigDescription<RulesConfig>, config: RulesConfig)
     : boolean
     {
         const validators: ((config: RulesConfig) => MGPValidation)[] =

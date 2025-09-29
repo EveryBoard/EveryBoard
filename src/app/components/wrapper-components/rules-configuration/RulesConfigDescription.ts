@@ -68,7 +68,11 @@ export class EnumConfig extends ConfigLine {
     }
 
     public override checkValidity(fieldValue: string): MGPValidation {
-        return this.validator(fieldValue);
+        if (typeof(fieldValue) === 'string') {
+            return this.validator(fieldValue);
+        } else {
+            return MGPValidation.failure('EnumConfig expects a string value');
+        }
     }
 }
 

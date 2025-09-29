@@ -49,7 +49,7 @@ export class QuebecCastlesFailure {
 
 }
 
-type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH'
+export type DropMode = 'AUTO' | 'PIECE_BY_PIECE' | 'BY_BATCH'
 
 export const DropModes: Record<DropMode, Localized> = {
     'AUTO': () => $localize`Automatic`,

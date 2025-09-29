@@ -11,7 +11,7 @@ import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { QuebecCastlesComponent } from 'src/app/games/quebec-castles/quebec-castles.component';
-import { QuebecCastlesConfig, QuebecCastlesRules } from 'src/app/games/quebec-castles/QuebecCastlesRules';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from 'src/app/games/quebec-castles/QuebecCastlesRules';
 import { QuebecCastlesState } from 'src/app/games/quebec-castles/QuebecCastlesState';
 
 describe('LocalGameWrapperComponent (rules config phase)', () => {
@@ -43,7 +43,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
-    it('should redirect to configuration if the provided config is invalid (due to invalid elements)', fakeAsync(async() => {
+    it('should redirect to configuration if the provided config is invalid (due to invalid value of element)', fakeAsync(async() => {
         // Given a game configured with an invalid config
         const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
             ...defaultConfig.get(),
@@ -62,7 +62,49 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
-    it('should redirect to configuration if the provided config is invalid (due to invalid config validator)', fakeAsync(async() => {
+    describe('should redirect to configuration if the provided config is invalid (due to invalid type of element)', () => {
+
+        it('number as string', fakeAsync(async() => {
+            // Given a game configured with an invalid config
+            const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                ...defaultConfig.get(),
+                defenders: 'gentil' as unknown as number, // we lie to typescript here, like the url config could do
+            });
+            const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
+
+            // When displaying it
+            await testUtils.setupState(state, { config });
+
+            // Then it should redirect to the configuration page
+            const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+            expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        }));
+
+        it('string as number', fakeAsync(async() => {
+            // Given a game configured with an invalid config
+            const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                ...defaultConfig.get(),
+                dropMode: 42 as unknown as DropMode, // we lie to typescript here, like the url config could do
+            });
+            const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
+
+            // When displaying it
+            await testUtils.setupState(state, { config });
+
+            // Then it should redirect to the configuration page
+            const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+            expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        }));
+
+    });
+
+    it('should redirect to configuration if the provided config is invalid (due to invalid global validator)', fakeAsync(async() => {
         // Given a game configured with an invalid config
         const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
             ...defaultConfig.get(),
