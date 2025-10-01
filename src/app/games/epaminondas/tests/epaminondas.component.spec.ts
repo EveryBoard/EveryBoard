@@ -10,7 +10,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from 'src/app/jscaip/TableUtils';
 
-fdescribe('EpaminondasComponent', () => {
+describe('EpaminondasComponent', () => {
 
     let testUtils: ComponentTestUtils<EpaminondasComponent>;
 
@@ -224,7 +224,7 @@ fdescribe('EpaminondasComponent', () => {
         testUtils.expectElementNotToExist('#clickable-0-11');
     }));
 
-    fit('should hide last move, when last move had captures', fakeAsync(async() => {
+    it('should hide last move, when last move had captures', fakeAsync(async() => {
         // Given a board on which you captured last turn
         const previousBoard: Table<PlayerOrNone> = [
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],

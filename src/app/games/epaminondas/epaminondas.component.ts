@@ -70,7 +70,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        console.log('epaminonde updateBoard')
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }
@@ -85,7 +84,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
-        console.log('epaminonde showLastMove')
         this.capturedCoords = [];
         let moved: Coord = move.coord;
         this.moveds = [moved];
@@ -130,7 +128,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public override hideLastMove(): void {
-        console.log('epaminondas hideLastMove')
         this.capturedCoords = [];
         this.moveds = [];
     }
@@ -174,7 +171,6 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public override cancelMoveAttempt(): void {
-        console.log('epaminondas cancelMoveAttempt')
         this.firstPiece = MGPOptional.empty();
         this.possibleMoves = [];
         this.lastPiece = MGPOptional.empty();
