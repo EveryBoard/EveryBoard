@@ -65,7 +65,7 @@ describe('MGPOptional', () => {
         it('should return the optional if value is absent', () => {
             const optional: MGPOptional<number> = MGPOptional.empty();
             const present: MGPOptional<number> = MGPOptional.of(3.14);
-            expect(optional.orElse(MGPOptional.empty())).toBe(optional);
+            expect(optional.orElse(MGPOptional.empty())).toEqual(optional);
             expect(optional.orElse(present)).toBe(present);
         });
 
