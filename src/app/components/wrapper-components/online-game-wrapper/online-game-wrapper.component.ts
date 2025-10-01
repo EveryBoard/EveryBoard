@@ -224,10 +224,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const mutex: Mutex = new Mutex(); // Need to ensure we receive events one at a time
         const callback: (events: GameEvent[]) => Promise<void> = async(events: GameEvent[]): Promise<void> => {
             if (events.length === 0) return; // Only happens in the test suite
-            const moves = events
-                    .map((value: GameEvent, index: number) => { return { v: value.eventType, i: index }; })
-                    .filter(value => value.v === 'Move');
-            const lastMove = moves[moves.length - 1];
             await mutex.runExclusive(async() => {
                 const numberOfMoves: number = events.filter((g: GameEvent) => g.eventType === 'Move').length;
                 let numberOfMovesDone: number = 0;
