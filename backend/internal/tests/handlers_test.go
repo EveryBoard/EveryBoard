@@ -1,3 +1,4 @@
+// TODO: ne pas review ce fichier (yet), il est en bonno modification
 package internal
 
 import (
@@ -138,14 +139,61 @@ func TestGameFlowSimpler(t *testing.T) {
 	sb.Cleanup()
 }
 
-func TestResign(t *testing.T) {
-	// player, opponent := setupGameWithTwoPlayers()
+func setupTwoPlayersGame(t *testing.T) (ScenarioBuilder, string, string, model.GameID) {
+	sb := NewScenarioBuilder(t)
+	player := sb.EstablishConnection("player")
+	opponent := sb.EstablishConnection("opponent")
+	gameId := sb.Create(player, "P4") // player creates game
+	sb.SubscribeConfigRoom(player, gameId) // player subscribes to the config room
+	sb.SubscribeConfigRoom(opponent, gameId) // opponent subscribes to the config room
+	sb.SelectOpponent(player, opponent) // player selects the opponent
+	proposal := model.ConfigProposal{
+		GameType: model.GameTypeStandard,
+		MoveDuration: 120,
+		GameDuration: 1800,
+		FirstPlayer: model.FirstPlayerRandom,
+		RulesConfig: json.RawMessage(`null`),
+	}
+	sb.ProposeConfig(player, proposal) // player proposes to the opponent
+	sb.AcceptConfig(opponent) // opponent accepts (the game starts)
+	sb.Unsubscribe(player) // player unsubscribes from the config room
+	sb.Unsubscribe(opponent) // opponent unsubscribes from the config room
+	sb.SubscribeGame(player, gameId) // player subscribes to the game
+	sb.SubscribeGame(opponent, gameId) // opponent subscribes to the game
+	return sb, player, opponent, gameId
 }
 
-// TODO: TestNotifyTimeout
-// TODO: TestEndGame with a winner
-// TODO: TestRejectProposal
+func TestResign(t *testing.T) {
+	sb, _, opponent, _ := setupTwoPlayersGame(t)
+	sb.Resign(opponent) // opponent resigns
+	sb.Cleanup()
+}
+
+// func TestNotifyTimeout(t *testing.T) {
 // TODO: TestAddTime
+// 	sb, player, opponent, _ := setupTwoPlayersGame()
+// 	sb.NotifyTimeout(player, opponent)
+// 	sb.Cleanup()
+// }
+//
+// func TestEndGame(t *testing.T) {
+// 	sb, player, opponent, _ := setupTwoPlayersGame()
+// 	sb.EndGame(player, opponent)
+// 	sb.Cleanup()
+// }
+//
+// func TestRejectProposal(t *testing.T) {
+// 	sb, player, opponent, _ := setupTwoPlayersGame()
+// 	sb.ProposeDraw(player)
+// 	sb.RejectDraw(opponent)
+// 	sb.Cleanup()
+// }
+//
+// func TestAddTime(t *testing.T) {
+// 	sb, player, _, _ := setupTwoPlayersGame()
+// 	sb.AddTime(player)
+// 	sb.Cleanup()
+// }
 
 func TestInvalidMessages(t *testing.T) {
 	stopServer, _ := PrepareServer(t)

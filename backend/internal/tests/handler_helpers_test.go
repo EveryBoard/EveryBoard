@@ -1,3 +1,4 @@
+// TODO: ne pas review ce fichier (yet), il est en bonno modification
 package internal
 
 import (
@@ -1206,6 +1207,68 @@ func (sb ScenarioBuilder) AcceptDraw(userId string) {
 	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
 		expectMessage(sb.t, sb.getConnection(subscriber), fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventJSON))
 	}
+
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
+	}
+	gameJSON := toJSON(sb.t, game)
+	eventEndGameJSON := toJSON(sb.t, eventEndGame)
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		conn := sb.getConnection(subscriber)
+		expectMessage(sb.t, conn, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, gameJSON))
+		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventEndGameJSON))
+	}
+}
+
+func (sb ScenarioBuilder) Resign(userId string) {
+	user := sb.getUser(userId)
+	gameId := sb.getSubscribedGameId(userId)
+	configRoom := sb.getConfigRoom(gameId)
+	game := sb.getGame(gameId)
+
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	ExpectSpecificGameSelection(sb.mock, *game)
+	if game.PlayerZero.ID == userId {
+		game.Result = model.ResultResignOfZero
+	} else {
+		game.Result = model.ResultResignOfOne
+	}
+	ExpectGameUpdateSetResult(sb.mock, *game)
+	eventEndGame := model.GameEvent{
+	 	ID: sb.getNextEventId(),
+	 	GameID: configRoom.ID,
+	 	Timestamp: 42,
+	 	User: user,
+	 	Data: model.EventDataEndGame,
+	}
+	ExpectEventInsertion(sb.mock, eventEndGame)
+	var opponent model.MinimalUser
+	if game.PlayerZero.ID == userId {
+		opponent = game.PlayerOne
+	} else {
+		opponent = game.PlayerZero
+	}
+	eloUser := sb.getElo(user, configRoom.GameName)
+	eloOpponent := sb.getElo(opponent, configRoom.GameName)
+	eloUser.GamesPlayed += 1
+	eloOpponent.GamesPlayed += 1
+	newEloUser, newEloOpponent := everyboard.ComputeNewElos(eloUser, eloOpponent, true)
+	eloUser.CurrentElo = newEloUser.CurrentElo
+	eloOpponent.CurrentElo = newEloOpponent.CurrentElo
+	ExpectEloUpdates(sb.mock, eloUser, eloOpponent)
+	configRoom.Status = model.StatusFinished
+	ExpectConfigRoomUpdateStatus(sb.mock, *configRoom)
+	ExpectCurrentGameDelete(sb.mock, user.ID)
+	ExpectCurrentGameDelete(sb.mock, opponent.ID)
+	ExpectCurrentGameSelectObservers(sb.mock, configRoom.ID, sb.getObservers(configRoom.ID))
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		if subscriber != user.ID && subscriber != opponent.ID {
+			ExpectCurrentGameDelete(sb.mock, sb.getUser(subscriber).ID)
+			delete(sb.currentGames, subscriber)
+		}
+	}
+
+	sendMessage(sb.t, sb.getConnection(userId), `["Resign"]`)
 
 	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
 		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
