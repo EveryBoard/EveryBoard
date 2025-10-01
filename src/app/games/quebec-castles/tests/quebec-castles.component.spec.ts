@@ -249,7 +249,57 @@ describe('QuebecCastlesComponent', () => {
                 await testUtils.expectClickSuccess('#click-8-7');
 
                 // When displaying board
-                // Then it should not have drop-validator
+                // Then it should have a drop-validator
+                testUtils.expectElementToExist('#drop-validator');
+                testUtils.expectElementNotToExist('#remaining-piece-0');
+            }));
+
+            it('should display drop-validator when it is your turn and all piece have been dropped (rectangular)', fakeAsync(async() => {
+                // Given a board where it is your turn to play
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: 'BY_BATCH',
+                    defenders: 2,
+                    isRhombic: false,
+                });
+                await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
+                await testUtils.expectClickSuccess('#click-7-8');
+                await testUtils.expectClickSuccess('#click-8-7');
+
+                // When displaying board
+                // Then it should have a drop-validator
+                testUtils.expectElementToExist('#drop-validator');
+                testUtils.expectElementNotToExist('#remaining-piece-0');
+            }));
+
+            it('should display drop-validator when it is your turn and all piece have been dropped (rectangular as Player.ONE)', fakeAsync(async() => {
+                // Given a board where it is your turn to play
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: 'BY_BATCH',
+                    invaders: 5,
+                    defenders: 3,
+                    isRhombic: false,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 1, defaultCastles);
+                await testUtils.setupState(state, { config: customConfig });
+                await testUtils.expectClickSuccess('#click-0-2');
+                await testUtils.expectClickSuccess('#click-2-0');
+
+                // When dropping last piece
+                await testUtils.expectClickSuccess('#click-2-2');
+
+                // Then it should have a drop-validator
                 testUtils.expectElementToExist('#drop-validator');
                 testUtils.expectElementNotToExist('#remaining-piece-0');
             }));
@@ -577,6 +627,35 @@ describe('QuebecCastlesComponent', () => {
                 testUtils.expectElementNotToHaveClass('#piece-0-1', 'selected-stroke');
             }));
 
+            it('should allow capture', fakeAsync(async() => {
+                // Given any state where a capture is possible
+                // And more turn have passed that piece are present on the board (yes, this bug happend)
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: 'PIECE_BY_PIECE',
+                    defenders: 3,
+                    invaders: 5,
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, _, _, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [_, _, X, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, X, _, _],
+                    [_, _, _, _, _, _, _, O, O],
+                    [_, _, _, _, _, _, _, O, _],
+                ], 10, defaultCastles);
+                await testUtils.setupState(state, { config: customConfig });
+
+                // When trying capture
+                // Then the move should succeed
+                const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
+                await testUtils.expectClickSuccess('#click-7-7');
+                await testUtils.expectMoveSuccess('#click-6-6', move);
+            }));
+
         });
 
         describe('place castle yourself', () => {
@@ -640,7 +719,22 @@ describe('QuebecCastles Custom Configs', () => {
         component.editable = true;
     });
 
-    it('should forbid config with too little room for pieces', fakeAsync(async() => {
+    it('should forbid config with too little room for pieces (invader)', fakeAsync(async() => {
+        // Given a config with too little room for defender piece
+        const customConfig: QuebecCastlesConfig = {
+            ...defaultConfig.get(),
+            invaders: 15, // There won't be enough room for that many pieces
+        };
+
+        // When setting up that invalid config
+        await setCustomConfigTags(customConfig);
+
+        // Then there should be an error eh!
+        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER(14, 5);
+        expectElementToHaveError(error);
+    }));
+
+    it('should forbid config with too little room for pieces (defender)', fakeAsync(async() => {
         // Given a config with too little room for defender piece
         const customConfig: QuebecCastlesConfig = {
             ...defaultConfig.get(),

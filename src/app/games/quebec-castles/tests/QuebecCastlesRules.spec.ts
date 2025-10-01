@@ -253,6 +253,46 @@ describe('QuebecCastlesRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
+        describe('Custom Config', () => {
+
+            it('should allow capture after piece by piece batch', () => {
+                // Given any state where a capture is possible
+                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                    ...defaultConfig.get(),
+                    dropMode: 'PIECE_BY_PIECE',
+                });
+                const state: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, X, X, X, _, _, _, _],
+                    [X, X, X, X, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, O],
+                    [_, _, _, _, _, _, X, O, O],
+                    [_, _, _, _, _, _, O, O, O],
+                    [_, _, _, _, _, O, O, O, _],
+                ], 6, defaultCastles);
+
+                // When trying capture
+                const move: QuebecCastlesMove = QuebecCastlesMove.translation(new Coord(7, 7), new Coord(6, 6));
+
+                // Then the move should succeed
+                const expectedState: QuebecCastlesState = new QuebecCastlesState([
+                    [_, X, X, X, X, _, _, _, _],
+                    [X, X, X, X, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, X, _, _, _, _, _, _, _],
+                    [X, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, O],
+                    [_, _, _, _, _, _, O, O, O],
+                    [_, _, _, _, _, _, O, _, O],
+                    [_, _, _, _, _, O, O, O, _],
+                ], 7, defaultCastles);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+        });
+
         describe('Invader move', () => {
 
             it('should forbid move that are not orthogonal', () => {

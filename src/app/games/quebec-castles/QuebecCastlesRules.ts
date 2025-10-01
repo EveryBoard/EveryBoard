@@ -290,7 +290,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         switch (config.dropMode) {
             case 'PIECE_BY_PIECE':
                 const totalPieceToDrop: number = config.defenders + config.invaders;
-                if (state.turn < totalPieceToDrop) { // TODO: add unit test for else
+                if (state.turn < totalPieceToDrop) {
                     return this.getExpectedDropsThisTurnForPieceByPiece(state, config);
                 } else {
                     return 0;
@@ -606,7 +606,6 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
                     width: config.width,
                     height: config.height,
                     isRhombic: config.isRhombic,
-                    // TODO: defender and invader are affected TOOOOO
                 });
                 const newState: QuebecCastlesState =
                     this.placeCastlesAndMovePiece(state, castles, adaptedDefaultConfig);

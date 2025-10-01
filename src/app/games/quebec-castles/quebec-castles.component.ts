@@ -359,7 +359,6 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 y = this.upperCorner.y - halfRadius;
             }
         } else {
-            // TODO: UT
             x = this.getState().getWidth() * 0.5 * this.SPACE_SIZE;
             if (this.getCurrentPlayer() === Player.ZERO) {
                 y = -halfRadius;

@@ -38,7 +38,7 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
         if (stateProvider.isPresent()) {
             const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
             this.configDemo = {
-                title: 'TODO',
+                title: this.getGameName().get(),
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
                 node,

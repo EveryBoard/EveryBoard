@@ -109,5 +109,3 @@ export class QuebecCastlesTutorial extends Tutorial {
         ),
     ];
 }
-// TODO FOR REVIEW: quand il faut placer le trône, faudrait voir le trône "hors du plateau"
-//     pas les pièces, right ?
