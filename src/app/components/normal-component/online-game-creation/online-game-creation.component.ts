@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
 import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
@@ -25,7 +26,7 @@ export class OnlineGameCreationComponent implements OnInit {
         await this.createGameAndRedirectOrShowError(this.extractGameFromURL());
     }
     private extractGameFromURL(): string {
-        return Utils.getNonNullable(this.route.snapshot.paramMap.get('compo'));
+        return Utils.getNonNullable(this.route.snapshot.paramMap.get('game'));
     }
     private async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         const authUser: AuthUser = this.connectedUserService.user.get();

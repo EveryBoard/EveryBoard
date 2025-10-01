@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
-import { Player } from 'src/app/jscaip/Player';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
+
+import { Player } from 'src/app/jscaip/Player';
 import { ActivatedRouteStub, ComponentTestUtils, ConfigureTestingModuleUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from './GameComponent';
@@ -18,7 +19,7 @@ describe('GameComponent', () => {
 
     it('should fail if pass() is called on a game that does not support it', fakeAsync(async() => {
         // Given such a game, like Abalone
-        activatedRouteStub.setRoute('compo', 'Abalone');
+        activatedRouteStub.setRoute('game', 'Abalone');
         const testUtils: ComponentTestUtils<AbaloneComponent> = await ComponentTestUtils.forGame('Abalone', false);
         const component: AbstractGameComponent = testUtils.getGameComponent();
         expect(component).toBeDefined();
@@ -42,7 +43,7 @@ describe('GameComponent', () => {
     for (const gameInfo of GameInfo.getAllGames()) {
         it(`should have an encoder, tutorial and AI for ${ gameInfo.name }`, fakeAsync(async() => {
             // Given a game
-            activatedRouteStub.setRoute('compo', gameInfo.urlName);
+            activatedRouteStub.setRoute('game', gameInfo.urlName);
             const testUtils: ComponentTestUtils<AbstractGameComponent> =
                 await ComponentTestUtils.forGame(gameInfo.urlName);
 

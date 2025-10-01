@@ -8,7 +8,6 @@ import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord3D } from 'src/app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
@@ -41,26 +40,23 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         move: MGPOptional.empty(),
     };
 
-    public static modeMap: Record<ModeType, ModeConfig> = {
+    public static readonly modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             offsetRatio: 0,
             horizontalWidthRatio: 1,
             pieceHeightRatio: 0,
             parallelogramHeight: 100,
-            abstractBoardSize: 10,
         },
         '3D': {
             offsetRatio: 0.4,
             horizontalWidthRatio: 1.2,
             pieceHeightRatio: 0.2,
             parallelogramHeight: 100,
-            abstractBoardSize: 10,
         },
     };
 
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
     public readonly left: number = - this.STROKE_WIDTH / 2;
-    public Coord3D: typeof Coord3D = Coord3D;
     public up: number = 0;
     public width: number;
     public height: number;

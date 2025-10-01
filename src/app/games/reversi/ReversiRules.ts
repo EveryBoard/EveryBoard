@@ -100,13 +100,11 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
 
         for (const direction of Ordinal.ORDINALS) {
             const firstSpace: Coord = move.coord.getNext(direction);
-            if (state.isOnBoard(firstSpace)) {
-                if (state.getPieceAt(firstSpace) === opponent) {
-                    // let's test this direction
-                    const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
-                    for (const switched of switchedInDir) {
-                        switcheds.push(switched);
-                    }
+            if (state.hasPieceAt(firstSpace, opponent)) {
+                // let's test this direction
+                const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
+                for (const switched of switchedInDir) {
+                    switcheds.push(switched);
                 }
             }
         }
@@ -209,8 +207,8 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             }
         }
         if (moves.length === 0) {
-            // When the user cannot start, his only move is to pass, which he cannot do otherwise
-            // board unchanged, only the turn changed "pass"
+            // When the user cannot move, their only move is to pass, which they cannot do otherwise
+            // The board remains unchanged, only the turn changed, and the move is a "pass"
             moves.push(new ReversiMoveWithSwitched(ReversiMove.PASS, 0));
         }
         return moves;

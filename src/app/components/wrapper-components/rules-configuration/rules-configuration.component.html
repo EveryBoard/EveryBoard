@@ -39,7 +39,7 @@
                  class="mb-2">
                 <div class="field is-horizontal columns is-gapless">
                     <div class="field-label column is-three-quarters">
-                        <label class="label has-text-left">{{ rulesConfigDescription.getI18nName(configParameter) }}</label>
+                        <label class="label has-text-left">{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}</label>
                     </div>
                     <div class="field-body column has-text-right">
                         <div class="field is-narrow">
@@ -61,7 +61,7 @@
                                                class="input is-small"
                                                [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
                                                required
-                                               placeholder="{{ rulesConfigDescription.getI18nName(configParameter) }}" />
+                                               placeholder="{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}" />
                                     </div>
                                     <div *ngIf="isValid(configParameter) === false"
                                          id="{{configParameter}}-error"

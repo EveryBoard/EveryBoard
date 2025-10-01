@@ -3,9 +3,9 @@ import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { Table } from 'src/app/jscaip/TableUtils';
-import { SixNode, SixRules } from '../SixRules';
+import { SixConfig, SixNode, SixRules } from '../SixRules';
 import { SixMoveGenerator } from '../SixMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MGPOptional } from '@everyboard/lib';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
@@ -13,10 +13,10 @@ const X: PlayerOrNone = Player.ONE;
 describe('SixMoveGenerator', () => {
 
     let moveGenerator: SixMoveGenerator;
-    const defaultConfig: NoConfig = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        moveGenerator = new SixMoveGenerator();
+        moveGenerator = new SixMoveGenerator(SixRules.get());
     });
 
     it(`should propose all movements`, () => {

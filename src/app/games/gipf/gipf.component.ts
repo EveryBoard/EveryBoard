@@ -22,6 +22,7 @@ import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
 import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-gipf',
@@ -88,6 +89,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
     public override async showLastMove(move: GipfMove): Promise<void> {
         const previousState: GipfState = this.getPreviousState();
         move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c, previousState));
@@ -98,7 +103,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.inserted = MGPOptional.empty();
         if (move.placement.direction.isPresent()) {
             const lastPlacement: GipfPlacement = move.placement;
-            this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
+            this.inserted = MGPOptional.of(this.arrowToward(lastPlacement.coord, lastPlacement.direction.get()));
         }
     }
 
@@ -111,7 +116,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         );
     }
 
-    private arrowTowards(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
+    private arrowToward(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
         const previous: Coord = placement.getNext(direction.getOpposite());
         return new Arrow<HexaDirection>(previous,
                                         placement,
@@ -139,14 +144,13 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return pieces;
     }
 
-    public isPiece(coord: Coord): boolean {
-        const piece: FourStatePiece = this.getPiece(coord);
-        return piece !== FourStatePiece.EMPTY;
+    public isPlayerAt(coord: Coord): boolean {
+        const piece: FourStatePiece = this.getPieceAt(coord);
+        return piece.isPlayer();
     }
 
-    private getPiece(coord: Coord): FourStatePiece {
-        const piece: FourStatePiece = this.constructedState.getPieceAt(coord);
-        return piece;
+    private getPieceAt(coord: Coord): FourStatePiece {
+        return this.constructedState.getPieceAt(coord);
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -322,7 +326,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     }
 
     public getPieceClass(coord: Coord): string {
-        const piece: FourStatePiece = this.getPiece(coord);
+        const piece: FourStatePiece = this.getPieceAt(coord);
         return this.getPlayerClass(piece.getPlayer());
     }
 

@@ -10,6 +10,7 @@ import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameSt
 import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { CoordSet } from 'src/app/jscaip/CoordSet';
 import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { SixConfig } from './SixRules';
 
 export class SixState extends OpenHexagonalGameState<Player> {
 
@@ -87,7 +88,7 @@ export class SixState extends OpenHexagonalGameState<Player> {
         return new SixState(pieces, this.turn + 1);
     }
 
-    public applyLegalDeplacement(move: SixMove, kept: CoordSet): SixState {
+    public applyLegalTranslation(move: SixMove, kept: CoordSet): SixState {
         const stateAfterMove: SixState = this.movePiece(move);
 
         if (kept.size() > 0) {
@@ -102,11 +103,18 @@ export class SixState extends OpenHexagonalGameState<Player> {
 
     }
 
-    public countPieces(): PlayerNumberMap {
+    public countPiecesOnBoard(): PlayerNumberMap {
         const pieces: ReversibleMap<Player, Set<Coord>> = this.pieces.reverse();
         const zeroPieces: Set<Coord> = pieces.get(Player.ZERO).getOrElse(new CoordSet());
         const onePieces: Set<Coord> = pieces.get(Player.ONE).getOrElse(new CoordSet());
         return PlayerNumberMap.of(zeroPieces.size(), onePieces.size());
+    }
+
+    public countPiecesToDrop(config: SixConfig): PlayerNumberMap {
+        const total: number = config.piecesPerPlayer + 1;
+        const piecesOnBoard: PlayerNumberMap = this.countPiecesOnBoard();
+        return PlayerNumberMap.of(total - piecesOnBoard.get(Player.ZERO),
+                                  total - piecesOnBoard.get(Player.ONE));
     }
 
     public switchPiece(coord: Coord): SixState {

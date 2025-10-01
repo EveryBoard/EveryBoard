@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { MGPOptional, Utils, TestUtils } from '@everyboard/lib';
+
 import { RulesConfigurationComponent } from './rules-configuration.component';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional, Utils, TestUtils } from '@everyboard/lib';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { RulesConfigDescription, NumberConfig, BooleanConfig } from './RulesConfigDescription';
@@ -15,14 +16,14 @@ describe('RulesConfigurationComponent', () => {
     let component: RulesConfigurationComponent;
 
     async function chooseConfig(configName: string): Promise<void> {
-        const selectAI: HTMLSelectElement = testUtils.findElement('#ruleSelect').nativeElement;
-        const option: HTMLOptionElement | undefined = Array.from(selectAI.options)
+        const selectElement: HTMLSelectElement = testUtils.findElement('#ruleSelect').nativeElement;
+        const option: HTMLOptionElement | undefined = Array.from(selectElement.options)
             .find((opt: HTMLOptionElement) => {
                 return opt.value === configName;
             });
         expect(option).withContext('No config found with name "' + configName + '"').toBeDefined();
-        selectAI.value = option?.value as string;
-        selectAI.dispatchEvent(new Event('change'));
+        selectElement.value = option?.value as string;
+        selectElement.dispatchEvent(new Event('change'));
         testUtils.detectChanges();
     }
 
