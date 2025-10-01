@@ -818,18 +818,18 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 		// Players will take the take back into account when receiving the event
 		return h.addEvent(model.EventDataReplyAccept(proposition, nil))
 	case model.PropositionDraw:
-		err := h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
+		err := h.addEvent(model.EventDataReplyAccept(proposition, nil))
+		if err != nil {
+			return err
+		}
+		return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
 			if h.user.ID == playerZero.ID {
 				return model.ResultAgreedDrawByZero
 			} else {
 				return model.ResultAgreedDrawByOne
 			}
 		})
-		if err != nil {
-			return err
-		}
 
-		return h.addEvent(model.EventDataReplyAccept(proposition, nil))
 	case model.PropositionRematch:
 		configRoom, game, err := h.getSubscribedConfigRoomAndGame()
 		if err != nil {
@@ -904,6 +904,7 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 		if err != nil {
 			return err
 		}
+
 		// Broadcast the config room to the lobby
 		return h.broadcastToLobby(model.ConfigRoomUpdateMessage{
 			GameID:     rematchConfigRoom.ID,

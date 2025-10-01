@@ -15,7 +15,6 @@ import (
 
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
 	"github.com/EveryBoard/EveryBoard/internal/model"
-	"github.com/EveryBoard/EveryBoard/internal/utils"
 )
 
 func encodeID(t *testing.T, id model.GameID) string {
@@ -361,7 +360,7 @@ func ExpectEloUpdates(mock sqlmock.Sqlmock, firstElo model.Elo, secondElo model.
 	mock.ExpectCommit()
 }
 
-func ExpectCandidateSelection(mock sqlmock.Sqlmock, gameId model.GameID, candidates []*model.Candidate) {
+func ExpectCandidateSelection(mock sqlmock.Sqlmock, gameId model.GameID, candidates []model.Candidate) {
 	rows := sqlmock.NewRows(model.CandidateRows)
 	for _, c := range(candidates) {
 		rows.AddRow(c.ID, c.GameID, c.User.ID, c.User.Name, c.Elo)
@@ -495,11 +494,11 @@ type ScenarioBuilder struct {
 	messages map[model.GameID][]model.Message // messages per game id
 	elos map[string]map[string]*model.Elo // user to game name to elo
 	currentGames map[string]*model.CurrentGame
-	candidates map[model.GameID][]*model.Candidate
+	candidates map[model.GameID][]model.Candidate
 	events map[model.GameID][]model.GameEvent
-	lobbySubscribers utils.Set[string]
-	configRoomSubscribers map[model.GameID]utils.Set[string] // map from game id to subscriber ids
-	gameSubscribers map[model.GameID]utils.Set[string]
+	lobbySubscribers []string
+	configRoomSubscribers map[model.GameID][]string // map from game id to subscriber ids
+	gameSubscribers map[model.GameID][]string
 	subscriptions map[string]model.GameID // reverse, map from subscriber id to the game subscribed
 }
 
@@ -520,11 +519,11 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 		messages: make(map[model.GameID][]model.Message),
 		elos: make(map[string]map[string]*model.Elo),
 		currentGames: make(map[string]*model.CurrentGame),
-		candidates: make(map[model.GameID][]*model.Candidate),
+		candidates: make(map[model.GameID][]model.Candidate),
 		events: make(map[model.GameID][]model.GameEvent),
-		lobbySubscribers: utils.NewSet[string](),
-		configRoomSubscribers: make(map[model.GameID]utils.Set[string]),
-		gameSubscribers: make(map[model.GameID]utils.Set[string]),
+		lobbySubscribers: []string{},
+		configRoomSubscribers: make(map[model.GameID][]string),
+		gameSubscribers: make(map[model.GameID][]string),
 		subscriptions: make(map[string]model.GameID),
 	}
 }
@@ -558,7 +557,7 @@ func (sb ScenarioBuilder) getConnection(userId string) *websocket.Conn {
 	return conn
 }
 
-func (sb ScenarioBuilder) SubscribeLobby(userId string) {
+func (sb *ScenarioBuilder) SubscribeLobby(userId string) {
 	conn := sb.getConnection(userId)
 	ExpectMessageSelection(sb.mock, model.GameIDLobby, sb.messages[model.GameIDLobby])
 	configRooms := []model.ConfigRoom{}
@@ -570,7 +569,50 @@ func (sb ScenarioBuilder) SubscribeLobby(userId string) {
 	ExpectInGameConfigRoomSelection(sb.mock, configRooms)
 	sendMessage(sb.t, conn, `["SubscribeLobby"]`)
 	sb.subscriptions[userId] = model.GameIDLobby
-	sb.lobbySubscribers.Add(userId)
+	sb.lobbySubscribers = append(sb.lobbySubscribers, userId)
+	log.Printf("lobby subscribers: %v", sb.lobbySubscribers)
+}
+
+func find(t *testing.T, arr []string, value string) *int {
+	for i, v := range(arr) {
+		if v == value {
+			return &i
+		}
+	}
+	return nil
+}
+
+func (sb ScenarioBuilder) removeLobbySubscription(userId string) {
+	log.Printf("lobby subscribers: %v", sb.lobbySubscribers)
+	idx := find(sb.t, sb.lobbySubscribers, userId)
+	if idx == nil {
+		sb.t.Fatalf("cannot find subscriber: %s", userId)
+		return
+	}
+	sb.lobbySubscribers = append(sb.lobbySubscribers[0:*idx], sb.lobbySubscribers[*idx+1:]...)
+}
+
+func (sb ScenarioBuilder) isSubscribedToConfigRoom(userId string, gameId model.GameID) bool {
+	idx := find(sb.t, sb.configRoomSubscribers[gameId], userId)
+	return idx != nil
+}
+
+func (sb ScenarioBuilder) removeConfigRoomSubscription(userId string, gameId model.GameID) {
+	idx := find(sb.t, sb.configRoomSubscribers[gameId], userId)
+	if idx == nil {
+		sb.t.Fatalf("cannot find subscriber: %s", userId)
+		return
+	}
+	sb.configRoomSubscribers[gameId] = append(sb.configRoomSubscribers[gameId][0:*idx], sb.configRoomSubscribers[gameId][*idx+1:]...)
+}
+
+func (sb ScenarioBuilder) removeGameSubscription(userId string, gameId model.GameID) {
+	idx := find(sb.t, sb.gameSubscribers[gameId], userId)
+	if idx == nil {
+		sb.t.Fatalf("cannot find subscriber: %s", userId)
+		return
+	}
+	sb.gameSubscribers[gameId] = append(sb.gameSubscribers[gameId][0:*idx], sb.gameSubscribers[gameId][*idx+1:]...)
 }
 
 func (sb ScenarioBuilder) getElo(user model.MinimalUser, gameName string) model.Elo {
@@ -584,10 +626,15 @@ func (sb ScenarioBuilder) getElo(user model.MinimalUser, gameName string) model.
 		if ok {
 			elo = *gameElo
 			newElo = false
+		} else {
+			sb.elos[user.ID][gameName] = &elo
 		}
+	} else {
+		sb.elos[user.ID] = make(map[string]*model.Elo)
 	}
 
 	if newElo {
+		log.Printf("new elo")
 		ExpectEloSelection(sb.mock, user.ID, gameName, nil)
 		ExpectEloInsertion(sb.mock, elo)
 	} else {
@@ -596,13 +643,30 @@ func (sb ScenarioBuilder) getElo(user model.MinimalUser, gameName string) model.
 	return elo
 }
 
-func (sb ScenarioBuilder) getConfigRoomSubscribers(gameId model.GameID) *utils.Set[string] {
+func (sb ScenarioBuilder) getNextEloId() uint64 {
+	total := 0
+	for _, e := range(sb.events) {
+		total += len(e)
+	}
+	return uint64(total+1)
+}
+
+func (sb ScenarioBuilder) getConfigRoomSubscribers(gameId model.GameID) []string {
 	subscribers, ok := sb.configRoomSubscribers[gameId]
 	if !ok {
-		subscribers = utils.NewSet[string]()
+		subscribers = []string{}
 		sb.configRoomSubscribers[gameId] = subscribers
 	}
-	return &subscribers
+	return subscribers
+}
+
+func (sb ScenarioBuilder) getGameSubscribers(gameId model.GameID) []string {
+	subscribers, ok := sb.gameSubscribers[gameId]
+	if !ok {
+		subscribers = []string{}
+		sb.gameSubscribers[gameId] = subscribers
+	}
+	return subscribers
 }
 
 func (sb ScenarioBuilder) getSubscribedGameId(userId string) model.GameID {
@@ -634,7 +698,7 @@ func (sb ScenarioBuilder) Create(userId string, gameName string) model.GameID {
 	ExpectConfigRoomInsertion(sb.mock, configRoom)
 	sb.configRooms[configRoom.ID] = &configRoom
 	currentGamePlayer := model.CurrentGame{
-		ID: uint(len(sb.elos)),
+		ID: uint(len(sb.currentGames)),
 		User: user,
 		GameID: configRoom.ID,
 		GameName: gameName,
@@ -649,21 +713,21 @@ func (sb ScenarioBuilder) Create(userId string, gameName string) model.GameID {
 	expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGamePlayer)))
 
 	configRoomJSON := toJSON(sb.t, configRoom)
-	for subscriberId := range(*sb.getConfigRoomSubscribers(configRoom.ID)) {
+	for _, subscriberId := range(sb.getConfigRoomSubscribers(configRoom.ID)) {
 		log.Printf("subscriber to config room: %s", subscriberId)
 		expectMessage(sb.t, sb.getConnection(subscriberId), fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, gameId, configRoomJSON))
 	}
-	for subscriberId := range(sb.lobbySubscribers) {
+	for _, subscriberId := range(sb.lobbySubscribers) {
 		log.Printf("subscriber to lobby: %s", subscriberId)
 		expectMessage(sb.t, sb.getConnection(subscriberId), fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, gameId, configRoomJSON))
 	}
 	return configRoom.ID
 }
 
-func (sb ScenarioBuilder) getCandidates(gameId model.GameID) []*model.Candidate {
+func (sb ScenarioBuilder) getCandidates(gameId model.GameID) []model.Candidate {
 	candidates, ok := sb.candidates[gameId]
 	if !ok {
-		return []*model.Candidate{}
+		return []model.Candidate{}
 	}
 	return candidates
 }
@@ -676,12 +740,32 @@ func (sb ScenarioBuilder) getNextCandidateId() uint64 {
 	return uint64(total+1)
 }
 
-func (sb ScenarioBuilder) addCandidate(candidate *model.Candidate) {
+func (sb ScenarioBuilder) addCandidate(candidate model.Candidate) {
 	candidates, ok := sb.candidates[candidate.GameID]
 	if !ok {
-		candidates = []*model.Candidate{candidate}
+		candidates = []model.Candidate{candidate}
 	}
 	sb.candidates[candidate.GameID] = append(candidates, candidate)
+}
+
+func (sb ScenarioBuilder) removeCandidate(userId string, gameId model.GameID) {
+	gameCandidates, ok := sb.candidates[gameId]
+	if !ok {
+		sb.t.Fatalf("no game candidates for game %d", gameId)
+	}
+
+	foundIdx := -1
+	for idx, candidate := range(gameCandidates) {
+		if candidate.User.ID == userId {
+			foundIdx = idx
+			break
+		}
+	}
+	if foundIdx == -1 {
+		sb.t.Fatalf("no candidates %s for game %d, candidates are: %v", userId, gameId, sb.candidates)
+	}
+
+	sb.candidates[gameId] = append(gameCandidates[0:foundIdx], gameCandidates[foundIdx+1:]...)
 }
 
 func (sb ScenarioBuilder) addGame(game *model.Game) {
@@ -704,9 +788,18 @@ func (sb ScenarioBuilder) addEvent(gameId model.GameID, event model.GameEvent) {
 	sb.events[gameId] = append(sb.events[gameId], event)
 }
 
-func (sb *ScenarioBuilder) subscribeConfigRoom(userId string, gameId model.GameID) {
+func (sb ScenarioBuilder) subscribeConfigRoom(userId string, gameId model.GameID) {
+	log.Printf("subscribeConfigRoom with %d: %v", gameId, sb.configRoomSubscribers[gameId])
 	sb.subscriptions[userId] = gameId
-	sb.getConfigRoomSubscribers(gameId).Add(userId)
+	subscribers := sb.getConfigRoomSubscribers(gameId)
+	sb.configRoomSubscribers[gameId] = append(subscribers, userId)
+	log.Printf("subscribeConfigRoom with %d: %v", gameId, sb.configRoomSubscribers[gameId])
+}
+
+func (sb ScenarioBuilder) subscribeGame(userId string, gameId model.GameID) {
+	sb.subscriptions[userId] = gameId
+	subscribers := sb.getGameSubscribers(gameId)
+	sb.gameSubscribers[gameId] = append(subscribers, userId)
 }
 
 func (sb ScenarioBuilder) getConfigRoom(gameId model.GameID) *model.ConfigRoom {
@@ -756,7 +849,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 			Elo: elo.CurrentElo,
 		}
 		ExpectCandidateInsertion(sb.mock, candidate)
-		sb.addCandidate(&candidate)
+		sb.addCandidate(candidate)
 		currentGame := model.CurrentGame{
 			ID: uint(len(sb.currentGames)+1),
 			User: user,
@@ -776,14 +869,13 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 	sendMessage(sb.t, conn, fmt.Sprintf(`["SubscribeConfigRoom", {"gameId":"%s"}]`, encodedGameId))
 	expectMessage(sb.t, conn, fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedGameId, toJSON(sb.t, configRoom)))
 
-	sb.subscriptions[userId] = gameId
-	sb.getConfigRoomSubscribers(gameId).Add(userId)
+	sb.subscribeConfigRoom(userId, gameId)
 
 	// All subscribers see the candidate appear
 	candidateJSON := toJSON(sb.t, user)
 	if userId != configRoom.Creator.ID {
 		log.Printf("user is not creator, getting subscribers of %d", configRoom.ID)
-		for subscriber := range(*sb.getConfigRoomSubscribers(configRoom.ID)) {
+		for _, subscriber := range(sb.getConfigRoomSubscribers(configRoom.ID)) {
 			log.Printf("%s is is a subscriber", subscriber)
 			expectMessage(sb.t, sb.getConnection(subscriber),
 				fmt.Sprintf(`["CandidateJoined",{"candidate":%s}]`, candidateJSON))
@@ -826,6 +918,8 @@ func (sb ScenarioBuilder) SubscribeGame(userId string, gameId model.GameID) {
 
 	sendMessage(sb.t, conn, fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedGameId))
 
+	sb.subscribeGame(userId, gameId)
+
 	if isObserver {
 		currentGame := sb.getCurrentGame(userId)
 		expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
@@ -834,9 +928,18 @@ func (sb ScenarioBuilder) SubscribeGame(userId string, gameId model.GameID) {
 	for _, event := range(events) {
 		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, toJSON(sb.t, event)))
 	}
+	syncEvent := model.GameEvent{
+		ID: 0,
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: user,
+		Data: model.EventDataSync,
+	}
+	expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, toJSON(sb.t, syncEvent)))
 }
 
 func (sb ScenarioBuilder) Unsubscribe(userId string) {
+	log.Printf("unsubscribe: %s", userId)
 	conn := sb.getConnection(userId)
 
 	subscription, ok := sb.subscriptions[userId]
@@ -848,17 +951,17 @@ func (sb ScenarioBuilder) Unsubscribe(userId string) {
 
 	if subscription == model.GameIDLobby {
 		// nothing special to do when leaving lobby
-		sb.lobbySubscribers.Remove(userId)
-	} else if sb.configRoomSubscribers[subscription].Exists(userId) {
-		sb.configRoomSubscribers[subscription].Remove(userId)
-		log.Printf("ITS A CONFIGROOM")
+		sb.removeLobbySubscription(userId)
+	} else if sb.isSubscribedToConfigRoom(userId, subscription) {
+		sb.removeConfigRoomSubscription(userId, subscription)
 		configRoom := sb.getConfigRoom(subscription)
 		ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
-		// TODO: remove from candidates
-	} else if sb.gameSubscribers[subscription].Exists(userId) {
-		sb.gameSubscribers[subscription].Remove(userId)
+		if configRoom.Creator.ID != userId {
+			sb.removeCandidate(userId, subscription)
+		}
 	} else {
-		sb.t.Fatalf("invalid subscription for %s", userId)
+		// Should be subscribed to a game
+		sb.removeGameSubscription(userId, subscription)
 	}
 	sendMessage(sb.t, conn, `["Unsubscribe"]`)
 }
@@ -869,6 +972,16 @@ func (sb ScenarioBuilder) getCurrentGame(userId string) *model.CurrentGame {
 		sb.t.Fatalf("no current game: %s", userId)
 	}
 	return currentGame
+}
+
+func (sb ScenarioBuilder) getObservers(gameId model.GameID) []model.CurrentGame{
+	currentGames := []model.CurrentGame{}
+	for _, currentGame := range(sb.currentGames) {
+		if (*currentGame).GameID == gameId && currentGame.Role == model.UserRoleObserver {
+			currentGames = append(currentGames, *currentGame)
+		}
+	}
+	return currentGames
 }
 
 func (sb ScenarioBuilder) SelectOpponent(creator string, opponent string) {
@@ -897,7 +1010,7 @@ func (sb ScenarioBuilder) SelectOpponent(creator string, opponent string) {
 		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameOpponent)))
 	encodedGameId := encodeID(sb.t, gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
-	for subscriber := range(*sb.getConfigRoomSubscribers(configRoom.ID)) {
+	for _, subscriber := range(sb.getConfigRoomSubscribers(configRoom.ID)) {
 		expectMessage(sb.t, sb.getConnection(subscriber),
 			fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedGameId, configRoomJSON))
 	}
@@ -923,7 +1036,7 @@ func (sb ScenarioBuilder) ProposeConfig(userId string, proposal model.ConfigProp
 
 	encodedGameId := encodeID(sb.t, gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
-	for subscriber := range(*sb.getConfigRoomSubscribers(configRoom.ID)) {
+	for _, subscriber := range(sb.getConfigRoomSubscribers(configRoom.ID)) {
 		expectMessage(sb.t, sb.getConnection(subscriber),
 			fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedGameId, configRoomJSON))
 	}
@@ -940,7 +1053,7 @@ func (sb ScenarioBuilder) ReviewConfig(userId string) {
 	sendMessage(sb.t, connPlayer, `["ReviewConfig"]`)
 	encodedGameId := encodeID(sb.t, gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
-	for subscriber := range(*sb.getConfigRoomSubscribers(configRoom.ID)) {
+	for _, subscriber := range(sb.getConfigRoomSubscribers(configRoom.ID)) {
 		expectMessage(sb.t, sb.getConnection(subscriber),
 			fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedGameId, configRoomJSON))
 	}
@@ -989,8 +1102,119 @@ func (sb ScenarioBuilder) AcceptConfig(userId string) {
 	expectMessage(sb.t, sb.getConnection(userOpponent.ID), fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameOpponent)))
 
 	configRoomJSON := toJSON(sb.t, configRoom)
-	for subscriber := range(*sb.getConfigRoomSubscribers(configRoom.ID)) {
+	for _, subscriber := range(sb.getConfigRoomSubscribers(configRoom.ID)) {
 		expectMessage(sb.t, sb.getConnection(subscriber),
 			fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedGameId, configRoomJSON))
+	}
+}
+
+func (sb ScenarioBuilder) doEvent(userId string, data model.EventData, eventStr string) {
+	conn := sb.getConnection(userId)
+	user := sb.getUser(userId)
+	gameId := sb.getSubscribedGameId(userId)
+	configRoom := sb.getConfigRoom(gameId)
+
+	event := model.GameEvent{
+		ID: sb.getNextEventId(),
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: user,
+		Data: data,
+	}
+
+	ExpectEventInsertion(sb.mock, event)
+	sb.addEvent(gameId, event)
+	sendMessage(sb.t, conn, eventStr)
+
+	eventJSON := toJSON(sb.t, event)
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		log.Printf("%s is exppecting event %v", subscriber, data)
+		expectMessage(sb.t, sb.getConnection(subscriber), fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventJSON))
+	}
+}
+
+func (sb ScenarioBuilder) Move(userId string, move json.RawMessage) {
+	data := model.EventDataMove(move)
+	sb.doEvent(userId, data, fmt.Sprintf(`["Move",{"move":%s}]`, toJSON(sb.t, move)))
+}
+
+func (sb ScenarioBuilder) ProposeDraw(userId string) {
+	data := model.EventDataRequest(model.PropositionDraw)
+	sb.doEvent(userId, data, `["Propose",{"proposition":"Draw"}]`)
+}
+
+func (sb ScenarioBuilder) AcceptDraw(userId string) {
+	user := sb.getUser(userId)
+	gameId := sb.getSubscribedGameId(userId)
+	configRoom := sb.getConfigRoom(gameId)
+	game := sb.getGame(gameId)
+
+	data := model.EventDataReplyAccept(model.PropositionDraw, nil)
+	eventStr := `["Accept",{"proposition":"Draw"}]`
+	conn := sb.getConnection(userId)
+	event := model.GameEvent{
+		ID: sb.getNextEventId(),
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: user,
+		Data: data,
+	}
+	ExpectEventInsertion(sb.mock, event)
+
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	ExpectSpecificGameSelection(sb.mock, *game)
+	game.Result = model.ResultAgreedDrawByZero
+	ExpectGameUpdateSetResult(sb.mock, *game)
+	eventEndGame := model.GameEvent{
+	 	ID: sb.getNextEventId(),
+	 	GameID: configRoom.ID,
+	 	Timestamp: 42,
+	 	User: user,
+	 	Data: model.EventDataEndGame,
+	}
+	ExpectEventInsertion(sb.mock, eventEndGame)
+	var opponent model.MinimalUser
+	if game.PlayerZero.ID == userId {
+		opponent = game.PlayerOne
+	} else {
+		opponent = game.PlayerZero
+	}
+	eloUser := sb.getElo(user, configRoom.GameName)
+	eloOpponent := sb.getElo(opponent, configRoom.GameName)
+	eloUser.GamesPlayed += 1
+	eloOpponent.GamesPlayed += 1
+	newEloUser, newEloOpponent := everyboard.ComputeNewElos(eloUser, eloOpponent, true)
+	eloUser.CurrentElo = newEloUser.CurrentElo
+	eloOpponent.CurrentElo = newEloOpponent.CurrentElo
+	ExpectEloUpdates(sb.mock, eloUser, eloOpponent)
+	configRoom.Status = model.StatusFinished
+	ExpectConfigRoomUpdateStatus(sb.mock, *configRoom)
+	ExpectCurrentGameDelete(sb.mock, user.ID)
+	ExpectCurrentGameDelete(sb.mock, opponent.ID)
+	ExpectCurrentGameSelectObservers(sb.mock, configRoom.ID, sb.getObservers(configRoom.ID))
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		if subscriber != user.ID && subscriber != opponent.ID {
+			ExpectCurrentGameDelete(sb.mock, sb.getUser(subscriber).ID)
+			delete(sb.currentGames, subscriber)
+		}
+	}
+
+	sb.addEvent(gameId, event)
+	sendMessage(sb.t, conn, eventStr)
+
+	eventJSON := toJSON(sb.t, event)
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		expectMessage(sb.t, sb.getConnection(subscriber), fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventJSON))
+	}
+
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
+	}
+	gameJSON := toJSON(sb.t, game)
+	eventEndGameJSON := toJSON(sb.t, eventEndGame)
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		conn := sb.getConnection(subscriber)
+		expectMessage(sb.t, conn, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, gameJSON))
+		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventEndGameJSON))
 	}
 }

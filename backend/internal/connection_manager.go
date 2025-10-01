@@ -117,7 +117,7 @@ func (connectionManager *ConnectionManager[Connection]) GetUserOfClient(client C
 	user, exists := connectionManager.clientToUser[client]
 	if !exists {
 		return nil
-	} else {
-		return &user
 	}
+
+	return &user
 }
