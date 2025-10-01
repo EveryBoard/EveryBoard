@@ -73,7 +73,7 @@ export abstract class TutorialStep {
     protected constructor(public readonly title: string,
                           public readonly instruction: string,
                           public readonly state: GameState,
-                          public readonly config: MGPOptional<RulesConfig> = MGPOptional.empty()) {
+                          public readonly config: MGPOptional<RulesConfig>) {
     }
 
     public isMove(): this is TutorialStepMove {
@@ -116,7 +116,7 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
                        instruction: string,
                        state: GameState,
                        private readonly successMessage: string,
-                       config: MGPOptional<RulesConfig> = MGPOptional.empty())
+                       config: MGPOptional<RulesConfig>)
     {
         super(title, instruction, state, config);
     }
@@ -141,7 +141,7 @@ export class TutorialStepMove extends TutorialStepWithSolution {
                        public readonly acceptedMoves: ReadonlyArray<Move>,
                        successMessage: string,
                        private readonly failureMessage: string,
-                       config: MGPOptional<RulesConfig> = MGPOptional.empty())
+                       config: MGPOptional<RulesConfig>)
     {
         super(title, instruction, state, successMessage, config);
         Utils.assert(acceptedMoves.length > 0, 'TutorialStepMove: At least one accepted move should be provided, otherwise use TutorialStepInformational');
@@ -168,7 +168,7 @@ export class TutorialStepAnyMove extends TutorialStepWithSolution {
                        state: GameState,
                        private readonly solutionMove: Move,
                        successMessage: string,
-                       config: MGPOptional<RulesConfig> = MGPOptional.empty()) {
+                       config: MGPOptional<RulesConfig>) {
         super(title, instruction, state, successMessage, config);
     }
 

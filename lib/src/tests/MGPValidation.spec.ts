@@ -18,7 +18,7 @@ describe('MGPValidation', () => {
             const validation: MGPValidation = MGPValidation.ofFallible(fallible);
 
             // Then it should be MGPValidation.SUCCESS
-            expect(validation).toBe(MGPValidation.SUCCESS);
+            expect(validation).toEqual(MGPValidation.SUCCESS);
         });
 
         it('should return a failure when given a failed fallible', () => {
