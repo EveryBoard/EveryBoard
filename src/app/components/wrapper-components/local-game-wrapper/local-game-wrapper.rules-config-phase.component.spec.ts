@@ -43,11 +43,30 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
-    it('should redirect to configuration if the provided config is invalid (due to invalid value of element)', fakeAsync(async() => {
+    it('should redirect to configuration if the provided config is invalid (due to invalid value of number)', fakeAsync(async() => {
         // Given a game configured with an invalid config
         const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
             ...defaultConfig.get(),
             defenders: -10,
+        });
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
+    it('should redirect to configuration if the provided config is invalid (due to invalid value of string/enum)', fakeAsync(async() => {
+        // Given a game configured with an invalid config
+        const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+            ...defaultConfig.get(),
+            dropMode: 'INVALID' as unknown as DropMode, // we lie to typescript here, like the url config could do
         });
         const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
 

@@ -28,8 +28,7 @@ export class RulesConfigDescriptionLocalizable {
 export abstract class ConfigLine {
 
     protected constructor(public readonly defaultValue: ConfigDescriptionType,
-                          public readonly title: Localized,
-    )
+                          public readonly title: Localized)
     {
     }
 
@@ -68,10 +67,12 @@ export class EnumConfig extends ConfigLine {
     }
 
     public override checkValidity(fieldValue: string): MGPValidation {
-        if (typeof(fieldValue) === 'string') {
-            return this.validator(fieldValue);
-        } else {
+        if (typeof(fieldValue) !== 'string') {
             return MGPValidation.failure('EnumConfig expects a string value');
+        } else if (Object.keys(this.possibleValues).indexOf(fieldValue) === -1) {
+            return MGPValidation.failure('This value is not among the possible values');
+        } else {
+            return this.validator(fieldValue);
         }
     }
 }
