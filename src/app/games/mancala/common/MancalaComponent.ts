@@ -15,6 +15,7 @@ import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { MancalaConfig } from './MancalaConfig';
 import { AI, AIOptions, MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
 
 export type SeedDropResult = {
     houseToDistribute: Coord,
@@ -30,8 +31,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     // The awaited time between two laps or distributions
     public static readonly TIMEOUT_BETWEEN_LAPS: number = 1000;
-
-    public MGPOptional: typeof MGPOptional = MGPOptional;
 
     public lastDistributedHouses: Coord[] = [];
 
@@ -53,6 +52,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         super(messageDisplayer, cdr);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
     }
 
     public getMancalaViewBox(): string {

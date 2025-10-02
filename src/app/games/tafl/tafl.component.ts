@@ -20,6 +20,8 @@ import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
@@ -45,6 +47,18 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.updateViewInfo();
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        const state: TaflState = this.getState();
+        const scoreZero: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
+        const scoreOne: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
     }
 
     public override async showLastMove(move: M): Promise<void> {

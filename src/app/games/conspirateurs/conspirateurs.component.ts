@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
+import { GameComponent, ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
 import { PlayerOrNone } from 'src/app/jscaip/Player';
@@ -78,6 +78,15 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.rules.getProtectedPieces(this.getState()));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.PROTECTED_PIECES;
     }
 
     private updateViewInfo(): void {
@@ -133,7 +142,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
             {
                 squareInfo.shelterClasses.push('selectable-stroke');
-                // squareInfo.pieceClasses.push('victory-stroke');
                 this.victoriousCoords.push(shelter);
                 squareInfo.squareClasses.push('victory-fill');
             }

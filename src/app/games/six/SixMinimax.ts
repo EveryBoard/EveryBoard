@@ -1,19 +1,15 @@
 import { Minimax } from 'src/app/jscaip/AI/Minimax';
 import { SixMove } from './SixMove';
 import { SixState } from './SixState';
-import { SixLegalityInformation, SixRules } from './SixRules';
+import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { SixHeuristic } from './SixHeuristic';
 import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export class SixMinimax extends Minimax<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation> {
+export class SixMinimax extends Minimax<SixMove, SixState, SixConfig, SixLegalityInformation> {
 
     public constructor() {
-        super($localize`Minimax`,
-              SixRules.get(),
-              new SixHeuristic(),
-              new SixFilteredMoveGenerator(),
-        );
+        const rules: SixRules = SixRules.get();
+        super($localize`Minimax`, rules, new SixHeuristic(), new SixFilteredMoveGenerator(rules));
     }
 
 }

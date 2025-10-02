@@ -55,6 +55,16 @@ describe('MGPOptional', () => {
         });
     });
 
+    describe('orElse', () => {
+        it('should preserve the value if there is one', () => {
+            expect(MGPOptional.of(42).orElse(MGPOptional.of(0)).get()).toBe(42);
+        });
+
+        it('should return the other value if there is no value inside', () => {
+            expect(MGPOptional.empty().orElse(MGPOptional.of(0)).get()).toBe(0);
+        });
+    });
+
     describe('equals', () => {
         it('should consider the same optional equal', () => {
             const optional: MGPOptional<number> = MGPOptional.of(42);
@@ -80,6 +90,11 @@ describe('MGPOptional', () => {
         it('should compare an optional with a direct value', () => {
             const optional: MGPOptional<number> = MGPOptional.of(42);
             expect(optional.equalsValue(42)).toBeTrue();
+        });
+
+        it('should consider empty different', () => {
+            const optional: MGPOptional<number> = MGPOptional.empty();
+            expect(optional.equalsValue(42)).toBeFalse();
         });
     });
 
@@ -107,6 +122,17 @@ describe('MGPOptional', () => {
             const optional: MGPOptional<number> = MGPOptional.of(41);
             expect(optional.map(addOne)).toEqual(MGPOptional.of(42));
         });
+    });
+
+    it('should be able to get on an else branch of isAbsent', () => {
+        function f(v: MGPOptional<number>): number {
+            if (v.isAbsent()) {
+                return 0;
+            } else {
+                return v.get();
+            }
+        }
+        expect(f(MGPOptional.of(5))).toBe(5);
     });
 
 });

@@ -3,23 +3,22 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { Timestamp } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
+import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/ConfigRoom';
 import { GameService } from '../../../services/GameService';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
-import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserService } from 'src/app/services/UserService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { FirestoreTime } from 'src/app/domain/Time';
 import { CurrentGame, User, UserRoleInPart } from 'src/app/domain/User';
-import { Timestamp } from 'firebase/firestore';
-import { Subscription } from 'rxjs';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameState } from 'src/app/jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { Debug } from 'src/app/utils/Debug';
@@ -560,10 +559,6 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
         return this.configDemo;
     }
 
-    public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
-        return GameInfo.getStateProvider(this.getGameUrlName());
-    }
-
     public async ngOnDestroy(): Promise<void> {
         // This will unsubscribe from all observables
         this.ngUnsubscribe.next();
@@ -607,7 +602,7 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
 
     public async playLocally(): Promise<void> {
         const urlName: string = this.getGameUrlName();
-        this.navigateThereAfterGameCanceled = ['/local', urlName];
+        this.navigateThereAfterGameCanceled = ['/local', urlName, 'config'];
         await this.cancelGameCreation();
     }
 
