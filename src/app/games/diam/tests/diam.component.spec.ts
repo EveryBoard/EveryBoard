@@ -223,7 +223,7 @@ describe('DiamComponent', () => {
             testUtils.expectElementToHaveClass('#click-0-0', 'selected-stroke');
         }));
 
-        it('should deselect remaining piece when clicking on it again', fakeAsync(async() => {
+        it('should deselect remaining piece when clicking on it a second time', fakeAsync(async() => {
             // Given a board on which a remaining piece is selected
             await testUtils.expectClickSuccess('#piece-PLAYER_ZERO-1-7');
 
@@ -252,7 +252,7 @@ describe('DiamComponent', () => {
             testUtils.expectElementNotToHaveClass('#click-7-0', 'selected-stroke');
         }));
 
-        it('should deselect stack when clicking on it a second time', fakeAsync(async() => {
+        it('should show last move when deselecting remaining piece', fakeAsync(async() => {
             // Given a board with a previous move and a selected stack
             const state: DiamState = DiamState.ofRepresentation([
                 [__, __, __, __, __, __, __, __],

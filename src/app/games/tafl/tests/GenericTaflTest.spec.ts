@@ -14,7 +14,6 @@ import { TaflState } from '../TaflState';
 import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
 import { TaflPawn } from '../TaflPawn';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,
