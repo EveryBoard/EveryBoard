@@ -80,19 +80,19 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.hasAsymmetricBoard = true;
     }
 
-    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.constructedState = this.getState(); // AND SWITCH IT
-        this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
-        this.scores = this.constructedState.getScores();
-        this.showPossibleClicks();
-    }
-
     protected override getScoreName(): ScoreName {
         if (this.config.get().canStackPieces) {
             return ScoreName.STACKS_UNDER_CONTROL;
         } else {
             return ScoreName.PIECES_UNDER_CONTROL;
         }
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.constructedState = this.getState(); // AND SWITCH IT
+        this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
+        this.scores = this.constructedState.getScores();
+        this.showPossibleClicks();
     }
 
     public getSquareClass(x: number, y: number): string[] {
