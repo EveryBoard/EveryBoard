@@ -124,7 +124,6 @@ module FirestoreUtils = struct
             | `List v -> `Assoc [("arrayValue", `Assoc [("values", `List (List.map transform_field v))])]
             | `Float v -> `Assoc [("doubleValue", `Float v)]
             | `Int v -> `Assoc [("integerValue", `String (string_of_int v))]
-            | _ -> raise (UnexpectedError ("Invalid object for firestore: unsupported field: " ^ (JSON.to_string v)))
         and transform_key_and_field = fun ((key, field) : string * JSON.t) : (string * JSON.t) ->
             (key, transform_field field) in
         let doc_with_fields : JSON.t = match doc with

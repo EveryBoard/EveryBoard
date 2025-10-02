@@ -102,9 +102,6 @@ kKH8s3BZjxwN0cBo4dMsZO5ScTWBn9pqT4z/bz6xUf5RvQ0=
              check_raises "failure" (UnexpectedError "Invalid object for firestore") (fun () ->
                  let _ = FirestoreUtils.to_firestore (`Int 1) in
                  ());
-             check_raises "failure" (UnexpectedError "Invalid object for firestore: unsupported field: (1)") (fun () ->
-                 let _ = FirestoreUtils.to_firestore (`Assoc ["foo", `Tuple [`Int 1]]) in
-                 ());
          );
      ]);
 
