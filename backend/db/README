@@ -20,5 +20,5 @@ To test locally:
 0. Set up a dummy root password for the db
 1. Launch a docker container for postgresql: `docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -it postgres:17`
 2. Create the database: `echo 'CREATE DATABASE everyboard' | psql -h localhost postgres postgres`
-2. Run the backend, we will use the root user for the db: `DB_USERNAME=postgres DB_PASSWORD=password DB_HOST=localhost DB_NAME=everyboard make run-postgres`
+2. Run the backend: `DB_USERNAME=postgres DB_PASSWORD=password DB_HOST=localhost DB_NAME=everyboard make run-postgres`
   
