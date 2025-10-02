@@ -1144,6 +1144,41 @@ func (sb ScenarioBuilder) ProposeDraw(userId string) {
 	sb.doEvent(userId, data, `["Propose",{"proposition":"Draw"}]`)
 }
 
+func (sb ScenarioBuilder) endGameDBExpectations(configRoom model.ConfigRoom, winner model.MinimalUser, loser model.MinimalUser, draw bool) {
+	eloWinner := sb.getElo(winner, configRoom.GameName)
+	eloWinner.GamesPlayed += 1
+	eloLoser := sb.getElo(loser, configRoom.GameName)
+	eloLoser.GamesPlayed += 1
+	newEloWinner, newEloLoser := everyboard.ComputeNewElos(eloWinner, eloLoser, draw)
+	eloWinner.CurrentElo = newEloWinner.CurrentElo
+	eloLoser.CurrentElo = newEloLoser.CurrentElo
+	ExpectEloUpdates(sb.mock, eloWinner, eloLoser)
+	configRoom.Status = model.StatusFinished
+	ExpectConfigRoomUpdateStatus(sb.mock, configRoom)
+	ExpectCurrentGameDelete(sb.mock, winner.ID)
+	ExpectCurrentGameDelete(sb.mock, loser.ID)
+	ExpectCurrentGameSelectObservers(sb.mock, configRoom.ID, sb.getObservers(configRoom.ID))
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		if subscriber != winner.ID && subscriber != loser.ID {
+			ExpectCurrentGameDelete(sb.mock, sb.getUser(subscriber).ID)
+			delete(sb.currentGames, subscriber)
+		}
+	}
+}
+
+func (sb ScenarioBuilder) endGameMessageExpectations(configRoom model.ConfigRoom, game model.Game, eventEndGame model.GameEvent) {
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
+	}
+	gameJSON := toJSON(sb.t, game)
+	eventEndGameJSON := toJSON(sb.t, eventEndGame)
+	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
+		conn := sb.getConnection(subscriber)
+		expectMessage(sb.t, conn, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, gameJSON))
+		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventEndGameJSON))
+	}
+}
+
 func (sb ScenarioBuilder) AcceptDraw(userId string) {
 	user := sb.getUser(userId)
 	gameId := sb.getSubscribedGameId(userId)
@@ -1180,26 +1215,8 @@ func (sb ScenarioBuilder) AcceptDraw(userId string) {
 	} else {
 		opponent = game.PlayerZero
 	}
-	eloUser := sb.getElo(user, configRoom.GameName)
-	eloOpponent := sb.getElo(opponent, configRoom.GameName)
-	eloUser.GamesPlayed += 1
-	eloOpponent.GamesPlayed += 1
-	newEloUser, newEloOpponent := everyboard.ComputeNewElos(eloUser, eloOpponent, true)
-	eloUser.CurrentElo = newEloUser.CurrentElo
-	eloOpponent.CurrentElo = newEloOpponent.CurrentElo
-	ExpectEloUpdates(sb.mock, eloUser, eloOpponent)
-	configRoom.Status = model.StatusFinished
-	ExpectConfigRoomUpdateStatus(sb.mock, *configRoom)
-	ExpectCurrentGameDelete(sb.mock, user.ID)
-	ExpectCurrentGameDelete(sb.mock, opponent.ID)
-	ExpectCurrentGameSelectObservers(sb.mock, configRoom.ID, sb.getObservers(configRoom.ID))
-	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		if subscriber != user.ID && subscriber != opponent.ID {
-			ExpectCurrentGameDelete(sb.mock, sb.getUser(subscriber).ID)
-			delete(sb.currentGames, subscriber)
-		}
-	}
 
+	sb.endGameDBExpectations(*configRoom, user, opponent, true)
 	sb.addEvent(gameId, event)
 	sendMessage(sb.t, conn, eventStr)
 
@@ -1208,16 +1225,7 @@ func (sb ScenarioBuilder) AcceptDraw(userId string) {
 		expectMessage(sb.t, sb.getConnection(subscriber), fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventJSON))
 	}
 
-	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
-	}
-	gameJSON := toJSON(sb.t, game)
-	eventEndGameJSON := toJSON(sb.t, eventEndGame)
-	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		conn := sb.getConnection(subscriber)
-		expectMessage(sb.t, conn, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, gameJSON))
-		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventEndGameJSON))
-	}
+	sb.endGameMessageExpectations(*configRoom, *game, eventEndGame)
 }
 
 func (sb ScenarioBuilder) Resign(userId string) {
@@ -1248,36 +1256,11 @@ func (sb ScenarioBuilder) Resign(userId string) {
 	} else {
 		opponent = game.PlayerZero
 	}
-	eloUser := sb.getElo(user, configRoom.GameName)
-	eloOpponent := sb.getElo(opponent, configRoom.GameName)
-	eloUser.GamesPlayed += 1
-	eloOpponent.GamesPlayed += 1
-	newEloUser, newEloOpponent := everyboard.ComputeNewElos(eloUser, eloOpponent, true)
-	eloUser.CurrentElo = newEloUser.CurrentElo
-	eloOpponent.CurrentElo = newEloOpponent.CurrentElo
-	ExpectEloUpdates(sb.mock, eloUser, eloOpponent)
-	configRoom.Status = model.StatusFinished
-	ExpectConfigRoomUpdateStatus(sb.mock, *configRoom)
-	ExpectCurrentGameDelete(sb.mock, user.ID)
-	ExpectCurrentGameDelete(sb.mock, opponent.ID)
-	ExpectCurrentGameSelectObservers(sb.mock, configRoom.ID, sb.getObservers(configRoom.ID))
-	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		if subscriber != user.ID && subscriber != opponent.ID {
-			ExpectCurrentGameDelete(sb.mock, sb.getUser(subscriber).ID)
-			delete(sb.currentGames, subscriber)
-		}
-	}
 
+	winner := opponent
+	loser := user
+	draw := false
+	sb.endGameDBExpectations(*configRoom, winner, loser, draw)
 	sendMessage(sb.t, sb.getConnection(userId), `["Resign"]`)
-
-	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
-	}
-	gameJSON := toJSON(sb.t, game)
-	eventEndGameJSON := toJSON(sb.t, eventEndGame)
-	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		conn := sb.getConnection(subscriber)
-		expectMessage(sb.t, conn, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, gameJSON))
-		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventEndGameJSON))
-	}
+	sb.endGameMessageExpectations(*configRoom, *game, eventEndGame)
 }
