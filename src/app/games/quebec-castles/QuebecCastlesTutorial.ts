@@ -5,14 +5,8 @@ import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutor
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesMove } from './QuebecCastlesMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
-const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
-    MGPOptional.of(new Coord(8, 8)),
-    MGPOptional.of(new Coord(0, 0)),
-);
-defaultCastles.makeImmutable();
 const rectangularWidthHeightConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
     ...defaultConfig.get(),
     height: 12,
