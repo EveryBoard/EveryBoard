@@ -328,5 +328,10 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
+	if e.Data.Type == EventTypeMove {
+		if string(e.Data.Payload.(MovePayload).Move) == "" {
+			return fmt.Errorf("missing move payload")
+		}
+	}
 	return nil
 }

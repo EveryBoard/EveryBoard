@@ -1,4 +1,3 @@
-// TODO: ne pas review ce fichier (yet), il est en bonno modification
 package internal
 
 import (
@@ -945,7 +944,7 @@ func (sb ScenarioBuilder) Unsubscribe(userId string) {
 
 	subscription, ok := sb.subscriptions[userId]
 	if !ok {
-		sb.t.Fatalf("TODO: handle unsubscribed case: error?")
+		sb.t.Fatalf("cannot unsubscribe not subscribed user")
 	}
 
 	delete(sb.subscriptions, userId)
@@ -1228,7 +1227,7 @@ func (sb ScenarioBuilder) AcceptDraw(userId string) {
 	sb.endGameMessageExpectations(*configRoom, *game, eventEndGame)
 }
 
-func (sb ScenarioBuilder) Resign(userId string) {
+func (sb ScenarioBuilder) endGame(userId string, message string, resultFn func (model.Game) model.Result, win bool, draw bool) {
 	user := sb.getUser(userId)
 	gameId := sb.getSubscribedGameId(userId)
 	configRoom := sb.getConfigRoom(gameId)
@@ -1236,11 +1235,7 @@ func (sb ScenarioBuilder) Resign(userId string) {
 
 	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	ExpectSpecificGameSelection(sb.mock, *game)
-	if game.PlayerZero.ID == userId {
-		game.Result = model.ResultResignOfZero
-	} else {
-		game.Result = model.ResultResignOfOne
-	}
+	game.Result = resultFn(*game)
 	ExpectGameUpdateSetResult(sb.mock, *game)
 	eventEndGame := model.GameEvent{
 	 	ID: sb.getNextEventId(),
@@ -1257,10 +1252,33 @@ func (sb ScenarioBuilder) Resign(userId string) {
 		opponent = game.PlayerZero
 	}
 
-	winner := opponent
-	loser := user
-	draw := false
+	var winner model.MinimalUser
+	var loser model.MinimalUser
+	if win {
+		winner = user
+		loser = opponent
+	} else {
+		winner = opponent
+		loser = user
+	}
 	sb.endGameDBExpectations(*configRoom, winner, loser, draw)
-	sendMessage(sb.t, sb.getConnection(userId), `["Resign"]`)
+	sendMessage(sb.t, sb.getConnection(userId), message)
 	sb.endGameMessageExpectations(*configRoom, *game, eventEndGame)
+}
+
+func (sb ScenarioBuilder) Resign(userId string) {
+	sb.endGame(userId, `["Resign"]`, func (game model.Game) model.Result {
+		if game.PlayerZero.ID == userId {
+			return model.ResultResignOfZero
+		} else {
+			return model.ResultResignOfOne
+		}
+	}, false, false)
+}
+
+func (sb ScenarioBuilder) NotifyTimeout(notifier string) {
+	sb.endGame(notifier, `["NotifyTimeout",{"timeoutedPlayer":1}]`,
+		func (game model.Game) model.Result {
+			return model.ResultTimeoutOfOne
+		}, true, false)
 }

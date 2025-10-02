@@ -1,4 +1,3 @@
-// TODO: ne pas review ce fichier (yet), il est en bonno modification
 package internal
 
 import (
@@ -169,12 +168,11 @@ func TestResign(t *testing.T) {
 	sb.Cleanup()
 }
 
-// func TestNotifyTimeout(t *testing.T) {
-// TODO: TestAddTime
-// 	sb, player, opponent, _ := setupTwoPlayersGame()
-// 	sb.NotifyTimeout(player, opponent)
-// 	sb.Cleanup()
-// }
+func TestNotifyTimeout(t *testing.T) {
+	sb, player, _, _ := setupTwoPlayersGame(t)
+	sb.NotifyTimeout(player)
+	sb.Cleanup()
+}
 //
 // func TestEndGame(t *testing.T) {
 // 	sb, player, opponent, _ := setupTwoPlayersGame()

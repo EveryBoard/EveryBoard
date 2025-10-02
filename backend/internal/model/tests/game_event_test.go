@@ -74,7 +74,7 @@ func TestUnmarshalInvalidGameEventFails(t *testing.T) {
 	ExpectUnmarshallingToFail(t, &model.GameEvent{}, `{"eventType":42,"requestType":42,"time":42,"user":{"id":"foo","name":"foo"}}`)
 	ExpectUnmarshallingToFail(t, &model.GameEvent{}, `{"requestType":42,"time":42,"user":{"id":"foo","name":"foo"}}`)
 	// Invalid because of invalid move
-	// TODO: ExpectUnmarshallingToFail(t, &model.GameEvent{}, `{"eventType":"Move","time":42,"user":{"id":"foo","name":"foo"}}`)
+	ExpectUnmarshallingToFail(t, &model.GameEvent{}, `{"eventType":"Move","time":42,"user":{"id":"foo","name":"foo"}}`)
 }
 
 func TestMarshalInvalidGameEventFails(t *testing.T) {
