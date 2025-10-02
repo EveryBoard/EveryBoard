@@ -446,8 +446,8 @@
         <source>Pass by player store</source>
         <target>Passer par le magasin</target>
       </trans-unit>
-      <trans-unit id="5302957168498438243" datatype="html">
-        <source>You must continue distribution after last seed ends in store</source>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
         <target>Continuer la distribution après que la dernière graine soit tombée dans le magasin</target>
       </trans-unit>
       <trans-unit id="356626260857129297" datatype="html">
@@ -651,7 +651,7 @@
       </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
-        <target>Chateaux Québecois</target>
+        <target>Châteaux Québecois</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -3916,7 +3916,7 @@
       </trans-unit>
       <trans-unit id="4108446576215978761" datatype="html">
         <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all the pieces of the opponent, or to step on the opponent&apos;s castle. The castles are on the corners by default.</source>
-        <target>Chateaux Québecois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de capturer toutes les pièces adverses, ou d&apos;atteindre le château adverse. Les châteaux sont par défaut dans les coins.</target>
+        <target>Châteaux Québecois est le premier jeu inventé par l&apos;équipe EveryBoard.&lt;br/&gt;Le but du jeu est de capturer toutes les pièces adverses, ou d&apos;atteindre le château adverse. Les châteaux sont par défaut dans les coins.</target>
       </trans-unit>
       <trans-unit id="5230748384162383195" datatype="html">
         <source>Defender&apos;s move</source>
@@ -3946,32 +3946,32 @@
         <source>Custom config: place castle yourself</source>
         <target>Configuration alternative: placez le château vous même</target>
       </trans-unit>
-      <trans-unit id="7842496462088765849" datatype="html">
-        <source>You have the option to change decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
+      <trans-unit id="7385463908675411729" datatype="html">
+        <source>You have the option to decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
         <target>Vous avez l&apos;option de choisir vous même où placer le château. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre château.</target>
       </trans-unit>
       <trans-unit id="4647263668364735204" datatype="html">
         <source>Custom config: drop mode: by batch</source>
         <target>Configuration alternative: mode de placement: par groupe</target>
       </trans-unit>
-      <trans-unit id="4109163222082818733" datatype="html">
-        <source>You have the option to decide yourself where you place your pieces.</source>
-        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces.</target>
+      <trans-unit id="7033117155002350193" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place all your pieces.</source>
+        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé/Défenseur, placez toutes vos pièces.</target>
       </trans-unit>
-      <trans-unit id="5304732373611529036" datatype="html">
-        <source>Custom config: Drop Mode: Piece by piece</source>
+      <trans-unit id="8905744515857698442" datatype="html">
+        <source>Custom config: drop mode: piece by piece</source>
         <target>Configuration alternative: Mode de placement: Pièces par pièces</target>
       </trans-unit>
       <trans-unit id="3173152046401939537" datatype="html">
         <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
         <target>Vous avez l&apos;option de décider vous même ou placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.&lt;br/&gt;Vous jouez Foncé/Défenseur, déposez une pièce.</target>
       </trans-unit>
-      <trans-unit id="2804461591757192500" datatype="html">
-        <source>Custom config: Number of piece &amp; territory size</source>
+      <trans-unit id="7981767151607448456" datatype="html">
+        <source>Custom config: number of piece &amp; territory size</source>
         <target>Configuration alternative: Nombre de pièces &amp; taille du territoire</target>
       </trans-unit>
-      <trans-unit id="7017903359617000794" datatype="html">
-        <source>You have the option to change territory size, which is the number of line on which you can drop your pieces, it&apos;s indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
+      <trans-unit id="8332720029342556814" datatype="html">
+        <source>You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
         <target>Vous avez l&apos;option de changer la taille du territoire, qui est le nombre de lignes sur lesquelles vous pouvez déposer vos pièces, c&apos;est indiqué par une couleur semi-transparente. Vous pouvez aussi changer combien de pièces chaque joueur contrôle.</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">

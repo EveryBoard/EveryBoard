@@ -2404,8 +2404,8 @@
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
       </trans-unit>
-      <trans-unit id="5302957168498438243" datatype="html">
-        <source>You must continue distribution after last seed ends in store</source>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
       </trans-unit>
       <trans-unit id="356626260857129297" datatype="html">
         <source>Continue distribution until capture or empty house</source>
@@ -2883,26 +2883,26 @@
       <trans-unit id="2289520460836999741" datatype="html">
         <source>Custom config: place castle yourself</source>
       </trans-unit>
-      <trans-unit id="7842496462088765849" datatype="html">
-        <source>You have the option to change decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
+      <trans-unit id="7385463908675411729" datatype="html">
+        <source>You have the option to decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
       </trans-unit>
       <trans-unit id="4647263668364735204" datatype="html">
         <source>Custom config: drop mode: by batch</source>
       </trans-unit>
-      <trans-unit id="4109163222082818733" datatype="html">
-        <source>You have the option to decide yourself where you place your pieces.</source>
+      <trans-unit id="7033117155002350193" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place all your pieces.</source>
       </trans-unit>
-      <trans-unit id="5304732373611529036" datatype="html">
-        <source>Custom config: Drop Mode: Piece by piece</source>
+      <trans-unit id="8905744515857698442" datatype="html">
+        <source>Custom config: drop mode: piece by piece</source>
       </trans-unit>
       <trans-unit id="3173152046401939537" datatype="html">
         <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
       </trans-unit>
-      <trans-unit id="2804461591757192500" datatype="html">
-        <source>Custom config: Number of piece &amp; territory size</source>
+      <trans-unit id="7981767151607448456" datatype="html">
+        <source>Custom config: number of piece &amp; territory size</source>
       </trans-unit>
-      <trans-unit id="7017903359617000794" datatype="html">
-        <source>You have the option to change territory size, which is the number of line on which you can drop your pieces, it&apos;s indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
+      <trans-unit id="8332720029342556814" datatype="html">
+        <source>You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>

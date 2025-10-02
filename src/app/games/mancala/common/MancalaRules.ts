@@ -52,7 +52,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public static readonly FEED_ORIGINAL_HOUSE: Localized = () => $localize`Feed original house`;
     public static readonly MUST_FEED: Localized = () => $localize`You must feed`;
     public static readonly PASS_BY_PLAYER_STORE: Localized = () => $localize`Pass by player store`;
-    public static readonly MULTIPLE_SOW: Localized = () => $localize`You must continue distribution after last seed ends in store`;
+    public static readonly MULTIPLE_SOW: Localized = () => $localize`Continue distribution after last seed ends in store`;
     public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue distribution until capture or empty house`;
     public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
 
