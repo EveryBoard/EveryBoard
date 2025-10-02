@@ -172,7 +172,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 const otherCoord: string = entries.otherPlayerPiece.x + '-' + entries.otherPlayerPiece.y;
                 await testUtils.expectClickSuccess('#click-' + otherCoord);
 
-                // // Then that piece should be selected and the previous unselected
+                // Then that piece should be selected and the previous unselected
                 testUtils.expectElementToHaveClass('#piece-' + otherCoord, 'selected-stroke');
                 testUtils.expectElementNotToHaveClass('#piece-' + playersCoord, 'selected-stroke');
             }));
