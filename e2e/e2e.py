@@ -518,7 +518,7 @@ def can_perform_take_back(user1, user2):
     turnAfterTakeBack = parse_turn(user1.get_text_of('#turn-number'))
 
     if not(turnAfterTakeBack < turnBeforeTakeBack):
-        print('Turn has not decreased')
+        print(f'Turn has not decreased: it was {turnBeforeTakeBack} and is now {turnAfterTakeBack}')
         raise Exception('Test failed')
 
     # Cleanup

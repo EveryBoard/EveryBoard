@@ -43,14 +43,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
+    // Data linked to the move attempt
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
-
+    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
     public possibleMoves: PossibleMove[] = [];
 
-    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
-
+    // Data linked to the last move
     private moveds: Coord[] = [];
-
     private capturedCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
@@ -85,6 +84,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
+        this.capturedCoords = [];
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.phalanxSize); i++) {

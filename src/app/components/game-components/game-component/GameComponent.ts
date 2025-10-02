@@ -148,6 +148,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public isPlayerTurn: () => boolean;
 
+    /**
+     * Called by the game component when the user creates a move
+     */
     public chooseMove: (move: M) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => Promise<MGPValidation>;
