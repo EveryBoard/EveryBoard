@@ -51,13 +51,11 @@ export class TimerComponent implements OnDestroy {
 
     public changeDuration(seconds: number): void {
         Utils.assert(this.isPaused, 'Should not change duration of a clock while it is running');
-        console.log('timer.changeDuration', seconds)
         this.remainingSeconds = seconds;
         this.displayDuration();
     }
 
     public subtract(seconds: number): void {
-        console.log('timer.subtract with ' + seconds)
         this.changeDuration(this.remainingSeconds - seconds);
     }
 
@@ -71,16 +69,13 @@ export class TimerComponent implements OnDestroy {
         // duration is in ms
         Utils.assert(this.isSet, 'Should not start a timer that has not been set!');
         Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName + ')');
-        console.log('starting: ' + this.debugName);
 
-        console.log(`${this.debugName} STARTING at ${this.remainingSeconds}`);
         this.started = true;
         this.resume();
     }
 
     public resume(): void {
         Utils.assert(this.isPaused && this.started, 'Should only resume timer that are started and paused!');
-        console.log('resuming: ' + this.debugName + ' with remaining: ' + this.remainingSeconds);
 
         this.startTime = Date.now() / 1000;
         const remainingTimeOnResume: number = this.remainingSeconds;
@@ -92,18 +87,15 @@ export class TimerComponent implements OnDestroy {
     }
 
     private onEndReached(): void {
-        console.log('end reached of ' + this.debugName)
         this.isPaused = true;
         this.started = false;
         this.clearTimeouts();
         this.changeDuration(0);
-        console.log('emitting from ' + this.debugName)
         this.outOfTimeAction.emit();
     }
 
     private countSeconds(): void {
         this.updateHandle = window.setTimeout(() => {
-            console.log('updating shown time of ' + this.debugName)
             this.updateShownTime();
         }, 300); // update a bit more frequently than every second to account for drifts
     }
@@ -116,7 +108,6 @@ export class TimerComponent implements OnDestroy {
     public pause(): void {
         Utils.assert(this.started, 'Should not pause not started timer (' + this.debugName + ')');
         Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + this.debugName + ')');
-        console.log('pausing: ' + this.debugName)
 
         this.clearTimeouts();
         this.isPaused = true;
