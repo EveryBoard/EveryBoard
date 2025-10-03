@@ -206,6 +206,7 @@ describe('CurrentGameService', () => {
             // Then it's should be refused
             expect(validation.getReason()).toBe(GameActionFailure.YOU_ARE_ALREADY_OBSERVING());
         }));
+
     });
 
     describe('canUserJoin', () => {
@@ -329,6 +330,7 @@ describe('CurrentGameService', () => {
             // When asking if you can join some started part
             await shouldAllowToJoinGame(currentGame, 'some-id', true);
         }));
+
     });
 
     describe('unsubscriptions', () => {
@@ -364,6 +366,7 @@ describe('CurrentGameService', () => {
             // Then it should have unsubscribed from active users
             expectUnsubscribeToHaveBeenCalled();
         }));
+
     });
 
     afterEach(async() => {
@@ -371,4 +374,5 @@ describe('CurrentGameService', () => {
             currentGameService.ngOnDestroy();
         }
     });
+
 });

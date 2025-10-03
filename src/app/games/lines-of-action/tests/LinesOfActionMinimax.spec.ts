@@ -21,4 +21,5 @@ describe('LinesOfActionMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

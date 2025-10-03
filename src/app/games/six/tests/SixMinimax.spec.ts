@@ -53,4 +53,5 @@ describe('SixMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

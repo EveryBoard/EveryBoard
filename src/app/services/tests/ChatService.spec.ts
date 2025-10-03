@@ -35,6 +35,7 @@ describe('ChatService', () => {
             // Then the message is forwarded to the backend
             expect(backendService.send).toHaveBeenCalledOnceWith(['ChatSend', { message: 'hello' }]);
         }));
+
     });
 
     describe('subscribeToMessage', () => {

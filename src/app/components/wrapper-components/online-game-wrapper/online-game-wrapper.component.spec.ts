@@ -192,6 +192,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             testUtils.expectElementToExist('#game');
             testUtils.expectElementToExist('app-p4');
         }));
+
     });
 
     it('should unsubscribe from the game upon destruction', fakeAsync(async() => {

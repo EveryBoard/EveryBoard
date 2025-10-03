@@ -21,4 +21,5 @@ describe('PentagoDummyMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

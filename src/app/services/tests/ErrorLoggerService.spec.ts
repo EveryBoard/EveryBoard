@@ -168,4 +168,5 @@ describe('ErrorLoggerService', () => {
             expect(errors[0].id).toEqual(errorId);
         });
     });
+
 });

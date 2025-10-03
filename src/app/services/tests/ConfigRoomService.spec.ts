@@ -175,6 +175,7 @@ describe('ConfigRoomService', () => {
             // Then it should send the ReviewConfig message
             expect(backendService.send).toHaveBeenCalledOnceWith(['ReviewConfig']);
         }));
+
     });
 
     describe('acceptConfig', () => {
@@ -186,5 +187,7 @@ describe('ConfigRoomService', () => {
             // Then it should send the AcceptConfig message
             expect(backendService.send).toHaveBeenCalledOnceWith(['AcceptConfig']);
         }));
+
     });
+
 });

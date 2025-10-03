@@ -339,6 +339,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
             await receiveEndGame();
         }));
+
     });
 
     describe('Component initialization', () => {
@@ -358,6 +359,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
             await receiveEndGame();
         }));
+
     });
 
     it('should forbid making a move when it is not the turn of the player', fakeAsync(async() => {
@@ -959,6 +961,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
             await receiveEndGame();
         }));
+
     });
 
     describe('End Game Time Management', () => {
@@ -1162,6 +1165,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveEndGame();
                 expectGameToBeOver();
             }));
+
         });
 
         describe('opponent', () => {
@@ -1180,6 +1184,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 await receiveEndGame();
             }));
+
         });
     });
 
@@ -1377,6 +1382,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
             expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
         }));
+
     });
 
     describe('Non Player Experience', () => {
@@ -1444,6 +1450,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
                 expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(true);
                 tick(wrapper.configRoom.moveDuration * 1000);
             }));
+
         });
     });
 
@@ -1498,6 +1505,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementNotToHaveClass('#board-highlight', 'player1-bg');
             await receiveEndGame();
         }));
+
     });
 
     describe('onCancelMove', () => {
@@ -1532,6 +1540,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(component.showLastMove).not.toHaveBeenCalled();
             await receiveEndGame();
         }));
+
     });
 
     describe('interactivity', () => {
@@ -1576,5 +1585,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
             await receiveEndGame();
         }));
+
     });
 });

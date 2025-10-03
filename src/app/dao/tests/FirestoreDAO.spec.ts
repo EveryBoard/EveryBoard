@@ -88,4 +88,5 @@ describe('FirestoreDAO', () => {
             expect(docs[0].data).toEqual({ value: 'foo', otherValue: 1 });
         });
     });
+
 });

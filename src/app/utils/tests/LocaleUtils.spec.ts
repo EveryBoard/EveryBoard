@@ -49,4 +49,5 @@ describe('@everyboard/lib', () => {
             localStorage.clear(); // clear local storage
         });
     });
+
 });

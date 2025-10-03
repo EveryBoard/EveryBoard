@@ -5,7 +5,7 @@ import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from
 import { LocalGameConfigurationComponent } from './local-game-configuration.component';
 import { Router } from '@angular/router';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
-import { MGPOptional } from 'lib/dist';
+import { MGPOptional } from '@everyboard/lib';
 import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { AuthUser } from 'src/app/services/ConnectedUserService';
