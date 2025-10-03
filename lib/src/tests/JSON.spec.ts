@@ -13,6 +13,7 @@ describe('isJSONPrimitive', () => {
         expect(isJSONPrimitive({})).toBeFalse();
         expect(isJSONPrimitive(undefined)).toBeFalse(); // undefined is not valid in JSON!
     });
+
 });
 
 

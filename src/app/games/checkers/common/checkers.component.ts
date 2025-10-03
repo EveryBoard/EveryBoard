@@ -1,4 +1,5 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
+
 import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Vector';
@@ -87,7 +88,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         }
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.constructedState = this.getState();
         this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
         this.scores = this.constructedState.getScores();

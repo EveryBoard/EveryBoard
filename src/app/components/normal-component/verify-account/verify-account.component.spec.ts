@@ -64,6 +64,7 @@ describe('VerifyAccountComponent', () => {
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
         }));
+
     });
     describe('email user', () => {
         beforeEach(() => {
@@ -126,4 +127,5 @@ describe('VerifyAccountComponent', () => {
         }));
 
     });
+
 });

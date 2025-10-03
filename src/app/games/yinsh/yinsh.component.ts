@@ -1,4 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -10,7 +12,6 @@ import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
@@ -104,7 +105,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.constructedState = this.getState();
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: YinshState = this.getState();
         this.constructedState = state;
         this.hexaBoard = this.constructedState.board;

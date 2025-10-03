@@ -21,4 +21,5 @@ describe('LodestoneScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

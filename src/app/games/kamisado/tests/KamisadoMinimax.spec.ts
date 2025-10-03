@@ -21,4 +21,5 @@ describe('KamisadoMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });
