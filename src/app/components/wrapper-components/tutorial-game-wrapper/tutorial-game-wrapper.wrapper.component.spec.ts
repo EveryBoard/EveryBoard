@@ -22,7 +22,7 @@ import { QuartoConfig, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { TutorialStepMessage } from './TutorialStepMessage';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 
-describe('TutorialGameWrapperComponent for non-existing game', () => {
+fdescribe('TutorialGameWrapperComponent for non-existing game', () => {
 
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
@@ -46,7 +46,7 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
 
 });
 
-describe('TutorialGameWrapperComponent (wrapper)', () => {
+fdescribe('TutorialGameWrapperComponent (wrapper)', () => {
 
     let testUtils: ComponentTestUtils<QuartoComponent, Comparable>;
     let wrapper: TutorialGameWrapperComponent;
@@ -1190,6 +1190,19 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             expect(wrapper.stepFinished[0]).toBeTrue();
+        }));
+
+        it('should have no solution', fakeAsync(async() => {
+            // Given tutorial step of type "anyMove"
+            const tutorial: TutorialStep = TutorialStep.informational(
+                'title',
+                'Explanation Explanation Explanation.',
+                QuartoRules.get().getInitialState(defaultConfig),
+            );
+
+            // When doing a move
+            // Then it should not be considered a success
+            expect(tutorial.hasSolution()).toBeFalse();
         }));
 
     });

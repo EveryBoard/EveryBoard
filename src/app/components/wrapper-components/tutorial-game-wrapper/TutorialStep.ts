@@ -97,6 +97,7 @@ export abstract class TutorialStep {
     }
 
     public hasSolution(): this is TutorialStepWithSolution {
+        console.log('jagenflaf')
         return false;
     }
 
@@ -122,6 +123,7 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
     }
 
     public override hasSolution(): this is TutorialStepWithSolution {
+        console.log('with solution')
         return true;
     }
 
@@ -190,7 +192,7 @@ export class TutorialStepClick extends TutorialStepWithSolution {
                        public readonly acceptedClicks: ReadonlyArray<string>,
                        successMessage: string,
                        private readonly failureMessage: string,
-                       config: MGPOptional<RulesConfig> = MGPOptional.empty())
+                       config: MGPOptional<RulesConfig>)
     {
         super(title, instruction, state, successMessage, config);
     }
@@ -217,7 +219,7 @@ export class TutorialStepPredicate extends TutorialStepWithSolution {
                        private readonly solutionMove: Move,
                        public readonly predicate: TutorialPredicate,
                        successMessage: string,
-                       config: MGPOptional<RulesConfig> = MGPOptional.empty())
+                       config: MGPOptional<RulesConfig>)
     {
         super(title, instruction, state, successMessage, config);
     }
