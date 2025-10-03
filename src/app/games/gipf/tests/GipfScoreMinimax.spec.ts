@@ -21,4 +21,5 @@ describe('GipfScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

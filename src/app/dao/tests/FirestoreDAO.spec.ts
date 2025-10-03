@@ -217,4 +217,5 @@ describe('FirestoreDAO', () => {
             expect(subDAOPath).toEqual(path + '/foo/sub');
         });
     });
+
 });
