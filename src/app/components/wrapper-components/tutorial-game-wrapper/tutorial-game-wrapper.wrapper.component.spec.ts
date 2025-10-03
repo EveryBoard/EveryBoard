@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
-import { TutorialStep } from './TutorialStep';
+import { TutorialStep, TutorialStepAnyMove } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -22,7 +22,7 @@ import { QuartoConfig, QuartoRules } from 'src/app/games/quarto/QuartoRules';
 import { TutorialStepMessage } from './TutorialStepMessage';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 
-fdescribe('TutorialGameWrapperComponent for non-existing game', () => {
+describe('TutorialGameWrapperComponent for non-existing game', () => {
 
     it('should redirect to /notFound', fakeAsync(async() => {
         // Given a game wrapper for a game that does not exist
@@ -46,7 +46,7 @@ fdescribe('TutorialGameWrapperComponent for non-existing game', () => {
 
 });
 
-fdescribe('TutorialGameWrapperComponent (wrapper)', () => {
+describe('TutorialGameWrapperComponent (wrapper)', () => {
 
     let testUtils: ComponentTestUtils<QuartoComponent, Comparable>;
     let wrapper: TutorialGameWrapperComponent;
@@ -970,6 +970,22 @@ fdescribe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Then hideLastMove should have been called
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
+        }));
+
+        it('should have a solution', fakeAsync(async() => {
+            // Given tutorial step of type "anyMove"
+            const solutionMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BABA);
+            const tutorial: TutorialStepAnyMove = TutorialStep.anyMove(
+                'title',
+                'instruction',
+                QuartoRules.get().getInitialState(defaultConfig),
+                solutionMove,
+                TutorialStepMessage.CONGRATULATIONS(),
+            ) as TutorialStepAnyMove;
+
+            // When doing a move
+            // Then it should not be considered a success
+            expect(tutorial.getSolution()).toEqual(solutionMove);
         }));
 
     });

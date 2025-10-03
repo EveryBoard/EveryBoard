@@ -97,7 +97,6 @@ export abstract class TutorialStep {
     }
 
     public hasSolution(): this is TutorialStepWithSolution {
-        console.log('jagenflaf')
         return false;
     }
 
@@ -123,7 +122,6 @@ export abstract class TutorialStepWithSolution extends TutorialStep {
     }
 
     public override hasSolution(): this is TutorialStepWithSolution {
-        console.log('with solution')
         return true;
     }
 
