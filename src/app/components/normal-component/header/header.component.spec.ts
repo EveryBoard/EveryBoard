@@ -68,6 +68,7 @@ describe('HeaderComponent', () => {
             // Then currentGameLink should not be displayed
             testUtils.expectElementNotToExist('#currentGameLink');
         }));
+
     });
     it('should have empty username when user is not connected', fakeAsync(async() => {
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
@@ -173,6 +174,7 @@ describe('HeaderComponent', () => {
             const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
         }));
+
     });
     it('should unsubscribe from connectedUserService when destroying component', fakeAsync(async() => {
         // Given a header
