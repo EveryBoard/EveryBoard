@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameComponent } from '../../../app/components/game-components/game-component/GameComponent';
+import { GameComponent, ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
 import { Coord } from '../../../app/jscaip/Coord';
 import { Vector } from '../../../app/jscaip/Vector';
 import { PlayerOrNone } from '../../../app/jscaip/Player';
@@ -76,8 +76,17 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.rules.getProtectedPieces(this.getState()));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.PROTECTED_PIECES;
     }
 
     private updateViewInfo(): void {
@@ -133,7 +142,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
             {
                 squareInfo.shelterClasses.push('selectable-stroke');
-                // squareInfo.pieceClasses.push('victory-stroke');
                 this.victoriousCoords.push(shelter);
                 squareInfo.squareClasses.push('victory-fill');
             }

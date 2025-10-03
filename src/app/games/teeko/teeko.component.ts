@@ -40,7 +40,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.encoder = TeekoMove.encoder;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.node.gameState.board;
     }
 
@@ -76,8 +76,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         } else {
             if (this.selected.isPresent()) {
                 if (this.selected.equalsValue(clickedCoord)) {
-                    this.selected = MGPOptional.empty();
-                    return MGPValidation.SUCCESS;
+                    return this.cancelMove();
                 } else {
                     const move: TeekoTranslationMove =
                         TeekoTranslationMove.from(this.selected.get(), clickedCoord).get();

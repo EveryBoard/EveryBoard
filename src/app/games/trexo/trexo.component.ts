@@ -9,7 +9,6 @@ import { Coord } from '../../../app/jscaip/Coord';
 import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
 import { Table3DUtils, TableUtils } from '../../../app/jscaip/TableUtils';
-import { Coord3D } from '../../../app/jscaip/Coord3D';
 import { TrexoFailure } from './TrexoFailure';
 import { Ordinal } from '../../../app/jscaip/Ordinal';
 import { MCTS } from '../../../app/jscaip/AI/MCTS';
@@ -42,28 +41,23 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         move: MGPOptional.empty(),
     };
 
-    public static modeMap: Record<ModeType, ModeConfig> = {
+    public static readonly modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             offsetRatio: 0,
             horizontalWidthRatio: 1,
             pieceHeightRatio: 0,
             parallelogramHeight: 100,
-            abstractBoardWidth: 0, // Will be overriden in updateBoard
-            abstractBoardHeight: 0, // Will be overriden in updateBoard
         },
         '3D': {
             offsetRatio: 0.4,
             horizontalWidthRatio: 1.2,
             pieceHeightRatio: 0.2,
             parallelogramHeight: 100,
-            abstractBoardWidth: 0, // Will be overriden in updateBoard
-            abstractBoardHeight: 0, // Will be overriden in updateBoard
         },
     };
 
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
     public readonly left: number = - this.STROKE_WIDTH / 2;
-    public Coord3D: typeof Coord3D = Coord3D;
     public up: number = 0;
     public width: number;
     public height: number;
@@ -141,7 +135,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         return pieceBonus;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TrexoState = this.getState();
         this.board = state.getCopiedBoard();
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());

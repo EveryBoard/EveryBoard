@@ -21,4 +21,5 @@ describe('YinshScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
+
 import { TrigoComponent } from '../trigo.component';
 import { GoMove } from '../../../../../app/games/gos/GoMove';
 import { GoState } from '../../../../../app/games/gos/GoState';
@@ -9,6 +11,7 @@ import { Table } from '../../../../../app/jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../../app/utils/tests/TestUtils.spec';
 import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
 import { Coord } from '../../../../../app/jscaip/Coord';
+import { GoPhase } from '../../GoPhase';
 
 describe('TrigoComponent', () => {
 
@@ -47,7 +50,7 @@ describe('TrigoComponent', () => {
             [N, _, _, _, _, _, _, _, N],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'PLAYING');
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
         const move: GoMove = new GoMove(4, 1);
@@ -72,7 +75,7 @@ describe('TrigoComponent', () => {
             [k, b, b, O, _, _, X, w, w],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 4), 3, MGPOptional.empty(), 'COUNTING');
+            new GoState(board, PlayerNumberMap.of(2, 4), 3, MGPOptional.empty(), GoPhase.COUNTING);
 
         // When rendering it
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
@@ -93,7 +96,7 @@ describe('TrigoComponent', () => {
             [O, _, O, _, _, _, _, X, _],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(1, 4)), 'PLAYING');
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(1, 4)), GoPhase.PLAYING);
 
         // When rendering it
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
@@ -112,7 +115,7 @@ describe('TrigoComponent', () => {
             [_, _, _, O, _, O, X, _, _],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 1), 11, MGPOptional.of(new Coord(4, 4)), 'PLAYING');
+            new GoState(board, PlayerNumberMap.of(2, 1), 11, MGPOptional.of(new Coord(4, 4)), GoPhase.PLAYING);
 
         // When rendering it
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });

@@ -41,14 +41,14 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         this.setRulesAndNode('Squarz');
         this.availableAIs = [
             new SquarzMinimax(),
-            new MCTS($localize`MCTS`, new SquarzMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new SquarzMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = SquarzMove.encoder;
 
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SquarzState = this.getState();
         this.board = state.getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());

@@ -5,7 +5,7 @@ import { HexaDirection } from '../../../app/jscaip/HexaDirection';
 import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
-import { SixVictorySource, SixNode, SixConfig } from './SixRules';
+import { SixVictorySource, SixNode, SixConfig, SixRules } from './SixRules';
 import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
 import { AlignmentHeuristic, AlignmentStatus, BoardInfo } from '../../../app/jscaip/AI/AlignmentHeuristic';
 import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
@@ -33,9 +33,8 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         if (shapeInfo.status === AlignmentStatus.VICTORY) {
             return BoardValue.of(victoryValue);
         }
-        const lastDropTurn: number = (2 * config.get().piecesPerPlayer) - 1;
-        if (state.turn > lastDropTurn) {
-            const pieces: PlayerNumberMap = state.countPieces();
+        if (SixRules.get().isInDropPhase(state, config) === false) {
+            const pieces: PlayerNumberMap = state.countPiecesOnBoard();
             return BoardValue.ofPlayerNumberMap(pieces);
         }
         if (shapeInfo.status === AlignmentStatus.PRE_VICTORY) {

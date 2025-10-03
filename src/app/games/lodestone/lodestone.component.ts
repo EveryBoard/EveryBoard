@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameComponent } from '../../../app/components/game-components/game-component/GameComponent';
+import { GameComponent, ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
 import { Coord } from '../../../app/jscaip/Coord';
 import { Ordinal } from '../../../app/jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
@@ -140,6 +140,10 @@ export class LodestoneComponent
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.getState();
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
     }
 
     public getViewBox(): ViewBox {
@@ -298,7 +302,7 @@ export class LodestoneComponent
         return MGPValidation.SUCCESS;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.displayedState = this.getState();
         this.removePlayerLodestoneFromDisplayedState();
         this.scores = MGPOptional.of(this.getState().getScores());

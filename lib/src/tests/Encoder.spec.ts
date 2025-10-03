@@ -65,15 +65,16 @@ describe('Encoder', () => {
     });
 
     describe('disjunction', () => {
-        const encoder1: Encoder<number> = Encoder.identity<number>();
-        function is1(value : number | boolean): value is number {
+        const numberEncoder: Encoder<number> = Encoder.identity<number>();
+        function isNumber(value : number | boolean): value is number {
             return typeof(value) === 'number';
         }
-        const encoder2: Encoder<boolean> = Encoder.identity<boolean>();
-        function is2(value : number | boolean): value is boolean {
+        const booleanEncoder: Encoder<boolean> = Encoder.identity<boolean>();
+        function isBoolean(value : number | boolean): value is boolean {
             return typeof(value) === 'boolean';
         }
-        const encoder: Encoder<number | boolean> = Encoder.disjunction([is1, is2], [encoder1, encoder2]);
+        const encoder: Encoder<number | boolean> = Encoder.disjunction([isNumber, isBoolean],
+                                                                       [numberEncoder, booleanEncoder]);
 
         it('should provide a bijective encoder', () => {
             const disjunctedValues: (number | boolean)[] = [0, 1, 3, true, false];
@@ -81,6 +82,15 @@ describe('Encoder', () => {
             for (const disjunctedValue of disjunctedValues) {
                 EncoderTestUtils.expectToBeBijective(encoder, disjunctedValue);
             }
+        });
+
+        it('should fail if no matcher matches', () => {
+            const value: number | boolean = 4;
+            // This encoder is wrong because the typecheck is twice "isBoolean".
+            // Because we have a number, none of the typechecks will match, and we should have an error
+            const wrongEncoder : Encoder<number | boolean> = Encoder.disjunction([isBoolean, isBoolean],
+                                                                                 [numberEncoder, booleanEncoder]);
+            expect(() => wrongEncoder.encode(value)).toThrowError('cannot encode value: 4');
         });
     });
 
@@ -91,4 +101,5 @@ describe('Encoder', () => {
             EncoderTestUtils.expectToBeBijective(encoder, [1, 2, 3]);
         });
     });
+
 });

@@ -1,4 +1,4 @@
-import { Set, Utils } from '@everyboard/lib';
+import { JSONPrimitive, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { MGPValidator, MGPValidators } from '../../../../app/utils/MGPValidator';
 import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
@@ -25,31 +25,50 @@ export class RulesConfigDescriptionLocalizable {
 
 }
 
-export class ConfigLine {
+export abstract class ConfigLine {
 
-    protected constructor(public readonly value: ConfigDescriptionType,
-                          public readonly title: Localized,
-                          public readonly validator?: MGPValidator)
+    protected constructor(public readonly defaultValue: ConfigDescriptionType,
+                          public readonly title: Localized)
     {
     }
+
+    // Should check if the value is valid
+    public abstract checkValidity(value: JSONPrimitive): MGPValidation;
+
 }
 
 export class NumberConfig extends ConfigLine {
 
-    public constructor(value: number,
+    public constructor(defaultValue: number,
                        title: Localized,
-                       validator: MGPValidator)
+                       private readonly validator: MGPValidator<number>)
     {
-        super(value, title, validator);
+        super(defaultValue, title);
+    }
+
+    public checkValidity(value: JSONPrimitive): MGPValidation {
+        if (typeof(value) === 'number') {
+            return this.validator(value);
+        } else {
+            return MGPValidation.failure('NumberConfig expects a number value');
+        }
     }
 
 }
 
 export class BooleanConfig extends ConfigLine {
 
-    public constructor(value: boolean, title: Localized)
+    public constructor(defaultValue: boolean, title: Localized)
     {
-        super(value, title);
+        super(defaultValue, title);
+    }
+
+    public checkValidity(value: JSONPrimitive): MGPValidation {
+        if (typeof(value) === 'boolean') {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('BooleanConfig expects a boolean value');
+        }
     }
 
 }
@@ -63,7 +82,7 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
     {
         const config: R = {} as R;
         for (const field of this.getFields()) {
-            config[field as keyof R] = defaultConfigDescription.config[field].value as R[keyof R];
+            config[field as keyof R] = defaultConfigDescription.config[field].defaultValue as R[keyof R];
         }
         this.defaultConfig = {
             name: defaultConfigDescription.name,
@@ -84,16 +103,8 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         return this.defaultConfig;
     }
 
-    public getFields(): string[] {
-        return Object.keys(this.defaultConfigDescription.config);
-    }
-
     public getNonDefaultStandardConfigs(): NamedRulesConfig<R>[] {
         return this.nonDefaultStandardConfigs;
-    }
-
-    public getI18nName(field: string): string {
-        return this.defaultConfigDescription.config[field].title();
     }
 
     public getConfig(configName: string): R {
@@ -102,9 +113,33 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         return rulesConfig.config;
     }
 
-    public getValidator(fieldName: string): MGPValidator {
-        Utils.assert(fieldName in this.defaultConfigDescription.config, fieldName + ' is not a validator!');
-        return this.defaultConfigDescription.config[fieldName].validator as MGPValidator;
+    public getFields(): string[] {
+        return Object.keys(this.defaultConfigDescription.config);
+    }
+
+    public getFieldLocalizedName(field: string): string {
+        return this.defaultConfigDescription.config[field].title();
+    }
+
+    private getFieldValidity(field: string, value: JSONPrimitive): MGPValidation {
+        if (value == null) {
+            // no value was provided, it is invalid
+            return MGPValidation.failure($localize`This value is mandatory`);
+        }
+        const configLine: ConfigLine | null = this.defaultConfigDescription.config[field];
+        if (configLine == null) {
+            // this does not match an element from the config, it is invalid
+            return MGPValidation.failure($localize`There is no such configuration element`);
+        }
+        return configLine.checkValidity(value);
+    }
+
+    public isValid(field: string, value: JSONPrimitive): boolean {
+        return this.getFieldValidity(field, value).isSuccess();
+    }
+
+    public getValidityError(field: string, value: JSONPrimitive): string {
+        return this.getFieldValidity(field, value).getReason();
     }
 
 }

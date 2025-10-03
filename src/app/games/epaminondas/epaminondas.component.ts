@@ -1,5 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { EpaminondasMove } from '../../../app/games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from '../../../app/games/epaminondas/EpaminondasState';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../../../app/games/epaminondas/EpaminondasRules';
@@ -17,6 +18,7 @@ import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { Arrow } from '../../../app/components/game-components/arrow-component/Arrow';
+import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
 
 export type PossibleMove = {
 
@@ -42,14 +44,13 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
+    // Data linked to the move attempt
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
-
+    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
     public possibleMoves: PossibleMove[] = [];
 
-    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
-
+    // Data linked to the last move
     private moveds: Coord[] = [];
-
     private capturedCoords: Coord[] = [];
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
@@ -65,7 +66,11 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.hasAsymmetricBoard = true;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }
@@ -80,6 +85,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     }
 
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
+        this.capturedCoords = [];
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.phalanxSize); i++) {

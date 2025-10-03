@@ -186,4 +186,5 @@ describe('ChatDAO', () => {
             await expectPermissionToBeDenied(result);
         });
     });
+
 });

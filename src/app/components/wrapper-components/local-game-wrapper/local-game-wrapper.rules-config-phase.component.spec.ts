@@ -1,51 +1,125 @@
+/* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, ComponentTestUtils, expectValidRouting } from '../../../../app/utils/tests/TestUtils.spec';
 import { UserMocks } from '../../../../app/domain/UserMocks.spec';
 import { P4Component } from '../../../../app/games/p4/p4.component';
 import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from '../../../../app/services/ErrorLoggerService';
-import { LocalGameWrapperComponent } from './local-game-wrapper.component';
+import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
+import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { P4State } from '../../../../app/games/p4/P4State';
+import { P4Config, P4Rules } from '../../../../app/games/p4/P4Rules';
 
 describe('LocalGameWrapperComponent (rules config phase)', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<P4Component>('P4', true, false);
+        testUtils = await ComponentTestUtils.forGame<P4Component>('P4', true);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
 
-    it('should show partCreation config and button to accept default config, at start', () => {
-        // Given any game needing a config, like P4
-        // When rendering component
-        // Then a RulesConfiguration component should be present
-        testUtils.expectElementToExist('#rules-config-component');
-        // And a button to accept default rules config should be present
-        testUtils.expectElementToExist('#start-game-with-config');
-    });
+    it('should redirect to configuration if the provided config is invalid (due to missing elements)', fakeAsync(async() => {
+        // Given a game configured with an invalid config
+        const config: MGPOptional<RulesConfig> = MGPOptional.of({
+            invalid: true,
+        });
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
 
-    it('should disable button to accept default configuration when receiving empty optional from child component', fakeAsync(async() => {
-        // Given any game needing a config, like P4
-        const component: LocalGameWrapperComponent = testUtils.getComponent() as LocalGameWrapperComponent;
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
 
-        // When updateConfig is called with MGPOptional.empty()
-        component.updateConfig(MGPOptional.empty());
+        // When displaying it
+        await testUtils.setupState(state, { config });
 
-        // Then the button to accept default rules config should be disabled
-        testUtils.expectElementToBeDisabled('#start-game-with-config');
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
-    it('should create game component once you click on the button', fakeAsync(async() => {
-        // Given any game needing a config, like P4
-        // When clicking on startGameWithConfig
-        testUtils.expectElementNotToExist('#board');
-        await testUtils.clickElement('#start-game-with-config');
+    it('should redirect to configuration if the provided config is invalid (due to invalid elements)', fakeAsync(async() => {
+        // Given a game configured with an invalid config
+        const config: MGPOptional<P4Config> = MGPOptional.of({
+            width: -10,
+            height: 42,
+        });
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
 
-        // Then game component should be created
-        testUtils.expectElementToExist('#board');
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
+
+    it('should redirect to configuration if the provided config is missing elements', fakeAsync(async() => {
+        // Given a game configured with a config where all provided elements are valid, but some are missing
+        const config: MGPOptional<RulesConfig> = MGPOptional.of({
+            width: 4,
+        });
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
+    it('should redirect to configuration if the provided config is nesting JSON objects', fakeAsync(async() => {
+        // Given a game configured with a config where a config element is nested JSON
+        const config: MGPOptional<RulesConfig> = MGPOptional.of({
+            width: 4,
+            height: {
+                lol: 42,
+            },
+        } as unknown as RulesConfig /* we are lying to typescript for the test */);
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
+    it('should redirect to configuration if the provided config is not valid JSON', fakeAsync(async() => {
+        // Given a game configured with a config that is not parsable JSON
+        const config: MGPOptional<RulesConfig> = MGPOptional.of({
+            width: 4,
+            // height will be set manually in the route
+        });
+        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const extraInvalidConfigElement: string = 'I\'m not Jason, not JSON :}}{';
+        TestBed.inject(ActivatedRouteStub).setParam('height', extraInvalidConfigElement);
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
 });

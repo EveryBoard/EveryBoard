@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent } from '../../../app/components/game-components/game-component/GameComponent';
@@ -35,7 +36,6 @@ interface DropArrow {
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
-    public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
     public board: readonly ApagosSquare[];
 
@@ -96,7 +96,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.showPossibleDrops();
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         const width: number = this.board.length;

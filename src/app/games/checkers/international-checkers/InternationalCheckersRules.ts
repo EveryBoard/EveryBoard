@@ -20,7 +20,7 @@ export class InternationalCheckersRules extends AbstractCheckersRules {
                                             MGPValidators.range(1, 99)),
                 width:
                     new NumberConfig(10, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(2, 99)),
-                canStackPiece:
+                canStackPieces:
                     new BooleanConfig(false, CheckersOptionLocalizable.STACK_PIECES),
                 mustMakeMaximalCapture:
                     new BooleanConfig(true, CheckersOptionLocalizable.MAXIMAL_CAPTURE),

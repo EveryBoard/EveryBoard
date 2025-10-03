@@ -137,7 +137,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                                          FlatHexaOrientation.INSTANCE);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.layers = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);

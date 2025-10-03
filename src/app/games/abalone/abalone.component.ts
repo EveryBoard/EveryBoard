@@ -22,6 +22,7 @@ import { Arrow } from '../../../app/components/game-components/arrow-component/A
 import { MCTS } from '../../../app/jscaip/AI/MCTS';
 import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
 import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
+import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
 
 type CapturedInfo = {
     coord: Coord,
@@ -88,6 +89,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                          PointyHexaOrientation.INSTANCE);
     }
 
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
     public getViewBox(): ViewBox {
         const abstractSize: number = this.getState().getWidth() + 2;
         const pieceSize: number = this.SPACE_SIZE * 1.5;
@@ -101,7 +106,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return new ViewBox(left, up, width, height);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }

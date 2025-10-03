@@ -30,9 +30,7 @@ export abstract class BackendService {
                     // eslint-disable-next-line dot-notation
                     return MGPFallible.failure(jsonResponse['reason'] as string);
                 }
-            }
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            catch (err: unknown) {
+            } catch {
                 return MGPFallible.failure('Invalid JSON response from the server');
             }
         }

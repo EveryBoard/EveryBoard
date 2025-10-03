@@ -75,7 +75,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: DiaballikState = this.node.gameState;
         this.board = state.board; // Needed by RectangularGameComponent
         this.stateInConstruction = state;

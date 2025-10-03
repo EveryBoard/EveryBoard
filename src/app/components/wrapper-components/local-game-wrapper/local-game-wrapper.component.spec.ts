@@ -61,7 +61,7 @@ describe('LocalGameWrapperComponent (game without config)', () => {
     let testUtils: ComponentTestUtils<GipfComponent>;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf', true, false);
+        testUtils = await ComponentTestUtils.forGame<GipfComponent>('Gipf', true);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
@@ -232,6 +232,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(testUtils.getGameComponent().hideLastMove).toHaveBeenCalledOnceWith();
             expect(testUtils.getGameComponent().cancelMoveAttempt).toHaveBeenCalledOnceWith();
         }));
+
     });
 
     describe('Using AI', () => {
@@ -272,7 +273,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When selecting player zero as AI and letting it play
             const component: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            await testUtils.choosingAIOrHuman(Player.ZERO, 'AI');
+            testUtils.choosingAIOrHuman(Player.ZERO, 'AI');
             spyOn(component, 'proposeAIToPlay').and.callThrough();
             await testUtils.choosingAILevel(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
@@ -302,7 +303,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When chosing the human as player zero again
-            await testUtils.choosingAIOrHuman(Player.ZERO, 'human');
+            testUtils.choosingAIOrHuman(Player.ZERO, 'human');
 
             // Then the board should have been rotated so that player zero is below again
             const rotation: string = testUtils.getGameComponent().rotation;
@@ -493,6 +494,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const winnerTag: string = testUtils.findElement('#winner').nativeElement.innerHTML;
             expect(winnerTag).toBe('Minimax (Player 2) won');
         }));
+
     });
 
     describe('onCancelMove', () => {
@@ -520,6 +522,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Then showLastMove should not have been called
             expect(component.showLastMove).not.toHaveBeenCalled();
         }));
+
     });
 
     describe('Take Back', () => {
@@ -605,6 +608,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // disactivate AI to stop timeout generation
             tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
         }));
+
     });
 
     describe('view', () => {
@@ -627,4 +631,5 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
     });
+
 });

@@ -6,6 +6,90 @@
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
         <target>Si vous aimez <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, suivez-nous !</target>
       </trans-unit>
+      <trans-unit id="2330911039423728715" datatype="html">
+        <source>0 points</source>
+        <target>0 point</target>
+       </trans-unit>
+      <trans-unit id="3615868699392073675" datatype="html">
+        <source>1 point</source>
+        <target>1 point</target>
+       </trans-unit>
+      <trans-unit id="5859970255480348780" datatype="html">
+        <source><x id="PH" equiv-text="n"/> points</source>
+        <target><x id="PH" equiv-text="n"/> points</target>
+      </trans-unit>
+      <trans-unit id="5338644563389793015" datatype="html">
+        <source>0 captures</source>
+        <target>0 capture</target>
+      </trans-unit>
+      <trans-unit id="4285343428589620223" datatype="html">
+        <source>1 capture</source>
+        <target>1 capture</target>
+      </trans-unit>
+      <trans-unit id="3582401300259379730" datatype="html">
+        <source><x id="PH" equiv-text="n"/> captures</source>
+        <target><x id="PH" equiv-text="n"/> captures</target>
+      </trans-unit>
+      <trans-unit id="1477756554987205959" datatype="html">
+        <source>0 remaining pieces</source>
+        <target>0 pièce restante</target>
+      </trans-unit>
+      <trans-unit id="1621210823826499525" datatype="html">
+        <source>1 remaining piece</source>
+        <target>1 pièce restante</target>
+      </trans-unit>
+      <trans-unit id="3762170440311046861" datatype="html">
+        <source><x id="PH" equiv-text="n"/> remaining pieces</source>
+        <target><x id="PH" equiv-text="n"/> pièces restantes</target>
+      </trans-unit>
+      <trans-unit id="4877261268986191253" datatype="html">
+        <source>0 pieces to drop</source>
+        <target>0 pièce à déposer</target>
+      </trans-unit>
+      <trans-unit id="4536404072544955370" datatype="html">
+        <source>1 piece to drop</source>
+        <target>1 pièce à déposer</target>
+      </trans-unit>
+      <trans-unit id="3974299801183550747" datatype="html">
+        <source><x id="PH" equiv-text="n"/> pieces to drop</source>
+        <target><x id="PH" equiv-text="n"/> pièce à déposer</target>
+      </trans-unit>
+      <trans-unit id="4263400138524138884" datatype="html">
+        <source>0 protected pieces</source>
+        <target>0 pièce protégée</target>
+      </trans-unit>
+      <trans-unit id="7720479219163238747" datatype="html">
+        <source>1 protected piece</source>
+        <target>1 pièce protégée</target>
+      </trans-unit>
+      <trans-unit id="386205842328325911" datatype="html">
+        <source><x id="PH" equiv-text="n"/> protected pieces</source>
+        <target><x id="PH" equiv-text="n"/> pièces protégées</target>
+      </trans-unit>
+      <trans-unit id="5643570775222920843" datatype="html">
+        <source>0 pieces under control</source>
+        <target>0 pièce contrôlée</target>
+      </trans-unit>
+      <trans-unit id="7442652741075415834" datatype="html">
+        <source>1 piece under control</source>
+        <target>1 pièce contrôlée</target>
+      </trans-unit>
+      <trans-unit id="5472957127368349716" datatype="html">
+        <source><x id="PH" equiv-text="n"/> pieces under control</source>
+        <target><x id="PH" equiv-text="n"/> pièces contrôlées</target>
+      </trans-unit>
+      <trans-unit id="2259880720558443999" datatype="html">
+        <source>0 stacks under control</source>
+        <target>0 pile contrôlée</target>
+      </trans-unit>
+      <trans-unit id="3096894933609558247" datatype="html">
+        <source>1 stack under control</source>
+        <target>1 pile contrôlée</target>
+      </trans-unit>
+      <trans-unit id="6608381869213568684" datatype="html">
+        <source><x id="PH" equiv-text="n"/> stacks under control</source>
+        <target><x id="PH" equiv-text="n"/> piles contrôlées</target>
+      </trans-unit>
       <trans-unit id="6153797048311741939" datatype="html">
         <source>User settings</source>
         <target>Paramètres utilisateurs</target>
@@ -321,6 +405,10 @@
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
         <target>Cette valeur est obligatoire</target>
+      </trans-unit>
+      <trans-unit id="4231579860680569680" datatype="html">
+        <source>There is no such configuration element</source>
+        <target>Cet élément de configuration n'existe pas</target>
       </trans-unit>
       <trans-unit id="4408456168772857996" datatype="html">
         <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
@@ -757,10 +845,6 @@
         <source>Pick the options</source>
         <target>Choisissez les options</target>
       </trans-unit>
-      <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ gameComponent.scores[0] }}"/> points</target>
-      </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
         <target>Match nul</target>
@@ -769,8 +853,8 @@
         <source>Start a new game</source>
         <target>Commencer une nouvelle partie</target>
       </trans-unit>
-      <trans-unit id="342909021169073473" datatype="html">
-        <source>Start with this config</source>
+      <trans-unit id="5171566373349249449" datatype="html">
+        <source>Start with this configuration</source>
         <target>Commencer avec cette configuration</target>
       </trans-unit>
       <trans-unit id="960848013465225718" datatype="html">
@@ -796,6 +880,14 @@
       <trans-unit id="6128115494237258310" datatype="html">
         <source>Take back move</source>
         <target>Reprendre un coup</target>
+      </trans-unit>
+      <trans-unit id="4780631467843839550" datatype="html">
+        <source>Rules configuration</source>
+        <target>Configuration des règles</target>
+      </trans-unit>
+      <trans-unit id="1781858426685447922" datatype="html">
+        <source>View configuration</source>
+        <target>Voir la configuration</target>
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
         <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.node.gameState.turn + 1 }}"/></source>
@@ -1140,10 +1232,6 @@
       <trans-unit id="8893431763975992974" datatype="html">
         <source>Initial board and object of the game</source>
         <target>Plateau initial et but du jeu</target>
-      </trans-unit>
-      <trans-unit id="4780631467843839550" datatype="html">
-        <source>Rules configuration</source>
-        <target>Configuration des règles</target>
       </trans-unit>
       <trans-unit id="5878048397926852057" datatype="html">
         <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>

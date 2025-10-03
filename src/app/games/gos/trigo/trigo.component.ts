@@ -19,6 +19,7 @@ import { ViewBox } from '../../../../app/components/game-components/GameComponen
 import { TriangularCheckerBoard } from '../../../../app/jscaip/state/TriangularCheckerBoard';
 import { TrigoMinimax } from './TrigoMinimax';
 import { TableUtils } from '../../../../app/jscaip/TableUtils';
+import { ScoreName } from '../../../../app/components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-trigo',
@@ -93,15 +94,23 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         return this.chooseMove(resultlessMove);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
         const phase: GoPhase = state.phase;
 
         this.board = state.getCopiedBoard();
-        this.scores = MGPOptional.of(state.getCapturedCopy());
+        this.updateScores();
 
         this.ko = state.koCoord;
-        this.canPass = phase !== 'FINISHED';
+        this.canPass = phase.allowsPass();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.getState().captured);
+    }
+
+    protected override getScoreName(): ScoreName {
+        return this.getState().phase.getScoreName();
     }
 
     private showCaptures(): void {
@@ -120,10 +129,10 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
 
     public override async pass(): Promise<MGPValidation> {
         const phase: GoPhase = this.getState().phase;
-        if (phase === 'PLAYING' || phase === 'PASSED') {
+        if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase === 'COUNTING' || phase === 'ACCEPT',
+        Utils.assert(phase.isCounting() || phase.isAccept(),
                      'TrigoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }

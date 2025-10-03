@@ -105,7 +105,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.constructedState = this.getState();
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: YinshState = this.getState();
         this.constructedState = state;
         this.hexaBoard = this.constructedState.board;

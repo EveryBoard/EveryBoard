@@ -13,12 +13,12 @@ export class DqnAiService {
         // this.session = await ort.InferenceSession.create(modelUrl, {
         //     executionProviders: ['wasm'], // ou ['webgl'] pour accélérer
         // });
-        this.session = await ort.InferenceSession.create('/assets/models/dqn_model.onnx', {
-            executionProviders: ['wasm'],
-            graphOptimizationLevel: 'all',
-            // Spécifier où aller chercher les WASM
-            wasmPaths: '/assets/onnxruntime/',
-        });
+        // this.session = await ort.InferenceSession.create('/assets/models/dqn_model.onnx', {
+        //     executionProviders: ['wasm'],
+        //     graphOptimizationLevel: 'all',
+        //     Spécifier où aller chercher les WASM
+        //     wasmPaths: '/assets/onnxruntime/',
+        // });
         console.log('✅ ONNX model loaded:', modelUrl);
     }
 

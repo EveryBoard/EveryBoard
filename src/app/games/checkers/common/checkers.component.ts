@@ -15,6 +15,7 @@ import { CheckersScoreMinimax } from './CheckersScoreMinimax';
 import { MCTS } from '../../../../app/jscaip/AI/MCTS';
 import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
 import { CheckersControlMinimax } from './CheckersControlMinimax';
+import { ScoreName } from '../../../../app/components/game-components/game-component/GameComponent';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
     extends ParallelogramGameComponent<R,
@@ -29,8 +30,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         offsetRatio: 0.4,
         pieceHeightRatio: 1,
         parallelogramHeight: 100,
-        abstractBoardWidth: 0, // Will be overriden in updateBoard
-        abstractBoardHeight: 0, // Will be overriden in updateBoard
     };
 
     private LEFT: number;
@@ -49,13 +48,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public possibleClicks: Set<Coord> = new Set();
     private selectedStack: MGPOptional<Coord> = MGPOptional.empty();
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
-    private flyiedOverCoords: Coord[] = []; // Coord that where flewed over during ongoing turn
+    private flyiedOverCoords: Coord[] = []; // Coord that where flyied over during ongoing turn
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
 
     public override getViewBox(): ViewBox {
-        const abstractWidth: number = this.mode.abstractBoardWidth;
-        const abstractHeight: number = this.mode.abstractBoardHeight;
+        const abstractWidth: number = this.getState().getWidth();
+        const abstractHeight: number = this.getState().getHeight();
         this.LEFT = 0;
         this.UP = - this.SPACE_SIZE;
         this.basicWidth = abstractWidth * this.mode.parallelogramHeight;
@@ -81,10 +80,16 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.hasAsymmetricBoard = true;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.constructedState = this.getState(); // AND SWITCH IT
-        this.mode.abstractBoardWidth = this.constructedState.getWidth();
-        this.mode.abstractBoardHeight = this.constructedState.getHeight();
+    protected override getScoreName(): ScoreName {
+        if (this.config.get().canStackPieces) {
+            return ScoreName.STACKS_UNDER_CONTROL;
+        } else {
+            return ScoreName.PIECES_UNDER_CONTROL;
+        }
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.constructedState = this.getState();
         this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
         this.scores = this.constructedState.getScores();
         this.showPossibleClicks();

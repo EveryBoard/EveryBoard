@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
@@ -12,7 +13,6 @@ import { ComponentTestUtils, expectValidRouting } from '../../../../app/utils/te
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { TutorialFailure } from './TutorialFailure';
 import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
@@ -21,6 +21,7 @@ import { Player } from '../../../../app/jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../../../app/jscaip/RulesConfigUtil';
 import { QuartoConfig, QuartoRules } from '../../../../app/games/quarto/QuartoRules';
 import { TutorialStepMessage } from './TutorialStepMessage';
+import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
 
@@ -543,7 +544,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expectValidRouting(router, ['/local', 'Quarto'], LocalGameWrapperComponent);
+            expectValidRouting(router, ['/local', 'Quarto', 'config'], LocalGameConfigurationComponent);
         }));
 
         it('should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {

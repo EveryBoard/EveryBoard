@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -60,7 +61,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         return this.getPlayerClass(piece.player);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
 

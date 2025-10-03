@@ -32,7 +32,7 @@ import { FirestoreTime } from '../../../../app/domain/Time';
 import { UserService } from '../../../../app/services/UserService';
 import { CurrentGameService } from '../../../../app/services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 
 describe('PartCreationComponent', () => {
 
@@ -202,8 +202,9 @@ describe('PartCreationComponent', () => {
                 });
                 // Then it should cancel game and navigate to local game
                 expect(gameService.deleteGame).toHaveBeenCalledOnceWith('configRoomId');
-                expectValidRouting(router, ['/local', 'P4'], LocalGameWrapperComponent);
+                expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
             }));
+
         });
 
         describe('Candidate arrival', () => {
@@ -235,6 +236,7 @@ describe('PartCreationComponent', () => {
                 expectElementToExist('#candidate_firstCandidate');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Candidate/chosenOpponent clean departure', () => {
             it('should go back to start when ChosenOpponent leaves', fakeAsync(async() => {
@@ -278,6 +280,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Candidate/chosenOpponent stop sending token', () => {
             it('should go back to start when ChosenOpponent token is too old', fakeAsync(async() => {
@@ -289,9 +292,9 @@ describe('PartCreationComponent', () => {
 
                 // When the candidate token becomes too old
                 spyOn(currentGameService, 'updateCurrentGame').and.callThrough();
-                // Creator update his last presence token
+                // Creator update their last presence token
                 await userService.updatePresenceToken(UserMocks.CREATOR_AUTH_USER.id);
-                // but chosenOpponent don't update his last presence token
+                // but chosenOpponent don't update their last presence token
                 const infoMessage: string = UserMocks.OPPONENT.username + ' left the game, please pick another opponent.';
                 await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
                     tick(PartCreationComponent.TOKEN_TIMEOUT); // two token time pass and timeout is reached
@@ -321,6 +324,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Candidate/ChosenOpponent removal', () => {
             it('should deselect candidate, remove it, and call logError when a candidate is removed from db', fakeAsync(async() => {
@@ -347,6 +351,7 @@ describe('PartCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Chosing Opponent', () => {
             it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
@@ -393,6 +398,7 @@ describe('PartCreationComponent', () => {
                 });
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Config proposal', () => {
             it('should send what creator sees, not what is stored in the configRoom', fakeAsync(async() => {
@@ -607,6 +613,7 @@ describe('PartCreationComponent', () => {
                 expectElementToHaveClass('#partTypeBlitz', 'is-selected');
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Canceling part creation and component destruction', () => {
             it('should delete the game', fakeAsync(async() => {
@@ -680,6 +687,7 @@ describe('PartCreationComponent', () => {
                 expectConfigRoomUnsubscribeToHaveBeenCalled();
                 expectCandidateUnsubscribeToHaveBeenCalled();
             }));
+
         });
     });
 
@@ -745,6 +753,7 @@ describe('PartCreationComponent', () => {
 
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Not chosen yet', () => {
             it('should reroute to server when game is cancelled', fakeAsync(async() => {
@@ -777,6 +786,7 @@ describe('PartCreationComponent', () => {
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Chosen opponent', () => {
             it('should send a presence token every 5 second', fakeAsync(async() => {
@@ -872,6 +882,7 @@ describe('PartCreationComponent', () => {
                 // To avoid finishing test with periodic timer in queue
                 component.stopSendingPresenceTokensAndObservingUsersIfNeeded();
             }));
+
         });
         describe('Leaving', () => {
             it('should remove yourself when leaving the room and empty user.currentGame', fakeAsync(async() => {
@@ -909,6 +920,7 @@ describe('PartCreationComponent', () => {
                 expect(currentGameService.removeCurrentGame).not.toHaveBeenCalled();
                 expect(configRoomService.removeCandidate).not.toHaveBeenCalled();
             }));
+
         });
     });
     afterEach(fakeAsync(async() => {

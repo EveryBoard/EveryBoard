@@ -1,9 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { TriangularGameComponent }
     from '../../../app/components/game-components/game-component/TriangularGameComponent';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../../../app/games/coerceo/CoerceoMove';
 import { CoerceoState } from '../../../app/games/coerceo/CoerceoState';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Coord } from '../../../app/jscaip/Coord';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../../../app/games/coerceo/CoerceoRules';
 import { CoerceoFailure } from '../../../app/games/coerceo/CoerceoFailure';
@@ -17,6 +18,7 @@ import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
 import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
 import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
+import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-coerceo',
@@ -56,7 +58,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
         this.tiles = this.state.tiles;

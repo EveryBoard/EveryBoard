@@ -1,19 +1,21 @@
+import { ChangeDetectorRef } from '@angular/core';
+import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
+
 import { MancalaState } from './MancalaState';
 import { RectangularGameComponent } from '../../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 import { Coord } from '../../../../app/jscaip/Coord';
 import { Table, TableUtils } from '../../../../app/jscaip/TableUtils';
 import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { Player } from '../../../../app/jscaip/Player';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
-import { ChangeDetectorRef } from '@angular/core';
 import { MancalaFailure } from './MancalaFailure';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
 import { MCTS } from '../../../../app/jscaip/AI/MCTS';
 import { MancalaConfig } from './MancalaConfig';
 import { AI, AIOptions, MoveGenerator } from '../../../../app/jscaip/AI/AI';
+import { ScoreName } from '../../../../app/components/game-components/game-component/GameComponent';
 
 export type SeedDropResult = {
     houseToDistribute: Coord,
@@ -29,8 +31,6 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     // The awaited time between two laps or distributions
     public static readonly TIMEOUT_BETWEEN_LAPS: number = 1000;
-
-    public MGPOptional: typeof MGPOptional = MGPOptional;
 
     public lastDistributedHouses: Coord[] = [];
 
@@ -52,6 +52,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         super(messageDisplayer, cdr);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
     }
 
     public getMancalaViewBox(): string {
@@ -85,7 +89,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.changeVisibleState(this.getState());
     }
 
-    public async updateBoard(triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(triggerAnimation: boolean): Promise<void> {
         const state: MancalaState = this.getState();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;

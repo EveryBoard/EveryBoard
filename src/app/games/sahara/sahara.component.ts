@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TriangularGameComponent } from '../../../app/components/game-components/game-component/TriangularGameComponent';
 import { Coord } from '../../../app/jscaip/Coord';
 import { SaharaMove } from '../../../app/games/sahara/SaharaMove';
 import { SaharaState } from '../../../app/games/sahara/SaharaState';
 import { SaharaRules } from '../../../app/games/sahara/SaharaRules';
-import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Player } from '../../../app/jscaip/Player';
 import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
@@ -101,7 +101,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get());
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().board;
     }
 

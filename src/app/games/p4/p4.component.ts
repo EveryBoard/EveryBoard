@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { P4State } from './P4State';
@@ -46,7 +47,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         return await this.chooseMove(chosenMove);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: P4State = this.getState();
 
         this.victoryCoords = P4Rules.get().getVictoriousCoords(state);

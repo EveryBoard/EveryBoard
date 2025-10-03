@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { Set, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { PylosMove, PylosMoveFailure } from '../../../app/games/pylos/PylosMove';
 import { PylosState } from '../../../app/games/pylos/PylosState';
 import { PylosRules } from '../../../app/games/pylos/PylosRules';
@@ -215,7 +215,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.chosenLandingCoord = MGPOptional.of(clickedCoord);
             this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
             this.updateCapturableList();
-            return MGPValidation.SUCCESS; // now player can click on his captures
+            return MGPValidation.SUCCESS; // now player can click on their captures
         } else {
             this.chosenLandingCoord = MGPOptional.of(clickedCoord);
             return this.concludeMoveWithCapture([]);
@@ -310,7 +310,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return pieces;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.constructedState = this.state;
         const repartition: PlayerNumberMap = this.state.getPiecesRepartition();
@@ -318,6 +318,15 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             15 - repartition.get(Player.ZERO),
             15 - repartition.get(Player.ONE),
         );
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.remainingPieces);
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
     }
 
     public override async showLastMove(move: PylosMove): Promise<void> {

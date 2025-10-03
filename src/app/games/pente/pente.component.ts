@@ -13,6 +13,7 @@ import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 import { PenteConfig } from './PenteConfig';
 import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
+import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-new-game',
@@ -41,7 +42,11 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.getState();
         this.board = state.board;
         this.scores = MGPOptional.of(this.getState().captures);

@@ -1,10 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+
 import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { Coord } from '../../../app/jscaip/Coord';
-import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { RulesFailure } from '../../../app/jscaip/RulesFailure';
 import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -45,7 +47,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.pieceInHand = this.getState().pieceInHand;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
@@ -71,7 +73,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                 const chosenMove: QuartoMove = new QuartoMove(clicked.x, clicked.y, QuartoPiece.EMPTY);
                 return this.chooseMove(chosenMove);
             } else if (this.pieceToGive.isAbsent()) {
-                return MGPValidation.SUCCESS; // the user has just chosen his coord
+                return MGPValidation.SUCCESS; // the user has just chosen their coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(clicked.x, clicked.y, this.pieceToGive.get());
@@ -93,7 +95,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         this.pieceToGive = MGPOptional.of(QuartoPiece.ofInt(givenPiece));
         if (this.chosen.isAbsent()) {
-            return MGPValidation.SUCCESS; // the user has just chosen his piece
+            return MGPValidation.SUCCESS; // the user has just chosen their piece
         } else {
             // the user has chosen the coord before the piece
             const chosen: Coord = this.chosen.get();

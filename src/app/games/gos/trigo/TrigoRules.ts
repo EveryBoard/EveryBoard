@@ -10,6 +10,7 @@ import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GroupDataFactory } from '../../../../app/jscaip/BoardData';
 import { TriangularCheckerBoard } from '../../../../app/jscaip/state/TriangularCheckerBoard';
 import { HexagonalUtils } from '../../../../app/jscaip/HexagonalUtils';
+import { GoPhase } from '../GoPhase';
 
 export type TrigoConfig = {
 
@@ -53,7 +54,7 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         } else {
             board = TriangularCheckerBoard.createBoard(size, GoPiece.UNREACHABLE, GoPiece.EMPTY);
         }
-        return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
+        return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TrigoConfig>> {

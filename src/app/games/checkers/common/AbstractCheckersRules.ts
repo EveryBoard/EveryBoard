@@ -18,7 +18,7 @@ export type CheckersConfig = {
     playerRows: number;
     emptyRows: number;
     width: number;
-    canStackPiece: boolean;
+    canStackPieces: boolean;
     mustMakeMaximalCapture: boolean;
     simplePieceCanCaptureBackwards: boolean;
     promotedPiecesCanFly: boolean;
@@ -311,7 +311,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         let resultingState: CheckersState = state.remove(moveStart);
         if (this.isMoveStep(move) === false) {
             for (const capturedCoord of this.getCapturedCoords(move, state)) {
-                if (config.get().canStackPiece) {
+                if (config.get().canStackPieces) {
                     const capturedSpace: CheckersStack = state.getPieceAt(capturedCoord);
                     const capturedCommander: CheckersPiece = capturedSpace.getCommander();
                     movingStack = movingStack.capturePiece(capturedCommander);

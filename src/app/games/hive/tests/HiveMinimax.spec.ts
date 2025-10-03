@@ -21,4 +21,5 @@ describe('HiveMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

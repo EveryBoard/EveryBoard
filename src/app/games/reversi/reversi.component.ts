@@ -9,9 +9,6 @@ import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
 import { Ordinal } from '../../../app/jscaip/Ordinal';
 import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
 import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
-import { ReversiMoveGenerator } from './ReversiMoveGenerator';
-import { ReversiMinimax } from './ReversiMinimax';
 import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
 
 @Component({
@@ -47,7 +44,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         return await this.chooseMove(chosenMove);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();
