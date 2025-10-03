@@ -3852,7 +3852,7 @@
       </trans-unit>
       <trans-unit id="8012565028574700911" datatype="html">
         <source>You cannot drop that many pieces</source>
-        <target>Vous ne pouvez déposer autant de pièces</target>
+        <target>Vous ne pouvez pas déposer autant de pièces</target>
       </trans-unit>
       <trans-unit id="8952465701867689047" datatype="html">
         <source>You must drop pieces one by one</source>
@@ -3932,7 +3932,7 @@
       </trans-unit>
       <trans-unit id="4107747706727630088" datatype="html">
         <source>The invaders have the light pieces, they play second by selecting one of their piece and moving them two step in a straight line. A piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
-        <target>Les envahisseurs ont les pièces Claires, ils jouent en deuxième en sélectionnant leurs pièces et les déplaçant de deux pas dans une ligne droite. Les pièces ne peuvent sauter par dessus d&apos;autres.&lt;br/&gt;Déplacez une pièce de l&apos;envahisseur.</target>
+        <target>Les envahisseurs ont les pièces claires, ils jouent en deuxième en sélectionnant leurs pièces et les déplaçant de deux pas dans une ligne droite. Les pièces ne peuvent sauter par dessus d&apos;autres.&lt;br/&gt;Déplacez une pièce de l&apos;envahisseur.</target>
       </trans-unit>
       <trans-unit id="2713433806060355704" datatype="html">
         <source>Custom config: rhombic, width, height</source>
@@ -3940,15 +3940,15 @@
       </trans-unit>
       <trans-unit id="2002655185364987666" datatype="html">
         <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
-        <target>Vous avez l&apos;option de changer la forme du plateau, si il n&apos;est pas losange, il sera rectangulaire. Vous Vous pouvez aussi en changer la taille.</target>
+        <target>Vous avez l&apos;option de changer la forme du plateau, si il n&apos;est pas losange, il sera rectangulaire. Vous pouvez aussi en changer la taille.</target>
       </trans-unit>
       <trans-unit id="2289520460836999741" datatype="html">
         <source>Custom config: place castle yourself</source>
-        <target>Configuration alternative: placez le château vous même</target>
+        <target>Configuration alternative: placez le château vous-même</target>
       </trans-unit>
       <trans-unit id="7385463908675411729" datatype="html">
         <source>You have the option to decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
-        <target>Vous avez l&apos;option de choisir vous même où placer le château. Si vous ne changez rien d&apos;autres, le placement des pièces ce fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre château.</target>
+        <target>Vous avez l&apos;option de choisir vous-même où placer le château. Si vous ne changez rien d&apos;autres, le placement des pièces se fera automatiquement juste après.&lt;br/&gt;Vous jouez Foncé/Défenseur, placez votre château.</target>
       </trans-unit>
       <trans-unit id="4647263668364735204" datatype="html">
         <source>Custom config: drop mode: by batch</source>
@@ -3956,7 +3956,7 @@
       </trans-unit>
       <trans-unit id="7033117155002350193" datatype="html">
         <source>You have the option to decide yourself where you place your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place all your pieces.</source>
-        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé/Défenseur, placez toutes vos pièces.</target>
+        <target>Vous avez l&apos;option de décider vous-même où placer vos pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé/Défenseur, placez toutes vos pièces.</target>
       </trans-unit>
       <trans-unit id="8905744515857698442" datatype="html">
         <source>Custom config: drop mode: piece by piece</source>
@@ -3964,7 +3964,7 @@
       </trans-unit>
       <trans-unit id="3173152046401939537" datatype="html">
         <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
-        <target>Vous avez l&apos;option de décider vous même ou placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.&lt;br/&gt;Vous jouez Foncé/Défenseur, déposez une pièce.</target>
+        <target>Vous avez l&apos;option de décider vous-même où placer vos pièces, une par tour. Une fois qu&apos;un des joueurs n&apos;as plus de pièces à déposer, l&apos;autre joueur dépose toutes ses pièces en un tour.&lt;br/&gt;Vous jouez Foncé/Défenseur, déposez une pièce.</target>
       </trans-unit>
       <trans-unit id="7981767151607448456" datatype="html">
         <source>Custom config: number of piece &amp; territory size</source>
@@ -3972,7 +3972,7 @@
       </trans-unit>
       <trans-unit id="8332720029342556814" datatype="html">
         <source>You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
-        <target>Vous avez l&apos;option de changer la taille du territoire, qui est le nombre de lignes sur lesquelles vous pouvez déposer vos pièces, c&apos;est indiqué par une couleur semi-transparente. Vous pouvez aussi changer combien de pièces chaque joueur contrôle.</target>
+        <target>Vous avez l&apos;option de changer la taille du territoire, qui est le nombre de lignes sur lesquelles vous pouvez déposer vos pièces. C&apos;est indiqué par une couleur semi-transparente. Vous pouvez aussi changer combien de pièces chaque joueur contrôle.</target>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
