@@ -413,26 +413,27 @@ def can_create_part_and_play(user1, user2):
     user2.wait_for('#youLostIndicator')
 
 @scenario('registered')
-def can_reload_part_creation(user):
+def reload_game_creation(user):
     '''
     Role: I am a registered user with a game in creation
     Action: I reload the page
     Result: It works
     '''
-    # I create a part
+    # I create a game
     user.click('#createOnlineGame')
     user.click('#image-P4')
-    user.wait_for('#partCreation')
+    user.wait_for('#gameCreation')
 
     # I reload the page
     user.reload_page()
 
-    # Now I should still be on the part creation page
-    user.wait_for('#partCreation')
-
-    # Cleanup
-    user.click('#cancel')
-    time.sleep(1) # needed to make sure that the request has been well handled, otherwise we receive "failed to fetch" errors
+    # Now I should see that the game does not exist
+    user.wait_for('.message-body')
+    error = user.get_text_of('.message-body')
+    expected_error = 'does not exist'
+    if expected_error not in error:
+        print(f'error should contain "{expected_error}", but is actually {error}')
+        raise Exception('Test failed')
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):
@@ -518,7 +519,7 @@ def can_perform_take_back(user1, user2):
     turnAfterTakeBack = parse_turn(user1.get_text_of('#turn-number'))
 
     if not(turnAfterTakeBack < turnBeforeTakeBack):
-        print('Turn has not decreased')
+        print(f'Turn has not decreased, {turnBeforeTakeBack} before, {turnAfterTakeBack} after')
         raise Exception('Test failed')
 
     # Cleanup

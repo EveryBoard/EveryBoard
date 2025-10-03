@@ -1,5 +1,4 @@
 <app-game-creation id="gameCreation"
-                   #partCreation
                    *ngIf="gameStarted === false"
                    [gameId]="gameId"
                    [rulesConfigDescription]="getRulesConfigDescription()"
@@ -44,7 +43,7 @@
                     >
                     </app-timer>
                     <app-timer #timerZeroMove
-                               id="timer-zero-turn"
+                               id="timer-zero-move"
                                [dangerTimeLimit]="15"
                                [active]="(game === null) ? false : getTurn() % 2 === 0"
                                [canAddTime]='role === Player.ONE && endGame === false'
@@ -79,7 +78,7 @@
                     >
                     </app-timer>
                     <app-timer #timerOneMove
-                               id="timer-one-turn"
+                               id="timer-one-move"
                                [dangerTimeLimit]="15"
                                [active]="(game === null) ? false : getTurn() % 2 === 1"
                                [canAddTime]='role === Player.ZERO && endGame === false'

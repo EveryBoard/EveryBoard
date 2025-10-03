@@ -5,7 +5,7 @@ import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
 import { Localized } from '../utils/LocaleUtils';
-import { BackendService, BackendMessage, AbstractBackendService } from './BackendService';
+import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractCurrentGameService {
 
@@ -90,6 +90,7 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     private readonly authSubscription: Subscription;
 
     private currentGameSubscription: Subscription = new Subscription();
+    private backendSubscription: Subscription = new Subscription();
 
     public constructor(private readonly backendService: BackendService,
                        private readonly connectedUserService: ConnectedUserService)
@@ -103,17 +104,16 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     private async onUserUpdate(user: AuthUser): Promise<void> {
         if (user === AuthUser.NOT_CONNECTED || user.verified === false) { // user logged out or not yet verified
             this.currentGameSubscription.unsubscribe();
+            this.backendSubscription.unsubscribe();
             this.clearCurrentGame();
         } else { // new user logged in
             // We need to subscribe to any change to the user's current game
-            console.log('subscribing!!!')
             this.currentGameSubscription =
                 this.backendService.setCallback('CurrentGameUpdate', (message: BackendMessage) => {
                     this.onCurrentGameUpdate(message.getOptionalArgument('currentGame'));
                 });
-            console.log('the value is: ' + JSON.stringify(this.currentGameSubscription))
             // connect after setting callback to be sure to get the first one
-            await this.backendService.connect();
+            this.backendSubscription = await this.backendService.connect();
         }
     }
 
@@ -130,9 +130,8 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     }
 
     public ngOnDestroy(): void {
-        console.log('unsubscribing')
         this.currentGameSubscription.unsubscribe();
         this.authSubscription.unsubscribe();
-        console.log('done unsubscribing')
+        this.backendSubscription.unsubscribe();
     }
 }
