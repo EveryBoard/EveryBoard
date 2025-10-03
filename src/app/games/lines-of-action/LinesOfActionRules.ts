@@ -100,10 +100,10 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         if (piece === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
+        if (move.getDistance() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
             return MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
         }
-        if (move.getStart().getCoordsToward(move.getEnd()).some((c: Coord) =>
+        if (move.getJumpedOverCoords().some((c: Coord) =>
             state.getPieceAt(c) === state.getCurrentOpponent()))
         {
             return MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());

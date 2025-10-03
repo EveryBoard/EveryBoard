@@ -22,7 +22,7 @@ describe('NewGameMinimax', () => {
 
     it('should select some move', () => {
         // Given state
-        const state: NewGameState = NewGameRules.get().getInitialState();
+        const state: NewGameState = NewGameRules.get().getInitialState(defaultConfig);
         const node: NewGameNode = new NewGameNode(state);
 
         // When selecting the best move

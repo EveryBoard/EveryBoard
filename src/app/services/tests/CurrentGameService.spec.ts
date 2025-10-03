@@ -236,7 +236,7 @@ describe('CurrentGameService', () => {
                 };
                 await currentGameService.updateCurrentGame(newValue);
 
-                // Then all value from the update should be there, and the one not mentionned should be from the old one
+                // Then all value from the update should be there, and the one not mentioned should be from the old one
                 const currentGame: CurrentGame = {
                     id: 'new',
                     role: 'Candidate',

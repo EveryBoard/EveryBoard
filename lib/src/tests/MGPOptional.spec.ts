@@ -56,6 +56,19 @@ describe('MGPOptional', () => {
     });
 
     describe('orElse', () => {
+        it('should return itself if value is present', () => {
+            const optional: MGPOptional<number> = MGPOptional.of(42);
+            expect(optional.orElse(MGPOptional.empty())).toEqual(optional);
+            expect(optional.orElse(MGPOptional.of(3.14))).toEqual(optional);
+        });
+
+        it('should return the optional if value is absent', () => {
+            const optional: MGPOptional<number> = MGPOptional.empty();
+            const present: MGPOptional<number> = MGPOptional.of(3.14);
+            expect(optional.orElse(MGPOptional.empty())).toEqual(optional);
+            expect(optional.orElse(present)).toEqual(present);
+        });
+
         it('should preserve the value if there is one', () => {
             expect(MGPOptional.of(42).orElse(MGPOptional.of(0)).get()).toBe(42);
         });

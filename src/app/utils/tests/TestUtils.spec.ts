@@ -310,7 +310,7 @@ export class SimpleComponentTestUtils<T> {
         const dropdown: DebugElement = this.findElement(dropdownId);
         expect(dropdown.nativeElement.value)
             .withContext(`${dropdownId} should not have value ${optionValue}`)
-            .not.toBe(optionValue);
+            .not.toEqual(optionValue);
     }
 
     public expectElementToBeDisabled(elementName: string): void {
@@ -330,11 +330,23 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public async selectChildElementOfDropDown(dropDownName: string, childName: string): Promise<void> {
-        const selectedDropDOwn: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
-        selectedDropDOwn.value = selectedDropDOwn.options[childName].value;
-        selectedDropDOwn.dispatchEvent(new Event('change'));
+        const selectedDropDown: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        selectedDropDown.value = selectedDropDown.options[childName].value;
+        selectedDropDown.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick();
+    }
+
+    public async chooseConfig(configName: string): Promise<void> {
+        const selectAI: HTMLSelectElement = this.findElement('#ruleSelect').nativeElement;
+        const option: HTMLOptionElement | undefined = Array.from(selectAI.options)
+            .find((opt: HTMLOptionElement) => {
+                return opt.value === configName;
+            });
+        expect(option).withContext('No config found with name "' + configName + '"').toBeDefined();
+        selectAI.value = option?.value as string;
+        selectAI.dispatchEvent(new Event('change'));
+        this.detectChanges();
     }
 
 }
@@ -354,10 +366,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<Component>>
     {
-        const optionalGameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.getAllGames().find((gameInfo: GameInfo) => gameInfo.urlName === game));
+        const gameInfos: GameInfo[] = GameInfo.getAllGames();
+        const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
+        const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo');
+            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
@@ -750,7 +763,7 @@ export function expectValidRouting(router: Router,
                                                queryParams?: Record<string, string> })
 : void
 {
-    expect(path[0][0]).withContext('Routings should start with /').toBe('/');
+    expect(path[0][0]).withContext('Routings should start with /').toEqual('/');
     for (const pathPart of path) {
         expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
     }

@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
-import { TutorialStep } from './TutorialStep';
+import { TutorialStep, TutorialStepAnyMove } from './TutorialStep';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoState } from 'src/app/games/quarto/QuartoState';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -153,6 +153,57 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expectedTitle = 'title 1';
             currentTitle = testUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
+        }));
+
+        it('should change the game config to the one of the chosen step', fakeAsync(async() => {
+            // Given a tutorial with a step with a custom config
+            const customConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+                playerOneLevel: 2,
+                playerZeroLevel: 2,
+            });
+            const tutorial: TutorialStep[] = [
+                TutorialStep.informational(
+                    'title 0',
+                    'instruction',
+                    QuartoRules.get().getInitialState(customConfig),
+                    customConfig,
+                ),
+            ];
+
+            // When page rendered
+            await wrapper.startTutorial(tutorial);
+
+            // Then the config of the board should be set on the game component
+            expect(wrapper.gameComponent.config).toEqual(customConfig);
+        }));
+
+        it('should change the game config to default config when going back to non-configured-step', fakeAsync(async() => {
+            // Given a tutorial with a step with a custom config in one step on the next one without
+            const customConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+                playerOneLevel: 2,
+                playerZeroLevel: 2,
+            });
+            const tutorial: TutorialStep[] = [
+                TutorialStep.informational(
+                    'title 0',
+                    'instruction',
+                    QuartoRules.get().getInitialState(customConfig),
+                    customConfig,
+                ),
+                TutorialStep.informational(
+                    'title 1',
+                    'instruction',
+                    QuartoRules.get().getInitialState(defaultConfig),
+                ),
+            ];
+            await wrapper.startTutorial(tutorial);
+            expect(wrapper.gameComponent.config).toEqual(customConfig);
+
+            // When going to a step without config
+            await testUtils.clickElement('#nextButton');
+
+            // Then the config of the board should be set to the default config again
+            expect(wrapper.gameComponent.config).toEqual(defaultConfig);
         }));
 
         it('should call setRole according to the current player (player zero)', fakeAsync(async() => {
@@ -921,6 +972,22 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(gameComponent.hideLastMove).toHaveBeenCalledOnceWith();
         }));
 
+        it('should have a solution', fakeAsync(async() => {
+            // Given tutorial step of type "anyMove"
+            const solutionMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BABA);
+            const tutorial: TutorialStepAnyMove = TutorialStep.anyMove(
+                'title',
+                'instruction',
+                QuartoRules.get().getInitialState(defaultConfig),
+                solutionMove,
+                TutorialStepMessage.CONGRATULATIONS(),
+            ) as TutorialStepAnyMove;
+
+            // When doing a move
+            // Then it should not be considered a success
+            expect(tutorial.getSolution()).toEqual(solutionMove);
+        }));
+
     });
 
     describe('TutorialStep expecting a click', () => {
@@ -1141,6 +1208,19 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             expect(wrapper.stepFinished[0]).toBeTrue();
         }));
 
+        it('should have no solution', fakeAsync(async() => {
+            // Given tutorial step of type "anyMove"
+            const tutorial: TutorialStep = TutorialStep.informational(
+                'title',
+                'Explanation Explanation Explanation.',
+                QuartoRules.get().getInitialState(defaultConfig),
+            );
+
+            // When doing a move
+            // Then it should not be considered a success
+            expect(tutorial.hasSolution()).toBeFalse();
+        }));
+
     });
 
     describe('TutorialStep expecting a predicate', () => {
@@ -1268,7 +1348,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
     describe('getConfig', () => {
 
-        it('should provide initial default config to game component', fakeAsync(async() => {
+        it('should provide initial default config to game component when no config is provided', fakeAsync(async() => {
             // Given any tutorial for a game that has a specific default config
             const defaultRulesConfig: MGPOptional<RulesConfig> =
                 MGPOptional.of({ mais_quelles_belles_chaussettes: 42 });
@@ -1279,6 +1359,33 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toBe(defaultRulesConfig);
+        }));
+
+        it('should provide custom config to game component when providen', fakeAsync(async() => {
+            // Given any tutorial for a game that has a specific default config
+            const customConfig: MGPOptional<QuartoConfig> =
+                MGPOptional.of({ playerOneLevel: 2, playerZeroLevel: 2 });
+            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(customConfig);
+            const state: QuartoState = QuartoRules.get().getInitialState(customConfig);
+            const tutorial: TutorialStep[] = [
+                TutorialStep.forClick(
+                    'title',
+                    'instruction',
+                    state,
+                    ['#click_0_0'],
+                    TutorialStepMessage.CONGRATULATIONS(),
+                    'Perdu.',
+                    customConfig,
+                ),
+            ];
+            // When starting tutorial
+            await wrapper.startTutorial(tutorial);
+
+            // When calling getConfig
+            const actualDefaultRulesConfig: MGPOptional<RulesConfig> = await testUtils.getComponent().getConfig();
+
+            // Then the return should be the default game config
+            expect(actualDefaultRulesConfig).toEqual(customConfig);
         }));
 
     });

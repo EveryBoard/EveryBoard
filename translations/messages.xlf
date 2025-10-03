@@ -293,6 +293,9 @@
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
       </trans-unit>
+      <trans-unit id="7654735708945652840" datatype="html">
+        <source>EveryBoard&apos;s first game: an asymmetric game where each player moves differently. Be the first one to capture the opponent&apos;s throne!</source>
+      </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
       </trans-unit>
@@ -448,6 +451,9 @@
       </trans-unit>
       <trans-unit id="5226075040149407867" datatype="html">
         <source>International Checkers</source>
+      </trans-unit>
+      <trans-unit id="7549008463336671286" datatype="html">
+        <source>Quebec Castles</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -890,6 +896,9 @@
       <trans-unit id="488799603315113699" datatype="html">
         <source>Translations</source>
       </trans-unit>
+      <trans-unit id="4948237861189298097" datatype="html">
+        <source>Congratulations! You know everything you need to start a game!</source>
+      </trans-unit>
       <trans-unit id="6439401135646542284" datatype="html">
         <source>Failure</source>
       </trans-unit>
@@ -967,9 +976,6 @@
       </trans-unit>
       <trans-unit id="3110387991397245428" datatype="html">
         <source>This is not a translation, this is a &quot;pushing move&quot;, try a translation.</source>
-      </trans-unit>
-      <trans-unit id="4948237861189298097" datatype="html">
-        <source>Congratulations! You know everything you need to start a game!</source>
       </trans-unit>
       <trans-unit id="2565981183757255753" datatype="html">
         <source>You will see when creating a game that you can configure two things.&lt;br/&gt;&lt;ul&gt;&lt;li&gt;First, the number of captures needed to win. The default is 6, changing it will help changing the game&apos;s duration if wanted.&lt;/li&gt;&lt;li&gt;Last, the maximum size of a moved group. The default is 3 but if you want a more chaotic and fun game, you could increase that limit and play a more powerful alternative version of the game!&lt;/li&gt;&lt;/ul&gt;</source>
@@ -2392,14 +2398,14 @@
       <trans-unit id="1086558575410854374" datatype="html">
         <source>Feed original house</source>
       </trans-unit>
-      <trans-unit id="1571603835358328677" datatype="html">
-        <source>Must feed</source>
+      <trans-unit id="5863215957559063071" datatype="html">
+        <source>You must feed</source>
       </trans-unit>
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
       </trans-unit>
-      <trans-unit id="8576122948092687879" datatype="html">
-        <source>Must continue distribution after last seed ends in store</source>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
       </trans-unit>
       <trans-unit id="356626260857129297" datatype="html">
         <source>Continue distribution until capture or empty house</source>
@@ -2783,6 +2789,120 @@
       </trans-unit>
       <trans-unit id="2467449610168621115" datatype="html">
         <source>Wrong, you could have won by making a square.</source>
+      </trans-unit>
+      <trans-unit id="5604193951980576244" datatype="html">
+        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/></source>
+      </trans-unit>
+      <trans-unit id="4809301322027947242" datatype="html">
+        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
+      </trans-unit>
+      <trans-unit id="941976348970067109" datatype="html">
+        <source>You must drop in your own territory</source>
+      </trans-unit>
+      <trans-unit id="2561363337853886115" datatype="html">
+        <source>You cannot drop in move phase</source>
+      </trans-unit>
+      <trans-unit id="6838858844517047193" datatype="html">
+        <source>You cannot move in drop phase</source>
+      </trans-unit>
+      <trans-unit id="4933773936312573082" datatype="html">
+        <source>You must drop all your pieces</source>
+      </trans-unit>
+      <trans-unit id="1577452622903571200" datatype="html">
+        <source>You must drop all your remaining pieces, not more not less</source>
+      </trans-unit>
+      <trans-unit id="8012565028574700911" datatype="html">
+        <source>You cannot drop that many pieces</source>
+      </trans-unit>
+      <trans-unit id="8952465701867689047" datatype="html">
+        <source>You must drop pieces one by one</source>
+      </trans-unit>
+      <trans-unit id="7497498388753121757" datatype="html">
+        <source>You cannot land or drop on your castle</source>
+      </trans-unit>
+      <trans-unit id="5963846295180517656" datatype="html">
+        <source>You must only place your castle</source>
+      </trans-unit>
+      <trans-unit id="5637364645971249040" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
+      </trans-unit>
+      <trans-unit id="984815225652827868" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
+      </trans-unit>
+      <trans-unit id="2740099122933909931" datatype="html">
+        <source>Too many lines for territory, your opponent lines would merge with yours!</source>
+      </trans-unit>
+      <trans-unit id="810888510148304696" datatype="html">
+        <source>Automatic</source>
+      </trans-unit>
+      <trans-unit id="5830114547747897795" datatype="html">
+        <source>Piece by piece</source>
+      </trans-unit>
+      <trans-unit id="410841679211120323" datatype="html">
+        <source>By batch</source>
+      </trans-unit>
+      <trans-unit id="7732765787483081988" datatype="html">
+        <source>Lines for territory</source>
+      </trans-unit>
+      <trans-unit id="6952700396277252102" datatype="html">
+        <source>Number of invaders</source>
+      </trans-unit>
+      <trans-unit id="8136810909201933801" datatype="html">
+        <source>Number of defenders</source>
+      </trans-unit>
+      <trans-unit id="859693719600901508" datatype="html">
+        <source>Is Rhombic</source>
+      </trans-unit>
+      <trans-unit id="3155220222252009452" datatype="html">
+        <source>Place castle yourself</source>
+      </trans-unit>
+      <trans-unit id="5344724322380814051" datatype="html">
+        <source>Drop mode</source>
+      </trans-unit>
+      <trans-unit id="4108446576215978761" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all the pieces of the opponent, or to step on the opponent&apos;s castle. The castles are on the corners by default.</source>
+      </trans-unit>
+      <trans-unit id="5230748384162383195" datatype="html">
+        <source>Defender&apos;s move</source>
+      </trans-unit>
+      <trans-unit id="7182015855595398104" datatype="html">
+        <source>The defenders have the dark pieces, they play first by selecting one of their pieces and moving it on a neighboring square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a defender piece.</source>
+      </trans-unit>
+      <trans-unit id="2155198865476397918" datatype="html">
+        <source>Invader&apos;s move</source>
+      </trans-unit>
+      <trans-unit id="4107747706727630088" datatype="html">
+        <source>The invaders have the light pieces, they play second by selecting one of their piece and moving them two step in a straight line. A piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
+      </trans-unit>
+      <trans-unit id="2713433806060355704" datatype="html">
+        <source>Custom config: rhombic, width, height</source>
+      </trans-unit>
+      <trans-unit id="2002655185364987666" datatype="html">
+        <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
+      </trans-unit>
+      <trans-unit id="2289520460836999741" datatype="html">
+        <source>Custom config: place castle yourself</source>
+      </trans-unit>
+      <trans-unit id="7385463908675411729" datatype="html">
+        <source>You have the option to decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
+      </trans-unit>
+      <trans-unit id="4647263668364735204" datatype="html">
+        <source>Custom config: drop mode: by batch</source>
+      </trans-unit>
+      <trans-unit id="7033117155002350193" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place all your pieces.</source>
+      </trans-unit>
+      <trans-unit id="8905744515857698442" datatype="html">
+        <source>Custom config: drop mode: piece by piece</source>
+      </trans-unit>
+      <trans-unit id="3173152046401939537" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
+      </trans-unit>
+      <trans-unit id="7981767151607448456" datatype="html">
+        <source>Custom config: number of piece &amp; territory size</source>
+      </trans-unit>
+      <trans-unit id="8332720029342556814" datatype="html">
+        <source>You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
@@ -3477,10 +3597,10 @@
         <source>This is the wrong game type!</source>
       </trans-unit>
       <trans-unit id="4408456168772857996" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
+        <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/></source>
       </trans-unit>
       <trans-unit id="701935636628882602" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
+        <source><x id="PH" equiv-text="v"/> is too big, the maximum is <x id="PH_1" equiv-text="m"/></source>
       </trans-unit>
     </body>
   </file>

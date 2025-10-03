@@ -1,5 +1,8 @@
+#!/usr/bin/python3
+# This script renders a non-square image square by padding with the auto-detected background color
 from PIL import Image
 import sys
+
 
 if len(sys.argv) != 2:
     print('I need an image file path as argument')

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntil } from 'rxjs/operators';
@@ -52,6 +52,7 @@ type PartCreationViewInfo = {
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 @Debug.log
 export class PartCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
@@ -549,6 +550,7 @@ export class PartCreationComponent extends BaseWrapperComponent implements OnIni
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
+                title: this.getGameUrlName(),
                 node,
             };
             this.cdr.detectChanges();
