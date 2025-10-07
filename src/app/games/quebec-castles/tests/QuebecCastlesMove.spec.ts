@@ -2,9 +2,9 @@
 import { EncoderTestUtils } from '@everyboard/lib';
 
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from '../QuebecCastlesMove';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../../app/jscaip/tests/Move.spec';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../app/jscaip/Coord';
 import { QuebecCastlesRules } from '../QuebecCastlesRules';
 
 describe('QuebecCastlesMove', () => {
