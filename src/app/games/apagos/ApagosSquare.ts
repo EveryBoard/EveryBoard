@@ -47,7 +47,7 @@ export class ApagosSquare {
         return ApagosSquare.from(nbZero, nbOne, nbTotal).get();
     }
 
-    public substractPiece(piece: Player): ApagosSquare {
+    public subtractPiece(piece: Player): ApagosSquare {
         let nbZero: number = this.count(Player.ZERO);
         let nbOne: number = this.count(Player.ONE);
         const nbTotal: number = this.count(PlayerOrNone.NONE);

@@ -216,7 +216,7 @@ describe('SixRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should refuse deconnection of same sized group when no group is mentionned in move', () => {
+        it('should refuse deconnection of same sized group when no group is mentioned in move', () => {
             // Given a board where a equal cut is possible
             const board: Table<PlayerOrNone> = [
                 [X, X, _, O, _],
@@ -235,7 +235,7 @@ describe('SixRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should refuse deconnection of different sized group with group mentionned in move', () => {
+        it('should refuse deconnection of different sized group with group mentioned in move', () => {
             // Given a board with a cut possible
             const board: Table<PlayerOrNone> = [
                 [X, X, _, _, _],

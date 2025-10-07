@@ -20,4 +20,6 @@ export class TutorialStepMessage {
 
     public static readonly RULES_CONFIGURATION: Localized = () => $localize`Rules configuration`;
 
+    public static readonly CONGRATULATIONS_YOU_KNOW_EVERYTHING: Localized = () => $localize`Congratulations! You know everything you need to start a game!`;
+
 }

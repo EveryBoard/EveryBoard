@@ -1,6 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
 import { DemoPageComponent } from './demo-page.component';
+import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 
 describe('DemoPageComponent', () => {
 
@@ -16,7 +17,21 @@ describe('DemoPageComponent', () => {
     });
 
     it('should display demo nodes', () => {
-        expect(testUtils.findElements('app-demo-card').length).withContext('app-demo-card should be present').toBeGreaterThan(0);
+        const numberOfDemos: number = testUtils.findElements('app-demo-card').length;
+        expect(numberOfDemos)
+            .withContext('app-demo-card should be present')
+            .toBeGreaterThan(0);
+    });
+
+    it('should not have node whose parent is themself', () => {
+        const demoNodeInfos: DemoNodeInfo[] = testUtils.getComponent().getDemoNodes();
+        const nodeWithParentBeingThemselvesExist: boolean = demoNodeInfos.some((demoNode: DemoNodeInfo) => {
+            return demoNode.node.parent.isPresent() &&
+                   demoNode.node.gameState.turn === demoNode.node.parent.get().gameState.turn;
+        });
+        expect(nodeWithParentBeingThemselvesExist)
+            .withContext('There should not be node whose parent is themself')
+            .toBeFalse();
     });
 
     it('should adapt the number of columns upon change', () => {

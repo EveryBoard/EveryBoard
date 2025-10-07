@@ -41,7 +41,7 @@ export class NumberConfig extends ConfigLine {
 
     public constructor(defaultValue: number,
                        title: Localized,
-                       private readonly validator: MGPValidator<number>)
+                       public readonly validator: MGPValidator)
     {
         super(defaultValue, title);
     }
@@ -54,6 +54,27 @@ export class NumberConfig extends ConfigLine {
         }
     }
 
+}
+
+export class EnumConfig extends ConfigLine {
+
+    public constructor(value: string,
+                       title: Localized,
+                       public readonly possibleValues: { [key: string]: Localized },
+                       public readonly validator: MGPValidator = (_: string) => MGPValidation.SUCCESS)
+    {
+        super(value, title);
+    }
+
+    public override checkValidity(fieldValue: string): MGPValidation {
+        if (typeof(fieldValue) !== 'string') {
+            return MGPValidation.failure('EnumConfig expects a string value');
+        } else if (Object.keys(this.possibleValues).indexOf(fieldValue) === -1) {
+            return MGPValidation.failure('This value is not among the possible values');
+        } else {
+            return this.validator(fieldValue);
+        }
+    }
 }
 
 export class BooleanConfig extends ConfigLine {
@@ -72,6 +93,7 @@ export class BooleanConfig extends ConfigLine {
     }
 
 }
+
 
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
 
@@ -130,8 +152,9 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
         if (configLine == null) {
             // this does not match an element from the config, it is invalid
             return MGPValidation.failure($localize`There is no such configuration element`);
+        } else {
+            return configLine.checkValidity(value);
         }
-        return configLine.checkValidity(value);
     }
 
     public isValid(field: string, value: JSONPrimitive): boolean {

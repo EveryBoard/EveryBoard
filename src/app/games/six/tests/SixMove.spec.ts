@@ -10,7 +10,7 @@ describe('SixMove', () => {
         expect(move).toBeTruthy();
     });
 
-    it('should allow move without mentionned "keep"', () => {
+    it('should allow move without mentioned "keep"', () => {
         const move: SixMove = SixMove.ofTranslation(new Coord(0, 0), new Coord(1, 1));
         expect(move).toBeTruthy();
     });
@@ -22,7 +22,7 @@ describe('SixMove', () => {
         TestUtils.expectToThrowAndLog(creatingStaticMovement, 'Translation cannot be static!');
     });
 
-    it('should allow move with mentionned "keep"', () => {
+    it('should allow move with mentioned "keep"', () => {
         const move: SixMove = SixMove.ofCut(new Coord(0, 0), new Coord(2, 2), new Coord(1, 1));
         expect(move).toBeTruthy();
     });

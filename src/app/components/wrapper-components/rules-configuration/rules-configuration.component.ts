@@ -1,12 +1,13 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
-import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
+import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConfigDescriptionType, NamedRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
+import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
+import { Localized } from '../../../../app/utils/LocaleUtils';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -15,6 +16,7 @@ type ConfigFormJSON = {
 @Component({
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 
@@ -41,8 +43,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private chosenConfigName: string = '';
 
-    public constructor(activatedRoute: ActivatedRoute)
-    {
+    public errorMessages: string[] = [];
+
+    public constructor(activatedRoute: ActivatedRoute) {
         super(activatedRoute);
     }
 
@@ -74,7 +77,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             const value: ConfigDescriptionType =
                 this.getRulesConfigDescriptionValue(parameterName,
                                                     config[parameterName]);
-
             group[parameterName] = this.getFormControl(value, configurable);
         });
         this.rulesConfigForm = new FormGroup(group);
@@ -100,33 +102,48 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         return formControl;
     }
 
+    public isEditable(): boolean {
+        return this.editable && this.chosenConfigName === 'Custom';
+    }
+
     private onUpdate(): void {
         // Note: we may receive updates just because the form has changed from "editable" to "non editable"
         // (e.g., due to proposing to the opponent or clicking on "changing configuration").
         const rulesConfig: RulesConfig = {};
-        const parameterNames: string[] = this.rulesConfigDescription.getFields();
-        for (const parameterName of parameterNames) {
-            if (this.isValid(parameterName)) {
-                rulesConfig[parameterName] = this.rulesConfigForm.controls[parameterName].value;
+        const fieldNames: string[] = this.rulesConfigDescription.getFields();
+        for (const field of fieldNames) {
+            if (this.isValid(field)) {
+                rulesConfig[field] = this.rulesConfigForm.controls[field].value;
             } else {
                 // This informs the parent component that an invalid update has been done
                 this.updateCallback.emit(MGPOptional.empty());
                 return; // In order not to send update when form is invalid
             }
         }
-        this.updateCallback.emit(MGPOptional.of(rulesConfig));
+        return this.checkForValidators(rulesConfig);
     }
 
-    public isNumber(field: string): boolean {
-        const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-        const value: ConfigDescriptionType = config[field];
-        return typeof value === 'number';
+    private checkForValidators(rulesConfig: RulesConfig): void {
+        const validators: ((config: RulesConfig) => MGPValidation)[] =
+            this.rulesConfigDescription.defaultConfigDescription.validators ?? [];
+        this.errorMessages = [];
+        for (const validator of validators) {
+            const validation: MGPValidation = validator(rulesConfig);
+            if (validation.isFailure()) {
+                this.errorMessages.push(validation.getReason());
+            }
+        }
+        if (this.errorMessages.length > 0) {
+            this.updateCallback.emit(MGPOptional.empty());
+        } else {
+            this.updateCallback.emit(MGPOptional.of(rulesConfig));
+        }
     }
 
-    public isBoolean(field: string): boolean {
+    public typeOfConfig(field: string): string {
         const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
         const value: ConfigDescriptionType = config[field];
-        return typeof value === 'boolean';
+        return typeof value;
     }
 
     public isValid(field: string): boolean {
@@ -145,6 +162,26 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public onChange(event: Event): void {
         const select: HTMLSelectElement = event.target as HTMLSelectElement;
         this.setChosenConfig(select.value);
+    }
+
+    public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
+        const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription.defaultConfigDescription;
+        const config: EnumConfig = defaultConfig.config[field] as EnumConfig;
+        return Object.keys(config.possibleValues).map((key: string) => {
+            return {
+                enumValue: key,
+                localized: config.possibleValues[key],
+            };
+        });
+    }
+
+    public isSelectedEnum(configParameter: string, enumValue: string): boolean {
+        return enumValue === this.rulesConfigForm.controls[configParameter].getRawValue();
+    }
+
+    public onEnumChange(field: string, event: Event): void {
+        const select: HTMLSelectElement = event.target as HTMLSelectElement;
+        this.rulesConfigForm.controls[field].setValue(select.value);
     }
 
     private setChosenConfig(configName: string): void {

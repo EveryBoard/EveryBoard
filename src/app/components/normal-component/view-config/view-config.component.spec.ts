@@ -22,7 +22,9 @@ describe('ViewConfigComponent', () => {
                 config: {
                     size: new NumberConfig(5, () => 'size', MGPValidators.range(1, 99)),
                 },
-            }, []);
+            },
+            [],
+        );
 
     const defaultConfig: RulesConfig = { size: 5 };
     const customConfig: RulesConfig = { size: 42 };

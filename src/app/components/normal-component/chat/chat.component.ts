@@ -43,7 +43,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     {
     }
     public ngOnInit(): void {
-        Utils.assert(this.chatId != null && this.chatId !== '', 'No chat to join mentionned');
+        Utils.assert(this.chatId != null && this.chatId !== '', 'No chat to join mentioned');
         this.loadChatContent();
     }
     public ngAfterViewChecked(): void {

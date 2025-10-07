@@ -9,11 +9,17 @@ import { Move } from '../../../../app/jscaip/Move';
 import { PlayerOrNone } from '../../../../app/jscaip/Player';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { AbstractNode } from '../../../../app/jscaip/AI/GameNode';
+import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
 
 export type DemoNodeInfo = {
-    name: string, // The name of the game
+    name: string; // The url name of the game
+    title: string, // The title of the step
     node: AbstractNode, // The demo node
     click: MGPOptional<string>, // An element to click
+}
+
+export type DemoNodeWithConfig = DemoNodeInfo & {
+    config: MGPOptional<RulesConfig>,
 }
 
 @Component({

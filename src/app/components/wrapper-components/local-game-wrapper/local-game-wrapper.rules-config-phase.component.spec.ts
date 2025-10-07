@@ -6,20 +6,21 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { ActivatedRouteStub, ComponentTestUtils, expectValidRouting } from '../../../../app/utils/tests/TestUtils.spec';
 import { UserMocks } from '../../../../app/domain/UserMocks.spec';
-import { P4Component } from '../../../../app/games/p4/p4.component';
 import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
 import { ErrorLoggerService } from '../../../../app/services/ErrorLoggerService';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { P4State } from '../../../../app/games/p4/P4State';
-import { P4Config, P4Rules } from '../../../../app/games/p4/P4Rules';
+import { QuebecCastlesComponent } from '../../../../app/games/quebec-castles/quebec-castles.component';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from '../../../../app/games/quebec-castles/QuebecCastlesRules';
+import { QuebecCastlesState } from '../../../../app/games/quebec-castles/QuebecCastlesState';
 
 describe('LocalGameWrapperComponent (rules config phase)', () => {
 
-    let testUtils: ComponentTestUtils<P4Component>;
+    let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
+    const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<P4Component>('P4', true);
+        testUtils = await ComponentTestUtils.forGame<QuebecCastlesComponent>('QuebecCastles', true);
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         TestBed.inject(ErrorLoggerService);
     }));
@@ -29,7 +30,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         const config: MGPOptional<RulesConfig> = MGPOptional.of({
             invalid: true,
         });
-        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
 
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -38,17 +39,17 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         await testUtils.setupState(state, { config });
 
         // Then it should redirect to the configuration page
-        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
-    it('should redirect to configuration if the provided config is invalid (due to invalid elements)', fakeAsync(async() => {
+    it('should redirect to configuration if the provided config is invalid (due to invalid value of number)', fakeAsync(async() => {
         // Given a game configured with an invalid config
-        const config: MGPOptional<P4Config> = MGPOptional.of({
-            width: -10,
-            height: 42,
+        const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+            ...defaultConfig.get(),
+            defenders: -10,
         });
-        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
 
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -57,17 +58,96 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         await testUtils.setupState(state, { config });
 
         // Then it should redirect to the configuration page
-        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
+    it('should redirect to configuration if the provided config is invalid (due to invalid value of string/enum)', fakeAsync(async() => {
+        // Given a game configured with an invalid config
+        const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+            ...defaultConfig.get(),
+            dropMode: 'INVALID' as unknown as DropMode, // we lie to typescript here, like the url config could do
+        });
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
+
+    describe('should redirect to configuration if the provided config is invalid (due to invalid type of element)', () => {
+
+        it('number as string', fakeAsync(async() => {
+            // Given a game configured with an invalid config
+            const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                ...defaultConfig.get(),
+                defenders: 'gentil' as unknown as number, // we lie to typescript here, like the url config could do
+            });
+            const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
+
+            // When displaying it
+            await testUtils.setupState(state, { config });
+
+            // Then it should redirect to the configuration page
+            const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+            expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        }));
+
+        it('string as number', fakeAsync(async() => {
+            // Given a game configured with an invalid config
+            const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+                ...defaultConfig.get(),
+                dropMode: 42 as unknown as DropMode, // we lie to typescript here, like the url config could do
+            });
+            const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
+
+            // When displaying it
+            await testUtils.setupState(state, { config });
+
+            // Then it should redirect to the configuration page
+            const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+            expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        }));
+
+    });
+
+    it('should redirect to configuration if the provided config is invalid (due to invalid global validator)', fakeAsync(async() => {
+        // Given a game configured with an invalid config
+        const config: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
+            ...defaultConfig.get(),
+            defenders: 155, // too many defenders for 4 lines of defender
+        });
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
+
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+
+        // When displaying it
+        await testUtils.setupState(state, { config });
+
+        // Then it should redirect to the configuration page
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
+        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+    }));
 
     it('should redirect to configuration if the provided config is missing elements', fakeAsync(async() => {
         // Given a game configured with a config where all provided elements are valid, but some are missing
         const config: MGPOptional<RulesConfig> = MGPOptional.of({
             width: 4,
         });
-        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
 
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -76,7 +156,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         await testUtils.setupState(state, { config });
 
         // Then it should redirect to the configuration page
-        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
@@ -88,7 +168,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
                 lol: 42,
             },
         } as unknown as RulesConfig /* we are lying to typescript for the test */);
-        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
 
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
@@ -97,7 +177,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         await testUtils.setupState(state, { config });
 
         // Then it should redirect to the configuration page
-        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
@@ -107,7 +187,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
             width: 4,
             // height will be set manually in the route
         });
-        const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
+        const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(defaultConfig);
         const extraInvalidConfigElement: string = 'I\'m not Jason, not JSON :}}{';
         TestBed.inject(ActivatedRouteStub).setParam('height', extraInvalidConfigElement);
 
@@ -118,7 +198,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
         await testUtils.setupState(state, { config });
 
         // Then it should redirect to the configuration page
-        const expectedRoute: string[] = ['/local', 'P4', 'config'];
+        const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
         expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 

@@ -50,7 +50,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
     /**
      * This method returns the initial state of a game
      */
-    public override getInitialState(): NewGameState {
+    public override getInitialState(config: NoConfig): NewGameState {
         return new NewGameState(0);
     }
 

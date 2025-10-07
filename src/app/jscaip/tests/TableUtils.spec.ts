@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../app/jscaip/Coord';
 import { Table, TableUtils, TableWithPossibleNegativeIndices } from '../TableUtils';
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
 describe('TableUtils', () => {
 
@@ -99,6 +100,35 @@ describe('TableUtils', () => {
             expect(result.get()).toBe(0);
         });
 
+    });
+
+    describe('find', () => {
+
+        it('should return empty optional when element is absent', () => {
+            // Given a table with no odd element
+            const table: Table<number> = [[2, 4], [6, 8, 10], [100, -2]];
+
+            // When searching for an odd element
+            const oddElement: MGPOptional<number> = TableUtils.find(table, (e: number) => {
+                return e % 2 === 1;
+            });
+
+            // Then it should not find any
+            expect(oddElement.isAbsent()).toBeTrue();
+        });
+
+        it('should return value optional when element is present', () => {
+            // Given a table with no odd element
+            const table: Table<number> = [[2, 4], [6, 111111, 10], [100, -2]];
+
+            // When searching for an odd element
+            const oddElement: MGPOptional<number> = TableUtils.find(table, (e: number) => {
+                return e % 2 === 1;
+            });
+
+            // Then it should not find any
+            expect(oddElement.getOrElse(-1)).toEqual(111111);
+        });
     });
 
 });

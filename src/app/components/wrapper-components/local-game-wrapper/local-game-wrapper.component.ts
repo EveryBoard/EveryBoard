@@ -114,8 +114,26 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     }
                 }
             }
+            const areValidatorsValid: boolean = this.areGlobalValidatorsValid(rulesConfigDescription, config);
+            if (areValidatorsValid === false) {
+                return this.redirectToConfiguration();
+            }
             this.rulesConfig = MGPOptional.of(config);
         }
+    }
+
+    private areGlobalValidatorsValid(rulesConfigDescription: RulesConfigDescription<RulesConfig>, config: RulesConfig)
+    : boolean
+    {
+        const validators: ((config: RulesConfig) => MGPValidation)[] =
+            rulesConfigDescription.defaultConfigDescription.validators ?? [];
+        for (const validator of validators) {
+            const validation: MGPValidation = validator(config);
+            if (validation.isFailure()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private async redirectToConfiguration(): Promise<void> {

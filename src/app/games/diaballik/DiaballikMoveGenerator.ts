@@ -113,7 +113,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     public passPathContains(coord: Coord): boolean {
         for (const subMove of this.subMoves) {
             if (subMove instanceof DiaballikBallPass) {
-                const passPath: Coord[] = subMove.getStart().getCoordsToward(subMove.getEnd());
+                const passPath: Coord[] = subMove.getJumpedOverCoords();
                 return passPath.some((c: Coord): boolean => c.equals(coord));
             }
         }

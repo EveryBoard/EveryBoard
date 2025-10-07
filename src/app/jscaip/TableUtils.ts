@@ -88,6 +88,17 @@ export class TableUtils {
         return MGPOptional.empty();
     }
 
+    public static find<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<T> {
+        for (const line of table) {
+            for (const element of line) {
+                if (predicate(element)) {
+                    return MGPOptional.of(element);
+                }
+            }
+        }
+        return MGPOptional.empty();
+    }
+
 }
 
 export type Cell<T> = {
