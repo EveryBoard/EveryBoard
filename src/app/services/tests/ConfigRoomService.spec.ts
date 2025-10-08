@@ -33,6 +33,11 @@ describe('ConfigRoomService', () => {
         tick(1);
     }
 
+    function deleteConfigRoom(gameId: string): void {
+        backendService.mockReceivedMessage('ConfigRoomDeleted', { gameId });
+        tick(1);
+    }
+
     function addCandidate(candidate: MinimalUser): void {
         backendService.mockReceivedMessage('CandidateJoined', { candidate });
         tick(1);
@@ -59,6 +64,7 @@ describe('ConfigRoomService', () => {
                                              },
                                              ignore,
                                              ignore,
+                                             ignore,
                                              ignore);
 
             // When there are config room updates
@@ -70,11 +76,33 @@ describe('ConfigRoomService', () => {
             subscription.unsubscribe();
         }));
 
+        it('should notify about config room deletions', fakeAsync(async() => {
+            // Given a service with which we joined a config room
+            let deleted: MGPOptional<string> = MGPOptional.empty();
+            const subscription: Subscription =
+                await configRoomService.join('gameId',
+                                             ignore,
+                                             (gameId: string): void => {
+                                                 deleted = MGPOptional.of(gameId);
+                                             },
+                                             ignore,
+                                             ignore,
+                                             ignore);
+
+            // When there is a config room deletion
+            deleteConfigRoom('gameId');
+            // Then we are notified about it
+            expect(deleted.isPresent()).toBeTrue();
+            expect(deleted.get()).toEqual('gameId');
+            subscription.unsubscribe();
+        }));
+
         it('should notify about candidates joining', fakeAsync(async() => {
             // Given a service with which we joined a config room
             const candidates: MinimalUser[] = [];
             const subscription: Subscription =
                 await configRoomService.join('gameId',
+                                             ignore,
                                              ignore,
                                              (candidate: MinimalUser): void => {
                                                  candidates.push(candidate);
@@ -96,6 +124,7 @@ describe('ConfigRoomService', () => {
             let candidates: MinimalUser[] = [];
             const subscription: Subscription =
                 await configRoomService.join('gameId',
+                                             ignore,
                                              ignore,
                                              (candidate: MinimalUser): void => {
                                                  candidates.push(candidate);
@@ -122,6 +151,7 @@ describe('ConfigRoomService', () => {
             let errorsSeen: number = 0;
             const subscription: Subscription =
                 await configRoomService.join('gameId',
+                                             ignore,
                                              ignore,
                                              ignore,
                                              ignore,

@@ -11,7 +11,7 @@ export type Game = {
 
 export type GameEventBase = {
     readonly eventType: string;
-    readonly time: number;
+    readonly timestamp: number;
     readonly user: MinimalUser;
 }
 

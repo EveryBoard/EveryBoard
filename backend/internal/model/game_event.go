@@ -296,11 +296,11 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 		return err
 	}
 
-	timeField, ok := raw["time"]
+	timestampField, ok := raw["timestamp"]
 	if !ok {
-		return fmt.Errorf("missing time field")
+		return fmt.Errorf("missing timestamp field")
 	}
-	delete(raw, "time")
+	delete(raw, "timestamp")
 
 	userField, ok := raw["user"]
 	if !ok {
