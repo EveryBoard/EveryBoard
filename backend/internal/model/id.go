@@ -11,7 +11,7 @@ type GameID uint64
 
  // The lobby is the first game id that exist. It needs a game id for ensuring
  // that we can send messages to it and subscribe to it.
-const GameIDLobby GameID = 0
+const GameIDLobby GameID = 1
 
 type IDEncoder interface {
 	Initialize() error

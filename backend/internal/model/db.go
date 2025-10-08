@@ -47,12 +47,12 @@ func InitDatabase(dialector gorm.Dialector) error {
 	}
 
 	// Create first config room, which is actually the lobby
-	var lobby ConfigRoom
-	result := db.First(&lobby, "id = ?", GameIDLobby)
-
+	result := db.First(&ConfigRoom{}, "id = ?", GameIDLobby)
 	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
-		lobby = ConfigRoom{
-			ID:          GameIDLobby,
+		// The ID of the lobby will be the first available id, hence 1 (We can't
+		// set it ourselves otherwise the "autoIncrement" feature of postgresql
+		// will be confused and try to allocate 1 as the next id)
+		lobby := ConfigRoom{
 			Creator:     MinimalUser{Name: "", ID: ""},
 			CreatorElo:  0,
 			Status:      StatusFinished,
