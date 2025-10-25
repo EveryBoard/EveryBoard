@@ -100,6 +100,8 @@ jobs:
       uses: actions/setup-go@v5
       with:
         go-version: ${{ env.GO_VERSION }}
+    - name: Setup dependencies (install dependencies)
+      run: npm ci # Needed for auth tests
     - name: Build
       run: cd backend && make
     - name: Test
