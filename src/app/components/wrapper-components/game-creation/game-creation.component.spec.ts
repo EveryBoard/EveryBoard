@@ -172,7 +172,6 @@ describe('GameCreationComponent', () => {
 
             it('should have button to go to lobby and cancel game', fakeAsync(async() => {
                 // Given a game creation component
-                const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate').and.resolveTo(true);
                 await awaitComponentInitialization();
 
@@ -188,7 +187,6 @@ describe('GameCreationComponent', () => {
 
             it('should have button to play against AI and cancel game', fakeAsync(async() => {
                 // Given a game creation component
-                const router: Router = TestBed.inject(Router);
                 spyOn(router, 'navigate').and.resolveTo(true);
                 await awaitComponentInitialization();
 
@@ -432,21 +430,6 @@ describe('GameCreationComponent', () => {
 
                 // Then the detailed timing options are shown
                 expectElementToExist('#customTime');
-            }));
-
-            it('should update the timings when selecting blitz game', fakeAsync(async() => {
-                // Given a game creation
-                await awaitComponentInitialization();
-
-                // When setting the game type to 'blitz'
-                await clickElement('#gameTypeBlitz');
-                testUtils.detectChanges();
-
-                // Then the timings in the form are updated
-                const moveDuration: number = component.configFormGroup.get('moveDuration')?.value;
-                expect(moveDuration).toBe(GameDuration.BLITZ_MOVE_DURATION);
-                const gameDuration: number = component.configFormGroup.get('gameDuration')?.value;
-                expect(gameDuration).toBe(GameDuration.BLITZ_GAME_DURATION);
             }));
 
             it('should update the timings when selecting blitz game', fakeAsync(async() => {

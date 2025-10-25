@@ -171,7 +171,6 @@ export class OGWCTimeManagerService {
         }
         this.updateTimers();
         if (this.gameEnd === false) {
-            console.log('not end game yet')
             // The drift is how long has passed since the last event occurred
             // It can be only a few ms, or a much longer time in case we join mid-game
             const drift: number = this.getSecondsElapsedSinceLastMoveStart(currentTime);

@@ -4,13 +4,11 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
-import { serverTimestamp } from 'firebase/firestore';
 
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { UserService } from '../UserService';
 import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
@@ -161,7 +159,6 @@ describe('ConnectedUserService', () => {
 
     let auth: FireAuth.Auth;
     let connectedUserService: ConnectedUserService;
-    let userDAO: UserDAO;
 
     const username: string = 'jeanjaja';
     const email: string = 'jean@jaja.europe';
@@ -173,7 +170,6 @@ describe('ConnectedUserService', () => {
         await setupAuthTestModule();
         connectedUserService = TestBed.inject(ConnectedUserService);
         auth = FireAuth.getAuth();
-        userDAO = TestBed.inject(UserDAO);
         alreadyDestroyed = false;
     });
 

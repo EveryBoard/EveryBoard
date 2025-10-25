@@ -5,13 +5,11 @@ import { Router } from '@angular/router';
 import { MGPOptional } from '@everyboard/lib';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AbstractConfigRoomService, ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
+import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { Game } from 'src/app/domain/Game';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { UserDAO } from 'src/app/dao/UserDAO';

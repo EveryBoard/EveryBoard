@@ -2,9 +2,6 @@ import * as Firestore from '@firebase/firestore';
 import { Subscription } from 'rxjs';
 import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
 
-import { FirestoreCollectionObserver } from './FirestoreCollectionObserver';
-import { Debug } from '../utils/Debug';
-
 export interface FirestoreDocument<T> {
     id: string
     data: T

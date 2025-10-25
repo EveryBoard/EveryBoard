@@ -199,7 +199,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async handleReply(reply: GameEventReply): Promise<void> {
-        console.log('handleReply: ' + JSON.stringify(reply));
         switch (reply.requestType) {
             case 'TakeBack':
                 const accepter: Player = this.timeManager.playerOfMinimalUser(reply.user);

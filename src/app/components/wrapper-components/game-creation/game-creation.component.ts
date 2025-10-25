@@ -282,7 +282,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     public selectGameType(gameType: GameType): void {
-        console.log('select game type: ' + gameType)
         if (gameType === GameType.STANDARD) {
             this.getForm('moveDuration').setValue(GameDuration.STANDARD_MOVE_DURATION);
             this.getForm('gameDuration').setValue(GameDuration.STANDARD_GAME_DURATION);

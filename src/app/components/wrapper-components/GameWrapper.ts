@@ -99,7 +99,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     private async createGameComponent(component: Type<AbstractGameComponent>): Promise<void> {
-        console.log('createGameComponent')
         Utils.assert(this.boardRef != null, 'Board element should be present' + this['gameStarted']);
 
         const componentRef: ComponentRef<AbstractGameComponent> =

@@ -2,7 +2,6 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameActionFailure } from 'src/app/services/ConnectedUserService';
@@ -16,7 +15,6 @@ import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ActiveConfigRoomsServiceMock } from 'src/app/services/tests/ActiveConfigRoomServiceMock.spec';
 import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 
@@ -26,7 +24,7 @@ describe('LobbyComponent', () => {
     let component: LobbyComponent;
     let router: Router;
     let currentGameService: CurrentGameService;
-    
+
     const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty());
 
     beforeEach(fakeAsync(async() => {
@@ -125,7 +123,7 @@ describe('LobbyComponent', () => {
 
         // When clicking on the first part
         // Then the refusal reason should be given
-        await testUtils.expectToDisplayCriticalMessage(reason, async () => {
+        await testUtils.expectToDisplayCriticalMessage(reason, async() => {
             await testUtils.clickElement('#part-0');
         });
     }
@@ -147,7 +145,7 @@ describe('LobbyComponent', () => {
             // Given an user not allowed to participate to the game
             spyOn(currentGameService, 'canUserJoin').and.returnValue(MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING()));
             testUtils.detectChanges();
-            
+
             // And a lobby with one active config room
             // Then the user should not be able to join
             await shouldForbidToJoinConfigRoom(configRoom, GameActionFailure.YOU_ARE_ALREADY_PLAYING());

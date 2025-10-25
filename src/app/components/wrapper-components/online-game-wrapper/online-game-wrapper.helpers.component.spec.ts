@@ -1,5 +1,4 @@
 import { TestBed, tick } from '@angular/core/testing';
-import { DebugElement } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -16,7 +15,7 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { ConfigRoom, Status } from 'src/app/domain/ConfigRoom';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { AbstractGameService, GameService } from 'src/app/services/GameService';
 import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
 import { GameMocks } from 'src/app/domain/PartMocks.spec';
@@ -92,25 +91,6 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
         configRoom = { ...configRoom, gameDuration: 10 };
     }
     configRoomService.mockConfigRoomUpdate(configRoom);
-
-    // This is wat was done previously, we probably don't need to do this at all.
-    // const gameCreationElement: DebugElement = testUtils.findElement('#gameCreation');
-    // expect(gameCreationElement).withContext('game creation should be present after ngOnInit').toBeTruthy();
-    // configRoomService.mockCandidateJoined(UserMocks.OPPONENT_MINIMAL_USER);
-    // testUtils.detectChanges();
-    // configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(rulesConfig));
-    // testUtils.detectChanges();
-    // let configRoom: ConfigRoom = ConfigRoomMocks.withProposedConfig(rulesConfig);
-    // if (preparationOptions.shorterGlobalClock) {
-    //     configRoom = { ...configRoom, gameDuration: 10 };
-    // }
-    // configRoomService.mockConfigRoomUpdate(configRoom);
-    // testUtils.detectChanges();
-    // configRoomService.mockConfigRoomUpdate({
-    //     ...configRoom,
-    //     status: Status.STARTED,
-    // });
-    // testUtils.detectChanges();
 
     testUtils.detectChanges();
     if (preparationOptions.waitForGameToStart) {

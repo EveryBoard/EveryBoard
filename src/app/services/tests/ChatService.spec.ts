@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
+import { Subscription } from 'rxjs';
 
 import { Message } from 'src/app/domain/Message';
 import { ChatService } from '../ChatService';
@@ -54,7 +55,7 @@ describe('ChatService', () => {
 
         it('should unsubscribe from callback upon unsubscription', fakeAsync(async() => {
             // Given a chat where we subscribed to the messages
-            const subscription = chatService.subscribeToMessages(() => {});
+            const subscription: Subscription = chatService.subscribeToMessages(() => {});
             // When we unsubscribe
             subscription.unsubscribe();
             // Then the subscription should be unsubscribed

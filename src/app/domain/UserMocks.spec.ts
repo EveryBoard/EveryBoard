@@ -1,4 +1,3 @@
-import { Timestamp } from 'firebase/firestore';
 import { MGPOptional } from '@everyboard/lib';
 
 import { AuthUser } from '../services/ConnectedUserService';

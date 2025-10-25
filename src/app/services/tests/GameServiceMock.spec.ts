@@ -49,6 +49,6 @@ export class GameServiceMock extends AbstractGameService {
 
     public mockError(reason: string): void {
         Utils.assert(this.subscribedCallback.isPresent(), 'GameServiceMock should be subscribed');
-        return this.subscribedCallback.get().error(reason)
+        return this.subscribedCallback.get().error(reason);
     }
 }

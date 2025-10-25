@@ -67,7 +67,6 @@ export abstract class AbstractBackendService {
     }
 
     public setCallback(tag: string, callback: Callback): Subscription {
-        console.log('setCallback called with ' + tag)
         this.callbacks.set(tag, callback);
         return new Subscription(() => this.removeCallback(tag));
     }
@@ -113,15 +112,12 @@ export class BackendService extends AbstractBackendService {
     }
 
     public override async connect(): Promise<Subscription> {
-        console.warn('----------------- connect() is called')
         Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!')
         const token: string = await this.connectedUserService.getIdToken();
 
         return new Promise((resolve: (sub: Subscription) => void) => {
-            console.warn('1')
             const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
             let timeout: MGPOptional<number> = MGPOptional.empty();
-            console.warn('2')
             const reconnect: () => void = (): void => {
                 if (timeout.isPresent()) {
                     // not trying to reconnect because there's already an attempt scheduled
@@ -134,26 +130,21 @@ export class BackendService extends AbstractBackendService {
             };
 
             ws.onopen = (): void => {
-                console.warn('WS: connected');
                 if (timeout.isPresent()) {
                     window.clearTimeout(timeout.get());
                     timeout = MGPOptional.empty(); // clear the timeout
                 }
-                console.warn('4')
                 this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset the exponential backoff
                 this.resolveConnection(); // notify waiters
-                console.warn('5')
                 resolve(new Subscription(() => this.disconnect()));
             };
             ws.onerror = (_error: Event): void => {
-                console.warn('------ clearing websocket on error')
                 this.webSocket = MGPOptional.empty();
                 reconnect();
             };
             ws.onclose = (): void => {
-                console.warn('DISCONNECT')
                 this.webSocket = MGPOptional.empty();
                 // The connection has been closed by the server.
                 if (this.disconnectRequested) {
@@ -178,7 +169,6 @@ export class BackendService extends AbstractBackendService {
                 // each callback is associated to a tag
                 this.receive(new BackendMessage(tag as string, args));
             };
-            console.warn('3')
         });
     }
 
