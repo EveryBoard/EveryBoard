@@ -16,7 +16,7 @@
         <g *ngFor="let moveYZ of moveZ; index as y">
             <g *ngFor="let piece of moveYZ; index as x">
                 <g *ngIf="piece.move.isPresent()"
-                   mgp-trexo-half-piece
+                   app-trexo-half-piece
                    id="half_tile_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
                    [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
@@ -26,7 +26,7 @@
                    [move]="piece.move.get()"
                    [pieceClasses]="getPieceClasses(x, y, z)"/>
                 <g *ngIf="piece.isDroppedPiece"
-                   mgp-trexo-half-piece
+                   app-trexo-half-piece
                    [mode]="mode"
                    id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
                    (click)="onClick(x, y)"
@@ -39,14 +39,14 @@
     <g #switchModeIndicator>
         <g *ngIf="chosenMode === '2D' else switchTo2D"
            id="switchTo3D"
-           mgp-trexo-half-piece
+           app-trexo-half-piece
            (click)="switchToMode('3D')"
            [mode]="TrexoComponent.modeMap['3D']"
            [attr.transform]="get3DSwitcherTransform()"
            [coord]="Coord3D.of(10.5, 8.5, 0)"
            [pieceClasses]="['player0-fill']"/>
         <ng-template #switchTo2D>
-            <g mgp-trexo-half-piece
+            <g app-trexo-half-piece
                id="switchTo2D"
                (click)="switchToMode('2D')"
                [mode]="TrexoComponent.modeMap['2D']"

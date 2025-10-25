@@ -270,7 +270,7 @@ describe('CoerceoPiecesThreatTilesHeuristic', () => {
             const threatenedCoord: Coord = new Coord(8, 7);
             const threats: MGPOptional<PieceThreat> = heuristic.getThreat(threatenedCoord, state);
 
-            // Then the piece mentionned upper should be included
+            // Then the piece mentioned upper should be included
             expect(threats.isPresent()).toBeTrue();
         });
 

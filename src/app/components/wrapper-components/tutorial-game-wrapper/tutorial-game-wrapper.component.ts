@@ -33,7 +33,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
-    public stepIndex: number = -1;
+    public stepIndex: number = 0;
     public currentMessage: string = ''; // Initially empty, will always be set once tutorial has started
     public currentReason: MGPOptional<string> = MGPOptional.empty();
     public moveAttemptMade: boolean = false;
@@ -171,9 +171,12 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        this.gameComponent.node = new GameNode(currentStep.state,
+        const state: GameState = currentStep.state;
+        this.gameComponent.node = new GameNode(state,
                                                currentStep.parent,
                                                currentStep.previousMove);
+        const defaultConfig: MGPOptional<RulesConfig> = this.gameComponent.rules.getDefaultRulesConfig();
+        this.gameComponent.config = currentStep.config.orElse(defaultConfig);
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
@@ -248,6 +251,19 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public async createGame(): Promise<void> {
         const urlName: string = this.getGameUrlName();
         await this.router.navigate(['/play', urlName]);
+    }
+
+    public override getConfig(): MGPOptional<RulesConfig> {
+        if (this.steps.length === 0) {
+            return super.getConfig();
+        }
+        const step: TutorialStep = this.steps[this.stepIndex];
+        const config: MGPOptional<RulesConfig> = step.config;
+        if (config.isPresent()) {
+            return config;
+        } else {
+            return super.getConfig();
+        }
     }
 
 }

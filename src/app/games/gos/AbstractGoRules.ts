@@ -74,7 +74,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
     }
 
-    private removeAndSubstractTerritory(state: GoState): GoState {
+    private removeAndSubtractTerritory(state: GoState): GoState {
         const resultingBoard: GoPiece[][] = state.getCopiedBoard();
         const captured: PlayerNumberMap = state.getCapturedCopy();
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -168,8 +168,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                (state.phase.isCounting() || state.phase.isAccept());
     }
 
-    private isLegalNormalMove(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
-
+    private isLegalTranslation(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         if (this.isKo(move, state)) {
             return MGPFallible.failure(GoFailure.ILLEGAL_KO());
@@ -328,11 +327,11 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                 }
             }
         }
-        return this.removeAndSubstractTerritory(state);
+        return this.removeAndSubtractTerritory(state);
     }
 
     private applyDeadMarkingMove(legalMove: GoMove, state: GoState): GoState {
-        const territorylessState: GoState = this.removeAndSubstractTerritory(state);
+        const territorylessState: GoState = this.removeAndSubtractTerritory(state);
         const switchedState: GoState = this.switchAliveness(legalMove.coord, territorylessState);
         const resultingState: GoState =
             new GoState(switchedState.getCopiedBoard(),
@@ -373,7 +372,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             }
         } else {
             Debug.display('GoRules', 'isLegal', 'move is normal stuff: ' + move.toString());
-            return this.isLegalNormalMove(move, state);
+            return this.isLegalTranslation(move, state);
         }
     }
 

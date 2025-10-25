@@ -98,7 +98,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
     private applyLegalTransfer(move: ApagosMove, state: ApagosState): ApagosState {
         const currentPlayer: Player = state.getCurrentPlayer();
         const starting: number = move.starting.get();
-        const newStartingSquare: ApagosSquare = state.getPieceAt(starting).substractPiece(currentPlayer);
+        const newStartingSquare: ApagosSquare = state.getPieceAt(starting).subtractPiece(currentPlayer);
         const newLandingSquare: ApagosSquare = state.getPieceAt(move.landing).addPiece(currentPlayer);
         let resultingState: ApagosState = state.updateAt(starting, newStartingSquare);
         resultingState = resultingState.updateAt(move.landing, newLandingSquare);

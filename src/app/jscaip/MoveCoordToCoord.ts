@@ -11,8 +11,8 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
         if (start.equals(end)) throw new Error(RulesFailure.MOVE_CANNOT_BE_STATIC());
     }
 
-    public length(): number {
-        return this.getStart().getLinearDistanceToward(this.getEnd());
+    public getDistance(): number {
+        return this.getStart().getLinearDistanceToward(this.getEnd(), false);
     }
 
     public getDirection(): MGPFallible<Ordinal> {
@@ -29,6 +29,10 @@ export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 
     public getMovedOverCoords(): Coord[] {
         return this.getStart().getAllCoordsToward(this.getEnd());
+    }
+
+    public getJumpedOverCoords(): Coord[] {
+        return this.getStart().getCoordsToward(this.getEnd());
     }
 
     public equals(other: this): boolean {

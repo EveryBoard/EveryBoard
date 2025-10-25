@@ -40,6 +40,7 @@ describe('DemoCardComponent', () => {
 
         // When displaying it for a given game
         await loadNode({
+            title: 'P4',
             name: 'P4',
             // Current player is player 1
             node: new P4Node(new P4State(board, 1)),
@@ -60,6 +61,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component
         // When displaying it for a game that has intermediary clicks
         await loadNode({
+            title: 'Lodestone',
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
             click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
@@ -71,6 +73,7 @@ describe('DemoCardComponent', () => {
     it('should not allow clicks', fakeAsync(async() => {
         // Given a demo component displayed for a game
         await loadNode({
+            title: 'P4',
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -101,6 +104,7 @@ describe('DemoCardComponent', () => {
     it('should reload node when inputs are updated by parents', fakeAsync(async() => {
         // Given a component already initialized with one given set of infos
         await loadNode({
+            title: 'P4',
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -111,6 +115,7 @@ describe('DemoCardComponent', () => {
         const boardWithPiece: Table<PlayerOrNone> = TableUtils.create(7, 6, PlayerOrNone.ZERO);
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
         await loadNode({
+            title: 'P4',
             name: 'P4',
             node: new GameNode(stateWithPieces),
             click: MGPOptional.empty(),
@@ -139,6 +144,7 @@ describe('DemoCardComponent', () => {
                 mais_quelles_belles_chaussettes: 42,
             });
             await loadNode({
+                title: 'P4',
                 name: 'P4',
                 node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),

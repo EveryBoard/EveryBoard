@@ -45,7 +45,7 @@ describe('MCTS', () => {
             expect(true).toBe(true);
         } else {
             // MCTS gave the opponent a piece with which they cannot win
-            expect(move.piece).not.toBe(QuartoPiece.AABA);
+            expect(move.piece).not.toEqual(QuartoPiece.AABA);
         }
     });
 

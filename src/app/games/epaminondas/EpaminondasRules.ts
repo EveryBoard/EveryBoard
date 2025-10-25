@@ -180,9 +180,9 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
 
     public override getGameStatus(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): GameStatus {
         const state: EpaminondasState = node.gameState;
-        const zerosInFirstLine: number = state.countRow(Player.ZERO, 0);
+        const zerosInFirstLine: number = state.countPieceInRow(Player.ZERO, 0);
         const height: number = state.getHeight();
-        const onesInLastLine: number = state.countRow(Player.ONE, height - 1);
+        const onesInLastLine: number = state.countPieceInRow(Player.ONE, height - 1);
         if (state.turn % 2 === 0) {
             if (zerosInFirstLine > onesInLastLine) {
                 return GameStatus.ZERO_WON;

@@ -1,7 +1,8 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameState } from '../NewGameState';
-import { MGPOptional } from '@everyboard/lib';
 import { Player } from 'src/app/jscaip/Player';
 import { NewGameRules } from '../NewGameRules';
 import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
@@ -27,7 +28,7 @@ describe('NewGameHeuristic', () => {
          * `HeuristicUtils.expectSecondStateToBeBetterThanFirstFor`.
          * You can include last moves when needed (here there are set to MGPOptional.empty())
          */
-        const weakState: NewGameState = NewGameRules.get().getInitialState();
+        const weakState: NewGameState = NewGameRules.get().getInitialState(defaultConfig);
         const strongState: NewGameState = new NewGameState(42);
         HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
                                                                weakState, MGPOptional.empty(),

@@ -26,7 +26,7 @@ export class SiamOrientationArrowComponent extends BaseGameComponent {
     public getOrientationTransform(orientation: Orthogonal): string {
         const config: SiamConfig = this.config;
 
-        // Thoses are the calculation for a min size of 5
+        // Those are the calculation for a min size of 5
         const sizeRatio: number = Math.min(config.width, config.height) / 5;
         // Our arrow base needs a width of SPACE_SIZE, they currently have 40
         const arrowRatio: number = this.SPACE_SIZE / 40;

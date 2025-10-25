@@ -16,5 +16,6 @@ rm scripts/games.txt
 
 # And finally, square the images
 for image in src/assets/images/dark/*.png src/assets/images/light/*.png; do
+    python scripts/trim.py "$image"
     python scripts/square-image.py "$image"
 done

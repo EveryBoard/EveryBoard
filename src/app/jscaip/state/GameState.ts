@@ -1,4 +1,10 @@
 import { Player } from '../Player';
+import { RulesConfig } from '../RulesConfigUtil';
+
+export type GameStateAndConfig = {
+    state: GameState;
+    config: RulesConfig
+};
 
 export abstract class GameState {
 
