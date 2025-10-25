@@ -145,12 +145,14 @@ func waitForPort(address string, timeout time.Duration) error {
 
 func startFirebaseEmulator(t *testing.T) *exec.Cmd {
 	cmd := exec.Command("npx", "firebase", "emulators:start", "--only", "firestore,auth", "--project", "my-project")
+	cmd.Stdout = os.Stdout // for debugging purpose only
+	cmd.Stderr = os.Stderr
 	err := cmd.Start();
 	if err != nil {
 		t.Fatalf("failed to start Firebase emulator: %v", err)
 	}
 
-	err = waitForPort("127.0.0.1:9099", 120*time.Second);
+	err = waitForPort("127.0.0.1:9099", 1200*time.Second);
 	if err != nil {
 		t.Fatalf("failed to wait for Firebase emulator to start: %v", err)
 	}
