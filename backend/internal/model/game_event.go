@@ -276,7 +276,7 @@ func (e GameEvent) MarshalJSON() ([]byte, error) {
 		return nil, err
 	}
 
-	dataFields["time"], err = json.Marshal(e.Timestamp)
+	dataFields["timestamp"], err = json.Marshal(e.Timestamp)
 	if err != nil {
 		return nil, err
 	}

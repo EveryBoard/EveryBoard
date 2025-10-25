@@ -92,7 +92,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			Event: gameEvent,
 			ServerTime: 42.0,
 		},
-		`{"event":{"eventType":"Request","requestType":"Draw","time":42,"user":{"id":"foo","name":"foo"}},"serverTime":42}`, "GameEvent")
+		`{"event":{"eventType":"Request","requestType":"Draw","timestamp":42,"user":{"id":"foo","name":"foo"}},"serverTime":42}`, "GameEvent")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.CurrentGameUpdateMessage{
