@@ -308,7 +308,7 @@ func (e *GameEvent) UnmarshalJSON(data []byte) error {
 	}
 	delete(raw, "user")
 
-	err = json.Unmarshal(timeField, &e.Timestamp)
+	err = json.Unmarshal(timestampField, &e.Timestamp)
 	if err != nil {
 		return err
 	}
