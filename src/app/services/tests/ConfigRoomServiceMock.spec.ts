@@ -10,6 +10,7 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
 
     private subscribedCallback: MGPOptional<{
         configRoomUpdate: (configRoom: ConfigRoom) => void,
+        configRoomDeleted: () => void,
         candidateJoined: (candidate: MinimalUser) => void,
         candidateLeft: (candidate: MinimalUser) => void,
         error: (reason: string) => void,
@@ -17,7 +18,7 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
 
     public override async join(gameId: string,
                                configRoomUpdate: (configRoom: ConfigRoom) => void,
-                               configRoomDeleted: (gameId: string) => void,
+                               configRoomDeleted: () => void,
                                candidateJoined: (candidate: MinimalUser) => void,
                                candidateLeft: (candidate: MinimalUser) => void,
                                error: (reason: string) => void)
@@ -64,5 +65,10 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
     public mockError(reason: string): void {
         Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
         this.subscribedCallback.get().error(reason);
+    }
+
+    public mockDeletion(): void {
+        Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
+        this.subscribedCallback.get().configRoomDeleted();
     }
 }

@@ -26,7 +26,7 @@ describe('ConfigRoomService', () => {
         expect(configRoomService).toBeTruthy();
     }));
 
-    function ignore(_: unknown): void {}
+    function ignore(): void {}
 
     function updateConfigRoom(gameId: string, configRoom: ConfigRoom): void {
         backendService.mockReceivedMessage('ConfigRoomUpdate', { gameId, configRoom });
@@ -78,12 +78,12 @@ describe('ConfigRoomService', () => {
 
         it('should notify about config room deletions', fakeAsync(async() => {
             // Given a service with which we joined a config room
-            let deleted: MGPOptional<string> = MGPOptional.empty();
+            let deleted: boolean = false;
             const subscription: Subscription =
                 await configRoomService.join('gameId',
                                              ignore,
-                                             (gameId: string): void => {
-                                                 deleted = MGPOptional.of(gameId);
+                                             (): void => {
+                                                 deleted = true;
                                              },
                                              ignore,
                                              ignore,
@@ -92,8 +92,7 @@ describe('ConfigRoomService', () => {
             // When there is a config room deletion
             deleteConfigRoom('gameId');
             // Then we are notified about it
-            expect(deleted.isPresent()).toBeTrue();
-            expect(deleted.get()).toEqual('gameId');
+            expect(deleted).toBeTrue();
             subscription.unsubscribe();
         }));
 

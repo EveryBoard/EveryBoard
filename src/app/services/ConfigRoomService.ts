@@ -14,7 +14,7 @@ export class ConfigRoomServiceFailure {
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
                          configRoomUpdate: (configRoom: ConfigRoom) => void,
-                         configRoomDeleted: (gameId: string) => void,
+                         configRoomDeleted: () => void,
                          candidateJoined: (candidate: MinimalUser) => void,
                          candidateLeft: (candidate: MinimalUser) => void,
                          error: (reason: string) => void)
@@ -41,7 +41,7 @@ export class ConfigRoomService extends AbstractConfigRoomService {
 
     public override async join(gameId: string,
                                configRoomUpdate: (configRoom: ConfigRoom) => void,
-                               configRoomDeleted: (gameId: string) => void,
+                               configRoomDeleted: () => void,
                                candidateJoined: (candidate: MinimalUser) => void,
                                candidateLeft: (candidate: MinimalUser) => void,
                                error: (reason: string) => void)
@@ -53,8 +53,8 @@ export class ConfigRoomService extends AbstractConfigRoomService {
                 configRoomUpdate(message.getArgument('configRoom'));
             });
         const configRoomDeletionSubscription: Subscription =
-            this.backendService.setCallback('ConfigRoomDeleted', (message: BackendMessage): void => {
-                configRoomDeleted(message.getArgument('gameId'));
+            this.backendService.setCallback('ConfigRoomDeleted', (_message: BackendMessage): void => {
+                configRoomDeleted();
             });
         const candidateJoinedSubscription: Subscription =
             this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {

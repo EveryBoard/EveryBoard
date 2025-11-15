@@ -41,6 +41,10 @@ describe('GameCreationComponent', () => {
         configRoomService.mockError(error);
     }
 
+    async function receiveCancellation(): Promise<void> {
+        configRoomService.mockDeletion();
+    }
+
     async function awaitComponentInitialization(): Promise<void> {
         testUtils.detectChanges();
         await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.empty()));
@@ -530,6 +534,21 @@ describe('GameCreationComponent', () => {
             configRoomService.mockConfigRoomUpdate(configRoom);
             // testUtils.detectChanges();
             expect(component.currentConfigRoom).toEqual(configRoom);
+        }));
+
+        it('should be notified about game cancellation', fakeAsync(async() => {
+            // Given a component that is loaded
+            await awaitComponentInitialization();
+            spyOn(router, 'navigate').and.resolveTo();
+
+            // When the game is cancelled
+            // Then we should be redirected to /
+            await testUtils.expectToDisplayInfoMessage(
+                'The game has been cancelled.',
+                async() => {
+                    await receiveCancellation();
+                    expectValidRouting(router, ['/'], WelcomeComponent);
+                });
         }));
 
         it('should update the view accordingly when receiving blitz update', fakeAsync(async() => {
