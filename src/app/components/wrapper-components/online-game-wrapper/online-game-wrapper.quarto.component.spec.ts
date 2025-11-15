@@ -112,6 +112,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(0);
     }
 
+    async function receiveError(reason: string): Promise<void> {
+        await gameService.mockError(reason);
+        tick(0);
+    }
+
     async function receiveGameUpdate(game: Game, detectChanges: boolean = true): Promise<void> {
         await gameService.mockGameUpdate(game);
         if (detectChanges) {
@@ -242,8 +247,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
 
     it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
-        // Given a started part
+        // Given a started game
         await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
+        await receiveSync();
 
         // When receiving a move
         await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
@@ -256,6 +262,19 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(testUtils.getGameComponent().getTurn()).toEqual(2);
 
         await receiveEndGame();
+    }));
+
+    it('should display an error if it receives one from the backend', fakeAsync(async() => {
+        // Given a game
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+
+        // When receiving an error from the backend
+        // Then it should display it
+        await testUtils.expectToDisplayCriticalMessage(
+            'Unexpected error from backend: unknown-message',
+            async() => {
+                await receiveError('unknown-message');
+            });
     }));
 
     describe('Animation', () => {

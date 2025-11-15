@@ -141,12 +141,12 @@ describe('GameCreationComponent', () => {
         expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
-    it('should display an error if it receives an unknown message from the server', fakeAsync(async() => {
+    it('should display an error if it receives one from the backend', fakeAsync(async() => {
         // Given a component that is loaded
         await awaitComponentInitialization();
         spyOn(router, 'navigate').and.resolveTo();
 
-        // When an unknown message is received
+        // When receiving an error from the backend
         // Then it should display the error and navigate to /
         await testUtils.expectToDisplayCriticalMessage(
             'Unexpected error from backend: unknown-message',
