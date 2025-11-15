@@ -827,18 +827,30 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
     let subscribed: boolean = false;
     let unsubscribed: boolean = false;
     const spy: jasmine.Spy = spyOn(service, subscribeMethod);
-    spy.and.callFake(async (...args: unknown[]): Promise<Subscription> => {
+    spy.and.callFake((...args: unknown[]): Subscription | Promise<Subscription> => {
         subscribed = true;
         // We need to call the original function.
         // This is a bit hacky, but seems to be the only way:
         // we change the spy to call through, and apply the original method.
         // This is fine for subscribe methods as they are expected to be called only once.
         spy.and.callThrough();
-        const subscription: Subscription = await service[subscribeMethod](...args);
-        return new Subscription(() => {
-            unsubscribed = true;
-            subscription.unsubscribe();
-        });
+        // The subscription method could be a promise, we need to deal with both cases
+        const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
+        if (subscription['unsubscribe'] != undefined) {
+            // This is not a promise, we can wrap it directly
+            return new Subscription(() => {
+                unsubscribed = true;
+                (subscription as Subscription).unsubscribe();
+            });
+        } else {
+            // This is a promise, let's await it then wrap it
+            return (subscription as Promise<Subscription>).then((subscription: Subscription): Subscription => {
+                return new Subscription(() => {
+                    unsubscribed = true;
+                    subscription.unsubscribe();
+                });
+            });
+        }
     });
     return () => {
         expect(subscribed)
