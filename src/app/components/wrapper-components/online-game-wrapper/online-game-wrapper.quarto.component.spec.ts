@@ -438,7 +438,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
 
-        it('should notify victory when active player timeouts', fakeAsync(async() => {
+        it('should notify victory when active player times out', fakeAsync(async() => {
             // Given a board
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
@@ -1081,7 +1081,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             it('should add turn time when receiving AddMoveTime action from Player.ONE', fakeAsync(async() => {
                 // Given an onlineGameComponent where it's our turn and we have some time remaining
                 await prepareStartedGameForCreator();
-                const timeBeforeAdding: number = wrapper.timerZeroGame.remainingSeconds;
+                const timeBeforeAdding: number = wrapper.timerZeroMove.remainingSeconds;
 
                 // When receiving AddMoveTime action from player one
                 await receiveAction(Player.ONE, 'AddMoveTime');
