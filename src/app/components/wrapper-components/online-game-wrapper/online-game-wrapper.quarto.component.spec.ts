@@ -25,7 +25,7 @@ import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
 import { GameMocks } from 'src/app/domain/PartMocks.spec';
 
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     // component construction (beforeEach)
     // stage 0
@@ -438,7 +438,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
 
-        fit('should notify victory when active player timeouts', fakeAsync(async() => {
+        it('should notify victory when active player timeouts', fakeAsync(async() => {
             // Given a board
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();

@@ -10,7 +10,6 @@ import { UserDAO } from 'src/app/dao/UserDAO';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { UserService } from '../UserService';
 import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 import { BackendServiceMock } from './BackendServiceMock.spec';
 import { AbstractBackendService, BackendService } from '../BackendService';
@@ -20,7 +19,6 @@ describe('CurrentGameService', () => {
     let currentGameService: CurrentGameService;
     let connectedUserService: ConnectedUserService;
     let userDAO: UserDAO;
-    let userService: UserService;
     let alreadyDestroyed: boolean;
 
     let backendService: BackendServiceMock;
@@ -42,7 +40,6 @@ describe('CurrentGameService', () => {
         }).compileComponents();
 
         userDAO = TestBed.inject(UserDAO);
-        userService = TestBed.inject(UserService);
         connectedUserService = TestBed.inject(ConnectedUserService);
         currentGameService = TestBed.inject(CurrentGameService);
         alreadyDestroyed = false;
@@ -335,10 +332,11 @@ describe('CurrentGameService', () => {
 
     describe('unsubscriptions', () => {
         it('should unsubscribe from backend subscription when destroying service', fakeAsync(async() => {
-            // TODO: unsubscribe does not seem to be called, yet it should?
             // Given a service on which user is logged in
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            console.log('preparing unsubscribe check')
+            // destroy the one that has already been created in beforeEach
+            // somehow, this is required to get the unsubscription check working properly
+            currentGameService.ngOnDestroy();
             const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(backendService, 'setCallback');
             // Since the subscription is done in the constructor, we need to spy it before
             currentGameService = new CurrentGameService(backendService as AbstractBackendService as BackendService,

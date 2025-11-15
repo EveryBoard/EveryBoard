@@ -23,7 +23,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { endpoint, expectedParams } from './BackendService.spec';
 
-fdescribe('GameService', () => {
+describe('GameService', () => {
 
     let gameService: GameService;
     let partDAO: PartDAO;
