@@ -102,12 +102,12 @@
                     </div>
                     <div *ngIf="isWin()">
                         <p class="title" id="youWonIndicator" *ngIf="getWinner().name === getPlayer().name" i18n>You won.</p>
-                        <p class="title" id="youLostIndicator" *ngIf="(getWinner().name !== getPlayer().name) && isPlaying()" i18n>You lost.</p>
+                        <p class="title" id="youLostIndicator" *ngIf="(getLoser().name === getPlayer().name) && isPlaying()" i18n>You lost.</p>
                         <p class="title" *ngIf="isPlaying() === false" i18n>{{ getWinner().name }} won.</p>
                     </div>
                     <div *ngIf="isTimeout()">
                         <p class="title" id="youWonIndicator" *ngIf="getWinner().name === getPlayer().name" i18n>{{ getLoser().name }} has reached their time limit. You won.</p>
-                        <p class="title" id="youLostIndicator" *ngIf="(getWinner().name !== getPlayer().name) && isPlaying()" i18n>You reached your time limit.</p>
+                        <p class="title" id="youLostIndicator" *ngIf="(getLoser().name === getPlayer().name) && isPlaying()" i18n>You reached your time limit.</p>
                         <p class="title" *ngIf="isPlaying() === false" i18n>{{ getLoser().name }} has reached their time limit.</p>
                     </div>
                     <div *ngIf="isResign()">

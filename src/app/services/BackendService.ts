@@ -53,13 +53,17 @@ export abstract class AbstractBackendService {
     }
 
     public async sendAndWaitForReply(message: JSONValue, replyTag: string): Promise<BackendMessage> {
+        console.log('SEND')
         await this.send(message);
+        console.log('WAIT')
         return this.waitForMessage(replyTag);
     }
 
     private async waitForMessage(tag: string): Promise<BackendMessage> {
         return new Promise((resolve: (value: BackendMessage) => void) => {
+            console.log('SET CALLBACK')
             this.setCallback(tag, (message: BackendMessage) => {
+                console.log('GOT IN CALLBACK')
                 this.removeCallback(tag);
                 resolve(message);
             });
@@ -73,8 +77,9 @@ export abstract class AbstractBackendService {
 
     protected receive(message: BackendMessage): void {
         const callback: MGPOptional<Callback> = this.callbacks.get(message.tag);
-        Utils.assert(callback.isPresent(), `Received a message with no callback registered: ${message.tag}`);
-        callback.get()(message);
+        if (callback.isPresent()) {
+            callback.get()(message);
+        }
     }
 
     public removeCallback(tag: string): void {

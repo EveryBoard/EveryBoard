@@ -444,10 +444,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'Rematch':
                 return this.gameService.rejectRematch();
             case 'Draw':
-                return this.gameService.refuseDraw();
+                return this.gameService.rejectDraw();
             default:
                 Utils.expectToBe(request, 'TakeBack');
-                return this.gameService.refuseTakeBack();
+                return this.gameService.rejectTakeBack();
         }
     }
 

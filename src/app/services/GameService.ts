@@ -52,8 +52,8 @@ export abstract class AbstractGameService {
         return this.accept('Draw');
     }
 
-    /** Refuse a draw request from the opponent */
-    public async refuseDraw(): Promise<void> {
+    /** Reject a draw request from the opponent */
+    public async rejectDraw(): Promise<void> {
         return this.reject('Draw');
     }
 
@@ -82,8 +82,8 @@ export abstract class AbstractGameService {
         return this.accept('TakeBack');
     }
 
-    /** Refuse that opponent takes back a move */
-    public async refuseTakeBack(): Promise<void> {
+    /** Reject that opponent takes back a move */
+    public async rejectTakeBack(): Promise<void> {
         return this.reject('TakeBack');
     }
 

@@ -3,9 +3,22 @@ import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
+import { AuthUser, ConnectedUserService } from './ConnectedUserService';
 import { Localized } from '../utils/LocaleUtils';
 import { BackendService, BackendMessage } from './BackendService';
+
+export class GameActionFailure {
+
+    public static YOU_ARE_ALREADY_PLAYING: Localized = () => $localize`You are already playing in another game.`;
+
+    public static YOU_ARE_ALREADY_CREATING: Localized = () => $localize`You are already the creator of another game.`;
+
+    public static YOU_ARE_ALREADY_CHOSEN_OPPONENT: Localized = () => $localize`You are already the chosen opponent in another game.`;
+
+    public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
+
+    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing another game.`;
+}
 
 export abstract class AbstractCurrentGameService {
 

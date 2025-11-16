@@ -5,11 +5,6 @@ import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
 import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
-import { Localized } from '../utils/LocaleUtils';
-
-export class ConfigRoomServiceFailure {
-    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;
-}
 
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,

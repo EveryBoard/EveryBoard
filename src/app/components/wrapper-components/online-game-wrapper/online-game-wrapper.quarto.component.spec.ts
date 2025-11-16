@@ -113,7 +113,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }
 
     async function receiveError(reason: string): Promise<void> {
-        await gameService.mockError(reason);
+        gameService.mockError(reason);
         tick(0);
     }
 
@@ -581,7 +581,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await receiveMove(Player.ZERO, SECOND_MOVE_ENCODED);
                 testUtils.expectElementNotToExist('#refuseTakeBack');
                 await receiveRequest(Player.ONE, 'TakeBack');
-                spyOn(gameService, 'refuseTakeBack').and.callThrough();
+                spyOn(gameService, 'rejectTakeBack').and.callThrough();
 
                 // When refusing take back
                 await refuseTakeBack(Player.ZERO);
@@ -589,7 +589,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 // Then a TakeBack rejection reply should have been sent
                 testUtils.expectElementNotToExist('#refuseTakeBack');
-                expect(gameService.refuseTakeBack).toHaveBeenCalledOnceWith();
+                expect(gameService.rejectTakeBack).toHaveBeenCalledOnceWith();
 
                 await receiveEndGame();
             }));
@@ -960,10 +960,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveSync();
             await receiveRequest(Player.ONE, 'Draw');
 
-            spyOn(gameService, 'refuseDraw').and.callThrough();
+            spyOn(gameService, 'rejectDraw').and.callThrough();
 
             await testUtils.clickElement('#reject');
-            expect(gameService.refuseDraw).toHaveBeenCalledOnceWith();
+            expect(gameService.rejectDraw).toHaveBeenCalledOnceWith();
 
             await receiveEndGame();
         }));
@@ -1453,6 +1453,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await wrapper.reachedOutOfTime(Player.ZERO);
             // Then we should not notify the timeout
             expect(gameService.notifyTimeout).not.toHaveBeenCalled();
+        }));
+
+        it('should display when someone resigned', fakeAsync(async() => {
+            // Given a board where the opponent has resigned
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
+            await receiveSync();
+            await receiveEndGame(GameResult.RESIGN_OF_ZERO);
+
+            // When checking "victory text"
+            const resignText: string = testUtils.findElement('#resignIndicator').nativeElement.innerText;
+
+            // Then we should see "player has resign"
+            expect(resignText).toBe(`creator has resigned.`);
+            expectGameToBeOver();
         }));
 
         describe('Animation', () => {

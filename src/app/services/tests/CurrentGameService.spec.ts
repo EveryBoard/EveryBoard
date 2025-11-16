@@ -3,9 +3,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CurrentGame } from 'src/app/domain/User';
-import { CurrentGameService } from '../CurrentGameService';
+import { CurrentGameService, GameActionFailure } from '../CurrentGameService';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
+import { AuthUser, ConnectedUserService } from '../ConnectedUserService';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
@@ -23,7 +23,7 @@ describe('CurrentGameService', () => {
 
     let backendService: BackendServiceMock;
 
-    function updateCurrentGame(currentGame: CurrentGame): void {
+    function updateCurrentGame(currentGame: CurrentGame | null): void {
         backendService.mockReceivedMessage('CurrentGameUpdate', { currentGame });
         tick(1);
     }
@@ -129,6 +129,21 @@ describe('CurrentGameService', () => {
             // Then the observable should have updated its value
             expect(lastValue).toEqual(MGPOptional.of({ id: '1234', gameName: 'P4', role: 'Player' }));
             subscription.unsubscribe();
+        }));
+
+        it('should update currentGame when it is removed', fakeAsync(async() => {
+            // Given a connected user with a current game
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            updateCurrentGame({ id: '1234', gameName: 'P4', role: 'Player' });
+            tick(0);
+            expect((await currentGameService.getCurrentGame()).isPresent()).toBeTrue();
+
+            // When the current game is removed
+            updateCurrentGame(null);
+            tick(0);
+
+            // Then the service now has no current game
+            expect((await currentGameService.getCurrentGame()).isAbsent()).toBeTrue();
         }));
 
     });

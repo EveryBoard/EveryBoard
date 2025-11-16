@@ -163,6 +163,32 @@ describe('ConfigRoomService', () => {
             expect(errorsSeen).toBe(1);
             subscription.unsubscribe();
         }));
+
+        fit('should not notify after unsubscription', fakeAsync(async() => {
+            // Given a service with which we joined a config room and then unsubscribed
+            let observedSomething: boolean = false;
+            function recordObservation(): void {
+                observedSomething = true;
+            }
+            const subscription: Subscription =
+                await configRoomService.join('gameId',
+                                             recordObservation,
+                                             recordObservation,
+                                             recordObservation,
+                                             recordObservation,
+                                             recordObservation);
+            subscription.unsubscribe();
+            // When anything occurs on the backend
+            const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+            updateConfigRoom('gameId', updatedConfigRoom);
+            const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
+            addCandidate(candidate);
+            removeCandidate(candidate);
+            sendError('some error');
+            deleteConfigRoom('gameId');
+            // Then we are NOT notified about it
+            expect(observedSomething).toBeFalse();
+        }));
     });
 
     describe('proposeConfig', () => {

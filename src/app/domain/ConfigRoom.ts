@@ -69,7 +69,4 @@ export namespace Status {
 
     export const FINISHED: Status = 'Finished';
 
-    export function hasStarted(status: Status): boolean {
-        return status === STARTED || status === FINISHED;
-    }
 }

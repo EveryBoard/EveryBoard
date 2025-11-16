@@ -89,7 +89,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {
         const gameId: string = configRoom.id;
         const gameName: string = configRoom.data.gameName;
-        const gameStarted: boolean = Status.hasStarted(configRoom.data.status);
+        const gameStarted: boolean = configRoom.data.status === Status.STARTED;
         const canUserJoin: MGPValidation = this.currentGameService.canUserJoin(gameId, gameStarted);
         if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', gameName, gameId]);

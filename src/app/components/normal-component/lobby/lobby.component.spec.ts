@@ -4,13 +4,12 @@ import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameActionFailure } from 'src/app/services/ConnectedUserService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { LobbyComponent } from './lobby.component';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 import { ActiveConfigRoomsServiceMock } from 'src/app/services/tests/ActiveConfigRoomServiceMock.spec';
 import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
