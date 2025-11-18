@@ -164,7 +164,7 @@ describe('ConfigRoomService', () => {
             subscription.unsubscribe();
         }));
 
-        fit('should not notify after unsubscription', fakeAsync(async() => {
+        it('should not notify after unsubscription', fakeAsync(async() => {
             // Given a service with which we joined a config room and then unsubscribed
             let observedSomething: boolean = false;
             function recordObservation(): void {

@@ -19,7 +19,6 @@ export class BackendServiceMock extends AbstractBackendService {
     }
 
     public mockReceivedMessage(tag: string, args: JSONValue): void {
-        console.log('this.RECEIVE')
         this.receive(new BackendMessage(tag, args));
     }
 

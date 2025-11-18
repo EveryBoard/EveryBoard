@@ -71,6 +71,9 @@ export abstract class AbstractBackendService {
     }
 
     public setCallback(tag: string, callback: Callback): Subscription {
+        if (this.callbacks.containsKey(tag)) {
+            throw new Error('registering a callback which already exists, this is likely not what we need!');
+        }
         this.callbacks.set(tag, callback);
         return new Subscription(() => this.removeCallback(tag));
     }
@@ -82,7 +85,7 @@ export abstract class AbstractBackendService {
         }
     }
 
-    public removeCallback(tag: string): void {
+    private removeCallback(tag: string): void {
         this.callbacks.delete(tag);
     }
 
@@ -121,40 +124,58 @@ export class BackendService extends AbstractBackendService {
         const token: string = await this.connectedUserService.getIdToken();
 
         return new Promise((resolve: (sub: Subscription) => void) => {
+            console.log('creating websocket')
             const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
             let timeout: MGPOptional<number> = MGPOptional.empty();
             const reconnect: () => void = (): void => {
+                console.log('reconnect')
                 if (timeout.isPresent()) {
                     // not trying to reconnect because there's already an attempt scheduled
                     return;
                 }
+                console.log('PRINTING')
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                timeout = MGPOptional.of(window.setTimeout(async() => await this.connect(),
+                console.log('setting a timeout of ' + this.nextConnectionAttemptTime * 1000);
+                timeout = MGPOptional.of(window.setTimeout(async() => {
+                    console.log('connecting again...')
+                    const subscription: Subscription = await this.connect();
+                    resolve(subscription);
+                },
                                                            this.nextConnectionAttemptTime * 1000));
                 this.nextConnectionAttemptTime *= 2; // exponential backoff: wait twice as long at every new attempt
             };
 
             ws.onopen = (): void => {
+                console.log('OPEN')
                 if (timeout.isPresent()) {
+                    console.log('clearing timeout')
                     window.clearTimeout(timeout.get());
                     timeout = MGPOptional.empty(); // clear the timeout
                 }
-                this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
+                // this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset the exponential backoff
+                console.log('RESOLVING')
                 this.resolveConnection(); // notify waiters
                 resolve(new Subscription(() => this.disconnect()));
             };
             ws.onerror = (_error: Event): void => {
+                console.log('ERROR')
+                if (this.webSocket.isPresent()) {
+                    this.webSocket.get().close();
+                }
                 this.webSocket = MGPOptional.empty();
                 reconnect();
             };
             ws.onclose = (): void => {
+                console.log('CLOSE')
                 this.webSocket = MGPOptional.empty();
                 // The connection has been closed by the server.
                 if (this.disconnectRequested) {
                     // It is because client code requested to disconnect. Keep it as is.
-                    this.disconnectRequested = false;
+                    // TODO: check how this works
+                    throw new Error('Disconnect requested from client, I thought it did not happen!');
+                    // this.disconnectRequested = false;
                 } else {
                     // Or it is because the server has restarted (or some unexpected error).
                     // It is best to try to reconnect.
@@ -162,6 +183,7 @@ export class BackendService extends AbstractBackendService {
                 }
             };
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
+                console.log('MESSAGE')
                 Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message (not a string): ${JSON.stringify(ev.data)}`);
                 const json: NonNullable<JSONValue> = Utils.getNonNullable(JSON.parse(ev.data as string));
                 console.log('%cWS: <<< ' + JSON.stringify(json), 'color: green');
@@ -196,6 +218,7 @@ export class BackendService extends AbstractBackendService {
         Utils.assert(this.webSocket.isPresent(), 'Should not disconnect from unconnected WebSocket!');
         this.disconnectRequested = true;
         this.webSocket.get().close();
+        this.webSocket = MGPOptional.empty();
         // Need to clear the promise for the next connection
         this.connectionPromise = new Promise((resolve: () => void) => {
             this.resolveConnection = resolve;

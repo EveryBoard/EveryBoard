@@ -10,7 +10,7 @@ import { Game, GameEvent } from 'src/app/domain/Game';
 import { GameMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 
-fdescribe('GameService', () => {
+describe('GameService', () => {
 
     let backendService: BackendServiceMock;
     let gameService: GameService;

@@ -23,10 +23,9 @@ export class ChatService extends AbstractChatService {
 
     public override subscribeToMessages(callback: (message: Message) => void): Subscription {
         // Make a new subscription to receive new messages
-        this.backendService.setCallback('ChatMessage', (message: BackendMessage): void => {
+        return this.backendService.setCallback('ChatMessage', (message: BackendMessage): void => {
             callback(message.getArgument('message'));
         });
-        return new Subscription(() => this.backendService.removeCallback('ChatMessage'));
     }
 
     public override async sendMessage(message: string): Promise<void> {
