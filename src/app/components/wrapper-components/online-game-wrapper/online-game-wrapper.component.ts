@@ -532,7 +532,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             case 'ResignOfZero':
                 return Utils.getNonNullable(this.game).playerZero;
             default:
-                Utils.expectToBeMultiple(result, ['VictoryOfZero', 'TimeoutOfOne', 'ResignOfOne'])
+                Utils.expectToBeMultiple(result, ['VictoryOfZero', 'TimeoutOfOne', 'ResignOfOne']);
                 return Utils.getNonNullable(this.game).playerOne;
         }
     }
