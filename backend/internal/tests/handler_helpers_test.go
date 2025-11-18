@@ -1128,7 +1128,7 @@ func (sb ScenarioBuilder) doEvent(userId string, data model.EventData, eventStr 
 
 	eventJSON := toJSON(sb.t, event)
 	for _, subscriber := range(sb.getGameSubscribers(configRoom.ID)) {
-		log.Printf("%s is exppecting event %v", subscriber, data)
+		log.Printf("%s is expecting event %v", subscriber, data)
 		expectMessage(sb.t, sb.getConnection(subscriber), fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, eventJSON))
 	}
 }
@@ -1141,6 +1141,16 @@ func (sb ScenarioBuilder) Move(userId string, move json.RawMessage) {
 func (sb ScenarioBuilder) ProposeDraw(userId string) {
 	data := model.EventDataRequest(model.PropositionDraw)
 	sb.doEvent(userId, data, `["Propose",{"proposition":"Draw"}]`)
+}
+
+func (sb ScenarioBuilder) RejectDraw(userId string) {
+	data := model.EventDataReplyReject(model.PropositionDraw)
+	sb.doEvent(userId, data, `["Reject",{"proposition":"Draw"}]`)
+}
+
+func (sb ScenarioBuilder) AddTime(userId string) {
+	data := model.EventDataAddTime(model.AddTimeMove)
+	sb.doEvent(userId, data, `["AddTime",{"kind":"Move"}]`)
 }
 
 func (sb ScenarioBuilder) endGameDBExpectations(configRoom model.ConfigRoom, winner model.MinimalUser, loser model.MinimalUser, draw bool) {
@@ -1281,4 +1291,15 @@ func (sb ScenarioBuilder) NotifyTimeout(notifier string) {
 		func (game model.Game) model.Result {
 			return model.ResultTimeoutOfOne
 		}, true, false)
+}
+
+func (sb ScenarioBuilder) EndGame(userId string, winner int) {
+	sb.endGame(userId, fmt.Sprintf(`["EndGame",{"winner":%d}]`, winner),
+		func (game model.Game) model.Result {
+			if winner == 1 {
+				return model.ResultVictoryOfOne
+			} else {
+				return model.ResultVictoryOfZero
+			}
+		}, true, false);
 }

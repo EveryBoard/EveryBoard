@@ -57,6 +57,16 @@ describe('MGPMap', () => {
             // Then it should have no elements
             expect(map).toEqual(new MGPMap());
         });
+
+        it('should fail on an immutable map', () => {
+            // Given an immutable map with elements
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
+            map.makeImmutable();
+
+            // When clearing it
+            // Then it should fail
+            expect(() => map.clear()).toThrowError('Assertion failure: Cannot call clear on immutable map!');
+        });
     });
 
     describe('putAll', () => {

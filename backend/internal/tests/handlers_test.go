@@ -173,25 +173,25 @@ func TestNotifyTimeout(t *testing.T) {
 	sb.NotifyTimeout(player)
 	sb.Cleanup()
 }
-//
-// func TestEndGame(t *testing.T) {
-// 	sb, player, opponent, _ := setupTwoPlayersGame()
-// 	sb.EndGame(player, opponent)
-// 	sb.Cleanup()
-// }
-//
-// func TestRejectProposal(t *testing.T) {
-// 	sb, player, opponent, _ := setupTwoPlayersGame()
-// 	sb.ProposeDraw(player)
-// 	sb.RejectDraw(opponent)
-// 	sb.Cleanup()
-// }
-//
-// func TestAddTime(t *testing.T) {
-// 	sb, player, _, _ := setupTwoPlayersGame()
-// 	sb.AddTime(player)
-// 	sb.Cleanup()
-// }
+
+func TestEndGame(t *testing.T) {
+	sb, player, _, _ := setupTwoPlayersGame(t)
+	sb.EndGame(player, 1)
+	sb.Cleanup()
+}
+
+func TestRejectProposal(t *testing.T) {
+	sb, player, opponent, _ := setupTwoPlayersGame(t)
+	sb.ProposeDraw(player)
+	sb.RejectDraw(opponent)
+	sb.Cleanup()
+}
+
+func TestAddTime(t *testing.T) {
+	sb, player, _, _ := setupTwoPlayersGame(t)
+	sb.AddTime(player)
+	sb.Cleanup()
+}
 
 func TestInvalidMessages(t *testing.T) {
 	stopServer, _ := PrepareServer(t)

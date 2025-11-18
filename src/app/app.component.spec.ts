@@ -8,7 +8,6 @@ import { ErrorLoggerServiceMock } from './services/tests/ErrorLoggerServiceMock.
 describe('AppComponent', () => {
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [],
             declarations: [AppComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
