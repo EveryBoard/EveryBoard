@@ -176,7 +176,7 @@ func TestNotifyTimeout(t *testing.T) {
 
 func TestEndGame(t *testing.T) {
 	sb, player, _, _ := setupTwoPlayersGame(t)
-	sb.EndGame(player, 1)
+	sb.EndGame(player, 0)
 	sb.Cleanup()
 }
 

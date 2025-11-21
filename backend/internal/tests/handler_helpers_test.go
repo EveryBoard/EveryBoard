@@ -529,6 +529,9 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 }
 
 func (sb ScenarioBuilder) Cleanup() {
+	for _, conn := range(sb.connections) {
+		conn.Close()
+	}
 	for _, f := range(sb.cleanupFunctions) {
 		f()
 	}
