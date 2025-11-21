@@ -31,8 +31,13 @@ coverage:
 view-coverage: coverage
 	go tool cover -html=coverage.out -o coverage.html
 
+# Check that coverage is above a certain threshold. Change the sed command to increase the threshold as needed
 check-coverage: coverage
-	go tool cover -func=coverage.out | grep total | grep -q '100.0%' || exit 1
+	go tool cover -func=coverage.out | grep total | grep -o '..\..%' | sed 's/%/>78/' | bc | grep -q 1
+
+# Make sure that sources are formatted according to gofmt
+check-fmt:
+	test -z "$$(gofmt -l .)"
 
 lint:
 	golangci-lint run

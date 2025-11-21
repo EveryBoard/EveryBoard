@@ -114,6 +114,8 @@ jobs:
         path: backend/coverage.html
     - name: Check coverage
       run: cd backend && make check-coverage
+    - name: Check gofmt
+      run: cd backend && make check-fmt
 
   e2e:
     runs-on: ubuntu-24.04
