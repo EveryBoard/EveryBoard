@@ -9,7 +9,6 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-
 func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 	stopServer, _ := PrepareServer(t)
 	defer stopServer()
@@ -45,24 +44,24 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 
 	userFoo := model.MinimalUser{ID: "foo", Name: "foo"}
 	message := model.Message{
-		ID: 1,
-		GameID: model.GameIDLobby,
-		Sender: userFoo,
+		ID:        1,
+		GameID:    model.GameIDLobby,
+		Sender:    userFoo,
 		Timestamp: 42,
-		Content: "hello",
+		Content:   "hello",
 	}
 	configRoom := model.ConfigRoom{
-		ID: 2,
-		Creator: userFoo,
-		CreatorElo: 0,
+		ID:             2,
+		Creator:        userFoo,
+		CreatorElo:     0,
 		ChosenOpponent: nil,
-		Status: model.StatusCreated,
-		FirstPlayer: model.FirstPlayerRandom,
-		GameType: model.GameTypeStandard,
-		MoveDuration: model.StandardMoveDuration,
-		GameDuration: model.StandardGameDuration,
-		RulesConfig: json.RawMessage(`null`),
-		GameName: "P4",
+		Status:         model.StatusCreated,
+		FirstPlayer:    model.FirstPlayerRandom,
+		GameType:       model.GameTypeStandard,
+		MoveDuration:   model.StandardMoveDuration,
+		GameDuration:   model.StandardGameDuration,
+		RulesConfig:    json.RawMessage(`null`),
+		GameName:       "P4",
 	}
 	ExpectMessageInsertion(mock, message)
 	sendMessage(t, otherConnection, `["ChatSend",{"message":"hello"}]`)
@@ -70,21 +69,21 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 
 	ExpectEloSelection(mock, "foo", "P4", nil)
 	ExpectEloInsertion(mock, model.Elo{
-		ID: 1,
-		User: userFoo,
-		GameName: "P4",
-		CurrentElo: 0,
+		ID:          1,
+		User:        userFoo,
+		GameName:    "P4",
+		CurrentElo:  0,
 		GamesPlayed: 0,
 	})
 	ExpectConfigRoomInsertion(mock, configRoom)
 	currentGame := model.CurrentGame{
-		ID: 1,
-		User: userFoo,
-		GameID: configRoom.ID,
+		ID:       1,
+		User:     userFoo,
+		GameID:   configRoom.ID,
 		GameName: "P4",
-		Creator: userFoo,
+		Creator:  userFoo,
 		Opponent: nil,
-		Role: model.UserRoleCreator,
+		Role:     model.UserRoleCreator,
 	}
 	ExpectCurrentGameInsertion(mock, currentGame)
 
@@ -108,32 +107,32 @@ func TestGameFlowSimpler(t *testing.T) {
 	player := sb.EstablishConnection("player")
 	opponent := sb.EstablishConnection("opponent")
 
-	sb.SubscribeLobby(opponent) // opponent opens lobby
-	gameId := sb.Create(player, "P4") // player creates game
-	sb.SubscribeConfigRoom(player, gameId) // player subscribes to the config room
-	sb.Unsubscribe(opponent) // opponent unsubscribes from the lobby
+	sb.SubscribeLobby(opponent)              // opponent opens lobby
+	gameId := sb.Create(player, "P4")        // player creates game
+	sb.SubscribeConfigRoom(player, gameId)   // player subscribes to the config room
+	sb.Unsubscribe(opponent)                 // opponent unsubscribes from the lobby
 	sb.SubscribeConfigRoom(opponent, gameId) // opponent subscribes to the config room
-	sb.SelectOpponent(player, opponent) // player selects the opponent
+	sb.SelectOpponent(player, opponent)      // player selects the opponent
 	proposal := model.ConfigProposal{
-		GameType: model.GameTypeStandard,
+		GameType:     model.GameTypeStandard,
 		MoveDuration: 120,
 		GameDuration: 1800,
-		FirstPlayer: model.FirstPlayerRandom,
-		RulesConfig: json.RawMessage(`null`),
+		FirstPlayer:  model.FirstPlayerRandom,
+		RulesConfig:  json.RawMessage(`null`),
 	}
-	sb.ProposeConfig(player, proposal) // player proposes to the opponent
-	sb.ReviewConfig(player) // player reviews the config
-	sb.ProposeConfig(player, proposal) // player proposes the config again
-	sb.AcceptConfig(opponent) // opponent accepts (the game starts)
-	sb.Unsubscribe(player) // player unsubscribes from the config room
-	sb.Unsubscribe(opponent) // opponent unsubscribes from the config room
-	sb.SubscribeGame(player, gameId) // player subscribes to the game
-	sb.SubscribeGame(opponent, gameId) // opponent subscribes to the game
+	sb.ProposeConfig(player, proposal)             // player proposes to the opponent
+	sb.ReviewConfig(player)                        // player reviews the config
+	sb.ProposeConfig(player, proposal)             // player proposes the config again
+	sb.AcceptConfig(opponent)                      // opponent accepts (the game starts)
+	sb.Unsubscribe(player)                         // player unsubscribes from the config room
+	sb.Unsubscribe(opponent)                       // opponent unsubscribes from the config room
+	sb.SubscribeGame(player, gameId)               // player subscribes to the game
+	sb.SubscribeGame(opponent, gameId)             // opponent subscribes to the game
 	observer := sb.EstablishConnection("observer") // an observer joins
-	sb.SubscribeGame(observer, gameId) // the observer subscribes to the game
-	sb.Move(player,  json.RawMessage(`{"x":42}`)) // player plays one move
-	sb.ProposeDraw(opponent)// opponent proposes draw
-	sb.AcceptDraw(player) // player accepts
+	sb.SubscribeGame(observer, gameId)             // the observer subscribes to the game
+	sb.Move(player, json.RawMessage(`{"x":42}`))   // player plays one move
+	sb.ProposeDraw(opponent)                       // opponent proposes draw
+	sb.AcceptDraw(player)                          // player accepts
 
 	sb.Cleanup()
 }
@@ -142,22 +141,22 @@ func setupTwoPlayersGame(t *testing.T) (ScenarioBuilder, string, string, model.G
 	sb := NewScenarioBuilder(t)
 	player := sb.EstablishConnection("player")
 	opponent := sb.EstablishConnection("opponent")
-	gameId := sb.Create(player, "P4") // player creates game
-	sb.SubscribeConfigRoom(player, gameId) // player subscribes to the config room
+	gameId := sb.Create(player, "P4")        // player creates game
+	sb.SubscribeConfigRoom(player, gameId)   // player subscribes to the config room
 	sb.SubscribeConfigRoom(opponent, gameId) // opponent subscribes to the config room
-	sb.SelectOpponent(player, opponent) // player selects the opponent
+	sb.SelectOpponent(player, opponent)      // player selects the opponent
 	proposal := model.ConfigProposal{
-		GameType: model.GameTypeStandard,
+		GameType:     model.GameTypeStandard,
 		MoveDuration: 120,
 		GameDuration: 1800,
-		FirstPlayer: model.FirstPlayerRandom,
-		RulesConfig: json.RawMessage(`null`),
+		FirstPlayer:  model.FirstPlayerRandom,
+		RulesConfig:  json.RawMessage(`null`),
 	}
 	sb.ProposeConfig(player, proposal) // player proposes to the opponent
-	sb.AcceptConfig(opponent) // opponent accepts (the game starts)
-	sb.Unsubscribe(player) // player unsubscribes from the config room
-	sb.Unsubscribe(opponent) // opponent unsubscribes from the config room
-	sb.SubscribeGame(player, gameId) // player subscribes to the game
+	sb.AcceptConfig(opponent)          // opponent accepts (the game starts)
+	sb.Unsubscribe(player)             // player unsubscribes from the config room
+	sb.Unsubscribe(opponent)           // opponent unsubscribes from the config room
+	sb.SubscribeGame(player, gameId)   // player subscribes to the game
 	sb.SubscribeGame(opponent, gameId) // opponent subscribes to the game
 	return sb, player, opponent, gameId
 }

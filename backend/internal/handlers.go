@@ -31,8 +31,8 @@ func randBoolImpl() bool {
 var RandBool = randBoolImpl
 
 type Handlers struct {
-	connection          *websocket.Conn
-	user                model.MinimalUser
+	connection *websocket.Conn
+	user       model.MinimalUser
 }
 
 func sendMessage(connection *websocket.Conn, message model.OutgoingMessage) error {
@@ -141,7 +141,7 @@ func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.Curr
 		return err
 	}
 
-	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: &currentGame })
+	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{CurrentGame: &currentGame})
 }
 
 func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
@@ -150,7 +150,7 @@ func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.C
 		return err
 	}
 
-	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: &currentGame })
+	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{CurrentGame: &currentGame})
 }
 
 func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
@@ -159,7 +159,7 @@ func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
 		return err
 	}
 
-	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{ CurrentGame: nil })
+	return h.broadcastToUser(user, model.CurrentGameUpdateMessage{CurrentGame: nil})
 }
 
 func (h *Handlers) createGame(gameName string) error {
@@ -191,12 +191,12 @@ func (h *Handlers) createGame(gameName string) error {
 
 	// Creator now has a current game, without opponents yet
 	err = h.setCurrentGame(h.user, model.CurrentGame{
-		GameID: configRoom.ID,
+		GameID:   configRoom.ID,
 		GameName: gameName,
-		User: h.user,
-		Creator: h.user,
+		User:     h.user,
+		Creator:  h.user,
 		Opponent: nil,
-		Role: model.UserRoleCreator,
+		Role:     model.UserRoleCreator,
 	})
 	if err != nil {
 		return err
@@ -255,12 +255,12 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 			// And set the current game of the candidate
 			err = h.setCurrentGame(h.user, model.CurrentGame{
-				GameID: gameId,
+				GameID:   gameId,
 				GameName: configRoom.GameName,
-				User: h.user,
-				Creator: configRoom.Creator,
+				User:     h.user,
+				Creator:  configRoom.Creator,
 				Opponent: configRoom.ChosenOpponent,
-				Role: model.UserRoleCandidate,
+				Role:     model.UserRoleCandidate,
 			})
 			if err != nil {
 				return err
@@ -303,12 +303,12 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 			return err
 		}
 		err = h.setCurrentGame(h.user, model.CurrentGame{
-			GameID: gameId,
+			GameID:   gameId,
 			GameName: game.GameName,
-			User: h.user,
-			Creator: configRoom.Creator,
+			User:     h.user,
+			Creator:  configRoom.Creator,
 			Opponent: configRoom.ChosenOpponent,
-			Role: model.UserRoleObserver,
+			Role:     model.UserRoleObserver,
 		})
 		if err != nil {
 			return err
@@ -334,8 +334,8 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 
 	syncEvent := model.GameEvent{
 		Timestamp: Now(),
-		User: h.user,
-		Data: model.EventDataSync,
+		User:      h.user,
+		Data:      model.EventDataSync,
 	}
 	return h.send(model.GameEventMessage{Event: syncEvent, ServerTime: NowFloat()})
 }
@@ -393,11 +393,11 @@ func (h *Handlers) unsubscribe() error {
 
 				err = h.broadcastToLobby(update)
 				if err != nil {
-					return  err
+					return err
 				}
 
 				// Remove current game from all candidates and from creator
-				err = model.ApplyToCandidates(configRoom.ID, func (candidate model.Candidate) error {
+				err = model.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
 					return h.removeCurrentGame(candidate.User)
 				})
 				if err != nil {
@@ -424,7 +424,7 @@ func (h *Handlers) unsubscribe() error {
 						return err
 					}
 					err = h.broadcastToConfigRoom(configRoom.ID, model.ConfigRoomUpdateMessage{
-						GameID: configRoom.ID,
+						GameID:     configRoom.ID,
 						ConfigRoom: *configRoom,
 					})
 					if err != nil {
@@ -432,12 +432,12 @@ func (h *Handlers) unsubscribe() error {
 					}
 
 					err = h.updateCurrentGame(configRoom.Creator, model.CurrentGame{
-						GameID: configRoom.ID,
+						GameID:   configRoom.ID,
 						GameName: configRoom.GameName,
-						User: configRoom.Creator,
-						Creator: configRoom.Creator,
+						User:     configRoom.Creator,
+						Creator:  configRoom.Creator,
 						Opponent: nil,
-						Role: model.UserRoleCreator,
+						Role:     model.UserRoleCreator,
 					})
 					if err != nil {
 						return err
@@ -489,22 +489,22 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 
 	// Both players have their current game updated
 	err = h.updateCurrentGame(h.user, model.CurrentGame{
-		GameID: configRoom.ID,
+		GameID:   configRoom.ID,
 		GameName: configRoom.GameName,
-		Creator: h.user,
+		Creator:  h.user,
 		Opponent: &opponent,
-		Role: model.UserRoleCreator,
+		Role:     model.UserRoleCreator,
 	})
 	if err != nil {
 		return err
 	}
 
 	err = h.updateCurrentGame(opponent, model.CurrentGame{
-		GameID: configRoom.ID,
+		GameID:   configRoom.ID,
 		GameName: configRoom.GameName,
-		Creator: h.user,
+		Creator:  h.user,
 		Opponent: &opponent,
-		Role: model.UserRoleChosenOpponent,
+		Role:     model.UserRoleChosenOpponent,
 	})
 	if err != nil {
 		return err
@@ -591,8 +591,8 @@ func (h *Handlers) acceptConfig() error {
 	// Add its start event
 	event := model.GameEvent{
 		Timestamp: Now(),
-		User: h.user,
-		Data: model.EventDataStartGame,
+		User:      h.user,
+		Data:      model.EventDataStartGame,
 	}
 	err = model.AddEvent(configRoom.ID, event)
 	if err != nil {
@@ -602,7 +602,7 @@ func (h *Handlers) acceptConfig() error {
 	// They will get it when subscribing.
 
 	// Updates the current game of both players, and remove the current game of all non-chosen candidates
-	err = model.ApplyToCandidates(configRoom.ID, func (candidate model.Candidate) error {
+	err = model.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
 		if candidate.User.ID == configRoom.ChosenOpponent.ID {
 			return nil // skip the opponent
 		}
@@ -613,22 +613,22 @@ func (h *Handlers) acceptConfig() error {
 	}
 
 	err = h.updateCurrentGame(configRoom.Creator, model.CurrentGame{
-		GameID: configRoom.ID,
+		GameID:   configRoom.ID,
 		GameName: configRoom.GameName,
-		Creator: configRoom.Creator,
+		Creator:  configRoom.Creator,
 		Opponent: configRoom.ChosenOpponent,
-		Role: model.UserRolePlayer,
+		Role:     model.UserRolePlayer,
 	})
 	if err != nil {
 		return err
 	}
 
 	err = h.updateCurrentGame(*configRoom.ChosenOpponent, model.CurrentGame{
-		GameID: configRoom.ID,
+		GameID:   configRoom.ID,
 		GameName: configRoom.GameName,
-		Creator: configRoom.Creator,
+		Creator:  configRoom.Creator,
 		Opponent: configRoom.ChosenOpponent,
-		Role: model.UserRolePlayer,
+		Role:     model.UserRolePlayer,
 	})
 	if err != nil {
 		return err
@@ -701,8 +701,8 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 
 	event := model.GameEvent{
 		Timestamp: Now(),
-		User: h.user,
-		Data: model.EventDataEndGame,
+		User:      h.user,
+		Data:      model.EventDataEndGame,
 	}
 	err = model.AddEvent(game.GameID, event)
 	if err != nil {
@@ -728,7 +728,7 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 	if err != nil {
 		return err
 	}
-	err = model.ApplyToObservers(game.GameID, func (observer model.MinimalUser) error {
+	err = model.ApplyToObservers(game.GameID, func(observer model.MinimalUser) error {
 		return h.removeCurrentGame(observer)
 	})
 	if err != nil {
@@ -789,8 +789,8 @@ func (h *Handlers) addEvent(eventData model.EventData) error {
 
 	event := model.GameEvent{
 		Timestamp: Now(),
-		User: h.user,
-		Data: eventData,
+		User:      h.user,
+		Data:      eventData,
 	}
 
 	err := model.AddEvent(gameId, event)
@@ -861,23 +861,23 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 
 		// Set the current game of both players
 		err = h.setCurrentGame(rematchGame.PlayerZero, model.CurrentGame{
-			GameID: rematchGame.GameID,
+			GameID:   rematchGame.GameID,
 			GameName: rematchGame.GameName,
-			User: rematchGame.PlayerZero,
-			Creator: creator,
+			User:     rematchGame.PlayerZero,
+			Creator:  creator,
 			Opponent: &opponent,
-			Role: model.UserRolePlayer,
+			Role:     model.UserRolePlayer,
 		})
 		if err != nil {
 			return err
 		}
 		err = h.setCurrentGame(rematchGame.PlayerOne, model.CurrentGame{
-			GameID: rematchGame.GameID,
+			GameID:   rematchGame.GameID,
 			GameName: rematchGame.GameName,
-			User: rematchGame.PlayerOne,
-			Creator: creator,
+			User:     rematchGame.PlayerOne,
+			Creator:  creator,
 			Opponent: &opponent,
-			Role: model.UserRolePlayer,
+			Role:     model.UserRolePlayer,
 		})
 		if err != nil {
 			return err
@@ -886,8 +886,8 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 		// Add its start event
 		event := model.GameEvent{
 			Timestamp: Now(),
-			User: h.user,
-			Data: model.EventDataStartGame,
+			User:      h.user,
+			Data:      model.EventDataStartGame,
 		}
 		err = model.AddEvent(rematchConfigRoom.ID, event)
 		if err != nil {

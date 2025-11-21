@@ -12,11 +12,11 @@ func TestMarshalConfigProposal(t *testing.T) {
 	// Even though config proposals are only meant to be received, we test them
 	// in both ways (sending and receiving), for simplicity.
 	original := model.ConfigProposal{
-		GameType: model.GameTypeBlitz,
+		GameType:     model.GameTypeBlitz,
 		MoveDuration: 30,
 		GameDuration: 1200,
-		FirstPlayer: model.FirstPlayerCreator,
-		RulesConfig: json.RawMessage(`{"width":42,"height":42}`),
+		FirstPlayer:  model.FirstPlayerCreator,
+		RulesConfig:  json.RawMessage(`{"width":42,"height":42}`),
 	}
 	json := `{"gameType":"Blitz","moveDuration":30,"gameDuration":1200,"firstPlayer":"Creator","rulesConfig":{"width":42,"height":42}}`
 	ExpectMarshallingToWork(t, original, json)

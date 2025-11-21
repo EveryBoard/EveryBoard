@@ -24,24 +24,24 @@ type SubscriptionKindAndGameId struct {
 // make testing easier, but in practice we deal with *websocket.Conn values.
 type SubscriptionManager[Connection comparable] struct {
 	// A map from WebSocket client to the subscribed game
-	clientToGame  map[Connection]SubscriptionKindAndGameId
+	clientToGame map[Connection]SubscriptionKindAndGameId
 	// A map from subscribed games to the set of clients that subscribed to it.
 	// (yes, sets are ugly: map[T]struct{} is a set of T
 	gameToClients map[SubscriptionKindAndGameId]utils.Set[Connection]
 	// A map from client to the user id
-	clientToUser  map[Connection]string
+	clientToUser map[Connection]string
 	// A map from user id to their (only) client
-	userToClient  map[string]Connection
+	userToClient map[string]Connection
 	// The lock that protects concurrent accesses to the subscription manager
-	lock          sync.RWMutex
+	lock sync.RWMutex
 }
 
 func NewSubscriptionManager[Connection comparable]() SubscriptionManager[Connection] {
 	return SubscriptionManager[Connection]{
-		clientToGame:   make(map[Connection]SubscriptionKindAndGameId),
-		gameToClients:  make(map[SubscriptionKindAndGameId]utils.Set[Connection]),
-		clientToUser:   make(map[Connection]string),
-		userToClient:   make(map[string]Connection),
+		clientToGame:  make(map[Connection]SubscriptionKindAndGameId),
+		gameToClients: make(map[SubscriptionKindAndGameId]utils.Set[Connection]),
+		clientToUser:  make(map[Connection]string),
+		userToClient:  make(map[string]Connection),
 	}
 }
 
@@ -73,9 +73,9 @@ func (manager *SubscriptionManager[Connection]) Unsubscribe(client Connection) {
 	manager.lock.Lock()
 	defer manager.lock.Unlock()
 
-	subscription, exists := manager.clientToGame[client];
+	subscription, exists := manager.clientToGame[client]
 	if exists {
-		clients, exists := manager.gameToClients[subscription];
+		clients, exists := manager.gameToClients[subscription]
 		if exists {
 			delete(clients, client)
 			if len(clients) == 0 {
@@ -86,7 +86,7 @@ func (manager *SubscriptionManager[Connection]) Unsubscribe(client Connection) {
 	}
 
 	delete(manager.clientToGame, client)
-	user, exists := manager.clientToUser[client];
+	user, exists := manager.clientToUser[client]
 	if exists {
 		delete(manager.userToClient, user)
 	}
@@ -119,4 +119,3 @@ func (manager *SubscriptionManager[Connection]) SubscriptionOf(client Connection
 	sub, exists := manager.clientToGame[client]
 	return sub.kind, sub.gameID, exists
 }
-

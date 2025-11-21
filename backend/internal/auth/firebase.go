@@ -42,11 +42,11 @@ func InitFirebase() error {
 }
 
 type Firebase struct {
-	UseEmulator bool
-	ProjectID string
+	UseEmulator        bool
+	ProjectID          string
 	ServiceAccountFile string
-	auth *auth.Client
-	firestore *firestore.Client
+	auth               *auth.Client
+	firestore          *firestore.Client
 }
 
 func (f *Firebase) Initialize() error {

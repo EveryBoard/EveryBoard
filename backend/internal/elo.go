@@ -16,9 +16,12 @@ const (
 
 func w(end EndType) float64 {
 	switch end {
-	case Draw: return 0.5
-	case Victory: return 1
-	default: return 0
+	case Draw:
+		return 0.5
+	case Victory:
+		return 1
+	default:
+		return 0
 	}
 }
 
@@ -34,7 +37,7 @@ func k(gamesPlayed uint) float64 {
 
 func winProbability(eloOfWinner float64, eloOfLoser float64) float64 {
 	eloDifference := eloOfWinner - eloOfLoser
-	return 1 / (1 + (math.Pow(10, - eloDifference / 400)))
+	return 1 / (1 + (math.Pow(10, -eloDifference/400)))
 }
 
 func standardEloDifference(k float64, w float64, p float64) float64 {
@@ -50,7 +53,7 @@ func newEloValue(oldEloValue float64, difference float64) float64 {
 			return oldEloValue // They don't lose elo if they are below 100
 		} else {
 			// Otherwise, they can't go below 100
-			return math.Max(100.0, oldEloValue + difference)
+			return math.Max(100.0, oldEloValue+difference)
 		}
 	} else {
 		return oldEloValue + difference
@@ -62,7 +65,7 @@ func ComputeNewElo(oldElo model.Elo, oldOpponentElo model.Elo, end EndType) mode
 	w := w(end)
 	p := winProbability(oldElo.CurrentElo, oldOpponentElo.CurrentElo)
 	return model.Elo{
-		CurrentElo: newEloValue(oldElo.CurrentElo, standardEloDifference(k, w, p)),
+		CurrentElo:  newEloValue(oldElo.CurrentElo, standardEloDifference(k, w, p)),
 		GamesPlayed: oldElo.GamesPlayed + 1,
 	}
 }

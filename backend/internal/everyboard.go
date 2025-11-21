@@ -18,13 +18,13 @@ import (
 )
 
 type Configuration struct {
-	Firebase auth.FirebaseLike
+	Firebase  auth.FirebaseLike
 	IDEncoder model.IDEncoder
-	Database gorm.Dialector
+	Database  gorm.Dialector
 
 	ListenAddr string
-	Origin string
-	upgrader websocket.Upgrader
+	Origin     string
+	upgrader   websocket.Upgrader
 }
 
 // ReadConfiguration reads the configuration of the server through environment
@@ -32,8 +32,8 @@ type Configuration struct {
 // more checks will be done when the components are initialized.
 func ReadConfiguration() (*Configuration, error) {
 	firebase := &auth.Firebase{
-		UseEmulator: os.Getenv("USE_EMULATOR") != "no",
-		ProjectID: os.Getenv("PROJECT_ID"),
+		UseEmulator:        os.Getenv("USE_EMULATOR") != "no",
+		ProjectID:          os.Getenv("PROJECT_ID"),
 		ServiceAccountFile: os.Getenv("SERVICE_ACCOUNT"),
 	}
 	var database gorm.Dialector
@@ -53,11 +53,11 @@ func ReadConfiguration() (*Configuration, error) {
 	}
 
 	config := &Configuration{
-		Firebase: firebase,
-		IDEncoder: &model.SqidsEncoder{},
-		Origin: os.Getenv("ALLOW_ORIGIN"),
+		Firebase:   firebase,
+		IDEncoder:  &model.SqidsEncoder{},
+		Origin:     os.Getenv("ALLOW_ORIGIN"),
 		ListenAddr: os.Getenv("LISTEN_ADDR"),
-		Database: database,
+		Database:   database,
 	}
 	if config.ListenAddr == "" {
 		// No listen address provided, default to :8081
@@ -79,7 +79,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	minimalUser := model.MinimalUser{
-		ID: uid,
+		ID:   uid,
 		Name: user.Username,
 	}
 
@@ -140,20 +140,20 @@ var Subscriptions SubscriptionManager[*websocket.Conn]
 var Connections ConnectionManager[*websocket.Conn]
 
 func cors(origin string, next http.Handler) http.Handler {
-    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-        w.Header().Set("Access-Control-Allow-Origin", origin)
-        w.Header().Set("Access-Control-Allow-Methods", "GET, POST, HEAD, PATCH, DELETE")
-        w.Header().Set("Access-Control-Allow-Headers", "Authorization")
-        w.Header().Set("Access-Control-Allow-Credentials", "true")
-        w.Header().Set("Access-Control-Max-Age", "86400")
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", origin)
+		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, HEAD, PATCH, DELETE")
+		w.Header().Set("Access-Control-Allow-Headers", "Authorization")
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Max-Age", "86400")
 
-        if r.Method == http.MethodOptions {
-            w.WriteHeader(http.StatusNoContent)
-            return
-        }
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
 
-        next.ServeHTTP(w, r)
-    })
+		next.ServeHTTP(w, r)
+	})
 }
 
 func Prepare(config Configuration) (*http.Server, error) {
@@ -176,15 +176,15 @@ func Prepare(config Configuration) (*http.Server, error) {
 	Connections = NewConnectionManager[*websocket.Conn]()
 
 	config.upgrader = websocket.Upgrader{
-		CheckOrigin:  func(r *http.Request) bool {
-			return config.Origin == "*" || r.Header.Get("Origin") == config.Origin;
+		CheckOrigin: func(r *http.Request) bool {
+			return config.Origin == "*" || r.Header.Get("Origin") == config.Origin
 		},
 		Subprotocols: []string{"access_token"},
 	}
 	mux := http.NewServeMux()
 	mux.Handle("/ws", cors(config.Origin, config))
 	return &http.Server{
-		Addr: config.ListenAddr,
+		Addr:    config.ListenAddr,
 		Handler: mux,
 	}, nil
 }

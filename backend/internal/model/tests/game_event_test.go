@@ -1,8 +1,8 @@
 package model
 
 import (
-	"testing"
 	"encoding/json"
+	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
@@ -11,8 +11,8 @@ func MakeGameEvent(data model.EventData) model.GameEvent {
 	minimalUser := model.MinimalUser{ID: "foo", Name: "foo"}
 	return model.GameEvent{
 		Timestamp: 42,
-		User: minimalUser,
-		Data: data,
+		User:      minimalUser,
+		Data:      data,
 	}
 }
 

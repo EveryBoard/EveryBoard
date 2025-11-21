@@ -23,11 +23,11 @@ func InitializeFirebase(t *testing.T, f auth.FirebaseLike) {
 }
 
 type FirebaseMock struct {
-	errorOnInitialization bool
-	errorOnTokenVerification bool
+	errorOnInitialization       bool
+	errorOnTokenVerification    bool
 	uidToReturnUponVerification string
-	errorOnFetch bool
-	documentToFetch map[string]interface{}
+	errorOnFetch                bool
+	documentToFetch             map[string]interface{}
 }
 
 func (f FirebaseMock) Initialize() error {
@@ -53,9 +53,9 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 
 func TestVerificationOfInvalidToken(t *testing.T) {
 	InitializeFirebase(t, &FirebaseMock{
-		errorOnInitialization: false,
+		errorOnInitialization:    false,
 		errorOnTokenVerification: true,
-		errorOnFetch: false,
+		errorOnFetch:             false,
 	})
 	// Token invalid because it is not given in the Sec-WebSocket-Protocol field (which is absent)
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)
@@ -85,10 +85,10 @@ func TestVerificationOfInvalidToken(t *testing.T) {
 func TestVerifiedTokenButNoUser(t *testing.T) {
 	// Given a user that can't be fetched
 	InitializeFirebase(t, &FirebaseMock{
-		errorOnInitialization: false,
-		errorOnTokenVerification: false,
+		errorOnInitialization:       false,
+		errorOnTokenVerification:    false,
 		uidToReturnUponVerification: "foo",
-		errorOnFetch: true,
+		errorOnFetch:                true,
 	})
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)
 	if err != nil {
@@ -106,10 +106,10 @@ func TestVerifiedTokenButNoUser(t *testing.T) {
 func TestTokenVerificationHappyFlow(t *testing.T) {
 	// Given a user that will be verified and fetched
 	InitializeFirebase(t, &FirebaseMock{
-		errorOnInitialization: false,
-		errorOnTokenVerification: false,
+		errorOnInitialization:       false,
+		errorOnTokenVerification:    false,
 		uidToReturnUponVerification: "foo-uid",
-		errorOnFetch: false,
+		errorOnFetch:                false,
 		documentToFetch: map[string]interface{}{
 			"username": "foo",
 		},
@@ -145,12 +145,12 @@ func waitForPort(address string, timeout time.Duration) error {
 
 func startFirebaseEmulator(t *testing.T) *exec.Cmd {
 	cmd := exec.Command("npx", "firebase", "emulators:start", "--only", "firestore,auth", "--project", "my-project")
-	err := cmd.Start();
+	err := cmd.Start()
 	if err != nil {
 		t.Fatalf("failed to start Firebase emulator: %v", err)
 	}
 
-	err = waitForPort("127.0.0.1:9099", 30*time.Second);
+	err = waitForPort("127.0.0.1:9099", 30*time.Second)
 	if err != nil {
 		t.Fatalf("failed to wait for Firebase emulator to start: %v", err)
 	}
@@ -172,7 +172,7 @@ func TestTokenVerificationWithEmulator(t *testing.T) {
 	defer cmd.Process.Signal(os.Interrupt) // close down the emulator at the end of this test
 	InitializeFirebase(t, &auth.Firebase{
 		UseEmulator: true,
-		ProjectID: "my-project",
+		ProjectID:   "my-project",
 	})
 
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)

@@ -79,7 +79,6 @@ func (connectionManager *ConnectionManager[Connection]) SendMessage(client Conne
 		// the buffer is full, ignore this message (the client is likely dead)
 	}
 
-
 }
 
 func (connectionManager *ConnectionManager[Connection]) RemoveConnection(user model.MinimalUser, client Connection) {

@@ -1,9 +1,9 @@
 package model
 
 import (
-	"testing"
 	"fmt"
 	"strconv"
+	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
@@ -81,14 +81,14 @@ func TestMarshalInvalidIdWithSqids(t *testing.T) {
 	InitializeSqidsEncoder(t)
 	// Then unmarshalling an invalid id fails
 	var gameId model.GameID
-	ExpectUnmarshallingToFail(t, gameId, `{}`) // id is not a string
+	ExpectUnmarshallingToFail(t, gameId, `{}`)  // id is not a string
 	ExpectUnmarshallingToFail(t, gameId, `"x"`) // id is too short
 }
 
 type MockEncoder struct {
 	errorOnInitialization bool
-	errorOnEncode bool
-	errorOnDecode bool
+	errorOnEncode         bool
+	errorOnDecode         bool
 }
 
 func (encoder MockEncoder) Initialize() error {
@@ -117,8 +117,8 @@ func TestEncoderInitiliazationFailIsPropagated(t *testing.T) {
 	// Given an encoder that will fail at initialization
 	model.SetIDEncoder(&MockEncoder{
 		errorOnInitialization: true,
-		errorOnEncode: false,
-		errorOnDecode: false,
+		errorOnEncode:         false,
+		errorOnDecode:         false,
 	})
 	// Restore the sqids encoder when done
 	defer InitializeSqidsEncoder(t)
@@ -136,8 +136,8 @@ func TestEncoderEncodeFailureIsPropagated(t *testing.T) {
 	// Given an encoder that will fail during encoding
 	model.SetIDEncoder(&MockEncoder{
 		errorOnInitialization: false,
-		errorOnEncode: true,
-		errorOnDecode: false,
+		errorOnEncode:         true,
+		errorOnDecode:         false,
 	})
 	// Restore the sqids encoder when done
 	defer InitializeSqidsEncoder(t)
@@ -159,8 +159,8 @@ func TestEncoderDecodeFailureIsPropagated(t *testing.T) {
 	// Given an encoder that will fail
 	model.SetIDEncoder(&MockEncoder{
 		errorOnInitialization: false,
-		errorOnEncode: false,
-		errorOnDecode: true,
+		errorOnEncode:         false,
+		errorOnDecode:         true,
 	})
 	// Restore the sqids encoder when done
 	defer InitializeSqidsEncoder(t)
@@ -184,8 +184,8 @@ func TestEncoderMarshalingFailureToBePropagated(t *testing.T) {
 	// Given an encoder that will fail
 	model.SetIDEncoder(&MockEncoder{
 		errorOnInitialization: false,
-		errorOnEncode: true,
-		errorOnDecode: false,
+		errorOnEncode:         true,
+		errorOnDecode:         false,
 	})
 	// Restore the sqids encoder when done
 	defer InitializeSqidsEncoder(t)

@@ -16,31 +16,31 @@ func ExpectMarshallingToWorkAndTagToBe(t *testing.T, original model.OutgoingMess
 func TestMarshalOutgoingMessages(t *testing.T) {
 	minimalUser := model.MinimalUser{ID: "foo", Name: "foo"}
 	message := model.Message{
-		Sender: minimalUser,
+		Sender:    minimalUser,
 		Timestamp: 42,
-		Content: "hello",
+		Content:   "hello",
 	}
 	configRoom := model.ConfigRoom{
-		Creator: minimalUser,
-		CreatorElo: 0.0,
-		Status: model.StatusCreated,
-		FirstPlayer: model.FirstPlayerRandom,
-		GameType: model.GameTypeStandard,
+		Creator:      minimalUser,
+		CreatorElo:   0.0,
+		Status:       model.StatusCreated,
+		FirstPlayer:  model.FirstPlayerRandom,
+		GameType:     model.GameTypeStandard,
 		MoveDuration: 120,
 		GameDuration: 1200,
-		GameName: "Go",
+		GameName:     "Go",
 	}
 	game := model.Game{
-		GameName: "Go",
+		GameName:   "Go",
 		PlayerZero: minimalUser,
-		PlayerOne: model.MinimalUser{ID: "bar", Name: "bar"},
-		Result: model.ResultInProgress,
-		Beginning: 42,
+		PlayerOne:  model.MinimalUser{ID: "bar", Name: "bar"},
+		Result:     model.ResultInProgress,
+		Beginning:  42,
 	}
 	gameEvent := model.GameEvent{
 		Timestamp: 42,
-		User: minimalUser,
-		Data: model.EventDataRequest(model.PropositionDraw),
+		User:      minimalUser,
+		Data:      model.EventDataRequest(model.PropositionDraw),
 	}
 
 	ExpectMarshallingToWorkAndTagToBe(t,
@@ -57,11 +57,10 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.ConfigRoomUpdateMessage{
-			GameID: 42,
+			GameID:     42,
 			ConfigRoom: configRoom,
 		},
 		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
-
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.ConfigRoomDeletedMessage{
@@ -89,7 +88,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.GameEventMessage{
-			Event: gameEvent,
+			Event:      gameEvent,
 			ServerTime: 42.0,
 		},
 		`{"event":{"eventType":"Request","requestType":"Draw","timestamp":42,"user":{"id":"foo","name":"foo"}},"serverTime":42}`, "GameEvent")

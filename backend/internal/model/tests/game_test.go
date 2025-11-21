@@ -113,6 +113,6 @@ func TestMarshalGame(t *testing.T) {
 
 	// It should not allow to unmarshal, even a valid game
 	var result model.Game
-	ExpectUnmarshallingToFail(t, &result, `{}`);
-	ExpectUnmarshallingToFail(t, &result, json);
+	ExpectUnmarshallingToFail(t, &result, `{}`)
+	ExpectUnmarshallingToFail(t, &result, json)
 }

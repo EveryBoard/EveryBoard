@@ -86,11 +86,11 @@ func TestConfigRoomFlow(t *testing.T) {
 
 	// Propose the config room
 	configProposal := model.ConfigProposal{
-		GameType: model.GameTypeCustom,
+		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
 		GameDuration: 4200,
-		FirstPlayer: model.FirstPlayerCreator,
-		RulesConfig: json.RawMessage(`{}`),
+		FirstPlayer:  model.FirstPlayerCreator,
+		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = configRoom.Propose(configProposal)
 	if err != nil {
@@ -371,8 +371,8 @@ func TestGameFlow(t *testing.T) {
 	// Adding an event
 	err = model.AddEvent(game.GameID, model.GameEvent{
 		Timestamp: 42,
-		User: creator,
-		Data: model.EventDataRequest(model.PropositionDraw),
+		User:      creator,
+		Data:      model.EventDataRequest(model.PropositionDraw),
 	})
 	if err != nil {
 		t.Fatalf("cannot add event: %v", err)
@@ -392,18 +392,17 @@ func TestGameFlow(t *testing.T) {
 			t.Fatalf("there are missing or too many game events, I've seen %d instead of %d", seen, count)
 		}
 	}
-	expectEvents(1);
+	expectEvents(1)
 
 	// Adding another event
 	err = model.AddEvent(game.GameID, model.GameEvent{
 		Timestamp: 42,
-		User: opponent,
-		Data: model.EventDataRequest(model.PropositionDraw),
+		User:      opponent,
+		Data:      model.EventDataRequest(model.PropositionDraw),
 	})
 	if err != nil {
 		t.Fatalf("cannot add event: %v", err)
 	}
-
 
 	// Changing the game result
 	err = game.SetResult(model.ResultAgreedDrawByOne)
@@ -420,7 +419,6 @@ func TestGameFlow(t *testing.T) {
 	}
 
 }
-
 
 func TestGameCreationWithOpponentStarting(t *testing.T) {
 	// Given a db with a config room where opponent will start
@@ -440,11 +438,11 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 		t.Fatalf("cannnot select opponent: %v", err)
 	}
 	configProposal := model.ConfigProposal{
-		GameType: model.GameTypeCustom,
+		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
 		GameDuration: 4200,
-		FirstPlayer: model.FirstPlayerChosenOpponent,
-		RulesConfig: json.RawMessage(`{}`),
+		FirstPlayer:  model.FirstPlayerChosenOpponent,
+		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = configRoom.Propose(configProposal)
 	if err != nil {
@@ -481,11 +479,11 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 		t.Fatalf("cannnot select opponent: %v", err)
 	}
 	configProposal := model.ConfigProposal{
-		GameType: model.GameTypeCustom,
+		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
 		GameDuration: 4200,
-		FirstPlayer: model.FirstPlayerRandom,
-		RulesConfig: json.RawMessage(`{}`),
+		FirstPlayer:  model.FirstPlayerRandom,
+		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = configRoom.Propose(configProposal)
 	if err != nil {
@@ -517,11 +515,11 @@ func TestGameCreationWithoutOpponentFails(t *testing.T) {
 		t.Fatalf("cannot create config room: %v", err)
 	}
 	configProposal := model.ConfigProposal{
-		GameType: model.GameTypeCustom,
+		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
 		GameDuration: 4200,
-		FirstPlayer: model.FirstPlayerRandom,
-		RulesConfig: json.RawMessage(`{}`),
+		FirstPlayer:  model.FirstPlayerRandom,
+		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = configRoom.Propose(configProposal)
 	if err != nil {
@@ -592,15 +590,15 @@ func TestUpdateElos(t *testing.T) {
 	// When updating the elos
 	err = model.UpdateElos(gameName,
 		winner, model.Elo{
-			User: winner,
-			GameName: gameName,
-			CurrentElo: 20.0,
+			User:        winner,
+			GameName:    gameName,
+			CurrentElo:  20.0,
 			GamesPlayed: 1,
 		},
 		loser, model.Elo{
-			User: loser,
-			GameName: gameName,
-			CurrentElo: 1.0,
+			User:        loser,
+			GameName:    gameName,
+			CurrentElo:  1.0,
 			GamesPlayed: 1,
 		})
 
@@ -651,12 +649,12 @@ func TestSetCurrentGame(t *testing.T) {
 	gameName := "Go"
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
-		GameID: 42,
+		GameID:   42,
 		GameName: gameName,
-		User: user,
-		Creator: user,
+		User:     user,
+		Creator:  user,
 		Opponent: nil,
-		Role: role,
+		Role:     role,
 	}
 	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
@@ -687,12 +685,12 @@ func TestUpdateCurrentGame(t *testing.T) {
 	gameName := "Go"
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
-		GameID: 42,
-		User: user,
+		GameID:   42,
+		User:     user,
 		GameName: gameName,
-		Creator: user,
+		Creator:  user,
 		Opponent: nil,
-		Role: role,
+		Role:     role,
 	}
 	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
@@ -732,12 +730,12 @@ func TestRemoveCurrentGame(t *testing.T) {
 	gameName := "Go"
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
-		GameID: 42,
-		User: user,
+		GameID:   42,
+		User:     user,
 		GameName: gameName,
-		Creator: user,
+		Creator:  user,
 		Opponent: nil,
-		Role: role,
+		Role:     role,
 	}
 	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
@@ -769,12 +767,12 @@ func TestApplyToObservers(t *testing.T) {
 	user1 := model.MinimalUser{ID: "foo", Name: "foo"}
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
-		GameID: 42,
-		User: user1,
+		GameID:   42,
+		User:     user1,
 		GameName: "Go",
-		Creator: user1,
+		Creator:  user1,
 		Opponent: nil,
-		Role: model.UserRoleObserver,
+		Role:     model.UserRoleObserver,
 	}
 	err = model.SetCurrentGame(*currentGame)
 	if err != nil {
@@ -812,14 +810,14 @@ func TestChatMessageFlow(t *testing.T) {
 	}
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	message1 := model.Message{
-		Sender: user,
+		Sender:    user,
 		Timestamp: 1,
-		Content: "hello",
+		Content:   "hello",
 	}
 	message2 := model.Message{
-		Sender: user,
+		Sender:    user,
 		Timestamp: 2,
-		Content: "world",
+		Content:   "world",
 	}
 	// When adding messages
 	err = model.AddChatMessage(42, &message1)
@@ -834,7 +832,7 @@ func TestChatMessageFlow(t *testing.T) {
 
 	// Then they should be added and can be retrieved in timestamp order
 	seenMessages := []model.Message{}
-	model.ApplyToMessagesOfGame(42, func (m *model.Message) error {
+	model.ApplyToMessagesOfGame(42, func(m *model.Message) error {
 		seenMessages = append(seenMessages, *m)
 		return nil
 	})

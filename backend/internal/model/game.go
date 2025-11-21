@@ -63,4 +63,3 @@ var GameRows = []string{"game_id", "game_name", "player_zero_id", "player_zero_n
 func (g *Game) UnmarshalJSON(data []byte) error {
 	return fmt.Errorf("not allowed to unmarshall game")
 }
-

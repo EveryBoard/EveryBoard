@@ -9,8 +9,8 @@ import (
 
 type GameID uint64
 
- // The lobby is the first game id that exist. It needs a game id for ensuring
- // that we can send messages to it and subscribe to it.
+// The lobby is the first game id that exist. It needs a game id for ensuring
+// that we can send messages to it and subscribe to it.
 const GameIDLobby GameID = 1
 
 type IDEncoder interface {
@@ -51,6 +51,7 @@ var idEncoder IDEncoder
 func SetIDEncoder(encoder IDEncoder) {
 	idEncoder = encoder
 }
+
 // Initializes the encoder for ids
 func InitEncoder() error {
 	return idEncoder.Initialize()

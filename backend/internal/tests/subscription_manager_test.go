@@ -15,7 +15,6 @@ func (m *MockConnection) WriteMessage(messageType int, data []byte) error {
 	return nil
 }
 
-
 func TestSubscriptionWorkflow(t *testing.T) {
 	// Given a subscription manager with no subscription for client
 	manager := everyboard.NewSubscriptionManager[MockConnection]()
