@@ -1,6 +1,6 @@
 import { ConnectedUserService } from './ConnectedUserService';
 import { environment } from 'src/environments/environment';
-import { JSONValue, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { JSONValue, MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageDisplayer } from './MessageDisplayer';
@@ -52,21 +52,24 @@ export abstract class AbstractBackendService {
         return this.subscribeTo('SubscribeLobby');
     }
 
-    public async sendAndWaitForReply(message: JSONValue, replyTag: string): Promise<BackendMessage> {
-        console.log('SEND')
+    public async sendAndWaitForReply(message: JSONValue, replyTag: string): Promise<MGPFallible<BackendMessage>> {
         await this.send(message);
-        console.log('WAIT')
         return this.waitForMessage(replyTag);
     }
 
-    private async waitForMessage(tag: string): Promise<BackendMessage> {
-        return new Promise((resolve: (value: BackendMessage) => void) => {
-            console.log('SET CALLBACK')
-            this.setCallback(tag, (message: BackendMessage) => {
-                console.log('GOT IN CALLBACK')
+    private async waitForMessage(tag: string): Promise<MGPFallible<BackendMessage>> {
+        return new Promise((resolve: (value: MGPFallible<BackendMessage>) => void) => {
+            const onMessage: (message: BackendMessage) => void = (message: BackendMessage): void => {
                 this.removeCallback(tag);
-                resolve(message);
-            });
+                this.removeCallback('Error');
+                if (message.tag === 'Error') {
+                    resolve(MGPFallible.failure(message.getArgument('reason')));
+                } else {
+                    resolve(MGPFallible.success(message));
+                }
+            };
+            this.setCallback(tag, onMessage);
+            this.setCallback('Error', onMessage);
         });
     }
 
@@ -104,7 +107,6 @@ export class BackendService extends AbstractBackendService {
     private resolveConnection!: () => void;
 
     private nextConnectionAttemptTime: number = 1;
-    private disconnectRequested: boolean = false;
 
     public constructor(private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer)
@@ -124,20 +126,15 @@ export class BackendService extends AbstractBackendService {
         const token: string = await this.connectedUserService.getIdToken();
 
         return new Promise((resolve: (sub: Subscription) => void) => {
-            console.log('creating websocket')
             const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
             let timeout: MGPOptional<number> = MGPOptional.empty();
             const reconnect: () => void = (): void => {
-                console.log('reconnect')
                 if (timeout.isPresent()) {
                     // not trying to reconnect because there's already an attempt scheduled
                     return;
                 }
-                console.log('PRINTING')
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                console.log('setting a timeout of ' + this.nextConnectionAttemptTime * 1000);
                 timeout = MGPOptional.of(window.setTimeout(async() => {
-                    console.log('connecting again...')
                     const subscription: Subscription = await this.connect();
                     resolve(subscription);
                 },
@@ -146,21 +143,17 @@ export class BackendService extends AbstractBackendService {
             };
 
             ws.onopen = (): void => {
-                console.log('OPEN')
                 if (timeout.isPresent()) {
-                    console.log('clearing timeout')
                     window.clearTimeout(timeout.get());
                     timeout = MGPOptional.empty(); // clear the timeout
                 }
                 // this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset the exponential backoff
-                console.log('RESOLVING')
                 this.resolveConnection(); // notify waiters
                 resolve(new Subscription(() => this.disconnect()));
             };
             ws.onerror = (_error: Event): void => {
-                console.log('ERROR')
                 if (this.webSocket.isPresent()) {
                     this.webSocket.get().close();
                 }
@@ -168,25 +161,15 @@ export class BackendService extends AbstractBackendService {
                 reconnect();
             };
             ws.onclose = (): void => {
-                console.log('CLOSE')
                 this.webSocket = MGPOptional.empty();
                 // The connection has been closed by the server.
-                if (this.disconnectRequested) {
-                    // It is because client code requested to disconnect. Keep it as is.
-                    // TODO: check how this works
-                    throw new Error('Disconnect requested from client, I thought it did not happen!');
-                    // this.disconnectRequested = false;
-                } else {
-                    // Or it is because the server has restarted (or some unexpected error).
-                    // It is best to try to reconnect.
-                    reconnect();
-                }
+                // It is best to try to reconnect.
+                reconnect();
             };
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
-                console.log('MESSAGE')
                 Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message (not a string): ${JSON.stringify(ev.data)}`);
                 const json: NonNullable<JSONValue> = Utils.getNonNullable(JSON.parse(ev.data as string));
-                console.log('%cWS: <<< ' + JSON.stringify(json), 'color: green');
+                console.debug('%cWS: <<< ' + JSON.stringify(json), 'color: green');
                 Utils.assert(typeof(json) === 'object', // i.e., an array
                              `Received malformed WebSocket message (not an object): ${JSON.stringify(json)}`);
                 const tag: unknown = json[0]; // the tag is the first element of the array
@@ -210,13 +193,12 @@ export class BackendService extends AbstractBackendService {
 
     public override async send(message: JSONValue): Promise<void> {
         await this.waitForConnection(); // block until we are connected, otherwise we'll send messages nowhere
-        console.log('%cWS: >>> ' + JSON.stringify(message), 'color: lightblue');
+        console.debug('%cWS: >>> ' + JSON.stringify(message), 'color: lightblue');
         this.webSocket.get().send(JSON.stringify(message));
     }
 
     private disconnect(): void {
         Utils.assert(this.webSocket.isPresent(), 'Should not disconnect from unconnected WebSocket!');
-        this.disconnectRequested = true;
         this.webSocket.get().close();
         this.webSocket = MGPOptional.empty();
         // Need to clear the promise for the next connection

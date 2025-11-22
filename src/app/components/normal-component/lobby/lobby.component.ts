@@ -9,7 +9,7 @@ import { CurrentGame } from 'src/app/domain/User';
 import { CurrentGameService } from 'src/app/services/CurrentGameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Debug } from 'src/app/utils/Debug';
-import { BackendService } from 'src/app/services/BackendService';
+import { BackendMessage, BackendService } from 'src/app/services/BackendService';
 import { ConfigRoom, Status } from 'src/app/domain/ConfigRoom';
 import { GameInfo } from '../pick-game/pick-game.component';
 
@@ -58,6 +58,22 @@ export class LobbyComponent implements OnInit, OnDestroy {
             });
 
         this.lobbySubscription = await this.backendService.subscribeToLobby();
+        this.backendService.setCallback('Error', async(message: BackendMessage): Promise<void> => {
+            await this.onError(message.getArgument('reason'));
+        });
+    }
+
+    private async onError(error: string): Promise<void> {
+        switch (error) {
+            case 'already-subscribed':
+                this.messageDisplayer.criticalMessage($localize`You already have another tab open.`);
+                await this.router.navigate(['/']);
+                break;
+            default:
+                this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${error}`);
+                await this.router.navigate(['/']);
+                break;
+        }
     }
 
     public async ngOnDestroy(): Promise<void> {

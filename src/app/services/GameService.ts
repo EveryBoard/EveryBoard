@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { JSONValue } from '@everyboard/lib';
+import { JSONValue, MGPFallible } from '@everyboard/lib';
 import { GameEvent, Game } from '../domain/Game';
 import { Subscription } from 'rxjs';
 import { BackendService, BackendMessage } from './BackendService';
@@ -14,8 +14,8 @@ export abstract class AbstractGameService {
                                 error: (reason: string) => void)
     : Promise<Subscription>;
 
-    /** Create a game. Return the id of the created game. */
-    public abstract createGame(gameName: string): Promise<string>;
+    /** Create a game. Return the id of the created game, or an error. */
+    public abstract createGame(gameName: string): Promise<MGPFallible<string>>;
 
     /** Perform a specific game action and asserts that it has succeeded */
     protected abstract gameAction(action: JSONValue): Promise<void>;
@@ -145,10 +145,14 @@ export class GameService extends AbstractGameService {
         });
     }
 
-    public override async createGame(gameName: string): Promise<string> {
-        const response: BackendMessage =
+    public override async createGame(gameName: string): Promise<MGPFallible<string>> {
+        const response: MGPFallible<BackendMessage> =
             await this.backendService.sendAndWaitForReply(['Create', { gameName }], 'GameCreated');
-        return response.getArgument('gameId');
+        if (response.isFailure()) {
+            return response.toOtherFallible<string>();
+        } else {
+            return response.map((message: BackendMessage): string => message.getArgument('gameId'));
+        }
     }
 
     protected override async gameAction(action: JSONValue): Promise<void> {

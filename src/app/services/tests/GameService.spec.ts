@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
-import { JSONValue, MGPOptional } from '@everyboard/lib';
+import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { GameService } from '../GameService';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
@@ -144,13 +144,29 @@ describe('GameService', () => {
             // Given a game service
             const gameIdFromBackend: string = '1234';
             // When creating a game
-            spyOn(backendService, 'sendAndWaitForReply').and.callFake(async(_message: JSONValue, _replyTag: string): Promise<BackendMessage> => {
-                // When the backend receives the game creation message, it creates the game and replies with the id
-                return new BackendMessage('GameCreated', { gameId: gameIdFromBackend });
-            });
-            const gameId: string = await gameService.createGame('P4');
+            spyOn(backendService, 'sendAndWaitForReply').and.callFake(
+                async(_message: JSONValue, _replyTag: string): Promise<MGPFallible<BackendMessage>> => {
+                    // When the backend receives the game creation message, it creates the game and replies with the id
+                    return MGPFallible.success(new BackendMessage('GameCreated', { gameId: gameIdFromBackend }));
+                });
+            const gameId: MGPFallible<string> = await gameService.createGame('P4');
             // Then it should return the created game
-            expect(gameId).toBe(gameIdFromBackend);
+            expect(gameId.isSuccess()).toBeTrue();
+            expect(gameId.get()).toBe(gameIdFromBackend);
+        }));
+
+        it('should delegate to backend and retrieve errors when there is one', fakeAsync(async() => {
+            // Given a game service
+            // When creating a game but receiving an error
+            spyOn(backendService, 'sendAndWaitForReply').and.callFake(
+                async(_message: JSONValue, _replyTag: string): Promise<MGPFallible<BackendMessage>> => {
+                    // When the backend receives the game creation message, it creates the game and replies with the id
+                    return MGPFallible.failure('some-reason');
+                });
+            const gameId: MGPFallible<string> = await gameService.createGame('P4');
+            // Then it should return the error
+            expect(gameId.isFailure()).toBeTrue();
+            expect(gameId.getReason()).toBe('some-reason');
         }));
     });
 

@@ -7,6 +7,7 @@ import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { environment } from 'src/environments/environment';
 import { MessageDisplayer } from '../MessageDisplayer';
 import { JSONValue } from 'lib/dist';
+import { MGPFallible } from '@everyboard/lib';
 
 describe('BackendMessage', () => {
     describe('getArgument', () => {
@@ -357,7 +358,7 @@ describe('BackendService', () => {
             // When sending and waiting for reply
             const message: JSONValue = ['TestTag', { data: 'test' }];
             spyOn(ws, 'send').and.callThrough();
-            const replyPromise: Promise<BackendMessage> = backendService.sendAndWaitForReply(message, 'ReplyTag');
+            const replyPromise: Promise<MGPFallible<BackendMessage>> = backendService.sendAndWaitForReply(message, 'ReplyTag');
             tick(0);
 
             // Then the message must have been sent and we should get the reply back
@@ -365,9 +366,33 @@ describe('BackendService', () => {
             const reply: JSONValue = ['ReplyTag', { result: 'success' }];
             ws.onmessage!(new MessageEvent('message', { data: JSON.stringify(reply) })); // simulate reply
 
-            const received: BackendMessage = await replyPromise;
-            expect(received.tag).toBe('ReplyTag');
-            expect(received.getArgument<string>('result')).toBe('success');
+            const received: MGPFallible<BackendMessage> = await replyPromise;
+            expect(received.isSuccess()).toBeTrue();
+            expect(received.get().tag).toBe('ReplyTag');
+            expect(received.get().getArgument<string>('result')).toBe('success');
+
+            subscription.unsubscribe();
+        }));
+
+        it('should also receive errors', fakeAsync(async() => {
+            // Given a connected service
+            const subscription: Subscription = await connect();
+            const ws: WebSocket = webSocketInstances[0];
+
+            // When sending and waiting for reply but getting an error
+            const message: JSONValue = ['TestTag', { data: 'test' }];
+            spyOn(ws, 'send').and.callThrough();
+            const replyPromise: Promise<MGPFallible<BackendMessage>> = backendService.sendAndWaitForReply(message, 'ReplyTag');
+            tick(0);
+
+            // Then the message must have been sent and we should get the error appropriately
+            expect(ws.send).toHaveBeenCalledOnceWith(JSON.stringify(message));
+            const reply: JSONValue = ['Error', { reason: 'some-error' }];
+            ws.onmessage!(new MessageEvent('message', { data: JSON.stringify(reply) })); // simulate reply
+
+            const received: MGPFallible<BackendMessage> = await replyPromise;
+            expect(received.isFailure()).toBeTrue();
+            expect(received.getReason()).toBe('some-error');
 
             subscription.unsubscribe();
         }));
