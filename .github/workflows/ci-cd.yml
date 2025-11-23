@@ -94,32 +94,32 @@ jobs:
   tests-back:
     runs-on: ubuntu-24.04
     steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v4
-    - name: Setup Go
-      uses: actions/setup-go@v5
-      with:
-        go-version: ${{ env.GO_VERSION }}
-    - name: Setup dependencies (install dependencies)
-      run: npm ci # Needed for auth tests
-    - name: Build
-      run: cd backend && make
-    - name: Test
-      run: cd backend && make test
-    - name: Archive code coverage results
-      if: always()
-      uses: actions/upload-artifact@v4
-      with:
-        name: backend-code-coverage-report.html
-        path: backend/coverage.html
-    - name: Check coverage
-      run: cd backend && make check-coverage
-    - name: Check gofmt
-      run: cd backend && make check-fmt
+      - name: Checkout the repository
+        uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ env.GO_VERSION }}
+      - name: Setup dependencies (install dependencies)
+        run: npm ci  # Needed for auth tests
+      - name: Build
+        run: cd backend && make
+      - name: Test
+        run: cd backend && make test
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-code-coverage-report.html
+          path: backend/coverage.html
+      - name: Check coverage
+        run: cd backend && make check-coverage
+      - name: Check gofmt
+        run: cd backend && make check-fmt
 
   e2e:
     runs-on: ubuntu-24.04
-    needs: [ build-front, tests-front, tests-back ]
+    needs: [build-front]
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -250,7 +250,7 @@ jobs:
 
   deployment:
     runs-on: ubuntu-24.04
-    needs: [ build-front, tests-front, tests-back, linter, images, translations ]
+    needs: [build-front, tests-front, tests-back, linter, images, translations]
     environment: netlify
     if: github.event_name == 'push' &&
           contains('

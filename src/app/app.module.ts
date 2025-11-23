@@ -136,6 +136,7 @@ import { LocaleUtils } from './utils/LocaleUtils';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
 import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
+import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 
 registerLocaleData(localeFr);
 
@@ -149,9 +150,9 @@ export const routes: Route[] = [
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
-    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:game/config', component: LocalGameConfigurationComponent },
     { path: 'local/:game', component: LocalGameWrapperComponent },

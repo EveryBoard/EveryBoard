@@ -1,6 +1,15 @@
 import * as Firestore from '@firebase/firestore';
 import { Subscription } from 'rxjs';
-import { FirestoreJSONObject, MGPOptional, Utils } from '@everyboard/lib';
+import { JSONPrimitive, MGPOptional, Utils } from '@everyboard/lib';
+
+export type FirestoreJSONPrimitive = JSONPrimitive | Firestore.FieldValue;
+export type FirestoreJSONValue =
+    FirestoreJSONPrimitive |
+    FirestoreJSONObject |
+    Array<FirestoreJSONValueWithoutArray> |
+    ReadonlyArray<FirestoreJSONValueWithoutArray>;
+export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject;
+export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
 export interface FirestoreDocument<T> {
     id: string
@@ -35,8 +44,6 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
 export abstract class FirestoreDAO<T extends FirestoreJSONObject> implements IFirestoreDAO<T> {
 
     public readonly collection: Firestore.CollectionReference<T>;
-
-    private readonly subDAOs: Record<string, IFirestoreDAO<FirestoreJSONObject>> = {};
 
     public constructor(public readonly collectionName: string) {
         const genericConverter: Firestore.FirestoreDataConverter<T> = {
