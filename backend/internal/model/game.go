@@ -32,6 +32,10 @@ func (r Result) IsVictoryOfOne() bool {
 	return r == ResultResignOfZero || r == ResultTimeoutOfZero || r == ResultVictoryOfOne
 }
 
+func (r Result) IsTimeout() bool {
+	return r == ResultTimeoutOfZero || r == ResultTimeoutOfOne
+}
+
 func (r *Result) UnmarshalJSON(data []byte) error {
 	var s string
 	err := json.Unmarshal(data, &s)

@@ -16,6 +16,7 @@ import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from 'src/
 import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
+import { BackendService } from 'src/app/services/BackendService';
 
 describe('LobbyComponent', () => {
 
@@ -154,7 +155,8 @@ describe('LobbyComponent', () => {
 
     it('should unsubscribe from active config rooms when destroying component', fakeAsync(async() => {
         // Given the lobby
-        const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(TestBed.inject(ActiveConfigRoomsService), 'subscribe');
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(ActiveConfigRoomsService), 'subscribe');
         testUtils.detectChanges();
         tick(0);
 
@@ -169,6 +171,20 @@ describe('LobbyComponent', () => {
         // Given an initialized lobby
         const expectUnsubscribeToHaveBeenCalled: () => void =
             prepareUnsubscribeCheck(TestBed.inject(CurrentGameService), 'subscribeToCurrentGame');
+        testUtils.detectChanges();
+        tick(0);
+
+        // When it is destroyed
+        await component.ngOnDestroy();
+
+        // Then it should have unsubscribed from active users
+        expectUnsubscribeToHaveBeenCalled();
+    }));
+
+    it('should unsubscribe from error part when destroying component', fakeAsync(async() => {
+        // Given an initialized lobby
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(BackendService), 'setCallback');
         testUtils.detectChanges();
         tick(0);
 

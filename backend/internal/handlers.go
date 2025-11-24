@@ -666,13 +666,19 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 	if configRoom == nil || game == nil {
 		return h.error(model.ErrorUnknownGame)
 	}
-	if configRoom.Status != model.StatusStarted ||
-		(configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID) {
+	result := getResult(&game.PlayerZero, &game.PlayerOne)
+	if configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID {
 		// Only a player can finish a game. And they have to play in the game
 		return h.error(model.ErrorNotAllowed)
 	}
 
-	result := getResult(&game.PlayerZero, &game.PlayerOne)
+	if !((configRoom.Status == model.StatusFinished && result.IsTimeout()) || configRoom.Status == model.StatusStarted) {
+		// Player can only notify a non-finished game, except in the case of timeout.
+		// For the timeout case, this is because both players may notify the timeout,
+		// the first one to do it will do the end game, the second one will be ignored.
+		return h.error(model.ErrorNotAllowed)
+	}
+
 	err = game.SetResult(result)
 	if err != nil {
 		return err

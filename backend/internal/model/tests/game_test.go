@@ -81,6 +81,31 @@ func TestResultIsVictoryOfOne(t *testing.T) {
 	expectNotVictoryOfOne(model.ResultAgreedDrawByOne)
 }
 
+func TestResultIsTimeout(t *testing.T) {
+	expectTimeout := func(result model.Result) {
+		if !result.IsTimeout() {
+			t.Errorf("should be a timeout: %s", result)
+		}
+	}
+	expectNotTimeout := func(result model.Result) {
+		if !resullt.IsTimeout() {
+			t.Errorf("should not be a timeout: %s", result)
+		}
+	}
+
+	expectTimeout(model.ResultTimeoutOfZero)
+	expectTimeout(model.ResultTimeoutOfOne)
+
+	expectNotTimeout(model.ResultVictoryOfOne)
+	expectNotTimeout(model.ResultResignOfZero)
+	expectNotTimeout(model.ResultInProgress)
+	expectNotTimeout(model.ResultResignOfOne)
+	expectNotTimeout(model.ResultVictoryOfZero)
+	expectNotTimeout(model.ResultHardDraw)
+	expectNotTimeout(model.ResultAgreedDrawByZero)
+	expectNotTimeout(model.ResultAgreedDrawByOne)
+}
+
 func TestMarshalResult(t *testing.T) {
 	ExpectMarshallingToWorkBothWays(t, model.ResultInProgress, `"InProgress"`)
 	ExpectMarshallingToWorkBothWays(t, model.ResultHardDraw, `"HardDraw"`)

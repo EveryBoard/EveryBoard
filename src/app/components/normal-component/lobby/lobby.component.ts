@@ -32,6 +32,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private activeConfigRoomsSubscription!: Subscription; // initialized in ngOnInit
     private currentGameSubscription!: Subscription; // initialized in ngOnInit
     private lobbySubscription!: Subscription; // initialized in ngOnInit
+    private errorSubscription!: Subscription; // initialized in ngOnInit
 
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
@@ -58,7 +59,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
             });
 
         this.lobbySubscription = await this.backendService.subscribeToLobby();
-        this.backendService.setCallback('Error', async(message: BackendMessage): Promise<void> => {
+        this.errorSubscription = this.backendService.setCallback('Error', async(message: BackendMessage): Promise<void> => {
             await this.onError(message.getArgument('reason'));
         });
     }
@@ -80,6 +81,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
         this.lobbySubscription.unsubscribe();
         this.activeConfigRoomsSubscription.unsubscribe();
         this.currentGameSubscription.unsubscribe();
+        this.errorSubscription.unsubscribe();
     }
 
     public getActiveConfigRooms(): WithId<ConfigRoom>[] {
