@@ -2,7 +2,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
-import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -17,6 +17,8 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { BackendService } from 'src/app/services/BackendService';
+import { GameService } from 'src/app/services/GameService';
+import { WelcomeComponent } from '../welcome/welcome.component';
 
 describe('LobbyComponent', () => {
 
@@ -24,6 +26,7 @@ describe('LobbyComponent', () => {
     let component: LobbyComponent;
     let router: Router;
     let currentGameService: CurrentGameService;
+    let gameService: GameService;
 
     const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty());
 
@@ -33,6 +36,7 @@ describe('LobbyComponent', () => {
         component = testUtils.getComponent();
         router = TestBed.inject(Router);
         currentGameService = TestBed.inject(CurrentGameService);
+        gameService = TestBed.inject(GameService);
         spyOn(router, 'navigate').and.resolveTo();
     }));
 
@@ -149,6 +153,28 @@ describe('LobbyComponent', () => {
             // And a lobby with one active config room
             // Then the user should not be able to join
             await shouldForbidToJoinConfigRoom(configRoom, GameActionFailure.YOU_ARE_ALREADY_PLAYING());
+        }));
+
+        it('should forbid user to join a game when the backend rejects it because they are already subscribed', fakeAsync(async() => {
+            // Given an user not allowed to participate to the game
+            spyOn(gameService, 'createGame').and.callFake(async() => MGPFallible.failure('already-subscribed'));
+            testUtils.detectChanges();
+
+            // And a lobby with one active config room
+            // Then the user should not be able to join
+            await shouldForbidToJoinConfigRoom(configRoom, GameActionFailure.YOU_ARE_ALREADY_PLAYING());
+            expectValidRouting(router, ['/'], WelcomeComponent);
+        }));
+
+        it('should forbid user to join a game when the backend rejects it because of an unexpected failure', fakeAsync(async() => {
+            // Given an user not allowed to participate to the game
+            spyOn(gameService, 'createGame').and.callFake(async() => MGPFallible.failure('some-error'));
+            testUtils.detectChanges();
+
+            // And a lobby with one active config room
+            // Then the user should not be able to join
+            await shouldForbidToJoinConfigRoom(configRoom, GameActionFailure.UNEXPECTED_BACKEND_ERROR('some-error'));
+            expectValidRouting(router, ['/'], WelcomeComponent);
         }));
 
     });

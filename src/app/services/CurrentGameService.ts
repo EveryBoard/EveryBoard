@@ -18,6 +18,12 @@ export class GameActionFailure {
     public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
 
     public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing another game.`;
+
+    public static YOU_ALREADY_HAVE_ANOTHER_TAB: Localized = () => $localize`You already have another tab open.`;
+
+    public static UNEXPECTED_BACKEND_ERROR(error: string): string {
+        return $localize`Unexpected error from backend: ${error}`;
+    }
 }
 
 export abstract class AbstractCurrentGameService {

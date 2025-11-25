@@ -2,11 +2,12 @@
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
-import { FirestoreJSONObject, FirestoreJSONValue, MGPMap, MGPOptional, ObservableSubject, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
+import { FirestoreCondition, FirestoreDocument, FirestoreJSONObject, FirestoreJSONValue, IFirestoreDAO } from '../FirestoreDAO';
 import { Debug } from 'src/app/utils/Debug';
+import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 
@@ -22,8 +23,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     }
 
     public callbacks: [FirestoreCondition[], FirestoreCollectionObserver<T>][] = [];
-
-    private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
 
     public constructor(public readonly collectionName: string) {
         this.reset();

@@ -7,7 +7,7 @@ import { GameService } from 'src/app/services/GameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { GameInfo } from '../pick-game/pick-game.component';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
 
 @Component({
     selector: 'app-online-game-creation',
@@ -44,24 +44,14 @@ export class OnlineGameCreationComponent implements OnInit {
             const gameId: MGPFallible<string> = await this.gameService.createGame(game);
             if (gameId.isFailure()) {
                 const error: string = gameId.getReason();
-                switch (error) {
-                    case 'already-subscribed':
-                        // We might arrive here because the "create" message has
-                        // been sent before we get the current game update
-                        this.messageDisplayer.criticalMessage($localize`You already have another tab open.`);
-                        await this.router.navigate(['/']);
-                        break;
-                    default:
-                        this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${error}`);
-                        await this.router.navigate(['/']);
-                        break;
-                }
+                this.messageDisplayer.criticalMessage(GameActionFailure.UNEXPECTED_BACKEND_ERROR(error));
+                await this.router.navigate(['/']);
             } else {
                 await this.router.navigate(['/play', game, gameId.get()]);
             }
         } else {
             this.messageDisplayer.infoMessage(canCreateOnlineGame.getReason());
-            await this.router.navigate(['/lobby']);
+            await this.router.navigate(['/']);
         }
     }
 

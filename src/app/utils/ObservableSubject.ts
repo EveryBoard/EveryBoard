@@ -1,13 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { BehaviorSubject, Observable } from 'rxjs';
-import { ComparableObject } from './Comparable';
 
-export class ObservableSubject<T> implements ComparableObject {
+export class ObservableSubject<T> {
     public constructor(
         public subject: BehaviorSubject<T>,
         public observable: Observable<T>) {
-    }
-    public equals(): boolean {
-        throw new Error('Not needed yet, blame the dev');
     }
 }

@@ -6,7 +6,7 @@ import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
 import { CurrentGame } from 'src/app/domain/User';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
 import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { Debug } from 'src/app/utils/Debug';
 import { BackendMessage, BackendService } from 'src/app/services/BackendService';
@@ -67,11 +67,11 @@ export class LobbyComponent implements OnInit, OnDestroy {
     private async onError(error: string): Promise<void> {
         switch (error) {
             case 'already-subscribed':
-                this.messageDisplayer.criticalMessage($localize`You already have another tab open.`);
+                this.messageDisplayer.criticalMessage(GameActionFailure.YOU_ALREADY_HAVE_ANOTHER_TAB());
                 await this.router.navigate(['/']);
                 break;
             default:
-                this.messageDisplayer.criticalMessage($localize`Unexpected error from backend: ${error}`);
+                this.messageDisplayer.criticalMessage(GameActionFailure.UNEXPECTED_BACKEND_ERROR(error));
                 await this.router.navigate(['/']);
                 break;
         }
