@@ -38,6 +38,7 @@
     "core-js": "^3.39.0",
     "firebase": "^10.14.1",
     "firebase-tools": "^13.27.0",
+    "karma-firefox-launcher": "^2.1.3",
     "rxjs": "^7.8.1",
     "zone.js": "^0.14.10"
   },
