@@ -21,7 +21,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
