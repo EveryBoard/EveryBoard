@@ -78,7 +78,7 @@ describe('OnlineGameCreationComponent', () => {
         expectValidRouting(router, ['/'], WelcomeComponent);
     }));
 
-    it('should show toast and navigate to / when there is a backend erro', fakeAsync(async() => {
+    it('should show toast and navigate to / when there is a backend error', fakeAsync(async() => {
         // Given a page that is loaded for a specific game by a connected user
         const router: Router = TestBed.inject(Router);
         const gameService: GameService = TestBed.inject(GameService);
@@ -88,11 +88,11 @@ describe('OnlineGameCreationComponent', () => {
 
         // When the page is rendered and there is a backend error
         // Then it should toast, and navigate to /
-        await testUtils.expectToDisplayInfoMessage(GameActionFailure.UNEXPECTED_BACKEND_ERROR('some-error'), async() => {
+        await testUtils.expectToDisplayCriticalMessage(GameActionFailure.UNEXPECTED_BACKEND_ERROR('some-error'), async() => {
             testUtils.detectChanges();
         });
 
-        expectValidRouting(router, ['/lobby'], LobbyComponent);
+        expectValidRouting(router, ['/'], WelcomeComponent);
     }));
 
 });
