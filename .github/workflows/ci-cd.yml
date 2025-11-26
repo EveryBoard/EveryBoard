@@ -42,7 +42,9 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Setup dependencies (install dependencies)
-        run: npm ci
+        run: |
+          sha256sum package-lock.json
+          npm ci
       - name: Build lib
         run: cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase config)
