@@ -22,7 +22,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
       - name: Setup dependencies (install dependencies)
-        run: npm ci
+        run: npm install
       - name: Build lib
         run: cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase config)

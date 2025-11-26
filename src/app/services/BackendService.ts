@@ -74,6 +74,7 @@ export abstract class AbstractBackendService {
     }
 
     public setCallback(tag: string, callback: Callback): Subscription {
+        console.log('SETTING CALLBACK FOR ' + tag);
         if (this.callbacks.containsKey(tag)) {
             throw new Error(`registering a callback which already exists (${tag}), this is likely not what we need!`);
         }
@@ -82,6 +83,7 @@ export abstract class AbstractBackendService {
     }
 
     protected receive(message: BackendMessage): void {
+        console.log('RECEIVING: ' + message)
         const callback: MGPOptional<Callback> = this.callbacks.get(message.tag);
         if (callback.isPresent()) {
             callback.get()(message);

@@ -59,7 +59,9 @@ export class LobbyComponent implements OnInit, OnDestroy {
             });
 
         this.lobbySubscription = await this.backendService.subscribeToLobby();
+        console.log('Adding callback')
         this.errorSubscription = this.backendService.setCallback('Error', async(message: BackendMessage): Promise<void> => {
+            console.log('Erro')
             await this.onError(message.getArgument('reason'));
         });
     }
