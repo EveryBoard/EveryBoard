@@ -196,14 +196,14 @@ export class AIInfo {
             new AIInfo('Gipf',                  gipfAIList                 ), // 4 months after Dvonn        * Quentin
             new AIInfo('Coerceo',               coerceoAIList              ), // 76 days after Epaminondas   * Martin
             new AIInfo('Six',                   sixAIList                  ), // 18 days after Coerceo       * Martin
-            new AIInfo('LinesOfAction',         linesOfActionAIList        ),      // 65 days after Gipf          * Quentin
+            new AIInfo('LinesOfAction',         linesOfActionAIList        ), // 65 days after Gipf          * Quentin
             new AIInfo('Pentago',               pentagoAIList              ), // 25 days after Six           * Martin
             new AIInfo('Abalone',               abaloneAIList              ), // 71 days after Pentago       * Martin
             new AIInfo('Yinsh',                 yinshAIList                ), // 94 days after LinesOfAction * Quentin
             new AIInfo('Apagos',                apagosAIList               ), // 4 month after Abalone       * Martin
             new AIInfo('Diam',                  diamAIList                 ), // 4 months after Yinsh        * Quentin
             new AIInfo('Brandhub',              brandhubAIList             ), // 33 days after Apagos        * Martin
-            new AIInfo('Conspirateurs',         conspirateursAIList        ), // 30 days after Diam          * Quentinµ
+            new AIInfo('Conspirateurs',         conspirateursAIList        ), // 30 days after Diam          * Quentin
             new AIInfo('Lodestone',             lodestoneAIList            ), //                             * Quentin
             new AIInfo('MartianChess',          martianChessAIList         ), //                             * Martin
             new AIInfo('Hnefatafl',             hnefataflAIList            ), //                             * Martin
