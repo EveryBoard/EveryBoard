@@ -1,41 +1,38 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { P4State } from './P4State';
 import { P4Config, P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { P4Move } from '../../../app/games/p4/P4Move';
-import { PlayerOrNone } from '../../../app/jscaip/Player';
-import { Coord } from '../../../app/jscaip/Coord';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { DqnAiService } from 'src/src/tmp_ai_scripts/dqn-ai.service';
-import { P4DQN } from './P4DQN';
+import { P4Move } from '../../games/p4/P4Move';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { P4MoveGenerator } from './P4MoveGenerator';
+import { P4Minimax } from './P4Minimax';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
 })
-export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config>
-    implements OnInit
-{
+export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
     public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public last: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
-    private readonly dqnAiService: DqnAiService = inject(DqnAiService);
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
         this.setRulesAndNode('P4');
+        this.availableAIs = [
+            new P4Minimax(),
+            new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
+        ];
         // this.availableAIs = [ TODO: make this code sequence only present in setRulesAndNodes
-        this.availableAIs.push(new P4DQN());
         this.encoder = P4Move.encoder;
-    }
-
-    public async ngOnInit(): Promise<void> {
-        await this.dqnAiService.loadModel('assets/dqn_models/p4_dqn_model.onnx');
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
