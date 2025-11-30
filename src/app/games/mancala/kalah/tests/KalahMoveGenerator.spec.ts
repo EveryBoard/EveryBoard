@@ -6,7 +6,7 @@ import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
 import { MGPOptional } from '@everyboard/lib';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 
 describe('KalahMoveGenerator', () => {
 

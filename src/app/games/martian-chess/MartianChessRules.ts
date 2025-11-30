@@ -1,16 +1,16 @@
 import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
-import { Player } from '../../../app/jscaip/Player';
-import { Rules } from '../../../app/jscaip/Rules';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
 import { MartianChessCapture, MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessFailure } from './MartianChessFailure';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { Table } from '../../../app/jscaip/TableUtils';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Table } from '../../jscaip/TableUtils';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export interface MartianChessMoveResult {
 

@@ -1,5 +1,6 @@
-import { Coord } from '../../app/jscaip/Coord';
 import { Encoder } from '@everyboard/lib';
+
+import { Coord } from './Coord';
 
 export class Coord3D extends Coord {
 

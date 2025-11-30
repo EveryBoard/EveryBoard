@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../../app/jscaip/Coord';
-import { Player } from '../../../../../app/jscaip/Player';
-import { RulesUtils } from '../../../../../app/jscaip/tests/RulesUtils.spec';
-import { Table } from '../../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { Table } from '../../../../jscaip/TableUtils';
 import { BrandhubNode, BrandhubRules } from '../BrandhubRules';
 import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';

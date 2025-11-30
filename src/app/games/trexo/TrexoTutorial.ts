@@ -1,12 +1,12 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from '../../../app/jscaip/Coord';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../jscaip/Coord';
 import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
-import { Player } from '../../../app/jscaip/Player';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Player } from '../../jscaip/Player';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const ONE__0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);

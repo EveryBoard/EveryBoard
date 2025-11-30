@@ -2,17 +2,17 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
-import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { QuebecCastlesState } from '../QuebecCastlesState';
-import { RulesConfigurationComponent } from '../../../../app/components/wrapper-components/rules-configuration/rules-configuration.component';
+import { RulesConfigurationComponent } from '../../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { DebugElement } from '@angular/core';
-import { PlayerMap } from '../../../../app/jscaip/PlayerMap';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { PlayerOrNone } from '../../../jscaip/Player';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

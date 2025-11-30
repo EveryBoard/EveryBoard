@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Coord, CoordFailure } from '../../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPOptional } from '@everyboard/lib';
 import { PenteConfig } from '../PenteConfig';
 

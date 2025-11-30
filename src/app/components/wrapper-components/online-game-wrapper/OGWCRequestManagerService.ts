@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional, Utils, Set } from '@everyboard/lib';
 
-import { MinimalUser } from '../../../../app/domain/MinimalUser';
-import { GameEventReply, GameEventRequest, RequestType } from '../../../../app/domain/Part';
-import { ConnectedUserService } from '../../../../app/services/ConnectedUserService';
-import { Localized } from '../../../../app/utils/LocaleUtils';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { GameEventReply, GameEventRequest, RequestType } from '../../../domain/Part';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { Localized } from '../../../utils/LocaleUtils';
 
 export interface RequestInfo {
     requestType: RequestType,

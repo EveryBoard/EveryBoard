@@ -4,16 +4,16 @@ import { Utils } from '@everyboard/lib';
 
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnState } from '../DvonnState';
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { DvonnMove } from '../DvonnMove';
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnFailure } from '../DvonnFailure';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { ErrorLoggerServiceMock } from '../../../../app/services/tests/ErrorLoggerServiceMock.spec';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Table } from '../../../jscaip/TableUtils';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('DvonnRules', () => {
 

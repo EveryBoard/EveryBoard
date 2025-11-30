@@ -5,9 +5,9 @@ import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { ConfigDescriptionType, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { GameState } from '../../../../app/jscaip/state/GameState';
-import { AbstractNode, GameNode } from '../../../../app/jscaip/AI/GameNode';
+import { ConfigDescriptionType, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 
 
 /**

@@ -1,4 +1,4 @@
-import { Minimax } from '../../../app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 import { HiveMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HiveRules } from './HiveRules';

@@ -2,7 +2,7 @@
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncapsulePiece } from '../EncapsulePiece';

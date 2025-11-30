@@ -1,10 +1,10 @@
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { MGPOptional } from '@everyboard/lib';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
 import { TrexoRules } from '../TrexoRules';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const X1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 0)]);

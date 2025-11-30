@@ -1,4 +1,4 @@
-import { Localized } from '../../../app/utils/LocaleUtils';
+import { Localized } from '../../utils/LocaleUtils';
 
 export class DvonnFailure {
 

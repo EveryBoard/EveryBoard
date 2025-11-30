@@ -1,13 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { CoerceoRegularMove, CoerceoTileExchangeMove } from '../../../app/games/coerceo/CoerceoMove';
-import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { CoerceoState } from '../../../app/games/coerceo/CoerceoState';
-import { Coord } from '../../../app/jscaip/Coord';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
+import { CoerceoRegularMove, CoerceoTileExchangeMove } from '../coerceo/CoerceoMove';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { CoerceoState } from '../coerceo/CoerceoState';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

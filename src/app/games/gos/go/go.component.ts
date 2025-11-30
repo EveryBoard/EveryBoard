@@ -2,22 +2,22 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GoMove } from '../../../../app/games/gos/GoMove';
-import { GoConfig, GoRules } from '../../../../app/games/gos/go/GoRules';
+import { GoMove } from '../../gos/GoMove';
+import { GoConfig, GoRules } from '../../gos/go/GoRules';
 import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoState } from '../../../../app/games/gos/GoState';
+import { GoState } from '../../gos/GoState';
 import { GoPiece } from '../GoPiece';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { GroupData } from '../../../../app/jscaip/BoardData';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
-import { GobanGameComponent } from '../../../../app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from '../../../../app/jscaip/AI/MCTS';
+import { Coord } from '../../../jscaip/Coord';
+import { GroupData } from '../../../jscaip/BoardData';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GoMoveGenerator } from './GoMoveGenerator';
-import { Debug } from '../../../../app/utils/Debug';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { Debug } from '../../../utils/Debug';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
 import { GoMinimax } from './GoMinimax';
-import { ScoreName } from '../../../../app/components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-go',

@@ -6,6 +6,13 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+
+import { FirebaseError } from 'firebase/app';
+import { Subscription } from 'rxjs';
+
+import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { GameState } from '../../jscaip/state/GameState';
 import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
@@ -25,36 +32,32 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorLoggerService } from '../../../app/services/ErrorLoggerService';
-import { ErrorLoggerServiceMock } from '../../../app/services/tests/ErrorLoggerServiceMock.spec';
-import { AbstractGameComponent } from '../../../app/components/game-components/game-component/GameComponent';
-import { findMatchingRoute } from '../../../app/app.module.spec';
-import { HumanDurationPipe } from '../../../app/pipes-and-directives/human-duration.pipe';
-import { ToggleVisibilityDirective } from '../../../app/pipes-and-directives/toggle-visibility.directive';
-import { FirestoreTimePipe } from '../../../app/pipes-and-directives/firestore-time.pipe';
-import { UserMocks } from '../../../app/domain/UserMocks.spec';
-import { FirebaseError } from 'firebase/app';
-import { Subscription } from 'rxjs';
-import { CurrentGameService } from '../../../app/services/CurrentGameService';
-import { CurrentGameServiceMock } from '../../../app/services/tests/CurrentGameService.spec';
+import { ErrorLoggerService } from '../../services/ErrorLoggerService';
+import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
+import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
+import { findMatchingRoute } from '../../app.module.spec';
+import { HumanDurationPipe } from '../../pipes-and-directives/human-duration.pipe';
+import { ToggleVisibilityDirective } from '../../pipes-and-directives/toggle-visibility.directive';
+import { FirestoreTimePipe } from '../../pipes-and-directives/firestore-time.pipe';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { CurrentGameService } from '../../services/CurrentGameService';
+import { CurrentGameServiceMock } from '../../services/tests/CurrentGameService.spec';
 
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { Player } from '../../../app/jscaip/Player';
-import { ConfigDescriptionType, RulesConfig } from '../../../app/jscaip/RulesConfigUtil';
-import { Minimax } from '../../../app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from '../../../app/jscaip/AI/AI';
-import { SuperRules } from '../../../app/jscaip/Rules';
-import { GameServiceMock } from '../../../app/services/tests/GameServiceMock.spec';
-import { GameService } from '../../../app/services/GameService';
-import { ConfigRoomService } from '../../../app/services/ConfigRoomService';
-import { ServerTimeService } from '../../../app/services/ServerTimeService';
-import { ServerTimeServiceMock } from '../../../app/services/tests/ServerTimeServiceMock.spec';
-import { ConfigRoomServiceMock } from '../../../app/services/tests/ConfigRoomServiceMock.spec';
-import { RulesConfigurationComponent } from '../../../app/components/wrapper-components/rules-configuration/rules-configuration.component';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Player } from '../../jscaip/Player';
+import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../jscaip/AI/AI';
+import { SuperRules } from '../../jscaip/Rules';
+import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
+import { GameService } from '../../services/GameService';
+import { ConfigRoomService } from '../../services/ConfigRoomService';
+import { ServerTimeService } from '../../services/ServerTimeService';
+import { ServerTimeServiceMock } from '../../services/tests/ServerTimeServiceMock.spec';
+import { ConfigRoomServiceMock } from '../../services/tests/ConfigRoomServiceMock.spec';
+import { RulesConfigurationComponent } from '../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { GameInfo } from '../../components/normal-component/pick-game/game-info';
-import { TestVars } from 'src/src/TestVars.spec';
+import { TestVars } from '../../../TestVars.spec';
 
 @Component({})
 export class BlankComponent {}

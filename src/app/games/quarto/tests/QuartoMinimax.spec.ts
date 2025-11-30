@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
-import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { QuartoMinimax } from '../QuartoMinimax';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
 import { QuartoMove } from '../QuartoMove';
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 
 const ____: QuartoPiece = QuartoPiece.EMPTY;
 const AAAA: QuartoPiece = QuartoPiece.AAAA;

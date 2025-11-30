@@ -2,8 +2,8 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { MGPValidation } from '@everyboard/lib';
 
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 
 @Component({
     selector: 'app-online-game-selection',

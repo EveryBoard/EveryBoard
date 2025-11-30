@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LinesOfActionComponent } from '../lines-of-action.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { DirectionFailure } from '../../../../app/jscaip/Direction';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { DirectionFailure } from '../../../jscaip/Direction';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 
 describe('LinesOfActionComponent', () => {

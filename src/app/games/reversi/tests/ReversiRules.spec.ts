@@ -2,13 +2,13 @@
 import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ReversiFailure } from '../ReversiFailure';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
 describe('ReversiRules', () => {
 

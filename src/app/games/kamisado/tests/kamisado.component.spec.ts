@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { KamisadoState } from '../../../../app/games/kamisado/KamisadoState';
-import { KamisadoColor } from '../../../../app/games/kamisado/KamisadoColor';
+import { KamisadoState } from '../../kamisado/KamisadoState';
+import { KamisadoColor } from '../../kamisado/KamisadoColor';
 import { MGPOptional } from '@everyboard/lib';
-import { KamisadoPiece } from '../../../../app/games/kamisado/KamisadoPiece';
-import { KamisadoFailure } from '../../../../app/games/kamisado/KamisadoFailure';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { KamisadoPiece } from '../../kamisado/KamisadoPiece';
+import { KamisadoFailure } from '../../kamisado/KamisadoFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { KamisadoComponent } from '../kamisado.component';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { KamisadoMove } from '../../../../app/games/kamisado/KamisadoMove';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
+import { KamisadoMove } from '../../kamisado/KamisadoMove';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
 
 describe('KamisadoComponent', () => {
 

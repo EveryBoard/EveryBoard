@@ -1,6 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
-import { GameInfo } from 'src/src/app/components/normal-component/pick-game/game-info';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+
+import { GameInfo } from '../../../components/normal-component/pick-game/game-info';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { NewGameComponent } from '../new-game.component';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';

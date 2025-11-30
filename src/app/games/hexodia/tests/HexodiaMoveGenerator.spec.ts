@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 import { HexodiaState } from '../HexodiaState';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 
 describe('HexodiaMoveGenerator', () => {
 

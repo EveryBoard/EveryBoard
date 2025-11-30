@@ -4,8 +4,8 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MGPValidation } from '@everyboard/lib';
 
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
-import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TutorialGameWrapperComponent } from '../../wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { LobbyComponent } from '../lobby/lobby.component';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';

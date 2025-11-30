@@ -1,10 +1,10 @@
-import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
-import { Player } from '../../../app/jscaip/Player';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { Player } from '../../jscaip/Player';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessNode } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class MartianChessScoreHeuristic extends PlayerMetricHeuristic<MartianChessMove, MartianChessState> {
 

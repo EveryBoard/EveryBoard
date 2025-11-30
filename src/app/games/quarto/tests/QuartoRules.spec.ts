@@ -3,10 +3,10 @@ import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoState } from '../QuartoState';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
-import { Player } from '../../../../app/jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Player } from '../../../jscaip/Player';
 import { QuartoFailure } from '../QuartoFailure';
 import { MGPOptional } from '@everyboard/lib';
 

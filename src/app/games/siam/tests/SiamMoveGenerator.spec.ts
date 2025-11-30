@@ -3,7 +3,7 @@ import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
 

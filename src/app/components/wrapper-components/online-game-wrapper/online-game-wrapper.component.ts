@@ -5,30 +5,30 @@ import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from '../../../../app/services/ConnectedUserService';
-import { GameService } from '../../../../app/services/GameService';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { GameService } from '../../../services/GameService';
 import { Move } from '../../../jscaip/Move';
 import { Part, PartDocument, GameEvent, GameEventMove, GameEventReply, RequestType } from '../../../domain/Part';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { CurrentGame } from '../../../domain/User';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
-import { ConfigRoom } from '../../../../app/domain/ConfigRoom';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { GameState } from '../../../../app/jscaip/state/GameState';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { ConfigRoom } from '../../../domain/ConfigRoom';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { GameState } from '../../../jscaip/state/GameState';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
-import { Localized } from '../../../../app/utils/LocaleUtils';
-import { MinimalUser } from '../../../../app/domain/MinimalUser';
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
-import { GameEventService } from '../../../../app/services/GameEventService';
-import { AbstractNode, GameNode } from '../../../../app/jscaip/AI/GameNode';
+import { Localized } from '../../../utils/LocaleUtils';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { GameEventService } from '../../../services/GameEventService';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
-import { GameStatus } from '../../../../app/jscaip/GameStatus';
+import { GameStatus } from '../../../jscaip/GameStatus';
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { Debug } from '../../../../app/utils/Debug';
-import { ServerTimeService } from '../../../../app/services/ServerTimeService';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Debug } from '../../../utils/Debug';
+import { ServerTimeService } from '../../../services/ServerTimeService';
 
 export class OnlineGameWrapperMessages {
 

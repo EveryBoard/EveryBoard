@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
-import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { AbaloneScoreMinimax } from '../AbaloneScoreMinimax';
 
 describe('AbaloneScoreMinimax', () => {

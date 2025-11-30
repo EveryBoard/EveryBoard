@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
-import { ThemeService } from '../../../../app/services/ThemeService';
-import { UserSettingsService } from '../../../../app/services/UserSettingsService';
+import { ThemeService } from '../../../services/ThemeService';
+import { UserSettingsService } from '../../../services/UserSettingsService';
 
 type SettingOption = { value: string, name: string }
 

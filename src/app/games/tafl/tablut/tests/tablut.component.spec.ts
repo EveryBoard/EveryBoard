@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { TablutMove } from '../../../../../app/games/tafl/tablut/TablutMove';
-import { Coord } from '../../../../../app/jscaip/Coord';
+import { TablutMove } from '../../../tafl/tablut/TablutMove';
+import { Coord } from '../../../../jscaip/Coord';
 import { TablutRules } from '../TablutRules';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';

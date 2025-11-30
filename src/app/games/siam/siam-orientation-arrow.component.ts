@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import { BaseGameComponent } from '../../../app/components/game-components/game-component/GameComponent';
+import { BaseGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { SiamMove } from './SiamMove';
-import { Player } from '../../../app/jscaip/Player';
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { SiamConfig } from './SiamRules';
-import { Coord } from '../../../app/jscaip/Coord';
+import { Coord } from '../../jscaip/Coord';
 
 @Component({
     selector: '[app-siam-orientation-arrow]',

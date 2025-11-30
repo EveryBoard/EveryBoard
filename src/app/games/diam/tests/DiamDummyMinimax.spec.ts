@@ -1,10 +1,10 @@
 
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { DiamRules } from '../DiamRules';
-import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DiamDummyMinimax } from '../DiamDummyMinimax';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('DiamDummyMinimax', () => {
 

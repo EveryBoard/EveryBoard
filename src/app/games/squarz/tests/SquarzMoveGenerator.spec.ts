@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { SquarzMove } from '../SquarzMove';
 import { SquarzMoveGenerator } from '../SquarzMoveGenerator';
 import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';

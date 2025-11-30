@@ -2,9 +2,9 @@
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 
-import { Chat, ChatDocument } from '../../../app/domain/Chat';
-import { MessageDocument } from '../../../app/domain/Message';
-import { Debug } from '../../../app/utils/Debug';
+import { Chat, ChatDocument } from '../../domain/Chat';
+import { MessageDocument } from '../../domain/Message';
+import { Debug } from '../../utils/Debug';
 
 type ChatOS = ObservableSubject<MGPOptional<ChatDocument>>;
 

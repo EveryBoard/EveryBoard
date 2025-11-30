@@ -1,20 +1,20 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoState } from './KamisadoState';
 import { KamisadoPiece } from './KamisadoPiece';
-import { Player } from '../../../app/jscaip/Player';
-import { Rules } from '../../../app/jscaip/Rules';
+import { Player } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class KamisadoNode extends GameNode<KamisadoMove, KamisadoState> {}
 

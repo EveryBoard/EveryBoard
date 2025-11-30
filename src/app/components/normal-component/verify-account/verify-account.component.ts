@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from '../../../../app/services/ConnectedUserService';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 
 /**
  * Component to verify an account.

@@ -1,4 +1,4 @@
-import { Minimax } from '../../../app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 import { SixMove } from './SixMove';
 import { SixState } from './SixState';
 import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';

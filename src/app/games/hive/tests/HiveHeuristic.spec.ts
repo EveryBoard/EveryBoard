@@ -2,11 +2,11 @@
 import { HiveHeuristic } from '../HiveHeuristic';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { HivePiece } from '../HivePiece';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('HiveHeuristic', () => {
 

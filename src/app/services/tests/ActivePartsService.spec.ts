@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { ActivePartsService } from '../ActivePartsService';
-import { PartDAO } from '../../../app/dao/PartDAO';
+import { PartDAO } from '../../dao/PartDAO';
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { MGPResult, Part, PartDocument } from '../../../app/domain/Part';
-import { PartDAOMock } from '../../../app/dao/tests/PartDAOMock.spec';
+import { MGPResult, Part, PartDocument } from '../../domain/Part';
+import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { Utils } from '@everyboard/lib';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { FirestoreCollectionObserver } from '../../../app/dao/FirestoreCollectionObserver';
-import { UserMocks } from '../../../app/domain/UserMocks.spec';
+import { FirestoreCollectionObserver } from '../../dao/FirestoreCollectionObserver';
+import { UserMocks } from '../../domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
-import { FirestoreCondition } from '../../../app/dao/FirestoreDAO';
+import { FirestoreCondition } from '../../dao/FirestoreDAO';
 
 describe('ActivePartsService', () => {
 

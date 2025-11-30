@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
-import { ErrorLoggerServiceMock } from '../../../../app/services/tests/ErrorLoggerServiceMock.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { EncoderTestUtils, MGPFallible, Utils } from '@everyboard/lib';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('TrexoMove', () => {
 

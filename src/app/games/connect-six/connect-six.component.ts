@@ -4,12 +4,12 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
-import { PlayerOrNone } from '../../../app/jscaip/Player';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { Coord } from '../../../app/jscaip/Coord';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { GobanGameComponent } from '../../../app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Coord } from '../../jscaip/Coord';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
 import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
 

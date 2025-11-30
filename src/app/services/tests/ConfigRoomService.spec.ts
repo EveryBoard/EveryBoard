@@ -1,20 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
-import { ConfigRoomDAO } from '../../../app/dao/ConfigRoomDAO';
-import { ConfigRoomDAOMock } from '../../../app/dao/tests/ConfigRoomDAOMock.spec';
-import { ConfigRoomMocks } from '../../../app/domain/ConfigRoomMocks.spec';
+import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
+import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
+import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
 import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { UserMocks } from '../../../app/domain/UserMocks.spec';
-import { MinimalUser } from '../../../app/domain/MinimalUser';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { MinimalUser } from '../../domain/MinimalUser';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { IFirestoreDAO } from '../../../app/dao/FirestoreDAO';
-import { FirstPlayer, PartStatus, PartType } from '../../../app/domain/ConfigRoom';
-import { RulesConfig } from '../../../app/jscaip/RulesConfigUtil';
-import { BlankComponent } from '../../../app/utils/tests/TestUtils.spec';
+import { IFirestoreDAO } from '../../dao/FirestoreDAO';
+import { FirstPlayer, PartStatus, PartType } from '../../domain/ConfigRoom';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { BlankComponent } from '../../utils/tests/TestUtils.spec';
 
 describe('ConfigRoomService', () => {
 

@@ -4,12 +4,12 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TeekoConfig, TeekoRules } from './TeekoRules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { Coord } from '../../../app/jscaip/Coord';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 import { TeekoMinimax } from './TeekoMinimax';
 

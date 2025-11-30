@@ -1,12 +1,12 @@
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 
 export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 

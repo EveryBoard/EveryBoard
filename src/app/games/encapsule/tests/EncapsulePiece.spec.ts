@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 
 describe('EncapsulePiece', () => {

@@ -1,12 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { SiamMove } from '../../../app/games/siam/SiamMove';
-import { SiamPiece } from '../../../app/games/siam/SiamPiece';
-import { SiamState } from '../../../app/games/siam/SiamState';
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
+import { SiamMove } from '../siam/SiamMove';
+import { SiamPiece } from '../siam/SiamPiece';
+import { SiamState } from '../siam/SiamState';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SiamConfig, SiamRules } from './SiamRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

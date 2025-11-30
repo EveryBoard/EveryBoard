@@ -3,13 +3,13 @@ import { MGPOptional } from '@everyboard/lib';
 import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
-import { Table, TableUtils } from '../../../../../app/jscaip/TableUtils';
-import { Coord } from '../../../../../app/jscaip/Coord';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { Coord } from '../../../../jscaip/Coord';
 import { TrigoConfig, TrigoRules } from '../TrigoRules';
 import { GoFailure } from '../../GoFailure';
-import { RulesUtils } from '../../../../../app/jscaip/tests/RulesUtils.spec';
-import { Player } from '../../../../../app/jscaip/Player';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { GoNode } from '../../AbstractGoRules';
 import { GoPhase } from '../../GoPhase';
 

@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 import { HexodiaState } from '../HexodiaState';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { Minimax } from '../../../../app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { Table } from '../../../jscaip/TableUtils';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { HexodiaAlignmentMinimax } from '../HexodiaAlignmentMinimax';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
-import { SlowTest, minimaxTest } from '../../../../app/utils/tests/TestUtils.spec';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { SlowTest, minimaxTest } from '../../../utils/tests/TestUtils.spec';
 
 describe('HexodiaAlignmentMinimax', () => {
 

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { YinshState } from '../YinshState';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('YinshScoreHeuristic', () => {
 

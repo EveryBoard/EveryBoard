@@ -64,7 +64,7 @@ import { LodestoneTutorial } from '../../../games/lodestone/LodestoneTutorial';
 import { MartianChessRules } from '../../../games/martian-chess/MartianChessRules';
 import { MartianChessTutorial } from '../../../games/martian-chess/MartianChessTutorial';
 
-import { P4MoveGenerator } from '../../../../app/games/p4/P4MoveGenerator';
+import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
 import { P4Rules } from '../../../games/p4/P4Rules';
 import { P4Tutorial } from '../../../games/p4/P4Tutorial';
 import { PentagoRules } from '../../../games/pentago/PentagoRules';
@@ -79,8 +79,8 @@ import { QuartoTutorial } from '../../../games/quarto/QuartoTutorial';
 import { QuixoRules } from '../../../games/quixo/QuixoRules';
 import { QuixoTutorial } from '../../../games/quixo/QuixoTutorial';
 
-import { ReversiMinimax } from '../../../../app/games/reversi/ReversiMinimax';
-import { ReversiMoveGenerator } from '../../../../app/games/reversi/ReversiMoveGenerator';
+import { ReversiMinimax } from '../../../games/reversi/ReversiMinimax';
+import { ReversiMoveGenerator } from '../../../games/reversi/ReversiMoveGenerator';
 import { ReversiRules } from '../../../games/reversi/ReversiRules';
 import { ReversiTutorial } from '../../../games/reversi/ReversiTutorial';
 

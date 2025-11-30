@@ -1,19 +1,19 @@
-import { Coord } from '../../../app/jscaip/Coord';
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { ConfigurableRules } from '../../../app/jscaip/Rules';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { NInARowHelper } from '../../../app/jscaip/NInARowHelper';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { MGPMap, MGPOptional, Set, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { TableUtils } from '../../../app/jscaip/TableUtils';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { TableUtils } from '../../jscaip/TableUtils';
 import { QuixoFailure } from './QuixoFailure';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../../app/utils/MGPValidator';
-import { PlayerMap } from '../../../app/jscaip/PlayerMap';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 

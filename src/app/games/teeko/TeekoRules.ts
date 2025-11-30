@@ -1,16 +1,16 @@
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
-import { ConfigurableRules } from '../../../app/jscaip/Rules';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { NInARowHelper } from '../../../app/jscaip/NInARowHelper';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { Coord, CoordFailure } from '../../../app/jscaip/Coord';
-import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
-import { BooleanConfig, RulesConfigDescription } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 

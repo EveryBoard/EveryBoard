@@ -4,11 +4,11 @@ import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Coord, CoordFailure } from '../../../../app/jscaip/Coord';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 
 describe('TeekoRules', () => {
 

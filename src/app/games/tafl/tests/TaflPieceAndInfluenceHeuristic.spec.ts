@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Player } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { TaflPawn } from '../TaflPawn';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
@@ -9,11 +9,11 @@ import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
-import { CoordSet } from '../../../../app/jscaip/CoordSet';
+import { CoordSet } from '../../../jscaip/CoordSet';
 import { TaflMove } from '../TaflMove';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { HnefataflRules } from '../hnefatafl/HnefataflRules';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('TafPieceAndInfluenceHeuristic', () => {
 

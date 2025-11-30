@@ -1,28 +1,28 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from '../../../app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Direction } from '../../../app/jscaip/Direction';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { HexaDirection } from '../../../app/jscaip/HexaDirection';
-import { HexaLayout } from '../../../app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../../app/jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Direction } from '../../jscaip/Direction';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { Arrow } from '../../../app/components/game-components/arrow-component/Arrow';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
-import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 
 type CapturedInfo = {
     coord: Coord,

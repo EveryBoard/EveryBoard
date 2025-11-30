@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Table, TableUtils } from '../../../../app/jscaip/TableUtils';
+import { Table, TableUtils } from '../../TableUtils';
 import { Coord } from '../../Coord';
 import { HexagonalGameState } from '../HexagonalGameState';
 import { HexaLine } from '../../HexaLine';
-import { ErrorLoggerServiceMock } from '../../../../app/services/tests/ErrorLoggerServiceMock.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { JSONValue, Utils } from '@everyboard/lib';
 
 export class TestingHexagonalState extends HexagonalGameState<number> {

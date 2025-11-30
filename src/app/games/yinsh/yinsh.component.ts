@@ -1,23 +1,23 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from '../../../app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../../app/jscaip/Coord';
-import { HexaLayout } from '../../../app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../../app/jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { PlayerMap, PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { EmptyRulesConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { YinshScoreMinimax } from './YinshScoreMinimax';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { CoordSet } from '../../jscaip/CoordSet';
 
 interface ViewInfo {
     targets: Coord[],

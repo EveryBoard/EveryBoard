@@ -1,13 +1,13 @@
 import { MGPFallible, MGPOptional, Set } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
-import { Coord } from '../../../app/jscaip/Coord';
-import { HexaDirection } from '../../../app/jscaip/HexaDirection';
-import { Player } from '../../../app/jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { Player } from '../../jscaip/Player';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneNode, AbaloneRules } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState, AbaloneConfig> {
 

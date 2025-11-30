@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { EpaminondasState } from '../EpaminondasState';
 import { MGPOptional } from '@everyboard/lib';
 import { EpaminondasAttackHeuristic } from '../EpaminondasAttackHeuristic';

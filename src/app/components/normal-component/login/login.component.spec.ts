@@ -5,10 +5,10 @@ import { Observable, ReplaySubject } from 'rxjs';
 import { MGPValidation } from '@everyboard/lib';
 
 import { LoginComponent } from './login.component';
-import { ConnectedUserService, AuthUser } from '../../../../app/services/ConnectedUserService';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LobbyComponent } from '../lobby/lobby.component';
-import { UserMocks } from '../../../../app/domain/UserMocks.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
 
 describe('LoginComponent', () => {
     let testUtils: SimpleComponentTestUtils<LoginComponent>;

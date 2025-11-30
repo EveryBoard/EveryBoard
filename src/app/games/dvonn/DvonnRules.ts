@@ -1,19 +1,19 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { DvonnState } from './DvonnState';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
-import { Rules } from '../../../app/jscaip/Rules';
-import { Coord } from '../../../app/jscaip/Coord';
-import { TableUtils } from '../../../app/jscaip/TableUtils';
-import { Player } from '../../../app/jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
+import { Coord } from '../../jscaip/Coord';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { Player } from '../../jscaip/Player';
 import { DvonnFailure } from './DvonnFailure';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { HexagonalUtils } from '../../../app/jscaip/HexagonalUtils';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 

@@ -1,16 +1,16 @@
 import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Vector } from '../../../app/jscaip/Vector';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { TableUtils, Table } from '../../../app/jscaip/TableUtils';
+import { Coord } from '../../jscaip/Coord';
+import { Vector } from '../../jscaip/Vector';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { TableUtils, Table } from '../../jscaip/TableUtils';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { OpenHexagonalGameState } from '../../../app/jscaip/state/OpenHexagonalGameState';
-import { HexagonalUtils } from '../../../app/jscaip/HexagonalUtils';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { SixConfig } from './SixRules';
 
 export class SixState extends OpenHexagonalGameState<Player> {

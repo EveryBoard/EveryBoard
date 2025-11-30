@@ -7,30 +7,30 @@ import { Timestamp } from 'firebase/firestore';
 import { PartCreationComponent } from './part-creation.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 
-import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../../app/services/ConfigRoomService';
-import { GameService } from '../../../../app/services/GameService';
-import { ErrorLoggerServiceMock } from '../../../../app/services/tests/ErrorLoggerServiceMock.spec';
-import { AuthUser, ConnectedUserService } from '../../../../app/services/ConnectedUserService';
-import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../services/ConfigRoomService';
+import { GameService } from '../../../services/GameService';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 
-import { ConfigRoomDAO } from '../../../../app/dao/ConfigRoomDAO';
-import { PartDAO } from '../../../../app/dao/PartDAO';
-import { ChatDAO } from '../../../../app/dao/ChatDAO';
-import { UserDAO } from '../../../../app/dao/UserDAO';
+import { ConfigRoomDAO } from '../../../dao/ConfigRoomDAO';
+import { PartDAO } from '../../../dao/PartDAO';
+import { ChatDAO } from '../../../dao/ChatDAO';
+import { UserDAO } from '../../../dao/UserDAO';
 
-import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { ConfigRoomMocks } from '../../../../app/domain/ConfigRoomMocks.spec';
-import { FirstPlayer, PartStatus, PartType, ConfigRoom } from '../../../../app/domain/ConfigRoom';
-import { Part } from '../../../../app/domain/Part';
-import { PartMocks } from '../../../../app/domain/PartMocks.spec';
-import { CurrentGame } from '../../../../app/domain/User';
-import { CurrentGameMocks } from '../../../../app/domain/mocks/CurrentGameMocks.spec';
-import { UserMocks } from '../../../../app/domain/UserMocks.spec';
-import { FirestoreTime } from '../../../../app/domain/Time';
-import { UserService } from '../../../../app/services/UserService';
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { FirstPlayer, PartStatus, PartType, ConfigRoom } from '../../../domain/ConfigRoom';
+import { Part } from '../../../domain/Part';
+import { PartMocks } from '../../../domain/PartMocks.spec';
+import { CurrentGame } from '../../../domain/User';
+import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { FirestoreTime } from '../../../domain/Time';
+import { UserService } from '../../../services/UserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 

@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
 
 export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {

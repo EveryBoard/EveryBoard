@@ -5,26 +5,26 @@ import { Router } from '@angular/router';
 import { MGPOptional } from '@everyboard/lib';
 
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../../app/services/ConfigRoomService';
-import { ConfigRoomDAO } from '../../../../app/dao/ConfigRoomDAO';
-import { ConfigRoom } from '../../../../app/domain/ConfigRoom';
-import { ConfigRoomMocks } from '../../../../app/domain/ConfigRoomMocks.spec';
-import { PartDAO } from '../../../../app/dao/PartDAO';
-import { PartMocks } from '../../../../app/domain/PartMocks.spec';
-import { ChatDAO } from '../../../../app/dao/ChatDAO';
-import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../../app/utils/tests/TestUtils.spec';
-import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
-import { P4Component } from '../../../../app/games/p4/p4.component';
-import { Part } from '../../../../app/domain/Part';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../services/ConfigRoomService';
+import { ConfigRoomDAO } from '../../../dao/ConfigRoomDAO';
+import { ConfigRoom } from '../../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { PartDAO } from '../../../dao/PartDAO';
+import { PartMocks } from '../../../domain/PartMocks.spec';
+import { ChatDAO } from '../../../dao/ChatDAO';
+import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { P4Component } from '../../../games/p4/p4.component';
+import { Part } from '../../../domain/Part';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { UserDAO } from '../../../../app/dao/UserDAO';
-import { UserMocks } from '../../../../app/domain/UserMocks.spec';
+import { UserDAO } from '../../../dao/UserDAO';
+import { UserMocks } from '../../../domain/UserMocks.spec';
 import { GameWrapperMessages } from '../GameWrapper';
-import { GameService } from '../../../../app/services/GameService';
-import { MinimalUser } from '../../../../app/domain/MinimalUser';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { ConnectedUserService } from '../../../../app/services/ConnectedUserService';
+import { GameService } from '../../../services/GameService';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 

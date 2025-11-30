@@ -2,12 +2,12 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { GameEventService } from '../GameEventService';
-import { PartDAO } from '../../../app/dao/PartDAO';
-import { GameEvent } from '../../../app/domain/Part';
+import { PartDAO } from '../../dao/PartDAO';
+import { GameEvent } from '../../domain/Part';
 import { JSONValue } from '@everyboard/lib';
-import { PartDAOMock } from '../../../app/dao/tests/PartDAOMock.spec';
+import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
-import { UserMocks } from '../../../app/domain/UserMocks.spec';
+import { UserMocks } from '../../domain/UserMocks.spec';
 
 describe('GameEventService', () => {
 

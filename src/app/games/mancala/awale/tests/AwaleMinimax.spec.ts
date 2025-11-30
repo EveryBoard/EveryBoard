@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleRules } from '../AwaleRules';
-import { MancalaState } from '../../../../../app/games/mancala/common/MancalaState';
-import { Table } from '../../../../../app/jscaip/TableUtils';
-import { AIDepthLimitOptions } from '../../../../../app/jscaip/AI/AI';
-import { Minimax } from '../../../../../app/jscaip/AI/Minimax';
+import { MancalaState } from '../../../mancala/common/MancalaState';
+import { Table } from '../../../../jscaip/TableUtils';
+import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';

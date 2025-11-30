@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../app/jscaip/Coord';
-import { PlayerMetricHeuristic } from '../../../../app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../../../app/jscaip/PlayerNumberTable';
-import { Player } from '../../../../app/jscaip/Player';
-import { CoordSet } from '../../../../app/jscaip/CoordSet';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerMetricHeuristic } from '../../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+import { Player } from '../../../jscaip/Player';
+import { CoordSet } from '../../../jscaip/CoordSet';
 import { CheckersMove } from '../common/CheckersMove';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from './AbstractCheckersRules';
 import { CheckersState } from '../common/CheckersState';

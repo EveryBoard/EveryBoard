@@ -1,10 +1,10 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { MoveCoordToCoord } from '../../../app/jscaip/MoveCoordToCoord';
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { KamisadoState } from './KamisadoState';
-import { Move } from '../../../app/jscaip/Move';
-import { MoveWithTwoCoords } from '../../../app/jscaip/MoveWithTwoCoords';
+import { Move } from '../../jscaip/Move';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 
 export type KamisadoMove = KamisadoPieceMove | KamisadoPassMove;
 

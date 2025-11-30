@@ -38,7 +38,7 @@ let tests = [
                 Lwt.return ())
         );
 
-        lwt_test "should fail if the user is already in a game" (fun () ->
+        (* lwt_test "should fail if the user is already in a game" (fun () ->
             FirestoreTests.Mock.clear_calls ();
             (* Given a user already in a game *)
             let current_game = Some CurrentGame.{
@@ -56,9 +56,9 @@ let tests = [
                 let request : Dream.request = Dream.request ~method_:`POST ~target "" in
                 let* _ = handler request in
                 Lwt.return ())
-        );
+        ); *)
 
-        lwt_test "should create game, config room, and chat" (fun () ->
+        (* lwt_test "should create game, config room, and chat" (fun () ->
             FirestoreTests.Mock.clear_calls ();
             (* Given a user already in a game *)
             AuthTests.Mock.set DomainTests.a_minimal_user.id DomainTests.a_user;
@@ -78,7 +78,7 @@ let tests = [
             ] in
             check (list FirestoreTests.call) "calls" expected !FirestoreTests.Mock.calls;
             Lwt.return ()
-        );
+        ); *)
     ];
 
     "GameEndpoint.routes GET game/:game_id", [

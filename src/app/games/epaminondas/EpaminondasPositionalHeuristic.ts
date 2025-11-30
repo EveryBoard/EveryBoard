@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
-import { Heuristic } from '../../../app/jscaip/AI/Minimax';
-import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
-import { Player } from '../../../app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Heuristic } from '../../jscaip/AI/Minimax';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Player } from '../../jscaip/Player';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';

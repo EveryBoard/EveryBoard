@@ -1,6 +1,6 @@
-import { Coord } from '../../../app/jscaip/Coord';
-import { GameStateWithTable } from '../../../app/jscaip/state/GameStateWithTable';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Utils } from '@everyboard/lib';
 
 /**

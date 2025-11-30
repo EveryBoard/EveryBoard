@@ -1,4 +1,4 @@
-import { DummyHeuristic, Minimax } from '../../../app/jscaip/AI/Minimax';
+import { DummyHeuristic, Minimax } from '../../jscaip/AI/Minimax';
 import { DiamMove } from './DiamMove';
 import { DiamMoveGenerator } from './DiamMoveGenerator';
 import { DiamRules } from './DiamRules';

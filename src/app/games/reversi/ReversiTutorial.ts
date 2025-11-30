@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { ReversiMove } from '../../../app/games/reversi/ReversiMove';
-import { ReversiState } from '../../../app/games/reversi/ReversiState';
-import { PlayerOrNone } from '../../../app/jscaip/Player';
+import { ReversiMove } from '../reversi/ReversiMove';
+import { ReversiState } from '../reversi/ReversiState';
+import { PlayerOrNone } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ReversiConfig, ReversiRules } from './ReversiRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

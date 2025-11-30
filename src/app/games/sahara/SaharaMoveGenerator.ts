@@ -1,12 +1,12 @@
-import { Player } from '../../../app/jscaip/Player';
-import { Coord } from '../../../app/jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
-import { TriangularGameState } from '../../../app/jscaip/state/TriangularGameState';
+import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> {
 

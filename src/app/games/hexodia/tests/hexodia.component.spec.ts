@@ -3,14 +3,14 @@ import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
 import { HexodiaMove } from '../HexodiaMove';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HexodiaComponent } from '../hexodia.component';
 import { HexodiaState } from '../HexodiaState';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { HexodiaConfig, HexodiaRules } from '../HexodiaRules';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 
 describe('HexodiaComponent', () => {
 

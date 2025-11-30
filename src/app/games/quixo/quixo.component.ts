@@ -2,15 +2,15 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
-import { QuixoMove } from '../../../app/games/quixo/QuixoMove';
-import { QuixoConfig, QuixoState } from '../../../app/games/quixo/QuixoState';
-import { QuixoRules } from '../../../app/games/quixo/QuixoRules';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { PlayerOrNone } from '../../../app/jscaip/Player';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { QuixoMove } from '../quixo/QuixoMove';
+import { QuixoConfig, QuixoState } from '../quixo/QuixoState';
+import { QuixoRules } from '../quixo/QuixoRules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { QuixoMinimax } from './QuixoMinimax';
 

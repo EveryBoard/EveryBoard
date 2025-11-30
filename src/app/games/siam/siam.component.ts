@@ -2,22 +2,22 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { SiamMove } from '../../../app/games/siam/SiamMove';
-import { SiamState } from '../../../app/games/siam/SiamState';
-import { SiamConfig, SiamLegalityInformation, SiamRules } from '../../../app/games/siam/SiamRules';
-import { SiamPiece } from '../../../app/games/siam/SiamPiece';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { Player } from '../../../app/jscaip/Player';
+import { SiamMove } from '../siam/SiamMove';
+import { SiamState } from '../siam/SiamState';
+import { SiamConfig, SiamLegalityInformation, SiamRules } from '../siam/SiamRules';
+import { SiamPiece } from '../siam/SiamPiece';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Player } from '../../jscaip/Player';
 import { SiamFailure } from './SiamFailure';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
-import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
-import { Debug } from '../../../app/utils/Debug';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { Debug } from '../../utils/Debug';
+import { CoordSet } from '../../jscaip/CoordSet';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,

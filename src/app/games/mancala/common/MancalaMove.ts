@@ -1,4 +1,4 @@
-import { Move } from '../../../../app/jscaip/Move';
+import { Move } from '../../../jscaip/Move';
 import { ArrayUtils, Encoder, Utils } from '@everyboard/lib';
 
 export class MancalaDistribution {

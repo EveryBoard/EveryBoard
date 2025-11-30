@@ -2,15 +2,15 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { EncapsuleComponent } from '../encapsule.component';
-import { EncapsuleMove } from '../../../../app/games/encapsule/EncapsuleMove';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../../../app/games/encapsule/EncapsuleState';
-import { Player } from '../../../../app/jscaip/Player';
-import { EncapsulePiece } from '../../../../app/games/encapsule/EncapsulePiece';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { EncapsuleMove } from '../../encapsule/EncapsuleMove';
+import { Coord } from '../../../jscaip/Coord';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../encapsule/EncapsuleState';
+import { Player } from '../../../jscaip/Player';
+import { EncapsulePiece } from '../../encapsule/EncapsulePiece';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';
-import { PlayerMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
 import { DebugElement } from '@angular/core';
 

@@ -1,7 +1,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
-import { Heuristic } from '../../../app/jscaip/AI/Minimax';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../jscaip/AI/Minimax';
 import { PenteMove } from './PenteMove';
 import { PenteNode, PenteRules } from './PenteRules';
 import { PenteState } from './PenteState';

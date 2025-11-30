@@ -2,12 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from '../../../../app/services/ConnectedUserService';
-import { GameService } from '../../../../app/services/GameService';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { GameService } from '../../../services/GameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { GameInfo } from '../pick-game/game-info';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 
 @Component({
     selector: 'app-online-game-creation',

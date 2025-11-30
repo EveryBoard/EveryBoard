@@ -1,14 +1,14 @@
 import { MGPOptional, Set } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
-import { Player } from '../../../app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessNode } from './MartianChessRules';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, MartianChessState> {
 

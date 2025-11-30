@@ -5,9 +5,9 @@ import { QuebecCastlesDrop, QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
 import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { PlayerMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TeekoComponent } from '../teeko.component';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { TeekoState } from '../TeekoState';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 
 describe('TeekoComponent', () => {
 

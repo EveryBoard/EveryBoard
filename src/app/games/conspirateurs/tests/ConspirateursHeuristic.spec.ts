@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursState } from '../ConspirateursState';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { ConspirateursRules } from '../ConspirateursRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

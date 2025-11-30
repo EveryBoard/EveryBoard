@@ -1,10 +1,10 @@
-import { TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from '../../../app/jscaip/Coord';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../jscaip/Coord';
 import { DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamState } from './DiamState';
 import { DiamRules } from './DiamRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const __: DiamPiece = DiamPiece.EMPTY;
 const A1: DiamPiece = DiamPiece.ZERO_FIRST;

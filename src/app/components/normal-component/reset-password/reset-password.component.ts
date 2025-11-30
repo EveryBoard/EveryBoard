@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConnectedUserService } from '../../../../app/services/ConnectedUserService';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
 
 @Component({
     selector: 'app-reset-password',

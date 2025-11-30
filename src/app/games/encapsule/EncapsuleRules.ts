@@ -1,21 +1,21 @@
 import { ArrayUtils, MGPFallible, MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { ConfigurableRules } from '../../jscaip/Rules';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap, EncapsuleRemainingPieces } from './EncapsuleState';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleFailure } from './EncapsuleFailure';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { TableUtils } from '../../../app/jscaip/TableUtils';
-import { Debug } from '../../../app/utils/Debug';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../../app/utils/MGPValidator';
-import { NInARowHelper } from '../../../app/jscaip/NInARowHelper';
-import { PlayerMap } from '../../../app/jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 
 export type EncapsuleConfig = {
 

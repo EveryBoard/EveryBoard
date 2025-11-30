@@ -1,4 +1,4 @@
-import { PlayerOrNone } from '../../../../../app/jscaip/Player';
+import { PlayerOrNone } from '../../../../jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { HnefataflRules } from '../HnefataflRules';
 import { TaflState } from '../../TaflState';

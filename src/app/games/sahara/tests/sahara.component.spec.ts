@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { SaharaComponent } from '../sahara.component';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { SaharaMove } from '../../../../app/games/sahara/SaharaMove';
-import { SaharaState } from '../../../../app/games/sahara/SaharaState';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { Coord } from '../../../jscaip/Coord';
+import { SaharaMove } from '../../sahara/SaharaMove';
+import { SaharaState } from '../../sahara/SaharaState';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { SaharaFailure } from '../SaharaFailure';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Table } from '../../../jscaip/TableUtils';
 
 describe('SaharaComponent', () => {
 

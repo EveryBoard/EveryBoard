@@ -1,4 +1,4 @@
-import { Minimax } from '../../../app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteMoveGenerator } from './PenteMoveGenerator';

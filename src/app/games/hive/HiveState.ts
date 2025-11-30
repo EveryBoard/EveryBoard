@@ -1,13 +1,13 @@
 import { ComparableObject, MGPMap, MGPOptional, ReversibleMap, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Vector } from '../../../app/jscaip/Vector';
-import { OpenHexagonalGameState } from '../../../app/jscaip/state/OpenHexagonalGameState';
-import { Player } from '../../../app/jscaip/Player';
-import { Table } from '../../../app/jscaip/TableUtils';
+import { Coord } from '../../jscaip/Coord';
+import { Vector } from '../../jscaip/Vector';
+import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
+import { Player } from '../../jscaip/Player';
+import { Table } from '../../jscaip/TableUtils';
 import { HivePiece, HivePieceStack } from './HivePiece';
-import { HexagonalUtils } from '../../../app/jscaip/HexagonalUtils';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { CoordSet } from '../../jscaip/CoordSet';
 
 export class HiveRemainingPieces implements ComparableObject {
 

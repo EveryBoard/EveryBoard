@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MGPOptional, Set } from '@everyboard/lib';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { CoordSet } from '../../../../app/jscaip/CoordSet';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { CoordSet } from '../../../jscaip/CoordSet';
 
 describe('LinesOfActionRules', () => {
 

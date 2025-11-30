@@ -4,13 +4,13 @@ import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
 import { TrigoComponent } from '../trigo.component';
-import { GoMove } from '../../../../../app/games/gos/GoMove';
-import { GoState } from '../../../../../app/games/gos/GoState';
+import { GoMove } from '../../../gos/GoMove';
+import { GoState } from '../../../gos/GoState';
 import { GoPiece } from '../../GoPiece';
-import { Table } from '../../../../../app/jscaip/TableUtils';
-import { ComponentTestUtils } from '../../../../../app/utils/tests/TestUtils.spec';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
-import { Coord } from '../../../../../app/jscaip/Coord';
+import { Table } from '../../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Coord } from '../../../../jscaip/Coord';
 import { GoPhase } from '../../GoPhase';
 
 describe('TrigoComponent', () => {

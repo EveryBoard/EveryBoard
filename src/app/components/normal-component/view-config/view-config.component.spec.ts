@@ -2,11 +2,11 @@
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
-import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ViewConfigComponent } from './view-config.component';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { NumberConfig, RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../../../app/utils/MGPValidator';
+import { MGPValidators } from '../../../utils/MGPValidator';
 import { RulesConfigurationComponent } from '../../wrapper-components/rules-configuration/rules-configuration.component';
 
 describe('ViewConfigComponent', () => {

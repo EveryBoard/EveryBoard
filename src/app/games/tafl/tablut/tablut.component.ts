@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { TablutMove } from '../../../../app/games/tafl/tablut/TablutMove';
+import { TablutMove } from '../../tafl/tablut/TablutMove';
 import { TablutRules } from './TablutRules';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 
 @Component({

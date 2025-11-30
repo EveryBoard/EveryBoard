@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 import { FormControl } from '@angular/forms';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { GameNode } from '../../../../app/jscaip/AI/GameNode';
-import { Move } from '../../../../app/jscaip/Move';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Move } from '../../../jscaip/Move';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/game-info';
-import { AbstractNode } from '../../../../app/jscaip/AI/GameNode';
-import { AbstractRules } from '../../../../app/jscaip/Rules';
+import { AbstractNode } from '../../../jscaip/AI/GameNode';
+import { AbstractRules } from '../../../jscaip/Rules';
 import { DemoNodeInfo, DemoNodeWithConfig } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { GameState } from '../../../../app/jscaip/state/GameState';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 
 @Component({
     selector: 'app-demo-page',

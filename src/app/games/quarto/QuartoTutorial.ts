@@ -1,11 +1,11 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { QuartoMove } from '../../../app/games/quarto/QuartoMove';
-import { QuartoState } from '../../../app/games/quarto/QuartoState';
-import { QuartoPiece } from '../../../app/games/quarto/QuartoPiece';
+import { QuartoMove } from '../quarto/QuartoMove';
+import { QuartoState } from '../quarto/QuartoState';
+import { QuartoPiece } from '../quarto/QuartoPiece';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../../app/jscaip/Coord';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
 
 const AAAA: QuartoPiece = QuartoPiece.AAAA;
 const AAAB: QuartoPiece = QuartoPiece.AAAB;

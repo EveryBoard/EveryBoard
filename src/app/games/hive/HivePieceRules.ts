@@ -1,13 +1,13 @@
 import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { HexaDirection } from '../../../app/jscaip/HexaDirection';
+import { Coord } from '../../jscaip/Coord';
+import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
-import { HexagonalUtils } from '../../../app/jscaip/HexagonalUtils';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { CoordSet } from '../../jscaip/CoordSet';
 
 export abstract class HivePieceRules {
 

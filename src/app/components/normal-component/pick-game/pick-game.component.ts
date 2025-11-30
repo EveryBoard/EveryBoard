@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { GameInfo } from './game-info';
-import { ThemeService } from '../../../../app/services/ThemeService';
+import { ThemeService } from '../../../services/ThemeService';
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',

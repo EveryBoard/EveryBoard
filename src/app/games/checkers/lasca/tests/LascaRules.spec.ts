@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Coord, CoordFailure } from '../../../../../app/jscaip/Coord';
-import { Player } from '../../../../../app/jscaip/Player';
-import { RulesFailure } from '../../../../../app/jscaip/RulesFailure';
-import { RulesUtils } from '../../../../../app/jscaip/tests/RulesUtils.spec';
+import { Coord, CoordFailure } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { RulesFailure } from '../../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersConfig, CheckersNode } from '../../common/AbstractCheckersRules';
 import { CheckersFailure } from '../../common/CheckersFailure';

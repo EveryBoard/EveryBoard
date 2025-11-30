@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { EpaminondasMove } from '../../../../app/games/epaminondas/EpaminondasMove';
-import { EpaminondasState } from '../../../../app/games/epaminondas/EpaminondasState';
-import { Ordinal } from '../../../../app/jscaip/Ordinal';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
+import { EpaminondasMove } from '../../epaminondas/EpaminondasMove';
+import { EpaminondasState } from '../../epaminondas/EpaminondasState';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { EpaminondasComponent } from '../epaminondas.component';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 
 describe('EpaminondasComponent', () => {
 

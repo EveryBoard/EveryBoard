@@ -1,7 +1,7 @@
 import { Utils } from '@everyboard/lib';
 import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
-import { Table } from '../../../app/jscaip/TableUtils';
+import { Table } from '../TableUtils';
 import { BoardValue } from '../AI/BoardValue';
 import { GameStatus } from '../GameStatus';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';

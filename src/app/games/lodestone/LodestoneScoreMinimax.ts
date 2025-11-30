@@ -1,5 +1,5 @@
-import { Minimax } from '../../../app/jscaip/AI/Minimax';
-import { EmptyRulesConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { LodestoneMove } from './LodestoneMove';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneInfos, LodestoneRules } from './LodestoneRules';

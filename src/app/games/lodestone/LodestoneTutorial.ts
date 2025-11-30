@@ -1,13 +1,13 @@
 import { MGPMap, MGPValidation } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Player } from '../../../app/jscaip/Player';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
 import { LodestoneMove } from './LodestoneMove';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneRules } from './LodestoneRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
 const _: LodestonePiece = LodestonePieceNone.EMPTY;

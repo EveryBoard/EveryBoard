@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Player } from '../../../../app/jscaip/Player';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Table } from '../../../jscaip/TableUtils';
 import { MGPOptional, Set, Utils } from '@everyboard/lib';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { ErrorLoggerServiceMock } from '../../../../app/services/tests/ErrorLoggerServiceMock.spec';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { CoordSet } from '../../../../app/jscaip/CoordSet';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { CoordSet } from '../../../jscaip/CoordSet';
 
 describe('HiveRules', () => {
 

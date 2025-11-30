@@ -3,22 +3,22 @@ import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from '../../../../app/jscaip/state/GameState';
-import { GameNode } from '../../../../app/jscaip/AI/GameNode';
-import { AI, AIOptions } from '../../../../app/jscaip/AI/AI';
-import { EmptyRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
-import { Debug } from '../../../../app/utils/Debug';
+import { GameState } from '../../../jscaip/state/GameState';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { AI, AIOptions } from '../../../jscaip/AI/AI';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
 import { BaseComponent } from '../../BaseComponent';
-import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { AIInfo } from '../../normal-component/pick-game/ai-info';
-import { Coord3D } from '../../../../app/jscaip/Coord3D';
-import { Localized } from '../../../../app/utils/LocaleUtils';
+import { Coord3D } from '../../../jscaip/Coord3D';
+import { Localized } from '../../../utils/LocaleUtils';
 
 export class ScoreName {
 

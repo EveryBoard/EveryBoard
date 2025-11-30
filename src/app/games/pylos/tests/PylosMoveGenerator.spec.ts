@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosState } from '../PylosState';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMoveGenerator } from '../PylosMoveGenerator';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

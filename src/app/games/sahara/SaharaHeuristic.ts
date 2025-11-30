@@ -1,10 +1,10 @@
-import { Player } from '../../../app/jscaip/Player';
+import { Player } from '../../jscaip/Player';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { SaharaNode, SaharaRules } from './SaharaRules';
-import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class SaharaHeuristic extends PlayerMetricHeuristic<SaharaMove, SaharaState> {
 

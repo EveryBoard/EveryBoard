@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Move } from '../../jscaip/Move';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { Localized } from '../../../app/utils/LocaleUtils';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Localized } from '../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { RulesConfig, RulesConfigUtils } from '../../../app/jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { BaseWrapperComponent } from './BaseWrapperComponent';
 import { ComponentInfo } from '../normal-component/pick-game/component-info';
 

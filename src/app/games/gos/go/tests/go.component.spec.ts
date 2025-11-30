@@ -2,13 +2,13 @@
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 import { GoComponent } from '../go.component';
-import { GoMove } from '../../../../../app/games/gos/GoMove';
-import { GoState } from '../../../../../app/games/gos/GoState';
+import { GoMove } from '../../../gos/GoMove';
+import { GoState } from '../../../gos/GoState';
 import { GoPiece } from '../../GoPiece';
-import { TableUtils, Table } from '../../../../../app/jscaip/TableUtils';
-import { Coord } from '../../../../../app/jscaip/Coord';
-import { ComponentTestUtils } from '../../../../../app/utils/tests/TestUtils.spec';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { TableUtils, Table } from '../../../../jscaip/TableUtils';
+import { Coord } from '../../../../jscaip/Coord';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
 import { GoPhase } from '../../GoPhase';
 

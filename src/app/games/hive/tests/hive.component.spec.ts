@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Player } from '../../../../app/jscaip/Player';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HiveComponent } from '../hive.component';
 import { HiveFailure } from '../HiveFailure';
 import { HiveDropMove, HiveMove } from '../HiveMove';

@@ -3,10 +3,10 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from '../../../../app/services/ConnectedUserService';
-import { expectValidRouting, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from './verify-account.component';
-import { ConnectedUserServiceMock } from '../../../../app/services/tests/ConnectedUserService.spec';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { LobbyComponent } from '../lobby/lobby.component';
 
 describe('VerifyAccountComponent', () => {

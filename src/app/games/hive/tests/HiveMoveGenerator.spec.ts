@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { HiveMove } from '../HiveMove';
 import { HiveMoveGenerator } from '../HiveMoveGenerator';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('HiveMoveGenerator', () => {
 

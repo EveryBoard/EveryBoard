@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Ordinal } from '../../../../app/jscaip/Ordinal';
-import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
-import { Minimax } from '../../../../app/jscaip/AI/Minimax';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { MGPOptional } from '@everyboard/lib';
-import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

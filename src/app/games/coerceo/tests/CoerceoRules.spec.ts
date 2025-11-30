@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
-import { Player } from '../../../../app/jscaip/Player';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Table } from '../../../jscaip/TableUtils';
 
 describe('CoerceoRules', () => {
 

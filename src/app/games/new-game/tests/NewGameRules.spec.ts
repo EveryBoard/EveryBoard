@@ -1,8 +1,8 @@
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 /**
  * This is the test suite for the rules

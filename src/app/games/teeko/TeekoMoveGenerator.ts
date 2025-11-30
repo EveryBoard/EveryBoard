@@ -1,10 +1,10 @@
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
 import { TeekoConfig, TeekoNode } from './TeekoRules';
-import { Coord } from '../../../app/jscaip/Coord';
-import { PlayerOrNone } from '../../../app/jscaip/Player';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { MGPOptional } from '@everyboard/lib';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {

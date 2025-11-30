@@ -1,15 +1,15 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { HiveState } from './HiveState';
 import { HivePiece } from './HivePiece';
-import { Player } from '../../../app/jscaip/Player';
+import { Player } from '../../jscaip/Player';
 import { HiveMove } from './HiveMove';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Move } from '../../../app/jscaip/Move';
-import { GameState } from '../../../app/jscaip/state/GameState';
+import { Coord } from '../../jscaip/Coord';
+import { Move } from '../../jscaip/Move';
+import { GameState } from '../../jscaip/state/GameState';
 import { HiveRules } from './HiveRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
 const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');

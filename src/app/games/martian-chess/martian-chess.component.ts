@@ -1,19 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Player } from '../../../app/jscaip/Player';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
-import { EmptyRulesConfig } from '../../../app/jscaip/RulesConfigUtil';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
 
 type SelectedPieceInfo = {

@@ -1,17 +1,17 @@
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { Coord, CoordFailure } from '../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { ConfigurableRules } from '../../../app/jscaip/Rules';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasFailure } from './EpaminondasFailure';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../../app/utils/MGPValidator';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { GameNode } from '../../jscaip/AI/GameNode';
 
 export type EpaminondasConfig = {
     width: number;

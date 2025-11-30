@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { RulesUtils } from '../../../../app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { Player } from '../../../../app/jscaip/Player';
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Player } from '../../../jscaip/Player';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { CoordFailure } from '../../../jscaip/Coord';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('DiaballikRules', () => {
 

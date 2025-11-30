@@ -1,16 +1,16 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Vector } from '../../../app/jscaip/Vector';
-import { FourStatePieceTriangularGameState } from '../../../app/jscaip/state/TriangularGameState';
-import { TriangularCheckerBoard } from '../../../app/jscaip/state/TriangularCheckerBoard';
-import { Table } from '../../../app/jscaip/TableUtils';
+import { Coord } from '../../jscaip/Coord';
+import { Vector } from '../../jscaip/Vector';
+import { FourStatePieceTriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+import { Table } from '../../jscaip/TableUtils';
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { Debug } from '../../../app/utils/Debug';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Debug } from '../../utils/Debug';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 @Debug.log
 export class CoerceoState extends FourStatePieceTriangularGameState {

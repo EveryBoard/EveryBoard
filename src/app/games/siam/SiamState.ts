@@ -1,7 +1,7 @@
-import { GameStateWithTable } from '../../../app/jscaip/state/GameStateWithTable';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { SiamPiece } from './SiamPiece';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { Player } from '../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Player } from '../../jscaip/Player';
 
 export class SiamState extends GameStateWithTable<SiamPiece> {
 

@@ -2,15 +2,15 @@
 import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
-import { SixState } from '../../../../app/games/six/SixState';
-import { SixMove } from '../../../../app/games/six/SixMove';
-import { SixFailure } from '../../../../app/games/six/SixFailure';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { SixState } from '../../six/SixState';
+import { SixMove } from '../../six/SixMove';
+import { SixFailure } from '../../six/SixFailure';
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { SixConfig, SixRules } from '../SixRules';
 
 describe('SixComponent', () => {

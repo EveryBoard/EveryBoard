@@ -1,18 +1,18 @@
 import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
 
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { Rules } from '../../../app/jscaip/Rules';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { TableUtils } from '../../../app/jscaip/TableUtils';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 

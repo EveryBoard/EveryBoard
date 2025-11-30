@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

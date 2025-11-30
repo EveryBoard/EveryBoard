@@ -3,13 +3,13 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
-import { ReversiMove } from '../../../app/games/reversi/ReversiMove';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { ReversiMove } from '../reversi/ReversiMove';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 @Component({
     selector: 'app-reversi',

@@ -1,4 +1,4 @@
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 
 export type MancalaConfig = RulesConfig & {
 

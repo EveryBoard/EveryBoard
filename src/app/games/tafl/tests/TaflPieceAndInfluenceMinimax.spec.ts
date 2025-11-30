@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
+import { Table } from '../../../jscaip/TableUtils';
 import { TaflPawn } from '../TaflPawn';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
 import { TablutMove } from '../tablut/TablutMove';
-import { Minimax } from '../../../../app/jscaip/AI/Minimax';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflConfig } from '../TaflConfig';
 import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../TaflState';
-import { minimaxTest, SlowTest } from '../../../../app/utils/tests/TestUtils.spec';
-import { AIDepthLimitOptions } from '../../../../app/jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 
 describe('TaflPieceAndInfluenceMinimax', () => {
 

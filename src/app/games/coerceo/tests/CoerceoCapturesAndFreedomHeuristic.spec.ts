@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from '../../../../app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

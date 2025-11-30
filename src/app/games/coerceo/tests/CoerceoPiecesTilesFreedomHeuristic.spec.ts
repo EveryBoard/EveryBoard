@@ -2,12 +2,12 @@
 import { MGPOptional } from '@everyboard/lib';
 import { CoerceoPiecesTilesFreedomHeuristic } from '../CoerceoPiecesTilesFreedomHeuristic';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { FourStatePiece } from '../../../../app/jscaip/FourStatePiece';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
-import { HeuristicUtils } from '../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from '../../../../app/jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
 
 describe('CoerceoPiecesTilesFreedomHeuristic', () => {
 

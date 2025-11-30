@@ -3,7 +3,7 @@ import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
 import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
-import { Minimax } from '../../../app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 
 export class CoerceoPiecesTilesFreedomMinimax extends Minimax<CoerceoMove, CoerceoState, CoerceoConfig> {
 

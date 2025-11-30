@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { QuixoComponent } from '../quixo.component';
-import { QuixoMove } from '../../../../app/games/quixo/QuixoMove';
-import { Orthogonal } from '../../../../app/jscaip/Orthogonal';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
-import { QuixoState } from '../../../../app/games/quixo/QuixoState';
-import { QuixoFailure } from '../../../../app/games/quixo/QuixoFailure';
+import { QuixoMove } from '../../quixo/QuixoMove';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { Table } from '../../../jscaip/TableUtils';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { QuixoState } from '../../quixo/QuixoState';
+import { QuixoFailure } from '../../quixo/QuixoFailure';
 
 describe('QuixoComponent', () => {
 

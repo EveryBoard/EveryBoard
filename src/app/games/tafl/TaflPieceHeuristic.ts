@@ -1,9 +1,9 @@
 import { TaflNode, TaflRules } from './TaflRules';
 import { TaflMove } from './TaflMove';
 import { TaflState } from './TaflState';
-import { Player } from '../../../app/jscaip/Player';
-import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
+import { Player } from '../../jscaip/Player';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { TaflConfig } from './TaflConfig';
 import { MGPOptional } from '@everyboard/lib';
 

@@ -1,10 +1,10 @@
 import { ArrayUtils } from '@everyboard/lib';
 
-import { GameState } from '../../../app/jscaip/state/GameState';
-import { Player } from '../../../app/jscaip/Player';
+import { GameState } from '../../jscaip/state/GameState';
+import { Player } from '../../jscaip/Player';
 import { ApagosSquare } from './ApagosSquare';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { Table } from '../../../app/jscaip/TableUtils';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Table } from '../../jscaip/TableUtils';
 
 export class ApagosState extends GameState {
 

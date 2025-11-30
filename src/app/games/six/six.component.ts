@@ -1,25 +1,25 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
-import { SixState } from '../../../app/games/six/SixState';
-import { SixMove } from '../../../app/games/six/SixMove';
-import { SixFailure } from '../../../app/games/six/SixFailure';
-import { SixConfig, SixLegalityInformation, SixRules } from '../../../app/games/six/SixRules';
-import { Coord } from '../../../app/jscaip/Coord';
-import { HexaLayout } from '../../../app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../../app/jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { SixState } from '../six/SixState';
+import { SixMove } from '../six/SixMove';
+import { SixFailure } from '../six/SixFailure';
+import { SixConfig, SixLegalityInformation, SixRules } from '../six/SixRules';
+import { Coord } from '../../jscaip/Coord';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { HexagonalGameComponent }
     from '../../components/game-components/game-component/HexagonalGameComponent';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { SixMoveGenerator } from './SixMoveGenerator';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { SixMinimax } from './SixMinimax';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
-import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 
 type CoordAndClass = {
     coord: Coord,

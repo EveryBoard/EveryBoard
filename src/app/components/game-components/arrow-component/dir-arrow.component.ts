@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 
 import { BaseGameComponent } from '../game-component/GameComponent';
 import { Arrow } from './Arrow';
-import { Ordinal } from '../../../../app/jscaip/Ordinal';
+import { Ordinal } from '../../../jscaip/Ordinal';
 
 @Component({
     selector: '[app-dir-arrow]',

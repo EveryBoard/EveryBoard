@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
 import { Move } from '../../../jscaip/Move';
-import { GameStateWithTable } from '../../../../app/jscaip/state/GameStateWithTable';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
-import { Table } from '../../../../app/jscaip/TableUtils';
-import { SuperRules } from '../../../../app/jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { SuperRules } from '../../../jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ViewBox } from '../GameComponentUtils';
 
 @Component({

@@ -1,20 +1,20 @@
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
-import { Ordinal } from '../../../app/jscaip/Ordinal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { RelativePlayer } from '../../../app/jscaip/RelativePlayer';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { RelativePlayer } from '../../jscaip/RelativePlayer';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
 import { TaflConfig } from './TaflConfig';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { TaflState } from './TaflState';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { Debug } from '../../../app/utils/Debug';
-import { Localized } from '../../../app/utils/LocaleUtils';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Debug } from '../../utils/Debug';
+import { Localized } from '../../utils/LocaleUtils';
 
 export class TaflNode<M extends TaflMove> extends GameNode<M, TaflState> {}
 

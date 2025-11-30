@@ -1,18 +1,18 @@
 import { MGPValidation, MGPOptional, Utils, MGPMap } from '@everyboard/lib';
 
-import { ConfigurableRules } from '../../../app/jscaip/Rules';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { HexodiaState } from './HexodiaState';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { HexodiaMove } from './HexodiaMove';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { Coord, CoordFailure } from '../../../app/jscaip/Coord';
-import { AbstractNInARowHelper } from '../../../app/jscaip/NInARowHelper';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { TableUtils } from '../../../app/jscaip/TableUtils';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../../app/utils/MGPValidator';
-import { DodecaHexaDirection } from '../../../app/jscaip/DodecaHexaDirection';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { AbstractNInARowHelper } from '../../jscaip/NInARowHelper';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { DodecaHexaDirection } from '../../jscaip/DodecaHexaDirection';
 
 export type HexodiaConfig = {
 

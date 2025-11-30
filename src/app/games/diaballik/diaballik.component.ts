@@ -4,19 +4,19 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { Coord } from '../../../app/jscaip/Coord';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Coord } from '../../jscaip/Coord';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
-import { RectangularGameComponent } from '../../../app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Line } from '../../../app/jscaip/Line';
-import { Player } from '../../../app/jscaip/Player';
+import { Line } from '../../jscaip/Line';
+import { Player } from '../../jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
-import { EmptyRulesConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 @Component({
     selector: 'app-diaballik',

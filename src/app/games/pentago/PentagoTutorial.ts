@@ -1,12 +1,12 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { TutorialStep } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerOrNone } from '../../../app/jscaip/Player';
+import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { PlayerOrNone } from '../../jscaip/Player';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { PentagoRules } from './PentagoRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../../app/jscaip/Coord';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,8 +1,8 @@
-import { PlayerMetricHeuristic } from '../../../app/jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { SquarzMove } from './SquarzMove';
 import { SquarzConfig, SquarzNode } from './SquarzRules';
 import { SquarzState } from './SquarzState';
-import { PlayerNumberTable } from '../../../app/jscaip/PlayerNumberTable';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 export class SquarzHeuristic extends PlayerMetricHeuristic<SquarzMove, SquarzState, SquarzConfig> {
 

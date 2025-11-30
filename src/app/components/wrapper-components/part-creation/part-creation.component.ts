@@ -10,20 +10,20 @@ import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@ever
 import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/ConfigRoom';
 import { GameService } from '../../../services/GameService';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
-import { UserService } from '../../../../app/services/UserService';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
-import { AuthUser, ConnectedUserService } from '../../../../app/services/ConnectedUserService';
-import { MinimalUser } from '../../../../app/domain/MinimalUser';
-import { FirestoreTime } from '../../../../app/domain/Time';
-import { CurrentGame, User, UserRoleInPart } from '../../../../app/domain/User';
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { UserService } from '../../../services/UserService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { FirestoreTime } from '../../../domain/Time';
+import { CurrentGame, User, UserRoleInPart } from '../../../domain/User';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { GameState } from '../../../../app/jscaip/state/GameState';
+import { GameState } from '../../../jscaip/state/GameState';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
-import { Debug } from '../../../../app/utils/Debug';
+import { Debug } from '../../../utils/Debug';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { AbstractNode, GameNode } from '../../../../app/jscaip/AI/GameNode';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
 type PartCreationViewInfo = {

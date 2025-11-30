@@ -2,16 +2,16 @@ import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } 
 import { ActivatedRoute, Router } from '@angular/router';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameWrapper } from '../../../../app/components/wrapper-components/GameWrapper';
-import { AbstractNode, GameNode } from '../../../../app/jscaip/AI/GameNode';
-import { Move } from '../../../../app/jscaip/Move';
+import { GameWrapper } from '../../wrapper-components/GameWrapper';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
+import { Move } from '../../../jscaip/Move';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 import { TutorialFailure } from './TutorialFailure';
-import { GameState } from '../../../../app/jscaip/state/GameState';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { Localized } from '../../../../app/utils/LocaleUtils';
-import { Debug } from '../../../../app/utils/Debug';
+import { GameState } from '../../../jscaip/state/GameState';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Localized } from '../../../utils/LocaleUtils';
+import { Debug } from '../../../utils/Debug';
 
 export class TutorialGameWrapperMessages {
 

@@ -1,21 +1,21 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { Rules } from '../../../app/jscaip/Rules';
-import { GameNode } from '../../../app/jscaip/AI/GameNode';
-import { Player } from '../../../app/jscaip/Player';
-import { Coord, CoordFailure } from '../../../app/jscaip/Coord';
+import { Rules } from '../../jscaip/Rules';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player } from '../../jscaip/Player';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
-import { TriangularCheckerBoard } from '../../../app/jscaip/state/TriangularCheckerBoard';
-import { TriangularGameState } from '../../../app/jscaip/state/TriangularGameState';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
-import { Debug } from '../../../app/utils/Debug';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
-import { HexagonalUtils } from '../../../app/jscaip/HexagonalUtils';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { Debug } from '../../utils/Debug';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 

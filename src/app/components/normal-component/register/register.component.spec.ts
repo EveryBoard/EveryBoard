@@ -4,8 +4,8 @@ import { Router } from '@angular/router';
 import * as FireAuth from '@firebase/auth';
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService } from '../../../../app/services/ConnectedUserService';
-import { expectValidRouting, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { RegisterComponent } from './register.component';
 import { VerifyAccountComponent } from '../verify-account/verify-account.component';
 

@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';

@@ -4,9 +4,9 @@ import { DebugElement } from '@angular/core';
 import { MGPOptional, Utils, TestUtils, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigurationComponent } from './rules-configuration.component';
-import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
-import { MGPValidators } from '../../../../app/utils/MGPValidator';
+import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { MGPValidators } from '../../../utils/MGPValidator';
 import { RulesConfigDescription, NumberConfig, BooleanConfig, EnumConfig } from './RulesConfigDescription';
 
 describe('RulesConfigurationComponent', () => {

@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { PylosComponent } from '../pylos.component';
-import { PylosMove, PylosMoveFailure } from '../../../../app/games/pylos/PylosMove';
-import { PylosCoord } from '../../../../app/games/pylos/PylosCoord';
-import { PylosState } from '../../../../app/games/pylos/PylosState';
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { PylosMove, PylosMoveFailure } from '../../pylos/PylosMove';
+import { PylosCoord } from '../../pylos/PylosCoord';
+import { PylosState } from '../../pylos/PylosState';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { PylosFailure } from '../PylosFailure';
 
 describe('PylosComponent', () => {

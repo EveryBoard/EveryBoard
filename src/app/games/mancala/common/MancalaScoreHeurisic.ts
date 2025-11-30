@@ -1,6 +1,6 @@
 import { MancalaState } from '../common/MancalaState';
-import { PlayerMetricHeuristic } from '../../../../app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../../../app/jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '../../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
 import { MancalaMove } from './MancalaMove';
 import { MancalaConfig } from './MancalaConfig';
 import { MGPOptional } from '@everyboard/lib';

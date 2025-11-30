@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from '../../../../../app/jscaip/TableUtils';
+import { Table } from '../../../../jscaip/TableUtils';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
-import { HeuristicUtils } from '../../../../../app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from '../../../../../app/jscaip/Player';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
+import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../GoRules';
 import { GoHeuristic } from '../GoHeuristic';
 import { GoPhase } from '../../GoPhase';

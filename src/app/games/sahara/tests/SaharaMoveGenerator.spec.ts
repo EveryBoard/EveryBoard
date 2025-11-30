@@ -2,7 +2,7 @@
 import { SaharaNode, SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('SaharaMoveGenerator', () => {
 

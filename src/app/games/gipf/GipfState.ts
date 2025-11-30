@@ -1,9 +1,9 @@
-import { Player } from '../../../app/jscaip/Player';
-import { Table, TableUtils } from '../../../app/jscaip/TableUtils';
-import { HexagonalGameState } from '../../../app/jscaip/state/HexagonalGameState';
-import { Coord } from '../../../app/jscaip/Coord';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { Player } from '../../jscaip/Player';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class GipfState extends HexagonalGameState<FourStatePiece> {
 

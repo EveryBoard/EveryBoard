@@ -1,5 +1,5 @@
-import { Player } from '../../../app/jscaip/Player';
-import { PlayerOrNoneGameStateWithTable } from '../../../app/jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Player } from '../../jscaip/Player';
+import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class EpaminondasState extends PlayerOrNoneGameStateWithTable {
 

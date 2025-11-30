@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { TriangularGameComponent } from '../../../app/components/game-components/game-component/TriangularGameComponent';
-import { Coord } from '../../../app/jscaip/Coord';
-import { SaharaMove } from '../../../app/games/sahara/SaharaMove';
-import { SaharaState } from '../../../app/games/sahara/SaharaState';
-import { SaharaRules } from '../../../app/games/sahara/SaharaRules';
-import { Player } from '../../../app/jscaip/Player';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
+import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { SaharaMove } from '../sahara/SaharaMove';
+import { SaharaState } from '../sahara/SaharaState';
+import { SaharaRules } from '../sahara/SaharaRules';
+import { Player } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaMinimax } from './SaharaMinimax';
 

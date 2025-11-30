@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { UserSettingsService } from '../../../../app/services/UserSettingsService';
+import { UserSettingsService } from '../../../services/UserSettingsService';
 import { MGPOptional } from '@everyboard/lib';
 
-import { SimpleComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SettingsComponent } from './settings.component';
-import { LocaleUtils } from '../../../../app/utils/LocaleUtils';
+import { LocaleUtils } from '../../../utils/LocaleUtils';
 
 describe('SettingsComponent', () => {
 

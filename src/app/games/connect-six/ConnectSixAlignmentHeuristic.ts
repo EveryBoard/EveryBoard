@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { BoardValue } from '../../../app/jscaip/AI/BoardValue';
-import { Heuristic } from '../../../app/jscaip/AI/Minimax';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../jscaip/AI/Minimax';
 import { ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixState } from './ConnectSixState';
-import { GobanConfig } from '../../../app/jscaip/GobanConfig';
+import { GobanConfig } from '../../jscaip/GobanConfig';
 
 export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState, BoardValue, GobanConfig> {
 

@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../../../../app/jscaip/Player';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Player } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnScoreHeuristic } from '../DvonnScoreHeuristic';
 import { DvonnState } from '../DvonnState';
-import { NoConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 const _N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;

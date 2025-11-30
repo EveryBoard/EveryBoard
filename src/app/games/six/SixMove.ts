@@ -1,7 +1,7 @@
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../app/jscaip/Coord';
-import { Move } from '../../../app/jscaip/Move';
+import { Coord } from '../../jscaip/Coord';
+import { Move } from '../../jscaip/Move';
 
 type SixMoveFields = [MGPOptional<Coord>, Coord, MGPOptional<Coord>];
 

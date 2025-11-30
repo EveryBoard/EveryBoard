@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ThemeService } from '../../../../app/services/ThemeService';
+import { ThemeService } from '../../../services/ThemeService';
 import { GameInfo } from '../pick-game/game-info';
-import { MessageDisplayer } from '../../../../app/services/MessageDisplayer';
-import { CurrentGameService } from '../../../../app/services/CurrentGameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 
 @Component({
     selector: 'app-welcome',

@@ -1,4 +1,4 @@
-import { PlayerOrNone } from '../../../app/jscaip/Player';
+import { PlayerOrNone } from '../../jscaip/Player';
 
 export class TaflPawn {
 

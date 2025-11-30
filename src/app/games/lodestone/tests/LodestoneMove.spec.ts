@@ -1,4 +1,4 @@
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { EncoderTestUtils } from '@everyboard/lib';
 import { LodestoneMove } from '../LodestoneMove';
 

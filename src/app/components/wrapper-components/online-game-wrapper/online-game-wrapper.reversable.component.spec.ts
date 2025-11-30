@@ -2,10 +2,10 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AwaleComponent } from '../../../../app/games/mancala/awale/awale.component';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
-import { UserMocks } from '../../../../app/domain/UserMocks.spec';
-import { MinimalUser } from '../../../../app/domain/MinimalUser';
+import { AwaleComponent } from '../../../games/mancala/awale/awale.component';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { MinimalUser } from '../../../domain/MinimalUser';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
 
 describe('OnlineGameWrapperComponent of Reversable Game:', () => {

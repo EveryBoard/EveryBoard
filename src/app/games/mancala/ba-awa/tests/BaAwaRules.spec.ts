@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 import { MancalaState } from '../../common/MancalaState';
-import { RulesUtils } from '../../../../../app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { BaAwaConfig } from '../BaAwaConfig';
-import { PlayerNumberMap } from '../../../../../app/jscaip/PlayerMap';
-import { Table, TableUtils } from '../../../../../app/jscaip/TableUtils';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 
 describe('BaAwaRules', () => {
 

@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from '../../../../app/jscaip/Coord';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
+import { Table } from '../../../jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
-import { ComponentTestUtils } from '../../../../app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { DirectionFailure } from '../../../../app/jscaip/Direction';
-import { RulesFailure } from '../../../../app/jscaip/RulesFailure';
+import { DirectionFailure } from '../../../jscaip/Direction';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MartianChessRules } from '../MartianChessRules';
 
 describe('MartianChessComponent', () => {

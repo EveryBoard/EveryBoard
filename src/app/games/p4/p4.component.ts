@@ -5,7 +5,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { P4State } from './P4State';
 import { P4Config, P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { P4Move } from '../../games/p4/P4Move';
+import { P4Move } from '../p4/P4Move';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Coord } from '../../jscaip/Coord';
 import { MessageDisplayer } from '../../services/MessageDisplayer';

@@ -1,16 +1,16 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from '../../../app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../../app/jscaip/Coord';
-import { GameStatus } from '../../../app/jscaip/GameStatus';
-import { HexaLayout } from '../../../app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../../app/jscaip/HexaOrientation';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
-import { Player } from '../../../app/jscaip/Player';
-import { RulesFailure } from '../../../app/jscaip/RulesFailure';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { TableWithPossibleNegativeIndices } from '../../../app/jscaip/TableUtils';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Player } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
 import { HiveFailure } from './HiveFailure';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
@@ -18,8 +18,8 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { ViewBox } from '../../../app/components/game-components/GameComponentUtils';
-import { CoordSet } from '../../../app/jscaip/CoordSet';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { HiveMinimax } from './HiveMinimax';
 
 interface GroundInfo {

@@ -4,16 +4,16 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PenteRules } from './PenteRules';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { MessageDisplayer } from '../../../app/services/MessageDisplayer';
-import { Coord } from '../../../app/jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../app/jscaip/Player';
-import { GobanGameComponent } from '../../../app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from '../../../app/jscaip/AI/MCTS';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
-import { PlayerNumberMap } from '../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PenteConfig } from './PenteConfig';
 import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
-import { ScoreName } from '../../../app/components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-new-game',

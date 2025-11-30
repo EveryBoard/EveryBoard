@@ -1,9 +1,9 @@
-import { GroupDataFactory } from '../../../app/jscaip/BoardData';
-import { Orthogonal } from '../../../app/jscaip/Orthogonal';
+import { GroupDataFactory } from '../../jscaip/BoardData';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 import { GoGroupData } from './GoGroupsData';
 import { GoPiece } from './GoPiece';
-import { Coord } from '../../../app/jscaip/Coord';
-import { TriangularCheckerBoard } from '../../../app/jscaip/state/TriangularCheckerBoard';
+import { Coord } from '../../jscaip/Coord';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 
 export abstract class GoGroupDatasFactory extends GroupDataFactory<GoPiece> {
 

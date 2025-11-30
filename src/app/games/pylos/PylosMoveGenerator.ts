@@ -4,8 +4,8 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { PylosNode, PylosRules } from './PylosRules';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
-import { NoConfig } from '../../../app/jscaip/RulesConfigUtil';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
 

@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from '../../../../app/jscaip/Player';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
-import { Table } from '../../../../app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';

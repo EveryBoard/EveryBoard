@@ -3,8 +3,8 @@ import { MGPOptional } from '@everyboard/lib';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
-import { Player } from '../../../app/jscaip/Player';
-import { MoveGenerator } from '../../../app/jscaip/AI/AI';
+import { Player } from '../../jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
 
 export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {

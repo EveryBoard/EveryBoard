@@ -3,7 +3,7 @@ import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { RulesConfig } from '../../../../app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 
 @Component({

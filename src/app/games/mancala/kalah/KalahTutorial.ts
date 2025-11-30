@@ -1,11 +1,11 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from '../../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MancalaState } from '../common/MancalaState';
 import { KalahRules } from './KalahRules';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { TutorialStepMessage } from '../../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 

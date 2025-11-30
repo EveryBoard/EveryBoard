@@ -1,8 +1,8 @@
-import { GameStateWithTable } from '../../../../app/jscaip/state/GameStateWithTable';
-import { Table, TableUtils } from '../../../../app/jscaip/TableUtils';
-import { Player } from '../../../../app/jscaip/Player';
-import { PlayerNumberMap } from '../../../../app/jscaip/PlayerMap';
-import { Coord } from '../../../../app/jscaip/Coord';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { Table, TableUtils } from '../../../jscaip/TableUtils';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Coord } from '../../../jscaip/Coord';
 
 export class MancalaState extends GameStateWithTable<number> {
 

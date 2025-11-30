@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 import { SixMove } from '../SixMove';
 

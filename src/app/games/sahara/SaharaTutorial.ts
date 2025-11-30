@@ -1,11 +1,11 @@
-import { SaharaMove } from '../../../app/games/sahara/SaharaMove';
-import { SaharaState } from '../../../app/games/sahara/SaharaState';
-import { Coord } from '../../../app/jscaip/Coord';
-import { FourStatePiece } from '../../../app/jscaip/FourStatePiece';
+import { SaharaMove } from '../sahara/SaharaMove';
+import { SaharaState } from '../sahara/SaharaState';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SaharaRules } from './SaharaRules';
-import { TutorialStepMessage } from '../../../app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const O: FourStatePiece = FourStatePiece.ZERO;
