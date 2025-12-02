@@ -73,3 +73,41 @@ func TestConnectionWorkflow(t *testing.T) {
 		t.Fatalf("connection manager should not contain any connection, but contains %d", len(connections))
 	}
 }
+
+
+type CountMessagesConnection struct {
+	messagesReceived int
+	receiveNext chan struct{} // to signal that we should receive the next message
+}
+
+func (c *CountMessagesConnection) WriteMessage(messageType int, data []byte) error {
+	<- c.receiveNext // wait for being signalled to receive the next message (to simulate network delays)
+	c.messagesReceived++
+	return nil
+}
+func TestManyMessages(t *testing.T) {
+	// Given a connection manager with one connection
+	user := model.MinimalUser{ID: "foo", Name: "foo"}
+	manager := everyboard.NewConnectionManager[*CountMessagesConnection]()
+	connection := &CountMessagesConnection{
+		messagesReceived: 0,
+		receiveNext: make(chan struct{}, 1),
+	}
+	manager.AddConnection(user, connection)
+	// When sending many messages (to simulate a player reconnecting and receiving all events)
+	numberOfMessages := 100
+	for _ = range(numberOfMessages) {
+		manager.SendMessage(connection, model.ChatMessage{})
+	}
+
+	// Then it should not lose messages
+	if connection.messagesReceived != 0 {
+		t.Fatalf("unexpected: we received messages even we shouldn't have (yet)")
+	}
+	for _ = range(numberOfMessages) {
+		connection.receiveNext <- struct{}{} // will make it receive one more message
+	}
+	if connection.messagesReceived != numberOfMessages {
+		t.Fatalf("unexpected: received %d messages instead of %d", connection.messagesReceived, numberOfMessages)
+	}
+}

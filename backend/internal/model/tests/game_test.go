@@ -88,7 +88,7 @@ func TestResultIsTimeout(t *testing.T) {
 		}
 	}
 	expectNotTimeout := func(result model.Result) {
-		if !result.IsTimeout() {
+		if result.IsTimeout() {
 			t.Errorf("should not be a timeout: %s", result)
 		}
 	}

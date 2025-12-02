@@ -403,6 +403,7 @@ func TestGameFlow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot add event: %v", err)
 	}
+	expectEvents(2)
 
 	// Changing the game result
 	err = game.SetResult(model.ResultAgreedDrawByOne)
@@ -418,6 +419,61 @@ func TestGameFlow(t *testing.T) {
 		t.Fatalf("game result has not changed, it is %v", game.Result)
 	}
 
+}
+
+func TestManyGameEvents(t *testing.T) {
+	// Given a db with a game
+	err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
+
+	gameName := "Go"
+	creator := model.MinimalUser{ID: "foo", Name: "foo"}
+	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
+	configRoom, err := model.CreateConfigRoom(creator, gameName)
+	if err != nil {
+		t.Fatalf("cannot create config room: %v", err)
+	}
+	err = configRoom.SelectOpponent(opponent)
+	if err != nil {
+		t.Fatalf("cannnot select opponent: %v", err)
+	}
+	game, err := configRoom.CreateGame(42, true)
+	if err != nil {
+		t.Fatalf("cannot create game: %v", err)
+	}
+
+	// When doing a regular flow for a game
+	// Then it should work as expected
+
+	// Adding an event
+	for _ = range(42) {
+		err = model.AddEvent(game.GameID, model.GameEvent{
+			Timestamp: 42,
+			User:      creator,
+			Data:      model.EventDataAddTime(model.AddTimeGame),
+		})
+		if err != nil {
+			t.Fatalf("cannot add event: %v", err)
+		}
+	}
+
+	// Retrieving the events
+	expectEvents := func(count int) {
+		seen := 0
+		err := model.ApplyToGameEvents(game.GameID, func(user *model.GameEvent) error {
+			seen = seen + 1
+			return nil
+		})
+		if err != nil {
+			t.Fatalf("cannot apply to game events: %v", err)
+		}
+		if seen != count {
+			t.Fatalf("there are missing or too many game events, I've seen %d instead of %d", seen, count)
+		}
+	}
+	expectEvents(42)
 }
 
 func TestGameCreationWithOpponentStarting(t *testing.T) {
