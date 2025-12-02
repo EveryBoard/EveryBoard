@@ -74,7 +74,6 @@ export abstract class AbstractBackendService {
     }
 
     public setCallback(tag: string, callback: Callback): Subscription {
-        console.log('SETTING CALLBACK FOR ' + tag);
         if (this.callbacks.containsKey(tag)) {
             throw new Error(`registering a callback which already exists (${tag}), this is likely not what we need!`);
         }
@@ -83,10 +82,11 @@ export abstract class AbstractBackendService {
     }
 
     protected receive(message: BackendMessage): void {
-        console.log('RECEIVING: ' + message)
         const callback: MGPOptional<Callback> = this.callbacks.get(message.tag);
         if (callback.isPresent()) {
             callback.get()(message);
+        } else {
+            console.warn('MESSAGE WITHOUT CALLBACK: ' + JSON.stringify(message));
         }
     }
 
@@ -171,7 +171,6 @@ export class BackendService extends AbstractBackendService {
             ws.onmessage = (ev: MessageEvent<unknown>): void => {
                 Utils.assert(typeof(ev.data) === 'string', `Received malformed WebSocket message (not a string): ${JSON.stringify(ev.data)}`);
                 const json: NonNullable<JSONValue> = Utils.getNonNullable(JSON.parse(ev.data as string));
-                console.debug('%cWS: <<< ' + JSON.stringify(json), 'color: green');
                 Utils.assert(typeof(json) === 'object', // i.e., an array
                              `Received malformed WebSocket message (not an object): ${JSON.stringify(json)}`);
                 const tag: unknown = json[0]; // the tag is the first element of the array
@@ -195,7 +194,6 @@ export class BackendService extends AbstractBackendService {
 
     public override async send(message: JSONValue): Promise<void> {
         await this.waitForConnection(); // block until we are connected, otherwise we'll send messages nowhere
-        console.debug('%cWS: >>> ' + JSON.stringify(message), 'color: lightblue');
         this.webSocket.get().send(JSON.stringify(message));
     }
 

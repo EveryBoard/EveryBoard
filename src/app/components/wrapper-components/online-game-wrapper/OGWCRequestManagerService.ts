@@ -75,7 +75,6 @@ export class OGWCRequestManagerService {
      * @returns true if the request has been accepted and must be handled by the OGWC
      */
     public async onReceivedReply(reply: GameEventReply): Promise<boolean> {
-        console.log('onReceivedReply: ' + JSON.stringify(reply));
         this.requestAwaitingReply = MGPOptional.empty();
         if (reply.accept) {
             // The request has been accepted by the opponent, we give it back to OGWC

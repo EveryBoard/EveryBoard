@@ -52,7 +52,6 @@ export abstract class AbstractCurrentGameService {
     }
 
     protected changeCurrentGame(newCurrentGame: MGPOptional<CurrentGame>): void {
-        console.log('CHANGING CURRENT GAME to: ' + newCurrentGame);
         this.currentGameInitialized = true;
         this.currentGame = newCurrentGame;
         this.currentGameRS.next(newCurrentGame);
@@ -124,7 +123,6 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     }
 
     private async onUserUpdate(user: AuthUser): Promise<void> {
-        console.log('USER UPDATE: ' + user);
         if (user === AuthUser.NOT_CONNECTED || user.verified === false) { // user logged out or not yet verified
             this.currentGameSubscription.unsubscribe();
             this.backendSubscription.unsubscribe();
@@ -141,14 +139,13 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     }
 
     private onCurrentGameUpdate(newCurrentGame: CurrentGame | null | undefined): void {
-        console.log('current game update!')
         // Undefined if the user had no currentGame, null if it has been removed
         const previousCurrentGame: MGPOptional<CurrentGame> = this.currentGame;
-        const stayedNull: boolean = newCurrentGame == null && previousCurrentGame.isAbsent() && this.currentGameInitialized;
+        const stayedNull: boolean =
+            newCurrentGame == null && previousCurrentGame.isAbsent() && this.currentGameInitialized;
         const stayedItselfAsNonNull: boolean = newCurrentGame != null &&
                                                previousCurrentGame.equalsValue(newCurrentGame);
         const valueChanged: boolean = stayedNull === false && stayedItselfAsNonNull === false;
-        console.log('value changed?' + valueChanged)
         if (valueChanged) {
             this.changeCurrentGame(MGPOptional.ofNullable(newCurrentGame));
         }
