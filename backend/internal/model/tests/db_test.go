@@ -448,7 +448,7 @@ func TestManyGameEvents(t *testing.T) {
 	// Then it should work as expected
 
 	// Adding an event
-	for _ = range(42) {
+	for _ = range 42 {
 		err = model.AddEvent(game.GameID, model.GameEvent{
 			Timestamp: 42,
 			User:      creator,

@@ -1,6 +1,6 @@
 import { ConnectedUserService } from './ConnectedUserService';
 import { environment } from 'src/environments/environment';
-import { JSONValue, MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MessageDisplayer } from './MessageDisplayer';

@@ -9,7 +9,6 @@ import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserSe
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LobbyComponent } from '../lobby/lobby.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { OnlineGameCreationComponent } from './online-game-creation.component';
 import { WelcomeComponent } from '../welcome/welcome.component';

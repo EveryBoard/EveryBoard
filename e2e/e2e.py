@@ -232,13 +232,17 @@ scenarios = {
     'two_drivers': [],
 }
 
-def launch_scenarios():
+def launch_scenarios(only_scenario=None):
     '''
     Launches all the scenarios, stop at the first one that fails.
     It is important that each scenario finishes what it started, e.g., if a part is created, it should be canceled or ended
     '''
     driver = PlayerDriver()
-    #driver.get('http://localhost:4200')
+
+    print('ONLY SCENARIO: ' + only_scenario)
+    if only_scenario != None:
+        for kind in ['simple', 'registered', 'two_drivers']:
+            scenarios[kind] = filter(scenarios[kind], lambda x: x == only_scenario)
 
     for simple_scenario in scenarios['simple']:
        # Always go back home for a new scenario
@@ -611,6 +615,3 @@ def can_rematch(user1, user2):
 
     user1.click('#resign')
     user1.wait_for('#resignIndicator')
-
-if __name__ == '__main__':
-    launch_scenarios()

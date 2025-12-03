@@ -2,7 +2,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { DebugElement } from '@angular/core';
-import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -27,7 +27,6 @@ describe('LobbyComponent', () => {
     let component: LobbyComponent;
     let router: Router;
     let currentGameService: CurrentGameService;
-    let gameService: GameService;
 
     const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty());
 

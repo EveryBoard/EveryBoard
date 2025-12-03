@@ -1,4 +1,4 @@
-/// <reference types="jasmine" />
+// <reference types="jasmine" />
 import { JSONValue, JSONValueWithoutArray } from './JSON';
 import { Utils } from './Utils';
 
