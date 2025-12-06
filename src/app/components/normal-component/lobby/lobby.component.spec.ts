@@ -17,7 +17,6 @@ import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServic
 import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
 import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
 import { AbstractBackendService, BackendService } from 'src/app/services/BackendService';
-import { GameService } from 'src/app/services/GameService';
 import { WelcomeComponent } from '../welcome/welcome.component';
 import { BackendServiceMock } from 'src/app/services/tests/BackendServiceMock.spec';
 
@@ -36,7 +35,6 @@ describe('LobbyComponent', () => {
         component = testUtils.getComponent();
         router = TestBed.inject(Router);
         currentGameService = TestBed.inject(CurrentGameService);
-        gameService = TestBed.inject(GameService);
         spyOn(router, 'navigate').and.resolveTo();
     }));
 

@@ -125,7 +125,7 @@ export class BackendService extends AbstractBackendService {
     }
 
     public override async connect(): Promise<Subscription> {
-        Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!')
+        Utils.assert(this.webSocket.isAbsent(), 'Should not connect twice to WebSocket!');
         const token: string = await this.connectedUserService.getIdToken();
 
         return new Promise((resolve: (sub: Subscription) => void) => {

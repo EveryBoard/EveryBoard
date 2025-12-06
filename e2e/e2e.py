@@ -209,9 +209,6 @@ class PlayerDriver():
         # Player 1 configures the part
         self.click('#firstPlayerCreator') # Player 1 will start
 
-        print("GAME CREATED; ACTING AS OPPONENT")
-        time.sleep(1)
-
         # Player 2 joins the part
         opponent.click('#seeGameList')
         opponent.click('#part-of-{}'.format(self.username))
@@ -250,6 +247,7 @@ def launch_scenarios(only_scenarios=None):
         for kind in ['simple', 'registered', 'two_drivers']:
             scenarios[kind] = list(filter(lambda x: x.__name__ in only_scenarios, scenarios[kind]))
 
+    scenarios['simple'].reverse() # so that they are run in order of appearance
     for simple_scenario in scenarios['simple']:
        # Always go back home for a new scenario
        driver.go_to_page('http://localhost:4200')
@@ -261,6 +259,7 @@ def launch_scenarios(only_scenarios=None):
 
     # Now we need a registered account
     driver.register('1-')
+    scenarios['registered'].reverse() # so that they are run in order of appearance
     for registered_scenario in scenarios['registered']:
         driver.go_to_page('http://localhost:4200')
         driver.ensure_no_errors()
@@ -272,6 +271,7 @@ def launch_scenarios(only_scenarios=None):
     # Now we need another driver
     driver2 = PlayerDriver()
     driver2.register('2-')
+    scenarios['two_drivers'].reverse() # so that they are run in order of appearance
     for two_drivers_scenario in scenarios['two_drivers']:
         driver.go_to_page('http://localhost:4200')
         driver2.go_to_page('http://localhost:4200')
