@@ -7,6 +7,8 @@ import threading
 import e2e
 import killport
 import os
+import sys
+import traceback
 
 failed = False
 
@@ -27,7 +29,12 @@ def log(process):
     for line in iter(process.stdout.readline, ""):
         print(f'[back] {line}', end='')
 
-def run_e2e():
+def run_e2e(only_scenario):
+    backend_process = None
+    frontend_process = None
+    watch_thread = None
+    backend_log_thread = None
+    docker_id = None
     try:
         print('[e2e] Launching processes')
         postgres_user = 'everyboard_e2e'
@@ -69,12 +76,13 @@ def run_e2e():
                 print(f'[e2e] Got {e}')
 
         print('[e2e] Starting e2e tests')
-        e2e.launch_scenarios()
+        e2e.launch_scenarios(only_scenario)
         print('[e2e] e2e tests done with success')
         return True
 
     except Exception as e:
         print(f'[e2e] Failed! {e}')
+        traceback.print_exc()
         return False
 
     finally:
@@ -82,15 +90,22 @@ def run_e2e():
         # We can't just kill the processes as they have created detached children
         killport.kill_ports(ports = [9000, 8080, 8081, 4200, 4000])
 
-        subprocess.run(["docker", "rm", "-f", docker_id])
-        backend_process.kill()
-        frontend_process.kill()
-        watch_thread.join()
-        backend_log_thread.join()
-
+        if docker_id != None:
+            subprocess.run(["docker", "rm", "-f", docker_id])
+        if backend_process != None:
+            backend_process.kill()
+        if frontend_process != None:
+            frontend_process.kill()
+        if watch_thread != None:
+            watch_thread.join()
+        if backend_log_thread != None:
+            backend_log_thread.join()
 
 if __name__ == '__main__':
-    success = run_e2e()
+    only_scenarios = None
+    if len(sys.argv) >= 2:
+        only_scenarios = sys.argv[1:]
+    success = run_e2e(only_scenarios)
     print('[e2e] Done.')
     if success == False:
         exit(1)
