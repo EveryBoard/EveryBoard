@@ -109,6 +109,7 @@ export class BackendService extends AbstractBackendService {
     private resolveConnection!: () => void;
 
     private nextConnectionAttemptTime: number = 1;
+    private disconnectRequested: boolean = false;
 
     public constructor(private readonly connectedUserService: ConnectedUserService,
                        private readonly messageDisplayer: MessageDisplayer)
@@ -164,6 +165,11 @@ export class BackendService extends AbstractBackendService {
             };
             ws.onclose = (): void => {
                 this.webSocket = MGPOptional.empty();
+                if (this.disconnectRequested) {
+                    // We closed it ourselves (most likely due to disconnect), keep it closed.
+                    this.disconnectRequested = false; // clear it for next time
+                    return;
+                }
                 // The connection has been closed by the server.
                 // It is best to try to reconnect.
                 reconnect();
@@ -199,6 +205,7 @@ export class BackendService extends AbstractBackendService {
 
     private disconnect(): void {
         Utils.assert(this.webSocket.isPresent(), 'Should not disconnect from unconnected WebSocket!');
+        this.disconnectRequested = true;
         this.webSocket.get().close();
         this.webSocket = MGPOptional.empty();
         // Need to clear the promise for the next connection
