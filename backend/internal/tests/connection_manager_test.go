@@ -2,6 +2,7 @@ package internal
 
 import (
 	"testing"
+	"time"
 
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
 	"github.com/EveryBoard/EveryBoard/internal/model"
@@ -106,6 +107,7 @@ func TestManyMessages(t *testing.T) {
 	for _ = range numberOfMessages {
 		connection.receiveNext <- struct{}{} // will make it receive one more message
 	}
+	time.Sleep(100 * time.Millisecond) // wait a bit to make sure every message has been processed
 	if connection.messagesReceived != numberOfMessages {
 		t.Fatalf("unexpected: received %d messages instead of %d", connection.messagesReceived, numberOfMessages)
 	}
