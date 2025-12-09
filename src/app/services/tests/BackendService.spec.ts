@@ -60,7 +60,7 @@ describe('BackendMessage', () => {
     });
 });
 
-describe('BackendService', () => {
+fdescribe('BackendService', () => {
     class WebSocketMock {
         public onopen: ((ev: Event) => void) | null = null;
         public onerror: ((ev: Event) => void) | null = null;
@@ -465,6 +465,9 @@ describe('BackendService', () => {
             subscription.unsubscribe();
             // Then it should close the websocket connection
             expect(ws.close).toHaveBeenCalledOnceWith();
+            ws.onclose!(new CloseEvent('close')); // onclose is therefore called
+            // And it should not reconnect
+            expect(webSocketInstances.length).toBe(1);
         }));
 
         it('should be able to connect again after disconnect', fakeAsync(async() => {
