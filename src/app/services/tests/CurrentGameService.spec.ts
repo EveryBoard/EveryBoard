@@ -131,6 +131,31 @@ describe('CurrentGameService', () => {
             subscription.unsubscribe();
         }));
 
+        it('should not update currentGame when it was empty and updated to be empty again', fakeAsync(async() => {
+            // Given a connected user without a current game
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            tick(0);
+            let resolvePromise: () => void;
+            const userHasUpdated: Promise<void> = new Promise((resolve: () => void) => {
+                resolvePromise = resolve;
+            });
+            let updates: number = 0;
+            const subscription: Subscription =
+                currentGameService.subscribeToCurrentGame((currentGame: MGPOptional<CurrentGame>) => {
+                    updates += 1;
+                    resolvePromise();
+                });
+            updateCurrentGame(null);
+            await userHasUpdated;
+
+            // When the current game is updated again to null
+            updateCurrentGame(null);
+            tick(100);
+            // Then it should not see the update
+            expect(updates).toBe(1);
+            subscription.unsubscribe();
+        }));
+
         it('should update currentGame when it is removed', fakeAsync(async() => {
             // Given a connected user with a current game
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);

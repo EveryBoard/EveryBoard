@@ -60,7 +60,7 @@ describe('BackendMessage', () => {
     });
 });
 
-fdescribe('BackendService', () => {
+describe('BackendService', () => {
     class WebSocketMock {
         public onopen: ((ev: Event) => void) | null = null;
         public onerror: ((ev: Event) => void) | null = null;
