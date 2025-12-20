@@ -124,6 +124,17 @@ describe('SaharaComponent', () => {
             await testUtils.expectClickFailure('#click_7_1', reason);
         }));
 
+        it('should show last move with last-move-stroke', fakeAsync(async() => {
+            // Given a board with a last move
+            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectMoveSuccess('#click_2_1', SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get());
+
+            // When displaying it
+            // Then it should show the last move with last-move-stroke
+            testUtils.expectElementToHaveClass('#last_move_origin', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#last_move_destination', 'last-move-stroke');
+        }));
+
     });
 
     it('should play correctly shortest victory', fakeAsync(async() => {
