@@ -903,7 +903,7 @@ describe('LascaRules', () => {
 
             // Then the board should be 8x8 with correct initial setup
             expect(state.getWidth()).toBe(8);
-            expect(state.getHeight()).toBe(8); // 3 rows player 1 + 2 empty + 3 rows player 0
+            expect(state.getHeight()).toBe(8); // 3 rows player 1 (top) + 2 empty + 3 rows player 0 (bottom)
             // Verify pieces occupy odd squares (occupyEvenSquare: false)
             // Top-left corner (0,0) should be empty as we occupy odd squares
             expect(state.getPieceAt(new Coord(0, 0)).isEmpty()).toBeTrue();
