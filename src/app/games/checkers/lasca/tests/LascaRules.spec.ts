@@ -890,4 +890,81 @@ describe('LascaRules', () => {
 
     });
 
+    describe('Bashni configuration', () => {
+
+        it('should create correct initial state for Bashni (8x8 board)', () => {
+            // Given the Bashni configuration
+            const bashniConfig: MGPOptional<CheckersConfig> = MGPOptional.of(
+                LascaRules.RULES_CONFIG_DESCRIPTION.getConfig('Bashni'),
+            );
+
+            // When getting the initial state
+            const state: CheckersState = rules.getInitialState(bashniConfig);
+
+            // Then the board should be 8x8 with correct initial setup
+            expect(state.getWidth()).toBe(8);
+            expect(state.getHeight()).toBe(7); // 3 rows player 0 + 1 empty + 3 rows player 1
+            // Verify pieces occupy odd squares (occupyEvenSquare: false)
+            // Top-left corner (0,0) should be empty as we occupy odd squares
+            expect(state.getPieceAt(new Coord(0, 0)).isEmpty()).toBeTrue();
+            // Position (1,0) should have a piece
+            expect(state.getPieceAt(new Coord(1, 0)).isEmpty()).toBeFalse();
+        });
+
+        it('should enforce maximal capture in Bashni', () => {
+            // Given a Bashni configuration state where player can capture 1 or 2 pieces
+            const bashniConfig: MGPOptional<CheckersConfig> = MGPOptional.of(
+                LascaRules.RULES_CONFIG_DESCRIPTION.getConfig('Bashni'),
+            );
+            const state: CheckersState = CheckersState.of([
+                [___, __V, ___, ___, ___, ___, ___, ___],
+                [___, ___, __V, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [__U, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When trying to capture only one piece while a double capture is available
+            const singleCapture: CheckersMove = CheckersMove.fromCapture([new Coord(0, 3), new Coord(2, 1)]).get();
+
+            // Then it should be illegal (must capture maximum)
+            const reason: string = CheckersFailure.MUST_DO_LONGEST_CAPTURE();
+            RulesUtils.expectMoveFailure(rules, state, singleCapture, reason, bashniConfig);
+        });
+
+        it('should allow simple pieces to capture backwards in Bashni', () => {
+            // Given a Bashni configuration state where a simple piece can capture backwards
+            const bashniConfig: MGPOptional<CheckersConfig> = MGPOptional.of(
+                LascaRules.RULES_CONFIG_DESCRIPTION.getConfig('Bashni'),
+            );
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, ___, ___, ___, ___, ___],
+                [__U, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When doing a backward capture with a simple piece
+            const backwardCapture: CheckersMove = CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 3)]).get();
+
+            // Then the move should succeed
+            const expectedState: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, _UV, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, backwardCapture, expectedState, bashniConfig);
+        });
+
+    });
+
 });

@@ -31,7 +31,20 @@ export class LascaRules extends AbstractCheckersRules {
                 frisianCaptureAllowed:
                     new BooleanConfig(false, CheckersOptionLocalizable.FRISIAN_CAPTURE_ALLOWED),
             },
-        });
+        }, [{
+            name: (): string => $localize`Bashni`,
+            config: {
+                playerRows: 3,
+                emptyRows: 1,
+                width: 8,
+                canStackPieces: true,
+                mustMakeMaximalCapture: true,
+                simplePieceCanCaptureBackwards: true,
+                promotedPiecesCanFly: false,
+                occupyEvenSquare: false,
+                frisianCaptureAllowed: false,
+            },
+        }]);
 
     public static get(): LascaRules {
         if (LascaRules.singleton.isAbsent()) {
