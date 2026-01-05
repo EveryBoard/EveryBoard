@@ -114,9 +114,9 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
             ], 2),
         ),
-        TutorialStep.anyMove(
-            $localize`Promotion`,
-            CheckersTutorialStep.PROMOTION(),
+        TutorialStep.fromMove(
+            CheckersTutorialStep.PROMOTION_TITLE(),
+            $localize`When a piece reaches the last line, it is promoted and becomes a king, and gains abilities such as moving backward! One of your pieces can be promoted now.<br/><br/>You're playing Dark. Do it.`,
             CheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __, __],
@@ -127,8 +127,9 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [_u, __, __, __, __, __, __, __],
             ], 6),
-            CheckersMove.fromStep(new Coord(0, 7), new Coord(1, 6)),
+            [CheckersMove.fromStep(new Coord(0, 7), new Coord(1, 6))],
             TutorialStepMessage.CONGRATULATIONS(),
+            TutorialStepMessage.FAILED_TRY_AGAIN(),
         ),
     ];
 }
