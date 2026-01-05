@@ -60,6 +60,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/mancala/awale/awale.component';
 
 import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
+import { BashniComponent } from './games/checkers/bashni/bashni.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
@@ -204,6 +205,7 @@ export const routes: Route[] = [
         AwaleComponent, NumberedCircleComponent,
         BrandhubComponent,
         BaAwaComponent,
+        BashniComponent,
         CoerceoComponent,
         ConnectSixComponent,
         ConspirateursComponent,
