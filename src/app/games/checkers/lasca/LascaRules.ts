@@ -35,7 +35,7 @@ export class LascaRules extends AbstractCheckersRules {
             name: (): string => $localize`Bashni`,
             config: {
                 playerRows: 3,
-                emptyRows: 1,
+                emptyRows: 2,
                 width: 8,
                 canStackPieces: true,
                 mustMakeMaximalCapture: true,
