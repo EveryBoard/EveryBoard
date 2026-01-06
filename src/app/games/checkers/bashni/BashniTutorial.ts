@@ -13,7 +13,6 @@ const one: CheckersPiece = CheckersPiece.ONE;
 const _u: CheckersStack = new CheckersStack([zero]);
 const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
-const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
 const defaultConfig: MGPOptional<CheckersConfig> = BashniRules.get().getDefaultRulesConfig();
 
@@ -21,7 +20,7 @@ export class BashniTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Bashni: origins`,
-            $localize`Bashni, also known as Russian Checkers or Column Checkers, is a variant of checkers played in Russia. It is played on an 8x8 board, each player has 12 pieces. Like Lasca, pieces form stacks when captured.`,
+            $localize`Bashni, also known as Russian Checkers or Column Checkers, is a variant of checkers played in Russia. It is played on an 8x8 board, each player has 12 pieces. Like Lasca, pieces form columns when captured.`,
             BashniRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
@@ -102,7 +101,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Stacking pieces`,
-            $localize`When you capture a piece in Bashni, it is placed under your piece, forming a stack. The piece at the top of the stack determines who controls it. When a stack is captured, only the top piece is removed and placed below the capturing piece.`,
+            $localize`When you capture a piece in Bashni, it is placed under your piece, forming a column. The piece at the top of the column determines who controls it. When a column is captured, only the top piece is removed and placed below the capturing piece.`,
             CheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],

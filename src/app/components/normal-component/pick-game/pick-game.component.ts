@@ -168,7 +168,7 @@ class GameDescription {
 
     public static readonly BA_AWA: Localized = () => $localize`The most widespread multiple-lap Mancala.`;
 
-    public static readonly BASHNI: Localized = () => $localize`Russian checkers: capture opponents' pieces to form stacks, and immobilize your opponent to win!`;
+    public static readonly BASHNI: Localized = () => $localize`Russian checkers: capture opponents' pieces to form columns, and immobilize your opponent to win!`;
 
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
