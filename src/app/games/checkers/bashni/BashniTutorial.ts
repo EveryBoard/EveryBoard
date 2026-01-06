@@ -21,7 +21,7 @@ export class BashniTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Bashni: origins`,
-            $localize`Bashni, also known as Russian Checkers or Column Checkers, is a variant of checkers played in Russia. It is played on an 8x8 board, each player has 12 pieces. Like Lasca, pieces form columns when captured.`,
+            $localize`Bashni, also known as Russian Checkers or Column Checkers, is a variant of checkers played in Russia. It is played on an 8x8 board, each player has 12 pieces. Like Lasca, pieces form stacks when captured.`,
             BashniRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
@@ -102,7 +102,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Stacking pieces`,
-            $localize`When you capture a piece in Bashni, it is placed under your piece, forming a column. The piece at the top of the column determines who controls it. When a column is captured, only the top piece is removed and placed below the capturing piece.`,
+            $localize`When you capture a piece in Bashni, it is placed under your piece, forming a stack. The piece at the top of the stack determines who controls it. When a stack is captured, only the top piece is removed and placed below the capturing piece.`,
             CheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
@@ -130,6 +130,20 @@ export class BashniTutorial extends Tutorial {
             [CheckersMove.fromStep(new Coord(0, 7), new Coord(1, 6))],
             TutorialStepMessage.CONGRATULATIONS(),
             TutorialStepMessage.FAILED_TRY_AGAIN(),
+        ),
+        TutorialStep.informational(
+            $localize`Mid-capture promotion`,
+            $localize`In Bashni, if a piece touches the last row during a capture and can continue capturing, it is promoted immediately and can continue capturing as a king! This is different from International Checkers where promotion only happens at the end of the turn.`,
+            CheckersState.of([
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+            ], 0),
         ),
     ];
 }
