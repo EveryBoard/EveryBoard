@@ -6,7 +6,6 @@ import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersConfig, CheckersNode } from '../../common/AbstractCheckersRules';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { BashniRules } from '../BashniRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 describe('BashniRules', () => {
 
