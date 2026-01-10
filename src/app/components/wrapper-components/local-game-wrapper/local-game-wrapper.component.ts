@@ -53,7 +53,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async ngAfterViewInit(): Promise<void> {
+        console.log('JAJ LGW ngAfterViewInit');
         window.setTimeout(async() => {
+            console.log('JAJ LGW ngAfterViewInit > timeout');
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
                 await this.restartGame();

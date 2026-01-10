@@ -59,6 +59,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public abstract getPlayer(): P;
 
     private getMatchingComponent(gameName: string): MGPOptional<Type<AbstractGameComponent>> {
+        console.log('FLAF 0 getMatchingComponent', gameName);
         const optionalComponentInfo: MGPOptional<ComponentInfo> = ComponentInfo.getByUrlName(gameName);
         return optionalComponentInfo.map((gameInfo: ComponentInfo) => gameInfo.component);
     }
@@ -69,12 +70,15 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * It returns true if successful, or false if this is not a valid game.
      */
     protected async createMatchingGameComponent(): Promise<boolean> {
+        console.log('JAJ createMatchingGameComponent')
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
+            console.log('JAJ createMatchingGameComponent > if')
             await this.createGameComponentAndSetConfig(componentType.get());
             return true;
         } else {
+            console.log('JAJ createMatchingGameComponent > else')
             return false;
         }
     }
@@ -90,7 +94,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     private async getMatchingComponentAndNavigateOutIfAbsent(): Promise<MGPOptional<Type<AbstractGameComponent>>> {
         const urlName: string = this.getGameUrlName();
+        console.log('GW > getMatchingComponentAndNavigateOutIfAbsent', urlName);
         const component: MGPOptional<Type<AbstractGameComponent>> = this.getMatchingComponent(urlName);
+        console.log('GW > getMatchingComponentAndNavigateOutIfAbsent', component);
         if (component.isAbsent()) {
             await this.router.navigate(['/notFound', GameWrapperMessages.NO_MATCHING_GAME(urlName)], { skipLocationChange: true });
             return MGPOptional.empty();
@@ -100,6 +106,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     private async createGameComponent(component: Type<AbstractGameComponent>): Promise<void> {
+        console.log('JAJ 0')
         Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =

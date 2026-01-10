@@ -220,6 +220,7 @@ export class AIInfo {
             new AIInfo('Hexodia',               hexodiaAIList              ), //                             * Martin
             new AIInfo('Trigo',                 trigoAIList                ), //                             * Martin
             new AIInfo('InternationalCheckers', internationalCheckersAIList), //                             * Martin
+            new AIInfo('QuebecCastles',         []                         ), //                             * Martin
         ].sort((a: AIInfo, b: AIInfo) => a.urlName.localeCompare(b.urlName));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

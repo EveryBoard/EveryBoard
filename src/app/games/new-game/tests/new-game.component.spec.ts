@@ -1,18 +1,23 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { GameInfo } from '../../../components/normal-component/pick-game/game-info';
+import { ComponentInfo } from '../../../components/normal-component/pick-game/component-info';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { NewGameComponent } from '../new-game.component';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
 import { NewGameTutorial } from '../NewGameTutorial';
 
-describe('NewGameComponent', () => {
+fdescribe('NewGameComponent', () => {
     let testUtils: ComponentTestUtils<NewGameComponent>;
 
     beforeEach(fakeAsync(async() => {
+        console.log('>>>>>>> NewGameComponent')
         // This next statement *should be removed for any real game*.
         // Instead, you should look at the README at how to add your game to the project.
+        spyOn(ComponentInfo, 'getAllGames').and.returnValue([
+            new ComponentInfo('NewGame', NewGameComponent),
+        ]);
         spyOn(GameInfo, 'getAllGames').and.returnValue([
             new GameInfo('New Game', 'NewGame', new NewGameTutorial(), NewGameRules.get(), new Date('2018-08-28'), 'This is the one-line description of the game'),
         ]);
@@ -20,7 +25,8 @@ describe('NewGameComponent', () => {
         testUtils = await ComponentTestUtils.forGame<NewGameComponent>('NewGame');
     }));
 
-    it('should create', () => {
+    fit('should create', () => {
+        console.log('======================= NewGameComponent')
         // This test is done in all games to ensure that their initialization works as expected
         testUtils.expectToBeCreated();
     });

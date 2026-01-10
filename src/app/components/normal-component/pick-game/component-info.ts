@@ -44,6 +44,7 @@ import { PenteComponent } from '../../../games/pente/pente.component';
 import { PylosComponent } from '../../../games/pylos/pylos.component';
 
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
+import { QuebecCastlesComponent } from 'src/src/app/games/quebec-castles/quebec-castles.component';
 import { QuixoComponent } from '../../../games/quixo/quixo.component';
 
 import { ReversiComponent } from '../../../games/reversi/reversi.component';
@@ -119,10 +120,12 @@ export class ComponentInfo {
             new ComponentInfo('Hexodia',               HexodiaComponent              ),
             new ComponentInfo('Trigo',                 TrigoComponent                ),
             new ComponentInfo('InternationalCheckers', InternationalCheckersComponent),
+            new ComponentInfo('QuebecCastles',         QuebecCastlesComponent        ),
         ].sort((a: ComponentInfo, b: ComponentInfo) => a.urlName.localeCompare(b.urlName));
     }
 
     public static getByUrlName(urlName: string): MGPOptional<ComponentInfo> {
+        console.log('FLAF 1 getByUrlName', urlName);
         const games: ComponentInfo[] = ComponentInfo
             .getAllGames()
             .filter((gameInfo: ComponentInfo) => gameInfo.urlName === urlName);

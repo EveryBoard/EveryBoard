@@ -415,6 +415,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public bindGameComponent(): void {
+        console.log(this.component)
         expect(this.component.gameComponent).withContext('gameComponent should be bound on the wrapper').toBeDefined();
         this.gameComponent = this.component.gameComponent;
     }

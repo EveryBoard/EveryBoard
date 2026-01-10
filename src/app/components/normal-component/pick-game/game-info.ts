@@ -74,6 +74,8 @@ import { PylosTutorial } from '../../../games/pylos/PylosTutorial';
 
 import { QuartoRules } from '../../../games/quarto/QuartoRules';
 import { QuartoTutorial } from '../../../games/quarto/QuartoTutorial';
+import { QuebecCastlesRules } from 'src/src/app/games/quebec-castles/QuebecCastlesRules';
+import { QuebecCastlesTutorial } from 'src/src/app/games/quebec-castles/QuebecCastlesTutorial';
 import { QuixoRules } from '../../../games/quixo/QuixoRules';
 import { QuixoTutorial } from '../../../games/quixo/QuixoTutorial';
 
@@ -169,13 +171,16 @@ export class GameInfo {
             new GameInfo($localize`Squarz`,                 'Squarz',                new SquarzTutorial(),                SquarzRules.get(),                new Date('2024-05-08'), GameDescription.SQUARZ()                ), //                             * Martin
             new GameInfo($localize`Hexodia`,                'Hexodia',               new HexodiaTutorial(),               HexodiaRules.get(),               new Date('2024-06-26'), GameDescription.HEXODIA()               ), //                             * Martin
             new GameInfo($localize`Trigo`,                  'Trigo',                 new TrigoTutorial(),                 TrigoRules.get(),                 new Date('2024-06-29'), GameDescription.TRI_GO()                ), //                             * Martin
-            new GameInfo($localize`International Checkers`, 'InternationalCheckers', new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2024-10-08'), GameDescription.INTERNATIONAL_CHECKERS()), //                             * Martin
+
+            new GameInfo($localize`International Checkers`, 'InternationalCheckers', new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2025-02-03'), GameDescription.INTERNATIONAL_CHECKERS()), //                             * Martin
+            new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ),
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
     }
 
     public static getByUrlName(urlName: string): MGPOptional<GameInfo> {
+        console.log('FLAF getByUrlName', urlName);
         const games: GameInfo[] = GameInfo.getAllGames().filter((gameInfo: GameInfo) => gameInfo.urlName === urlName);
         Utils.assert(games.length <= 1, `There should only be one game matching $urlName!`);
         if (games.length === 0) {
