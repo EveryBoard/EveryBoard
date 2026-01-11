@@ -1,21 +1,21 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
 import { QuebecCastlesState } from './QuebecCastlesState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { BooleanConfig, EnumConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { DirectionFailure } from 'src/app/jscaip/Direction';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { BooleanConfig, EnumConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { DirectionFailure } from '../../jscaip/Direction';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Localized } from '../../utils/LocaleUtils';
 
 export class QuebecCastlesFailure {
 

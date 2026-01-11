@@ -5,12 +5,12 @@ import { QuartoMove } from './QuartoMove';
 import { QuartoState } from './QuartoState';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { QuartoMinimax } from './QuartoMinimax';
 
 @Component({
