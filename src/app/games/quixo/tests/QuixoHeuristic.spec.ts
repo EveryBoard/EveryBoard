@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { QuixoConfig, QuixoState } from '../QuixoState';
 import { QuixoMove } from '../QuixoMove';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoHeuristic } from '../QuixoHeuristic';

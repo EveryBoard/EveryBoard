@@ -3,9 +3,9 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { BaseComponent } from '../BaseComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
-import { GameState } from 'src/app/jscaip/state/GameState';
+import { GameState } from '../../jscaip/state/GameState';
 
 export abstract class BaseWrapperComponent extends BaseComponent {
 

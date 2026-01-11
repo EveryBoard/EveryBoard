@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { SixConfig, SixNode, SixRules } from '../SixRules';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
 
 const O: PlayerOrNone = Player.ZERO;

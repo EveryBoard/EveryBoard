@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { SaharaNode, SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaState } from '../SaharaState';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { SaharaFailure } from '../SaharaFailure';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('SaharaRules', () => {
 
