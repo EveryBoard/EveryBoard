@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { AppModule } from 'src/app/app.module';
+import { AppModule } from '../../app.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { endpoint, expectedParams } from './BackendService.spec';

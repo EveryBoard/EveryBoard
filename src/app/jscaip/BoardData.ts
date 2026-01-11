@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from './Coord';
 import { Ordinal } from './Ordinal';
 import { Table, TableUtils } from './TableUtils';
 import { Debug } from '../utils/Debug';

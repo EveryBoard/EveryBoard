@@ -2,18 +2,18 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { CurrentGame } from 'src/app/domain/User';
+import { CurrentGame } from '../../domain/User';
 import { CurrentGameService } from '../CurrentGameService';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
-import { UserDAO } from 'src/app/dao/UserDAO';
+import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
+import { UserMocks } from '../../domain/UserMocks.spec';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
+import { CurrentGameMocks } from '../../domain/mocks/CurrentGameMocks.spec';
 import { UserService } from '../UserService';
-import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
+import { prepareUnsubscribeCheck } from '../../utils/tests/TestUtils.spec';
 
 export class CurrentGameServiceMock {
 

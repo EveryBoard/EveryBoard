@@ -35,7 +35,7 @@ import { CountDownComponent } from './components/normal-component/count-down/cou
 import { OnlineGameWrapperComponent }
     from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+    from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
