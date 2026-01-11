@@ -4,8 +4,8 @@ import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslatio
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Coord } from '../../../jscaip/Coord';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('DiaballikMoveInConstruction', () => {
 
