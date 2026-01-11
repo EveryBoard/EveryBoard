@@ -1,5 +1,5 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';

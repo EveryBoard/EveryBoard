@@ -1,20 +1,20 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/HexaLine';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { Coord } from '../../jscaip/Coord';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaLine } from '../../jscaip/HexaLine';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfFailure } from './GipfFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { GipfCapture } from '../../jscaip/GipfProjectHelper';
+import { Table } from '../../jscaip/TableUtils';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export type GipfLegalityInformation = GipfState
 
