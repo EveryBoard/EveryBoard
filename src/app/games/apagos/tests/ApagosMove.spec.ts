@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { ApagosRules } from '../ApagosRules';
 
 describe('ApagosMove', () => {

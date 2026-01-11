@@ -5,17 +5,17 @@ import { DebugElement } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ActivePartsService } from 'src/app/services/ActivePartsService';
-import { GameActionFailure } from 'src/app/services/ConnectedUserService';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { PartDocument } from 'src/app/domain/Part';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { ActivePartsService } from '../../../services/ActivePartsService';
+import { GameActionFailure } from '../../../services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { PartMocks } from '../../../domain/PartMocks.spec';
+import { PartDocument } from '../../../domain/Part';
+import { UserMocks } from '../../../domain/UserMocks.spec';
 import { LobbyComponent } from './lobby.component';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameService.spec';
 
 describe('LobbyComponent', () => {
 
