@@ -1,25 +1,25 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GoMove } from 'src/app/games/gos/GoMove';
+import { GoMove } from '../GoMove';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
-import { GoState } from 'src/app/games/gos/GoState';
+import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GroupData } from 'src/app/jscaip/BoardData';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { Coord } from '../../../jscaip/Coord';
+import { GroupData } from '../../../jscaip/BoardData';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { MCTS } from '../../../jscaip/AI/MCTS';
 import { TrigoMoveGenerator } from './TrigoMoveGenerator';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { Debug } from '../../../utils/Debug';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
-import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
+import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
 import { GoLegalityInformation } from '../AbstractGoRules';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { TrigoMinimax } from './TrigoMinimax';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-trigo',

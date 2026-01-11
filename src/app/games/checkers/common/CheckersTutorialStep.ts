@@ -1,4 +1,4 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../../utils/LocaleUtils';
 
 export class CheckersTutorialStep {
 

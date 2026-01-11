@@ -2,7 +2,7 @@
 import { BrandhubComponent } from '../brandhub.component';
 import { BrandhubRules } from '../BrandhubRules';
 import { BrandhubMove } from '../BrandhubMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../jscaip/Coord';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TaflState } from '../../TaflState';

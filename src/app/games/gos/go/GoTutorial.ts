@@ -1,10 +1,10 @@
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoState } from 'src/app/games/gos/GoState';
+import { GoMove } from '../GoMove';
+import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { GoConfig, GoRules } from './GoRules';
 import { GoPhase } from '../GoPhase';
 

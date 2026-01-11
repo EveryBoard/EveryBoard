@@ -2,7 +2,7 @@
 import { HnefataflComponent } from '../hnefatafl.component';
 import { HnefataflRules } from '../HnefataflRules';
 import { HnefataflMove } from '../HnefataflMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../jscaip/Coord';
 import { TaflPawn } from '../../TaflPawn';
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TaflState } from '../../TaflState';

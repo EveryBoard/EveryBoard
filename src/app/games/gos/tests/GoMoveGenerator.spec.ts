@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { GoMove } from '../GoMove';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { GoNode } from '../AbstractGoRules';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { GoConfig, GoRules } from '../go/GoRules';
 import { GoMoveGenerator } from '../go/GoMoveGenerator';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GoPhase } from '../GoPhase';
 
 const X: GoPiece = GoPiece.LIGHT;

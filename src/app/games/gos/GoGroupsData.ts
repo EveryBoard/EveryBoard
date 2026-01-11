@@ -1,5 +1,5 @@
-import { GroupData } from 'src/app/jscaip/BoardData';
-import { Coord } from 'src/app/jscaip/Coord';
+import { GroupData } from '../../jscaip/BoardData';
+import { Coord } from '../../jscaip/Coord';
 import { MGPMap, Utils } from '@everyboard/lib';
 import { GoPiece } from './GoPiece';
 
