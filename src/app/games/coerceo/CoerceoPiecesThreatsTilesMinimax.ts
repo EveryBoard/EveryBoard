@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
 import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';

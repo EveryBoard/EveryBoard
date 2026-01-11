@@ -1,10 +1,10 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../jscaip/Coord';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { MGPOptional } from '@everyboard/lib';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState, CoerceoConfig> {

@@ -3,10 +3,10 @@ import { ArrayUtils, Utils } from '@everyboard/lib';
 import { DvonnState } from './DvonnState';
 import { DvonnNode } from './DvonnRules';
 import { DvonnPieceStack } from './DvonnPieceStack';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../jscaip/Player';
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
