@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { ApagosRightmostHeuristic } from '../ApagosRightmostHeuristic';
 import { ApagosState } from '../ApagosState';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('ApagosRightmostHeuristic', () => {
 
