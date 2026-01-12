@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { ApagosRightmostMinimax } from '../ApagosRightmostMinimax';
 
