@@ -1,19 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { GipfComponent } from '../gipf.component';
 import { MGPOptional } from '@everyboard/lib';
-import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { GipfFailure } from '../../../games/gipf/GipfFailure';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfState } from 'src/app/games/gipf/GipfState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
+import { Coord } from '../../../jscaip/Coord';
+import { GipfMove, GipfPlacement } from '../../../games/gipf/GipfMove';
+import { GipfState } from '../../../games/gipf/GipfState';
+import { Table } from '../../../jscaip/TableUtils';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Arrow } from '../../../components/game-components/arrow-component/Arrow';
 import { GipfRules } from '../GipfRules';
 
 describe('GipfComponent', () => {
