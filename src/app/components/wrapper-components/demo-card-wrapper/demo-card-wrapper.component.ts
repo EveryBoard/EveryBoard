@@ -4,12 +4,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameWrapper } from '../../wrapper-components/GameWrapper';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Move } from 'src/app/jscaip/Move';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Move } from '../../../jscaip/Move';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AbstractNode } from '../../../jscaip/AI/GameNode';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 
 export type DemoNodeInfo = {
     name: string; // The url name of the game
