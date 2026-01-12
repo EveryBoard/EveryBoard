@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameStatus } from '../../../jscaip/GameStatus';
 
 describe('AbaloneRules', () => {
 

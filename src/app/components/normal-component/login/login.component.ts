@@ -5,7 +5,7 @@ import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 import { MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 
 @Component({
     selector: 'app-login',

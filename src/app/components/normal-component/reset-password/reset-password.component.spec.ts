@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MGPValidation } from '@everyboard/lib';
 
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ResetPasswordComponent } from './reset-password.component';
 
 describe('ResetPasswordComponent', () => {

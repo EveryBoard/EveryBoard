@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { Utils } from '@everyboard/lib';
 
-import { Player } from 'src/app/jscaip/Player';
-import { Debug } from 'src/app/utils/Debug';
+import { Player } from '../../../jscaip/Player';
+import { Debug } from '../../../utils/Debug';
 
 @Component({
     selector: 'app-count-down',

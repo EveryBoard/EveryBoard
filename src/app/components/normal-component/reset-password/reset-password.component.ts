@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 @Component({
