@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { MancalaState } from '../../common/MancalaState';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { AwaleRules } from '../AwaleRules';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
 import { MGPOptional } from '@everyboard/lib';
 import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../jscaip/TableUtils';
 
 describe('AwaleMoveGenerator', () => {
 

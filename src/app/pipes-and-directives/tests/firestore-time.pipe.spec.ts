@@ -3,8 +3,8 @@ import { formatDate } from '@angular/common';
 import { Component, DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Timestamp } from 'firebase/firestore';
-import { FirestoreTime } from 'src/app/domain/Time';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { FirestoreTime } from '../../domain/Time';
+import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';
 
 @Component({
     template: `<span id="time">{{ timestamp | firestoreTime }}</span>`,

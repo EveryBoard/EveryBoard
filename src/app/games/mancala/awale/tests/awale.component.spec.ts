@@ -4,14 +4,14 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { AwaleComponent } from '../awale.component';
 import { AwaleRules } from '../AwaleRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { MancalaState } from '../../common/MancalaState';
 import { doMancalaComponentTests as doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../jscaip/TableUtils';
 import { MancalaFailure } from '../../common/MancalaFailure';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();

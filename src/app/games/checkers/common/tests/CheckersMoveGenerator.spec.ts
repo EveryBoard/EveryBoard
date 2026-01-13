@@ -6,7 +6,7 @@ import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../Abstract
 import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../../jscaip/Coord';
 
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);

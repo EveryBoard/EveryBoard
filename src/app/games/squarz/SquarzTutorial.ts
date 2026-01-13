@@ -1,10 +1,10 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
 import { SquarzState } from './SquarzState';
 import { SquarzMove } from './SquarzMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();

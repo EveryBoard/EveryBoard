@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../../jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
 import { CheckersControlHeuristic } from '../CheckersControlHeuristic';
 import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
 
