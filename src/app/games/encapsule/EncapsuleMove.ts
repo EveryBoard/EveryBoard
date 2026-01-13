@@ -1,5 +1,5 @@
-import { Move } from 'src/app/jscaip/Move';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Move } from '../../jscaip/Move';
+import { Coord } from '../../jscaip/Coord';
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
 import { EncapsulePiece } from './EncapsulePiece';
 

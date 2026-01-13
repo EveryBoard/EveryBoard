@@ -1,5 +1,5 @@
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { Table } from '../../jscaip/TableUtils';
 import { Utils } from '@everyboard/lib';
 import { DiamPiece } from './DiamPiece';
 

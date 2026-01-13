@@ -1,13 +1,13 @@
-import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from 'src/app/games/encapsule/EncapsuleState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { EncapsuleMove } from '../../games/encapsule/EncapsuleMove';
+import { EncapsulePiece } from '../../games/encapsule/EncapsulePiece';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../games/encapsule/EncapsuleState';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { EncapsuleConfig, EncapsuleRules } from './EncapsuleRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 
 
 const _: EncapsuleSpace = EncapsuleSpace.EMPTY;

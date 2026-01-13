@@ -3,10 +3,10 @@ import { YinshState } from '../YinshState';
 import { YinshCapture } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('YinshMoveGenerator', () => {
 

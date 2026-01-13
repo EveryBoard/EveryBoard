@@ -1,11 +1,11 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionState } from './LinesOfActionState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Player } from 'src/app/jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Player } from '../../jscaip/Player';
 
 export class LinesOfActionHeuristic extends PlayerMetricHeuristic<LinesOfActionMove, LinesOfActionState> {
 

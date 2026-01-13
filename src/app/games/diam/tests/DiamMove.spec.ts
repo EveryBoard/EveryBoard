@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
 import { EncoderTestUtils } from '@everyboard/lib';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';

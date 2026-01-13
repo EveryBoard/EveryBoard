@@ -3,14 +3,14 @@ import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { MGPOptional } from '@everyboard/lib';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SiamFailure } from '../SiamFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord } from 'src/app/jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
 
 describe('SiamRules', () => {
 

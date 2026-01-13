@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('YinshRules', () => {
 

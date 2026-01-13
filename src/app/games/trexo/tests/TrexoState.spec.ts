@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
 import { Utils } from '@everyboard/lib';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { TableUtils } from '../../../jscaip/TableUtils';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { TrexoRules } from '../TrexoRules';
 

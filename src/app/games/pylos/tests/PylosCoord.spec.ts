@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { EncoderTestUtils, MGPOptional, TestUtils } from '@everyboard/lib';
 import { PylosCoord } from '../PylosCoord';
 

@@ -1,10 +1,10 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { Vector } from 'src/app/jscaip/Vector';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Localized } from '../../utils/LocaleUtils';
+import { Vector } from '../../jscaip/Vector';
 import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveFailure {
