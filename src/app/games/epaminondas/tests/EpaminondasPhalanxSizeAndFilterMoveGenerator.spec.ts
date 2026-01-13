@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/jscaip/TableUtils';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { PlayerOrNone } from '../../../jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasState } from '../EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';

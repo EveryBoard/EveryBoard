@@ -1,20 +1,20 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameComponent, ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Vector } from '../../jscaip/Vector';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],

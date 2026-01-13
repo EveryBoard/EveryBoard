@@ -1,12 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { QuebecCastlesState } from '../QuebecCastlesState';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesMinimax } from '../QuebecCastlesMinimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 describe('QuebecCastlesMinimax', () => {
 

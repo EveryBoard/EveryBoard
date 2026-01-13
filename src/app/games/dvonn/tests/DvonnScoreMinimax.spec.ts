@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { DvonnRules } from '../DvonnRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DvonnScoreMinimax } from '../DvonnScoreMinimax';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('DvonnScoreMinimax', () => {
 

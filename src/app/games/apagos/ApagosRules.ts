@@ -1,15 +1,15 @@
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
 
 export type ApagosConfig = {
     width: number;
