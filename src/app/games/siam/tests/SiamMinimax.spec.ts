@@ -3,13 +3,13 @@ import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../Sia
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { SiamMove } from '../SiamMove';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { MGPOptional } from '@everyboard/lib';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { SiamMinimax } from '../SiamMinimax';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

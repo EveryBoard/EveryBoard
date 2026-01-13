@@ -6,7 +6,7 @@ import { FirestoreJSONObject, FirestoreJSONValue, MGPMap, MGPOptional, Observabl
 
 import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
-import { Debug } from 'src/app/utils/Debug';
+import { Debug } from '../../utils/Debug';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 

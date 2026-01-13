@@ -1,4 +1,4 @@
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ComparableObject, Encoder } from '@everyboard/lib';
 
 

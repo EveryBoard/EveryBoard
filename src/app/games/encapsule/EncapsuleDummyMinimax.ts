@@ -1,4 +1,4 @@
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
+import { DummyHeuristic, Minimax } from '../../jscaip/AI/Minimax';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';

@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SixState } from '../SixState';
 import { SixMove } from '../SixMove';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { SixConfig, SixNode, SixRules } from '../SixRules';
 import { SixMoveGenerator } from '../SixMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';

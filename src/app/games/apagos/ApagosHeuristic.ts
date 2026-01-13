@@ -1,10 +1,10 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerOrNone } from '../../jscaip/Player';
 import { ApagosMove } from './ApagosMove';
 import { ApagosNode } from './ApagosRules';
 import { ApagosState } from './ApagosState';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 export class ApagosHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState> {
 

@@ -1,7 +1,7 @@
 import { CoerceoState } from './CoerceoState';
 import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { CoerceoHeuristic } from './CoerceoHeuristic';
 import { MGPOptional } from '@everyboard/lib';
 

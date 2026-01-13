@@ -1,9 +1,9 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { Encoder, MGPFallible } from '@everyboard/lib';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { LinesOfActionState } from './LinesOfActionState';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
 
