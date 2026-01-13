@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesNode, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { DirectionFailure } from 'src/app/jscaip/Direction';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { DirectionFailure } from '../../../jscaip/Direction';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
