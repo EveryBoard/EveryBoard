@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Table } from '../../jscaip/TableUtils';
 
 export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
 

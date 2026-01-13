@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../../jscaip/TableUtils';
 import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
 import { GoNode } from '../../AbstractGoRules';
 import { TrigoMoveGenerator } from '../TrigoMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { TrigoConfig, TrigoRules } from '../TrigoRules';
 import { GoPhase } from '../../GoPhase';
 

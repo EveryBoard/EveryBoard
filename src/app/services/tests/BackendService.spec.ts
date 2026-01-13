@@ -2,7 +2,7 @@
 import { TestBed, fakeAsync } from '@angular/core/testing';
 import { BackendService } from '../BackendService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { AppModule } from 'src/app/app.module';
+import { AppModule } from '../../app.module';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { MGPFallible } from '@everyboard/lib';

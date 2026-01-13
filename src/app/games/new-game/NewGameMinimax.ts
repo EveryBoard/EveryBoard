@@ -1,9 +1,9 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
 import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { NewGameHeuristic } from './NewGameHeuristic';
 
 /**

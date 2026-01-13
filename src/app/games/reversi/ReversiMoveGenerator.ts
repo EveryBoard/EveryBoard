@@ -1,6 +1,6 @@
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
 import { MGPOptional } from '@everyboard/lib';
 

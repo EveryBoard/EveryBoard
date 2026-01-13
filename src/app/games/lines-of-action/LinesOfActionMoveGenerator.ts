@@ -1,10 +1,10 @@
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class LinesOfActionMoveGenerator extends MoveGenerator<LinesOfActionMove, LinesOfActionState> {
 

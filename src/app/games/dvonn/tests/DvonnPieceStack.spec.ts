@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib';
 
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 
 describe('DvonnPieceStack', () => {

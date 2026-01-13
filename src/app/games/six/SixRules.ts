@@ -1,20 +1,20 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Table } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
 
 export type SixLegalityInformation = CoordSet;
 

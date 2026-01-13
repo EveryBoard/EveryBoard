@@ -4,11 +4,11 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 
 import { Move } from '../../jscaip/Move';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Localized } from '../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { BaseWrapperComponent } from './BaseWrapperComponent';
 
 export class GameWrapperMessages {

@@ -2,19 +2,19 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from 'src/app/games/encapsule/EncapsuleState';
-import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from '../../games/encapsule/EncapsuleRules';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from '../../games/encapsule/EncapsuleState';
+import { EncapsuleMove } from '../../games/encapsule/EncapsuleMove';
+import { EncapsulePiece } from '../../games/encapsule/EncapsulePiece';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { EncapsuleFailure } from './EncapsuleFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 
 @Component({
     selector: 'app-encapsule',

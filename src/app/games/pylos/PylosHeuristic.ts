@@ -1,10 +1,10 @@
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { PylosNode } from './PylosRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class PylosHeuristic extends PlayerMetricHeuristic<PylosMove, PylosState> {
 

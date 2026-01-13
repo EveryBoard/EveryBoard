@@ -1,21 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaState } from './HexodiaState';
 import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-hexodia',

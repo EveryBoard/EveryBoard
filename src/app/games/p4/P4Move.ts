@@ -1,5 +1,5 @@
 import { Encoder, Utils } from '@everyboard/lib';
-import { Move } from 'src/app/jscaip/Move';
+import { Move } from '../../jscaip/Move';
 
 export class P4Move extends Move {
 

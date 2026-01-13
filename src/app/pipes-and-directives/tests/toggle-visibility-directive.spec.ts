@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Component } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';
 
 @Component({
     template: `<input id="password" type="password"/>

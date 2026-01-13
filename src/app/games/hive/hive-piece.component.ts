@@ -1,7 +1,7 @@
 import { AfterContentChecked, Component, Input } from '@angular/core';
-import { BaseGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
+import { BaseGameComponent } from '../../components/game-components/game-component/GameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { HexaLayout } from '../../jscaip/HexaLayout';
 import { HivePiece } from './HivePiece';
 
 @Component({
