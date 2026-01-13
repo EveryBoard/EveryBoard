@@ -1,24 +1,24 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { EpaminondasMove } from '../../games/epaminondas/EpaminondasMove';
+import { EpaminondasState } from '../../games/epaminondas/EpaminondasState';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../../games/epaminondas/EpaminondasRules';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { EpaminondasFailure } from './EpaminondasFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
-import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 
 export type PossibleMove = {
 

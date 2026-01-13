@@ -1,9 +1,9 @@
 import { ArrayUtils, MGPMap, MGPOptional, NumberMap, Utils } from '@everyboard/lib';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { EncapsulePiece } from '../../games/encapsule/EncapsulePiece';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Table } from '../../jscaip/TableUtils';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 
 export class EncapsuleRemainingPieces extends PlayerMap<EncapsuleSizeToNumberMap> {
 }
