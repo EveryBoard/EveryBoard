@@ -3,7 +3,7 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('PylosOrderedMoveGenerator', () => {
 
