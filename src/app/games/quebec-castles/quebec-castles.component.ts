@@ -4,16 +4,16 @@ import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
 import { QuebecCastlesState } from './QuebecCastlesState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
 import { QuebecCastlesMinimax } from './QuebecCastlesMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 
 @Component({
     selector: 'app-quebec-castles',

@@ -3,16 +3,16 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
-import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { ReversiMove } from './ReversiMove';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiMinimax } from './ReversiMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 @Component({
     selector: 'app-reversi',

@@ -1,4 +1,4 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';

@@ -1,4 +1,4 @@
-import { DummyHeuristic, Minimax } from 'src/app/jscaip/AI/Minimax';
+import { DummyHeuristic, Minimax } from '../../jscaip/AI/Minimax';
 import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
 import { QuebecCastlesMove } from './QuebecCastlesMove';
 import { QuebecCastlesState } from './QuebecCastlesState';

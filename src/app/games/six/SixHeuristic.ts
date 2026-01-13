@@ -1,13 +1,13 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MGPOptional, Utils } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixVictorySource, SixNode, SixConfig, SixRules } from './SixRules';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { AlignmentHeuristic, AlignmentStatus, BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { AlignmentHeuristic, AlignmentStatus, BoardInfo } from '../../jscaip/AI/AlignmentHeuristic';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVictorySource, SixConfig> {
 

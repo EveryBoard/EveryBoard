@@ -1,8 +1,8 @@
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
 import { SiamPiece } from './SiamPiece';
-import { Player } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { Player } from '../../jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
 import { MGPOptional } from '@everyboard/lib';
 
