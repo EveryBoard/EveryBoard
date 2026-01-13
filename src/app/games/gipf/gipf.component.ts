@@ -1,28 +1,28 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player } from 'src/app/jscaip/Player';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { Coord } from '../../jscaip/Coord';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player } from '../../jscaip/Player';
+import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfState } from 'src/app/games/gipf/GipfState';
+import { GipfLegalityInformation, GipfRules } from '../../games/gipf/GipfRules';
+import { GipfFailure } from '../../games/gipf/GipfFailure';
+import { GipfMove, GipfPlacement } from '../../games/gipf/GipfMove';
+import { GipfState } from '../../games/gipf/GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-gipf',
