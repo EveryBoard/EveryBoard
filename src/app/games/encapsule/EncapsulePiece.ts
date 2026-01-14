@@ -2,7 +2,6 @@ import { ComparableObject, Encoder } from '@everyboard/lib';
 
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 
-
 export class EncapsulePiece implements ComparableObject {
 
     public static encoder: Encoder<EncapsulePiece> = Encoder.tuple(
