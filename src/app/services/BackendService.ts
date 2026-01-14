@@ -1,5 +1,5 @@
 import { ConnectedUserService } from './ConnectedUserService';
-import { environment } from 'src/environments/environment';
+import { environment } from '../../environments/environment';
 import { JSONValue, MGPFallible, Utils } from '@everyboard/lib';
 
 type HTTPMethod = 'POST' | 'GET' | 'PATCH' | 'HEAD' | 'DELETE';

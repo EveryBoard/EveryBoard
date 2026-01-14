@@ -1,6 +1,6 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { TaflFailure } from './TaflFailure';
 import { MGPFallible, MGPValidation, Utils } from '@everyboard/lib';
 

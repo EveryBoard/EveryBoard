@@ -1,7 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
+import { BrandhubMove } from './BrandhubMove';
 import { BrandhubRules } from './BrandhubRules';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 
 @Component({
