@@ -3,10 +3,10 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
-import { PylosMove, PylosMoveFailure } from '../pylos/PylosMove';
-import { PylosState } from '../pylos/PylosState';
-import { PylosRules } from '../pylos/PylosRules';
-import { PylosCoord } from '../pylos/PylosCoord';
+import { PylosMove, PylosMoveFailure } from './PylosMove';
+import { PylosState } from './PylosState';
+import { PylosRules } from './PylosRules';
+import { PylosCoord } from './PylosCoord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { RulesFailure } from '../../jscaip/RulesFailure';

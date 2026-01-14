@@ -1,9 +1,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { KamisadoMove } from '../kamisado/KamisadoMove';
-import { KamisadoColor } from '../kamisado/KamisadoColor';
-import { KamisadoState } from '../kamisado/KamisadoState';
-import { KamisadoPiece } from '../kamisado/KamisadoPiece';
+import { KamisadoMove } from './KamisadoMove';
+import { KamisadoColor } from './KamisadoColor';
+import { KamisadoState } from './KamisadoState';
+import { KamisadoPiece } from './KamisadoPiece';
 import { Coord } from '../../jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { KamisadoRules } from './KamisadoRules';

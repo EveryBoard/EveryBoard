@@ -14,9 +14,9 @@ import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
+import { AIInfo } from '../../normal-component/pick-game/ai-info';
 import { BaseComponent } from '../../BaseComponent';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { AIInfo } from '../../normal-component/pick-game/ai-info';
 import { Coord3D } from '../../../jscaip/Coord3D';
 import { Localized } from '../../../utils/LocaleUtils';
 

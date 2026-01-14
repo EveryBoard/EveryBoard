@@ -1,5 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { TablutMove } from '../../../tafl/tablut/TablutMove';
+import { MGPOptional } from '@everyboard/lib';
+
+import { TablutMove } from '../TablutMove';
 import { Coord } from '../../../../jscaip/Coord';
 import { TablutRules } from '../TablutRules';
 import { TaflPawn } from '../../TaflPawn';
@@ -7,7 +9,6 @@ import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
 import { TablutComponent } from '../tablut.component';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
-import { MGPOptional } from '@everyboard/lib';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

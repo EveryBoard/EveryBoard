@@ -1,6 +1,6 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { MancalaState } from '../../mancala/common/MancalaState';
+import { MancalaState } from '../common/MancalaState';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaConfig } from '../common/MancalaConfig';

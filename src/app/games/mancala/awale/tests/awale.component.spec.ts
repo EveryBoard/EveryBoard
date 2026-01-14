@@ -5,7 +5,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { AwaleComponent } from '../awale.component';
 import { AwaleRules } from '../AwaleRules';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { MancalaState } from '../../../mancala/common/MancalaState';
+import { MancalaState } from '../../common/MancalaState';
 import { doMancalaComponentTests as doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';

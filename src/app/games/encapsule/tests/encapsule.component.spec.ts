@@ -2,11 +2,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { EncapsuleComponent } from '../encapsule.component';
-import { EncapsuleMove } from '../../encapsule/EncapsuleMove';
+import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from '../../../jscaip/Coord';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../encapsule/EncapsuleState';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player } from '../../../jscaip/Player';
-import { EncapsulePiece } from '../../encapsule/EncapsulePiece';
+import { EncapsulePiece } from '../EncapsulePiece';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';

@@ -3,9 +3,9 @@ import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
-import { SaharaMove } from '../sahara/SaharaMove';
-import { SaharaState } from '../sahara/SaharaState';
-import { SaharaRules } from '../sahara/SaharaRules';
+import { SaharaMove } from './SaharaMove';
+import { SaharaState } from './SaharaState';
+import { SaharaRules } from './SaharaRules';
 import { Player } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';

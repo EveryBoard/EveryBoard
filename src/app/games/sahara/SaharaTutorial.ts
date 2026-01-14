@@ -1,5 +1,5 @@
-import { SaharaMove } from '../sahara/SaharaMove';
-import { SaharaState } from '../sahara/SaharaState';
+import { SaharaMove } from './SaharaMove';
+import { SaharaState } from './SaharaState';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { MGPValidation } from '@everyboard/lib';

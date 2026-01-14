@@ -1,5 +1,5 @@
-import { P4Move } from '../p4/P4Move';
-import { P4State } from '../p4/P4State';
+import { P4Move } from './P4Move';
+import { P4State } from './P4State';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { P4Config, P4Rules } from './P4Rules';

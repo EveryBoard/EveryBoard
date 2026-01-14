@@ -2,12 +2,12 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { SiamComponent } from '../siam.component';
-import { SiamMove } from '../../siam/SiamMove';
+import { SiamMove } from '../SiamMove';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { MGPOptional } from '@everyboard/lib';
-import { SiamPiece } from '../../siam/SiamPiece';
+import { SiamPiece } from '../SiamPiece';
 import { Table } from '../../../jscaip/TableUtils';
-import { SiamState } from '../../siam/SiamState';
+import { SiamState } from '../SiamState';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';

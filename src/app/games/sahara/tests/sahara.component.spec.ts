@@ -2,8 +2,8 @@
 import { fakeAsync } from '@angular/core/testing';
 import { SaharaComponent } from '../sahara.component';
 import { Coord } from '../../../jscaip/Coord';
-import { SaharaMove } from '../../sahara/SaharaMove';
-import { SaharaState } from '../../sahara/SaharaState';
+import { SaharaMove } from '../SaharaMove';
+import { SaharaState } from '../SaharaState';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { SaharaFailure } from '../SaharaFailure';

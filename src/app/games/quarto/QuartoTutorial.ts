@@ -1,8 +1,8 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { QuartoMove } from '../quarto/QuartoMove';
-import { QuartoState } from '../quarto/QuartoState';
-import { QuartoPiece } from '../quarto/QuartoPiece';
+import { QuartoMove } from './QuartoMove';
+import { QuartoState } from './QuartoState';
+import { QuartoPiece } from './QuartoPiece';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';

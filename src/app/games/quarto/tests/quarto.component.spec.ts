@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 import { QuartoComponent } from '../quarto.component';
-import { QuartoMove } from '../../quarto/QuartoMove';
-import { QuartoPiece } from '../../quarto/QuartoPiece';
-import { QuartoState } from '../../quarto/QuartoState';
+import { QuartoMove } from '../QuartoMove';
+import { QuartoPiece } from '../QuartoPiece';
+import { QuartoState } from '../QuartoState';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

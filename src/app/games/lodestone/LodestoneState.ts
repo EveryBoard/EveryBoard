@@ -1,6 +1,6 @@
 import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
-import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../lodestone/LodestonePiece';
+import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 import { Coord } from '../../jscaip/Coord';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { Player } from '../../jscaip/Player';

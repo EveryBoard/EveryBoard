@@ -4,7 +4,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoRules } from './TrexoRules';
 import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { TrexoMove } from '../trexo/TrexoMove';
+import { TrexoMove } from './TrexoMove';
 import { Coord } from '../../jscaip/Coord';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Player, PlayerOrNone } from '../../jscaip/Player';

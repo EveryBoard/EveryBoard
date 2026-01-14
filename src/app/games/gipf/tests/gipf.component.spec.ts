@@ -2,13 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { GipfComponent } from '../gipf.component';
-import { GipfFailure } from '../../gipf/GipfFailure';
+import { GipfFailure } from '../GipfFailure';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../jscaip/Coord';
-import { GipfMove, GipfPlacement } from '../../gipf/GipfMove';
-import { GipfState } from '../../gipf/GipfState';
+import { GipfMove, GipfPlacement } from '../GipfMove';
+import { GipfState } from '..//GipfState';
 import { Table } from '../../../jscaip/TableUtils';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';

@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GoMove } from '../../gos/GoMove';
-import { GoConfig, GoRules } from '../../gos/go/GoRules';
+import { GoMove } from '../GoMove';
+import { GoConfig, GoRules } from './GoRules';
 import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoState } from '../../gos/GoState';
+import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from '../../../jscaip/Coord';
 import { GroupData } from '../../../jscaip/BoardData';

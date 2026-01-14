@@ -1,8 +1,8 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { EncapsuleMove } from '../encapsule/EncapsuleMove';
-import { EncapsulePiece } from '../encapsule/EncapsulePiece';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../encapsule/EncapsuleState';
+import { EncapsuleMove } from './EncapsuleMove';
+import { EncapsulePiece } from './EncapsulePiece';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from './EncapsuleState';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

@@ -4,8 +4,8 @@ import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
 import { TrigoComponent } from '../trigo.component';
-import { GoMove } from '../../../gos/GoMove';
-import { GoState } from '../../../gos/GoState';
+import { GoMove } from '../../GoMove';
+import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';
 import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

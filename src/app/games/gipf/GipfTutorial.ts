@@ -1,7 +1,7 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GipfMove, GipfPlacement } from '../gipf/GipfMove';
-import { GipfState } from '../gipf/GipfState';
+import { GipfMove, GipfPlacement } from './GipfMove';
+import { GipfState } from './GipfState';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';

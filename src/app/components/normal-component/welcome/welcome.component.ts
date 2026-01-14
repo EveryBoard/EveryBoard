@@ -4,7 +4,11 @@ import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawes
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ThemeService } from '../../../services/ThemeService';
+<<<<<<< HEAD
 import { GameInfo } from '../pick-game/game-info';
+=======
+import { GameInfo } from '../pick-game/pick-game.component';
+>>>>>>> fd43e74c282ea98bc06d42de36346dcfe50ea039
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 

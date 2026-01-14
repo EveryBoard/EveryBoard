@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { AwaleRules } from '../AwaleRules';
-import { MancalaState } from '../../../mancala/common/MancalaState';
+import { MancalaState } from '../../common/MancalaState';
 import { Table } from '../../../../jscaip/TableUtils';
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';

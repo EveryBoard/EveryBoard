@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 import { CoerceoComponent } from '../coerceo.component';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../../coerceo/CoerceoMove';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { Coord } from '../../../jscaip/Coord';
-import { CoerceoFailure } from '../../coerceo/CoerceoFailure';
-import { CoerceoState } from '../../coerceo/CoerceoState';
+import { CoerceoFailure } from '../CoerceoFailure';
+import { CoerceoState } from '../CoerceoState';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';

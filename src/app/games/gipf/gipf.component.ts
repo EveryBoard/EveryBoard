@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
@@ -14,10 +15,10 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { GipfLegalityInformation, GipfRules } from '../gipf/GipfRules';
-import { GipfFailure } from '../gipf/GipfFailure';
-import { GipfMove, GipfPlacement } from '../gipf/GipfMove';
-import { GipfState } from '../gipf/GipfState';
+import { GipfLegalityInformation, GipfRules } from './GipfRules';
+import { GipfFailure } from './GipfFailure';
+import { GipfMove, GipfPlacement } from './GipfMove';
+import { GipfState } from './GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { GipfScoreMinimax } from './GipfScoreMinimax';

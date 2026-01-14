@@ -3,7 +3,7 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
-import { ReversiMove } from '../reversi/ReversiMove';
+import { ReversiMove } from './ReversiMove';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Ordinal } from '../../jscaip/Ordinal';

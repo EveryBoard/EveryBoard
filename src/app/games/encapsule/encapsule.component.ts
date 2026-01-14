@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from '../encapsule/EncapsuleRules';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from '../encapsule/EncapsuleState';
-import { EncapsuleMove } from '../encapsule/EncapsuleMove';
-import { EncapsulePiece } from '../encapsule/EncapsulePiece';
+import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
+import { EncapsuleMove } from './EncapsuleMove';
+import { EncapsulePiece } from './EncapsulePiece';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';

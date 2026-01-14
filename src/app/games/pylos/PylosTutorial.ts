@@ -1,9 +1,9 @@
 import { MGPValidation } from '@everyboard/lib';
 
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PylosCoord } from '../pylos/PylosCoord';
-import { PylosMove } from '../pylos/PylosMove';
-import { PylosState } from '../pylos/PylosState';
+import { PylosCoord } from './PylosCoord';
+import { PylosMove } from './PylosMove';
+import { PylosState } from './PylosState';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PylosRules } from './PylosRules';

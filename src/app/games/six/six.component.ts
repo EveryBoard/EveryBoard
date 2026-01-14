@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
-import { SixState } from '../six/SixState';
-import { SixMove } from '../six/SixMove';
-import { SixFailure } from '../six/SixFailure';
-import { SixConfig, SixLegalityInformation, SixRules } from '../six/SixRules';
+import { SixState } from './SixState';
+import { SixMove } from './SixMove';
+import { SixFailure } from './SixFailure';
+import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { Coord } from '../../jscaip/Coord';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';

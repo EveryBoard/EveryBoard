@@ -1,5 +1,5 @@
-import { QuixoConfig, QuixoState } from '../quixo/QuixoState';
-import { QuixoMove } from '../quixo/QuixoMove';
+import { QuixoConfig, QuixoState } from './QuixoState';
+import { QuixoMove } from './QuixoMove';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

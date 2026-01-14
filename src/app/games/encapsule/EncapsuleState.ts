@@ -1,7 +1,7 @@
 import { ArrayUtils, MGPMap, MGPOptional, NumberMap, Utils } from '@everyboard/lib';
 
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
-import { EncapsulePiece } from '../encapsule/EncapsulePiece';
+import { EncapsulePiece } from './EncapsulePiece';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Table } from '../../jscaip/TableUtils';
 import { PlayerMap } from '../../jscaip/PlayerMap';

@@ -2,10 +2,10 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { SiamMove } from '../siam/SiamMove';
-import { SiamState } from '../siam/SiamState';
-import { SiamConfig, SiamLegalityInformation, SiamRules } from '../siam/SiamRules';
-import { SiamPiece } from '../siam/SiamPiece';
+import { SiamMove } from './SiamMove';
+import { SiamState } from './SiamState';
+import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
+import { SiamPiece } from './SiamPiece';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { MessageDisplayer } from '../../services/MessageDisplayer';

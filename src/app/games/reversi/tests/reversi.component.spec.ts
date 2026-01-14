@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { ReversiComponent } from '../reversi.component';
-import { ReversiMove } from '../../reversi/ReversiMove';
-import { ReversiState } from '../../reversi/ReversiState';
+import { ReversiMove } from '../ReversiMove';
+import { ReversiState } from '../ReversiState';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

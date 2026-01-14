@@ -1,7 +1,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { ReversiMove } from '../reversi/ReversiMove';
-import { ReversiState } from '../reversi/ReversiState';
+import { ReversiMove } from './ReversiMove';
+import { ReversiState } from './ReversiState';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ReversiConfig, ReversiRules } from './ReversiRules';

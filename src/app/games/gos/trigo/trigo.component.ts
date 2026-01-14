@@ -1,9 +1,9 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GoMove } from '../../gos/GoMove';
+import { GoMove } from '../GoMove';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
-import { GoState } from '../../gos/GoState';
+import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { Coord } from '../../../jscaip/Coord';
 import { GroupData } from '../../../jscaip/BoardData';

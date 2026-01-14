@@ -3,11 +3,11 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TriangularGameComponent }
     from '../../components/game-components/game-component/TriangularGameComponent';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../coerceo/CoerceoMove';
-import { CoerceoState } from '../coerceo/CoerceoState';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
+import { CoerceoState } from './CoerceoState';
 import { Coord } from '../../jscaip/Coord';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../coerceo/CoerceoRules';
-import { CoerceoFailure } from '../coerceo/CoerceoFailure';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { CoerceoFailure } from './CoerceoFailure';
 import { Player } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';

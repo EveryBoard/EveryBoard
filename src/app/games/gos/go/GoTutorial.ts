@@ -1,5 +1,5 @@
-import { GoMove } from '../../gos/GoMove';
-import { GoState } from '../../gos/GoState';
+import { GoMove } from '../GoMove';
+import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

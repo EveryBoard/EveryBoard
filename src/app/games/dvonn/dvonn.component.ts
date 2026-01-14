@@ -1,11 +1,12 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { DvonnMove } from '../dvonn/DvonnMove';
-import { DvonnState } from '../dvonn/DvonnState';
-import { DvonnRules } from '../dvonn/DvonnRules';
-import { DvonnPieceStack } from '../dvonn/DvonnPieceStack';
+import { DvonnMove } from './DvonnMove';
+import { DvonnState } from './DvonnState';
+import { DvonnRules } from './DvonnRules';
+import { DvonnPieceStack } from './DvonnPieceStack';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { HexagonalGameComponent }

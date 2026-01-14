@@ -1,7 +1,7 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { EpaminondasMove } from '../epaminondas/EpaminondasMove';
-import { EpaminondasState } from '../epaminondas/EpaminondasState';
+import { EpaminondasMove } from './EpaminondasMove';
+import { EpaminondasState } from './EpaminondasState';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

@@ -4,12 +4,12 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
-import { KamisadoBoard } from '../kamisado/KamisadoBoard';
-import { KamisadoMove, KamisadoPieceMove } from '../kamisado/KamisadoMove';
-import { KamisadoState } from '../kamisado/KamisadoState';
-import { KamisadoPiece } from '../kamisado/KamisadoPiece';
-import { KamisadoRules } from '../kamisado/KamisadoRules';
-import { KamisadoFailure } from '../kamisado/KamisadoFailure';
+import { KamisadoBoard } from './KamisadoBoard';
+import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
+import { KamisadoState } from './KamisadoState';
+import { KamisadoPiece } from './KamisadoPiece';
+import { KamisadoRules } from './KamisadoRules';
+import { KamisadoFailure } from './KamisadoFailure';
 import { Player } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { RulesFailure } from '../../jscaip/RulesFailure';

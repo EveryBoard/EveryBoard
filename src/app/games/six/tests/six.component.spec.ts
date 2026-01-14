@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { SixState } from '../../six/SixState';
-import { SixMove } from '../../six/SixMove';
-import { SixFailure } from '../../six/SixFailure';
+import { SixState } from '../SixState';
+import { SixMove } from '../SixMove';
+import { SixFailure } from '../SixFailure';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
