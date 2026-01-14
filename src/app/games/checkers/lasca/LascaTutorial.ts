@@ -1,9 +1,9 @@
 import { MGPOptional } from '@everyboard/lib';
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../../jscaip/Coord';
 import { CheckersMove } from '../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { LascaRules } from './LascaRules';
 import { CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';

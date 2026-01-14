@@ -2,8 +2,8 @@
 import { BoardData, GroupInfos } from '../../../jscaip/BoardData';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
+import { TableUtils, Table } from '../../../jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
 import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 
 describe('GoBoardData for Go', () => {

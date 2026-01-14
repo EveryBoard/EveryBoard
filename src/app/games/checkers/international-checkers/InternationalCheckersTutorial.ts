@@ -1,10 +1,10 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Coord } from '../../../jscaip/Coord';
 import { CheckersMove } from '../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
 import { CheckersConfig } from '../common/AbstractCheckersRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { InternationalCheckersRules } from './InternationalCheckersRules';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
 
