@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 
-import { HnefataflMove } from '../../tafl/hnefatafl/HnefataflMove';
+import { HnefataflMove } from './HnefataflMove';
 import { HnefataflRules } from './HnefataflRules';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
