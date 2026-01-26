@@ -1,7 +1,7 @@
 all: bin
 
 gamelist:
-	grep "new GameInfo" ../src/app/components/normal-component/pick-game/pick-game.component.ts | sed -E "s/.*new GameInfo\([^,]+, +'([^']+)'.*/\1/" > games.txt
+	grep "new GameInfo" ../src/app/components/normal-component/pick-game/game-info.ts | sed -E "s/.*new GameInfo\([^,]+, +'([^']+)'.*/\1/" > games.txt
 
 bin:
 	opam exec -- dune build main.exe

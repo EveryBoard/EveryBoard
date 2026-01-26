@@ -5,7 +5,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { BaAwaComponent } from '../ba-awa.component';
 import { BaAwaRules } from '../BaAwaRules';
 import { MancalaState } from '../../common/MancalaState';
-import { MancalaComponentTestUtils, doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
+import { MancalaComponentTestUtils, doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
 import { BaAwaConfig } from '../BaAwaConfig';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

@@ -366,17 +366,17 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     private onLegalUserMoveSpy: jasmine.Spy;
 
     public static async forGame<Component extends AbstractGameComponent>(
-        game: string,
+        urlName: string,
         configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<Component>>
     {
         const gameInfos: GameInfo[] = GameInfo.getAllGames();
-        const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
+        const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === urlName);
         const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
+            throw new Error(urlName + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
         }
-        return ComponentTestUtils.forGameWithWrapper(game,
+        return ComponentTestUtils.forGameWithWrapper(urlName,
                                                      LocalGameWrapperComponent,
                                                      AuthUser.NOT_CONNECTED,
                                                      configureTestingModule);

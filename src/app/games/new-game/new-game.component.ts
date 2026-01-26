@@ -39,7 +39,6 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      */
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
-        console.log('JAJDUR')
         this.setRulesAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),

@@ -125,7 +125,6 @@ export class ComponentInfo {
     }
 
     public static getByUrlName(urlName: string): MGPOptional<ComponentInfo> {
-        console.log('FLAF 1 getByUrlName', urlName);
         const games: ComponentInfo[] = ComponentInfo
             .getAllGames()
             .filter((gameInfo: ComponentInfo) => gameInfo.urlName === urlName);

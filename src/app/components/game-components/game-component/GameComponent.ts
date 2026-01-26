@@ -14,7 +14,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/game-info';
-import { AIInfo } from '../../normal-component/pick-game/ai-info';
 import { BaseComponent } from '../../BaseComponent';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Coord3D } from '../../../jscaip/Coord3D';
@@ -281,17 +280,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public abstract hideLastMove(): void;
 
     protected setRulesAndNode(urlName: string): void {
-        console.log('FLAF setRulesAndNode 0', urlName);
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
-        console.log('FLAF setRulesAndNode 1', gameInfo);
-        const aiInfo: AIInfo = AIInfo.getByUrlName(urlName).get();
-        console.log('FLAF setRulesAndNode 2', aiInfo);
         const defaultConfig: MGPOptional<C> = gameInfo.getRulesConfig() as MGPOptional<C>;
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig);
         this.tutorial = gameInfo.tutorial.tutorial;
-        this.availableAIs = aiInfo.ais as AI<M, S, AIOptions, C>[];
     }
 
     protected getConfig(): MGPOptional<C> {

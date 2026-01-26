@@ -12,7 +12,7 @@ import { DirectionFailure } from '../../../jscaip/Direction';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MartianChessRules } from '../MartianChessRules';
 
-fdescribe('MartianChessComponent', () => {
+describe('MartianChessComponent', () => {
 
     let testUtils: ComponentTestUtils<MartianChessComponent>;
 
@@ -22,12 +22,10 @@ fdescribe('MartianChessComponent', () => {
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
     beforeEach(fakeAsync(async() => {
-        console.log('>>>>>>> MartianChessComponent')
         testUtils = await ComponentTestUtils.forGame<MartianChessComponent>('MartianChess');
     }));
 
-    fit('should show selected piece when clicking on it', fakeAsync(async() => {
-        console.log('======================= MartianChessComponent')
+    it('should show selected piece when clicking on it', fakeAsync(async() => {
         // Given the initial board
         // When clicking on on of your pieces
         await testUtils.expectClickSuccess('#click-1-5');

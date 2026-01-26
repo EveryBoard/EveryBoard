@@ -18,7 +18,6 @@ import { GameInfo } from '../app/components/normal-component/pick-game/game-info
 import { RulesConfig } from '../app/jscaip/RulesConfigUtil';
 import { AI, AIOptions, MoveGenerator } from '../app/jscaip/AI/AI';
 import { AwaleMoveGenerator } from '../app/games/mancala/awale/AwaleMoveGenerator';
-import { AIInfo } from '../app/components/normal-component/pick-game/ai-info';
 import { QuartoMove } from '../app/games/quarto/QuartoMove';
 import { QuartoMoveGenerator } from '../app/games/quarto/QuartoMoveGenerator';
 import { QuartoState } from '../app/games/quarto/QuartoState';
@@ -74,7 +73,6 @@ type GenericAI = AI<Move, GameState, AIOptions, RulesConfig>;
 class ProcessApplier<S extends GameState, M extends Move> {
 
     public readonly gameInfo: GameInfo;
-    public readonly aiInfo: AIInfo;
 
     public constructor(public readonly gameName: string,
                        public readonly moveEncoder: Encoder<M>,
@@ -82,7 +80,6 @@ class ProcessApplier<S extends GameState, M extends Move> {
                        public readonly moveGenerator: MoveGenerator<M, S, RulesConfig>,
     ) {
         this.gameInfo = GameInfo.getByUrlName(gameName).get();
-        this.aiInfo = AIInfo.getByUrlName(gameName).get();
     }
 
     private mapMoveToIndex(move: Move): number {
@@ -135,7 +132,7 @@ class ProcessApplier<S extends GameState, M extends Move> {
             const initialState: GameState = this.gameInfo.rules.getInitialState(defaultConfig);
             return { initialState };
         } else if (input.action === 'getAINameList') {
-            const aiList: GenericAI[] = this.aiInfo.ais;
+            const aiList: GenericAI[] = this.gameInfo.availableAIList;
             const aiNameList: string[] = aiList.map((ai: GenericAI) => ai.name);
             return {
                 aiNameList,
@@ -144,7 +141,7 @@ class ProcessApplier<S extends GameState, M extends Move> {
             if (input.action !== 'letAIPlay') {
                 throw Error('Unknown action ' + input.action);
             }
-            const aiList: GenericAI[] = this.aiInfo.ais;
+            const aiList: GenericAI[] = this.gameInfo.availableAIList;
             const optionalAI: GenericAI[] = aiList.filter((genericAI: GenericAI) => genericAI.name === input['aiName']);
             const ai: GenericAI = optionalAI[0];
             const gameState: S = this.gameStateMapper(input);

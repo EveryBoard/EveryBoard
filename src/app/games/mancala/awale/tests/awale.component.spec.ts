@@ -6,7 +6,7 @@ import { AwaleComponent } from '../awale.component';
 import { AwaleRules } from '../AwaleRules';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaState } from '../../common/MancalaState';
-import { doMancalaComponentTests as doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
+import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

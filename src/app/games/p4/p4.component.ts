@@ -31,7 +31,6 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
             new P4Minimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
         ];
-        // this.availableAIs = [ TODO: make this code sequence only present in setRulesAndNodes
         this.encoder = P4Move.encoder;
     }
 
