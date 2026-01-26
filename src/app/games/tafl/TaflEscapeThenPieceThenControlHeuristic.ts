@@ -1,7 +1,7 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Player } from '../../jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { MGPOptional } from '@everyboard/lib';

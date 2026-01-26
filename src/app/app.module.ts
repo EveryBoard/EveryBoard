@@ -123,7 +123,7 @@ import { TrigoComponent } from './games/gos/trigo/trigo.component';
 
 import { YinshComponent } from './games/yinsh/yinsh.component';
 
-import { environment } from 'src/environments/environment';
+import { environment } from '../environments/environment';
 
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';

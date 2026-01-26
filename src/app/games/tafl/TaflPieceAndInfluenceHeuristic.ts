@@ -1,16 +1,16 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
 import { TaflPawn } from './TaflPawn';
 import { TaflNode } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { GameStatus } from '../../jscaip/GameStatus';
 import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { TaflConfig } from './TaflConfig';
 
 export type PointValue = {

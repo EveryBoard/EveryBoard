@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';
 import { TaflMove } from '../TaflMove';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { TaflConfig } from '../TaflConfig';
 import { TaflPawn } from '../TaflPawn';
 

@@ -1,11 +1,11 @@
 import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../jscaip/Player';
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Debug } from 'src/app/utils/Debug';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Debug } from '../../utils/Debug';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { TaflConfig } from './TaflConfig';
 
 @Debug.log
