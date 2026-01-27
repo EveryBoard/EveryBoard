@@ -1,6 +1,7 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ActivePartsService } from '../../../services/ActivePartsService';

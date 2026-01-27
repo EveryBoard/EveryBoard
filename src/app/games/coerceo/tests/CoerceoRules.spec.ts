@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional, TestUtils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
@@ -8,7 +10,6 @@ import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
 

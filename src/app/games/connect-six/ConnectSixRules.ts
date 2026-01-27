@@ -1,7 +1,8 @@
+import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
+
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { ConnectSixState } from './ConnectSixState';
 import { GameNode } from '../../jscaip/AI/GameNode';
-import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Player, PlayerOrNone } from '../../jscaip/Player';

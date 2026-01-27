@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ViewConfigComponent } from './view-config.component';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { NumberConfig, RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { MGPOptional } from '@everyboard/lib';
-import { fakeAsync } from '@angular/core/testing';
 import { RulesConfigurationComponent } from '../../wrapper-components/rules-configuration/rules-configuration.component';
 
 describe('ViewConfigComponent', () => {

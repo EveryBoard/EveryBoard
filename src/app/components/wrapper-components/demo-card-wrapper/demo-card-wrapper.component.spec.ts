@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';

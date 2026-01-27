@@ -1,8 +1,9 @@
+import { MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { PieceThreat } from '../../jscaip/PieceThreat';
 import { Player } from '../../jscaip/Player';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { CoerceoStep } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoNode } from './CoerceoRules';

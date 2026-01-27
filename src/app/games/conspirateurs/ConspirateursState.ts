@@ -1,5 +1,6 @@
-import { Coord } from '../../jscaip/Coord';
 import { Set } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
 

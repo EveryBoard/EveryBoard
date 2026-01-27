@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { MGPOptional } from '@everyboard/lib';
 import { Player } from '../../../jscaip/Player';
 import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';

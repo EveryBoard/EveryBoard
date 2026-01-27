@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { MGPValidation } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';

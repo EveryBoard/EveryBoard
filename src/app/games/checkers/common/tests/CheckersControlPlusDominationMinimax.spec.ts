@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';

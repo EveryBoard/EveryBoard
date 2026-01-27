@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { GameEventMove, GameEventAction } from '../../../domain/Part';

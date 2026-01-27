@@ -1,7 +1,8 @@
+import { Component } from '@angular/core';
+
 import { Comparable } from '@everyboard/lib';
 
 import { Move } from '../../../jscaip/Move';
-import { Component } from '@angular/core';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { SuperRules } from '../../../jscaip/Rules';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
