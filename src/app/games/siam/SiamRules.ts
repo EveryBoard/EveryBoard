@@ -1,3 +1,5 @@
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamState } from './SiamState';
@@ -5,7 +7,6 @@ import { SiamPiece } from './SiamPiece';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { SiamFailure } from './SiamFailure';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';

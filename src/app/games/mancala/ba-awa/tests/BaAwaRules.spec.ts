@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 import { MancalaState } from '../../common/MancalaState';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
-
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { BaAwaConfig } from '../BaAwaConfig';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';

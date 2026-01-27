@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { MGPFallible } from '@everyboard/lib';
+
 import { SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { Coord } from '../../../jscaip/Coord';
 import { SaharaFailure } from '../SaharaFailure';
-import { MGPFallible } from '@everyboard/lib';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';

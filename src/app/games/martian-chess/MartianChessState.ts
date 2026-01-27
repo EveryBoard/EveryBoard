@@ -1,8 +1,9 @@
+import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { Player } from '../../jscaip/Player';
 import { Table } from '../../jscaip/TableUtils';
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessPiece } from './MartianChessPiece';
 

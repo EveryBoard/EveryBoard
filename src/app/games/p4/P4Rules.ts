@@ -1,9 +1,10 @@
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { P4State } from './P4State';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { P4Move } from './P4Move';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { P4Failure } from './P4Failure';

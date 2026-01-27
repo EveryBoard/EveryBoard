@@ -1,4 +1,5 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { ReversiState } from './ReversiState';

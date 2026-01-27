@@ -1,6 +1,7 @@
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
 import { MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { AwaleMoveGenerator } from './AwaleMoveGenerator';

@@ -2,6 +2,8 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { MGPOptional } from '@everyboard/lib';
+
 import { BaAwaComponent } from '../ba-awa.component';
 import { BaAwaRules } from '../BaAwaRules';
 import { MancalaState } from '../../common/MancalaState';
@@ -10,7 +12,6 @@ import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
 import { BaAwaConfig } from '../BaAwaConfig';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MGPOptional } from '@everyboard/lib';
 import { MancalaComponent } from '../../common/MancalaComponent';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 
