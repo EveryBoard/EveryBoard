@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../LodestoneState';

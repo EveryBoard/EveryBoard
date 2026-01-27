@@ -1,10 +1,11 @@
+import { ArrayUtils, MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { ArrayUtils, MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';

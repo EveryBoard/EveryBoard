@@ -1,9 +1,10 @@
+import { Encoder, MGPFallible } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Move } from '../../jscaip/Move';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Encoder, MGPFallible } from '@everyboard/lib';
 import { HivePiece } from './HivePiece';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 

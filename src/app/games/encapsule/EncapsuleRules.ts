@@ -1,4 +1,5 @@
 import { ArrayUtils, MGPFallible, MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap, EncapsuleRemainingPieces } from './EncapsuleState';

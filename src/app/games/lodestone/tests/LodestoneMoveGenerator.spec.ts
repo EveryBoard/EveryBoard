@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPMap } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPMap } from '@everyboard/lib';
 import { LodestoneMoveGenerator } from '../LodestoneMoveGenerator';
 import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneNode, LodestoneRules } from '../LodestoneRules';

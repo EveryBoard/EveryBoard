@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoMove } from '../KamisadoMove';
-import { EncoderTestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 

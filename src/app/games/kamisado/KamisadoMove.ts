@@ -1,5 +1,6 @@
-import { Coord } from '../../jscaip/Coord';
 import { Encoder, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { KamisadoState } from './KamisadoState';
 import { Move } from '../../jscaip/Move';

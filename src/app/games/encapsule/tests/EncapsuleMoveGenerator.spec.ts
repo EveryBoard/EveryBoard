@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player } from '../../../jscaip/Player';
