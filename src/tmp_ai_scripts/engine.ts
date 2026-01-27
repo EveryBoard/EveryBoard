@@ -102,7 +102,7 @@ class ProcessApplier<S extends GameState, M extends Move> {
         return moveGenerator.getListMoves(node, defaultConfig).map(this.mapMoveToIndex);
     }
 
-    private getResponse(input: Input): Record<string, any> { // TODO: CHANGE return name
+    private getResponse(input: Input): object {
         if (input.action === 'applyMove') {
             const gameState: S = this.gameStateMapper(input);
             let node: GameNode<Move, S> = new GameNode<Move, S>(gameState);
@@ -211,11 +211,11 @@ rl.on('line', (line: string) => {
             default:
                 throw new TypeError('Unknown Game ' + structuredClone(input.gameName));
         }
-    } catch (e: any) {
+    } catch (e: unknown) {
         const message: string = e?.message || e?.toString?.() || 'Unknown error';
         const stackTrace: string = e?.stack || 'No stack trace available';
 
-        const errorInfo = {
+        const errorInfo: object = {
             error: message,
             stack: stackTrace,
         };

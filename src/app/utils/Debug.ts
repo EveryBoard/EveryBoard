@@ -90,16 +90,7 @@ export class Debug {
     }
 }
 
-declare const window: any;
-
-if (typeof window === 'undefined') {
-    Debug['isVerbose'] = (name: string): [boolean, boolean] => {
-        return [false, false];
-    };
-    Debug.log = (): void => {};
-} else {
-    // To make Debug.enableLog accessible in the console, run this somewhere in the app's initialization code:
-    // eslint-disable-next-line dot-notation
-    window['enableLog'] = Debug.enableLog;
-    // To use it, one just has to do window.enableLog([true, true], 'SomeClass, 'someMethod')
-}
+// To make Debug.enableLog accessible in the console, run this somewhere in the app's initialization code:
+// eslint-disable-next-line dot-notation
+window['enableLog'] = Debug.enableLog;
+// To use it, one just has to do window.enableLog([true, true], 'SomeClass, 'someMethod')

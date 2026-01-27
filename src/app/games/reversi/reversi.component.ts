@@ -1,15 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { ReversiMinimax } from './ReversiMinimax';
+import { ReversiMove } from './ReversiMove';
+import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
-import { ReversiMove } from './ReversiMove';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 @Component({
     selector: 'app-reversi',
@@ -32,6 +36,10 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.setRulesAndNode('Reversi');
         this.encoder = ReversiMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
+        this.availableAIs = [
+            new ReversiMinimax(),
+            new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
+        ];
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
