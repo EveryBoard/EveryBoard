@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { TaflNode, TaflRules } from '../TaflRules';
 import { MyTaflMove } from './MyTaflMove.spec';
 import { Table } from '../../../jscaip/TableUtils';

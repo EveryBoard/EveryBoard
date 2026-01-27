@@ -1,7 +1,8 @@
+import { ArrayUtils, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
+
 import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
 import { Move } from '../Move';
 import { BoardValue } from './BoardValue';
-import { ArrayUtils, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 import { GameState } from '../state/GameState';
 import { Player } from '../Player';
 import { GameStatus } from '../GameStatus';

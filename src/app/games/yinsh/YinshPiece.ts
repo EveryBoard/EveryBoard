@@ -1,4 +1,5 @@
 import { ComparableObject, Encoder, Utils } from '@everyboard/lib';
+
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 

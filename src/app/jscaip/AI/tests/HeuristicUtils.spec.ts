@@ -1,5 +1,6 @@
-import { BoardValue } from '../BoardValue';
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
+import { BoardValue } from '../BoardValue';
 import { GameState } from '../../state/GameState';
 import { Move } from '../../Move';
 import { Heuristic } from '../Minimax';

@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils, MGPFallible, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
-import { EncoderTestUtils, MGPFallible, Utils } from '@everyboard/lib';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';

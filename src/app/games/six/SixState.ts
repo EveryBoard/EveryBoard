@@ -1,10 +1,11 @@
+import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Vector } from '../../jscaip/Vector';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { TableUtils, Table } from '../../jscaip/TableUtils';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
-import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';

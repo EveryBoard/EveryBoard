@@ -1,4 +1,5 @@
 import { Comparable, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
 import { GameStateWithTable } from '../state/GameStateWithTable';
 import { HexaDirection } from '../HexaDirection';
