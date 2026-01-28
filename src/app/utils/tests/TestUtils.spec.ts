@@ -6,6 +6,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
+import { FirebaseError } from 'firebase/app';
+import { Subscription } from 'rxjs';
+
+import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { GameState } from '../../jscaip/state/GameState';
 import { Move } from '../../jscaip/Move';
 import { AppModule } from '../../app.module';
@@ -25,8 +31,6 @@ import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { ErrorLoggerService } from '../../services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
@@ -35,8 +39,6 @@ import { HumanDurationPipe } from '../../pipes-and-directives/human-duration.pip
 import { ToggleVisibilityDirective } from '../../pipes-and-directives/toggle-visibility.directive';
 import { FirestoreTimePipe } from '../../pipes-and-directives/firestore-time.pipe';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { FirebaseError } from 'firebase/app';
-import { Subscription } from 'rxjs';
 import { CurrentGameService } from '../../services/CurrentGameService';
 import { CurrentGameServiceMock } from '../../services/tests/CurrentGameService.spec';
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';

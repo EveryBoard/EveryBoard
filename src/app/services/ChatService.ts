@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ChatDAO } from '../dao/ChatDAO';
-import { Message, MessageDocument } from '../domain/Message';
-import { MGPValidation } from '@everyboard/lib';
 import { Subscription } from 'rxjs';
 import { serverTimestamp } from 'firebase/firestore';
+
+import { MGPValidation } from '@everyboard/lib';
+
+import { ChatDAO } from '../dao/ChatDAO';
+import { Message, MessageDocument } from '../domain/Message';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { MinimalUser } from '../domain/MinimalUser';
 import { Localized } from '../utils/LocaleUtils';

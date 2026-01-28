@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+import { JSONValue } from '@everyboard/lib';
+
 import { GameEventService } from '../GameEventService';
 import { PartDAO } from '../../dao/PartDAO';
 import { GameEvent } from '../../domain/Part';
-import { JSONValue } from '@everyboard/lib';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { IFirestoreDAO } from '../../dao/FirestoreDAO';
 import { UserMocks } from '../../domain/UserMocks.spec';

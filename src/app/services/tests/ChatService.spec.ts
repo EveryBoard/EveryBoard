@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync, TestBed } from '@angular/core/testing';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+import { MGPValidation } from '@everyboard/lib';
+
 import { ChatMessages, ChatService } from '../ChatService';
 import { ChatDAO } from '../../dao/ChatDAO';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
-import { fakeAsync, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MGPValidation } from '@everyboard/lib';
 import { Message } from '../../domain/Message';
 import { serverTimestamp } from 'firebase/firestore';
 import { MinimalUser } from '../../domain/MinimalUser';

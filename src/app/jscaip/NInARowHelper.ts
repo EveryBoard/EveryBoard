@@ -1,4 +1,5 @@
 import { MGPMap, Utils } from '@everyboard/lib';
+
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';

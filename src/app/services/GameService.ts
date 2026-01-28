@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs';
+
 import { MGPValidation, MGPOptional, JSONValue, Utils, MGPFallible } from '@everyboard/lib';
+
 import { PartDAO } from '../dao/PartDAO';
 import { Part } from '../domain/Part';
-import { Subscription } from 'rxjs';
 import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreTime } from '../domain/Time';
 import { BackendService } from './BackendService';
