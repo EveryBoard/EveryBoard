@@ -1,7 +1,8 @@
+import { MGPOptional, Set } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
-import { MGPOptional, Set } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';

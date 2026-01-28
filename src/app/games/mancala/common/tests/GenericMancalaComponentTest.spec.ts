@@ -1,8 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
+
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MoveGenerator } from '../../../../jscaip/AI/AI';
 import { MancalaConfig } from '../MancalaConfig';
 import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';

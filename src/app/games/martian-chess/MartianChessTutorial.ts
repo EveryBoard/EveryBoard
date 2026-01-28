@@ -1,6 +1,7 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from '../../jscaip/Coord';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';

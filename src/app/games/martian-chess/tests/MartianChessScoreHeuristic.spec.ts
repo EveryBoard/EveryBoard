@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';

@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
 import { MancalaState } from '../common/MancalaState';
-import { MGPOptional } from '@everyboard/lib';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { AwaleRules } from '../awale/AwaleRules';

@@ -1,9 +1,10 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ReversiConfig, ReversiRules } from './ReversiRules';
-import { MGPOptional } from '@everyboard/lib';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

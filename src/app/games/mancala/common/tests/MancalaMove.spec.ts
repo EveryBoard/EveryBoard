@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ArrayUtils, EncoderTestUtils } from '@everyboard/lib';
+
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 
 describe('MancalaMove', () => {

@@ -1,4 +1,5 @@
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { QuartoState } from './QuartoState';

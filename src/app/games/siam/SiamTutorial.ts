@@ -1,8 +1,9 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { SiamMove } from './SiamMove';
 import { SiamPiece } from './SiamPiece';
 import { SiamState } from './SiamState';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SiamConfig, SiamRules } from './SiamRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
