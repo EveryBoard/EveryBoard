@@ -1,5 +1,6 @@
-import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { BaAwaConfig } from './BaAwaConfig';
 import { BaAwaRules } from './BaAwaRules';
 import { MancalaTutorial } from '../common/MancalaTutorial';

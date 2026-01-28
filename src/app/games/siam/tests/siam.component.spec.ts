@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { MGPOptional } from '@everyboard/lib';
+
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from '../SiamMove';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { MGPOptional } from '@everyboard/lib';
 import { SiamPiece } from '../SiamPiece';
 import { Table } from '../../../jscaip/TableUtils';
 import { SiamState } from '../SiamState';

@@ -1,3 +1,5 @@
+import { MGPMap, MGPOptional, Set, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -7,7 +9,6 @@ import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { MGPMap, MGPOptional, Set, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { QuixoFailure } from './QuixoFailure';

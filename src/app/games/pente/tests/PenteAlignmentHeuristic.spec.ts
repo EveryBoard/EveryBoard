@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
 import { PenteState } from '../PenteState';

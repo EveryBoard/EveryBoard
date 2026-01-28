@@ -1,7 +1,8 @@
+import { Utils } from '@everyboard/lib';
+
 import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaState } from './MancalaState';
-import { Utils } from '@everyboard/lib';
 import { Localized } from '../../../utils/LocaleUtils';
 
 export class MancalaTutorial {

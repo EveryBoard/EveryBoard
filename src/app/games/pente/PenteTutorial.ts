@@ -1,3 +1,5 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
@@ -5,7 +7,6 @@ import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { PenteRules } from './PenteRules';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PenteConfig } from './PenteConfig';
 
