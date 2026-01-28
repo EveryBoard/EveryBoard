@@ -1,3 +1,5 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { MancalaState } from '../../../games/mancala/common/MancalaState';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MancalaTutorial } from '../common/MancalaTutorial';
@@ -5,7 +7,6 @@ import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { AwaleRules } from './AwaleRules';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();

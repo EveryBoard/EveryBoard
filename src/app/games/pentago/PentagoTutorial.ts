@@ -1,6 +1,7 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 import { PentagoRules } from './PentagoRules';

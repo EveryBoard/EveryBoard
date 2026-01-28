@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { P4Move } from '../P4Move';
 import { P4State } from '../P4State';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4Minimax } from '../P4Minimax';
-import { MGPOptional } from '@everyboard/lib';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 

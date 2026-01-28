@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';

@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
@@ -7,7 +9,6 @@ import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
 import { PenteConfig } from '../PenteConfig';
 
 describe('PenteRules', () => {

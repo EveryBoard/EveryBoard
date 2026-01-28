@@ -1,10 +1,11 @@
+import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaState } from './MancalaState';
 import { Player } from '../../../jscaip/Player';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { ConfigurableRules } from '../../../jscaip/Rules';

@@ -1,8 +1,9 @@
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
 import { ReversiState } from './ReversiState';
 import { ReversiMove } from './ReversiMove';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
 import { Coord } from '../../jscaip/Coord';
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 
 export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {

@@ -1,3 +1,5 @@
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -6,7 +8,6 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
 import { TableUtils } from '../../jscaip/TableUtils';
