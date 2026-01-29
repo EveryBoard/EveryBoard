@@ -1,9 +1,10 @@
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Vector } from '../../jscaip/Vector';
 import { FourStatePieceTriangularGameState } from '../../jscaip/state/TriangularGameState';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 import { Table } from '../../jscaip/TableUtils';
-import { MGPOptional, Utils } from '@everyboard/lib';
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player, PlayerOrNone } from '../../jscaip/Player';

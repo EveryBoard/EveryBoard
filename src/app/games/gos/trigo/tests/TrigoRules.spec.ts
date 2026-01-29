@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';
 import { GoPiece } from '../../GoPiece';

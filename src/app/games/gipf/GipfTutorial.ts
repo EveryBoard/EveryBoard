@@ -1,9 +1,10 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { GipfMove, GipfPlacement } from '../../games/gipf/GipfMove';
 import { GipfState } from '../../games/gipf/GipfState';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { GipfRules } from './GipfRules';

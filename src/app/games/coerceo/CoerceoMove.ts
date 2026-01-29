@@ -1,7 +1,8 @@
+import { Encoder, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Vector } from '../../jscaip/Vector';
-import { Encoder, Utils } from '@everyboard/lib';
 import { CoerceoFailure } from './CoerceoFailure';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { MoveCoord } from '../../jscaip/MoveCoord';

@@ -1,6 +1,7 @@
+import { ArrayUtils } from '@everyboard/lib';
+
 import { GameState } from '../../jscaip/state/GameState';
 import { Player } from '../../jscaip/Player';
-import { ArrayUtils } from '@everyboard/lib';
 import { ApagosSquare } from './ApagosSquare';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';

@@ -1,8 +1,9 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { EpaminondasMove } from '../../games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from '../../games/epaminondas/EpaminondasState';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

@@ -1,5 +1,6 @@
-import { EncapsuleState } from './EncapsuleState';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
+
+import { EncapsuleState } from './EncapsuleState';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
 import { EncapsuleMove } from './EncapsuleMove';

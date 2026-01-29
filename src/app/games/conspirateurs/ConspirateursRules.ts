@@ -1,10 +1,11 @@
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';

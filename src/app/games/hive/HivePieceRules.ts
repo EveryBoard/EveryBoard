@@ -1,6 +1,7 @@
+import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';

@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
+import { MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LodestoneComponent } from '../lodestone.component';
 import { LodestoneFailure } from '../LodestoneFailure';

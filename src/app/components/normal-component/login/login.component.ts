@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { FormGroup, FormControl } from '@angular/forms';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+
 import { MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';

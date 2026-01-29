@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils } from '@everyboard/lib';
+
 import { EncapsuleRules } from '../EncapsuleRules';
 import { Coord } from '../../../jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
-import { EncoderTestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { Player } from '../../../jscaip/Player';

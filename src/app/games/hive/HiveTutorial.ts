@@ -1,3 +1,5 @@
+import { MGPValidation } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { HiveState } from './HiveState';
 import { HivePiece } from './HivePiece';
@@ -6,7 +8,6 @@ import { HiveMove } from './HiveMove';
 import { Coord } from '../../jscaip/Coord';
 import { Move } from '../../jscaip/Move';
 import { GameState } from '../../jscaip/state/GameState';
-import { MGPValidation } from '@everyboard/lib';
 import { HiveRules } from './HiveRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 

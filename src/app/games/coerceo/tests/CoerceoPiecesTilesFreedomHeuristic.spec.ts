@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { CoerceoPiecesTilesFreedomHeuristic } from '../CoerceoPiecesTilesFreedomHeuristic';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';

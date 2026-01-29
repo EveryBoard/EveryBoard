@@ -2,6 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { UserDAO } from '../../../dao/UserDAO';

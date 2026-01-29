@@ -1,3 +1,5 @@
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { KamisadoBoard } from './KamisadoBoard';
@@ -9,7 +11,6 @@ import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { KamisadoFailure } from './KamisadoFailure';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { NoConfig } from '../../jscaip/RulesConfigUtil';

@@ -1,4 +1,5 @@
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';

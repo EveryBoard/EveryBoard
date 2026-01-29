@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPValidation } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPValidation } from '@everyboard/lib';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HivePieceRules, HiveSpiderRules } from '../HivePieceRules';
