@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { GameStateWithTable } from './GameStateWithTable';
 import { Player } from '../Player';
 import { Coord } from '../Coord';

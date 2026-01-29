@@ -1,4 +1,5 @@
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
 import { Move } from '../Move';
 import { GameState } from '../state/GameState';
 import { GameStatus } from '../GameStatus';

@@ -1,4 +1,5 @@
 import { Utils } from '@everyboard/lib';
+
 import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';

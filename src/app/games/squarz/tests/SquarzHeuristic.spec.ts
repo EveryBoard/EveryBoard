@@ -1,7 +1,8 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { SquarzHeuristic } from '../SquarzHeuristic';
 import { SquarzState } from '../SquarzState';
-import { MGPOptional } from '@everyboard/lib';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SquarzConfig, SquarzRules } from '../SquarzRules';
 

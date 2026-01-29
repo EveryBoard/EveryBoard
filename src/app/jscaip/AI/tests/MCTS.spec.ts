@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoMoveGenerator } from '../../../games/quarto/QuartoMoveGenerator';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';

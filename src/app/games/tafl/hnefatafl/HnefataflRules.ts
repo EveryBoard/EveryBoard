@@ -1,7 +1,8 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { TaflState } from '../TaflState';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { HnefataflMove } from './HnefataflMove';
-import { MGPOptional } from '@everyboard/lib';
 import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
 import { BooleanConfig, RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';

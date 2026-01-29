@@ -1,7 +1,8 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { TeekoConfig, TeekoNode, TeekoRules } from './TeekoRules';
 import { Coord } from '../../jscaip/Coord';
-import { MGPOptional } from '@everyboard/lib';
 import { Heuristic } from '../../jscaip/AI/Minimax';
 import { TeekoMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';

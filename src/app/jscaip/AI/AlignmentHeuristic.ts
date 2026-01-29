@@ -1,4 +1,5 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { Heuristic } from './Minimax';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { BoardValue } from './BoardValue';

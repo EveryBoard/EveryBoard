@@ -1,3 +1,5 @@
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -5,7 +7,6 @@ import { Coord } from '../../jscaip/Coord';
 import { TaflMove } from './TaflMove';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { TaflPawn } from './TaflPawn';
-import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TaflFailure } from './TaflFailure';
