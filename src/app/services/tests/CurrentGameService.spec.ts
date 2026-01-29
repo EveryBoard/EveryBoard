@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ReplaySubject, Subscription } from 'rxjs';
+
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { CurrentGame } from '../../domain/User';
 import { CurrentGameService } from '../CurrentGameService';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
 import { UserDAO } from '../../dao/UserDAO';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';

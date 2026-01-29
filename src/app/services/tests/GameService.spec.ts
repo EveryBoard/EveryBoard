@@ -1,6 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Subscription } from 'rxjs';
+
+import { JSONValue, MGPOptional, MGPValidation, MGPValidationTestUtils } from '@everyboard/lib';
+
 import { GameService } from '../GameService';
 import { PartDAO } from '../../dao/PartDAO';
 import { Part, MGPResult } from '../../domain/Part';
@@ -12,10 +17,7 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { JSONValue, MGPOptional, MGPValidation, MGPValidationTestUtils } from '@everyboard/lib';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { Subscription } from 'rxjs';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { MinimalUser } from '../../domain/MinimalUser';
 import { BlankComponent } from '../../utils/tests/TestUtils.spec';

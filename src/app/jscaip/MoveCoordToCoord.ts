@@ -1,6 +1,7 @@
+import { MGPFallible } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 import { Ordinal } from './Ordinal';
-import { MGPFallible } from '@everyboard/lib';
 import { RulesFailure } from './RulesFailure';
 import { MoveWithTwoCoords } from './MoveWithTwoCoords';
 

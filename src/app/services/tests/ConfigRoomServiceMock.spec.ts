@@ -1,7 +1,9 @@
+import { Injectable } from '@angular/core';
+
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { MinimalUser } from '../../domain/MinimalUser';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Injectable } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, FirstPlayer, PartStatus, PartType } from '../../domain/ConfigRoom';
 import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';

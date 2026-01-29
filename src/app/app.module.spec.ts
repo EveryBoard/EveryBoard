@@ -1,5 +1,10 @@
 import { Type } from '@angular/core';
 import { Route } from '@angular/router';
+import * as Firestore from '@firebase/firestore';
+import * as Auth from '@firebase/auth';
+
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { routes } from './app.module';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
@@ -16,9 +21,6 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { MGPOptional, Utils } from '@everyboard/lib';
-import * as Firestore from '@firebase/firestore';
-import * as Auth from '@firebase/auth';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
 

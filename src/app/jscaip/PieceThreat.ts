@@ -1,5 +1,6 @@
-import { Coord } from './Coord';
 import { ComparableObject } from '@everyboard/lib';
+
+import { Coord } from './Coord';
 import { CoordSet } from './CoordSet';
 
 export class PieceThreat implements ComparableObject {

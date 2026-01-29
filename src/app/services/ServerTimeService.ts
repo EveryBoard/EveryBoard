@@ -1,5 +1,7 @@
 import { Injectable } from '@angular/core';
+
 import { JSONValue, MGPFallible, Utils } from '@everyboard/lib';
+
 import { BackendService } from './BackendService';
 import { ConnectedUserService } from './ConnectedUserService';
 

@@ -4,6 +4,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
 import { MinimalUser } from '../domain/MinimalUser';
