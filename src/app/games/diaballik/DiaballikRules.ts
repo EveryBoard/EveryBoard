@@ -1,3 +1,5 @@
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+
 import { Rules } from '../../jscaip/Rules';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
@@ -7,7 +9,6 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Ordinal } from '../../jscaip/Ordinal';
-import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { DiaballikFailure } from './DiaballikFailure';
 import { Table } from '../../jscaip/TableUtils';

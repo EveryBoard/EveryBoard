@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 

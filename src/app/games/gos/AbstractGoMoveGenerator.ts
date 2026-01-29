@@ -1,4 +1,5 @@
 import { MGPFallible } from '@everyboard/lib';
+
 import { GoState } from './GoState';
 import { GoPiece } from './GoPiece';
 import { GoMove } from './GoMove';

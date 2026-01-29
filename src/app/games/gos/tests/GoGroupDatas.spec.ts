@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
+
 import { Utils, TestUtils } from '@everyboard/lib';
+
 import { GoPiece } from '../GoPiece';
 import { Coord } from '../../../jscaip/Coord';
 import { GoGroupData } from '../GoGroupsData';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
-import { fakeAsync } from '@angular/core/testing';
 
 describe('GoGroupData', () => {
 

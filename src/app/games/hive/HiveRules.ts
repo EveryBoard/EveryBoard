@@ -1,9 +1,10 @@
+import { MGPOptional, Set, MGPValidation } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { HiveFailure } from './HiveFailure';
 import { HiveDropMove, HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';

@@ -1,4 +1,5 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { GoState } from './GoState';
 import { GoPhase } from './GoPhase';

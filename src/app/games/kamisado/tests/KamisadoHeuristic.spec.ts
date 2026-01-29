@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
 import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';

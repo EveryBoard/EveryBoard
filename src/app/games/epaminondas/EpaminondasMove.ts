@@ -1,5 +1,6 @@
-import { Ordinal } from '../../jscaip/Ordinal';
 import { Encoder, Utils } from '@everyboard/lib';
+
+import { Ordinal } from '../../jscaip/Ordinal';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { Coord } from '../../jscaip/Coord';
 import { EpaminondasFailure } from './EpaminondasFailure';

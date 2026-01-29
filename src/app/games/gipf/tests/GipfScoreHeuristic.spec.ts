@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { GipfState } from '../GipfState';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';

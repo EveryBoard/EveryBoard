@@ -1,4 +1,5 @@
 import { Utils } from '@everyboard/lib';
+
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from './DiaballikMoveGenerator';
 import { DiaballikNode } from './DiaballikRules';

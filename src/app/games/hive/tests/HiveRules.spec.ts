@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional, Set, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPOptional, Set, Utils } from '@everyboard/lib';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';

@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
+
 import { TrigoComponent } from '../trigo.component';
 import { GoMove } from '../../GoMove';
 import { GoState } from '../../GoState';

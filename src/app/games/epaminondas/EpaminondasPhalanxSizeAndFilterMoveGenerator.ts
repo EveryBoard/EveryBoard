@@ -1,4 +1,5 @@
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
