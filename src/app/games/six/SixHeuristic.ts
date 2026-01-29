@@ -1,7 +1,8 @@
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { MGPOptional, Utils } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixVictorySource, SixNode, SixConfig, SixRules } from './SixRules';

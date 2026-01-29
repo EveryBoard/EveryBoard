@@ -1,4 +1,5 @@
 import { Encoder, MGPFallible } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';

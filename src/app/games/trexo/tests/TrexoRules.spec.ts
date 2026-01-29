@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { ArrayUtils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { ArrayUtils } from '@everyboard/lib';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';

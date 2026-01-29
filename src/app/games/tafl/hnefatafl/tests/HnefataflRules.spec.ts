@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { HnefataflNode, HnefataflRules } from '../HnefataflRules';
 import { HnefataflMove } from '../HnefataflMove';
 import { Coord } from '../../../../jscaip/Coord';
 import { TaflPawn } from '../../TaflPawn';
 import { Player } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
-import { MGPOptional } from '@everyboard/lib';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { TaflFailure } from '../../TaflFailure';
 import { TaflConfig } from '../../TaflConfig';

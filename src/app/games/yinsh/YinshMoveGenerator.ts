@@ -1,5 +1,6 @@
-import { Coord } from '../../jscaip/Coord';
 import { Combinatorics, MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';

@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+
 import { Utils } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';

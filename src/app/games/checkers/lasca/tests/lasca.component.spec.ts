@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
+
+import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../../jscaip/Coord';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { LascaComponent } from '../lasca.component';

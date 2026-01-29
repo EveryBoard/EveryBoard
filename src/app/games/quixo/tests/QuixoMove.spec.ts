@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { QuixoConfig, QuixoState } from '../QuixoState';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMove } from '../QuixoMove';
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { Table } from '../../../jscaip/TableUtils';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 

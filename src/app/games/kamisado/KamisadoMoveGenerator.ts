@@ -1,7 +1,8 @@
+import { ArrayUtils, Utils } from '@everyboard/lib';
+
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoState } from './KamisadoState';
 import { KamisadoNode, KamisadoRules } from './KamisadoRules';
-import { ArrayUtils, Utils } from '@everyboard/lib';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
 import { KamisadoBoard } from './KamisadoBoard';

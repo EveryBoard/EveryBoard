@@ -1,8 +1,9 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
 import { Localized } from '../../utils/LocaleUtils';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';

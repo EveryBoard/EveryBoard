@@ -1,9 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
+
+import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TaflComponent } from '../tafl.component';
 import { TaflFailure } from '../TaflFailure';

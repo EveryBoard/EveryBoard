@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfState } from '../GipfState';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';

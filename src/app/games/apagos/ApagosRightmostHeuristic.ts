@@ -1,10 +1,11 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosNode } from './ApagosRules';
 import { ApagosState } from './ApagosState';
-import { MGPOptional } from '@everyboard/lib';
 import { ApagosSquare } from './ApagosSquare';
 
 export class ApagosRightmostHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState, ApagosConfig> {

@@ -1,6 +1,7 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Player } from '../../../jscaip/Player';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
-import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
 import { TrexoRules } from '../TrexoRules';

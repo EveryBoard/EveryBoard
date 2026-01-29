@@ -2,9 +2,11 @@
 import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
 import { BlankComponent } from '../../utils/tests/TestUtils.spec';
 import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
-import { MGPOptional } from '@everyboard/lib';
 import { PartDocument } from '../../domain/Part';
 import { PartMocks } from '../../domain/PartMocks.spec';
 import { CurrentGameService } from '../../services/CurrentGameService';

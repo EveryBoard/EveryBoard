@@ -1,3 +1,5 @@
+import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -6,7 +8,6 @@ import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece } from './LodestonePiece';

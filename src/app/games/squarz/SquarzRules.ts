@@ -1,3 +1,5 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';
@@ -10,7 +12,6 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../utils/MGPValidator';
 import { SquarzFailure } from './SquarzFailure';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TableUtils } from '../../jscaip/TableUtils';
 
 export class SquarzNode extends GameNode<SquarzMove, SquarzState> {}

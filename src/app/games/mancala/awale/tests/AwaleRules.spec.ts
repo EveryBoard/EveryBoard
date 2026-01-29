@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { AwaleRules } from '../AwaleRules';
 import { MancalaState } from '../../common/MancalaState';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { Player } from '../../../../jscaip/Player';
 import { MancalaFailure } from '../../common/MancalaFailure';
-import { MGPOptional } from '@everyboard/lib';
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';

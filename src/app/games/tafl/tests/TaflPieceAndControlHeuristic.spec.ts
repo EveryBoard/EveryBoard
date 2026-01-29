@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Table } from '../../../jscaip/TableUtils';
 import { TaflPawn } from '../TaflPawn';
 import { Player } from '../../../jscaip/Player';
-import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
 import { TaflState } from '../TaflState';

@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Table } from '../../../jscaip/TableUtils';
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -8,7 +10,6 @@ import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../Epamino
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 
 describe('EpaminondasRules', () => {

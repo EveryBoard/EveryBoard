@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
 import { KamisadoState } from '../../../games/kamisado/KamisadoState';
 import { KamisadoColor } from '../../../games/kamisado/KamisadoColor';
-import { MGPOptional } from '@everyboard/lib';
 import { KamisadoPiece } from '../../../games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from '../../../games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { KamisadoComponent } from '../kamisado.component';
-import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../jscaip/Coord';
 import { KamisadoMove } from '../../../games/kamisado/KamisadoMove';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

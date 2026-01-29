@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { P4Move } from '../../games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { Rules } from '../Rules';
 import { GameStateWithTable } from '../state/GameStateWithTable';
 import { GameStatus } from '../GameStatus';
-import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { RulesUtils } from './RulesUtils.spec';
 import { NoConfig, RulesConfig } from '../RulesConfigUtil';
 

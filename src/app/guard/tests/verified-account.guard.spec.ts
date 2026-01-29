@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
 import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
 import { BlankComponent } from '../../utils/tests/TestUtils.spec';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { VerifiedAccountGuard } from '../verified-account.guard';
-import { MGPOptional } from '@everyboard/lib';
 import { UserMocks } from '../../domain/UserMocks.spec';
 
 describe('VerifiedAccountGuard', () => {

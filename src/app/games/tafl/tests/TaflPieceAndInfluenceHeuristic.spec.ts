@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { TaflPawn } from '../TaflPawn';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';

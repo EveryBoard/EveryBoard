@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
@@ -8,7 +10,6 @@ import { SixFailure } from '../SixFailure';
 import { SixConfig, SixNode, SixRules } from '../SixRules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { Vector } from '../../../jscaip/Vector';
 
 describe('SixRules', () => {

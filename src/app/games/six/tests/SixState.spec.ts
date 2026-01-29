@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Set, ReversibleMap, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';

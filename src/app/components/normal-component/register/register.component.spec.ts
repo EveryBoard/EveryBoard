@@ -2,6 +2,7 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import * as FireAuth from '@firebase/auth';
+
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserService } from '../../../services/ConnectedUserService';

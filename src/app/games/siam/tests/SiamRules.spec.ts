@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
 import { SiamState } from '../SiamState';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { MGPOptional } from '@everyboard/lib';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

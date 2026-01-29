@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib';
+
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';

@@ -1,7 +1,8 @@
+import { MGPMap } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
-import { MGPMap } from '@everyboard/lib';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoordSet } from '../../jscaip/CoordSet';

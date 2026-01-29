@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { GipfComponent } from '../gipf.component';
+import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
+
+import { GipfComponent } from '../gipf.component';
 import { GipfFailure } from '../../../games/gipf/GipfFailure';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../jscaip/Coord';
 import { GipfMove, GipfPlacement } from '../../../games/gipf/GipfMove';
 import { GipfState } from '../../../games/gipf/GipfState';

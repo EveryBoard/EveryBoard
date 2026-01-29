@@ -1,3 +1,5 @@
+import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -7,7 +9,6 @@ import { SixMove } from './SixMove';
 import { SixFailure } from './SixFailure';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Table } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';

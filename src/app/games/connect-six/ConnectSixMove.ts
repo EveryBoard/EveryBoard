@@ -1,4 +1,5 @@
 import { Encoder, Utils } from '@everyboard/lib';
+
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 import { Coord } from '../../jscaip/Coord';

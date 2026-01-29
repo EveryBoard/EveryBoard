@@ -1,5 +1,6 @@
-import { TablutMove } from './TablutMove';
 import { MGPOptional } from '@everyboard/lib';
+
+import { TablutMove } from './TablutMove';
 import { TaflNode, TaflRules } from '../TaflRules';
 import { TaflConfig } from '../TaflConfig';
 import { BooleanConfig, RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';

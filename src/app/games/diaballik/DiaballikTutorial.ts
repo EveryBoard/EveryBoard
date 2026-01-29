@@ -1,8 +1,9 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
 import { Coord } from '../../jscaip/Coord';
-import { MGPOptional } from '@everyboard/lib';
 import { DiaballikRules } from './DiaballikRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 

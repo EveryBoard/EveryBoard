@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ReversiFailure } from '../ReversiFailure';

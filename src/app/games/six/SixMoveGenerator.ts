@@ -1,6 +1,7 @@
+import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { SixConfig, SixNode, SixRules } from './SixRules';

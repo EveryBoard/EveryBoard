@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Coord } from '../../../jscaip/Coord';
 import { CheckersMove } from '../common/CheckersMove';
