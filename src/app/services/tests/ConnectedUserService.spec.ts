@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { ReplaySubject, Subscription } from 'rxjs';
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
 import { serverTimestamp } from 'firebase/firestore';
+import { ReplaySubject, Subscription } from 'rxjs';
+
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { UserDAO } from '../../dao/UserDAO';
 import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';

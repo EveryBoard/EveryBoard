@@ -1,10 +1,12 @@
+import { Injectable } from '@angular/core';
+
+import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
+
 import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { MinimalUser } from '../../domain/MinimalUser';
 import { Action, GameEvent, MGPResult, Part, RequestType } from '../../domain/Part';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
-import { Injectable } from '@angular/core';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, FirstPlayer, PartStatus, PartType } from '../../domain/ConfigRoom';
 import { PartDAO } from '../../dao/PartDAO';

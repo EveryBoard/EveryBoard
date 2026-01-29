@@ -1,8 +1,9 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { CurrentGame, User, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { CurrentGame, User, UserRoleInPart } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
 import { UserService } from './UserService';
