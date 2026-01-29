@@ -70,6 +70,23 @@ const rl: readline.Interface = readline.createInterface({
 });
 
 type GenericAI = AI<Move, GameState, AIOptions, RulesConfig>;
+
+function stringifyError(e: object): string {
+    if (Object.keys(e).includes('messages')) {
+        return e['messages'];
+    } else {
+        return 'No Error Messages: ' + JSON.stringify(e);
+    }
+}
+
+function stringifyStack(e: object): string {
+    if (Object.keys(e).includes('stack')) {
+        return e['stack'];
+    } else {
+        return 'No stack.';
+    }
+}
+
 class ProcessApplier<S extends GameState, M extends Move> {
 
     public readonly gameInfo: GameInfo;
@@ -166,7 +183,7 @@ class ProcessApplier<S extends GameState, M extends Move> {
 
     public getRequestReponse(input: Input): string {
         // Always send response as single line
-        const response: Record<string, any> = this.getResponse(input);
+        const response: object = this.getResponse(input);
         const stringResponse: string = JSON.stringify(response) + '\n';
         return stringResponse;
     }
@@ -212,8 +229,8 @@ rl.on('line', (line: string) => {
                 throw new TypeError('Unknown Game ' + structuredClone(input.gameName));
         }
     } catch (e: unknown) {
-        const message: string = e?.message || e?.toString?.() || 'Unknown error';
-        const stackTrace: string = e?.stack || 'No stack trace available';
+        const message: string = stringifyError(e as object);
+        const stackTrace: string = stringifyStack(e as object);
 
         const errorInfo: object = {
             error: message,
