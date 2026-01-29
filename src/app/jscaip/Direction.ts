@@ -1,4 +1,5 @@
 import { MGPFallible } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 import { Vector } from './Vector';
 import { Localized } from '../utils/LocaleUtils';

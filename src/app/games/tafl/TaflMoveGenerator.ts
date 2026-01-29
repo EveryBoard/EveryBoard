@@ -1,8 +1,9 @@
+import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
 import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 import { TaflMove } from './TaflMove';
 import { Player } from '../../jscaip/Player';
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 import { Coord } from '../../jscaip/Coord';
 import { Debug } from '../../utils/Debug';
 import { MoveGenerator } from '../../jscaip/AI/AI';

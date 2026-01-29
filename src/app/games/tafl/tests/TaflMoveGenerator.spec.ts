@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { TaflPawn } from '../TaflPawn';
 import { Table } from '../../../jscaip/TableUtils';
@@ -6,7 +8,6 @@ import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflConfig } from '../TaflConfig';
-import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../TaflState';
 
 describe('TaflMoveGenerator', () => {

@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
 import { TablutRules } from '../tablut/TablutRules';
 import { TaflConfig } from '../TaflConfig';

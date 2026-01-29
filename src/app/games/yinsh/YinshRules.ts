@@ -1,10 +1,11 @@
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLine } from '../../jscaip/HexaLine';
 import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { YinshFailure } from './YinshFailure';
 import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';

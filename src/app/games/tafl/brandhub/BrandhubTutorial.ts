@@ -1,3 +1,5 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { BrandhubMove } from './BrandhubMove';
 import { TaflPawn } from '../../../games/tafl/TaflPawn';
 import { Coord } from '../../../jscaip/Coord';
@@ -5,7 +7,6 @@ import { Tutorial, TutorialStep } from '../../../components/wrapper-components/t
 import { BrandhubRules } from './BrandhubRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
-import { MGPOptional } from '@everyboard/lib';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;

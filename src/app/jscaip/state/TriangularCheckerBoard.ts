@@ -1,5 +1,6 @@
-import { Coord } from '../Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../Coord';
 import { Orthogonal } from '../Orthogonal';
 import { TableUtils } from '../TableUtils';
 

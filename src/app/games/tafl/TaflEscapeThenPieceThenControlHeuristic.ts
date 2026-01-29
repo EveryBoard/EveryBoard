@@ -1,10 +1,11 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Player } from '../../jscaip/Player';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
-import { MGPOptional } from '@everyboard/lib';
 import { TaflMove } from './TaflMove';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';

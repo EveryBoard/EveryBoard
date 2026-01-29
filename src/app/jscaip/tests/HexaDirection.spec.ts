@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib';
+
 import { HexaDirection } from '../HexaDirection';
 
 describe('HexaDirection', () => {

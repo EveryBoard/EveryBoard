@@ -1,4 +1,5 @@
 import { MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
 import { GameState } from './GameState';
 import { Table, TableUtils } from '../TableUtils';

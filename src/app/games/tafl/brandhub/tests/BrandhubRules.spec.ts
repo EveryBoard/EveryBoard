@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
@@ -8,7 +10,6 @@ import { TaflFailure } from '../../TaflFailure';
 import { BrandhubMove } from '../BrandhubMove';
 import { TaflPawn } from '../../TaflPawn';
 import { TaflConfig } from '../../TaflConfig';
-import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../../TaflState';
 
 describe('BrandhubRules', () => {

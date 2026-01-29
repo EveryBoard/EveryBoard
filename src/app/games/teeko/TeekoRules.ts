@@ -1,3 +1,5 @@
+import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
@@ -6,7 +8,6 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';

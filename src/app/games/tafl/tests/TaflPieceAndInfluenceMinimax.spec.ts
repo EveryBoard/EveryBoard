@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Table } from '../../../jscaip/TableUtils';
 import { TaflPawn } from '../TaflPawn';
@@ -7,7 +9,6 @@ import { TablutMove } from '../tablut/TablutMove';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
 import { TaflConfig } from '../TaflConfig';
-import { MGPOptional } from '@everyboard/lib';
 import { TaflState } from '../TaflState';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';

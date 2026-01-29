@@ -1,5 +1,6 @@
-import { Coord } from '../../jscaip/Coord';
 import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Move } from '../../jscaip/Move';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';

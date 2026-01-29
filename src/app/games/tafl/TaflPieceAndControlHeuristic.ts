@@ -1,8 +1,9 @@
+import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Player } from '../../jscaip/Player';
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 import { TaflPawn } from './TaflPawn';
 import { TaflState } from './TaflState';
 import { SandwichThreat } from '../../jscaip/PieceThreat';

@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { YinshFailure } from '../YinshFailure';
 import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';

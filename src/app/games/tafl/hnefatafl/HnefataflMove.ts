@@ -1,6 +1,7 @@
+import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { MoveWithTwoCoords } from '../../../jscaip/MoveWithTwoCoords';
-import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 import { TaflMove } from '../TaflMove';
 
 export class HnefataflMove extends TaflMove {

@@ -1,9 +1,10 @@
+import { MGPValidation } from '@everyboard/lib';
+
 import { SixState } from './SixState';
 import { SixMove } from './SixMove';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Localized } from '../../utils/LocaleUtils';
-import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SixRules } from './SixRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
