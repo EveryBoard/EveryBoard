@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { FormControl } from '@angular/forms';
+
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { GameNode } from '../../../jscaip/AI/GameNode';

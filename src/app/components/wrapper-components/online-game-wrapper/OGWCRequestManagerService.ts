@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
 import { MGPOptional, Utils, Set } from '@everyboard/lib';
 
 import { MinimalUser } from '../../../domain/MinimalUser';

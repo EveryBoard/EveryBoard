@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { Comparable } from '@everyboard/lib';
 
 import { Move } from '../../../jscaip/Move';

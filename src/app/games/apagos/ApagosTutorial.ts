@@ -1,7 +1,7 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ApagosMove } from '../apagos/ApagosMove';
-import { ApagosState } from '../apagos/ApagosState';
+import { ApagosMove } from './ApagosMove';
+import { ApagosState } from './ApagosState';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { Player } from '../../jscaip/Player';
 import { ApagosConfig, ApagosRules } from './ApagosRules';

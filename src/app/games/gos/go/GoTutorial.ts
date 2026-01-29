@@ -1,7 +1,8 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { GoMove } from '../GoMove';
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
-import { MGPOptional } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

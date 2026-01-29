@@ -1,4 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Move } from '../../../jscaip/Move';

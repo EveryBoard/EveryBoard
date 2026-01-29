@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
+
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';

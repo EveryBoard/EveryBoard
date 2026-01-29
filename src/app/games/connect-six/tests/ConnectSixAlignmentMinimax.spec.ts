@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { ConnectSixDrops, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
@@ -9,7 +11,6 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { MGPOptional } from '@everyboard/lib';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 describe('ConnectSixAlignmentMinimax', () => {

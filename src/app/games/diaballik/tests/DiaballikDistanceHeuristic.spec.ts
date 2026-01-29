@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { Player } from '../../../jscaip/Player';

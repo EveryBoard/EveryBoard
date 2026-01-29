@@ -1,8 +1,8 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { CoerceoRegularMove, CoerceoTileExchangeMove } from '../coerceo/CoerceoMove';
+import { CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { CoerceoState } from '../coerceo/CoerceoState';
+import { CoerceoState } from './CoerceoState';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { CoerceoConfig, CoerceoRules } from './CoerceoRules';

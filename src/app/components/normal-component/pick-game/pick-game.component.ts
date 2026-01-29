@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 import { Component, EventEmitter, Output } from '@angular/core';
+
 import { ThemeService } from '../../../services/ThemeService';
 import { GameInfo } from './game-info';
 
