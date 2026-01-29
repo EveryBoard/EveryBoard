@@ -1,10 +1,11 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Vector } from '../../jscaip/Vector';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';

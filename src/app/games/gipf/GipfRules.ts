@@ -1,3 +1,5 @@
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLine } from '../../jscaip/HexaLine';
@@ -5,7 +7,6 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';

@@ -1,6 +1,7 @@
+import { Encoder, MGPFallible } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
-import { Encoder, MGPFallible } from '@everyboard/lib';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { LinesOfActionState } from './LinesOfActionState';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';

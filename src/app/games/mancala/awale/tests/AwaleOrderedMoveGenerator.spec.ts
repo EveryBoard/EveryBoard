@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Table } from '../../../../jscaip/TableUtils';
 import { MancalaState } from '../../common/MancalaState';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { MGPOptional } from '@everyboard/lib';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { AwaleRules } from '../AwaleRules';
 

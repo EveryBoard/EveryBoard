@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';

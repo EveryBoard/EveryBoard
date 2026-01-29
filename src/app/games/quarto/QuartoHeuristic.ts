@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { QuartoState } from './QuartoState';
 import { QuartoMove } from './QuartoMove';
 import { Heuristic } from '../../jscaip/AI/Minimax';

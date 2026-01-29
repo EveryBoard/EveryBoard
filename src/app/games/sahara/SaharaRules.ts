@@ -1,3 +1,5 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { Rules } from '../../jscaip/Rules';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player } from '../../jscaip/Player';
@@ -5,7 +7,6 @@ import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { SaharaFailure } from './SaharaFailure';

@@ -1,8 +1,9 @@
+import { MGPValidation } from '@everyboard/lib';
+
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { SaharaRules } from './SaharaRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

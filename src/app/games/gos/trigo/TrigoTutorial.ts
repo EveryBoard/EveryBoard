@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { GoState } from '../GoState';
 import { GoPiece } from '../GoPiece';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';

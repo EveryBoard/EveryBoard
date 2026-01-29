@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { HexaLine } from '../../../jscaip/HexaLine';
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 import { GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 

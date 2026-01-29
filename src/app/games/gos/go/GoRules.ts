@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoState } from '../GoState';

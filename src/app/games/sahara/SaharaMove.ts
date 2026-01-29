@@ -1,7 +1,8 @@
+import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
+
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { Coord } from '../../jscaip/Coord';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 import { SaharaFailure } from './SaharaFailure';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';

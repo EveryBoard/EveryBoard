@@ -1,9 +1,10 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { EncapsuleMove } from '../../games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from '../../games/encapsule/EncapsulePiece';
 import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../games/encapsule/EncapsuleState';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { EncapsuleConfig, EncapsuleRules } from './EncapsuleRules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';

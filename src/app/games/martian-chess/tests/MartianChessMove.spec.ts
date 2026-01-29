@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { DirectionFailure } from '../../../jscaip/Direction';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';

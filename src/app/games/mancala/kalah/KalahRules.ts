@@ -1,5 +1,6 @@
-import { MancalaState } from './../common/MancalaState';
 import { MGPOptional } from '@everyboard/lib';
+
+import { MancalaState } from './../common/MancalaState';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { Coord } from '../../../jscaip/Coord';
 import { TableUtils } from '../../../jscaip/TableUtils';

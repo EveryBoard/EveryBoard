@@ -1,3 +1,5 @@
+import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
+
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -7,7 +9,6 @@ import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { PylosFailure } from './PylosFailure';
-import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { NoConfig } from '../../jscaip/RulesConfigUtil';

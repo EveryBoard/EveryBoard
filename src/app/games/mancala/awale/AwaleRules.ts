@@ -1,7 +1,8 @@
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { MancalaState } from '../common/MancalaState';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { MGPOptional, Utils } from '@everyboard/lib';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MGPValidators } from '../../../utils/MGPValidator';
