@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { CheckersMove } from '../CheckersMove';
 import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';

@@ -1,8 +1,9 @@
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { MGPOptional, Utils } from '@everyboard/lib';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
 export class CheckersPiece {

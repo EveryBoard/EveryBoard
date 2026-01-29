@@ -1,8 +1,9 @@
+import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 import { CoerceoFailure } from './CoerceoFailure';

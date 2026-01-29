@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 import { Component, EventEmitter, Output, Type } from '@angular/core';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../games/abalone/abalone.component';

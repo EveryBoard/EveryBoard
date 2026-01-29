@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { MGPValidation } from '@everyboard/lib';
 
 import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

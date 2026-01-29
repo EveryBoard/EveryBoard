@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../../../../jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Player } from '../../../../jscaip/Player';
 import { CheckersControlHeuristic } from '../CheckersControlHeuristic';
 import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';

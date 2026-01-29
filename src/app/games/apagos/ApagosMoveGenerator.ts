@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from './ApagosRules';

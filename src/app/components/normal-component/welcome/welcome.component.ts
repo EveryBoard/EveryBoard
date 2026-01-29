@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ThemeService } from '../../../services/ThemeService';

@@ -1,11 +1,11 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 
 import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { ConfigDescriptionType, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { ActivatedRoute, Router } from '@angular/router';
 import { GameState } from '../../../jscaip/state/GameState';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 

@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { CoerceoPiecesThreatsTilesMinimax } from '../CoerceoPiecesThreatsTilesMinimax';
 
 describe('CoerceoPiecesThreatsTilesMinimax', () => {

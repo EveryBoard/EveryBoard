@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { CoerceoRegularMove, CoerceoTileExchangeMove } from '../../games/coerceo/CoerceoMove';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { CoerceoState } from '../../games/coerceo/CoerceoState';

@@ -1,4 +1,5 @@
 import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerMetricHeuristic } from '../../../jscaip/AI/Minimax';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';

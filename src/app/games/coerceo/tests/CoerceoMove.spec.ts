@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
 import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
-import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
 

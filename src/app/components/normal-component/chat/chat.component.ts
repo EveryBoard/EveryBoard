@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+
 import { Utils } from '@everyboard/lib';
 
 import { ChatService } from '../../../services/ChatService';

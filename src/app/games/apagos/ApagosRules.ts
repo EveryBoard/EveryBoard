@@ -1,8 +1,9 @@
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { GameStatus } from '../../jscaip/GameStatus';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
