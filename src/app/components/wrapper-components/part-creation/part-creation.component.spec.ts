@@ -4,23 +4,20 @@ import { DebugElement } from '@angular/core';
 import { Router } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
 
+import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { PartCreationComponent } from './part-creation.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
-
 import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../services/ConfigRoomService';
 import { GameService } from '../../../services/GameService';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
-
 import { ConfigRoomDAO } from '../../../dao/ConfigRoomDAO';
 import { PartDAO } from '../../../dao/PartDAO';
 import { ChatDAO } from '../../../dao/ChatDAO';
 import { UserDAO } from '../../../dao/UserDAO';
-
 import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { MGPOptional, Utils } from '@everyboard/lib';
-
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { FirstPlayer, PartStatus, PartType, ConfigRoom } from '../../../domain/ConfigRoom';
 import { Part } from '../../../domain/Part';

@@ -1,4 +1,5 @@
 import { AfterContentChecked, Component, Input } from '@angular/core';
+
 import { BaseGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { HexaLayout } from '../../jscaip/HexaLayout';

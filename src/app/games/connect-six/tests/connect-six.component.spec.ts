@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

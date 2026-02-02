@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
+
 import { EpaminondasMove } from '../../../games/epaminondas/EpaminondasMove';
 import { EpaminondasState } from '../../../games/epaminondas/EpaminondasState';
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { EpaminondasComponent } from '../epaminondas.component';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from '../../../jscaip/TableUtils';

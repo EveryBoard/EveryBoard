@@ -1,5 +1,6 @@
-import { Move } from '../../../jscaip/Move';
 import { Component } from '@angular/core';
+
+import { Move } from '../../../jscaip/Move';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { GameComponent } from '../game-component/GameComponent';
 import { Table } from '../../../jscaip/TableUtils';

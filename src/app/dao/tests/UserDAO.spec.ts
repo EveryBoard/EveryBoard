@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@firebase/auth';
+
 import { MGPOptional } from '@everyboard/lib';
 
 import { User } from '../../domain/User';

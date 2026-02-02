@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { MancalaMove } from '../common/MancalaMove';
 import { KalahRules } from './KalahRules';

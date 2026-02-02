@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';

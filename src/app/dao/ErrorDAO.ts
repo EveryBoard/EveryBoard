@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+
 import { JSONValue } from '@everyboard/lib';
 
 import { FirestoreTime } from '../domain/Time';

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
+
 import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';

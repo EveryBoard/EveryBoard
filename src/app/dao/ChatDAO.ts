@@ -1,5 +1,6 @@
-import { FirestoreDAO } from './FirestoreDAO';
 import { Injectable } from '@angular/core';
+
+import { FirestoreDAO } from './FirestoreDAO';
 import { Chat } from '../domain/Chat';
 import { Debug } from '../utils/Debug';
 

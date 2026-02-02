@@ -2,24 +2,23 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 
+import { MGPOptional } from '@everyboard/lib';
+
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { Table } from '../../../../jscaip/TableUtils';
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { MancalaState } from '../../common/MancalaState';
 import { MancalaFailure } from '../../common/MancalaFailure';
 import { MancalaComponent } from '../../common/MancalaComponent';
 import { MancalaConfig } from '../../common/MancalaConfig';
-
 import { KalahComponent } from '../kalah.component';
 import { KalahRules } from '../KalahRules';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('KalahComponent', () => {
 
