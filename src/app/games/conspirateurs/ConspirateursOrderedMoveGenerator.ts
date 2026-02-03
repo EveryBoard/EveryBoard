@@ -1,7 +1,7 @@
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursNode } from './ConspirateursRules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerator {
 

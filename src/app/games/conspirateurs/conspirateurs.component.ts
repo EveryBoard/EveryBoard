@@ -1,20 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
-import { Vector } from '../../jscaip/Vector';
+import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Vector } from '../../jscaip/Vector';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
+import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
-import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],

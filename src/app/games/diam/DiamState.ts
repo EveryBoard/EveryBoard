@@ -1,7 +1,7 @@
 import { Utils } from '@everyboard/lib';
 
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { Table } from '../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { DiamPiece } from './DiamPiece';
 
 export class DiamState extends GameStateWithTable<DiamPiece> {

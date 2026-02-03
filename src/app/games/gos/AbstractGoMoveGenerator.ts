@@ -1,14 +1,14 @@
 import { MGPFallible } from '@everyboard/lib';
 
-import { GoState } from './GoState';
-import { GoPiece } from './GoPiece';
-import { GoMove } from './GoMove';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { Debug } from '../../utils/Debug';
 import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoGroupData } from './GoGroupsData';
-import { Coord } from '../../jscaip/Coord';
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Debug } from '../../utils/Debug';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { GoMove } from './GoMove';
+import { GoPiece } from './GoPiece';
+import { GoState } from './GoState';
 
 @Debug.log
 export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerator<GoMove, GoState, C> {

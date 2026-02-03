@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
-import { ConspirateursState } from '../ConspirateursState';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursRules } from '../ConspirateursRules';
+import { ConspirateursState } from '../ConspirateursState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

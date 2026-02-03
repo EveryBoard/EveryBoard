@@ -1,12 +1,12 @@
-import { GoState } from './GoState';
-import { GoPiece } from './GoPiece';
-import { GoMove } from './GoMove';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Player } from '../../jscaip/Player';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { GoNode, AbstractGoRules } from './AbstractGoRules';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { GoNode, AbstractGoRules } from './AbstractGoRules';
+import { GoMove } from './GoMove';
+import { GoPiece } from './GoPiece';
+import { GoState } from './GoState';
 
 export abstract class AbstractGoHeuristic<C extends RulesConfig> extends PlayerMetricHeuristic<GoMove, GoState, C> {
 

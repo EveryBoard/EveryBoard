@@ -1,24 +1,25 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { EpaminondasMove } from '../../games/epaminondas/EpaminondasMove';
-import { EpaminondasState } from '../../games/epaminondas/EpaminondasState';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../../games/epaminondas/EpaminondasRules';
+import { EpaminondasState } from '../../games/epaminondas/EpaminondasState';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { EpaminondasFailure } from './EpaminondasFailure';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
-import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
-import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
-import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Arrow } from '../../components/game-components/arrow-component/Arrow';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
+import { EpaminondasFailure } from './EpaminondasFailure';
+import { EpaminondasMinimax } from './EpaminondasMinimax';
+import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 
 export type PossibleMove = {
 

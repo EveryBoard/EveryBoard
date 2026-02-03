@@ -1,8 +1,8 @@
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
 import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 
 export class EpaminondasOrderedMoveGenerator extends EpaminondasMoveGenerator {
 

@@ -1,10 +1,10 @@
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { GipfMove } from './GipfMove';
 import { GipfNode, GipfRules } from './GipfRules';
 import { GipfState } from './GipfState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class GipfScoreHeuristic extends PlayerMetricHeuristic<GipfMove, GipfState> {
 

@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { GipfState } from '../GipfState';
-import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Table } from '../../../jscaip/TableUtils';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
-import { GipfRules } from '../GipfRules';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { GipfRules } from '../GipfRules';
+import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
+import { GipfState } from '../GipfState';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;
