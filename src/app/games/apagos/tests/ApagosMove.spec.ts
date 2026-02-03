@@ -2,10 +2,10 @@
 import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { ApagosRules } from '../ApagosRules';
 
 describe('ApagosMove', () => {

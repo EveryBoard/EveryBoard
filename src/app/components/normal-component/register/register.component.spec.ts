@@ -7,8 +7,8 @@ import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { RegisterComponent } from './register.component';
 import { VerifyAccountComponent } from '../verify-account/verify-account.component';
+import { RegisterComponent } from './register.component';
 
 describe('RegisterComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegisterComponent>;

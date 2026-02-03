@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
-import { ErrorDAO } from '../ErrorDAO';
+
 import { setupEmulators } from '../../utils/tests/TestUtils.spec';
+import { ErrorDAO } from '../ErrorDAO';
 
 describe('ErrorDAO', () => {
 

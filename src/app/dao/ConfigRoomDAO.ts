@@ -1,7 +1,8 @@
-import { FirestoreDAO } from './FirestoreDAO';
-import { ConfigRoom } from '../domain/ConfigRoom';
 import { Injectable } from '@angular/core';
+
+import { ConfigRoom } from '../domain/ConfigRoom';
 import { Debug } from '../utils/Debug';
+import { FirestoreDAO } from './FirestoreDAO';
 
 @Injectable({
     providedIn: 'root',

@@ -1,7 +1,8 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { InternationalCheckersRules } from './InternationalCheckersRules';
 import { CheckersComponent } from '../common/checkers.component';
+import { InternationalCheckersRules } from './InternationalCheckersRules';
 
 @Component({
     selector: 'app-international-checkers',

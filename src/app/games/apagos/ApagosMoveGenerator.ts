@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Player } from '../../jscaip/Player';
 import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from './ApagosRules';
 import { ApagosState } from './ApagosState';
-import { Player } from '../../jscaip/Player';
 
 export class ApagosMoveGenerator extends MoveGenerator<ApagosMove, ApagosState, ApagosConfig> {
 

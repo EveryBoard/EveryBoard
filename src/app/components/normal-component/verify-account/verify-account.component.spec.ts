@@ -5,10 +5,10 @@ import { Router } from '@angular/router';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
-import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { VerifyAccountComponent } from './verify-account.component';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LobbyComponent } from '../lobby/lobby.component';
+import { VerifyAccountComponent } from './verify-account.component';
 
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;

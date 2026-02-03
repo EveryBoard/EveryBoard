@@ -1,11 +1,11 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { MoveCoord } from '../../jscaip/MoveCoord';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Vector } from '../../jscaip/Vector';
 import { CoerceoFailure } from './CoerceoFailure';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
 
 export class CoerceoStep {
 

@@ -3,19 +3,19 @@ import { ActivatedRoute, ParamMap, Router } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
-import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
 import { GameWrapper } from '../../../components/wrapper-components/GameWrapper';
+import { AIOptions, AIStats, AbstractAI } from '../../../jscaip/AI/AI';
+import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
+import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
+import { Player } from '../../../jscaip/Player';
+import { SuperRules } from '../../../jscaip/Rules';
+import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { Player } from '../../../jscaip/Player';
-import { GameStatus } from '../../../jscaip/GameStatus';
 import { Debug } from '../../../utils/Debug';
-import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { AIOptions, AIStats, AbstractAI } from '../../../jscaip/AI/AI';
-import { SuperRules } from '../../../jscaip/Rules';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 @Component({
     selector: 'app-local-game-wrapper',

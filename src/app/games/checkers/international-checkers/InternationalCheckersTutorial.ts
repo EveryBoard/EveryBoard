@@ -1,13 +1,13 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../../jscaip/Coord';
+import { CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersMove } from '../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
-import { CheckersConfig } from '../common/AbstractCheckersRules';
-import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { InternationalCheckersRules } from './InternationalCheckersRules';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
+import { InternationalCheckersRules } from './InternationalCheckersRules';
 
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);

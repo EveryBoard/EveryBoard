@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
-import { GameComponent } from './GameComponent';
-import { GameState } from '../../../jscaip/state/GameState';
-import { Table } from '../../../jscaip/TableUtils';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { GameState } from '../../../jscaip/state/GameState';
+import { GameComponent } from './GameComponent';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
