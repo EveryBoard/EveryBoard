@@ -4,9 +4,9 @@ import { Coord } from '../../jscaip/Coord';
 import { Move } from '../../jscaip/Move';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { HivePiece } from './HivePiece';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 
 export class HiveDropMove extends MoveCoord {
 

@@ -1,8 +1,8 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
+import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoRules } from './KamisadoRules';
-import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoState } from './KamisadoState';
 
 export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoState> {

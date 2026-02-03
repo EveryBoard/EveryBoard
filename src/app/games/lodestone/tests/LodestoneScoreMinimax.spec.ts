@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { LodestoneRules } from '../LodestoneRules';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { LodestoneScoreMinimax } from '../LodestoneScoreMinimax';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { LodestoneRules } from '../LodestoneRules';
+import { LodestoneScoreMinimax } from '../LodestoneScoreMinimax';
 
 describe('LodestoneScoreMinimax', () => {
 

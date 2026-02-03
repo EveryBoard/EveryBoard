@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { LinesOfActionRules } from '../LinesOfActionRules';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { LinesOfActionRules } from '../LinesOfActionRules';
 
 describe('LinesOfActionMinimax', () => {
 

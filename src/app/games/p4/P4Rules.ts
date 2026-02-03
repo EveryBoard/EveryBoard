@@ -1,18 +1,18 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { P4State } from './P4State';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { P4Move } from './P4Move';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { P4Failure } from './P4Failure';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Debug } from '../../utils/Debug';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
 import { MGPValidators } from '../../utils/MGPValidator';
+import { P4Failure } from './P4Failure';
+import { P4Move } from './P4Move';
+import { P4State } from './P4State';
 
 export type P4Config = {
     width: number;

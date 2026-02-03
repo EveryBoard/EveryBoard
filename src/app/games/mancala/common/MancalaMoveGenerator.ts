@@ -1,9 +1,10 @@
-import { MancalaState } from '../common/MancalaState';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode, MancalaRules } from '../common/MancalaRules';
+import { MancalaState } from '../common/MancalaState';
 import { MancalaConfig } from './MancalaConfig';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaState, MancalaConfig> {
 

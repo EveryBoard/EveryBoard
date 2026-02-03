@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { HiveHeuristic } from '../HiveHeuristic';
-import { HiveNode, HiveRules } from '../HiveRules';
-import { HiveState } from '../HiveState';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { HivePiece } from '../HivePiece';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { HiveHeuristic } from '../HiveHeuristic';
+import { HivePiece } from '../HivePiece';
+import { HiveNode, HiveRules } from '../HiveRules';
+import { HiveState } from '../HiveState';
 
 describe('HiveHeuristic', () => {
 

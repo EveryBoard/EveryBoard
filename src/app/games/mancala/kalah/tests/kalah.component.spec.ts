@@ -1,25 +1,24 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 
-import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { Table } from '../../../../jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
+
+import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
-import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { MancalaState } from '../../common/MancalaState';
-import { MancalaFailure } from '../../common/MancalaFailure';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
 import { MancalaConfig } from '../../common/MancalaConfig';
-
-import { KalahComponent } from '../kalah.component';
-import { KalahRules } from '../KalahRules';
+import { MancalaFailure } from '../../common/MancalaFailure';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaState } from '../../common/MancalaState';
+import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
+import { KalahRules } from '../KalahRules';
+import { KalahComponent } from '../kalah.component';
 
 describe('KalahComponent', () => {
 

@@ -1,10 +1,10 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { HiveMove } from './HiveMove';
 import { HivePiece } from './HivePiece';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
 
