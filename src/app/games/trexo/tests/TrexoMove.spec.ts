@@ -2,12 +2,12 @@
 import { EncoderTestUtils, MGPFallible, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('TrexoMove', () => {
 

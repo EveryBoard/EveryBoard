@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { YinshRules } from '../YinshRules';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { YinshScoreMinimax } from '../YinshScoreMinimax';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { YinshRules } from '../YinshRules';
+import { YinshScoreMinimax } from '../YinshScoreMinimax';
 
 describe('YinshScoreMinimax', () => {
 

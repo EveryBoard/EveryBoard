@@ -2,9 +2,9 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { TaflPawn } from './TaflPawn';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { TaflPawn } from './TaflPawn';
 
 export class TaflState extends GameStateWithTable<TaflPawn> {
 

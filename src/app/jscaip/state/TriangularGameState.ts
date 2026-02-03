@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { GameStateWithTable } from './GameStateWithTable';
-import { Table } from '../TableUtils';
-import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 import { FourStatePiece } from '../FourStatePiece';
 import { Player } from '../Player';
+import { Table } from '../TableUtils';
+import { GameStateWithTable } from './GameStateWithTable';
+import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
 export abstract class TriangularGameState<T extends NonNullable<unknown>> extends GameStateWithTable<T> {
 

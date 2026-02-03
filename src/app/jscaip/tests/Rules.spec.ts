@@ -3,11 +3,11 @@ import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/
 
 import { P4Move } from '../../games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
-import { Rules } from '../Rules';
-import { GameStateWithTable } from '../state/GameStateWithTable';
 import { GameStatus } from '../GameStatus';
-import { RulesUtils } from './RulesUtils.spec';
+import { Rules } from '../Rules';
 import { NoConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameStateWithTable } from '../state/GameStateWithTable';
+import { RulesUtils } from './RulesUtils.spec';
 
 class AbstractState extends GameStateWithTable<number> {}
 

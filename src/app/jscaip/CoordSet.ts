@@ -1,5 +1,6 @@
-import { Coord } from '../jscaip/Coord';
 import { OptimizedSet } from '@everyboard/lib';
+
+import { Coord } from '../jscaip/Coord';
 
 export class CoordSet extends OptimizedSet<Coord> {
 

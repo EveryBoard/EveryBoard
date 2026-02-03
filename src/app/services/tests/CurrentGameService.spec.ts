@@ -5,17 +5,17 @@ import { ReplaySubject, Subscription } from 'rxjs';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { CurrentGame } from '../../domain/User';
-import { CurrentGameService } from '../CurrentGameService';
-import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
 import { UserDAO } from '../../dao/UserDAO';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
+import { CurrentGame } from '../../domain/User';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 import { CurrentGameMocks } from '../../domain/mocks/CurrentGameMocks.spec';
-import { UserService } from '../UserService';
 import { prepareUnsubscribeCheck } from '../../utils/tests/TestUtils.spec';
+import { AuthUser, ConnectedUserService, GameActionFailure } from '../ConnectedUserService';
+import { CurrentGameService } from '../CurrentGameService';
+import { UserService } from '../UserService';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 
 export class CurrentGameServiceMock {
 
