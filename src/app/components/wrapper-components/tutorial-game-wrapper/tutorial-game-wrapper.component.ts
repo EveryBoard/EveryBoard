@@ -1,5 +1,6 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameWrapper } from '../../../components/wrapper-components/GameWrapper';

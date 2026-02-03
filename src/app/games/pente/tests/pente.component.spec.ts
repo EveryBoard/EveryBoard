@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

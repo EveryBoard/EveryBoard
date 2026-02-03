@@ -1,5 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
 import { Player } from '../../../jscaip/Player';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ApagosComponent } from '../apagos.component';
@@ -7,7 +10,6 @@ import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosState } from '../ApagosState';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('ApagosComponent', () => {
 

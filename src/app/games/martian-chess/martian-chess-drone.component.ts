@@ -1,4 +1,5 @@
 import { Component, Input } from '@angular/core';
+
 import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
 
 @Component({

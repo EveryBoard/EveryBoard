@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+
 import { MGPOptional, Utils, TestUtils, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigurationComponent } from './rules-configuration.component';

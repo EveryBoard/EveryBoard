@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { SuperRules } from '../../../jscaip/Rules';
 import { Move } from '../../../jscaip/Move';

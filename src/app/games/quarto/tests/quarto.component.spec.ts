@@ -1,5 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
 import { QuartoComponent } from '../quarto.component';
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
@@ -8,7 +11,6 @@ import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { QuartoConfig, QuartoRules } from '../QuartoRules';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('QuartoComponent', () => {
 

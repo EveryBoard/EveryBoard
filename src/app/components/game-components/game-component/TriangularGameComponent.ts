@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 import { GameComponent } from './GameComponent';

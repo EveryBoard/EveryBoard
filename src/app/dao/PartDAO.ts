@@ -1,6 +1,7 @@
+import { Injectable } from '@angular/core';
+
 import { FirestoreDAO } from './FirestoreDAO';
 import { Part } from '../domain/Part';
-import { Injectable } from '@angular/core';
 import { Debug } from '../utils/Debug';
 
 @Injectable({

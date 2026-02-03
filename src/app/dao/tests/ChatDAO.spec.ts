@@ -3,6 +3,7 @@ import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@firebase/auth';
 import { serverTimestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+
 import { MGPOptional } from '@everyboard/lib';
 
 import { ChatDAO } from '../ChatDAO';

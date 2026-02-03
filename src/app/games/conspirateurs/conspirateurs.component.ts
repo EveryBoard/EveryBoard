@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';

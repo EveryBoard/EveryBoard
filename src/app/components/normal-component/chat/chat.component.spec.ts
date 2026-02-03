@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { DebugElement } from '@angular/core';
+import { serverTimestamp } from 'firebase/firestore';
+
 import { ChatComponent } from './chat.component';
 import { ChatService } from '../../../services/ChatService';
 import { ChatDAO } from '../../../dao/ChatDAO';
-import { DebugElement } from '@angular/core';
-
 import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { Message } from '../../../domain/Message';
-import { serverTimestamp } from 'firebase/firestore';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';

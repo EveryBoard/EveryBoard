@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GoMove } from '../GoMove';

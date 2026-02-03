@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+
+import { MGPOptional } from '@everyboard/lib';
 
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LocalGameConfigurationComponent } from './local-game-configuration.component';
-import { Router } from '@angular/router';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
-import { MGPOptional } from 'lib/dist';
 import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { AuthUser } from '../../../services/ConnectedUserService';

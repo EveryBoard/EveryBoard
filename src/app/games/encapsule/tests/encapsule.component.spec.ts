@@ -1,4 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { DebugElement } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
 
 import { EncapsuleComponent } from '../encapsule.component';
@@ -8,11 +11,9 @@ import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, Enc
 import { Player } from '../../../jscaip/Player';
 import { EncapsulePiece } from '../../../games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
-import { DebugElement } from '@angular/core';
 
 describe('EncapsuleComponent', () => {
 

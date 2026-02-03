@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
 
 import { AwaleComponent } from '../awale.component';

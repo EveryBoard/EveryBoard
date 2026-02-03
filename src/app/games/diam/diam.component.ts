@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';

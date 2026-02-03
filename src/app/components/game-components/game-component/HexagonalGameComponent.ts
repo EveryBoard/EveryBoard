@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+
 import { Coord } from '../../../jscaip/Coord';
 import { GameState } from '../../../jscaip/state/GameState';
 import { HexaLayout } from '../../../jscaip/HexaLayout';

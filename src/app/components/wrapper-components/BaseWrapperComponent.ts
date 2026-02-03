@@ -1,4 +1,5 @@
 import { ActivatedRoute } from '@angular/router';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { BaseComponent } from '../BaseComponent';

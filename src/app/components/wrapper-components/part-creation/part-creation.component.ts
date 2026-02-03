@@ -5,6 +5,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { Timestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+
 import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/ConfigRoom';

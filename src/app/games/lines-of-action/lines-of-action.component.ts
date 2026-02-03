@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';

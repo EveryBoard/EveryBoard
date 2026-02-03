@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
+
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { expectValidRoutingLink, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

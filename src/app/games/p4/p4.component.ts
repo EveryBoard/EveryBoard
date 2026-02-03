@@ -1,4 +1,5 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { P4State } from './P4State';
