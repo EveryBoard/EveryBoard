@@ -3,14 +3,14 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
-import { SixState } from '../SixState';
-import { SixMove } from '../SixMove';
-import { SixFailure } from '../SixFailure';
-import { SixConfig, SixNode, SixRules } from '../SixRules';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Table } from '../../../jscaip/TableUtils';
 import { Vector } from '../../../jscaip/Vector';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { SixFailure } from '../SixFailure';
+import { SixMove } from '../SixMove';
+import { SixConfig, SixNode, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 
 describe('SixRules', () => {
 

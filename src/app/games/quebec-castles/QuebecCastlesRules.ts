@@ -1,21 +1,21 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
-import { QuebecCastlesState } from './QuebecCastlesState';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { BooleanConfig, EnumConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../utils/MGPValidator';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { DirectionFailure } from '../../jscaip/Direction';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { DirectionFailure } from '../../jscaip/Direction';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Localized } from '../../utils/LocaleUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
+import { QuebecCastlesState } from './QuebecCastlesState';
 
 export class QuebecCastlesFailure {
 

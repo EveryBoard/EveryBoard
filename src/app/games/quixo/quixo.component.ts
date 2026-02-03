@@ -1,18 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { QuixoMove } from './QuixoMove';
-import { QuixoConfig, QuixoState } from './QuixoState';
-import { QuixoRules } from './QuixoRules';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 import { PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { QuixoMinimax } from './QuixoMinimax';
+import { QuixoMove } from './QuixoMove';
+import { QuixoMoveGenerator } from './QuixoMoveGenerator';
+import { QuixoRules } from './QuixoRules';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 @Component({
     selector: 'app-quixo',

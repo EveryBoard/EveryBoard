@@ -1,13 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { BrandhubMove } from './BrandhubMove';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { TaflPawn } from '../../../games/tafl/TaflPawn';
 import { Coord } from '../../../jscaip/Coord';
-import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { BrandhubRules } from './BrandhubRules';
 import { TaflConfig } from '../TaflConfig';
 import { TaflState } from '../TaflState';
-import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { BrandhubMove } from './BrandhubMove';
+import { BrandhubRules } from './BrandhubRules';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

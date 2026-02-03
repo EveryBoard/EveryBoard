@@ -1,12 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { QuartoState } from './QuartoState';
-import { QuartoMove } from './QuartoMove';
-import { Heuristic } from '../../jscaip/AI/Minimax';
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { QuartoNode, BoardStatus, QuartoRules, QuartoConfig, VictoryPattern } from './QuartoRules';
-import { CoordSet } from '../../jscaip/CoordSet';
 import { AlignmentStatus } from '../../jscaip/AI/AlignmentHeuristic';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../jscaip/AI/Minimax';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { QuartoMove } from './QuartoMove';
+import { QuartoNode, BoardStatus, QuartoRules, QuartoConfig, VictoryPattern } from './QuartoRules';
+import { QuartoState } from './QuartoState';
 
 export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState, BoardValue, QuartoConfig> {
 

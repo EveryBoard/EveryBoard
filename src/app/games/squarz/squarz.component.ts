@@ -1,19 +1,20 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { SquarzConfig, SquarzRules } from './SquarzRules';
-import { SquarzMove as SquarzMove } from './SquarzMove';
-import { SquarzState } from './SquarzState';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { SquarzMoveGenerator } from './SquarzMoveGenerator';
-import { SquarzMinimax } from './SquarzMinimax';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Coord } from '../../jscaip/Coord';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { SquarzMinimax } from './SquarzMinimax';
+import { SquarzMove as SquarzMove } from './SquarzMove';
+import { SquarzMoveGenerator } from './SquarzMoveGenerator';
+import { SquarzConfig, SquarzRules } from './SquarzRules';
+import { SquarzState } from './SquarzState';
 
 @Component({
     selector: 'app-squarz',

@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { QuixoComponent } from '../quixo.component';
-import { QuixoMove } from '../../../games/quixo/QuixoMove';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { Table } from '../../../jscaip/TableUtils';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { QuixoState } from '../../../games/quixo/QuixoState';
+
 import { QuixoFailure } from '../../../games/quixo/QuixoFailure';
+import { QuixoMove } from '../../../games/quixo/QuixoMove';
+import { QuixoState } from '../../../games/quixo/QuixoState';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { QuixoComponent } from '../quixo.component';
 
 describe('QuixoComponent', () => {
 

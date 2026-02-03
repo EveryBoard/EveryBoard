@@ -1,8 +1,8 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
+import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoMove } from './QuartoMove';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
-import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoState } from './QuartoState';
 
 export class QuartoMinimax extends Minimax<QuartoMove, QuartoState, QuartoConfig> {

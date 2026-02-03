@@ -1,14 +1,14 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { SixState } from './SixState';
-import { SixMove } from './SixMove';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { Localized } from '../../utils/LocaleUtils';
-import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { SixRules } from './SixRules';
-import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Localized } from '../../utils/LocaleUtils';
+import { SixMove } from './SixMove';
+import { SixRules } from './SixRules';
+import { SixState } from './SixState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
