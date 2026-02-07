@@ -86,7 +86,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     public isPlaying(): boolean {
-        return this.role.isPlayer();
+        return /* TODO: this should fix the bug: this.isSynced && */ this.role.isPlayer();
     }
 
     public override getPlayer(): MinimalUser {
