@@ -1,28 +1,28 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
 import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPOptional, MGPValidation, MGPValidationTestUtils } from '@everyboard/lib';
 
-import { GameService } from '../GameService';
-import { PartDAO } from '../../dao/PartDAO';
-import { Part, MGPResult } from '../../domain/Part';
-import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
-import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { ChatDAO } from '../../dao/ChatDAO';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
-import { ConnectedUserService } from '../ConnectedUserService';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { UserMocks } from '../../domain/UserMocks.spec';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PartDAO } from '../../dao/PartDAO';
+import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
+import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
+import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { MinimalUser } from '../../domain/MinimalUser';
-import { BlankComponent } from '../../utils/tests/TestUtils.spec';
+import { Part, MGPResult } from '../../domain/Part';
 import { PartMocks } from '../../domain/PartMocks.spec';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { BlankComponent } from '../../utils/tests/TestUtils.spec';
+import { ConnectedUserService } from '../ConnectedUserService';
+import { GameService } from '../GameService';
 import { endpoint, expectedParams } from './BackendService.spec';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 
 describe('GameService', () => {
 

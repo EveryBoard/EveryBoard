@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { MartianChessRules } from '../MartianChessRules';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { MartianChessScoreMinimax } from '../MartianChessScoreMinimax';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { MartianChessRules } from '../MartianChessRules';
+import { MartianChessScoreMinimax } from '../MartianChessScoreMinimax';
 
 describe('MartianChessScoreMinimax', () => {
 

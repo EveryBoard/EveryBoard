@@ -1,8 +1,8 @@
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Table } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 export class HexodiaState extends FourStatePieceGameStateWithTable {
 

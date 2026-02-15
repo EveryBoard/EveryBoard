@@ -1,10 +1,10 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
-import { TaflMoveGenerator } from './TaflMoveGenerator';
-import { TaflState } from './TaflState';
-import { TaflMove } from './TaflMove';
-import { TaflRules } from './TaflRules';
-import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
 import { TaflConfig } from './TaflConfig';
+import { TaflMove } from './TaflMove';
+import { TaflMoveGenerator } from './TaflMoveGenerator';
+import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
+import { TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 
 export class TaflPieceAndControlMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
 

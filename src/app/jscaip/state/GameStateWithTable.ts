@@ -1,9 +1,9 @@
 import { MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { GameState } from './GameState';
-import { Table, TableUtils } from '../TableUtils';
 import { CoordSet } from '../CoordSet';
+import { Table, TableUtils } from '../TableUtils';
+import { GameState } from './GameState';
 
 export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 

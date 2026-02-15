@@ -2,13 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { KamisadoState } from '../KamisadoState';
-import { KamisadoPiece } from '../KamisadoPiece';
-import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { KamisadoHeuristic } from '../KamisadoHeuristic';
-import { KamisadoColor } from '../KamisadoColor';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
+import { KamisadoColor } from '../KamisadoColor';
+import { KamisadoHeuristic } from '../KamisadoHeuristic';
+import { KamisadoPiece } from '../KamisadoPiece';
+import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
+import { KamisadoState } from '../KamisadoState';
 
 const _: KamisadoPiece = KamisadoPiece.EMPTY;
 const R: KamisadoPiece = KamisadoPiece.ZERO.RED;

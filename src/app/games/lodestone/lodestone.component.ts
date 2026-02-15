@@ -1,23 +1,24 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
+import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
-import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
+import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,

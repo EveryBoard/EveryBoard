@@ -1,12 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
+import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 
 export class EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic extends EpaminondasHeuristic {
 

@@ -1,20 +1,20 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { ConfigurableRules } from '../../jscaip/Rules';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { TableUtils } from '../../jscaip/TableUtils';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { PenteConfig } from './PenteConfig';
-import { MGPValidators } from '../../utils/MGPValidator';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 

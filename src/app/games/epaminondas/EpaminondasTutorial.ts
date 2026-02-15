@@ -1,12 +1,12 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { EpaminondasMove } from '../../games/epaminondas/EpaminondasMove';
-import { EpaminondasState } from '../../games/epaminondas/EpaminondasState';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
-import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { EpaminondasState } from './EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

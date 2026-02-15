@@ -1,9 +1,9 @@
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
 import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMoveGenerator {
 

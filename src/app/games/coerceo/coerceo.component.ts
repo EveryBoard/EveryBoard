@@ -1,24 +1,26 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
+import { CoerceoFailure } from './CoerceoFailure';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
+import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
+import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
+import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 import { TriangularGameComponent }
     from '../../components/game-components/game-component/TriangularGameComponent';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../../games/coerceo/CoerceoMove';
-import { CoerceoState } from '../../games/coerceo/CoerceoState';
-import { Coord } from '../../jscaip/Coord';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../../games/coerceo/CoerceoRules';
-import { CoerceoFailure } from '../../games/coerceo/CoerceoFailure';
-import { Player } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
-import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
-import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 
 @Component({
     selector: 'app-coerceo',

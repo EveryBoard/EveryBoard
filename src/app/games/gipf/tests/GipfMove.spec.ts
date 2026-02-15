@@ -2,10 +2,10 @@
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { HexaLine } from '../../../jscaip/HexaLine';
 import { GipfMove, GipfPlacement } from '../GipfMove';
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 
 describe('GipfCapture', () => {
 

@@ -1,28 +1,29 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { AbaloneFailure } from './AbaloneFailure';
-import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Arrow } from '../../components/game-components/arrow-component/Arrow';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { AbaloneState } from './AbaloneState';
 
 type CapturedInfo = {
     coord: Coord,

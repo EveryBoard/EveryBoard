@@ -4,9 +4,9 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
 import { UserSettingsService } from '../../../services/UserSettingsService';
+import { LocaleUtils } from '../../../utils/LocaleUtils';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SettingsComponent } from './settings.component';
-import { LocaleUtils } from '../../../utils/LocaleUtils';
 
 describe('SettingsComponent', () => {
 

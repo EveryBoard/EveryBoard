@@ -3,12 +3,12 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
+import { AbaloneComponent } from '../../../games/abalone/abalone.component';
 import { Player } from '../../../jscaip/Player';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { ActivatedRouteStub, ComponentTestUtils, ConfigureTestingModuleUtils } from '../../../utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { AbstractGameComponent } from './GameComponent';
-import { AbaloneComponent } from '../../../games/abalone/abalone.component';
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 
 describe('GameComponent', () => {
 

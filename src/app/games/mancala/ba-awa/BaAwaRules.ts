@@ -1,13 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { BaAwaConfig } from './BaAwaConfig';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '../common/MancalaRules';
-import { MGPValidators } from '../../../utils/MGPValidator';
-import { MancalaState } from '../common/MancalaState';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { TableUtils } from '../../../jscaip/TableUtils';
+import { MGPValidators } from '../../../utils/MGPValidator';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '../common/MancalaRules';
+import { MancalaState } from '../common/MancalaState';
+import { BaAwaConfig } from './BaAwaConfig';
 
 export class BaAwaRules extends MancalaRules<BaAwaConfig> {
 

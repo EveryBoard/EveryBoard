@@ -1,17 +1,17 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { GameNode } from '../../jscaip/AI/GameNode';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { TableUtils } from '../../jscaip/TableUtils';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
-import { TableUtils } from '../../jscaip/TableUtils';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 

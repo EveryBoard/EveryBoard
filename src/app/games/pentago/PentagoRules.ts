@@ -1,18 +1,18 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Vector } from '../../jscaip/Vector';
 import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { Vector } from '../../jscaip/Vector';
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
-import { PlayerMap } from '../../jscaip/PlayerMap';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 

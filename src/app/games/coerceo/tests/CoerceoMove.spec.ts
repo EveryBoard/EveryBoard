@@ -2,11 +2,11 @@
 import { EncoderTestUtils, TestUtils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { CoerceoRules } from '../CoerceoRules';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
+import { CoerceoRules } from '../CoerceoRules';
 
 describe('CoerceoMove', () => {
 

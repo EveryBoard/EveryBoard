@@ -1,8 +1,8 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
+import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HiveRules } from './HiveRules';
-import { HiveHeuristic } from './HiveHeuristic';
 import { HiveState } from './HiveState';
 
 export class HiveMinimax extends Minimax<HiveMove, HiveState> {

@@ -3,11 +3,11 @@ import { Injectable } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
-import { MinimalUser } from '../../domain/MinimalUser';
-import { ConnectedUserService } from '../ConnectedUserService';
 import { ConfigRoom, FirstPlayer, PartStatus, PartType } from '../../domain/ConfigRoom';
-import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
+import { MinimalUser } from '../../domain/MinimalUser';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
+import { ConnectedUserService } from '../ConnectedUserService';
 
 @Injectable({ providedIn: 'root' })
 export class ConfigRoomServiceMock extends ConfigRoomService {

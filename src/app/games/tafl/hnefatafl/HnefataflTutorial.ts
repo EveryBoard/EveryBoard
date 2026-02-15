@@ -1,13 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { HnefataflMove } from './HnefataflMove';
-import { TaflPawn } from '../TaflPawn';
-import { Coord } from '../../../jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { HnefataflRules } from './HnefataflRules';
-import { TaflConfig } from '../TaflConfig';
-import { TaflState } from '../TaflState';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../../jscaip/Coord';
+import { TaflConfig } from '../TaflConfig';
+import { TaflPawn } from '../TaflPawn';
+import { TaflState } from '../TaflState';
+import { HnefataflMove } from './HnefataflMove';
+import { HnefataflRules } from './HnefataflRules';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

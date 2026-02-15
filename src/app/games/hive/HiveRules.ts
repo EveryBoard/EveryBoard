@@ -1,21 +1,21 @@
 import { MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
 import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table } from '../../jscaip/TableUtils';
 import { HiveFailure } from './HiveFailure';
 import { HiveDropMove, HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HivePieceRules } from './HivePieceRules';
 import { HiveState } from './HiveState';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Table } from '../../jscaip/TableUtils';
-import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { CoordSet } from '../../jscaip/CoordSet';
 
 export class HiveNode extends GameNode<HiveMove, HiveState> {}
 

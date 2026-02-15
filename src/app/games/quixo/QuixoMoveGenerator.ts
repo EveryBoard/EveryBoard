@@ -1,10 +1,11 @@
+import { MGPOptional } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { QuixoConfig, QuixoState } from './QuixoState';
 import { QuixoMove } from './QuixoMove';
 import { QuixoNode, QuixoRules } from './QuixoRules';
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { MGPOptional } from '@everyboard/lib';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState, QuixoConfig> {
 

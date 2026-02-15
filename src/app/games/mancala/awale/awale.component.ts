@@ -1,10 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 
-import { AwaleRules } from './AwaleRules';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { AwaleMoveGenerator } from './AwaleMoveGenerator';
-import { MancalaMove } from '../common/MancalaMove';
 import { MancalaComponent } from '../common/MancalaComponent';
+import { MancalaMove } from '../common/MancalaMove';
+import { AwaleMoveGenerator } from './AwaleMoveGenerator';
+import { AwaleRules } from './AwaleRules';
 
 @Component({
     selector: 'app-awale-component',

@@ -1,8 +1,9 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { PlayerOrNone } from '../../../../jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
 import { BrandhubRules } from '../BrandhubRules';
-import { MGPOptional } from '@everyboard/lib';
 
 const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
 

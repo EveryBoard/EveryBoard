@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { SiamRules, SiamNode, SiamConfig } from '../SiamRules';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
-import { SiamMove } from '../SiamMove';
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord } from '../../../jscaip/Coord';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { SiamHeuristic } from '../SiamHeuristic';
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { SiamMove } from '../SiamMove';
+import { SiamPiece } from '../SiamPiece';
+import { SiamRules, SiamNode, SiamConfig } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

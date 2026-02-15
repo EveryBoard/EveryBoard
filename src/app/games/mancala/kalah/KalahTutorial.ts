@@ -1,13 +1,13 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { MancalaState } from '../common/MancalaState';
-import { KalahRules } from './KalahRules';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { MancalaTutorial } from '../common/MancalaTutorial';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
+import { MancalaState } from '../common/MancalaState';
+import { MancalaTutorial } from '../common/MancalaTutorial';
+import { KalahRules } from './KalahRules';
 
 const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
 

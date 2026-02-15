@@ -3,10 +3,10 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
-import { TablutRules } from '../tablut/TablutRules';
 import { TaflConfig } from '../TaflConfig';
+import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
 import { TablutMove } from '../tablut/TablutMove';
+import { TablutRules } from '../tablut/TablutRules';
 
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
 

@@ -1,10 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { TeekoConfig, TeekoNode, TeekoRules } from './TeekoRules';
-import { Coord } from '../../jscaip/Coord';
 import { Heuristic } from '../../jscaip/AI/Minimax';
+import { Coord } from '../../jscaip/Coord';
 import { TeekoMove } from './TeekoMove';
+import { TeekoConfig, TeekoNode, TeekoRules } from './TeekoRules';
 import { TeekoState } from './TeekoState';
 
 export class TeekoHeuristic extends Heuristic<TeekoMove,

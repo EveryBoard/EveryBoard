@@ -1,7 +1,7 @@
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { PylosMove } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosNode } from './PylosRules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class PylosOrderedMoveGenerator extends PylosMoveGenerator {
 

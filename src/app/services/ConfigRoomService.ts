@@ -3,16 +3,16 @@ import { Subscription } from 'rxjs';
 
 import { FirestoreJSONObject, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
 import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
-import { MinimalUser } from '../domain/MinimalUser';
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
+import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
+import { MinimalUser } from '../domain/MinimalUser';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
-import { BackendService } from './BackendService';
 import { Debug } from '../utils/Debug';
-import { ConnectedUserService } from './ConnectedUserService';
 import { Localized } from '../utils/LocaleUtils';
+import { BackendService } from './BackendService';
+import { ConnectedUserService } from './ConnectedUserService';
 
 export class ConfigRoomServiceFailure {
     public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+
 import { NextGameLoadingComponent } from './next-game-loading.component';
 
 describe('NextGameLoadingComponent', () => {

@@ -1,20 +1,20 @@
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { AbaloneFailure } from './AbaloneFailure';
-import { AbaloneState } from './AbaloneState';
-import { AbaloneMove } from './AbaloneMove';
 import { Table } from '../../jscaip/TableUtils';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Player } from '../../jscaip/Player';
-import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../utils/MGPValidator';
+import { AbaloneFailure } from './AbaloneFailure';
+import { AbaloneMove } from './AbaloneMove';
+import { AbaloneState } from './AbaloneState';
 
 export type AbaloneConfig = {
 

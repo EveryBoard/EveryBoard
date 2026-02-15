@@ -1,11 +1,11 @@
 import { Set } from '@everyboard/lib';
 
-import { PylosCoord } from './PylosCoord';
-import { PylosMove } from './PylosMove';
-import { PylosState } from './PylosState';
-import { PylosNode, PylosRules } from './PylosRules';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { PylosCoord } from './PylosCoord';
+import { PylosMove } from './PylosMove';
+import { PylosNode, PylosRules } from './PylosRules';
+import { PylosState } from './PylosState';
 
 export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
 

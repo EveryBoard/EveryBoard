@@ -1,15 +1,15 @@
 import { ArrayUtils, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 
-import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
-import { Move } from '../Move';
-import { BoardValue } from './BoardValue';
-import { GameState } from '../state/GameState';
-import { Player } from '../Player';
 import { GameStatus } from '../GameStatus';
+import { Move } from '../Move';
+import { Player } from '../Player';
+import { PlayerNumberTable } from '../PlayerNumberTable';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameState } from '../state/GameState';
+import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
+import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
-import { PlayerNumberTable } from '../PlayerNumberTable';
 
 /**
  * A heuristic assigns a specific value for a node.

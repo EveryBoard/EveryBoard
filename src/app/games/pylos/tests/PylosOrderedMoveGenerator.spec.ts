@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('PylosOrderedMoveGenerator', () => {
 

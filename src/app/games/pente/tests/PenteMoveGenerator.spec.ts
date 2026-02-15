@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { PenteConfig } from '../PenteConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteMoveGenerator } from '../PenteMoveGenerator';
 import { PenteNode, PenteRules } from '../PenteRules';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('PenteMoveGenerator', () => {
 

@@ -1,31 +1,31 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../services/ConfigRoomService';
+import { ChatDAO } from '../../../dao/ChatDAO';
 import { ConfigRoomDAO } from '../../../dao/ConfigRoomDAO';
+import { PartDAO } from '../../../dao/PartDAO';
+import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
-import { PartDAO } from '../../../dao/PartDAO';
-import { PartMocks } from '../../../domain/PartMocks.spec';
-import { ChatDAO } from '../../../dao/ChatDAO';
-import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
-import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
-import { P4Component } from '../../../games/p4/p4.component';
-import { Part } from '../../../domain/Part';
-import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { UserDAO } from '../../../dao/UserDAO';
-import { UserMocks } from '../../../domain/UserMocks.spec';
-import { GameWrapperMessages } from '../GameWrapper';
-import { GameService } from '../../../services/GameService';
 import { MinimalUser } from '../../../domain/MinimalUser';
+import { Part } from '../../../domain/Part';
+import { PartMocks } from '../../../domain/PartMocks.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { P4Component } from '../../../games/p4/p4.component';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../services/ConfigRoomService';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { GameService } from '../../../services/GameService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { GameWrapperMessages } from '../GameWrapper';
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 
@@ -268,4 +268,3 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     }));
 
 });
-

@@ -1,9 +1,9 @@
 import { Coord } from '../../jscaip/Coord';
-import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
 import { Player } from '../../jscaip/Player';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { YinshPiece } from './YinshPiece';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
+import { YinshPiece } from './YinshPiece';
 
 export class YinshState extends HexagonalGameState<YinshPiece> {
 

@@ -2,11 +2,11 @@ import { MGPOptional, Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneDirection, LodestoneOrientation, LodestonePiece } from './LodestonePiece';
 import { LodestoneInfos, LodestoneNode, LodestoneRules } from './LodestoneRules';
 import { LodestoneState } from './LodestoneState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class LodestoneMoveGenerator extends MoveGenerator<LodestoneMove, LodestoneState> {
 

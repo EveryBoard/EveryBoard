@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { MGPValidators } from '../../utils/MGPValidator';
-import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TestUtils } from '@everyboard/lib';
+
+import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPValidators } from '../../utils/MGPValidator';
+import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 
 describe('RulesConfigUtil', () => {
 

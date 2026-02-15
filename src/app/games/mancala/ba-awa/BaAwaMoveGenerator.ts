@@ -1,5 +1,5 @@
-import { BaAwaRules } from './BaAwaRules';
 import { MancalaMoveGenerator } from '../common/MancalaMoveGenerator';
+import { BaAwaRules } from './BaAwaRules';
 
 export class BaAwaMoveGenerator extends MancalaMoveGenerator {
 

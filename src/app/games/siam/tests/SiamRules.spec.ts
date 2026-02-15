@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
-import { SiamMove } from '../SiamMove';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
+import { Coord } from '../../../jscaip/Coord';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { SiamFailure } from '../SiamFailure';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Coord } from '../../../jscaip/Coord';
+import { SiamFailure } from '../SiamFailure';
+import { SiamMove } from '../SiamMove';
+import { SiamPiece } from '../SiamPiece';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 describe('SiamRules', () => {
 

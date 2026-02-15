@@ -2,10 +2,10 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
+import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteNode, PenteRules } from './PenteRules';
 import { PenteState } from './PenteState';
-import { PenteConfig } from './PenteConfig';
 
 export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState, BoardValue, PenteConfig> {
 

@@ -1,5 +1,6 @@
-import { MancalaDistribution } from '../MancalaMove';
 import { TestUtils } from '@everyboard/lib';
+
+import { MancalaDistribution } from '../MancalaMove';
 
 describe('MancalaDistribution', () => {
 

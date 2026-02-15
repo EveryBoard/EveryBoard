@@ -4,13 +4,13 @@ import { Subscription } from 'rxjs';
 import { MGPValidation, MGPOptional, JSONValue, Utils, MGPFallible } from '@everyboard/lib';
 
 import { PartDAO } from '../dao/PartDAO';
-import { Part } from '../domain/Part';
 import { MinimalUser } from '../domain/MinimalUser';
+import { Part } from '../domain/Part';
 import { FirestoreTime } from '../domain/Time';
-import { BackendService } from './BackendService';
 import { Player, PlayerOrNone } from '../jscaip/Player';
 import { PlayerNumberMap } from '../jscaip/PlayerMap';
 import { Debug } from '../utils/Debug';
+import { BackendService } from './BackendService';
 import { ConnectedUserService } from './ConnectedUserService';
 
 export interface StartingPartConfig extends Partial<Part> {

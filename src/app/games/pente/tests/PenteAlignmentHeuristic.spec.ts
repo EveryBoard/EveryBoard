@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
-import { PenteState } from '../PenteState';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PenteAlignmentHeuristic } from '../PenteAlignmentHeuristic';
 import { PenteConfig } from '../PenteConfig';
 import { PenteRules } from '../PenteRules';
+import { PenteState } from '../PenteState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
