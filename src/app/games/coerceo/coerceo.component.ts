@@ -1,8 +1,7 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { TriangularGameComponent }
-    from '../../components/game-components/game-component/TriangularGameComponent';
+import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../../games/coerceo/CoerceoMove';
 import { CoerceoState } from '../../games/coerceo/CoerceoState';
 import { Coord } from '../../jscaip/Coord';

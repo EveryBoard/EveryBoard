@@ -8,8 +8,7 @@ import { DvonnRules } from '../../games/dvonn/DvonnRules';
 import { DvonnPieceStack } from '../../games/dvonn/DvonnPieceStack';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
-import { HexagonalGameComponent }
-    from '../../components/game-components/game-component/HexagonalGameComponent';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';

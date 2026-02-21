@@ -20,8 +20,7 @@ import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserServ
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
-import { OnlineGameWrapperComponent }
-    from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { OnlineGameWrapperComponent } from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { ChatDAO } from '../../dao/ChatDAO';
 import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
 import { PartDAO } from '../../dao/PartDAO';
@@ -29,8 +28,7 @@ import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { LocalGameWrapperComponent }
-    from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { ErrorLoggerService } from '../../services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';

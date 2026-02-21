@@ -32,19 +32,13 @@ import { PartCreationComponent } from './components/wrapper-components/part-crea
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
-import { OnlineGameWrapperComponent }
-    from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent }
-    from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { TutorialGameWrapperComponent }
-    from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
+import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
-import { LocalGameCreationComponent }
-    from './components/normal-component/local-game-creation/local-game-creation.component';
-import { OnlineGameSelectionComponent }
-    from './components/normal-component/online-game-selection/online-game-selection.component';
-import { TutorialGameCreationComponent }
-    from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
+import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
+import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
+import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
