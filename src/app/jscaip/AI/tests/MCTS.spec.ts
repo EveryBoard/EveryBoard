@@ -45,8 +45,9 @@ describe('MCTS', () => {
             // MCTS blocked the opponent's only possible win
             expect(true).toBe(true);
         } else {
-            // MCTS gave the opponent a piece with which they cannot win
-            expect(move.piece).not.toEqual(QuartoPiece.AABA);
+            expect(move.piece)
+                .withContext('MCTS gave the opponent a piece with which they can win (while other option exist)')
+                .not.toEqual(QuartoPiece.AABA);
         }
     });
 
