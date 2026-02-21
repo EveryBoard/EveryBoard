@@ -21,12 +21,12 @@ import { LobbyComponent } from './components/normal-component/lobby/lobby.compon
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
-import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
-import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
-import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
+import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
+import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
 import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
