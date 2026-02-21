@@ -1,8 +1,8 @@
 import { registerLocaleData } from '@angular/common';
+import { HttpClientModule } from '@angular/common/http';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
-import { HttpClientModule } from '@angular/common/http';
 import { RouterModule, Route } from '@angular/router';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import * as Firebase from '@firebase/app';
