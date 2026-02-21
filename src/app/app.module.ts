@@ -9,9 +9,7 @@ import { RouterModule, Route } from '@angular/router';
 import * as Firebase from '@firebase/app';
 import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
-
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
 import { ChatService } from './services/ChatService';
 import { UserService } from './services/UserService';
 import { ConnectedUserService } from './services/ConnectedUserService';
@@ -19,7 +17,6 @@ import { GameService } from './services/GameService';
 import { ConfigRoomService } from './services/ConfigRoomService';
 import { GameEventService } from './services/GameEventService';
 import { ThemeService } from './services/ThemeService';
-
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
@@ -45,89 +42,66 @@ import { VerifyAccountComponent } from './components/normal-component/verify-acc
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
-
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
 import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
-
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { AwaleComponent } from './games/mancala/awale/awale.component';
-
 import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
 import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
-
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
-
 import { DiaballikComponent } from './games/diaballik/diaballik.component';
 import { DiamComponent } from './games/diam/diam.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
-
 import { EncapsuleComponent } from './games/encapsule/encapsule.component';
 import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
-
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/gos/go/go.component';
-
 import { HexodiaComponent } from './games/hexodia/hexodia.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
 import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
-
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
-
 import { KalahComponent } from './games/mancala/kalah/kalah.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
-
 import { LascaComponent } from './games/checkers/lasca/lasca.component';
 import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
 import { LodestoneComponent } from './games/lodestone/lodestone.component';
 import { LodestoneLodestoneComponent } from './games/lodestone/lodestone-lodestone.component';
-
 import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
 import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
 import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
 import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
-
 import { NumberedCircleComponent } from './games/mancala/common/numbered-circle.component';
-
 import { P4Component } from './games/p4/p4.component';
 import { PentagoComponent } from './games/pentago/pentago.component';
 import { PenteComponent } from './games/pente/pente.component';
 import { PylosComponent } from './games/pylos/pylos.component';
-
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuebecCastlesComponent } from './games/quebec-castles/quebec-castles.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
-
 import { ReversiComponent } from './games/reversi/reversi.component';
-
 import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
 import { SixComponent } from './games/six/six.component';
 import { SquarzComponent } from './games/squarz/squarz.component';
-
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
 import { TrigoComponent } from './games/gos/trigo/trigo.component';
-
 import { YinshComponent } from './games/yinsh/yinsh.component';
-
 import { environment } from '../environments/environment';
-
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
-
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
-
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
