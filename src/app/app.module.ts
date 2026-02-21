@@ -6,8 +6,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterModule, Route } from '@angular/router';
 import * as Firebase from '@firebase/app';
-import * as Firestore from '@firebase/firestore';
 import * as Auth from '@firebase/auth';
+import * as Firestore from '@firebase/firestore';
 import localeFr from '@angular/common/locales/fr';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
