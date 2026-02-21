@@ -17,13 +17,13 @@ import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
-import { GipfLegalityInformation, GipfRules } from './GipfRules';
-import { GipfState } from './GipfState';
-
 import { GipfMoveGenerator } from './GipfMoveGenerator';
+import { GipfLegalityInformation, GipfRules } from './GipfRules';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
+import { GipfState } from './GipfState';
 
 @Component({
     selector: 'app-gipf',

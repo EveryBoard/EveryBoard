@@ -2,8 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, In
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
-import { Subject } from 'rxjs';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';

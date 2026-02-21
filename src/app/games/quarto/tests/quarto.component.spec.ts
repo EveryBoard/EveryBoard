@@ -13,7 +13,6 @@ import { QuartoState } from '../QuartoState';
 import { QuartoComponent } from '../quarto.component';
 
 describe('QuartoComponent', () => {
-
     let testUtils: ComponentTestUtils<QuartoComponent>;
 
     const NULL: QuartoPiece = QuartoPiece.EMPTY;
