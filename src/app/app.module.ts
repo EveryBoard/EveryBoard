@@ -12,11 +12,11 @@ import * as Firestore from '@firebase/firestore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/normal-component/header/header.component';
-import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
-import { LoginComponent } from './components/normal-component/login/login.component';
+import { HeaderComponent } from './components/normal-component/header/header.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { LoginComponent } from './components/normal-component/login/login.component';
+import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
