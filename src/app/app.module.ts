@@ -1,5 +1,6 @@
 import { registerLocaleData } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
+import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
@@ -8,7 +9,6 @@ import { RouterModule, Route } from '@angular/router';
 import * as Firebase from '@firebase/app';
 import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
-import localeFr from '@angular/common/locales/fr';
 
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
