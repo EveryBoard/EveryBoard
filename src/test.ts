@@ -1,5 +1,7 @@
-// This file is required by karma.conf.js and loads recursively all the .spec and framework files
-
+/**
+ * This file is required by karma.conf.js and loads recursively all the .spec and framework files
+ * Note: zone.js must be imported before Angular testing modules to ensure that the correct zone is used.
+ */
 import 'zone.js/testing';
 import { getTestBed } from '@angular/core/testing';
 import { BrowserDynamicTestingModule, platformBrowserDynamicTesting } from '@angular/platform-browser-dynamic/testing';
