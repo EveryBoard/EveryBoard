@@ -3,11 +3,11 @@ import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { QuixoConfig, QuixoState } from '../QuixoState';
-import { QuixoNode, QuixoRules } from '../QuixoRules';
-import { QuixoMove } from '../QuixoMove';
 import { Table } from '../../../jscaip/TableUtils';
+import { QuixoMove } from '../QuixoMove';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
+import { QuixoNode, QuixoRules } from '../QuixoRules';
+import { QuixoConfig, QuixoState } from '../QuixoState';
 
 describe('QuixoMove', () => {
 

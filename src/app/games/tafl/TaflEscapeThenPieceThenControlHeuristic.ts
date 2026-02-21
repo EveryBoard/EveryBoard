@@ -1,15 +1,16 @@
 import { MGPOptional } from '@everyboard/lib';
 
+import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Player } from '../../jscaip/Player';
-import { TaflPawn } from './TaflPawn';
-import { TaflState } from './TaflState';
+
+import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';
+import { TaflPawn } from './TaflPawn';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';
-import { TaflConfig } from './TaflConfig';
+import { TaflState } from './TaflState';
 
 export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends TaflPieceAndControlHeuristic<M> {
 

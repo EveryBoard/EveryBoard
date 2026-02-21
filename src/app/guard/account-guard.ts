@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
+
 import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
 
 @Injectable({

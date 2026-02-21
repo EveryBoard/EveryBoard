@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
-import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
-import { ConnectSixState } from '../ConnectSixState';
+import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
+import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { MGPOptional } from '@everyboard/lib';
+import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
+import { ConnectSixState } from '../ConnectSixState';
 
 describe('ConnectSixMoveGenerator', () => {
 

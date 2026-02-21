@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { BaseGameComponent } from '../../../../components/game-components/game-component/GameComponent';
+
 import { Coord } from '../../../../jscaip/Coord';
 import { GobanUtils } from '../../../../jscaip/GobanUtils';
+import { BaseGameComponent } from '../../game-component/GameComponent';
 
 @Component({
     selector: '[app-blank-goban]',

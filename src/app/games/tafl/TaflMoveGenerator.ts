@@ -1,13 +1,14 @@
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { Debug } from '../../utils/Debug';
+
+import { TaflConfig } from './TaflConfig';
+import { TaflMove } from './TaflMove';
 import { TaflNode, TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
-import { TaflMove } from './TaflMove';
-import { Player } from '../../jscaip/Player';
-import { Coord } from '../../jscaip/Coord';
-import { Debug } from '../../utils/Debug';
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { TaflConfig } from './TaflConfig';
 
 @Debug.log
 export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, TaflState, TaflConfig> {

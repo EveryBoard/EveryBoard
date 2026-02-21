@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
+
 import { Coord } from '../../../jscaip/Coord';
 import { Coord3D } from '../../../jscaip/Coord3D';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { TrexoMove } from '../TrexoMove';
 import { TrexoHalfPieceComponent } from '../trexo-half-piece.component';
 import { TrexoComponent } from '../trexo.component';
-import { TrexoMove } from '../TrexoMove';
 
 describe('TrexoHalfSquareComponent', () => {
 

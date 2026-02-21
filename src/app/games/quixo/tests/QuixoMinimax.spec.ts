@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { QuixoRules } from '../QuixoRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { QuixoMinimax } from '../QuixoMinimax';
+import { QuixoRules } from '../QuixoRules';
 import { QuixoConfig } from '../QuixoState';
 
 describe('QuixoMinimax', () => {

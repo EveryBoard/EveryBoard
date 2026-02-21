@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player } from '../../../../jscaip/Player';
-import { CheckersScoreHeuristic } from '../CheckersScoreHeuristic';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
-import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../../jscaip/Player';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
+import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
+import { CheckersScoreHeuristic } from '../CheckersScoreHeuristic';
+import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 
 const u: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const v: CheckersStack = new CheckersStack([CheckersPiece.ONE]);

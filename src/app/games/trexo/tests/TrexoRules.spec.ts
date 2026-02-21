@@ -3,12 +3,12 @@ import { ArrayUtils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);

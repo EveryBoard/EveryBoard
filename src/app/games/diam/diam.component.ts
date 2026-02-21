@@ -1,20 +1,22 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
-import { Vector } from '../../jscaip/Vector';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Vector } from '../../jscaip/Vector';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
+
+import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
+import { DiamMoveGenerator } from './DiamMoveGenerator';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { DiamMoveGenerator } from './DiamMoveGenerator';
-import { DiamDummyMinimax } from './DiamDummyMinimax';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],

@@ -1,26 +1,28 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
-import { TutorialStep, TutorialStepAnyMove } from './TutorialStep';
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
-import { QuartoState } from '../../../games/quarto/QuartoState';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
-import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
+import { QuartoConfig, QuartoRules } from '../../../games/quarto/QuartoRules';
+import { QuartoState } from '../../../games/quarto/QuartoState';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
-import { TutorialFailure } from './TutorialFailure';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
-import { GameWrapperMessages } from '../GameWrapper';
-import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { Player } from '../../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { QuartoConfig, QuartoRules } from '../../../games/quarto/QuartoRules';
-import { TutorialStepMessage } from './TutorialStepMessage';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
+import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
+import { GameWrapperMessages } from '../GameWrapper';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
+
+import { TutorialFailure } from './TutorialFailure';
+import { TutorialStep, TutorialStepAnyMove } from './TutorialStep';
+import { TutorialStepMessage } from './TutorialStepMessage';
+import { TutorialGameWrapperComponent, TutorialGameWrapperMessages } from './tutorial-game-wrapper.component';
 
 describe('TutorialGameWrapperComponent for non-existing game', () => {
 

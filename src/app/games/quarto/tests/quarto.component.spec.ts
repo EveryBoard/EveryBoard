@@ -1,14 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { QuartoComponent } from '../quarto.component';
-import { QuartoMove } from '../../../games/quarto/QuartoMove';
-import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
-import { QuartoState } from '../../../games/quarto/QuartoState';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { QuartoMove } from '../QuartoMove';
+import { QuartoPiece } from '../QuartoPiece';
 import { QuartoConfig, QuartoRules } from '../QuartoRules';
-import { MGPOptional } from '@everyboard/lib';
+import { QuartoState } from '../QuartoState';
+import { QuartoComponent } from '../quarto.component';
 
 describe('QuartoComponent', () => {
 

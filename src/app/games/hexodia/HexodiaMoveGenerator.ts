@@ -1,12 +1,13 @@
 import { MGPOptional, Set } from '@everyboard/lib';
 
-import { HexodiaState } from './HexodiaState';
-import { HexodiaConfig, HexodiaNode } from './HexodiaRules';
-import { HexodiaMove } from './HexodiaMove';
-import { Coord } from '../../jscaip/Coord';
-import { TableUtils } from '../../jscaip/TableUtils';
 import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { TableUtils } from '../../jscaip/TableUtils';
+
+import { HexodiaMove } from './HexodiaMove';
+import { HexodiaConfig, HexodiaNode } from './HexodiaRules';
+import { HexodiaState } from './HexodiaState';
 
 export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaState, HexodiaConfig> {
 

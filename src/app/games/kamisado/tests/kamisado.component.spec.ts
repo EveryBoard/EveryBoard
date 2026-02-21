@@ -3,16 +3,16 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { KamisadoState } from '../../../games/kamisado/KamisadoState';
-import { KamisadoColor } from '../../../games/kamisado/KamisadoColor';
-import { KamisadoPiece } from '../../../games/kamisado/KamisadoPiece';
-import { KamisadoFailure } from '../../../games/kamisado/KamisadoFailure';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { KamisadoComponent } from '../kamisado.component';
 import { Coord } from '../../../jscaip/Coord';
-import { KamisadoMove } from '../../../games/kamisado/KamisadoMove';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { KamisadoColor } from '../KamisadoColor';
+import { KamisadoFailure } from '../KamisadoFailure';
+import { KamisadoMove } from '../KamisadoMove';
+import { KamisadoPiece } from '../KamisadoPiece';
+import { KamisadoState } from '../KamisadoState';
+import { KamisadoComponent } from '../kamisado.component';
 
 describe('KamisadoComponent', () => {
 

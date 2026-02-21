@@ -1,10 +1,11 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
-import { NewGameMoveGenerator } from './NewGameMoveGenerator';
-import { NewGameMove } from './NewGameMove';
-import { NewGameState } from './NewGameState';
-import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { NewGameHeuristic } from './NewGameHeuristic';
+import { NewGameMove } from './NewGameMove';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
+import { NewGameState } from './NewGameState';
 
 /**
  * This is the minimax AI.

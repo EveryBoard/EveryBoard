@@ -1,7 +1,9 @@
-// eslint-disable-next-line max-lines-per-function
-import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { TestBed } from '@angular/core/testing';
+
+import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { PartDAO } from '../PartDAO';
+
+// eslint-disable-next-line max-lines-per-function
 
 describe('PartDAO', () => {
 

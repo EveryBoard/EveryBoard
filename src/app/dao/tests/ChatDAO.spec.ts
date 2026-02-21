@@ -3,17 +3,18 @@ import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@firebase/auth';
 import { serverTimestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { ChatDAO } from '../ChatDAO';
+import { Chat } from '../../domain/Chat';
 import { Message, MessageDocument } from '../../domain/Message';
 import { MinimalUser } from '../../domain/MinimalUser';
-import { IFirestoreDAO } from '../FirestoreDAO';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { createConnectedUser } from '../../services/tests/ConnectedUserService.spec';
 import { ChatService } from '../../services/ChatService';
+import { createConnectedUser } from '../../services/tests/ConnectedUserService.spec';
 import { expectPermissionToBeDenied, setupEmulators } from '../../utils/tests/TestUtils.spec';
-import { Chat } from '../../domain/Chat';
+import { ChatDAO } from '../ChatDAO';
+import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
+import { IFirestoreDAO } from '../FirestoreDAO';
 
 describe('ChatDAO', () => {
 

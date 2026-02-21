@@ -3,20 +3,20 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { GipfComponent } from '../gipf.component';
-import { GipfFailure } from '../../../games/gipf/GipfFailure';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { Coord } from '../../../jscaip/Coord';
-import { GipfMove, GipfPlacement } from '../../../games/gipf/GipfMove';
-import { GipfState } from '../../../games/gipf/GipfState';
-import { Table } from '../../../jscaip/TableUtils';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Player } from '../../../jscaip/Player';
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Arrow } from '../../../components/game-components/arrow-component/Arrow';
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { GipfFailure } from '../GipfFailure';
+import { GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfRules } from '../GipfRules';
+import { GipfState } from '../GipfState';
+import { GipfComponent } from '../gipf.component';
 
 describe('GipfComponent', () => {
 

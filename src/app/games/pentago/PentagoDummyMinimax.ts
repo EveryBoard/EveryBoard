@@ -1,4 +1,5 @@
 import { DummyHeuristic, Minimax } from '../../jscaip/AI/Minimax';
+
 import { PentagoMove } from './PentagoMove';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 import { PentagoRules } from './PentagoRules';

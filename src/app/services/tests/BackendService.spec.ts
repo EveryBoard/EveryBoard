@@ -1,11 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync } from '@angular/core/testing';
-import { BackendService } from '../BackendService';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { AppModule } from '../../app.module';
 import { CUSTOM_ELEMENTS_SCHEMA, Injectable } from '@angular/core';
-import { ConnectedUserService } from '../ConnectedUserService';
+import { TestBed, fakeAsync } from '@angular/core/testing';
+
 import { MGPFallible } from '@everyboard/lib';
+
+import { AppModule } from '../../app.module';
+import { BackendService } from '../BackendService';
+import { ConnectedUserService } from '../ConnectedUserService';
+
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 
 @Injectable({ providedIn: 'root' })
 export class SomeBackendService extends BackendService {

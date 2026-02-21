@@ -1,15 +1,16 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Localized } from '../../utils/LocaleUtils';
-import { YinshState } from './YinshState';
+
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
-import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { YinshState } from './YinshState';
 
 const _: YinshPiece = YinshPiece.EMPTY;
 const N: YinshPiece = YinshPiece.UNREACHABLE;

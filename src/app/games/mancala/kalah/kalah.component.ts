@@ -1,9 +1,11 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { MancalaMove } from '../common/MancalaMove';
-import { KalahRules } from './KalahRules';
-import { KalahMoveGenerator } from './KalahMoveGenerator';
 import { MancalaComponent } from '../common/MancalaComponent';
+import { MancalaMove } from '../common/MancalaMove';
+
+import { KalahMoveGenerator } from './KalahMoveGenerator';
+import { KalahRules } from './KalahRules';
 
 @Component({
     selector: 'app-kalah-component',

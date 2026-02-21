@@ -3,8 +3,8 @@ import { Router } from '@angular/router';
 
 import { MGPValidation } from '@everyboard/lib';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { CurrentGameService } from '../../../services/CurrentGameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 
 @Component({
     selector: 'app-online-game-selection',

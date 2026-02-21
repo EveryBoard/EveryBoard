@@ -3,13 +3,13 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const _: DvonnPieceStack = DvonnPieceStack.EMPTY;

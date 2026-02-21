@@ -1,25 +1,27 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GoMove } from '../GoMove';
-import { TrigoConfig, TrigoRules } from './TrigoRules';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
-import { Coord } from '../../../jscaip/Coord';
-import { GroupData } from '../../../jscaip/BoardData';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { TrigoMoveGenerator } from './TrigoMoveGenerator';
-import { Debug } from '../../../utils/Debug';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { GoPhase } from '../GoPhase';
-import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
-import { GoLegalityInformation } from '../AbstractGoRules';
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
-import { TrigoMinimax } from './TrigoMinimax';
-import { TableUtils } from '../../../jscaip/TableUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
+import { MCTS } from '../../../jscaip/AI/MCTS';
+import { GroupData } from '../../../jscaip/BoardData';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
+import { GoLegalityInformation } from '../AbstractGoRules';
+import { GoMove } from '../GoMove';
+import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+
+import { TrigoMinimax } from './TrigoMinimax';
+import { TrigoMoveGenerator } from './TrigoMoveGenerator';
+import { TrigoConfig, TrigoRules } from './TrigoRules';
 
 @Component({
     selector: 'app-trigo',

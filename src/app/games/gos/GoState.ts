@@ -1,11 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { GoPiece } from './GoPiece';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+
 import { GoPhase } from './GoPhase';
+import { GoPiece } from './GoPiece';
 
 export class GoState extends GameStateWithTable<GoPiece> {
 

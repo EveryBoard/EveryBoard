@@ -2,8 +2,8 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
 import { AbaloneScoreMinimax } from '../AbaloneScoreMinimax';
 
 describe('AbaloneScoreMinimax', () => {

@@ -1,6 +1,7 @@
-import { Move } from './Move';
-import { Coord } from './Coord';
 import { MGPFallible, Encoder } from '@everyboard/lib';
+
+import { Coord } from './Coord';
+import { Move } from './Move';
 
 export abstract class MoveCoord extends Move {
 

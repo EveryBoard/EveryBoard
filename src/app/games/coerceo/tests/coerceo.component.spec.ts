@@ -3,16 +3,16 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { CoerceoComponent } from '../coerceo.component';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../../../games/coerceo/CoerceoMove';
 import { Coord } from '../../../jscaip/Coord';
-import { CoerceoFailure } from '../../../games/coerceo/CoerceoFailure';
-import { CoerceoState } from '../../../games/coerceo/CoerceoState';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { CoerceoFailure } from '../CoerceoFailure';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { CoerceoState } from '../CoerceoState';
+import { CoerceoComponent } from '../coerceo.component';
 
 describe('CoerceoComponent', () => {
 

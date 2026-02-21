@@ -1,21 +1,23 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { KamisadoBoard } from '../../games/kamisado/KamisadoBoard';
-import { KamisadoMove, KamisadoPieceMove } from '../../games/kamisado/KamisadoMove';
-import { KamisadoState } from '../../games/kamisado/KamisadoState';
-import { KamisadoPiece } from '../../games/kamisado/KamisadoPiece';
-import { KamisadoRules } from '../../games/kamisado/KamisadoRules';
-import { KamisadoFailure } from '../../games/kamisado/KamisadoFailure';
-import { Player } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { GameStatus } from '../../jscaip/GameStatus';
 import { MCTS } from '../../jscaip/AI/MCTS';
-import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { KamisadoBoard } from './KamisadoBoard';
+import { KamisadoFailure } from './KamisadoFailure';
+import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
+import { KamisadoPiece } from './KamisadoPiece';
+import { KamisadoRules } from './KamisadoRules';
+import { KamisadoState } from './KamisadoState';
+
 import { KamisadoMinimax } from './KamisadoMinimax';
+import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 
 @Component({
     selector: 'app-kamisado',

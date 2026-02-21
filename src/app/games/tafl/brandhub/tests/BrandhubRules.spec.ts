@@ -3,14 +3,14 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
-import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { Table } from '../../../../jscaip/TableUtils';
-import { BrandhubNode, BrandhubRules } from '../BrandhubRules';
-import { TaflFailure } from '../../TaflFailure';
-import { BrandhubMove } from '../BrandhubMove';
-import { TaflPawn } from '../../TaflPawn';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { TaflConfig } from '../../TaflConfig';
+import { TaflFailure } from '../../TaflFailure';
+import { TaflPawn } from '../../TaflPawn';
 import { TaflState } from '../../TaflState';
+import { BrandhubMove } from '../BrandhubMove';
+import { BrandhubNode, BrandhubRules } from '../BrandhubRules';
 
 describe('BrandhubRules', () => {
 

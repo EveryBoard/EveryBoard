@@ -4,16 +4,16 @@ import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { YinshComponent } from '../yinsh.component';
 import { YinshFailure } from '../YinshFailure';
-import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
-import { Table } from '../../../jscaip/TableUtils';
 import { YinshRules } from '../YinshRules';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { YinshState } from '../YinshState';
+import { YinshComponent } from '../yinsh.component';
 
 describe('YinshComponent', () => {
 

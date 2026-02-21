@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { SixState } from '../SixState';
-import { SixMove } from '../SixMove';
-import { Table } from '../../../jscaip/TableUtils';
-import { SixConfig, SixNode, SixRules } from '../SixRules';
-import { SixMoveGenerator } from '../SixMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { SixMove } from '../SixMove';
+import { SixMoveGenerator } from '../SixMoveGenerator';
+import { SixConfig, SixNode, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

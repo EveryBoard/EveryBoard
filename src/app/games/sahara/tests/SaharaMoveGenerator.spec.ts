@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { SaharaNode, SaharaRules } from '../SaharaRules';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { SaharaNode, SaharaRules } from '../SaharaRules';
 
 describe('SaharaMoveGenerator', () => {
 

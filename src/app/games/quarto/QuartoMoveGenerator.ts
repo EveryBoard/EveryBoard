@@ -1,10 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { QuartoState } from './QuartoState';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { QuartoConfig, QuartoNode } from './QuartoRules';
-import { MoveGenerator } from '../../jscaip/AI/AI';
+import { QuartoState } from './QuartoState';
 
 export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState, QuartoConfig> {
 

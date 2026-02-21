@@ -6,6 +6,7 @@ import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ErrorDAO, ErrorDocument, MGPError } from '../dao/ErrorDAO';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
+
 import { MessageDisplayer } from './MessageDisplayer';
 
 @Injectable({

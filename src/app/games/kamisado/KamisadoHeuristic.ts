@@ -1,11 +1,12 @@
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { KamisadoMove } from './KamisadoMove';
 import { KamisadoNode, KamisadoRules } from './KamisadoRules';
 import { KamisadoState } from './KamisadoState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
-import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class KamisadoHeuristic extends PlayerMetricHeuristic<KamisadoMove, KamisadoState> {
 

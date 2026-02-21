@@ -1,23 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, MGPValidationTestUtils, Utils } from '@everyboard/lib';
-
-import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
-import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
-import { TutorialStepMessage } from './TutorialStepMessage';
-
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { GameWrapper } from '../GameWrapper';
-import { Move } from '../../../jscaip/Move';
-import { Coord } from '../../../jscaip/Coord';
-import { AbstractRules, SuperRules } from '../../../jscaip/Rules';
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameState } from '../../../jscaip/state/GameState';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
 
 import { AbaloneMove } from '../../../games/abalone/AbaloneMove';
 import { AbaloneRules } from '../../../games/abalone/AbaloneRules';
@@ -25,17 +9,15 @@ import { AbaloneTutorial } from '../../../games/abalone/AbaloneTutorial';
 import { ApagosMove } from '../../../games/apagos/ApagosMove';
 import { ApagosRules } from '../../../games/apagos/ApagosRules';
 import { ApagosTutorial } from '../../../games/apagos/ApagosTutorial';
-
 import { CheckersMove } from '../../../games/checkers/common/CheckersMove';
-
+import { InternationalCheckersRules } from '../../../games/checkers/international-checkers/InternationalCheckersRules';
+import { InternationalCheckersTutorial } from '../../../games/checkers/international-checkers/InternationalCheckersTutorial';
 import { ConspirateursMoveSimple, ConspirateursMoveJump } from '../../../games/conspirateurs/ConspirateursMove';
 import { ConspirateursRules } from '../../../games/conspirateurs/ConspirateursRules';
 import { ConspirateursTutorial } from '../../../games/conspirateurs/ConspirateursTutorial';
-
 import { DvonnMove } from '../../../games/dvonn/DvonnMove';
 import { DvonnRules } from '../../../games/dvonn/DvonnRules';
 import { DvonnTutorial } from '../../../games/dvonn/DvonnTutorial';
-
 import { EncapsuleMove } from '../../../games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from '../../../games/encapsule/EncapsulePiece';
 import { EncapsuleRules } from '../../../games/encapsule/EncapsuleRules';
@@ -43,35 +25,25 @@ import { EncapsuleTutorial } from '../../../games/encapsule/EncapsuleTutorial';
 import { EpaminondasMove } from '../../../games/epaminondas/EpaminondasMove';
 import { EpaminondasRules } from '../../../games/epaminondas/EpaminondasRules';
 import { EpaminondasTutorial } from '../../../games/epaminondas/EpaminondasTutorial';
-
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 import { GipfMove, GipfPlacement } from '../../../games/gipf/GipfMove';
 import { GipfRules } from '../../../games/gipf/GipfRules';
 import { GipfTutorial } from '../../../games/gipf/GipfTutorial';
-
 import { HiveMove } from '../../../games/hive/HiveMove';
 import { HiveRules } from '../../../games/hive/HiveRules';
 import { HiveTutorial } from '../../../games/hive/HiveTutorial';
-
-import { InternationalCheckersRules } from '../../../games/checkers/international-checkers/InternationalCheckersRules';
-import { InternationalCheckersTutorial } from '../../../games/checkers/international-checkers/InternationalCheckersTutorial';
-
-import { KalahRules } from '../../../games/mancala/kalah/KalahRules';
-import { KalahTutorial } from '../../../games/mancala/kalah/KalahTutorial';
-
 import { LinesOfActionMove } from '../../../games/lines-of-action/LinesOfActionMove';
 import { LinesOfActionRules } from '../../../games/lines-of-action/LinesOfActionRules';
 import { LinesOfActionTutorial } from '../../../games/lines-of-action/LinesOfActionTutorial';
 import { LodestoneMove } from '../../../games/lodestone/LodestoneMove';
 import { LodestoneRules } from '../../../games/lodestone/LodestoneRules';
 import { LodestoneTutorial } from '../../../games/lodestone/LodestoneTutorial';
-
 import { MancalaDistribution } from '../../../games/mancala/common/MancalaMove';
 import { MancalaMove } from '../../../games/mancala/common/MancalaMove';
+import { KalahRules } from '../../../games/mancala/kalah/KalahRules';
+import { KalahTutorial } from '../../../games/mancala/kalah/KalahTutorial';
 import { MartianChessMove } from '../../../games/martian-chess/MartianChessMove';
 import { MartianChessRules } from '../../../games/martian-chess/MartianChessRules';
 import { MartianChessTutorial } from '../../../games/martian-chess/MartianChessTutorial';
-
 import { PentagoMove } from '../../../games/pentago/PentagoMove';
 import { PentagoRules } from '../../../games/pentago/PentagoRules';
 import { PentagoTutorial } from '../../../games/pentago/PentagoTutorial';
@@ -79,12 +51,10 @@ import { PylosCoord } from '../../../games/pylos/PylosCoord';
 import { PylosMove } from '../../../games/pylos/PylosMove';
 import { PylosRules } from '../../../games/pylos/PylosRules';
 import { PylosTutorial } from '../../../games/pylos/PylosTutorial';
-
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoRules } from '../../../games/quarto/QuartoRules';
 import { QuartoTutorial } from '../../../games/quarto/QuartoTutorial';
-
 import { SaharaMove } from '../../../games/sahara/SaharaMove';
 import { SaharaRules } from '../../../games/sahara/SaharaRules';
 import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
@@ -94,14 +64,29 @@ import { SixTutorial, SixTutorialMessages } from '../../../games/six/SixTutorial
 import { SquarzMove } from '../../../games/squarz/SquarzMove';
 import { SquarzRules } from '../../../games/squarz/SquarzRules';
 import { SquarzTutorial } from '../../../games/squarz/SquarzTutorial';
-
 import { TrexoMove } from '../../../games/trexo/TrexoMove';
 import { TrexoRules } from '../../../games/trexo/TrexoRules';
 import { TrexoTutorial } from '../../../games/trexo/TrexoTutorial';
-
 import { YinshCapture, YinshMove } from '../../../games/yinsh/YinshMove';
 import { YinshRules } from '../../../games/yinsh/YinshRules';
 import { YinshTutorial, YinshTutorialMessages } from '../../../games/yinsh/YinshTutorial';
+import { Coord } from '../../../jscaip/Coord';
+import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Move } from '../../../jscaip/Move';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { AbstractRules, SuperRules } from '../../../jscaip/Rules';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameWrapper } from '../GameWrapper';
+
+import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
+import { TutorialStepMessage } from './TutorialStepMessage';
+import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
 
 describe('TutorialGameWrapperComponent (games)', () => {
 

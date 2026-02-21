@@ -1,18 +1,19 @@
 /* eslint-disable max-lines-per-function */
+import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../../jscaip/Coord';
+import { DirectionFailure } from '../../../../jscaip/Direction';
+import { PlayerMap, PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { LascaComponent } from '../lasca.component';
+import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { CheckersFailure } from '../../common/CheckersFailure';
 import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
-import { CheckersConfig } from '../../common/AbstractCheckersRules';
-import { LascaRules } from '../LascaRules';
-import { PlayerMap, PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { DirectionFailure } from '../../../../jscaip/Direction';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
+import { LascaRules } from '../LascaRules';
+import { LascaComponent } from '../lasca.component';
 
 const zero: CheckersPiece = CheckersPiece.ZERO;
 const zeroPromoted: CheckersPiece = CheckersPiece.ZERO_PROMOTED;

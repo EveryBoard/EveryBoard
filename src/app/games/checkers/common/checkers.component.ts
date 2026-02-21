@@ -1,21 +1,22 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { ModeConfig, ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';
-import { Vector } from '../../../jscaip/Vector';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { CheckersFailure } from '../common/CheckersFailure';
-import { CheckersMove } from '../common/CheckersMove';
-import { AbstractCheckersRules, CheckersConfig } from '../common/AbstractCheckersRules';
-import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
-import { CheckersMoveGenerator } from '../common/CheckersMoveGenerator';
-import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { CheckersScoreMinimax } from './CheckersScoreMinimax';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
+import { Vector } from '../../../jscaip/Vector';
+import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
+import { CheckersFailure } from './CheckersFailure';
+import { CheckersMove } from './CheckersMove';
+import { CheckersMoveGenerator } from './CheckersMoveGenerator';
+import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
+
 import { CheckersControlMinimax } from './CheckersControlMinimax';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
+import { CheckersScoreMinimax } from './CheckersScoreMinimax';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
     extends ParallelogramGameComponent<R,

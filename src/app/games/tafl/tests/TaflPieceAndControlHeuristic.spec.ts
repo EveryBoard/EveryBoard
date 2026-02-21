@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Table } from '../../../jscaip/TableUtils';
-import { TaflPawn } from '../TaflPawn';
-import { Player } from '../../../jscaip/Player';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { TaflConfig } from '../TaflConfig';
+import { TaflMove } from '../TaflMove';
+import { TaflPawn } from '../TaflPawn';
 import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
 import { TaflState } from '../TaflState';
-import { TaflConfig } from '../TaflConfig';
 import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { HnefataflRules } from '../hnefatafl/HnefataflRules';
 import { TablutRules } from '../tablut/TablutRules';
-import { TaflMove } from '../TaflMove';
 
 describe('TaflPieceAndControlHeuristic', () => {
 

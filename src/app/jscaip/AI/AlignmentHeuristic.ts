@@ -1,12 +1,13 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { Heuristic } from './Minimax';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { BoardValue } from './BoardValue';
 import { Coord } from '../Coord';
 import { Move } from '../Move';
-import { GameState } from '../state/GameState';
 import { Player } from '../Player';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameState } from '../state/GameState';
+
+import { BoardValue } from './BoardValue';
+import { Heuristic } from './Minimax';
 
 /**
  * Represents possible alignment configurations

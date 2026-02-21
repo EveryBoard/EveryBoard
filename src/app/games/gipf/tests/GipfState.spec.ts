@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { GipfState } from '../GipfState';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { GipfState } from '../GipfState';
 
 describe('GipfState', () => {
 

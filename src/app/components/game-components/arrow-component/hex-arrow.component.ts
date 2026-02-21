@@ -1,7 +1,9 @@
 import { Component, Input } from '@angular/core';
-import { BaseGameComponent } from '../game-component/GameComponent';
-import { Arrow } from './Arrow';
+
 import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { BaseGameComponent } from '../game-component/GameComponent';
+
+import { Arrow } from './Arrow';
 
 @Component({
     selector: '[app-hex-arrow]',
