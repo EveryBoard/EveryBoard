@@ -11,7 +11,6 @@ import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import { ConfigRoomService } from './services/ConfigRoomService';
 import { GameEventService } from './services/GameEventService';
 import { ThemeService } from './services/ThemeService';
 import { AppComponent } from './app.component';
@@ -106,6 +105,7 @@ import { LocaleUtils } from './utils/LocaleUtils';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
 import { ChatService } from './services/ChatService';
+import { ConfigRoomService } from './services/ConfigRoomService';
 import { ConnectedUserService } from './services/ConnectedUserService';
 import { GameService } from './services/GameService';
 import { UserService } from './services/UserService';
