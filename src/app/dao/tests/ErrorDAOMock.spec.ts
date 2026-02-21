@@ -1,6 +1,7 @@
 import { JSONValue, MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 
 import { ErrorDocument, MGPError } from '../ErrorDAO';
+
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 
 type ErrorOS = ObservableSubject<MGPOptional<ErrorDocument>>;

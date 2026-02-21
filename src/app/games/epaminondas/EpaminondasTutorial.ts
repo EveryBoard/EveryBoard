@@ -4,10 +4,10 @@ import { Tutorial, TutorialStep } from '../../components/wrapper-components/tuto
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasState } from './EpaminondasState';
 
+import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasState } from './EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

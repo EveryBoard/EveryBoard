@@ -7,10 +7,10 @@ import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { GipfMove, GipfPlacement } from './GipfMove';
-import { GipfState } from './GipfState';
 
+import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfRules } from './GipfRules';
+import { GipfState } from './GipfState';
 
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const _: FourStatePiece = FourStatePiece.EMPTY;

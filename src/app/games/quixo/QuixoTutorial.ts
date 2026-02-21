@@ -4,10 +4,10 @@ import { Tutorial, TutorialStep } from '../../components/wrapper-components/tuto
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { QuixoConfig, QuixoState } from './QuixoState';
 
 import { QuixoMove } from './QuixoMove';
 import { QuixoRules } from './QuixoRules';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

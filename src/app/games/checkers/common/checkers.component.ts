@@ -8,15 +8,15 @@ import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Vector } from '../../../jscaip/Vector';
+
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
+import { CheckersControlMinimax } from './CheckersControlMinimax';
+import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
 import { CheckersFailure } from './CheckersFailure';
 import { CheckersMove } from './CheckersMove';
 import { CheckersMoveGenerator } from './CheckersMoveGenerator';
-import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
-
-import { CheckersControlMinimax } from './CheckersControlMinimax';
-import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
 import { CheckersScoreMinimax } from './CheckersScoreMinimax';
+import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
     extends ParallelogramGameComponent<R,

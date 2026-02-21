@@ -9,15 +9,15 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoFailure } from './KamisadoFailure';
+import { KamisadoMinimax } from './KamisadoMinimax';
 import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
+import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoPiece } from './KamisadoPiece';
 import { KamisadoRules } from './KamisadoRules';
 import { KamisadoState } from './KamisadoState';
-
-import { KamisadoMinimax } from './KamisadoMinimax';
-import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 
 @Component({
     selector: 'app-kamisado',

@@ -4,6 +4,7 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+
 import { EncapsulePiece } from './EncapsulePiece';
 
 export class EncapsuleRemainingPieces extends PlayerMap<EncapsuleSizeToNumberMap> {

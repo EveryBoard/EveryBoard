@@ -2,11 +2,11 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { PlayerMetricHeuristic } from '../../../jscaip/AI/Minimax';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
-import { MancalaState } from './MancalaState';
 
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaMove } from './MancalaMove';
 import { MancalaNode } from './MancalaRules';
+import { MancalaState } from './MancalaState';
 
 export class MancalaScoreHeuristic extends PlayerMetricHeuristic<MancalaMove, MancalaState, MancalaConfig>
 {

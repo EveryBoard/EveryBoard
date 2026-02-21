@@ -8,14 +8,14 @@ import { Coord } from '../../jscaip/Coord';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { DvonnMove } from './DvonnMove';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { DvonnRules } from './DvonnRules';
-import { DvonnState } from './DvonnState';
 
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
+import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { DvonnPieceStack } from './DvonnPieceStack';
+import { DvonnRules } from './DvonnRules';
 import { DvonnScoreMinimax } from './DvonnScoreMinimax';
+import { DvonnState } from './DvonnState';
 
 @Component({
     selector: 'app-dvonn',

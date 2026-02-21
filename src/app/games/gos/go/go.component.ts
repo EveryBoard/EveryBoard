@@ -15,10 +15,10 @@ import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
-import { GoConfig, GoRules } from './GoRules';
 
 import { GoMinimax } from './GoMinimax';
 import { GoMoveGenerator } from './GoMoveGenerator';
+import { GoConfig, GoRules } from './GoRules';
 
 @Component({
     selector: 'app-go',

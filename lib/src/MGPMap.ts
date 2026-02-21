@@ -1,5 +1,5 @@
-import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
+import { MGPOptional } from './MGPOptional';
 import { Set } from './Set';
 import { Utils } from './Utils';
 

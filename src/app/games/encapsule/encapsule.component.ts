@@ -9,14 +9,14 @@ import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { EncapsuleMove } from './EncapsuleMove';
-import { EncapsulePiece } from './EncapsulePiece';
-import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
 
 import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 import { EncapsuleFailure } from './EncapsuleFailure';
+import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
+import { EncapsulePiece } from './EncapsulePiece';
+import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
 
 @Component({
     selector: 'app-encapsule',

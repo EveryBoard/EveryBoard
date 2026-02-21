@@ -5,11 +5,11 @@ import { TutorialStepMessage } from '../../components/wrapper-components/tutoria
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
+
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from './EncapsuleState';
-
 import { EncapsuleConfig, EncapsuleRules } from './EncapsuleRules';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from './EncapsuleState';
 
 const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
 const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);

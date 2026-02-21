@@ -11,15 +11,15 @@ import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { CoerceoFailure } from './CoerceoFailure';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
-import { CoerceoState } from './CoerceoState';
 
 import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
+import { CoerceoFailure } from './CoerceoFailure';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
 import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
 import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 @Component({
     selector: 'app-coerceo',

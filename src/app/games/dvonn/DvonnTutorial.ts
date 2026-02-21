@@ -4,11 +4,11 @@ import { Tutorial, TutorialStep } from '../../components/wrapper-components/tuto
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
+
 import { DvonnMove } from './DvonnMove';
 import { DvonnPieceStack } from './DvonnPieceStack';
-import { DvonnState } from './DvonnState';
-
 import { DvonnRules } from './DvonnRules';
+import { DvonnState } from './DvonnState';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const NN: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;

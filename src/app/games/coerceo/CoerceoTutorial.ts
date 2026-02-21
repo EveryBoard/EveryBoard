@@ -5,10 +5,10 @@ import { TutorialStepMessage } from '../../components/wrapper-components/tutoria
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoState } from './CoerceoState';
 
+import { CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

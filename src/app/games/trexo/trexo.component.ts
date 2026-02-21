@@ -9,10 +9,10 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { TrexoMove } from './TrexoMove';
 
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 import { TrexoFailure } from './TrexoFailure';
+import { TrexoMove } from './TrexoMove';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';

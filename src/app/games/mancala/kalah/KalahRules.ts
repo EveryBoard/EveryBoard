@@ -7,7 +7,6 @@ import { TableUtils } from '../../../jscaip/TableUtils';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
-
 import { MancalaState } from '../common/MancalaState';
 
 export class KalahRules extends MancalaRules {

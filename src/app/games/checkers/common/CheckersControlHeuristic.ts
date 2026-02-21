@@ -5,10 +5,10 @@ import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
-import { CheckersMove } from './CheckersMove';
-import { CheckersState } from './CheckersState';
 
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from './AbstractCheckersRules';
+import { CheckersMove } from './CheckersMove';
+import { CheckersState } from './CheckersState';
 
 export class CheckersControlHeuristic extends PlayerMetricHeuristic<CheckersMove, CheckersState, CheckersConfig> {
 

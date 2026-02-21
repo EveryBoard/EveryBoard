@@ -5,9 +5,9 @@ import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
-import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 
 import { LodestoneCaptures } from './LodestoneMove';
+import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';
 
 /**
  * Represent different LodestonePressurePlate from the same side of the board

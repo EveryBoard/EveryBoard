@@ -12,15 +12,15 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
-import { EpaminondasState } from './EpaminondasState';
 
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
+import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasState } from './EpaminondasState';
 
 export type PossibleMove = {
 

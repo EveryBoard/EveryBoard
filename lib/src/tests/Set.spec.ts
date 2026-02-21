@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '../MGPOptional';
 import { Set } from '../Set';
+
 import { Pair } from './Pair.spec';
 
 describe('Set', () => {

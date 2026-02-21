@@ -7,9 +7,9 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { P4Move } from './P4Move';
 
 import { P4Minimax } from './P4Minimax';
+import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Config, P4Rules } from './P4Rules';
 import { P4State } from './P4State';

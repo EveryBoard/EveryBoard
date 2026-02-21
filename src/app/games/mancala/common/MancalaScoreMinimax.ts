@@ -1,11 +1,11 @@
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
-import { MancalaState } from './MancalaState';
 
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaMove } from './MancalaMove';
 import { MancalaRules } from './MancalaRules';
 import { MancalaScoreHeuristic } from './MancalaScoreHeurisic';
+import { MancalaState } from './MancalaState';
 
 export class MancalaScoreMinimax extends Minimax<MancalaMove, MancalaState, MancalaConfig> {
 
