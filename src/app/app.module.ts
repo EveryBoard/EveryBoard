@@ -36,13 +36,10 @@ import { LocalGameWrapperComponent } from './components/wrapper-components/local
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
-import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
+import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
-import { AwaleComponent } from './games/mancala/awale/awale.component';
-import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
-import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
@@ -56,8 +53,9 @@ import { GoComponent } from './games/gos/go/go.component';
 import { HexodiaComponent } from './games/hexodia/hexodia.component';
 import { HiveComponent } from './games/hive/hive.component';
 import { HivePieceComponent } from './games/hive/hive-piece.component';
-import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
+import { AwaleComponent } from './games/mancala/awale/awale.component';
+import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
 import { KalahComponent } from './games/mancala/kalah/kalah.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LascaComponent } from './games/checkers/lasca/lasca.component';
@@ -82,6 +80,8 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
 import { SixComponent } from './games/six/six.component';
 import { SquarzComponent } from './games/squarz/squarz.component';
+import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
+import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 import { TablutComponent } from './games/tafl/tablut/tablut.component';
 import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
