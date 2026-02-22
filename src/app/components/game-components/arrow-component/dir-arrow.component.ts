@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
 import { Ordinal } from '../../../jscaip/Ordinal';
-import { BaseGameComponent } from '../game-component/GameComponent';
+import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 import { Arrow } from './Arrow';
 

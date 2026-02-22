@@ -16,9 +16,9 @@ import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
-import { BaseComponent } from '../../BaseComponent';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 export class ScoreName {
 
@@ -75,28 +75,6 @@ export class ScoreName {
             default:
                 return this.plural(count);
         }
-    }
-}
-
-/**
- * Define some methods that are useful to have in game components.
- * We can't define these in GameComponent itself, as they are required
- * by sub components which themselves are not GameComponent subclasses
- */
-export abstract class BaseGameComponent extends BaseComponent {
-
-    public SPACE_SIZE: number = 100;
-
-    public readonly STROKE_WIDTH: number = 8;
-
-    public readonly SMALL_STROKE_WIDTH: number = 2;
-
-    public getSVGTranslation(x: number, y: number): string {
-        return 'translate(' + x + ', ' + y + ')';
-    }
-
-    public getSVGTranslationAt(coord: Coord): string {
-        return this.getSVGTranslation(coord.x, coord.y);
     }
 }
 
