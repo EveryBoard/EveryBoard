@@ -14,9 +14,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
-import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
-import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
-import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component'; // moving this leads to bug
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
+import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
+import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
@@ -110,9 +110,6 @@ import { GameService } from './services/GameService';
 import { ThemeService } from './services/ThemeService';
 import { UserService } from './services/UserService';
 import { LocaleUtils } from './utils/LocaleUtils';
-
-// Games Components
-// Guards
 
 registerLocaleData(localeFr);
 
