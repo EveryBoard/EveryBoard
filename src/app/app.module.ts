@@ -37,6 +37,7 @@ import { DemoCardWrapperComponent } from './components/wrapper-components/demo-c
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
+import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
 import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
@@ -94,11 +95,10 @@ import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
-import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
+import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
-import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { LocaleUtils } from './utils/LocaleUtils';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
