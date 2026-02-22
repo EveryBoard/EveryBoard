@@ -27,8 +27,8 @@ import { NotFoundComponent } from './components/normal-component/not-found/not-f
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
-import { RegisterComponent } from './components/normal-component/register/register.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
+import { RegisterComponent } from './components/normal-component/register/register.component';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
