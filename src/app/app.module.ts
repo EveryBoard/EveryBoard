@@ -19,8 +19,8 @@ import { ChatComponent } from './components/normal-component/chat/chat.component
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
-import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
+import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
