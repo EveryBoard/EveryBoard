@@ -34,8 +34,8 @@ import { TutorialGameCreationComponent } from './components/normal-component/tut
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
+import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
