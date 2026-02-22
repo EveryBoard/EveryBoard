@@ -41,6 +41,7 @@ import { RulesConfigurationComponent } from './components/wrapper-components/rul
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
 import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
+// Games Components
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
@@ -91,6 +92,7 @@ import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
+// Guards
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
@@ -99,10 +101,10 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
-import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component'; // moving this leads to bug
 import { LocaleUtils } from './utils/LocaleUtils';
-import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
-import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component'; // might lead to bug
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component'; // might lead to bug
 import { ChatService } from './services/ChatService';
 import { ConfigRoomService } from './services/ConfigRoomService';
 import { ConnectedUserService } from './services/ConnectedUserService';
