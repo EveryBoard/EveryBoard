@@ -14,10 +14,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
+import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
+import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component'; // moving this leads to bug
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
-import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
@@ -33,15 +35,15 @@ import { ResetPasswordComponent } from './components/normal-component/reset-pass
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component'; // might lead to bug
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component'; // might lead to bug
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
-// Games Components
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
@@ -92,7 +94,6 @@ import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
-// Guards
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
@@ -101,10 +102,6 @@ import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
-import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component'; // moving this leads to bug
-import { LocaleUtils } from './utils/LocaleUtils';
-import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component'; // might lead to bug
-import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component'; // might lead to bug
 import { ChatService } from './services/ChatService';
 import { ConfigRoomService } from './services/ConfigRoomService';
 import { ConnectedUserService } from './services/ConnectedUserService';
@@ -112,6 +109,10 @@ import { GameEventService } from './services/GameEventService';
 import { GameService } from './services/GameService';
 import { ThemeService } from './services/ThemeService';
 import { UserService } from './services/UserService';
+import { LocaleUtils } from './utils/LocaleUtils';
+
+// Games Components
+// Guards
 
 registerLocaleData(localeFr);
 
