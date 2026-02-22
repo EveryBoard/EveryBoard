@@ -37,8 +37,8 @@ import { DemoCardWrapperComponent } from './components/wrapper-components/demo-c
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
-import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component'; // Moving this leads to bug
+import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component'; // Moving this leads to bug
 // Games Components
