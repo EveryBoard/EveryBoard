@@ -11,6 +11,8 @@ import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+import { environment } from '../environments/environment';
+
 import { AppComponent } from './app.component';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
@@ -88,8 +90,6 @@ import { TeekoComponent } from './games/teeko/teeko.component';
 import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
 import { TrexoComponent } from './games/trexo/trexo.component';
 import { YinshComponent } from './games/yinsh/yinsh.component';
-
-import { environment } from '../environments/environment';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
