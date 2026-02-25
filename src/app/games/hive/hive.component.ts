@@ -2,26 +2,27 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { HiveFailure } from './HiveFailure';
+import { HiveMinimax } from './HiveMinimax';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HiveMinimax } from './HiveMinimax';
 
 interface GroundInfo {
 

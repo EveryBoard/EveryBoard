@@ -3,14 +3,14 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { DiaballikComponent } from '../diaballik.component';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 import { Coord } from '../../../jscaip/Coord';
-import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikRules } from '../DiaballikRules';
+import { DiaballikPiece, DiaballikState } from '../DiaballikState';
+import { DiaballikComponent } from '../diaballik.component';
 
 describe('DiaballikComponent', () => {
 

@@ -1,9 +1,9 @@
 import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
+import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Move } from '../../jscaip/Move';
-import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4, and it contains a ring taken
@@ -104,4 +104,3 @@ export class YinshMove extends Move {
     }
 
 }
-

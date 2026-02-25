@@ -2,17 +2,18 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ConnectSixRules } from './ConnectSixRules';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
-import { ConnectSixState } from './ConnectSixState';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { Coord } from '../../jscaip/Coord';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
-import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
+import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
+import { ConnectSixRules } from './ConnectSixRules';
+import { ConnectSixState } from './ConnectSixState';
 
 @Component({
     selector: 'app-connect-six',

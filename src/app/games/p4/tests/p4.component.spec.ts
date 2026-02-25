@@ -3,13 +3,13 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { P4Component } from '../p4.component';
-import { P4Rules, P4Config } from '../../../games/p4/P4Rules';
-import { P4Move } from '../../../games/p4/P4Move';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { P4State } from '../P4State';
 import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { P4Move } from '../P4Move';
+import { P4Rules, P4Config } from '../P4Rules';
+import { P4State } from '../P4State';
+import { P4Component } from '../p4.component';
 
 describe('P4Component', () => {
 

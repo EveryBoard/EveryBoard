@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { serverTimestamp } from 'firebase/firestore';
+
 import { MGPResult, Part } from './Part';
 import { UserMocks } from './UserMocks.spec';
 

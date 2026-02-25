@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 
 import { Comparable } from '@everyboard/lib';
 
-import { Move } from '../../../jscaip/Move';
-import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
-import { SuperRules } from '../../../jscaip/Rules';
-import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { GobanUtils } from '../../../jscaip/GobanUtils';
+import { Move } from '../../../jscaip/Move';
+import { SuperRules } from '../../../jscaip/Rules';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 
 /**
  * This component is used for games that are played on a Goban.

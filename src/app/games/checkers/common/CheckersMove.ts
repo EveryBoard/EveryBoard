@@ -2,6 +2,7 @@ import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } f
 
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
+
 import { CheckersFailure } from './CheckersFailure';
 
 export class CheckersMove extends Move {

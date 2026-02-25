@@ -4,16 +4,16 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { QuebecCastlesComponent } from '../quebec-castles.component';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
-import { QuebecCastlesMove } from '../QuebecCastlesMove';
-import { Coord } from '../../../jscaip/Coord';
-import { QuebecCastlesState } from '../QuebecCastlesState';
 import { RulesConfigurationComponent } from '../../../components/wrapper-components/rules-configuration/rules-configuration.component';
-import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { Coord } from '../../../jscaip/Coord';
 import { PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { QuebecCastlesMove } from '../QuebecCastlesMove';
+import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { QuebecCastlesState } from '../QuebecCastlesState';
+import { QuebecCastlesComponent } from '../quebec-castles.component';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 
-import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
-import { SiamMove } from '../SiamMove';
-import { SiamState } from '../SiamState';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { SiamPiece } from '../SiamPiece';
 import { Table } from '../../../jscaip/TableUtils';
+import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
+import { SiamPiece } from '../SiamPiece';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 describe('SiamMove', () => {
 

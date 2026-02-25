@@ -3,11 +3,12 @@ import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { CurrentGame, User, UserRoleInPart } from '../domain/User';
 import { UserDAO } from '../dao/UserDAO';
+import { CurrentGame, User, UserRoleInPart } from '../domain/User';
+import { Localized } from '../utils/LocaleUtils';
+
 import { AuthUser, ConnectedUserService, GameActionFailure } from './ConnectedUserService';
 import { UserService } from './UserService';
-import { Localized } from '../utils/LocaleUtils';
 
 @Injectable({
     providedIn: 'root',

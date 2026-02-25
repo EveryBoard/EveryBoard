@@ -3,6 +3,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
 import { TutorialGameCreationComponent } from './tutorial-game-creation.component';
 
 describe('TutorialGameCreationComponent', () => {

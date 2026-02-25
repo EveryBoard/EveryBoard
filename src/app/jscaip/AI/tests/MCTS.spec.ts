@@ -1,21 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { AwaleMoveGenerator } from '../../../games/mancala/awale/AwaleMoveGenerator';
+import { AwaleRules } from '../../../games/mancala/awale/AwaleRules';
+import { MancalaConfig } from '../../../games/mancala/common/MancalaConfig';
+import { MancalaMove } from '../../../games/mancala/common/MancalaMove';
+import { MancalaNode } from '../../../games/mancala/common/MancalaRules';
+import { MancalaState } from '../../../games/mancala/common/MancalaState';
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoMoveGenerator } from '../../../games/quarto/QuartoMoveGenerator';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../../../games/quarto/QuartoRules';
 import { QuartoState } from '../../../games/quarto/QuartoState';
-import { Table } from '../../../jscaip/TableUtils';
-import { AITimeLimitOptions } from '../AI';
 import { Coord } from '../../Coord';
+import { Table } from '../../TableUtils';
+import { AITimeLimitOptions } from '../AI';
 import { MCTS } from '../MCTS';
-import { MancalaNode } from '../../../games/mancala/common/MancalaRules';
-import { AwaleMoveGenerator } from '../../../games/mancala/awale/AwaleMoveGenerator';
-import { AwaleRules } from '../../../games/mancala/awale/AwaleRules';
-import { MancalaState } from '../../../games/mancala/common/MancalaState';
-import { MancalaConfig } from '../../../games/mancala/common/MancalaConfig';
-import { MancalaMove } from '../../../games/mancala/common/MancalaMove';
 
 describe('MCTS', () => {
 
@@ -45,8 +45,9 @@ describe('MCTS', () => {
             // MCTS blocked the opponent's only possible win
             expect(true).toBe(true);
         } else {
-            // MCTS gave the opponent a piece with which they cannot win
-            expect(move.piece).not.toEqual(QuartoPiece.AABA);
+            expect(move.piece)
+                .withContext('MCTS gave the opponent a piece with which they can win (while other option exist)')
+                .not.toEqual(QuartoPiece.AABA);
         }
     });
 

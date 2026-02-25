@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { KalahRules } from '../KalahRules';
-import { MancalaState } from '../../common/MancalaState';
-import { KalahMoveGenerator } from '../KalahMoveGenerator';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { MancalaState } from '../../common/MancalaState';
+import { KalahMoveGenerator } from '../KalahMoveGenerator';
+import { KalahRules } from '../KalahRules';
 
 describe('KalahMoveGenerator', () => {
 

@@ -1,10 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
-import { CheckersControlHeuristic } from './CheckersControlHeuristic';
-import { CheckersConfig, CheckersNode } from './AbstractCheckersRules';
-import { CheckersStack, CheckersState } from './CheckersState';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+
+import { CheckersConfig, CheckersNode } from './AbstractCheckersRules';
+import { CheckersControlHeuristic } from './CheckersControlHeuristic';
+import { CheckersStack, CheckersState } from './CheckersState';
 
 export class CheckersControlPlusDominationHeuristic extends CheckersControlHeuristic {
 

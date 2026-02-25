@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync } from '@angular/core/testing';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { AppModule } from '../../app.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { TestBed, fakeAsync } from '@angular/core/testing';
+
+import { AppModule } from '../../app.module';
 import { ConnectedUserService } from '../ConnectedUserService';
-import { endpoint, expectedParams } from './BackendService.spec';
 import { ServerTimeService } from '../ServerTimeService';
+
+import { endpoint, expectedParams } from './BackendService.spec';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 
 describe('BackendService', () => {
     let serverTimeService: ServerTimeService;

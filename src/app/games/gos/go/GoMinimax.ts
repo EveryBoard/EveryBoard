@@ -1,4 +1,5 @@
 import { AbstractGoMinimax } from '../AbstractGoMinimax';
+
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';

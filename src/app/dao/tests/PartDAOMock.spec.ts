@@ -2,8 +2,9 @@
 import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 
 import { Part, PartDocument } from '../../domain/Part';
-import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { Debug } from '../../utils/Debug';
+
+import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 
 type PartOS = ObservableSubject<MGPOptional<PartDocument>>;
 

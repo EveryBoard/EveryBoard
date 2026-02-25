@@ -1,31 +1,30 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
-import { Subject } from 'rxjs';
 import { Timestamp } from 'firebase/firestore';
-import { Subscription } from 'rxjs';
+import { Subject, Subscription } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { getMillisecondsElapsed, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, IFirstPlayer, ConfigRoom, IPartType, PartStatus, PartType, IPartStatus } from '../../../domain/ConfigRoom';
-import { GameService } from '../../../services/GameService';
-import { ConfigRoomService } from '../../../services/ConfigRoomService';
-import { UserService } from '../../../services/UserService';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { FirestoreTime } from '../../../domain/Time';
 import { CurrentGame, User, UserRoleInPart } from '../../../domain/User';
-import { CurrentGameService } from '../../../services/CurrentGameService';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { GameState } from '../../../jscaip/state/GameState';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
-import { Debug } from '../../../utils/Debug';
-import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { ConfigRoomService } from '../../../services/ConfigRoomService';
+import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { GameService } from '../../../services/GameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { UserService } from '../../../services/UserService';
+import { Debug } from '../../../utils/Debug';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
+import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
 type PartCreationViewInfo = {
     userIsCreator: boolean;

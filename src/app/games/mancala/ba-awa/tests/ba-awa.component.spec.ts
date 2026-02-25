@@ -4,16 +4,16 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { BaAwaComponent } from '../ba-awa.component';
-import { BaAwaRules } from '../BaAwaRules';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { MancalaComponent } from '../../common/MancalaComponent';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaState } from '../../common/MancalaState';
 import { MancalaComponentTestUtils, doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
 import { BaAwaConfig } from '../BaAwaConfig';
-import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaComponent } from '../../common/MancalaComponent';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
+import { BaAwaRules } from '../BaAwaRules';
+import { BaAwaComponent } from '../ba-awa.component';
 
 describe('BaAwaComponent', () => {
 

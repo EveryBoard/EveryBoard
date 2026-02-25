@@ -2,16 +2,16 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '../../../jscaip/Coord';
+import { DirectionFailure } from '../../../jscaip/Direction';
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { LinesOfActionComponent } from '../lines-of-action.component';
-import { LinesOfActionMove } from '../LinesOfActionMove';
-import { LinesOfActionFailure } from '../LinesOfActionFailure';
-import { LinesOfActionState } from '../LinesOfActionState';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
-import { DirectionFailure } from '../../../jscaip/Direction';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { LinesOfActionFailure } from '../LinesOfActionFailure';
+import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionState } from '../LinesOfActionState';
+import { LinesOfActionComponent } from '../lines-of-action.component';
 
 describe('LinesOfActionComponent', () => {
 

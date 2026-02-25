@@ -1,12 +1,13 @@
 import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
+import { Coord } from '../../jscaip/Coord';
 import { Move } from '../../jscaip/Move';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Coord } from '../../jscaip/Coord';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Vector } from '../../jscaip/Vector';
+
 import { DiaballikFailure } from './DiaballikFailure';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 
 export class DiaballikBallPass extends MoveCoordToCoord {
 

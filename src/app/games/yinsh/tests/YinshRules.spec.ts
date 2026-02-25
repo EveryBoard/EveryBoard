@@ -2,17 +2,17 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { GameStatus } from '../../../jscaip/GameStatus';
 import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { YinshFailure } from '../YinshFailure';
-import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
-import { Table } from '../../../jscaip/TableUtils';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { YinshState } from '../YinshState';
 
 describe('YinshRules', () => {
 

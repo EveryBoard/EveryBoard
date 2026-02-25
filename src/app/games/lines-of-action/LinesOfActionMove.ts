@@ -1,10 +1,11 @@
 import { Encoder, MGPFallible } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { LinesOfActionState } from './LinesOfActionState';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+import { Ordinal } from '../../jscaip/Ordinal';
+
+import { LinesOfActionState } from './LinesOfActionState';
 
 export class LinesOfActionMove extends MoveCoordToCoord {
 

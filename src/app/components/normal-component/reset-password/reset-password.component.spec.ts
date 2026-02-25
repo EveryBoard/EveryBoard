@@ -5,6 +5,7 @@ import { MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
 import { ResetPasswordComponent } from './reset-password.component';
 
 describe('ResetPasswordComponent', () => {

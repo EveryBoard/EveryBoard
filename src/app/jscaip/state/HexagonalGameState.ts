@@ -1,10 +1,11 @@
 import { Comparable, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { GameStateWithTable } from '../state/GameStateWithTable';
 import { HexaDirection } from '../HexaDirection';
 import { HexaLine } from '../HexaLine';
 import { Table } from '../TableUtils';
+
+import { GameStateWithTable } from './GameStateWithTable';
 
 export abstract class HexagonalGameState<P extends NonNullable<Comparable>> extends GameStateWithTable<P> {
 

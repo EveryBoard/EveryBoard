@@ -1,9 +1,9 @@
 import { JSONPrimitive, MGPValidation, Set, Utils } from '@everyboard/lib';
 
-import { MGPValidator, MGPValidators } from '../../../utils/MGPValidator';
-import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Localized } from '../../../utils/LocaleUtils';
+import { MGPValidator, MGPValidators } from '../../../utils/MGPValidator';
 
 export class RulesConfigDescriptionLocalizable {
 

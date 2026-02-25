@@ -1,11 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { P4Move } from './P4Move';
-import { P4State } from './P4State';
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { P4Config, P4Rules } from './P4Rules';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { P4Move } from './P4Move';
+import { P4Config, P4Rules } from './P4Rules';
+import { P4State } from './P4State';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

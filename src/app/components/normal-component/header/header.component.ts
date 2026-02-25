@@ -5,10 +5,10 @@ import { Subscription } from 'rxjs';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { UserService } from '../../../services/UserService';
-import { CurrentGame } from '../../../domain/User';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({

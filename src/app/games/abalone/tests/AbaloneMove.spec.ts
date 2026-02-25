@@ -2,12 +2,11 @@
 import { TestUtils } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-
 import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { AbaloneMove } from '../AbaloneMove';
-import { AbaloneRules } from '../AbaloneRules';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
+import { AbaloneRules } from '../AbaloneRules';
 
 describe('AbaloneMove', () => {
 

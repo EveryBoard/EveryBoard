@@ -2,6 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
 import { PickGameComponent } from './pick-game.component';
 
 describe('PickGameComponent', () => {

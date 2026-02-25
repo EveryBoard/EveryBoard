@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, TestUtils } from '@everyboard/lib';
 
+import { Coord } from '../../../jscaip/Coord';
+import { CoordSet } from '../../../jscaip/CoordSet';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { QuixoConfig, QuixoState } from '../QuixoState';
-import { QuixoMove } from '../QuixoMove';
-import { QuixoNode, QuixoRules } from '../QuixoRules';
-import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuixoFailure } from '../QuixoFailure';
-import { CoordSet } from '../../../jscaip/CoordSet';
+import { QuixoMove } from '../QuixoMove';
+import { QuixoNode, QuixoRules } from '../QuixoRules';
+import { QuixoConfig, QuixoState } from '../QuixoState';
 
 describe('QuixoRules', () => {
 

@@ -1,13 +1,14 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { TablutMove } from './TablutMove';
-import { TaflPawn } from '../TaflPawn';
-import { Coord } from '../../../jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { TablutRules } from './TablutRules';
-import { TaflConfig } from '../TaflConfig';
-import { TaflState } from '../TaflState';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../../jscaip/Coord';
+import { TaflConfig } from '../TaflConfig';
+import { TaflPawn } from '../TaflPawn';
+import { TaflState } from '../TaflState';
+
+import { TablutMove } from './TablutMove';
+import { TablutRules } from './TablutRules';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

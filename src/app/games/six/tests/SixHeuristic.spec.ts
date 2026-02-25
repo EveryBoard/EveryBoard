@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { SixState } from '../SixState';
-import { SixMove } from '../SixMove';
 import { Table } from '../../../jscaip/TableUtils';
-import { SixConfig, SixNode, SixRules } from '../SixRules';
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { SixHeuristic } from '../SixHeuristic';
+import { SixMove } from '../SixMove';
+import { SixConfig, SixNode, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

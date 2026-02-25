@@ -1,8 +1,8 @@
 import { Coord } from '../../jscaip/Coord';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class SquarzState extends PlayerOrNoneGameStateWithTable {

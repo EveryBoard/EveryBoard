@@ -3,6 +3,7 @@ import { formatDate } from '@angular/common';
 import { Component, DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 import { Timestamp } from 'firebase/firestore';
+
 import { FirestoreTime } from '../../domain/Time';
 import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';
 

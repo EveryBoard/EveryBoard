@@ -12,6 +12,7 @@ import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LobbyComponent } from '../lobby/lobby.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
+
 import { OnlineGameCreationComponent } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent for non-existing game', () => {

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Comparable, ComparableObject } from '../Comparable';
 import { Sets } from '../Sets';
+
 import { Pair } from './Pair.spec';
 
 describe('Sets', () => {

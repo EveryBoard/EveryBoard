@@ -2,9 +2,10 @@ import { Encoder, MGPFallible } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { DvonnState } from './DvonnState';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+
 import { DvonnFailure } from './DvonnFailure';
+import { DvonnState } from './DvonnState';
 
 export class DvonnMove extends MoveCoordToCoord {
 

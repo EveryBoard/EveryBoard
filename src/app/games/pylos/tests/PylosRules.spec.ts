@@ -2,14 +2,14 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PylosCoord } from '../PylosCoord';
-import { PylosMove } from '../PylosMove';
-import { PylosState } from '../PylosState';
-import { PylosNode, PylosRules } from '../PylosRules';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { PylosFailure } from '../PylosFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { PylosCoord } from '../PylosCoord';
+import { PylosFailure } from '../PylosFailure';
+import { PylosMove } from '../PylosMove';
+import { PylosNode, PylosRules } from '../PylosRules';
+import { PylosState } from '../PylosState';
 
 describe('PylosRules', () => {
 

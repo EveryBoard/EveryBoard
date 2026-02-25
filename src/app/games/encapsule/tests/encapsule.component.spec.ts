@@ -4,16 +4,16 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { EncapsuleComponent } from '../encapsule.component';
-import { EncapsuleMove } from '../../../games/encapsule/EncapsuleMove';
 import { Coord } from '../../../jscaip/Coord';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../../../games/encapsule/EncapsuleState';
 import { Player } from '../../../jscaip/Player';
-import { EncapsulePiece } from '../../../games/encapsule/EncapsulePiece';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
-import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { EncapsuleMove } from '../EncapsuleMove';
+import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
+import { EncapsuleComponent } from '../encapsule.component';
 
 describe('EncapsuleComponent', () => {
 

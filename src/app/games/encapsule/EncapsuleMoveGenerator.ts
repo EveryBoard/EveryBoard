@@ -1,12 +1,13 @@
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { EncapsuleState } from './EncapsuleState';
+import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
+
 import { EncapsuleMove } from './EncapsuleMove';
-import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation, EncapsuleConfig } from './EncapsuleRules';
-import { MoveGenerator } from '../../jscaip/AI/AI';
 import { EncapsulePiece } from './EncapsulePiece';
+import { EncapsuleRules, EncapsuleNode, EncapsuleLegalityInformation, EncapsuleConfig } from './EncapsuleRules';
+import { EncapsuleState } from './EncapsuleState';
 
 export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState, EncapsuleConfig> {
 

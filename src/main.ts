@@ -1,10 +1,10 @@
 import { enableProdMode } from '@angular/core';
+import { loadTranslations } from '@angular/localize';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
-import { loadTranslations } from '@angular/localize';
 import { LocaleUtils } from './app/utils/LocaleUtils';
+import { environment } from './environments/environment';
 
 function bootstrapApp(): void {
     if (environment.production) {

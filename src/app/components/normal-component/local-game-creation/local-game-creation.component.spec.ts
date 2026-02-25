@@ -2,6 +2,7 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
 import { LocalGameCreationComponent } from './local-game-creation.component';
 
 describe('LocalGameCreationComponent', () => {

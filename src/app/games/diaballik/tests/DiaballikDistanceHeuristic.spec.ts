@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
-import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { Player } from '../../../jscaip/Player';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikRules } from '../DiaballikRules';
+import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 
 describe('DiaballikDistanceHeuristic', () => {
 

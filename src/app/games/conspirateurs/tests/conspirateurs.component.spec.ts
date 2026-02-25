@@ -5,10 +5,10 @@ import { Coord } from '../../../jscaip/Coord';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ConspirateursComponent } from '../conspirateurs.component';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursState } from '../ConspirateursState';
+import { ConspirateursComponent } from '../conspirateurs.component';
 
 describe('ConspirateursComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;

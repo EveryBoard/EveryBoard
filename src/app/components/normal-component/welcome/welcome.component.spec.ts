@@ -7,12 +7,13 @@ import { MGPValidation } from '@everyboard/lib';
 
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { expectValidRouting, expectValidRoutingLink, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { LocalGameConfigurationComponent } from '../../wrapper-components/local-game-configuration/local-game-configuration.component';
 import { TutorialGameWrapperComponent } from '../../wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { LobbyComponent } from '../lobby/lobby.component';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
+
 import { WelcomeComponent } from './welcome.component';
-import { LocalGameConfigurationComponent } from '../../wrapper-components/local-game-configuration/local-game-configuration.component';
 
 describe('WelcomeComponent', () => {
 

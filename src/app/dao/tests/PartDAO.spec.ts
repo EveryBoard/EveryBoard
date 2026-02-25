@@ -1,4 +1,3 @@
-// eslint-disable-next-line max-lines-per-function
 import { TestBed } from '@angular/core/testing';
 
 import { setupEmulators } from '../../utils/tests/TestUtils.spec';

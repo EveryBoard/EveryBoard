@@ -1,6 +1,7 @@
 import { formatDate } from '@angular/common';
 import { Pipe, PipeTransform } from '@angular/core';
 import { Timestamp } from 'firebase/firestore';
+
 import { FirestoreTime } from '../domain/Time';
 
 @Pipe({ name: 'firestoreTime' })

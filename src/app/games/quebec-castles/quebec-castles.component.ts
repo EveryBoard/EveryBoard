@@ -2,19 +2,20 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
-import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
-import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
-import { QuebecCastlesState } from './QuebecCastlesState';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
-import { QuebecCastlesMinimax } from './QuebecCastlesMinimax';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
+import { QuebecCastlesMinimax } from './QuebecCastlesMinimax';
+import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
+import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
+import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
+import { QuebecCastlesState } from './QuebecCastlesState';
 
 @Component({
     selector: 'app-quebec-castles',

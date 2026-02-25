@@ -1,12 +1,13 @@
 import { ArrayUtils, Utils } from '@everyboard/lib';
 
-import { DvonnState } from './DvonnState';
-import { DvonnNode } from './DvonnRules';
-import { DvonnPieceStack } from './DvonnPieceStack';
 import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { DvonnPieceStack } from './DvonnPieceStack';
+import { DvonnNode } from './DvonnRules';
+import { DvonnState } from './DvonnState';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
