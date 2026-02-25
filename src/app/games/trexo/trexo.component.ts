@@ -1,19 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
-import { TrexoRules } from './TrexoRules';
 import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { TrexoMove } from '../../games/trexo/TrexoMove';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
-import { TrexoFailure } from './TrexoFailure';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
+import { TrexoFailure } from './TrexoFailure';
+import { TrexoMove } from './TrexoMove';
+import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { TrexoRules } from './TrexoRules';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 
 interface PieceOnBoard {
 

@@ -1,10 +1,12 @@
-import { Heuristic } from '../../jscaip/AI/Minimax';
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { P4Move } from './P4Move';
-import { P4State } from './P4State';
-import { P4Config, P4Node, P4Rules } from './P4Rules';
-import { Coord } from '../../jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../jscaip/AI/Minimax';
+import { Coord } from '../../jscaip/Coord';
+
+import { P4Move } from './P4Move';
+import { P4Config, P4Node, P4Rules } from './P4Rules';
+import { P4State } from './P4State';
 
 export class P4Heuristic extends Heuristic<P4Move, P4State, BoardValue, P4Config> {
 

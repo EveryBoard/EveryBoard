@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ApagosRightmostMinimax } from '../ApagosRightmostMinimax';
+import { ApagosConfig, ApagosRules } from '../ApagosRules';
 
 describe('ApagosRightmostMinimax', () => {
 

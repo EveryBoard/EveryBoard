@@ -4,19 +4,20 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
 import { LodestoneNode, LodestoneRules } from '../../../games/lodestone/LodestoneRules';
 import { P4Move } from '../../../games/p4/P4Move';
+import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { AbstractRules } from '../../../jscaip/Rules';
+import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
-import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { GameNode } from '../../../jscaip/AI/GameNode';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
+
+import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
 
 describe('DemoCardComponent', () => {
 

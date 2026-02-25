@@ -1,19 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
-import { PylosMove, PylosMoveFailure } from './PylosMove';
-import { PylosState } from './PylosState';
-import { PylosRules } from './PylosRules';
-import { PylosCoord } from './PylosCoord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { PylosFailure } from './PylosFailure';
 import { MCTS } from '../../jscaip/AI/MCTS';
-import { PylosMoveGenerator } from './PylosMoveGenerator';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
+import { PylosCoord } from './PylosCoord';
+import { PylosFailure } from './PylosFailure';
 import { PylosMinimax } from './PylosMinimax';
+import { PylosMove, PylosMoveFailure } from './PylosMove';
+import { PylosMoveGenerator } from './PylosMoveGenerator';
+import { PylosRules } from './PylosRules';
+import { PylosState } from './PylosState';
 
 @Component({
     selector: 'app-pylos',

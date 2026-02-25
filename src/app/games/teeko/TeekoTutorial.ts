@@ -1,10 +1,11 @@
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { TeekoState } from './TeekoState';
-import { TeekoDropMove, TeekoTranslationMove } from './TeekoMove';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
+
+import { TeekoDropMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoRules } from './TeekoRules';
-import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { TeekoState } from './TeekoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

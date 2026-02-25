@@ -6,6 +6,7 @@ import { MGPValidation } from '@everyboard/lib';
 
 import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
+
 import { OnlineGameSelectionComponent } from './online-game-selection.component';
 
 describe('OnlineGameSelectionComponent', () => {

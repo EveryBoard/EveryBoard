@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { KamisadoRules } from '../KamisadoRules';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { KamisadoMinimax } from '../KamisadoMinimax';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { KamisadoRules } from '../KamisadoRules';
 
 describe('KamisadoMinimax', () => {
 

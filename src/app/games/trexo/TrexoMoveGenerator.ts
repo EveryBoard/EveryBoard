@@ -1,8 +1,9 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
 import { TrexoState } from './TrexoState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class TrexoMoveGenerator extends MoveGenerator<TrexoMove, TrexoState> {
 

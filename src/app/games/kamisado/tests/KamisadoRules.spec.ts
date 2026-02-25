@@ -2,17 +2,17 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { KamisadoColor } from '../KamisadoColor';
+import { KamisadoFailure } from '../KamisadoFailure';
 import { KamisadoMove } from '../KamisadoMove';
-import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { Player } from '../../../jscaip/Player';
-import { KamisadoFailure } from '../KamisadoFailure';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Table } from '../../../jscaip/TableUtils';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { KamisadoState } from '../KamisadoState';
 
 describe('KamisadoRules', () => {
 

@@ -1,5 +1,7 @@
 import { Component, Input } from '@angular/core';
-import { BaseGameComponent } from '../../components/game-components/game-component/GameComponent';
+
+import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
+
 import { LodestoneInfo } from './lodestone.component';
 
 @Component({

@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { YinshState } from '../YinshState';
-import { YinshCapture } from '../YinshMove';
-import { YinshPiece } from '../YinshPiece';
-import { YinshNode, YinshRules } from '../YinshRules';
-import { Table } from '../../../jscaip/TableUtils';
-import { YinshMoveGenerator } from '../YinshMoveGenerator';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { YinshCapture } from '../YinshMove';
+import { YinshMoveGenerator } from '../YinshMoveGenerator';
+import { YinshPiece } from '../YinshPiece';
+import { YinshNode, YinshRules } from '../YinshRules';
+import { YinshState } from '../YinshState';
 
 describe('YinshMoveGenerator', () => {
 

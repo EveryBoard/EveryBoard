@@ -1,17 +1,18 @@
 import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 

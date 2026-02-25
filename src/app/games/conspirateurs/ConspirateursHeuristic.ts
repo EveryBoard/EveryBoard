@@ -1,11 +1,12 @@
-import { Coord } from '../../jscaip/Coord';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursNode } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursMove, ConspirateursState> {
 

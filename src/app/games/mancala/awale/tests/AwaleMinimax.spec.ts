@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleRules } from '../AwaleRules';
-import { MancalaState } from '../../common/MancalaState';
-import { Table } from '../../../../jscaip/TableUtils';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
-import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
-import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
+import { MancalaState } from '../../common/MancalaState';
+import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
+import { AwaleRules } from '../AwaleRules';
 
 describe('AwaleScoreMinimax', () => {
 

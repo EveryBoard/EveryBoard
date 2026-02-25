@@ -1,10 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { P4Move } from './P4Move';
-import { P4State } from './P4State';
-import { P4Config, P4Node } from './P4Rules';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Debug } from '../../utils/Debug';
+
+import { P4Move } from './P4Move';
+import { P4Config, P4Node } from './P4Rules';
+import { P4State } from './P4State';
 
 @Debug.log
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State, P4Config> {

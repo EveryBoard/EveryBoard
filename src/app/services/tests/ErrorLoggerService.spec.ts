@@ -2,16 +2,16 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
+import { serverTimestamp } from 'firebase/firestore';
 
 import { JSONValue, MGPOptional } from '@everyboard/lib';
 
-import { FirestoreDocument } from '../../dao/FirestoreDAO';
-import { ErrorLoggerService } from '../ErrorLoggerService';
-import { serverTimestamp } from 'firebase/firestore';
 import { ErrorDAO, MGPError } from '../../dao/ErrorDAO';
+import { FirestoreDocument } from '../../dao/FirestoreDAO';
 import { ErrorDAOMock } from '../../dao/tests/ErrorDAOMock.spec';
-import { MessageDisplayer } from '../MessageDisplayer';
 import { BlankComponent } from '../../utils/tests/TestUtils.spec';
+import { ErrorLoggerService } from '../ErrorLoggerService';
+import { MessageDisplayer } from '../MessageDisplayer';
 
 describe('ErrorLoggerService', () => {
 

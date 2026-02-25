@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
+
 import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
 import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
 import { PartDAO } from '../dao/PartDAO';

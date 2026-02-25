@@ -1,7 +1,7 @@
-import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
-import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
-import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
+import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
+import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 
 function expectNoBackAndForth(move: DiaballikMove): void {
     const subMoves: DiaballikSubMove[] = move.getSubMoves();

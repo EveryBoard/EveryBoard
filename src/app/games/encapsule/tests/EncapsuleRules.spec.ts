@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
-import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from '../../../jscaip/Coord';
-import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { Player } from '../../../jscaip/Player';
-import { EncapsulePiece } from '../EncapsulePiece';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { EncapsuleFailure } from '../EncapsuleFailure';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { EncapsuleFailure } from '../EncapsuleFailure';
+import { EncapsuleMove } from '../EncapsuleMove';
+import { EncapsulePiece } from '../EncapsulePiece';
+import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 
 describe('EncapsuleRules', () => {
 

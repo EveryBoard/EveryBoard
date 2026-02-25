@@ -1,19 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { ApagosFailure } from './ApagosFailure';
+import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
+import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
-import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
 
 interface PieceLocation {
 

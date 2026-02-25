@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { ReversiComponent } from '../reversi.component';
-import { ReversiMove } from '../../../games/reversi/ReversiMove';
-import { ReversiState } from '../../../games/reversi/ReversiState';
+import { fakeAsync } from '@angular/core/testing';
+
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
+import { ReversiMove } from '../ReversiMove';
+import { ReversiState } from '../ReversiState';
+import { ReversiComponent } from '../reversi.component';
 
 describe('ReversiComponent', () => {
 

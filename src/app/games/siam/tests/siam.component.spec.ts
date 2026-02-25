@@ -3,18 +3,18 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { SiamComponent } from '../siam.component';
-import { SiamMove } from '../../../games/siam/SiamMove';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { SiamPiece } from '../../../games/siam/SiamPiece';
-import { Table } from '../../../jscaip/TableUtils';
-import { SiamState } from '../../../games/siam/SiamState';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Coord } from '../../../jscaip/Coord';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SiamFailure } from '../SiamFailure';
+import { SiamMove } from '../SiamMove';
+import { SiamPiece } from '../SiamPiece';
 import { SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
+import { SiamComponent } from '../siam.component';
 
 describe('SiamComponent', () => {
 

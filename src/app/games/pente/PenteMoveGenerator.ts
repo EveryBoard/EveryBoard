@@ -1,12 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { PenteState } from './PenteState';
+
+import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteNode } from './PenteRules';
-import { Coord } from '../../jscaip/Coord';
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { PenteConfig } from './PenteConfig';
+import { PenteState } from './PenteState';
 
 export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState, PenteConfig> {
 

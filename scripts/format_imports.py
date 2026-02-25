@@ -4,7 +4,7 @@ from pathlib import Path
 
 # This script reorders import so that they adhere to the following rules:
 # 1. only relative imports (enforced by linter)
-# 2. shortest possible way (enforced only by this script)
+# 2. shortest possible path ('../a' cannot be written '../../b/a') (enforced only by this script)
 # 3. divided in three category separated by an empty line (enforced by linter)
 #    1. the external libraries
 #    2. external everyboard sub-projects
@@ -36,9 +36,13 @@ def is_project_lib_import(path: str) -> bool:
     """Returns true if the import is from our project, but not relative (e.g. @everyboard/lib)"""
     return any(path.startswith(lib) for lib in PROJECT_LIBS)
 
-def is_internal_import(path: str) -> bool:
-    """Returns true if the import is relative (starts with ".")"""
-    return path.startswith(".")
+def is_internal_parent_import(path: str) -> bool:
+    """Returns true if the import is relative (starts with "..")"""
+    return path.startswith("..")
+
+def is_internal_parent_sibling_import(path: str) -> bool:
+    """Returns true if the import is relative (starts with "./")"""
+    return path.startswith("./")
 
 def count_parent_refs(path: str) -> int:
     return path.count("../")
@@ -90,7 +94,8 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
 
     external_imports = []             # Outsides imports
     everyboard_libraries_imports = [] # Project library imports
-    internal_imports = []             # Internal imports
+    internal_parent_imports = []      # Internal imports starting by "../"
+    internal_sibling_imports = []     # Internal imports starting by "./"
 
     for import_line in imports:
         path = IMPORT_REGEXP.match(import_line.strip()).group(1)
@@ -99,19 +104,29 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
             external_imports.append(import_line)
         elif is_project_lib_import(path):
             everyboard_libraries_imports.append(import_line)
-        elif is_internal_import(path):
+        elif is_internal_parent_import(path):
             mapped_internal_import = map_internal_import(file_path.as_uri(), path)
-            new_internal_import_line = import_line.replace(path, mapped_internal_import)
-            internal_imports.append(new_internal_import_line)
+            new_internal_parent_import_line = import_line.replace(path, mapped_internal_import)
+            internal_parent_imports.append(new_internal_parent_import_line)
+        elif is_internal_parent_sibling_import(path):
+            mapped_internal_import = map_internal_import(file_path.as_uri(), path)
+            new_internal_sibling_import_line = import_line.replace(path, mapped_internal_import)
+            internal_sibling_imports.append(new_internal_sibling_import_line)
 
     external_imports.sort(
         # ortographical order of import path (not imported elements)
         key=lambda line: IMPORT_REGEXP.match(line.strip()).group(1)
     )
-    internal_imports.sort(
+    internal_parent_imports.sort(
         key = lambda line: (
             # proximity to the file (number of "../" in the path, less is closer)
             -count_parent_refs(IMPORT_REGEXP.match(line.strip()).group(1)),
+            # ortographical order of import path (not imported elements)
+            IMPORT_REGEXP.match(line.strip()).group(1),
+        )
+    )
+    internal_sibling_imports.sort(
+        key = lambda line: (
             # ortographical order of import path (not imported elements)
             IMPORT_REGEXP.match(line.strip()).group(1),
         )
@@ -124,10 +139,14 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
         if new_imports:
             new_imports.append("")
         new_imports.extend(everyboard_libraries_imports)
-    if internal_imports:
+    if internal_parent_imports:
         if new_imports:
             new_imports.append("")
-        new_imports.extend(internal_imports)
+        new_imports.extend(internal_parent_imports)
+    if internal_sibling_imports:
+        if new_imports:
+            new_imports.append("")
+        new_imports.extend(internal_sibling_imports)
 
     new_content_parts = []
     if eslint_disable_header:

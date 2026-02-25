@@ -1,20 +1,22 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Player } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { MartianChessMove } from './MartianChessMove';
-import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
-import { MartianChessState } from './MartianChessState';
-import { MartianChessPiece } from './MartianChessPiece';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { MCTS } from '../../jscaip/AI/MCTS';
-import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
+import { MartianChessMove } from './MartianChessMove';
+import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
+import { MartianChessPiece } from './MartianChessPiece';
+import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
+import { MartianChessState } from './MartianChessState';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,

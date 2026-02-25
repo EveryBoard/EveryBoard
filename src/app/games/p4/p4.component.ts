@@ -1,16 +1,18 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { P4State } from './P4State';
-import { P4Config, P4Rules } from './P4Rules';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { P4Move } from '../../games/p4/P4Move';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { Coord } from '../../jscaip/Coord';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { MCTS } from '../../jscaip/AI/MCTS';
-import { P4MoveGenerator } from './P4MoveGenerator';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { P4Minimax } from './P4Minimax';
+import { P4Move } from './P4Move';
+import { P4MoveGenerator } from './P4MoveGenerator';
+import { P4Config, P4Rules } from './P4Rules';
+import { P4State } from './P4State';
 
 @Component({
     selector: 'app-p4',

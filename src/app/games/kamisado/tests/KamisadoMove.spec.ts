@@ -2,10 +2,10 @@
 import { EncoderTestUtils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { KamisadoRules } from '../KamisadoRules';
-import { KamisadoMove } from '../KamisadoMove';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
+import { KamisadoRules } from '../KamisadoRules';
 
 describe('KamisadoMove', () => {
 

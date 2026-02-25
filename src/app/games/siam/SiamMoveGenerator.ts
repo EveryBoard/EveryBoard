@@ -1,10 +1,12 @@
-import { SiamMove } from './SiamMove';
-import { SiamState } from './SiamState';
-import { SiamPiece } from './SiamPiece';
-import { Player } from '../../jscaip/Player';
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
 import { MGPOptional } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Player } from '../../jscaip/Player';
+
+import { SiamMove } from './SiamMove';
+import { SiamPiece } from './SiamPiece';
+import { SiamRules, SiamNode, SiamConfig } from './SiamRules';
+import { SiamState } from './SiamState';
 
 export class SiamMoveGenerator extends MoveGenerator<SiamMove, SiamState, SiamConfig> {
 

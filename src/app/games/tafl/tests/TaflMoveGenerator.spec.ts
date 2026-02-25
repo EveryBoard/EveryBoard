@@ -2,13 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { TaflPawn } from '../TaflPawn';
 import { Table } from '../../../jscaip/TableUtils';
+import { TaflConfig } from '../TaflConfig';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflPawn } from '../TaflPawn';
+import { TaflState } from '../TaflState';
 import { BrandhubMove } from '../brandhub/BrandhubMove';
 import { BrandhubNode, BrandhubRules } from '../brandhub/BrandhubRules';
-import { TaflMoveGenerator } from '../TaflMoveGenerator';
-import { TaflConfig } from '../TaflConfig';
-import { TaflState } from '../TaflState';
 
 describe('TaflMoveGenerator', () => {
 

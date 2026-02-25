@@ -1,8 +1,9 @@
 import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 
 import { User, UserDocument } from '../../domain/User';
-import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { Debug } from '../../utils/Debug';
+
+import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 
 type UserOS = ObservableSubject<MGPOptional<UserDocument>>;
 

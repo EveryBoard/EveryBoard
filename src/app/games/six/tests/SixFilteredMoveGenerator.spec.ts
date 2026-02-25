@@ -3,11 +3,11 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { SixState } from '../SixState';
-import { SixMove } from '../SixMove';
 import { Table } from '../../../jscaip/TableUtils';
-import { SixConfig, SixNode, SixRules } from '../SixRules';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
+import { SixMove } from '../SixMove';
+import { SixConfig, SixNode, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

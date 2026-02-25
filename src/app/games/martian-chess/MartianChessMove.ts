@@ -1,11 +1,12 @@
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
 import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { Ordinal } from '../../jscaip/Ordinal';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Localized } from '../../utils/LocaleUtils';
 import { Vector } from '../../jscaip/Vector';
+import { Localized } from '../../utils/LocaleUtils';
+
 import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveFailure {

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { SaharaRules } from '../SaharaRules';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SaharaMinimax } from '../SaharaMinimax';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaMinimax', () => {
 

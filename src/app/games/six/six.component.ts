@@ -1,25 +1,26 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
-import { SixState } from './SixState';
-import { SixMove } from './SixMove';
-import { SixFailure } from './SixFailure';
-import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { HexagonalGameComponent }
-    from '../../components/game-components/game-component/HexagonalGameComponent';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { SixMoveGenerator } from './SixMoveGenerator';
-import { CoordSet } from '../../jscaip/CoordSet';
+
+import { SixFailure } from './SixFailure';
 import { SixMinimax } from './SixMinimax';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { SixMove } from './SixMove';
+import { SixMoveGenerator } from './SixMoveGenerator';
+import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
+import { SixState } from './SixState';
 
 type CoordAndClass = {
     coord: Coord,

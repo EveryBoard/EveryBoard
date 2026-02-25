@@ -1,11 +1,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
 import { QuebecCastlesDrop, QuebecCastlesMove } from './QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { Coord } from '../../jscaip/Coord';
 
 export class QuebecCastlesMoveGenerator extends MoveGenerator<QuebecCastlesMove,
                                                               QuebecCastlesState,

@@ -1,7 +1,7 @@
-import { Comparable, ComparableObject, comparableEquals } from './Comparable';
 import { ArrayUtils } from './ArrayUtils';
-import { Sets } from './Sets';
+import { Comparable, ComparableObject, comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
+import { Sets } from './Sets';
 
 export class Set<T extends Comparable> implements ComparableObject {
 

@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { PylosCoord } from '../PylosCoord';
-import { PylosMove } from '../PylosMove';
-import { PylosState } from '../PylosState';
-import { PylosNode, PylosRules } from '../PylosRules';
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { PylosHeuristic } from '../PylosHeuristic';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { PylosCoord } from '../PylosCoord';
+import { PylosHeuristic } from '../PylosHeuristic';
+import { PylosMove } from '../PylosMove';
+import { PylosNode, PylosRules } from '../PylosRules';
+import { PylosState } from '../PylosState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
