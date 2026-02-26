@@ -1,10 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { CoerceoState } from './CoerceoState';
-import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
 import { CoerceoHeuristic } from './CoerceoHeuristic';
+import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 export class CoerceoCapturesAndFreedomHeuristic extends CoerceoHeuristic {
 

@@ -5,10 +5,12 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 
 import { Move } from '../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
+import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+
 import { BaseWrapperComponent } from './BaseWrapperComponent';
 import { GameInfo } from '../normal-component/pick-game/game-info';
 

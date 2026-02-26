@@ -4,10 +4,10 @@ import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawes
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ThemeService } from '../../../services/ThemeService';
-import { GameInfo } from '../pick-game/game-info';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { CurrentGameService } from '../../../services/CurrentGameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { ThemeService } from '../../../services/ThemeService';
+import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-welcome',

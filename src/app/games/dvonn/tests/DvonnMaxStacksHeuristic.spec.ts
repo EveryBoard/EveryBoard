@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player } from '../../../jscaip/Player';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { DvonnMaxStacksHeuristic } from '../DvonnMaxStacksHeuristic';
 import { DvonnPieceStack } from '../DvonnPieceStack';
-import { DvonnState } from '../DvonnState';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { DvonnRules } from '../DvonnRules';
+import { DvonnState } from '../DvonnState';
 
 describe('DvonnMaxStacksHeuristic', () => {
 

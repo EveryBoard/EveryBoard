@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasState } from '../EpaminondasState';
+import { fakeAsync } from '@angular/core/testing';
+
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { EpaminondasComponent } from '../epaminondas.component';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { EpaminondasFailure } from '../EpaminondasFailure';
 import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { EpaminondasFailure } from '../EpaminondasFailure';
+import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasState } from '../EpaminondasState';
+import { EpaminondasComponent } from '../epaminondas.component';
 
 describe('EpaminondasComponent', () => {
 

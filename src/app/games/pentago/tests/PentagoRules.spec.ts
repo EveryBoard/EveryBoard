@@ -2,14 +2,14 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PentagoFailure } from '../PentagoFailure';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Table } from '../../../jscaip/TableUtils';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('PentagoRules', () => {
 

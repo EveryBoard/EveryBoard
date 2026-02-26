@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { TeekoMove } from '../TeekoMove';
+import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Table } from '../../../jscaip/TableUtils';
-import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
-import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

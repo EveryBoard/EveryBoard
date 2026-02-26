@@ -2,15 +2,15 @@ import { Injectable } from '@angular/core';
 
 import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
 
+import { ChatDAO } from '../../dao/ChatDAO';
 import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
+import { PartDAO } from '../../dao/PartDAO';
+import { ConfigRoom, FirstPlayer, PartStatus, PartType } from '../../domain/ConfigRoom';
 import { MinimalUser } from '../../domain/MinimalUser';
 import { Action, GameEvent, MGPResult, Part, RequestType } from '../../domain/Part';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConnectedUserService } from '../ConnectedUserService';
-import { ConfigRoom, FirstPlayer, PartStatus, PartType } from '../../domain/ConfigRoom';
-import { PartDAO } from '../../dao/PartDAO';
-import { ChatDAO } from '../../dao/ChatDAO';
 import { GameService } from '../GameService';
 
 @Injectable({ providedIn: 'root' })

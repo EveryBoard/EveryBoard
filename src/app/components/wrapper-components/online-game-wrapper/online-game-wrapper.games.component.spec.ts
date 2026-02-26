@@ -3,15 +3,16 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { MGPValidation } from '@everyboard/lib';
 
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameInfo } from '../../normal-component/pick-game/game-info';
-import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
-import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { PlayerOrNone } from '../../../jscaip/Player';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
+import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
 
 describe('OnlineGameWrapperComponent (games)', () => {
 

@@ -1,18 +1,19 @@
 import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
+import { TaflConfig } from './TaflConfig';
+import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 import { TaflNode } from './TaflRules';
 import { TaflState } from './TaflState';
-import { TaflMove } from './TaflMove';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { TaflConfig } from './TaflConfig';
 
 export type PointValue = {
     width: number;

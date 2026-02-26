@@ -2,28 +2,28 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GipfCapture } from '../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Arrow } from '../../components/game-components/arrow-component/Arrow';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
 
-import { GipfLegalityInformation, GipfRules } from './GipfRules';
 import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
-import { GipfState } from './GipfState';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
-import { GipfCapture } from '../../jscaip/GipfProjectHelper';
+import { GipfLegalityInformation, GipfRules } from './GipfRules';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { GipfState } from './GipfState';
 
 @Component({
     selector: 'app-gipf',

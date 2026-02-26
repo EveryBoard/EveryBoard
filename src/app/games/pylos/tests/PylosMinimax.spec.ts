@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { PylosRules } from '../PylosRules';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { PylosMinimax } from '../PylosMinimax';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { PylosRules } from '../PylosRules';
 
 describe('PylosMinimax', () => {
 

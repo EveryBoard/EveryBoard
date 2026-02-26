@@ -1,12 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { TablutMove } from './TablutMove';
-import { TaflNode, TaflRules } from '../TaflRules';
-import { TaflConfig } from '../TaflConfig';
 import { BooleanConfig, RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { TaflPawn } from '../TaflPawn';
 import { Table } from '../../../jscaip/TableUtils';
+import { TaflConfig } from '../TaflConfig';
+import { TaflPawn } from '../TaflPawn';
+import { TaflNode, TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
+
+import { TablutMove } from './TablutMove';
 
 export class TablutNode extends TaflNode<TablutMove> {}
 

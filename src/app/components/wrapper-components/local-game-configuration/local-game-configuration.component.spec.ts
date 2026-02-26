@@ -1,14 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { LocalGameConfigurationComponent } from './local-game-configuration.component';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
-import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { AuthUser } from '../../../services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+
+import { LocalGameConfigurationComponent } from './local-game-configuration.component';
 
 describe('LocalGameConfigurationComponent', () => {
 

@@ -1,8 +1,9 @@
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../jscaip/AI/AI';
-import { CheckersMove } from './CheckersMove';
+
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from './AbstractCheckersRules';
+import { CheckersMove } from './CheckersMove';
 import { CheckersState } from './CheckersState';
 
 export class CheckersMoveGenerator extends MoveGenerator<CheckersMove, CheckersState, CheckersConfig> {

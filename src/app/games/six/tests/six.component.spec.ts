@@ -3,16 +3,16 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { SixState } from '../SixState';
-import { SixMove } from '../SixMove';
-import { SixFailure } from '../SixFailure';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { SixComponent } from '../six.component';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { SixFailure } from '../SixFailure';
+import { SixMove } from '../SixMove';
 import { SixConfig, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
+import { SixComponent } from '../six.component';
 
 describe('SixComponent', () => {
 

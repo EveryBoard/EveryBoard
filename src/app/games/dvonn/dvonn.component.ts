@@ -2,20 +2,20 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
-import { DvonnMove } from './DvonnMove';
-import { DvonnState } from './DvonnState';
-import { DvonnRules } from './DvonnRules';
-import { DvonnPieceStack } from './DvonnPieceStack';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
-import { HexagonalGameComponent }
-    from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
+import { DvonnMove } from './DvonnMove';
+import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { DvonnPieceStack } from './DvonnPieceStack';
+import { DvonnRules } from './DvonnRules';
 import { DvonnScoreMinimax } from './DvonnScoreMinimax';
+import { DvonnState } from './DvonnState';
 
 @Component({
     selector: 'app-dvonn',

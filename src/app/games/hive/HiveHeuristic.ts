@@ -1,13 +1,14 @@
 import { MGPOptional, Set } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
 

@@ -1,10 +1,10 @@
 import { Utils } from '@everyboard/lib';
 
+import { BoardValue } from '../AI/BoardValue';
+import { GameStatus } from '../GameStatus';
 import { NInARowHelper } from '../NInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';
-import { BoardValue } from '../AI/BoardValue';
-import { GameStatus } from '../GameStatus';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

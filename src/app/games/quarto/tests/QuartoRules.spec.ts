@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { QuartoFailure } from '../QuartoFailure';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
-import { Table } from '../../../jscaip/TableUtils';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Player } from '../../../jscaip/Player';
-import { QuartoFailure } from '../QuartoFailure';
-import { MGPOptional } from '@everyboard/lib';
 
 const AAAA: QuartoPiece = QuartoPiece.AAAA;
 const AABA: QuartoPiece = QuartoPiece.AABA;

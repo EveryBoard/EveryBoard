@@ -1,5 +1,5 @@
-import { MancalaState } from '../MancalaState';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { MancalaState } from '../MancalaState';
 
 describe('MancalaState', () => {
 

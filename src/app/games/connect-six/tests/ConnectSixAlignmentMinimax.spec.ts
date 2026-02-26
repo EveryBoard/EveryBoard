@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
+import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
 import { ConnectSixDrops, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 describe('ConnectSixAlignmentMinimax', () => {
 

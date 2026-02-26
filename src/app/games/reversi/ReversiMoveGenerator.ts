@@ -1,9 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { ReversiState } from './ReversiState';
-import { ReversiMove } from './ReversiMove';
 import { MoveGenerator } from '../../jscaip/AI/AI';
+
+import { ReversiMove } from './ReversiMove';
 import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
+import { ReversiState } from './ReversiState';
 
 export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {
 
@@ -15,4 +16,3 @@ export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiStat
     }
 
 }
-

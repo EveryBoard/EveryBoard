@@ -4,7 +4,6 @@ import { Coord } from '../Coord';
 import { Orthogonal } from '../Orthogonal';
 import { TableUtils } from '../TableUtils';
 
-
 export class TriangularCheckerBoard {
 
     public static getDirections(c: Coord): Orthogonal[] {

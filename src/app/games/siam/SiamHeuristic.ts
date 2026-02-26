@@ -2,12 +2,13 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+
 import { SiamMove } from './SiamMove';
+import { SiamPiece } from './SiamPiece';
 import { SiamConfig, SiamNode, SiamRules } from './SiamRules';
 import { SiamState } from './SiamState';
-import { Player } from '../../jscaip/Player';
-import { SiamPiece } from './SiamPiece';
-import { Coord } from '../../jscaip/Coord';
 
 export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, SiamConfig> {
 

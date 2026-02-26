@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+import { TestUtils } from '@everyboard/lib';
+
 import { Ordinal } from '../../../jscaip/Ordinal';
-import { EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { EpaminondasFailure } from '../EpaminondasFailure';
-import { TestUtils } from '@everyboard/lib';
+import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
+import { EpaminondasRules } from '../EpaminondasRules';
 
 describe('EpaminondasMove: ', () => {
 

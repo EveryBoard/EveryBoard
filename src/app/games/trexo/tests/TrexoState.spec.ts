@@ -3,10 +3,10 @@ import { Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { TableUtils } from '../../../jscaip/TableUtils';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { TrexoRules } from '../TrexoRules';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 
 describe('TrexoState', () => {
 

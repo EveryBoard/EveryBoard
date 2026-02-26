@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { GameInfo } from '../../normal-component/pick-game/game-info';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+
+import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 
 describe(`RulesConfigDescriptions`, () => {
 

@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { NewGameHeuristic } from '../NewGameHeuristic';
-import { NewGameState } from '../NewGameState';
 import { Player } from '../../../jscaip/Player';
-import { NewGameRules } from '../NewGameRules';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { NewGameHeuristic } from '../NewGameHeuristic';
+import { NewGameRules } from '../NewGameRules';
+import { NewGameState } from '../NewGameState';
 
 /**
  * These are the tests for the heuristic.

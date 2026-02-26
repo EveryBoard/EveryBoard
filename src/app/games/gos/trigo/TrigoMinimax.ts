@@ -1,4 +1,5 @@
 import { AbstractGoMinimax } from '../AbstractGoMinimax';
+
 import { TrigoHeuristic } from './TrigoHeuristic';
 import { TrigoMoveGenerator } from './TrigoMoveGenerator';
 import { TrigoConfig, TrigoRules } from './TrigoRules';

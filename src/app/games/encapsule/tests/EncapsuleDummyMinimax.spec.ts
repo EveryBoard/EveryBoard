@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { EncapsuleDummyMinimax } from '../EncapsuleDummyMinimax';
+import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
 
 describe('EncapsuleDummyMinimax', () => {
 

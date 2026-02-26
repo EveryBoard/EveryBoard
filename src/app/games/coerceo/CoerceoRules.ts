@@ -1,20 +1,21 @@
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
+import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoState } from './CoerceoState';
-import { CoerceoFailure } from './CoerceoFailure';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { Player } from '../../jscaip/Player';
-import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { CoordSet } from '../../jscaip/CoordSet';
+
+import { CoerceoFailure } from './CoerceoFailure';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
+import { CoerceoState } from './CoerceoState';
 
 export type CoerceoConfig = {
     smallBoard: boolean;

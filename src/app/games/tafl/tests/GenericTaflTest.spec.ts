@@ -5,17 +5,17 @@ import { fakeAsync } from '@angular/core/testing';
 import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { TaflComponent } from '../tafl.component';
+import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflMove } from '../TaflMove';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflPawn } from '../TaflPawn';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { TaflConfig } from '../TaflConfig';
-import { TaflPawn } from '../TaflPawn';
+import { TaflComponent } from '../tafl.component';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,

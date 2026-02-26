@@ -2,8 +2,8 @@
 import { JSONValue, MGPFallible } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
-import { CheckersMove } from '../CheckersMove';
 import { CheckersFailure } from '../CheckersFailure';
+import { CheckersMove } from '../CheckersMove';
 
 describe('CheckersMove', () => {
 

@@ -1,25 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { ActivatedRouteSnapshot, Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { BlankComponent } from '../../utils/tests/TestUtils.spec';
-import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
 import { PartDocument } from '../../domain/Part';
 import { PartMocks } from '../../domain/PartMocks.spec';
-import { CurrentGameService } from '../../services/CurrentGameService';
-import { CurrentGameServiceMock } from '../../services/tests/CurrentGameService.spec';
-import { ConnectedUserService } from '../../services/ConnectedUserService';
-import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { GameService } from '../../services/GameService';
 import { ConfigRoomService } from '../../services/ConfigRoomService';
+import { ConnectedUserService } from '../../services/ConnectedUserService';
+import { CurrentGameService } from '../../services/CurrentGameService';
+import { GameService } from '../../services/GameService';
 import { ServerTimeService } from '../../services/ServerTimeService';
-import { ServerTimeServiceMock } from '../../services/tests/ServerTimeServiceMock.spec';
 import { ConfigRoomServiceMock } from '../../services/tests/ConfigRoomServiceMock.spec';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
+import { CurrentGameServiceMock } from '../../services/tests/CurrentGameService.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
+import { ServerTimeServiceMock } from '../../services/tests/ServerTimeServiceMock.spec';
+import { BlankComponent } from '../../utils/tests/TestUtils.spec';
+import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
 
 describe('ExclusiveOnlineGameGuard', () => {
 

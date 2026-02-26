@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 import { GameService } from '../../../services/GameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { GameInfo } from '../pick-game/game-info';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { CurrentGameService } from '../../../services/CurrentGameService';
+import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-online-game-creation',

@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { SaharaState } from '../SaharaState';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
-import { SaharaHeuristic } from '../SaharaHeuristic';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { SaharaHeuristic } from '../SaharaHeuristic';
 import { SaharaRules } from '../SaharaRules';
+import { SaharaState } from '../SaharaState';
 
 describe('SaharaHeuristic', () => {
 

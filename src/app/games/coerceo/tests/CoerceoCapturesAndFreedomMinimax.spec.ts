@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { CoerceoCapturesAndFreedomMinimax } from '../CoerceoCapturesAndFreedomMinimax';
+import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 
 describe('CoerceoCapturesAndFreedomMinimax', () => {
 

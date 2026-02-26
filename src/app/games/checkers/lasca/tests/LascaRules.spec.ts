@@ -5,9 +5,9 @@ import { Coord, CoordFailure } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
-import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersConfig, CheckersNode } from '../../common/AbstractCheckersRules';
 import { CheckersFailure } from '../../common/CheckersFailure';
+import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { LascaRules } from '../LascaRules';
 

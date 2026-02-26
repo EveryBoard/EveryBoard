@@ -2,11 +2,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
-import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
-import { CheckersControlMinimax } from '../CheckersControlMinimax';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
+import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
+import { CheckersControlMinimax } from '../CheckersControlMinimax';
 
 const rules: AbstractCheckersRules[] = [
     InternationalCheckersRules.get(),

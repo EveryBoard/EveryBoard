@@ -4,11 +4,11 @@ import { Subscription } from 'rxjs';
 
 import { Utils } from '@everyboard/lib';
 
-import { ChatService } from '../../../services/ChatService';
-import { Message, MessageDocument } from '../../../domain/Message';
-import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { FirestoreCollectionObserver } from '../../../dao/FirestoreCollectionObserver';
+import { Message, MessageDocument } from '../../../domain/Message';
 import { MinimalUser } from '../../../domain/MinimalUser';
+import { ChatService } from '../../../services/ChatService';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { Debug } from '../../../utils/Debug';
 
 @Component({

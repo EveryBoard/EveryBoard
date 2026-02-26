@@ -3,9 +3,9 @@ import { MGPMap, Utils } from '@everyboard/lib';
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
 import { Direction } from './Direction';
-import { GameStateWithTable } from './state/GameStateWithTable';
-import { Player, PlayerOrNone } from './Player';
 import { Ordinal } from './Ordinal';
+import { Player, PlayerOrNone } from './Player';
+import { GameStateWithTable } from './state/GameStateWithTable';
 
 export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
 
