@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { CheckersControlMinimax } from '../CheckersControlMinimax';
+
+import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
+import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
+import { CheckersControlMinimax } from '../CheckersControlMinimax';
 
 const rules: AbstractCheckersRules[] = [
     InternationalCheckersRules.get(),

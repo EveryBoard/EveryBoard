@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import * as FireAuth from '@firebase/auth';
+import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
 
 @Component({
     selector: 'app-register',

@@ -14,6 +14,7 @@ module.exports = {
         plugins: [
             '@typescript-eslint',
             'jasmine',
+            'import',
         ],
         extends: [
             'eslint:recommended',
@@ -23,6 +24,30 @@ module.exports = {
             'plugin:jasmine/recommended',
         ],
         rules: {
+            "import/order": [
+                "error", {
+                    "groups": [
+                        "builtin",
+                        "external",
+                        "internal",
+                        "parent",
+                        ["sibling", "index"]
+                    ],
+                    "pathGroups": [
+                        {
+                            "pattern": "@everyboard/**",
+                            "group": "internal",
+                            "position": "after"
+                        }
+                    ],
+                    "pathGroupsExcludedImportTypes": ["builtin"],
+                    "newlines-between": "always",
+                    "alphabetize": {
+                        "order": "asc",
+                        "caseInsensitive": false
+                    }
+                }
+            ],
             '@typescript-eslint/no-floating-promises': ['error'],
             'jasmine/no-unsafe-spy': ['off'],
             'jasmine/no-expect-in-setup-teardown': ['off'],

@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { DiaballikRules } from '../DiaballikRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DiaballikDistanceMinimax } from '../DiaballikDistanceMinimax';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikMoveGenerator } from '../DiaballikMoveGenerator';
+import { DiaballikRules } from '../DiaballikRules';
 
 describe('DiaballikDistanceMinimax', () => {
 

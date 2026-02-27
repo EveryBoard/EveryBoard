@@ -1,21 +1,23 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { GoState } from './GoState';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { GroupDataFactory } from '../../jscaip/BoardData';
+import { Coord } from '../../jscaip/Coord';
+import { Direction } from '../../jscaip/Direction';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { Table } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+
+import { GoFailure } from './GoFailure';
+import { GoGroupData } from './GoGroupsData';
+import { GoMove } from './GoMove';
 import { GoPhase } from './GoPhase';
 import { GoPiece } from './GoPiece';
-import { GoMove } from './GoMove';
-import { Player } from 'src/app/jscaip/Player';
-import { GoGroupData } from './GoGroupsData';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GoFailure } from './GoFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Direction } from 'src/app/jscaip/Direction';
-import { GroupDataFactory } from 'src/app/jscaip/BoardData';
+import { GoState } from './GoState';
 
 export type GoLegalityInformation = Coord[];
 

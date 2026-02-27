@@ -1,22 +1,24 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Line } from '../../jscaip/Line';
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
-import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Line } from 'src/app/jscaip/Line';
-import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
     selector: 'app-diaballik',

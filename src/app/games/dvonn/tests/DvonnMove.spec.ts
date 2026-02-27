@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib';
 
+import { Coord } from '../../../jscaip/Coord';
 import { DvonnMove } from '../DvonnMove';
-import { Coord } from 'src/app/jscaip/Coord';
 
 describe('DvonnMove', () => {
 

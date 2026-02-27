@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib';
 
+import { Coord } from '../../../jscaip/Coord';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from '../QuebecCastlesMove';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
-import { Coord } from 'src/app/jscaip/Coord';
 import { QuebecCastlesRules } from '../QuebecCastlesRules';
 
 describe('QuebecCastlesMove', () => {

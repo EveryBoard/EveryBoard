@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { TaflMove } from '../TaflMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MyTaflMove } from './MyTaflMove.spec';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TaflFailure } from '../TaflFailure';
 import { MGPValidation, MGPValidationTestUtils, TestUtils } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { TaflFailure } from '../TaflFailure';
+import { TaflMove } from '../TaflMove';
+
+import { MyTaflMove } from './MyTaflMove.spec';
 
 describe('TaflMove', () => {
 

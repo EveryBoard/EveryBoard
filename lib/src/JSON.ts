@@ -1,4 +1,5 @@
 import { FieldValue } from 'firebase/firestore';
+
 import { MGPOptional } from './MGPOptional';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not

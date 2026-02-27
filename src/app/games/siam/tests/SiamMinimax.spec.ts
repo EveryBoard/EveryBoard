@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
-import { SiamMove } from '../SiamMove';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { MGPOptional } from '@everyboard/lib';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SiamMinimax } from '../SiamMinimax';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { SiamMove } from '../SiamMove';
+import { SiamPiece } from '../SiamPiece';
+import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

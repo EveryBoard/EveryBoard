@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils, MGPFallible, MGPOptional, TestUtils } from '@everyboard/lib';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
-import { Coord } from 'src/app/jscaip/Coord';
+
+import { Coord } from '../../../jscaip/Coord';
 import { DiaballikFailure } from '../DiaballikFailure';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 
 describe('DiaballikMove', () => {
 

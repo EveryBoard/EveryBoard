@@ -1,5 +1,6 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
 import { PenteMove } from '../PenteMove';
 
 describe('PenteMove', () => {

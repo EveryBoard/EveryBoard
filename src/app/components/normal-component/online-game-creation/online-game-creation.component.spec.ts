@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+
 import { MGPValidation } from '@everyboard/lib';
 
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LobbyComponent } from '../lobby/lobby.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
+
 import { OnlineGameCreationComponent } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent for non-existing game', () => {

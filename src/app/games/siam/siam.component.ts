@@ -1,23 +1,25 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { SiamMove } from 'src/app/games/siam/SiamMove';
-import { SiamState } from 'src/app/games/siam/SiamState';
-import { SiamConfig, SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
-import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Debug } from '../../utils/Debug';
+
 import { SiamFailure } from './SiamFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { SiamMove } from './SiamMove';
+import { SiamMoveGenerator } from './SiamMoveGenerator';
+import { SiamPiece } from './SiamPiece';
+import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
+import { SiamState } from './SiamState';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,

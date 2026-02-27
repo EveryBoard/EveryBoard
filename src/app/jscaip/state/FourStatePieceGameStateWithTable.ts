@@ -1,9 +1,10 @@
 import { MGPOptional } from '@everyboard/lib';
-import { GameStateWithTable } from './GameStateWithTable';
-import { Player } from '../Player';
+
 import { Coord } from '../Coord';
 import { FourStatePiece } from '../FourStatePiece';
+import { Player } from '../Player';
 
+import { GameStateWithTable } from './GameStateWithTable';
 
 export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourStatePiece> {
 

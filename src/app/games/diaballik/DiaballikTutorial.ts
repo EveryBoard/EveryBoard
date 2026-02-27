@@ -1,10 +1,12 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikRules } from './DiaballikRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 const O: DiaballikPiece = DiaballikPiece.ZERO;
 const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;

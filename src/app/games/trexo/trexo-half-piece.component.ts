@@ -1,12 +1,14 @@
 import { Component, Input } from '@angular/core';
+
 import { Utils } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { Coord3D } from 'src/app/jscaip/Coord3D';
-import { Vector } from 'src/app/jscaip/Vector';
-import { TrexoComponent } from './trexo.component';
+import { ModeConfig } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Coord3D } from '../../jscaip/Coord3D';
+import { Vector } from '../../jscaip/Vector';
+
 import { TrexoMove } from './TrexoMove';
-import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { TrexoComponent } from './trexo.component';
 
 @Component({
     selector: '[app-trexo-half-piece]',

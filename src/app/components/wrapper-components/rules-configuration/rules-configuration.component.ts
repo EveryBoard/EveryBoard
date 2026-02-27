@@ -4,10 +4,11 @@ import { ActivatedRoute } from '@angular/router';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
+import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
-import { Localized } from 'src/app/utils/LocaleUtils';
+
+import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;

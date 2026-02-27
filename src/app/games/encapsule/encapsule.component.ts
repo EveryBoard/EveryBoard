@@ -1,20 +1,22 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from 'src/app/games/encapsule/EncapsuleState';
-import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { EncapsuleFailure } from './EncapsuleFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { EncapsuleFailure } from './EncapsuleFailure';
+import { EncapsuleMove } from './EncapsuleMove';
+import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
+import { EncapsulePiece } from './EncapsulePiece';
+import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
 
 @Component({
     selector: 'app-encapsule',

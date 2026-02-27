@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
-import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
-import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { MartianChessFailure } from '../MartianChessFailure';
-import { MartianChessCapture, MartianChessState } from '../MartianChessState';
+import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 
 describe('MartianChessRules', () => {
 

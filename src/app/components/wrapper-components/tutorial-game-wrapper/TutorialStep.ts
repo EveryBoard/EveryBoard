@@ -1,9 +1,9 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Move } from 'src/app/jscaip/Move';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Move } from '../../../jscaip/Move';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
 
 export type Click = string;
 

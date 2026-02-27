@@ -1,18 +1,19 @@
 /* eslint-disable max-lines-per-function */
+import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { QuebecCastlesComponent } from '../quebec-castles.component';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { RulesConfigurationComponent } from '../../../components/wrapper-components/rules-configuration/rules-configuration.component';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
-import { RulesConfigurationComponent } from 'src/app/components/wrapper-components/rules-configuration/rules-configuration.component';
-import { DebugElement } from '@angular/core';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { QuebecCastlesComponent } from '../quebec-castles.component';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

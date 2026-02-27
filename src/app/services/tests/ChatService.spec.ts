@@ -1,13 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { ChatMessages, ChatService } from '../ChatService';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
-import { fakeAsync, TestBed } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MGPValidation } from '@everyboard/lib';
-import { Message } from 'src/app/domain/Message';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { serverTimestamp } from 'firebase/firestore';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
+
+import { MGPValidation } from '@everyboard/lib';
+
+import { ChatDAO } from '../../dao/ChatDAO';
+import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
+import { Message } from '../../domain/Message';
+import { MinimalUser } from '../../domain/MinimalUser';
+import { ChatMessages, ChatService } from '../ChatService';
 
 describe('ChatService', () => {
 

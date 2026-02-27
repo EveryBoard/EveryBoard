@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/jscaip/TableUtils';
-import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { EpaminondasState } from '../EpaminondasState';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
 import { EpaminondasConfig, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasState } from '../EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

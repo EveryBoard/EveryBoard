@@ -1,8 +1,9 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
+import { TeekoHeuristic } from './TeekoHeuristic';
 import { TeekoMove } from './TeekoMove';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from './TeekoRules';
-import { TeekoHeuristic } from './TeekoHeuristic';
 import { TeekoState } from './TeekoState';
 
 export class TeekoMinimax

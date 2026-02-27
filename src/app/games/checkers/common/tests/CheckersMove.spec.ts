@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { JSONValue, MGPFallible } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { CheckersMove } from '../CheckersMove';
+
+import { Coord } from '../../../../jscaip/Coord';
 import { CheckersFailure } from '../CheckersFailure';
+import { CheckersMove } from '../CheckersMove';
 
 describe('CheckersMove', () => {
 

@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { SquarzFailure } from '../SquarzFailure';
+import { SquarzMove } from '../SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';
 import { SquarzState } from '../SquarzState';
-import { SquarzMove } from '../SquarzMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { SquarzFailure } from '../SquarzFailure';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('SquarzRules', () => {
 

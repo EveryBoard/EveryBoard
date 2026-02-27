@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { AwaleRules } from '../awale/AwaleRules';
+import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
 import { MancalaState } from '../common/MancalaState';
-import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { AwaleRules } from '../awale/AwaleRules';
 import { KalahRules } from '../kalah/KalahRules';
-import { MancalaConfig } from '../common/MancalaConfig';
 
 describe('MancalaScoreHeuristic', () => {
 

@@ -1,9 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
+
+import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { ErrorDAO, ErrorDocument, MGPError } from '../dao/ErrorDAO';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { MessageDisplayer } from './MessageDisplayer';
 
 @Injectable({

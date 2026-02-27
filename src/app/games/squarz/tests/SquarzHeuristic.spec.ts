@@ -1,9 +1,10 @@
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { SquarzHeuristic } from '../SquarzHeuristic';
-import { SquarzState } from '../SquarzState';
 import { MGPOptional } from '@everyboard/lib';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { SquarzHeuristic } from '../SquarzHeuristic';
 import { SquarzConfig, SquarzRules } from '../SquarzRules';
+import { SquarzState } from '../SquarzState';
 
 describe('SquarzHeuristic', () => {
 

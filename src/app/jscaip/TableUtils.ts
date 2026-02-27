@@ -1,4 +1,5 @@
 import { ArrayUtils, Comparable, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;

@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
-import { TrigoComponent } from '../trigo.component';
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoState } from 'src/app/games/gos/GoState';
-import { GoPiece } from '../../GoPiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Coord } from 'src/app/jscaip/Coord';
+
+import { Coord } from '../../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoState } from '../../GoState';
+import { TrigoComponent } from '../trigo.component';
 
 describe('TrigoComponent', () => {
 

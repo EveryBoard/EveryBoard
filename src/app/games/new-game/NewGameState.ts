@@ -1,4 +1,4 @@
-import { GameState } from 'src/app/jscaip/state/GameState';
+import { GameState } from '../../jscaip/state/GameState';
 
 /**
  * This class represent the state of the game at a specific turn.

@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoRules } from '../KamisadoRules';
-import { KamisadoMove } from '../KamisadoMove';
 import { EncoderTestUtils } from '@everyboard/lib';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+
+import { Coord } from '../../../jscaip/Coord';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
+import { KamisadoRules } from '../KamisadoRules';
 
 describe('KamisadoMove', () => {
 

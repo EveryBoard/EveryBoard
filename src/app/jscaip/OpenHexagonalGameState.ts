@@ -1,8 +1,9 @@
 import { Set, ReversibleMap } from '@everyboard/lib';
+
 import { Coord } from './Coord';
-import { GameState } from './state/GameState';
-import { HexagonalUtils } from './HexagonalUtils';
 import { CoordSet } from './CoordSet';
+import { HexagonalUtils } from './HexagonalUtils';
+import { GameState } from './state/GameState';
 
 type Scale = {
     width: number,

@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { SaharaRules } from '../SaharaRules';
-import { SaharaMove } from '../SaharaMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaFailure } from '../SaharaFailure';
 import { MGPFallible } from '@everyboard/lib';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { SaharaFailure } from '../SaharaFailure';
+import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
+import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaMoves', () => {
 

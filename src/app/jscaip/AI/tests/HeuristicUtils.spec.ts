@@ -1,11 +1,12 @@
-import { BoardValue } from '../BoardValue';
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
-import { GameState } from '../../state/GameState';
+
 import { Move } from '../../Move';
-import { Heuristic } from '../Minimax';
 import { Player } from '../../Player';
 import { EmptyRulesConfig, RulesConfig } from '../../RulesConfigUtil';
+import { GameState } from '../../state/GameState';
+import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
+import { Heuristic } from '../Minimax';
 
 export class HeuristicUtils {
 

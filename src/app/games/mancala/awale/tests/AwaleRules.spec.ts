@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { AwaleRules } from '../AwaleRules';
-import { MancalaState } from '../../common/MancalaState';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { MancalaFailure } from '../../common/MancalaFailure';
 import { MGPOptional } from '@everyboard/lib';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
+
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
+import { MancalaFailure } from '../../common/MancalaFailure';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
+import { MancalaState } from '../../common/MancalaState';
+import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
+import { AwaleRules } from '../AwaleRules';
 
 describe('AwaleRules', () => {
 

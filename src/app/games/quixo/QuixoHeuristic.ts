@@ -1,11 +1,13 @@
-import { Player } from 'src/app/jscaip/Player';
-import { QuixoConfig, QuixoState } from './QuixoState';
-import { QuixoMove } from './QuixoMove';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { QuixoNode, QuixoRules } from './QuixoRules';
 import { MGPMap, MGPOptional, NumberMap } from '@everyboard/lib';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
+import { QuixoMove } from './QuixoMove';
+import { QuixoNode, QuixoRules } from './QuixoRules';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState, QuixoConfig> {
 

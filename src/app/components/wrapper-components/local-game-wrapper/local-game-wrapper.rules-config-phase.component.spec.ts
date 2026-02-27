@@ -4,15 +4,15 @@ import { Router } from '@angular/router';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { ActivatedRouteStub, ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from '../../../games/quebec-castles/QuebecCastlesRules';
+import { QuebecCastlesState } from '../../../games/quebec-castles/QuebecCastlesState';
+import { QuebecCastlesComponent } from '../../../games/quebec-castles/quebec-castles.component';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { ErrorLoggerService } from '../../../services/ErrorLoggerService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { ActivatedRouteStub, ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { QuebecCastlesComponent } from 'src/app/games/quebec-castles/quebec-castles.component';
-import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from 'src/app/games/quebec-castles/QuebecCastlesRules';
-import { QuebecCastlesState } from 'src/app/games/quebec-castles/QuebecCastlesState';
 
 describe('LocalGameWrapperComponent (rules config phase)', () => {
 

@@ -1,43 +1,45 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import * as Firestore from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
+
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { PartDAO } from 'src/app/dao/PartDAO';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Action, GameEvent, MGPResult, Part, Reply, RequestType } from 'src/app/domain/Part';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { CurrentGame, User } from 'src/app/domain/User';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
-import { GameWrapperMessages } from '../GameWrapper';
-import { GameService } from 'src/app/services/GameService';
-import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { PartCreationComponent } from '../part-creation/part-creation.component';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
-import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
+import { ConfigRoomDAO } from '../../../dao/ConfigRoomDAO';
+import { IFirestoreDAO } from '../../../dao/FirestoreDAO';
+import { PartDAO } from '../../../dao/PartDAO';
+import { UserDAO } from '../../../dao/UserDAO';
+import { ConfigRoom } from '../../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { Action, GameEvent, MGPResult, Part, Reply, RequestType } from '../../../domain/Part';
+import { PartMocks } from '../../../domain/PartMocks.spec';
+import { CurrentGame, User } from '../../../domain/User';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
+import { QuartoMove } from '../../../games/quarto/QuartoMove';
+import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
+import { QuartoComponent } from '../../../games/quarto/quarto.component';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
+import { AuthUser } from '../../../services/ConnectedUserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { GameService } from '../../../services/GameService';
+import { UserService } from '../../../services/UserService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameService.spec';
+import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { UserService } from 'src/app/services/UserService';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
+import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
+import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
+import { GameWrapperMessages } from '../GameWrapper';
+import { PartCreationComponent } from '../part-creation/part-creation.component';
+
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { IFirestoreDAO } from 'src/app/dao/FirestoreDAO';
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;

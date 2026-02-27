@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib';
+
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
-import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { GoRules } from '../go/GoRules';
 import { TrigoRules } from '../trigo/TrigoRules';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('GoMove', () => {
 

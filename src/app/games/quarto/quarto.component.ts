@@ -1,17 +1,19 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
-import { QuartoMove } from './QuartoMove';
-import { QuartoState } from './QuartoState';
-import { QuartoConfig, QuartoRules } from './QuartoRules';
-import { QuartoPiece } from './QuartoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { QuartoMinimax } from './QuartoMinimax';
+import { QuartoMove } from './QuartoMove';
+import { QuartoMoveGenerator } from './QuartoMoveGenerator';
+import { QuartoPiece } from './QuartoPiece';
+import { QuartoConfig, QuartoRules } from './QuartoRules';
+import { QuartoState } from './QuartoState';
 
 @Component({
     selector: 'app-quarto',

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { YinshState } from '../YinshState';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Table } from '../../../jscaip/TableUtils';
 import { YinshPiece } from '../YinshPiece';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { YinshRules } from '../YinshRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { YinshState } from '../YinshState';
 
 describe('YinshState', () => {
 

@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MancalaState } from '../MancalaState';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaFailure } from '../MancalaFailure';
-import { Player } from 'src/app/jscaip/Player';
-import { MancalaConfig } from '../MancalaConfig';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { MancalaNode, MancalaRules } from '../MancalaRules';
 import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+
+import { GameNode } from '../../../../jscaip/AI/GameNode';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { MancalaConfig } from '../MancalaConfig';
+import { MancalaFailure } from '../MancalaFailure';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaNode, MancalaRules } from '../MancalaRules';
+import { MancalaState } from '../MancalaState';
 
 export class MancalaRulesTestEntries {
     gameName: string; // 'Awale', 'Kalah', etc

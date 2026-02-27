@@ -1,27 +1,29 @@
 import { ChangeDetectorRef } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TaflMove } from './TaflMove';
-import { TaflPawn } from './TaflPawn';
-import { TaflRules } from './TaflRules';
-import { TaflState } from './TaflState';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { AI, AIOptions } from '../../jscaip/AI/AI';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RelativePlayer } from '../../jscaip/RelativePlayer';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { TaflConfig } from './TaflConfig';
+import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
+import { TaflMove } from './TaflMove';
 import { TaflMoveGenerator } from './TaflMoveGenerator';
-import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { TaflPawn } from './TaflPawn';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
 import { TaflPieceMinimax } from './TaflPieceMinimax';
-import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
+import { TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>

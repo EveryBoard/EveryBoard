@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../Coord';
-import { HexagonalGameState } from '../state/HexagonalGameState';
 import { FlatHexaOrientation } from '../HexaOrientation';
+import { HexagonalGameState } from '../state/HexagonalGameState';
 import { TestingHexagonalState } from '../state/tests/HexagonalGameState.spec';
 
 describe('FlatHexaOrientation', () => {

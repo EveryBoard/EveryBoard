@@ -1,11 +1,13 @@
-import { Utils, MGPOptional } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { UserDAO } from '../dao/UserDAO';
-import { User } from '../domain/User';
-import { FirestoreTime } from '../domain/Time';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { serverTimestamp } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
+
+import { Utils, MGPOptional } from '@everyboard/lib';
+
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+import { UserDAO } from '../dao/UserDAO';
+import { FirestoreTime } from '../domain/Time';
+import { User } from '../domain/User';
 
 /**
   * The aim of this service is to:

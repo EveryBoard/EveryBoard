@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { AwaleComponent } from '../../../games/mancala/awale/awale.component';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
 
 describe('OnlineGameWrapperComponent of Reversable Game:', () => {

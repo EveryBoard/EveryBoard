@@ -1,5 +1,6 @@
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 import { TestBed } from '@angular/core/testing';
+
+import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { ConfigRoomDAO } from '../ConfigRoomDAO';
 
 describe('ConfigRoomDAO', () => {

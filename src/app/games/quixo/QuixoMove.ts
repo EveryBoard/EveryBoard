@@ -1,7 +1,8 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { Encoder } from '@everyboard/lib';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoord } from '../../jscaip/MoveCoord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 
 export class QuixoMove extends MoveCoord {
 

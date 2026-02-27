@@ -2,12 +2,14 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import * as FireAuth from '@firebase/auth';
+
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { RegisterComponent } from './register.component';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { VerifyAccountComponent } from '../verify-account/verify-account.component';
+
+import { RegisterComponent } from './register.component';
 
 describe('RegisterComponent', () => {
     let testUtils: SimpleComponentTestUtils<RegisterComponent>;

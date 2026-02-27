@@ -1,16 +1,18 @@
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { ConnectSixState } from './ConnectSixState';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
+
+import { RulesConfigDescription, RulesConfigDescriptions } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { GobanConfig } from '../../jscaip/GobanConfig';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { RulesConfigDescription, RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { ConnectSixState } from './ConnectSixState';
 
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 

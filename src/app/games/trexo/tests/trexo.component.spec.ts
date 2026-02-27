@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { TrexoComponent } from '../trexo.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
+import { TrexoComponent } from '../trexo.component';
 
 const _____: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const O1_T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);

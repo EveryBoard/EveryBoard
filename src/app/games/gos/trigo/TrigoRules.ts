@@ -1,15 +1,16 @@
 import { MGPOptional } from '@everyboard/lib';
+
+import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GroupDataFactory } from '../../../jscaip/BoardData';
+import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
+import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
-import { GroupDataFactory } from 'src/app/jscaip/BoardData';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
 
 export type TrigoConfig = {
 

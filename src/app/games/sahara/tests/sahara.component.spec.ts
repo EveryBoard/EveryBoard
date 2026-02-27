@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { SaharaComponent } from '../sahara.component';
-import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
-import { SaharaState } from 'src/app/games/sahara/SaharaState';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SaharaFailure } from '../SaharaFailure';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { SaharaMove } from '../SaharaMove';
 import { SaharaRules } from '../SaharaRules';
+import { SaharaState } from '../SaharaState';
+import { SaharaComponent } from '../sahara.component';
 
 describe('SaharaComponent', () => {
 
@@ -125,7 +126,7 @@ describe('SaharaComponent', () => {
             await testUtils.expectClickFailure('#click_7_1', reason);
         }));
 
-        fit('should show last move with last-move-stroke', fakeAsync(async() => {
+        it('should show last move with last-move-stroke', fakeAsync(async() => {
             // Given a board with a last move
             const board: Table<FourStatePiece> = [
                 [N, N, _, X, _, _, _, O, X, N, N],

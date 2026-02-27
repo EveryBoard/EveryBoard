@@ -1,18 +1,19 @@
 import { ArrayUtils, MGPFallible, MGPOptional, MGPUniqueList, MGPValidation } from '@everyboard/lib';
 
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { CheckersMove } from './CheckersMove';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { Player } from '../../../jscaip/Player';
+import { ConfigurableRules } from '../../../jscaip/Rules';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { Vector } from '../../../jscaip/Vector';
+import { Localized } from '../../../utils/LocaleUtils';
+
 import { CheckersFailure } from './CheckersFailure';
+import { CheckersMove } from './CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { Vector } from 'src/app/jscaip/Vector';
 
 export type CheckersConfig = {
     playerRows: number;

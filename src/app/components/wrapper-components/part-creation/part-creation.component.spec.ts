@@ -1,38 +1,36 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Timestamp } from 'firebase/firestore';
 
-import { PartCreationComponent } from './part-creation.component';
-import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
-
-import { ConfigRoomService, ConfigRoomServiceFailure } from 'src/app/services/ConfigRoomService';
-import { GameService } from 'src/app/services/GameService';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { PartDAO } from 'src/app/dao/PartDAO';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { UserDAO } from 'src/app/dao/UserDAO';
-
-import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { FirstPlayer, PartStatus, PartType, ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { Part } from 'src/app/domain/Part';
-import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { CurrentGame } from 'src/app/domain/User';
-import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { FirestoreTime } from 'src/app/domain/Time';
-import { UserService } from 'src/app/services/UserService';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
+import { ChatDAO } from '../../../dao/ChatDAO';
+import { ConfigRoomDAO } from '../../../dao/ConfigRoomDAO';
+import { PartDAO } from '../../../dao/PartDAO';
+import { UserDAO } from '../../../dao/UserDAO';
+import { FirstPlayer, PartStatus, PartType, ConfigRoom } from '../../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { Part } from '../../../domain/Part';
+import { PartMocks } from '../../../domain/PartMocks.spec';
+import { FirestoreTime } from '../../../domain/Time';
+import { CurrentGame } from '../../../domain/User';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
+import { ConfigRoomService, ConfigRoomServiceFailure } from '../../../services/ConfigRoomService';
+import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { GameService } from '../../../services/GameService';
+import { UserService } from '../../../services/UserService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
+import { addCandidate } from '../online-game-wrapper/online-game-wrapper.quarto.component.spec';
+
+import { PartCreationComponent } from './part-creation.component';
 
 describe('PartCreationComponent', () => {
 

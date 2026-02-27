@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
 import { YinshCapture, YinshMove } from '../YinshMove';
 
 describe('YinshCapture', () => {

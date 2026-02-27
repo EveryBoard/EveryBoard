@@ -1,12 +1,14 @@
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoState } from 'src/app/games/gos/GoState';
-import { GoPiece } from '../GoPiece';
 import { MGPOptional } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { GoConfig, GoRules } from './GoRules';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+
+import { GoConfig, GoRules } from './GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

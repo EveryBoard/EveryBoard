@@ -1,9 +1,10 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { CheckersMove } from './CheckersMove';
-import { CheckersState } from '../common/CheckersState';
+import { MoveGenerator } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { CheckersMove } from './CheckersMove';
 import { CheckersScoreHeuristic } from './CheckersScoreHeuristic';
+import { CheckersState } from './CheckersState';
 
 export class CheckersScoreMinimax extends Minimax<CheckersMove, CheckersState, CheckersConfig> {
 

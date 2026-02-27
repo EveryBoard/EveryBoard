@@ -1,19 +1,21 @@
 /* eslint-disable max-lines-per-function */
-import { ReplaySubject, Subscription } from 'rxjs';
-import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
 import { serverTimestamp } from 'firebase/firestore';
+import { ReplaySubject, Subscription } from 'rxjs';
 
-import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+
+import { UserDAO } from '../../dao/UserDAO';
+import { MinimalUser } from '../../domain/MinimalUser';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { setupEmulators } from '../../utils/tests/TestUtils.spec';
+import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { UserService } from '../UserService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
+
+import { ErrorLoggerServiceMock } from './ErrorLoggerServiceMock.spec';
 
 @Injectable()
 export class ConnectedUserServiceMock {

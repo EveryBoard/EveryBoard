@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
 
-import { Chat, ChatDocument } from 'src/app/domain/Chat';
-import { MessageDocument } from 'src/app/domain/Message';
-import { Debug } from 'src/app/utils/Debug';
+import { Chat, ChatDocument } from '../../domain/Chat';
+import { MessageDocument } from '../../domain/Message';
+import { Debug } from '../../utils/Debug';
+
+import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 
 type ChatOS = ObservableSubject<MGPOptional<ChatDocument>>;
 

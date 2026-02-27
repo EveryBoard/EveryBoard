@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { ConfigRoom } from '../../../domain/ConfigRoom';
+import { MinimalUser } from '../../../domain/MinimalUser';
 import { GameEventMove, GameEventAction } from '../../../domain/Part';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { Player } from 'src/app/jscaip/Player';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * The time manager manages clocks of each player.

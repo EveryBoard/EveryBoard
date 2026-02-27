@@ -1,9 +1,10 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { P4Move } from './P4Move';
-import { P4State } from './P4State';
-import { P4Config, P4Rules } from './P4Rules';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
 import { P4Heuristic } from './P4Heuristic';
+import { P4Move } from './P4Move';
 import { P4OrderedMoveGenerator } from './P4OrderedMoveGenerator';
+import { P4Config, P4Rules } from './P4Rules';
+import { P4State } from './P4State';
 
 export class P4Minimax extends Minimax<P4Move, P4State, P4Config> {
 

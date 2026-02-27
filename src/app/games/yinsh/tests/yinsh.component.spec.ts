@@ -1,17 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
 import { MGPOptional } from '@everyboard/lib';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { YinshComponent } from '../yinsh.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { YinshFailure } from '../YinshFailure';
-import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { YinshRules } from '../YinshRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { YinshState } from '../YinshState';
+import { YinshComponent } from '../yinsh.component';
 
 describe('YinshComponent', () => {
 
