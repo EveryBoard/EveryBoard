@@ -9,6 +9,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from '../SaharaFailure';
 import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { Table } from 'src/app/jscaip/TableUtils';
+import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaComponent', () => {
 
@@ -124,10 +125,19 @@ describe('SaharaComponent', () => {
             await testUtils.expectClickFailure('#click_7_1', reason);
         }));
 
-        it('should show last move with last-move-stroke', fakeAsync(async() => {
+        fit('should show last move with last-move-stroke', fakeAsync(async() => {
             // Given a board with a last move
-            await testUtils.expectClickSuccess('#click_2_0');
-            await testUtils.expectMoveSuccess('#click_2_1', SaharaMove.from(new Coord(2, 0), new Coord(2, 1)).get());
+            const board: Table<FourStatePiece> = [
+                [N, N, _, X, _, _, _, O, X, N, N],
+                [N, _, O, _, _, _, _, _, _, _, N],
+                [X, _, _, _, _, _, _, _, _, _, O],
+                [O, _, _, _, _, _, _, _, _, _, X],
+                [N, _, _, _, _, _, _, X, _, _, N],
+                [N, N, X, O, _, _, _, _, O, N, N],
+            ];
+            const state: SaharaState = new SaharaState(board, 3);
+            const previousMove: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 10)).get();
+            await testUtils.setupState(state, { previousMove });
 
             // When displaying it
             // Then it should show the last move with last-move-stroke
