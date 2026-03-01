@@ -1,0 +1,146 @@
+import { MGPOptional } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../../jscaip/Coord';
+import { CheckersConfig } from '../common/AbstractCheckersRules';
+import { CheckersMove } from '../common/CheckersMove';
+import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
+import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
+
+import { BashniRules } from './BashniRules';
+
+const zero: CheckersPiece = CheckersPiece.ZERO;
+const one: CheckersPiece = CheckersPiece.ONE;
+const _u: CheckersStack = new CheckersStack([zero]);
+const _v: CheckersStack = new CheckersStack([one]);
+const uv: CheckersStack = new CheckersStack([zero, one]);
+const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
+const __: CheckersStack = CheckersStack.EMPTY;
+const defaultConfig: MGPOptional<CheckersConfig> = BashniRules.get().getDefaultRulesConfig();
+
+export class BashniTutorial extends Tutorial {
+    public tutorial: TutorialStep[] = [
+        TutorialStep.informational(
+            $localize`Bashni: origins`,
+            $localize`Bashni (Russian: башни, towers), also known as column draughts, is a Russian checkers variant. Captured pieces are not removed but stacked under the capturing piece, forming towers.`,
+            BashniRules.get().getInitialState(defaultConfig),
+        ),
+        TutorialStep.informational(
+            TutorialStepMessage.OBJECT_OF_THE_GAME(),
+            $localize`The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.`,
+            BashniRules.get().getInitialState(defaultConfig),
+        ),
+        TutorialStep.anyMove(
+            $localize`Steps`,
+            CheckersTutorialStep.SIMPLE_STEPS(),
+            BashniRules.get().getInitialState(defaultConfig),
+            CheckersMove.fromStep(new Coord(3, 6), new Coord(4, 5)),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
+        TutorialStep.anyMove(
+            $localize`Captures`,
+            $localize`A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.<br/><br/>You're playing Dark, do a capture.`,
+            CheckersState.of([
+                [_v, __, _v, __, _v, __, _v, __],
+                [__, _v, __, _v, __, _v, __, _v],
+                [_v, __, _v, __, _v, __, _v, __],
+                [__, _v, __, _v, __, __, __, _v],
+                [__, __, __, __, __, _v, __, __],
+                [__, __, __, _u, __, __, _u, __],
+                [_u, __, _u, __, _u, __, _u, __],
+                [__, _u, __, _u, __, _u, __, _u],
+            ], 0),
+            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3)]).get(),
+            $localize`Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower.`,
+        ),
+        TutorialStep.anyMove(
+            CheckersTutorialStep.BACKWARD_CAPTURES_TITLE(),
+            CheckersTutorialStep.BACKWARD_CAPTURES(),
+            CheckersState.of([
+                [_v, __, _v, __, _v, __, _v, __],
+                [__, _v, __, _v, __, _v, __, _v],
+                [_v, __, __, __, _v, __, _v, __],
+                [__, _v, __, _v, __, __, __, _v],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, _u, __, _v, __, __],
+                [__, __, _u, __, _u, __, _u, __],
+                [__, _u, __, _u, __, _u, __, _u],
+            ], 0),
+            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 7)]).get(),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
+        TutorialStep.anyMove(
+            CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
+            CheckersTutorialStep.MULTIPLE_CAPTURES(),
+            CheckersState.of([
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, _v, __, _v, __, _v, __],
+                [__, _v, __, _v, __, _v, __, __],
+                [__, __, _v, __, _v, __, _v, __],
+                [__, _v, __, __, __, __, __, __],
+                [__, __, _u, __, _u, __, _u, __],
+                [__, __, __, __, __, __, __, __],
+            ], 2),
+            CheckersMove.fromCapture([new Coord(2, 6), new Coord(0, 4), new Coord(2, 2)]).get(),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
+        TutorialStep.anyMove(
+            $localize`Minority capture is allowed`,
+            $localize`In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.<br/><br/>You're playing Dark, do a capture.`,
+            CheckersState.of([
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, _v, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, _v, __, _v, __, __, __, __],
+                [__, __, _u, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+            ], 2),
+            CheckersMove.fromCapture([new Coord(2, 4), new Coord(0, 2)]).get(),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
+        TutorialStep.fromMove(
+            CheckersTutorialStep.PROMOTION_TITLE(),
+            $localize`When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            CheckersState.of([
+                [__, __, __, __, __, __, _v, __],
+                [__, __, __, uv, __, _v, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, _u, __, _u, __, _u, __],
+                [__, __, __, __, __, __, __, __],
+            ], 2),
+            [
+                CheckersMove.fromStep(new Coord(3, 1), new Coord(2, 0)),
+                CheckersMove.fromStep(new Coord(3, 1), new Coord(4, 0)),
+            ],
+            TutorialStepMessage.CONGRATULATIONS(),
+            $localize`You did not choose the correct piece, and got no promotion.`,
+        ),
+        TutorialStep.fromMove(
+            $localize`King move`,
+            $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king!`,
+            CheckersState.of([
+                [__, __, __, __, Uv, __, _v, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, _v, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, _u, __, _u, __, _u, __],
+            ], 2),
+            [
+                CheckersMove.fromStep(new Coord(4, 0), new Coord(3, 1)),
+                CheckersMove.fromStep(new Coord(4, 0), new Coord(5, 1)),
+            ],
+            TutorialStepMessage.CONGRATULATIONS(),
+            $localize`You did not move your king.`,
+        ),
+    ];
+}

@@ -46,6 +46,7 @@ import { RulesConfigurationComponent } from './components/wrapper-components/rul
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
+import { BashniComponent } from './games/checkers/bashni/bashni.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
 import { LascaComponent } from './games/checkers/lasca/lasca.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
@@ -189,6 +190,7 @@ export const routes: Route[] = [
         HiveComponent, HivePieceComponent,
         HnefataflComponent,
         InternationalCheckersComponent,
+        BashniComponent,
         KalahComponent,
         KamisadoComponent,
         LascaComponent,

@@ -9,6 +9,9 @@ import { AbaloneComponent } from '../../../games/abalone/abalone.component';
 import { ApagosRules } from '../../../games/apagos/ApagosRules';
 import { ApagosTutorial } from '../../../games/apagos/ApagosTutorial';
 import { ApagosComponent } from '../../../games/apagos/apagos.component';
+import { BashniRules } from '../../../games/checkers/bashni/BashniRules';
+import { BashniTutorial } from '../../../games/checkers/bashni/BashniTutorial';
+import { BashniComponent } from '../../../games/checkers/bashni/bashni.component';
 import { InternationalCheckersRules } from '../../../games/checkers/international-checkers/InternationalCheckersRules';
 import { InternationalCheckersTutorial } from '../../../games/checkers/international-checkers/InternationalCheckersTutorial';
 import { InternationalCheckersComponent } from '../../../games/checkers/international-checkers/international-checkers.component';
@@ -147,6 +150,8 @@ class GameDescription {
     public static readonly AWALE: Localized = () => $localize`The most widespread of the Mancalas.`;
 
     public static readonly BA_AWA: Localized = () => $localize`The most widespread multiple-lap Mancala.`;
+
+    public static readonly BASHNI: Localized = () => $localize`Russian column checkers: captured pieces stack under the capturing piece, forming towers.`;
 
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
@@ -289,6 +294,7 @@ export class GameInfo {
             new GameInfo($localize`Trigo`,                  'Trigo',                 TrigoComponent,                 new TrigoTutorial(),                 TrigoRules.get(),                 new Date('2024-06-29'), GameDescription.TRI_GO()                ), // 39:                             * Martin
 
             new GameInfo($localize`International Checkers`, 'InternationalCheckers', InternationalCheckersComponent, new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2025-02-03'), GameDescription.INTERNATIONAL_CHECKERS()), // 40:                             * Martin
+            new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),             BashniRules.get(),                 new Date('2025-03-01'), GameDescription.BASHNI()                ), // 42:                             * Quentin
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
