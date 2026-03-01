@@ -125,6 +125,26 @@ describe('SaharaComponent', () => {
             await testUtils.expectClickFailure('#click_7_1', reason);
         }));
 
+        it('should show last move with last-move-stroke', fakeAsync(async() => {
+            // Given a board with a last move
+            const board: Table<FourStatePiece> = [
+                [N, N, _, X, _, _, _, O, X, N, N],
+                [N, _, O, _, _, _, _, _, _, _, N],
+                [X, _, _, _, _, _, _, _, _, _, O],
+                [O, _, _, _, _, _, _, _, _, _, X],
+                [N, _, _, _, _, _, _, X, _, _, N],
+                [N, N, X, O, _, _, _, _, O, N, N],
+            ];
+            const state: SaharaState = new SaharaState(board, 3);
+            const previousMove: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
+            await testUtils.setupState(state, { previousMove });
+
+            // When displaying it
+            // Then it should show the last move with last-move-stroke
+            testUtils.expectElementToHaveClass('#last_move_origin', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#last_move_destination', 'last-move-stroke');
+        }));
+
     });
 
     it('should play correctly shortest victory', fakeAsync(async() => {
