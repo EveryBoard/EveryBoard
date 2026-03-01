@@ -8,7 +8,6 @@ import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { SaharaMove } from '../SaharaMove';
-import { SaharaRules } from '../SaharaRules';
 import { SaharaState } from '../SaharaState';
 import { SaharaComponent } from '../sahara.component';
 
