@@ -140,6 +140,7 @@ import { BlankGobanComponent } from './components/game-components/goban-game-com
 import { LocaleUtils } from './utils/LocaleUtils';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { HexagonalGoComponent } from './games/gos/hexagonal-go/hexagonal-go.component';
 
 registerLocaleData(localeFr);
 
@@ -215,6 +216,7 @@ export const routes: Route[] = [
         GipfComponent,
         BlankGobanComponent,
         GoComponent,
+        HexagonalGoComponent,
         HexodiaComponent,
         HiveComponent, HivePieceComponent,
         HnefataflComponent,

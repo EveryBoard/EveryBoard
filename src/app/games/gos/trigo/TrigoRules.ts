@@ -54,6 +54,24 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         } else {
             board = TriangularCheckerBoard.createBoard(size, GoPiece.UNREACHABLE, GoPiece.EMPTY);
         }
+            const X: GoPiece = GoPiece.LIGHT;
+            const O: GoPiece = GoPiece.DARK;
+            const k: GoPiece = GoPiece.DEAD_LIGHT;
+            const u: GoPiece = GoPiece.DEAD_DARK;
+            const w: GoPiece = GoPiece.LIGHT_TERRITORY;
+            const b: GoPiece = GoPiece.DARK_TERRITORY;
+            const _: GoPiece = GoPiece.EMPTY;
+            const N: GoPiece = GoPiece.UNREACHABLE;
+        board = [
+
+                [N, N, N, N, N, N, w, N, N, N, N, N, N],
+                [N, N, N, N, N, w, w, w, N, N, N, N, N],
+                [N, N, N, N, w, w, w, w, w, N, N, N, N],
+                [N, N, N, w, w, w, w, w, w, w, N, N, N],
+                [N, N, X, w, w, w, w, w, w, w, w, N, N],
+                [N, b, O, O, X, w, w, w, w, w, w, w, N],
+                [b, b, b, O, X, w, w, w, w, w, w, w, w],
+        ];
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
     }
 

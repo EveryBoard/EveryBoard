@@ -613,7 +613,7 @@ describe('TrigoRules', () => {
     describe('GoPhase.ACCEPT', () => {
 
         it('GoPhase.ACCEPT + GoMove/play = GoPhase.PLAYING', () => {
-            // Given a board on counting phase (for example, incorrectly marked)
+            // Given a board on ACCEPT phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
                 [N, N, N, N, b, N, N, N, N],
                 [N, N, N, _, O, _, N, N, N],

@@ -155,6 +155,9 @@ import { ThemeService } from '../../../services/ThemeService';
 import { QuebecCastlesComponent } from '../../../games/quebec-castles/quebec-castles.component';
 import { QuebecCastlesTutorial } from '../../../games/quebec-castles/QuebecCastlesTutorial';
 import { QuebecCastlesRules } from '../../../games/quebec-castles/QuebecCastlesRules';
+import { HexagonalGoComponent } from 'src/app/games/gos/hexagonal-go/hexagonal-go.component';
+import { HexagonalGoTutorial } from 'src/app/games/gos/hexagonal-go/HexagonalGoTutorial';
+import { HexagonalGoRules } from 'src/app/games/gos/hexagonal-go/HexagonalGoRules';
 
 class GameDescription {
 
@@ -187,6 +190,8 @@ class GameDescription {
     public static readonly GIPF: Localized = () => $localize`A hexagonal game of alignment. Insert your pieces on the board to capture your opponent's pieces!`;
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
+
+    public static readonly HEXAGONAL_GO: Localized = () => $localize`A version of Go on a hexagonal board!`;
 
     public static readonly HEXODIA: Localized = () => $localize`A hexagonal alignment game with weird "diagonals"!`;
 
@@ -308,6 +313,8 @@ export class GameInfo {
 
             new GameInfo($localize`International Checkers`, 'InternationalCheckers', InternationalCheckersComponent, new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2025-02-03'), GameDescription.INTERNATIONAL_CHECKERS()), // 40:                             * Martin
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
+
+            new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

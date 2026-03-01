@@ -8,11 +8,13 @@ import { GoRules } from '../go/GoRules';
 import { TrigoRules } from '../trigo/TrigoRules';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { HexagonalGoRules } from '../hexagonal-go/HexagonalGoRules';
 
 describe('GoMove', () => {
 
     const rules: AbstractGoRules<RulesConfig>[] = [
         GoRules.get(),
+        HexagonalGoRules.get(),
         TrigoRules.get(),
     ];
     for (const rule of rules) {

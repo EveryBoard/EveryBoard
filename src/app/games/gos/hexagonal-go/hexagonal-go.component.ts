@@ -1,0 +1,176 @@
+import { ChangeDetectorRef, Component } from '@angular/core';
+
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GoMove } from '../GoMove';
+import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
+import { GoState } from '../GoState';
+import { GoPiece } from '../GoPiece';
+import { Coord } from '../../../jscaip/Coord';
+import { GroupData } from '../../../jscaip/BoardData';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { MCTS } from '../../../jscaip/AI/MCTS';
+import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
+import { Debug } from '../../../utils/Debug';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { GoPhase } from '../GoPhase';
+import { GoLegalityInformation } from '../AbstractGoRules';
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { HexagonalGoMinimax } from './HexagonalGoMinimax';
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
+import { HexaLayout } from 'src/app/jscaip/HexaLayout';
+import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+
+@Component({
+    selector: 'app-hexagonal-go',
+    templateUrl: './hexagonal-go.component.html',
+    styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+})
+@Debug.log
+export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRules,
+                                                                 GoMove,
+                                                                 GoState,
+                                                                 GoPiece,
+                                                                 HexagonalGoConfig,
+                                                                 GoLegalityInformation>
+{
+
+    public boardInfo: GroupData<GoPiece>;
+
+    public ko: MGPOptional<Coord> = MGPOptional.empty();
+
+    public last: MGPOptional<Coord> = MGPOptional.empty();
+
+    public captures: Coord[]= [];
+
+    public GoPiece: typeof GoPiece = GoPiece;
+
+    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
+        super(messageDisplayer, cdr);
+        this.setRulesAndNode('HexagonalGo');
+        this.availableAIs = [
+            new HexagonalGoMinimax(),
+            new MCTS($localize`MCTS`, new HexagonalGoMoveGenerator(), this.rules),
+        ];
+        this.encoder = GoMove.encoder;
+        this.canPass = true;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.setHexaLayout();
+    }
+
+    private setHexaLayout(): void {
+        const halfStroke: number = this.STROKE_WIDTH / 2;
+        const configSize: number = Math.floor(this.getState().getWidth() / 2);
+        const hexaLayoutStartX: number =
+            (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
+        const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
+        const hexaLayoutStartingCoord: Coord = new Coord(hexaLayoutStartX, hexaLayoutStartY);
+        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
+                                         hexaLayoutStartingCoord,
+                                         PointyHexaOrientation.INSTANCE);
+    }
+
+    public override async showLastMove(move: GoMove): Promise<void> {
+        this.last = MGPOptional.of(move.coord);
+        this.showCaptures();
+    }
+
+    public override hideLastMove(): void {
+        this.captures = [];
+        this.last = MGPOptional.empty();
+    }
+
+    public getViewBox(): ViewBox {
+        const abstractSize: number = this.getState().getWidth() + 2;
+        const pieceSize: number = this.SPACE_SIZE * 1.5;
+        const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
+        const configSize: number = Math.floor(abstractSize / 2);
+        const halfStroke: number = this.STROKE_WIDTH / 2;
+        const left: number = ((configSize - 3) * (this.SPACE_SIZE - halfStroke)) - (this.STROKE_WIDTH);
+        const up: number = (-1 * (this.SPACE_SIZE - halfStroke)) - (2 * 1.25 * this.STROKE_WIDTH);
+        const width: number = size + (1.75 * configSize * this.STROKE_WIDTH);
+        const height: number = size + this.STROKE_WIDTH;
+        return new ViewBox(left, up, width, height);
+    }
+
+    public async onClick(coord: Coord): Promise<MGPValidation> {
+        const x: number = coord.x;
+        const y: number = coord.y;
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        const resultlessMove: GoMove = new GoMove(x, y);
+        return this.chooseMove(resultlessMove);
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        const state: GoState = this.getState();
+        const phase: GoPhase = state.phase;
+
+        this.hexaBoard = state.getCopiedBoard();
+        this.updateScores();
+
+        this.ko = state.koCoord;
+        this.canPass = phase.allowsPass();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.getState().captured);
+    }
+
+    protected override getScoreName(): ScoreName {
+        return this.getState().phase.getScoreName();
+    }
+
+    private showCaptures(): void {
+        const previousState: GoState = this.getPreviousState();
+        this.captures = [];
+        for (const coordAndContent of this.getState().getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
+            const isEmpty: boolean = this.hexaBoard[coord.y][coord.x] === GoPiece.EMPTY;
+            const isNotKo: boolean = this.ko.equalsValue(coord) === false;
+            if (wasOccupied && isEmpty && isNotKo) {
+                this.captures.push(coord);
+            }
+        }
+    }
+
+    public override async pass(): Promise<MGPValidation> {
+        const phase: GoPhase = this.getState().phase;
+        if (phase.isPlaying() || phase.isPassed()) {
+            return this.onClick(GoMove.PASS.coord);
+        }
+        Utils.assert(phase.isCounting() || phase.isAccept(),
+                     'HexagonalGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+        return this.onClick(GoMove.ACCEPT.coord);
+    }
+
+    public getPlayerClassAt(coord: Coord): string[] {
+        const piece: GoPiece = this.getState().getPieceAt(coord);
+        const classes: string[] = [];
+        if (this.captures.some((c: Coord) => c.equals(coord))) {
+            classes.push('captured-fill');
+        }
+        if (piece.isOccupied()) {
+            classes.push(this.getPlayerClass(piece.player));
+        }
+        return classes;
+    }
+
+    public getTerritoryHexagonalTransform(): string {
+        return this.getSVGTranslation(20, 25) + ' scale(0.6)';
+    }
+
+    public getKoTranslationAt(koCoord: Coord): string {
+        const koTranslationCoord: Coord = this.getKoTranslationCoordAt(koCoord);
+        return this.getSVGTranslationAt(koTranslationCoord);
+    }
+
+    private getKoTranslationCoordAt(koCoord: Coord): Coord {
+        return new Coord(0, 0);
+    }
+
+}

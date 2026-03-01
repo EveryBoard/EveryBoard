@@ -368,7 +368,7 @@ describe('HexodiaRules', () => {
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
-        it('should include the diagonals', () => {
+        it('should include the "rectangular" diagonals', () => {
             // Given a board where the square alignment
             // (the line that looks like an alignment on that square board but that is not on a hexagonal board)
             const state: HexodiaState = new HexodiaState([
@@ -387,6 +387,38 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            const node: HexodiaNode = new HexodiaNode(state);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
+
+        it('should include the "hexagonal" diagonals', () => {
+            // Given a board with the following alignment:
+            // the line that passes trough the hexagonal edges,
+            // two such diagonals don't have their pieces corner touching each other like in a rectangle board
+            //     but they share the mathematical aspect:
+            //         if you add two vector representing the direction UP-LEFT(0,-1) and UP-RIGHT(1,-1),
+            //         then you would end up in (1, -2)
+            const state: HexodiaState = new HexodiaState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
