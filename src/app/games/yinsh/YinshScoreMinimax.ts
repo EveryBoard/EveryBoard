@@ -1,5 +1,6 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { YinshMove } from './YinshMove';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';

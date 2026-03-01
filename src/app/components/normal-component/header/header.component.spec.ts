@@ -6,17 +6,18 @@ import { Router } from '@angular/router';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { UserDAO } from '../../../dao/UserDAO';
-import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
 import { CurrentGame } from '../../../domain/User';
 import { UserMocks } from '../../../domain/UserMocks.spec';
+import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameService.spec';
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AccountComponent } from '../account/account.component';
-import { HeaderComponent } from './header.component';
 import { GameInfo } from '../pick-game/pick-game.component';
+
+import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
 

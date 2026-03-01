@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+
 import { ConnectedUserService } from '../../services/ConnectedUserService';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
 import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';

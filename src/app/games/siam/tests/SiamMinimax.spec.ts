@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
-import { SiamMove } from '../SiamMove';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Minimax } from '../../../jscaip/AI/Minimax';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { SiamMinimax } from '../SiamMinimax';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { SiamMinimax } from '../SiamMinimax';
+import { SiamMove } from '../SiamMove';
+import { SiamPiece } from '../SiamPiece';
+import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

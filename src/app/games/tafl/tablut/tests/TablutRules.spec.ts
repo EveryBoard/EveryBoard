@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { TablutNode, TablutRules } from '../TablutRules';
-import { TablutMove } from '../TablutMove';
 import { Coord } from '../../../../jscaip/Coord';
-import { TaflPawn } from '../../TaflPawn';
 import { Player } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
-import { TaflFailure } from '../../TaflFailure';
 import { TaflConfig } from '../../TaflConfig';
+import { TaflFailure } from '../../TaflFailure';
+import { TaflPawn } from '../../TaflPawn';
 import { TaflState } from '../../TaflState';
+import { TablutMove } from '../TablutMove';
+import { TablutNode, TablutRules } from '../TablutRules';
 
 describe('TablutRules', () => {
 

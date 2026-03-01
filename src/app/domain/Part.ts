@@ -1,9 +1,10 @@
 import { JSONValue, MGPOptional, Utils } from '@everyboard/lib';
 
-import { FirestoreTime } from './Time';
-import { MinimalUser } from './MinimalUser';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
+import { FirestoreDocument } from '../dao/FirestoreDAO';
+
+import { MinimalUser } from './MinimalUser';
+import { FirestoreTime } from './Time';
 
 export type Part = {
     readonly typeGame: string; // the type of game

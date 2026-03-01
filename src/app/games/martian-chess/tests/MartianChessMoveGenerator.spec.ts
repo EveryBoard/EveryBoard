@@ -2,13 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessMove } from '../MartianChessMove';
+import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
+import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
-import { MartianChessPiece } from '../MartianChessPiece';
-import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('MartianChessMoveGenerator', () => {
 

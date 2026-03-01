@@ -1,21 +1,22 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { Rules } from '../../jscaip/Rules';
 import { GameNode } from '../../jscaip/AI/GameNode';
-import { Player } from '../../jscaip/Player';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { SaharaMove } from './SaharaMove';
-import { SaharaState } from './SaharaState';
-import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { SaharaFailure } from './SaharaFailure';
+import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
-import { Debug } from '../../utils/Debug';
-import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Player } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { Debug } from '../../utils/Debug';
+
+import { SaharaFailure } from './SaharaFailure';
+import { SaharaMove } from './SaharaMove';
+import { SaharaState } from './SaharaState';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 

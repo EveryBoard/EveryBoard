@@ -5,8 +5,8 @@ import { EncapsulePiece } from '../../../games/encapsule/EncapsulePiece';
 import { HivePiece } from '../../../games/hive/HivePiece';
 import { SiamMove } from '../../../games/siam/SiamMove';
 import { Coord } from '../../../jscaip/Coord';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Ordinal } from '../../../jscaip/Ordinal';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 
 export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[]; }; } = {

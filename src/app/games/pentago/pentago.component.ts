@@ -2,19 +2,20 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
+import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 import { PentagoMove } from './PentagoMove';
+import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { PentagoMoveGenerator } from './PentagoMoveGenerator';
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 
 interface ArrowInfo {
     path: string;

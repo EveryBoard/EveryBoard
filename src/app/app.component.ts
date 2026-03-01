@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
+import { faTwitter, faFacebook, faGithub, IconDefinition } from '@fortawesome/free-brands-svg-icons';
+
 import { ErrorLoggerService } from './services/ErrorLoggerService';
 import { ThemeService } from './services/ThemeService';
-import { faTwitter, faFacebook, faGithub, IconDefinition } from '@fortawesome/free-brands-svg-icons';
 
 @Component({
     selector: 'app-root',

@@ -4,9 +4,10 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { TestUtils } from '@everyboard/lib';
 
-import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { CountDownComponent } from './count-down.component';
 import { Player } from '../../../jscaip/Player';
+import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
+import { CountDownComponent } from './count-down.component';
 
 describe('CountDownComponent', () => {
 

@@ -1,9 +1,10 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode } from './PentagoRules';
 import { PentagoState } from './PentagoState';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
 
 export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoState> {
 

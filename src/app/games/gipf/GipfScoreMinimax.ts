@@ -1,5 +1,6 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { GipfMove } from './GipfMove';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfLegalityInformation, GipfRules } from './GipfRules';

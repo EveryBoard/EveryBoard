@@ -3,16 +3,16 @@ import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
-import { Table } from '../../../jscaip/TableUtils';
-import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
-import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessFailure } from '../MartianChessFailure';
-import { MartianChessCapture, MartianChessState } from '../MartianChessState';
+import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
+import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 
 describe('MartianChessRules', () => {
 

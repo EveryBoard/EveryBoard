@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
-import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { HexagonalGoMinimax } from '../HexagonalGoMinimax';
+import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
 
 describe('HexagonalGoMinimax', () => {
 

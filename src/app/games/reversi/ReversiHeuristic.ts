@@ -1,11 +1,13 @@
-import { ReversiState } from './ReversiState';
-import { ReversiMove } from './ReversiMove';
-import { Player } from '../../jscaip/Player';
-import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { ReversiConfig, ReversiNode } from './ReversiRules';
-import { Coord } from '../../jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
+import { ReversiMove } from './ReversiMove';
+import { ReversiConfig, ReversiNode } from './ReversiRules';
+import { ReversiState } from './ReversiState';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 

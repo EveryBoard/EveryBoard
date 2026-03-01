@@ -2,9 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { TrigoMinimax } from '../TrigoMinimax';
+import { TrigoConfig, TrigoRules } from '../TrigoRules';
 
 describe('TrigoMinimax', () => {
 

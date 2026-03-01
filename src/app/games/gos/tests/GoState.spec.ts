@@ -2,11 +2,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { GoConfig, GoRules } from '../go/GoRules';
 import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+import { GoConfig, GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;

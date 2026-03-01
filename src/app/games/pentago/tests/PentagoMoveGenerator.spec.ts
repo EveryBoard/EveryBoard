@@ -2,12 +2,12 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 
 describe('PentagoMoveGenerator', () => {
 

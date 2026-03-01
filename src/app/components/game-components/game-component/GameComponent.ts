@@ -2,23 +2,23 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/
 
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Move } from '../../../jscaip/Move';
-import { SuperRules } from '../../../jscaip/Rules';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from '../../../jscaip/state/GameState';
-import { GameNode } from '../../../jscaip/AI/GameNode';
 import { AI, AIOptions } from '../../../jscaip/AI/AI';
-import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Debug } from '../../../utils/Debug';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { BaseComponent } from '../../BaseComponent';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Coord3D } from '../../../jscaip/Coord3D';
+import { Move } from '../../../jscaip/Move';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { SuperRules } from '../../../jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 export class ScoreName {
 
@@ -75,28 +75,6 @@ export class ScoreName {
             default:
                 return this.plural(count);
         }
-    }
-}
-
-/**
- * Define some methods that are useful to have in game components.
- * We can't define these in GameComponent itself, as they are required
- * by sub components which themselves are not GameComponent subclasses
- */
-export abstract class BaseGameComponent extends BaseComponent {
-
-    public SPACE_SIZE: number = 100;
-
-    public readonly STROKE_WIDTH: number = 8;
-
-    public readonly SMALL_STROKE_WIDTH: number = 2;
-
-    public getSVGTranslation(x: number, y: number): string {
-        return 'translate(' + x + ', ' + y + ')';
-    }
-
-    public getSVGTranslationAt(coord: Coord): string {
-        return this.getSVGTranslation(coord.x, coord.y);
     }
 }
 

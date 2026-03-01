@@ -1,13 +1,14 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { ConnectSixState } from './ConnectSixState';
-import { ConnectSixDrops, ConnectSixFirstMove } from './ConnectSixMove';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { ConnectSixRules } from './ConnectSixRules';
-import { GobanConfig } from '../../jscaip/GobanConfig';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+import { GobanConfig } from '../../jscaip/GobanConfig';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { ConnectSixDrops, ConnectSixFirstMove } from './ConnectSixMove';
+import { ConnectSixRules } from './ConnectSixRules';
+import { ConnectSixState } from './ConnectSixState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,16 +1,17 @@
+import { TableUtils } from 'src/app/jscaip/TableUtils';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { AbstractGoRules } from '../AbstractGoRules';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from '../../../utils/MGPValidator';
-import { HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { MGPValidators } from '../../../utils/MGPValidator';
+import { AbstractGoRules } from '../AbstractGoRules';
+import { HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
 
 export type HexagonalGoConfig = {
 

@@ -5,13 +5,13 @@ import { Subscription } from 'rxjs';
 
 import { Utils } from '@everyboard/lib';
 
-import { ActivePartsService } from '../ActivePartsService';
-import { PartDAO } from '../../dao/PartDAO';
-import { MGPResult, Part, PartDocument } from '../../domain/Part';
-import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { FirestoreCollectionObserver } from '../../dao/FirestoreCollectionObserver';
-import { UserMocks } from '../../domain/UserMocks.spec';
 import { FirestoreCondition } from '../../dao/FirestoreDAO';
+import { PartDAO } from '../../dao/PartDAO';
+import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
+import { MGPResult, Part, PartDocument } from '../../domain/Part';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { ActivePartsService } from '../ActivePartsService';
 
 describe('ActivePartsService', () => {
 

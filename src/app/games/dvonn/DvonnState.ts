@@ -1,10 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { DvonnPieceStack } from './DvonnPieceStack';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
+
+import { DvonnPieceStack } from './DvonnPieceStack';
 
 export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
 

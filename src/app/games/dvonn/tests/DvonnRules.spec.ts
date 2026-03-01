@@ -3,18 +3,18 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Utils } from '@everyboard/lib';
 
-import { DvonnPieceStack } from '../DvonnPieceStack';
-import { DvonnState } from '../DvonnState';
 import { Coord } from '../../../jscaip/Coord';
-import { DvonnMove } from '../DvonnMove';
 import { Player } from '../../../jscaip/Player';
-import { DvonnNode, DvonnRules } from '../DvonnRules';
-import { DvonnFailure } from '../DvonnFailure';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Table } from '../../../jscaip/TableUtils';
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { DvonnFailure } from '../DvonnFailure';
+import { DvonnMove } from '../DvonnMove';
+import { DvonnPieceStack } from '../DvonnPieceStack';
+import { DvonnNode, DvonnRules } from '../DvonnRules';
+import { DvonnState } from '../DvonnState';
 
 describe('DvonnRules', () => {
 

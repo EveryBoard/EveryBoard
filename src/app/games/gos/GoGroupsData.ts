@@ -2,6 +2,7 @@ import { MGPMap, Utils } from '@everyboard/lib';
 
 import { GroupData } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';
+
 import { GoPiece } from './GoPiece';
 
 export class GoGroupData extends GroupData<GoPiece> {

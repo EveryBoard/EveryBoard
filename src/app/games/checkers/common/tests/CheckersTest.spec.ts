@@ -5,17 +5,17 @@ import { fakeAsync } from '@angular/core/testing';
 import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
-import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { Direction, DirectionFailure } from '../../../../jscaip/Direction';
+import { Player } from '../../../../jscaip/Player';
 import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
-import { CheckersComponent } from '../checkers.component';
+import { RulesFailure } from '../../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
+import { CheckersFailure } from '../CheckersFailure';
 import { CheckersMove } from '../CheckersMove';
 import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
 import { CheckersStack, CheckersState } from '../CheckersState';
-import { RulesFailure } from '../../../../jscaip/RulesFailure';
-import { Player } from '../../../../jscaip/Player';
-import { CheckersFailure } from '../CheckersFailure';
-import { Direction, DirectionFailure } from '../../../../jscaip/Direction';
+import { CheckersComponent } from '../checkers.component';
 
 export class CheckersComponentTestEntries<C extends CheckersComponent<R>,
                                           R extends AbstractCheckersRules>

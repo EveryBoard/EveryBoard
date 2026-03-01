@@ -1,17 +1,17 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { AbstractGoRules } from '../AbstractGoRules';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
-import { GobanUtils } from '../../../jscaip/GobanUtils';
+import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
+import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { GobanUtils } from '../../../jscaip/GobanUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { AbstractGoRules } from '../AbstractGoRules';
 import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
-import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
 
 export type GoConfig = GobanConfig & {
 

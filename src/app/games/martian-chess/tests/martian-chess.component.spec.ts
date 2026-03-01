@@ -4,15 +4,15 @@ import { fakeAsync } from '@angular/core/testing';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { Table } from '../../../jscaip/TableUtils';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
-import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessState } from '../MartianChessState';
-import { MartianChessPiece } from '../MartianChessPiece';
 import { DirectionFailure } from '../../../jscaip/Direction';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { MartianChessMove } from '../MartianChessMove';
+import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessRules } from '../MartianChessRules';
+import { MartianChessState } from '../MartianChessState';
+import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 
 describe('MartianChessComponent', () => {
 

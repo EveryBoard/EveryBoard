@@ -1,4 +1,5 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
+
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';

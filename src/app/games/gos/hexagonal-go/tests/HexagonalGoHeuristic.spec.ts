@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Table } from '../../../../jscaip/TableUtils';
-import { GoState } from '../../GoState';
-import { GoPiece } from '../../GoPiece';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
-import { HexagonalGoHeuristic } from '../HexagonalGoHeuristic';
+import { Table } from '../../../../jscaip/TableUtils';
 import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoState } from '../../GoState';
+import { HexagonalGoHeuristic } from '../HexagonalGoHeuristic';
+import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

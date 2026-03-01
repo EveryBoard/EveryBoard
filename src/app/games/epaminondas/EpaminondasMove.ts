@@ -1,8 +1,9 @@
 import { Encoder, Utils } from '@everyboard/lib';
 
-import { Ordinal } from '../../jscaip/Ordinal';
-import { MoveCoord } from '../../jscaip/MoveCoord';
 import { Coord } from '../../jscaip/Coord';
+import { MoveCoord } from '../../jscaip/MoveCoord';
+import { Ordinal } from '../../jscaip/Ordinal';
+
 import { EpaminondasFailure } from './EpaminondasFailure';
 
 type EpaminondasMoveFields = [Coord, number, number, Ordinal];

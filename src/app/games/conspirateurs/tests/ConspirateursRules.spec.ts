@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
+import { TestUtils } from '@everyboard/lib';
+
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
-import { TestUtils } from '@everyboard/lib';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;

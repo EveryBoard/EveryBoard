@@ -3,15 +3,16 @@ import { ChangeDetectorRef, Component } from '@angular/core';
 import { MGPOptional } from '@everyboard/lib';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
-import { NewGameMove } from './NewGameMove';
-import { NewGameState } from './NewGameState';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { MCTS } from '../../jscaip/AI/MCTS';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { NewGameMoveGenerator } from './NewGameMoveGenerator';
-import { NewGameMinimax } from './NewGameMinimax';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
+import { NewGameMinimax } from './NewGameMinimax';
+import { NewGameMove } from './NewGameMove';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
+import { NewGameState } from './NewGameState';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.

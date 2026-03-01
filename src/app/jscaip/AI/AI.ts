@@ -1,8 +1,10 @@
-import { GameNode } from './GameNode';
-import { GameState } from '../state/GameState';
+import { MGPOptional } from '@everyboard/lib';
+
 import { Move } from '../Move';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { MGPOptional } from '@everyboard/lib';
+import { GameState } from '../state/GameState';
+
+import { GameNode } from './GameNode';
 
 /**
  * A move generator should have a method that generates move from a node.

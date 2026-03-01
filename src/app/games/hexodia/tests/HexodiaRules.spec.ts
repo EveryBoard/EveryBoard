@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, TestUtils } from '@everyboard/lib';
 
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 import { HexodiaState } from '../HexodiaState';
-import { HexodiaMove } from '../HexodiaMove';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
 
 describe('HexodiaRules', () => {
     /**

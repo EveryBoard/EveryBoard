@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { P4State } from '../P4State';
-import { P4Config, P4Node, P4Rules } from '../P4Rules';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { P4Heuristic } from '../P4Heuristic';
+import { P4Config, P4Node, P4Rules } from '../P4Rules';
+import { P4State } from '../P4State';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

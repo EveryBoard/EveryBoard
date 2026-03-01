@@ -7,10 +7,10 @@ import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbaloneComponent } from '../abalone.component';
 import { AbaloneFailure } from '../AbaloneFailure';
-import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
+import { AbaloneState } from '../AbaloneState';
+import { AbaloneComponent } from '../abalone.component';
 
 describe('AbaloneComponent', () => {
 

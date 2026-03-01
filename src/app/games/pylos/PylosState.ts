@@ -1,11 +1,12 @@
 import { Set, Utils } from '@everyboard/lib';
 
-import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { GameState } from '../../jscaip/state/GameState';
+
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
-import { GameState } from '../../jscaip/state/GameState';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 export class PylosState extends GameState {
 

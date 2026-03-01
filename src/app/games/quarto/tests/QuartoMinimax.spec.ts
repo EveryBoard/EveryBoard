@@ -2,14 +2,14 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
+import { Coord } from '../../../jscaip/Coord';
+import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { QuartoMinimax } from '../QuartoMinimax';
-import { Table } from '../../../jscaip/TableUtils';
-import { QuartoPiece } from '../QuartoPiece';
-import { QuartoState } from '../QuartoState';
 import { QuartoMove } from '../QuartoMove';
-import { Coord } from '../../../jscaip/Coord';
+import { QuartoPiece } from '../QuartoPiece';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
+import { QuartoState } from '../QuartoState';
 
 const ____: QuartoPiece = QuartoPiece.EMPTY;
 const AAAA: QuartoPiece = QuartoPiece.AAAA;

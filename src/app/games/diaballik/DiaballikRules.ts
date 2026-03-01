@@ -1,21 +1,22 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { CoordFailure } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table } from '../../jscaip/TableUtils';
+
+import { DiaballikFailure } from './DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Player } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { DiaballikFailure } from './DiaballikFailure';
-import { Table } from '../../jscaip/TableUtils';
-import { CoordFailure } from '../../jscaip/Coord';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
-import { PlayerMap } from '../../jscaip/PlayerMap';
-import { CoordSet } from '../../jscaip/CoordSet';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}

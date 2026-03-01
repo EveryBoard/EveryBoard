@@ -2,18 +2,18 @@
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { GipfMove, GipfPlacement } from '../GipfMove';
-import { GipfState } from '../GipfState';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
-import { GipfFailure } from '../GipfFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { Player } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
 import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { GipfFailure } from '../GipfFailure';
+import { GipfMove, GipfPlacement } from '../GipfMove';
+import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
+import { GipfState } from '../GipfState';
 
 describe('GipfRules', () => {
 

@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { serverTimestamp } from 'firebase/firestore';
 
-import { ChatComponent } from './chat.component';
-import { ChatService } from '../../../services/ChatService';
 import { ChatDAO } from '../../../dao/ChatDAO';
-import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { Message } from '../../../domain/Message';
-import { UserMocks } from '../../../domain/UserMocks.spec';
-import { MinimalUser } from '../../../domain/MinimalUser';
-import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { UserDAO } from '../../../dao/UserDAO';
+import { Message } from '../../../domain/Message';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { ChatService } from '../../../services/ChatService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
+import { ChatComponent } from './chat.component';
 
 describe('ChatComponent', () => {
 

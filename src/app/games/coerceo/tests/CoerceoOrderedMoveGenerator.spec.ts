@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { CoerceoState } from '../CoerceoState';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoState } from '../CoerceoState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

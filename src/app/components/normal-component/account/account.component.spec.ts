@@ -6,6 +6,7 @@ import { UserMocks } from '../../../domain/UserMocks.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { expectValidRoutingLink, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+
 import { AccountComponent } from './account.component';
 
 describe('AccountComponent', () => {

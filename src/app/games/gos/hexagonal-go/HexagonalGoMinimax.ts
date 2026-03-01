@@ -1,4 +1,5 @@
 import { AbstractGoMinimax } from '../AbstractGoMinimax';
+
 import { HexagonalGoHeuristic } from './HexagonalGoHeuristic';
 import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';

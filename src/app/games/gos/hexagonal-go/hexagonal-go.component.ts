@@ -1,26 +1,27 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-
-import { GoMove } from '../GoMove';
-import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
-import { Coord } from '../../../jscaip/Coord';
-import { GroupData } from '../../../jscaip/BoardData';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
-import { Debug } from '../../../utils/Debug';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { GoPhase } from '../GoPhase';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { HexagonalGoMinimax } from './HexagonalGoMinimax';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../../jscaip/AI/MCTS';
+import { GroupData } from '../../../jscaip/BoardData';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
+import { GoLegalityInformation } from '../AbstractGoRules';
+import { GoMove } from '../GoMove';
+import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+
+import { HexagonalGoMinimax } from './HexagonalGoMinimax';
+import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
+import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 @Component({
     selector: 'app-hexagonal-go',

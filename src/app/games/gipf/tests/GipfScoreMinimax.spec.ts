@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { GipfRules } from '../GipfRules';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { GipfScoreMinimax } from '../GipfScoreMinimax';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { GipfRules } from '../GipfRules';
+import { GipfScoreMinimax } from '../GipfScoreMinimax';
 
 describe('GipfScoreMinimax', () => {
 

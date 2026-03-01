@@ -4,11 +4,11 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { DiamComponent } from '../diam.component';
 import { DiamFailure } from '../DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamState } from '../DiamState';
+import { DiamComponent } from '../diam.component';
 
 describe('DiamComponent', () => {
     const __: DiamPiece = DiamPiece.EMPTY;
@@ -340,4 +340,3 @@ describe('DiamComponent', () => {
     });
 
 });
-

@@ -1,8 +1,10 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
-import { BrandhubMove } from './BrandhubMove';
-import { BrandhubRules } from './BrandhubRules';
+
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
+
+import { BrandhubMove } from './BrandhubMove';
+import { BrandhubRules } from './BrandhubRules';
 
 @Component({
     selector: 'app-brandhub',

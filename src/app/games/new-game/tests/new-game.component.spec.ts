@@ -2,10 +2,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { GameInfo } from '../../../components/normal-component/pick-game/pick-game.component';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { NewGameComponent } from '../new-game.component';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
 import { NewGameTutorial } from '../NewGameTutorial';
+import { NewGameComponent } from '../new-game.component';
 
 describe('NewGameComponent', () => {
     let testUtils: ComponentTestUtils<NewGameComponent>;

@@ -2,6 +2,7 @@ import { Encoder, JSONObject, JSONValueWithoutArray, Utils } from '@everyboard/l
 
 import { Coord } from '../../jscaip/Coord';
 import { MoveCoord } from '../../jscaip/MoveCoord';
+
 import { LodestoneDirection, LodestoneOrientation } from './LodestonePiece';
 
 export type LodestoneCaptures = {

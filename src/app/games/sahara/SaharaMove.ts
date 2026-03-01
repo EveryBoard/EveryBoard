@@ -1,11 +1,12 @@
 import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { Coord } from '../../jscaip/Coord';
-import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { SaharaFailure } from './SaharaFailure';
-import { RulesFailure } from '../../jscaip/RulesFailure';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+
+import { SaharaFailure } from './SaharaFailure';
 
 export class SaharaMove extends MoveCoordToCoord {
 
