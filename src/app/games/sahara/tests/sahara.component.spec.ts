@@ -137,7 +137,7 @@ describe('SaharaComponent', () => {
                 [N, N, X, O, _, _, _, _, O, N, N],
             ];
             const state: SaharaState = new SaharaState(board, 3);
-            const previousMove: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 10)).get();
+            const previousMove: SaharaMove = SaharaMove.from(new Coord(2, 0), new Coord(3, 0)).get();
             await testUtils.setupState(state, { previousMove });
 
             // When displaying it
