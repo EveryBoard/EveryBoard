@@ -649,6 +649,10 @@
         <source>International Checkers</source>
         <target>Dames Internationales</target>
       </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
+        <target>Bashni</target>
+      </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
         <target>Châteaux Québecois</target>
@@ -2973,8 +2977,8 @@
         <source>Steps</source>
         <target>Pas</target>
       </trans-unit>
-      <trans-unit id="8375763259935871100" datatype="html">
-        <source>A simple step is made by one diagonal move forward left or forward right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="3181357103919988717" datatype="html">
+        <source>A simple step is made by one diagonal move forward left or forward right. Click on a piece to choose it, then click on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
         <target>Un simple pas est un déplacement d'une case en diagonale, en avant, vers la gauche ou la droite. Pour faire un déplacement cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
       </trans-unit>
       <trans-unit id="5943278728548812168" datatype="html">
@@ -2985,8 +2989,8 @@
         <source>Backward captures</source>
         <target>Captures en arrière</target>
       </trans-unit>
-      <trans-unit id="3186677422672219927" datatype="html">
-        <source>A capture can also be done backward&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture backward.</source>
+      <trans-unit id="1323130710227979862" datatype="html">
+        <source>A capture can also be done backward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a backward capture.</source>
         <target>Un capture peut aussi être faite en arrière.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, vous devez faire une capture en arrière, Allez-y !</target>
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
@@ -4972,6 +4976,42 @@
       <trans-unit id="1802530168433258138" datatype="html">
         <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
         <target>Votre requête (<x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/>) a été envoyée.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="7751928094372476864" datatype="html">
+        <source>Russian column checkers: captured pieces stack under the capturing piece, forming towers.</source>
+        <target>Dames colonnes russes : les pièces capturées s'empilent sous la pièce capturante, formant des tours.</target>
+      </trans-unit>
+      <trans-unit id="6999105537978094771" datatype="html">
+        <source>Bashni: origins</source>
+        <target>Bashni : les origines</target>
+      </trans-unit>
+      <trans-unit id="1795254043608057032" datatype="html">
+        <source>Bashni (Russian: башни, towers), also known as column draughts, is a Russian checkers variant. Captured pieces are not removed but stacked under the capturing piece, forming towers.</source>
+        <target>Bashni (russe : башни, tours), aussi connu sous le nom de dames colonnes, est une variante russe du jeu de dames. Les pièces capturées ne sont pas retirées mais empilées sous la pièce capturante, formant des tours.</target>
+      </trans-unit>
+      <trans-unit id="8402752246011864012" datatype="html">
+        <source>The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
+        <target>Le but de Bashni, comme aux dames, est de rendre l'adversaire incapable de bouger, soit en capturant toutes ses pièces, soit en les bloquant.</target>
+      </trans-unit>
+      <trans-unit id="3182705657358075075" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+        <target>Une capture se produit lorsque vous sautez en diagonale par-dessus une pièce adverse. À Bashni, la pièce capturée n'est pas retirée : elle va sous votre pièce, formant une tour. Vous devez capturer quand vous le pouvez.&lt;br/&gt;&lt;br/&gt;Vous jouez les pièces sombres, faites une capture.</target>
+      </trans-unit>
+      <trans-unit id="6008450572424233746" datatype="html">
+        <source>Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower.</source>
+        <target>Félicitations ! Remarquez que la pièce capturée n'a pas été retirée du plateau, mais placée sous la pièce capturante, formant une tour.</target>
+      </trans-unit>
+      <trans-unit id="4060948936151379193" datatype="html">
+        <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+        <target>À Bashni, contrairement aux Dames Internationales, vous pouvez choisir n'importe quelle séquence de capture légale. Si un choix capture une pièce et un autre en capture deux, vous pouvez choisir l'un ou l'autre.&lt;br/&gt;&lt;br/&gt;Vous jouez les pièces sombres, faites une capture.</target>
+      </trans-unit>
+      <trans-unit id="2170682009266275861" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+        <target>Quand une pièce atteint la dernière ligne, elle est promue et devient une dame. Seule la pièce du sommet d'une tour est promue. Une de vos pièces pourrait être promue maintenant.&lt;br/&gt;&lt;br/&gt;Vous jouez les pièces sombres. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="7641365772703186890" datatype="html">
+        <source>Kings can move and capture backward as well as forward. They can also &quot;fly&quot;: move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king!</source>
+        <target>Les dames peuvent se déplacer et capturer en arrière comme en avant. Elles peuvent aussi &quot;voler&quot; : se déplacer sur plusieurs cases ou sauter par-dessus une pièce adverse pour la capturer et atterrir n'importe où sur la même diagonale.&lt;br/&gt;&lt;br/&gt;Vous jouez les pièces sombres, déplacez votre dame !</target>
       </trans-unit>
     </body>
   </file>

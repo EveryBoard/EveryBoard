@@ -1,11 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../../jscaip/Coord';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
@@ -26,12 +23,12 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
     gameName: 'Bashni',
     component: BashniComponent,
     firstPlayerCoords: [
-        new Coord(1, 6),
-        new Coord(3, 6),
-        new Coord(5, 6),
-        new Coord(7, 6),
+        new Coord(0, 5),
+        new Coord(2, 5),
+        new Coord(4, 5),
+        new Coord(6, 5),
     ],
-    firstPlayerSecondClicks: [new Coord(0, 5), new Coord(2, 5)],
+    firstPlayerSecondClicks: [new Coord(1, 4)],
     promotedPieceOrientedState: CheckersState.of([
         [__, __, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
@@ -50,28 +47,28 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         new Coord(1, 3),
     ],
     stateWithForcedCapture: CheckersState.of([
-        [_V, __, _V, __, _V, __, _V, __],
-        [__, _V, __, _V, __, _V, __, _V],
-        [_V, __, _V, __, _V, __, _V, __],
+        [__, __, __, __, __, __, __, __],
+        [__, __, __, __, __, __, __, __],
+        [_V, __, __, __, __, __, __, __],
         [__, _U, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
-        [_U, __, __, __, _U, __, _U, __],
-        [__, _U, __, _U, __, _U, __, _U],
-        [_U, __, _U, __, _U, __, _U, __],
+        [__, __, __, __, __, __, __, __],
+        [__, __, __, __, __, __, __, __],
+        [__, __, __, __, __, __, __, __],
     ], 1),
-    forcedToMove: new Coord(1, 2),
+    forcedToMove: new Coord(0, 2),
     unmovable: new Coord(1, 6),
-    secondMove: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get(),
+    secondMove: CheckersMove.fromStep(new Coord(1, 2), new Coord(0, 3)),
     stateWithInvalidVerticalMove: CheckersState.of([
-        [_V, __, _V, __, _V, __, _V, __],
-        [__, _V, __, _V, __, _V, __, _V],
-        [_V, __, _V, __, _V, __, _V, __],
+        [__, __, __, __, __, __, __, __],
+        [__, _U, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
-        [__, _U, __, _U, __, _U, __, _U],
-        [_U, __, _U, __, _U, __, _U, __],
-        [__, _U, __, _U, __, _U, __, _U],
-    ], 1),
+        [__, __, __, __, __, __, __, __],
+        [__, __, __, __, __, __, __, __],
+        [__, __, __, __, __, __, __, __],
+        [__, __, __, __, __, __, __, __],
+    ], 0),
     invalidStepperCoord: new Coord(1, 1),
     stateWithSimpleCapture: CheckersState.of([
         [_V, __, _V, __, _V, __, _V, __],
@@ -117,7 +114,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         [__, __, __, __, __, __, __, __],
     ], 1),
     invalidCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get(),
-    invalidThirdMove: [new Coord(2, 4), new Coord(4, 3)],
+    invalidThirdMove: [new Coord(1, 4), new Coord(3, 5)],
 };
 
 DoCheckersTests(bashniEntries);

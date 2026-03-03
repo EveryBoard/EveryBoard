@@ -50,7 +50,7 @@ describe('BashniRules', () => {
             const state: CheckersState = rules.getInitialState(defaultConfig);
 
             // When doing a move that starts on an opponent's piece
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(0, 2), new Coord(1, 3));
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 2), new Coord(2, 3));
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
@@ -60,18 +60,18 @@ describe('BashniRules', () => {
         it('should forbid moving normal piece backward', () => {
             // Given a board with normal pieces that could try to go backward
             const state: CheckersState = CheckersState.of([
-                [__V, ___, __V, ___, __V, ___, __V, ___],
                 [___, __V, ___, __V, ___, __V, ___, __V],
                 [__V, ___, __V, ___, __V, ___, __V, ___],
-                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, __V, ___, __V, ___, __V],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, ___, ___, ___],
-                [__U, ___, __U, ___, __U, ___, __U, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, __U, ___, __U, ___, __U, ___, __U],
+                [__U, ___, __U, ___, __U, ___, __U, ___],
             ], 0);
 
             // When doing a move that moves a normal piece backward
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(3, 5), new Coord(4, 6));
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(3, 4), new Coord(4, 5));
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
@@ -103,22 +103,31 @@ describe('BashniRules', () => {
         });
 
         it('should allow simple move', () => {
-            // Given any board
-            const state: CheckersState = rules.getInitialState(defaultConfig);
+            // Given a board with a piece that can move
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, __U, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
 
             // When doing a simple move
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(3, 6), new Coord(4, 5));
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(2, 5), new Coord(3, 4));
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
-                [__V, ___, __V, ___, __V, ___, __V, ___],
-                [___, __V, ___, __V, ___, __V, ___, __V],
-                [__V, ___, __V, ___, __V, ___, __V, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, ___, __U, ___, ___, ___],
-                [___, ___, ___, __U, ___, __U, ___, ___],
-                [__U, ___, __U, ___, __U, ___, __U, ___],
-                [___, __U, ___, __U, ___, __U, ___, __U],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, __U, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -138,13 +147,12 @@ describe('BashniRules', () => {
         it('should forbid to get out of the board', () => {
             // Given any board
             const state: CheckersState = rules.getInitialState(defaultConfig);
-            const outOfBoardCoord: Coord = new Coord(-1, -1);
 
             // When trying a move going outside of the board
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(0, 0), outOfBoardCoord);
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(0, 0), new Coord(-1, -1));
 
             // Then it should be illegal
-            const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
+            const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -155,39 +163,39 @@ describe('BashniRules', () => {
         it('should forbid skipping capture', () => {
             // Given a board with a possible capture
             const state: CheckersState = CheckersState.of([
-                [__V, ___, __V, ___, __V, ___, __V, ___],
                 [___, __V, ___, __V, ___, __V, ___, __V],
                 [__V, ___, __V, ___, __V, ___, __V, ___],
-                [___, __U, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, __V, ___, __V, ___, __V],
+                [___, ___, __U, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, __U, ___, __U, ___, ___],
-                [__U, ___, __U, ___, __U, ___, __U, ___],
+                [___, ___, __U, ___, __U, ___, __U, ___],
                 [___, __U, ___, __U, ___, __U, ___, __U],
+                [__U, ___, __U, ___, __U, ___, __U, ___],
             ], 1);
 
             // When doing a non capturing move
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(2, 2), new Coord(3, 3));
+            const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 2), new Coord(0, 3));
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.CANNOT_SKIP_CAPTURE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid partial-capture', () => {
+        it('should forbid partial capture', () => {
             // Given a board on which a capture of two pieces is possible
             const state: CheckersState = CheckersState.of([
-                [__V, ___, __V, ___, __V, ___, __V, ___],
                 [___, __V, ___, __V, ___, __V, ___, __V],
-                [__V, ___, __U, ___, __V, ___, __V, ___],
-                [___, __U, ___, ___, ___, ___, ___, ___],
+                [__V, ___, __V, ___, ___, ___, __V, ___],
+                [___, __V, ___, __V, ___, ___, ___, __V],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, __U, ___, __U, ___, ___],
-                [__U, ___, __U, ___, __U, ___, __U, ___],
+                [___, ___, ___, __V, ___, ___, ___, ___],
+                [___, ___, ___, ___, __U, ___, ___, ___],
                 [___, __U, ___, __U, ___, __U, ___, __U],
-            ], 1);
+                [__U, ___, __U, ___, __U, ___, __U, ___],
+            ], 0);
 
             // When capturing the first but not the second
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 5), new Coord(2, 3)]).get();
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
@@ -217,9 +225,9 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, __V, ___, ___, ___],
                 [___, ___, ___, __V, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, ___, ___, ___, __U, ___],
+                [___, ___, ___, __U, ___, ___, ___, ___],
                 [___, ___, __U, ___, __U, ___, __U, ___],
-                [___, __U, ___, __U, _VU, __U, ___, __U],
+                [___, __U, ___, __U, _UV, __U, ___, __U],
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -255,17 +263,17 @@ describe('BashniRules', () => {
         });
 
         it('should allow capturing standalone opponent piece with stacking', () => {
-            // Given a board with a possible single-capture
+            // Given a board with a possible single capture
             const state: CheckersState = CheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V, ___],
                 [___, __V, ___, __V, ___, __V, ___, __V],
-                [__V, ___, __V, ___, __V, ___, __V, ___],
-                [___, __U, ___, ___, ___, ___, ___, ___],
+                [__V, ___, __U, ___, __V, ___, __V, ___],
+                [___, __V, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, __U, ___, ___],
                 [__U, ___, __U, ___, __U, ___, __U, ___],
                 [___, __U, ___, __U, ___, __U, ___, __U],
-            ], 1);
+            ], 0);
 
             // When capturing the single piece
             const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
@@ -276,16 +284,16 @@ describe('BashniRules', () => {
                 [___, __V, ___, __V, ___, __V, ___, __V],
                 [__V, ___, ___, ___, __V, ___, __V, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [_VU, ___, __U, ___, __U, ___, __U, ___],
+                [_UV, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, __U, ___, ___],
                 [__U, ___, __U, ___, __U, ___, __U, ___],
                 [___, __U, ___, __U, ___, __U, ___, __U],
-            ], 2);
+            ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow capturing commander of an opponent stack', () => {
-            // Given a board with a possible stack-capture
+            // Given a board with a possible stack capture
             const state: CheckersState = CheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V, ___],
                 [___, __V, ___, __V, ___, __V, ___, __V],
@@ -306,7 +314,7 @@ describe('BashniRules', () => {
                 [___, __V, ___, __V, ___, __V, ___, __V],
                 [__V, ___, ___, ___, __V, ___, __V, ___],
                 [___, __V, ___, ___, ___, ___, ___, ___],
-                [_VU, ___, __U, ___, __U, ___, __U, ___],
+                [_VU, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, __U, ___, ___],
                 [__U, ___, __U, ___, __U, ___, __U, ___],
                 [___, __U, ___, __U, ___, __U, ___, __U],
@@ -321,14 +329,14 @@ describe('BashniRules', () => {
         it('should promote piece that reached last line', () => {
             // Given a board where a single piece is about to reach final line
             const state: CheckersState = CheckersState.of([
-                [___, ___, ___, ___, __V, ___, __V, ___],
-                [___, __U, ___, __V, ___, __V, ___, __V],
-                [__V, ___, __V, ___, __V, ___, __V, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __U, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, __U, ___, __U, ___, ___],
-                [__U, ___, __U, ___, __U, ___, __U, ___],
-                [___, __U, ___, __U, ___, __U, ___, __U],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
             // When doing that move
@@ -336,14 +344,14 @@ describe('BashniRules', () => {
 
             // Then the piece should be promoted
             const expectedState: CheckersState = CheckersState.of([
-                [__O, ___, ___, ___, __V, ___, __V, ___],
-                [___, ___, ___, __V, ___, __V, ___, __V],
-                [__V, ___, __V, ___, __V, ___, __V, ___],
+                [__O, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, __U, ___, __U, ___, ___],
-                [__U, ___, __U, ___, __U, ___, __U, ___],
-                [___, __U, ___, __U, ___, __U, ___, __U],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
@@ -353,7 +361,7 @@ describe('BashniRules', () => {
     describe('End Game', () => {
 
         it('should declare current player winner when opponent commands no more stack', () => {
-            // Given a board where Player.ONE has no more commander
+            // Given a board where Player.ONE has no more piece or stack
             const expectedState: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],

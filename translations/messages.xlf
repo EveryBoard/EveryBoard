@@ -215,6 +215,9 @@
       <trans-unit id="1675508830863089385" datatype="html">
         <source>The most widespread multiple-lap Mancala.</source>
       </trans-unit>
+      <trans-unit id="7751928094372476864" datatype="html">
+        <source>Russian column checkers: captured pieces stack under the capturing piece, forming towers.</source>
+      </trans-unit>
       <trans-unit id="5716165296000343717" datatype="html">
         <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
@@ -451,6 +454,9 @@
       </trans-unit>
       <trans-unit id="5226075040149407867" datatype="html">
         <source>International Checkers</source>
+      </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
       </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
@@ -1037,6 +1043,45 @@
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
+      <trans-unit id="6999105537978094771" datatype="html">
+        <source>Bashni: origins</source>
+      </trans-unit>
+      <trans-unit id="1795254043608057032" datatype="html">
+        <source>Bashni (Russian: башни, towers), also known as column draughts, is a Russian checkers variant. Captured pieces are not removed but stacked under the capturing piece, forming towers.</source>
+      </trans-unit>
+      <trans-unit id="8402752246011864012" datatype="html">
+        <source>The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+      </trans-unit>
+      <trans-unit id="5216257512116603462" datatype="html">
+        <source>Captures</source>
+      </trans-unit>
+      <trans-unit id="3182705657358075075" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="6008450572424233746" datatype="html">
+        <source>Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower.</source>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+      </trans-unit>
+      <trans-unit id="4060948936151379193" datatype="html">
+        <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="2170682009266275861" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="2350466795039227682" datatype="html">
+        <source>You did not choose the correct piece, and got no promotion.</source>
+      </trans-unit>
+      <trans-unit id="3494718669384677623" datatype="html">
+        <source>King move</source>
+      </trans-unit>
+      <trans-unit id="7641365772703186890" datatype="html">
+        <source>Kings can move and capture backward as well as forward. They can also &quot;fly&quot;: move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king!</source>
+      </trans-unit>
       <trans-unit id="2406587628849019715" datatype="html">
         <source>Stack pieces instead of capturing them</source>
       </trans-unit>
@@ -1103,14 +1148,14 @@
       <trans-unit id="4596314344113953334" datatype="html">
         <source>You have done a step after a capture. A move that starts with a capture can only contain captures.</source>
       </trans-unit>
-      <trans-unit id="8375763259935871100" datatype="html">
-        <source>A simple step is made by one diagonal move forward left or forward right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="3181357103919988717" datatype="html">
+        <source>A simple step is made by one diagonal move forward left or forward right. Click on a piece to choose it, then click on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
       </trans-unit>
       <trans-unit id="7318689477424356735" datatype="html">
         <source>Backward captures</source>
       </trans-unit>
-      <trans-unit id="3186677422672219927" datatype="html">
-        <source>A capture can also be done backward&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture backward.</source>
+      <trans-unit id="1323130710227979862" datatype="html">
+        <source>A capture can also be done backward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a backward capture.</source>
       </trans-unit>
       <trans-unit id="5943278728548812168" datatype="html">
         <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
@@ -1127,12 +1172,6 @@
       <trans-unit id="1163551794419030546" datatype="html">
         <source>The goal of checkers is to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
       </trans-unit>
-      <trans-unit id="1534367694207535197" datatype="html">
-        <source>Steps</source>
-      </trans-unit>
-      <trans-unit id="5216257512116603462" datatype="html">
-        <source>Captures</source>
-      </trans-unit>
       <trans-unit id="7360724816457427020" datatype="html">
         <source>Maximum capture</source>
       </trans-unit>
@@ -1141,12 +1180,6 @@
       </trans-unit>
       <trans-unit id="6705237401508801272" datatype="html">
         <source>When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-      </trans-unit>
-      <trans-unit id="2350466795039227682" datatype="html">
-        <source>You did not choose the correct piece, and got no promotion.</source>
-      </trans-unit>
-      <trans-unit id="3494718669384677623" datatype="html">
-        <source>King move</source>
       </trans-unit>
       <trans-unit id="7943272134877911783" datatype="html">
         <source>Kings can, like any other piece, move forward and capture backward. They have extra abilities. First, they can move backward without capturing. Second, they are able to &quot;fly&quot;: they can move over multiple squares without jumping over any piece, or by jumping over exactly one opponent piece to capture it, and finally landing wherever in the same line.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king!</source>
@@ -1171,9 +1204,6 @@
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
-      </trans-unit>
-      <trans-unit id="6522624192206928831" datatype="html">
-        <source>Minority capture is allowed</source>
       </trans-unit>
       <trans-unit id="4604841825883708598" datatype="html">
         <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>

@@ -35,7 +35,7 @@ export class BashniTutorial extends Tutorial {
             $localize`Steps`,
             CheckersTutorialStep.SIMPLE_STEPS(),
             BashniRules.get().getInitialState(defaultConfig),
-            CheckersMove.fromStep(new Coord(3, 6), new Coord(4, 5)),
+            CheckersMove.fromStep(new Coord(0, 5), new Coord(1, 4)),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -62,12 +62,12 @@ export class BashniTutorial extends Tutorial {
                 [__, _v, __, _v, __, _v, __, _v],
                 [_v, __, __, __, _v, __, _v, __],
                 [__, _v, __, _v, __, __, __, _v],
-                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, _u, __],
                 [__, __, __, _u, __, _v, __, __],
-                [__, __, _u, __, _u, __, _u, __],
+                [__, __, _u, __, __, __, __, __],
                 [__, _u, __, _u, __, _u, __, _u],
             ], 0),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 7)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 4), new Coord(4, 6)]).get(),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -76,7 +76,7 @@ export class BashniTutorial extends Tutorial {
             CheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
-                [__, __, _v, __, _v, __, _v, __],
+                [__, __, __, __, _v, __, _v, __],
                 [__, _v, __, _v, __, _v, __, __],
                 [__, __, _v, __, _v, __, _v, __],
                 [__, _v, __, __, __, __, __, __],
@@ -122,7 +122,7 @@ export class BashniTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You did not choose the correct piece, and got no promotion.`,
         ),
-        TutorialStep.fromMove(
+        TutorialStep.anyMove(
             $localize`King move`,
             $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king!`,
             CheckersState.of([
@@ -135,12 +135,8 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, _u, __, _u, __, _u, __],
             ], 2),
-            [
-                CheckersMove.fromStep(new Coord(4, 0), new Coord(3, 1)),
-                CheckersMove.fromStep(new Coord(4, 0), new Coord(5, 1)),
-            ],
+            CheckersMove.fromStep(new Coord(4, 0), new Coord(3, 1)),
             TutorialStepMessage.CONGRATULATIONS(),
-            $localize`You did not move your king.`,
         ),
     ];
 }

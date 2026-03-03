@@ -24,8 +24,8 @@ export class InternationalCheckersTutorial extends Tutorial {
             InternationalCheckersRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
-            $localize`Steps`,
-            $localize`A simple step is made by one diagonal move forward left or forward right. Click on the chosen piece, then on its landing square.<br/><br/>You are playing Dark, do the first move.`,
+            CheckersTutorialStep.SIMPLE_STEPS_TITLE(),
+            CheckersTutorialStep.SIMPLE_STEPS(),
             InternationalCheckersRules.get().getInitialState(defaultConfig),
             CheckersMove.fromStep(new Coord(5, 6), new Coord(4, 5)),
             TutorialStepMessage.CONGRATULATIONS(),
