@@ -1,5 +1,3 @@
-import { FirestoreDocument } from '../dao/FirestoreDAO';
-
 import { MinimalUser } from './MinimalUser';
 
 // A chat message
@@ -8,5 +6,3 @@ export type Message = {
     sender: MinimalUser, // the sender of the message
     timestamp: number; // publication time
 }
-
-export type MessageDocument = FirestoreDocument<Message>;

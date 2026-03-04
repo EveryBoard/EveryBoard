@@ -4,7 +4,6 @@ import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
 import { FirestoreCondition, FirestoreDocument, FirestoreJSONObject, FirestoreJSONValue, IFirestoreDAO } from '../FirestoreDAO';
 import { Debug } from 'src/app/utils/Debug';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
@@ -21,8 +20,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         const nanoseconds: number = ms * 1000 * 1000;
         return new Timestamp(seconds, nanoseconds);
     }
-
-    public callbacks: [FirestoreCondition[], FirestoreCollectionObserver<T>][] = [];
 
     public constructor(public readonly collectionName: string) {
         this.reset();
@@ -110,11 +107,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 new BehaviorSubject(MGPOptional.of(tid));
             const observable: Observable<MGPOptional<FirestoreDocument<T>>> = subject.asObservable();
             this.getStaticDB().put(id, new ObservableSubject(subject, observable));
-            for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], subject.value.get().data)) {
-                    callback[1].onDocumentCreated([subject.value.get()]);
-                }
-            }
         }
         return Promise.resolve();
     }
@@ -134,11 +126,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             const oldDoc: T = observableSubject.subject.getValue().get().data;
             const newDoc: T = { ...oldDoc, ...update };
             observableSubject.subject.next(MGPOptional.of({ id, data: newDoc }));
-            for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], observableSubject.subject.value.get().data)) {
-                    callback[1].onDocumentModified([observableSubject.subject.value.get()]);
-                }
-            }
             return Promise.resolve();
         } else {
             throw new Error(`Cannot update element '${id}' absent from '${this.collectionName}'`);
@@ -150,11 +137,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             const removed: FirestoreDocument<T> = optionalOS.get().subject.value.get();
             optionalOS.get().subject.next(MGPOptional.empty());
             this.getStaticDB().delete(id);
-            for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], removed.data)) {
-                    callback[1].onDocumentDeleted([removed]);
-                }
-            }
         } else {
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }

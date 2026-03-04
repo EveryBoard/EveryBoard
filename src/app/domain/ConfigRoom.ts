@@ -1,4 +1,3 @@
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 
 import { MinimalUser } from './MinimalUser';
@@ -27,8 +26,6 @@ export type ConfigProposal = {
     readonly gameDuration: number;
     readonly rulesConfig: RulesConfig;
 }
-
-export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>;
 
 export type FirstPlayer = 'Creator' | 'Random' | 'ChosenOpponent';
 
