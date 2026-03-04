@@ -1,19 +1,21 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
-import { TrexoRules } from './TrexoRules';
-import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
-import { TrexoFailure } from './TrexoFailure';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
+import { TrexoFailure } from './TrexoFailure';
+import { TrexoMove } from './TrexoMove';
+import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { TrexoRules } from './TrexoRules';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 
 interface PieceOnBoard {
 

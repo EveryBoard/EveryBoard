@@ -1,10 +1,11 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { ConnectSixMove } from './ConnectSixMove';
-import { ConnectSixState } from './ConnectSixState';
-import { ConnectSixRules } from './ConnectSixRules';
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { GobanConfig } from '../../jscaip/GobanConfig';
+
 import { ConnectSixAlignmentHeuristic } from './ConnectSixAlignmentHeuristic';
+import { ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
+import { ConnectSixRules } from './ConnectSixRules';
+import { ConnectSixState } from './ConnectSixState';
 
 export class ConnectSixAlignmentMinimax extends Minimax<ConnectSixMove, ConnectSixState, GobanConfig> {
 

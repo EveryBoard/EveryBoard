@@ -1,8 +1,10 @@
-import { TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Utils } from '@everyboard/lib';
+
+import { TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Localized } from '../../../utils/LocaleUtils';
+
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaState } from './MancalaState';
-import { Utils } from '@everyboard/lib';
-import { Localized } from 'src/app/utils/LocaleUtils';
 
 export class MancalaTutorial {
 

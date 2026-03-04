@@ -2,17 +2,18 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { BaAwaComponent } from '../ba-awa.component';
-import { BaAwaRules } from '../BaAwaRules';
-import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { MancalaComponentTestUtils, doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
-import { BaAwaConfig } from '../BaAwaConfig';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaState } from '../../common/MancalaState';
+import { MancalaComponentTestUtils, doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
+import { BaAwaConfig } from '../BaAwaConfig';
+import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
+import { BaAwaRules } from '../BaAwaRules';
+import { BaAwaComponent } from '../ba-awa.component';
 
 describe('BaAwaComponent', () => {
 

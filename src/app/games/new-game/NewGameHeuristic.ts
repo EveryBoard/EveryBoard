@@ -1,9 +1,10 @@
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Heuristic } from 'src/app/jscaip/AI/Minimax';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../jscaip/AI/Minimax';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';
 import { NewGameState } from './NewGameState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 // A heuristic assigns values to game states
 export class NewGameHeuristic extends Heuristic<NewGameMove, NewGameState> {

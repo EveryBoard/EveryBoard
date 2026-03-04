@@ -48,12 +48,14 @@
 
     <ng-template #lastMove>
         <ng-container *ngIf="lastMoved.isPresent()">
-            <polygon [attr.points]="getTrianglePointsAt(lastCoord.get())"
+            <polygon id="last_move_origin"
+                     [attr.points]="getTrianglePointsAt(lastCoord.get())"
                      [attr.transform]="getTriangleTranslationAt(lastCoord.get())"
-                     class="base no-fill mid-stroke moved-stroke"/>
-            <polygon [attr.points]="getTrianglePointsAt(lastMoved.get())"
+                     class="base no-fill mid-stroke last-move-stroke"/>
+            <polygon id="last_move_destination"
+                     [attr.points]="getTrianglePointsAt(lastMoved.get())"
                      [attr.transform]="getTriangleTranslationAt(lastMoved.get())"
-                     class="base no-fill mid-stroke moved-stroke"/>
+                     class="base no-fill mid-stroke last-move-stroke"/>
         </ng-container>
     </ng-template>
 </svg>

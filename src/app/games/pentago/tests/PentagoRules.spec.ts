@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PentagoFailure } from '../PentagoFailure';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { MGPOptional } from '@everyboard/lib';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PentagoRules', () => {
 

@@ -1,7 +1,8 @@
+import { Player } from '../../jscaip/Player';
+import { TableUtils, Table } from '../../jscaip/TableUtils';
+
 import { KamisadoColor } from './KamisadoColor';
 import { KamisadoPiece } from './KamisadoPiece';
-import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
-import { Player } from 'src/app/jscaip/Player';
 
 export class KamisadoBoard {
 

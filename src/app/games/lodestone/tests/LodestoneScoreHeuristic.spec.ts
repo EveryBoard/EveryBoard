@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { LodestoneRules } from '../LodestoneRules';
+import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
+import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 
 describe('LodestoneScoreHeuristic', () => {
 

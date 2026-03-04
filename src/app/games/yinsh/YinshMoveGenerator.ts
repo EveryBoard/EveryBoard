@@ -1,13 +1,15 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { Combinatorics, MGPOptional } from '@everyboard/lib';
-import { YinshState } from './YinshState';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { GipfCapture, GipfProjectHelper } from '../../jscaip/GipfProjectHelper';
+import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Player } from 'src/app/jscaip/Player';
+import { YinshState } from './YinshState';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 

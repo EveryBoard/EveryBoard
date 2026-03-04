@@ -1,4 +1,5 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
+
 import { MinimalUser } from './MinimalUser';
 
 export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent' | 'Candidate';

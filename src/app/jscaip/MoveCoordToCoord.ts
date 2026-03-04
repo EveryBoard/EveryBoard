@@ -1,8 +1,9 @@
-import { Coord } from './Coord';
-import { Ordinal } from './Ordinal';
 import { MGPFallible } from '@everyboard/lib';
-import { RulesFailure } from './RulesFailure';
+
+import { Coord } from './Coord';
 import { MoveWithTwoCoords } from './MoveWithTwoCoords';
+import { Ordinal } from './Ordinal';
+import { RulesFailure } from './RulesFailure';
 
 export abstract class MoveCoordToCoord extends MoveWithTwoCoords {
 

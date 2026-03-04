@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasState } from '../EpaminondasState';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasAttackMinimax } from '../EpaminondasAttackMinimax';
 import { MGPOptional } from '@everyboard/lib';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { EpaminondasAttackMinimax } from '../EpaminondasAttackMinimax';
+import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasState } from '../EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

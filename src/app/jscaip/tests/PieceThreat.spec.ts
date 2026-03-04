@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { CoordSet } from '../CoordSet';
 import { Coord } from '../Coord';
+import { CoordSet } from '../CoordSet';
 import { PieceThreat, SandwichThreat } from '../PieceThreat';
 
 describe('PieceThreat', () => {

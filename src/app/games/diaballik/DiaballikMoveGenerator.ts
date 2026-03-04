@@ -1,14 +1,16 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { DiaballikNode, DiaballikRules } from './DiaballikRules';
-import { Player } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
+import { DiaballikNode, DiaballikRules } from './DiaballikRules';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 

@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+
+import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { TrigoMinimax } from '../TrigoMinimax';
+import { TrigoConfig, TrigoRules } from '../TrigoRules';
 
 describe('TrigoMinimax', () => {
 

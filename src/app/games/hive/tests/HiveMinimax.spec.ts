@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { HiveRules } from '../HiveRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { HiveMinimax } from '../HiveMinimax';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { HiveRules } from '../HiveRules';
 
 describe('HiveMinimax', () => {
 

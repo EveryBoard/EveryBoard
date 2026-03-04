@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { P4Heuristic } from 'src/app/games/p4/P4Heuristic';
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { P4MoveGenerator } from 'src/app/games/p4/P4MoveGenerator';
-import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
-import { P4State } from 'src/app/games/p4/P4State';
+import { ArrayUtils, MGPOptional, Set } from '@everyboard/lib';
+
+import { P4Heuristic } from '../../../games/p4/P4Heuristic';
+import { P4Move } from '../../../games/p4/P4Move';
+import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
+import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
+import { P4State } from '../../../games/p4/P4State';
+import { PlayerOrNone } from '../../Player';
 import { AIDepthLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
-import { ArrayUtils, MGPOptional, Set } from '@everyboard/lib';
-import { PlayerOrNone } from '../../Player';
 
 const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 

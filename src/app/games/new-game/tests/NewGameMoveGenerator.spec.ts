@@ -1,8 +1,8 @@
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 /**
  * These are the tests for the move generator.

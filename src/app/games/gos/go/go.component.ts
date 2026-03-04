@@ -1,22 +1,24 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoConfig, GoRules } from 'src/app/games/gos/go/GoRules';
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
+import { MCTS } from '../../../jscaip/AI/MCTS';
+import { GroupData } from '../../../jscaip/BoardData';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoState } from 'src/app/games/gos/GoState';
-import { GoPiece } from '../GoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GroupData } from 'src/app/jscaip/BoardData';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { GoMoveGenerator } from './GoMoveGenerator';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+
 import { GoMinimax } from './GoMinimax';
-import { ScoreName } from 'src/app/components/game-components/game-component/GameComponent';
+import { GoMoveGenerator } from './GoMoveGenerator';
+import { GoConfig, GoRules } from './GoRules';
 
 @Component({
     selector: 'app-go',

@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { AbaloneComponent } from '../abalone.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
-import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
+import { AbaloneState } from '../AbaloneState';
+import { AbaloneComponent } from '../abalone.component';
 
 describe('AbaloneComponent', () => {
 

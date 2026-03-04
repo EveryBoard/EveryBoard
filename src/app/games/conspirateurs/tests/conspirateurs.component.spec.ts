@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { ConspirateursComponent } from '../conspirateurs.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursState } from '../ConspirateursState';
+import { ConspirateursComponent } from '../conspirateurs.component';
 
 describe('ConspirateursComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;

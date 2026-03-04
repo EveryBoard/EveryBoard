@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { GoMove } from '../../GoMove';
-import { GoState } from '../../GoState';
-import { GoPiece } from '../../GoPiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GoConfig, GoRules } from '../GoRules';
-import { GoFailure } from '../../GoFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { GoNode } from '../../AbstractGoRules';
+import { GoFailure } from '../../GoFailure';
+import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoState } from '../../GoState';
+import { GoConfig, GoRules } from '../GoRules';
 
 describe('GoRules', () => {
 

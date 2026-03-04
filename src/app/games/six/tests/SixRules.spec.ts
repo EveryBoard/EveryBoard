@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { SixState } from '../SixState';
-import { SixMove } from '../SixMove';
-import { SixFailure } from '../SixFailure';
-import { SixConfig, SixNode, SixRules } from '../SixRules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { Vector } from 'src/app/jscaip/Vector';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { Vector } from '../../../jscaip/Vector';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { SixFailure } from '../SixFailure';
+import { SixMove } from '../SixMove';
+import { SixConfig, SixNode, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 
 describe('SixRules', () => {
 

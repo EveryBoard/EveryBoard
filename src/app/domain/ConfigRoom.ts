@@ -1,6 +1,7 @@
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { MinimalUser } from './MinimalUser';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
+
+import { MinimalUser } from './MinimalUser';
 
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
 export type ConfigRoom = {

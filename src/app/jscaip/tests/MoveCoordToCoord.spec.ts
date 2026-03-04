@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
-import { Ordinal } from '../Ordinal';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
+import { Ordinal } from '../Ordinal';
 
 class ConcreteMoveCoordToCoord extends MoveCoordToCoord {}
 

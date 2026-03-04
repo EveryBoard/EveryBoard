@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { DiaballikRules } from '../../diaballik/DiaballikRules';
 import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { DiaballikRules } from '../../diaballik/DiaballikRules';
 
 describe('DiamMoveGenerator', () => {
 

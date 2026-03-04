@@ -1,11 +1,13 @@
-import { TaflNode, TaflRules } from './TaflRules';
-import { TaflMove } from './TaflMove';
-import { TaflState } from './TaflState';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { TaflConfig } from './TaflConfig';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
+import { TaflConfig } from './TaflConfig';
+import { TaflMove } from './TaflMove';
+import { TaflNode, TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 
 export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristic<M, TaflState, TaflConfig> {
 

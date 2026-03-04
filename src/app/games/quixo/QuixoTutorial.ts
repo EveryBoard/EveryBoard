@@ -1,11 +1,13 @@
-import { QuixoConfig, QuixoState } from 'src/app/games/quixo/QuixoState';
-import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { QuixoRules } from './QuixoRules';
 import { MGPOptional } from '@everyboard/lib';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { QuixoMove } from './QuixoMove';
+import { QuixoRules } from './QuixoRules';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,19 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { Utils } from '@everyboard/lib';
 
-import { DvonnPieceStack } from '../DvonnPieceStack';
-import { DvonnState } from '../DvonnState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnMove } from '../DvonnMove';
-import { Player } from 'src/app/jscaip/Player';
-import { DvonnNode, DvonnRules } from '../DvonnRules';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { DvonnFailure } from '../DvonnFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DvonnMove } from '../DvonnMove';
+import { DvonnPieceStack } from '../DvonnPieceStack';
+import { DvonnNode, DvonnRules } from '../DvonnRules';
+import { DvonnState } from '../DvonnState';
 
 describe('DvonnRules', () => {
 

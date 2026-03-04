@@ -1,11 +1,13 @@
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { PylosMove } from 'src/app/games/pylos/PylosMove';
-import { PylosState } from 'src/app/games/pylos/PylosState';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPValidation } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { PylosCoord } from './PylosCoord';
+import { PylosMove } from './PylosMove';
 import { PylosRules } from './PylosRules';
+import { PylosState } from './PylosState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -1,11 +1,13 @@
-import { TaflState } from '../TaflState';
-import { TaflNode, TaflRules } from '../TaflRules';
-import { BrandhubMove } from './BrandhubMove';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+
+import { BooleanConfig, RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
+import { TaflNode, TaflRules } from '../TaflRules';
+import { TaflState } from '../TaflState';
+
+import { BrandhubMove } from './BrandhubMove';
 
 export class BrandhubNode extends TaflNode<BrandhubMove> {}
 

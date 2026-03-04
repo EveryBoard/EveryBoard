@@ -1,12 +1,14 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
+import { MancalaState } from '../common/MancalaState';
+import { MancalaTutorial } from '../common/MancalaTutorial';
+
 import { BaAwaConfig } from './BaAwaConfig';
 import { BaAwaRules } from './BaAwaRules';
-import { MancalaTutorial } from '../common/MancalaTutorial';
-import { MancalaState } from '../common/MancalaState';
-import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
 

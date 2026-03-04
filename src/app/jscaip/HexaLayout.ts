@@ -1,4 +1,5 @@
 import { Utils } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 import { FlatHexaOrientation, HexaOrientation } from './HexaOrientation';
 

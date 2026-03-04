@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
-
 import { Subscription } from 'rxjs';
+
+import { MGPOptional } from '@everyboard/lib';
 
 import { CurrentGame } from '../domain/User';
 import { CurrentGameService } from '../services/CurrentGameService';
-import { MGPOptional } from '@everyboard/lib';
 
 @Injectable({
     providedIn: 'root',

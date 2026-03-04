@@ -1,10 +1,11 @@
 import { fakeAsync } from '@angular/core/testing';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { NewGameComponent } from '../new-game.component';
+
+import { GameInfo } from '../../../components/normal-component/pick-game/pick-game.component';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
 import { NewGameTutorial } from '../NewGameTutorial';
+import { NewGameComponent } from '../new-game.component';
 
 describe('NewGameComponent', () => {
     let testUtils: ComponentTestUtils<NewGameComponent>;

@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PylosCoord } from '../PylosCoord';
-import { PylosMove } from '../PylosMove';
-import { PylosState } from '../PylosState';
-import { PylosNode, PylosRules } from '../PylosRules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { PylosFailure } from '../PylosFailure';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { PylosCoord } from '../PylosCoord';
+import { PylosFailure } from '../PylosFailure';
+import { PylosMove } from '../PylosMove';
+import { PylosNode, PylosRules } from '../PylosRules';
+import { PylosState } from '../PylosState';
 
 describe('PylosRules', () => {
 

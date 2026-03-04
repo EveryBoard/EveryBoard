@@ -1,9 +1,11 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoMove } from './CoerceoMove';
-import { CoerceoState } from './CoerceoState';
-import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+
+import { CoerceoMove } from './CoerceoMove';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
+import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 export class CoerceoOrderedMoveGenerator extends CoerceoMoveGenerator {
 

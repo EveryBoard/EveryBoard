@@ -1,11 +1,13 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+
 import { MartianChessMove } from './MartianChessMove';
-import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { MartianChessRules } from './MartianChessRules';
+import { MartianChessState } from './MartianChessState';
 
 const _: MartianChessPiece = MartianChessPiece.EMPTY;
 const A: MartianChessPiece = MartianChessPiece.PAWN;

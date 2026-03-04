@@ -1,10 +1,12 @@
-import { ApagosMove } from 'src/app/games/apagos/ApagosMove';
-import { ApagosState } from 'src/app/games/apagos/ApagosState';
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Player } from '../../jscaip/Player';
+
+import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { ApagosState } from './ApagosState';
 
 const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
 

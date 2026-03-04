@@ -1,4 +1,5 @@
-import { firebaseConfig } from 'src/app/firebaseConfig';
+import { firebaseConfig } from '../app/firebaseConfig';
+
 import { Environment } from './environment-type';
 
 export const environment: Environment = {

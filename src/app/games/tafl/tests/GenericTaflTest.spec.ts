@@ -1,19 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
 import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { TaflComponent } from '../tafl.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflMove } from '../TaflMove';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflPawn } from '../TaflPawn';
 import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { TaflConfig } from '../TaflConfig';
-import { TaflPawn } from '../TaflPawn';
+import { TaflComponent } from '../tafl.component';
 
 export class TaflTestEntries<C extends TaflComponent<R, M>,
                              R extends TaflRules<M>,

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { UserSettingsService } from '../UserSettingsService';
 
 describe('UserSettingsService', () => {

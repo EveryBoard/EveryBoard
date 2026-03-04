@@ -1,9 +1,8 @@
 import { Encoder, Set } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { Move } from 'src/app/jscaip/Move';
-
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
+import { Coord } from '../../jscaip/Coord';
+import { Move } from '../../jscaip/Move';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
 
 export type QuebecCastlesMove = QuebecCastlesTranslation | QuebecCastlesDrop;
 

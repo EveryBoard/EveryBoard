@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { TestBed } from '@angular/core/testing';
 import * as FireAuth from '@firebase/auth';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { User } from 'src/app/domain/User';
+import { User } from '../../domain/User';
+import { UserService } from '../../services/UserService';
+import { createConnectedGoogleUser, createDisconnectedGoogleUser } from '../../services/tests/ConnectedUserService.spec';
+import { expectPermissionToBeDenied, setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { UserDAO } from '../UserDAO';
-import { createConnectedGoogleUser, createDisconnectedGoogleUser } from 'src/app/services/tests/ConnectedUserService.spec';
-import { UserService } from 'src/app/services/UserService';
-import { expectPermissionToBeDenied, setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('UserDAO', () => {
 

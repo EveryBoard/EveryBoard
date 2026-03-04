@@ -1,17 +1,19 @@
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { SquarzFailure } from './SquarzFailure';
 import { SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { SquarzFailure } from './SquarzFailure';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class SquarzNode extends GameNode<SquarzMove, SquarzState> {}
 

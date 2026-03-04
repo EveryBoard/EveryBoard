@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { SiamFailure } from '../SiamFailure';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
 import { SiamState } from '../SiamState';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { MGPOptional } from '@everyboard/lib';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { SiamFailure } from '../SiamFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord } from 'src/app/jscaip/Coord';
 
 describe('SiamRules', () => {
 

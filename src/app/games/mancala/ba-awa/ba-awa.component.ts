@@ -1,10 +1,11 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 
-import { BaAwaRules } from './BaAwaRules';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MancalaMove } from '../common/MancalaMove';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { MancalaComponent } from '../common/MancalaComponent';
+import { MancalaMove } from '../common/MancalaMove';
+
 import { BaAwaMoveGenerator } from './BaAwaMoveGenerator';
+import { BaAwaRules } from './BaAwaRules';
 
 @Component({
     selector: 'app-ba-awa-component',

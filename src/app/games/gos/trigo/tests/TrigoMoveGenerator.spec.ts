@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GoMove } from '../../GoMove';
-import { GoState } from '../../GoState';
-import { GoPiece } from '../../GoPiece';
+
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
 import { GoNode } from '../../AbstractGoRules';
-import { TrigoMoveGenerator } from '../TrigoMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoState } from '../../GoState';
+import { TrigoMoveGenerator } from '../TrigoMoveGenerator';
+import { TrigoConfig, TrigoRules } from '../TrigoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

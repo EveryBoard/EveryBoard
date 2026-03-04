@@ -1,12 +1,14 @@
-import { KamisadoMove } from './KamisadoMove';
-import { KamisadoState } from './KamisadoState';
-import { KamisadoNode, KamisadoRules } from './KamisadoRules';
 import { ArrayUtils, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { KamisadoBoard } from './KamisadoBoard';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { KamisadoMove } from './KamisadoMove';
+import { KamisadoNode, KamisadoRules } from './KamisadoRules';
+import { KamisadoState } from './KamisadoState';
 
 export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoState> {
 

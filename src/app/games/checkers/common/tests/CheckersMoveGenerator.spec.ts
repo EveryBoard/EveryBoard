@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { CheckersMove } from '../CheckersMove';
-import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
-import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+
+import { Coord } from '../../../../jscaip/Coord';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
-import { Coord } from 'src/app/jscaip/Coord';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
+import { CheckersMove } from '../CheckersMove';
+import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
+import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);

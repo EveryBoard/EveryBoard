@@ -1,5 +1,6 @@
-import { Ordinal } from './Ordinal';
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
+
+import { Ordinal } from './Ordinal';
 import { Vector } from './Vector';
 
 export class CoordFailure {

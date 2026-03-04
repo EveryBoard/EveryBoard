@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+
+import { Player } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 
 const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
 const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
