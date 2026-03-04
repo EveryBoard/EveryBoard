@@ -1,4 +1,3 @@
-// <reference types="jasmine" />
 import { JSONValue, JSONValueWithoutArray } from './JSON';
 import { Utils } from './Utils';
 

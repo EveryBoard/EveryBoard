@@ -15,9 +15,8 @@ import { GameInfo } from '../pick-game/pick-game.component';
 
 type Tab = 'games' | 'create' | 'chat';
 
-type WithId<T> = {
+type WithId<T> = T & {
     id : string;
-    data: T;
 };
 
 @Component({
@@ -87,7 +86,7 @@ export class LobbyComponent implements OnInit, OnDestroy {
     public getActiveConfigRooms(): WithId<ConfigRoom>[] {
         const all: WithId<ConfigRoom>[] = [];
         for (const [id, data] of this.activeConfigRooms) {
-            all.push({ id, data });
+            all.push({ id, ...data });
         }
         return all;
     }
@@ -102,8 +101,8 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {
         const gameId: string = configRoom.id;
-        const gameName: string = configRoom.data.gameName;
-        const gameStarted: boolean = configRoom.data.status === Status.STARTED;
+        const gameName: string = configRoom.gameName;
+        const gameStarted: boolean = configRoom.status === Status.STARTED;
         const canUserJoin: MGPValidation = this.currentGameService.canUserJoin(gameId, gameStarted);
         if (canUserJoin.isSuccess()) {
             await this.router.navigate(['/play', gameName, gameId]);

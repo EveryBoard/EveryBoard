@@ -151,7 +151,7 @@ describe('BackendService', () => {
             expectCriticalMessage('Connection to server failed or closed, trying again in 1 seconds...');
             tick(1000); // wait 1 second to see if it reconnects
             expect(webSocketInstances.length).toBe(2);
-            ws.onopen!(new Event('open')); // open the second connection so that we can unsubscribe
+            ws.onopen!(new Event('open')); // open the second connection so that we can unsubscribe to let the test finish
             subscription.unsubscribe();
         }));
 

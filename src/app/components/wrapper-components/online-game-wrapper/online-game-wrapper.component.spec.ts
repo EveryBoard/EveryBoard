@@ -177,7 +177,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
 
     describe('for ChosenOpponent', () => {
-        it('it should replace GameCreationComponent by game component upon start', fakeAsync(async() => {
+        it('should replace GameCreationComponent by game component upon start', fakeAsync(async() => {
             // Given a component loaded with non creator
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             await prepareComponent(true);

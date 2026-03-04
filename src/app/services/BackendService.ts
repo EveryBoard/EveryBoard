@@ -29,7 +29,7 @@ export class BackendMessage {
     }
 }
 
-export type Callback = (message: BackendMessage) => void
+export type Callback = (message: BackendMessage) => void;
 
 export abstract class AbstractBackendService {
     private readonly callbacks: MGPMap<string, Callback> = new MGPMap();
@@ -137,11 +137,12 @@ export class BackendService extends AbstractBackendService {
                     return;
                 }
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                timeout = MGPOptional.of(window.setTimeout(async() => {
-                    const subscription: Subscription = await this.connect();
-                    resolve(subscription);
-                },
-                                                           this.nextConnectionAttemptTime * 1000));
+                timeout = MGPOptional.of(window.setTimeout(
+                    async() => {
+                        const subscription: Subscription = await this.connect();
+                        resolve(subscription);
+                    },
+                    this.nextConnectionAttemptTime * 1000));
                 this.nextConnectionAttemptTime *= 2; // exponential backoff: wait twice as long at every new attempt
             };
 
@@ -150,7 +151,6 @@ export class BackendService extends AbstractBackendService {
                     window.clearTimeout(timeout.get());
                     timeout = MGPOptional.empty(); // clear the timeout
                 }
-                // this.messageDisplayer.infoMessage($localize`Connection to server successful!`);
                 this.webSocket = MGPOptional.of(ws);
                 this.nextConnectionAttemptTime = 1; // reset the exponential backoff
                 this.resolveConnection(); // notify waiters

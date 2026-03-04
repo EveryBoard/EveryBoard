@@ -23,7 +23,7 @@ describe('PentagoRules', () => {
         rules = PentagoRules.get();
     });
 
-    it('it should be illegal to drop piece on occupied space', () => {
+    it('should be illegal to drop piece on occupied space', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _],
             [_, O, _, _, _, _],
@@ -40,7 +40,7 @@ describe('PentagoRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('it should prevent redundancy by refusing rotating neutral block', () => {
+    it('should prevent redundancy by refusing rotating neutral block', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, _, _],
             [_, O, _, _, _, _],
@@ -57,7 +57,7 @@ describe('PentagoRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('it should refuse rotation less move when there is no neutral block', () => {
+    it('should refuse rotation less move when there is no neutral block', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
             [_, _, _, _, _, _],
@@ -74,7 +74,7 @@ describe('PentagoRules', () => {
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
-    it('it should allow rotation-free move when there is neutral block', () => {
+    it('should allow rotation-free move when there is neutral block', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
             [_, _, _, _, _, _],
@@ -97,7 +97,7 @@ describe('PentagoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    it('it should be able to twist any block clockwise', () => {
+    it('should be able to twist any block clockwise', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
             [_, X, _, _, _, _],
@@ -123,7 +123,7 @@ describe('PentagoRules', () => {
         RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
     });
 
-    it('it should be able to twist any board anti-clockwise', () => {
+    it('should be able to twist any board anti-clockwise', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, O, _, _],
             [X, X, _, _, _, _],
@@ -150,7 +150,7 @@ describe('PentagoRules', () => {
 
     describe('victories', () => {
 
-        it('it should notice victory', () => {
+        it('should notice victory', () => {
             const board: Table<PlayerOrNone> = [
                 [O, _, _, O, _, _],
                 [O, X, _, _, _, _],
@@ -175,7 +175,7 @@ describe('PentagoRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
-        it('it should notice draw by end game', () => {
+        it('should notice draw by end game', () => {
             const board: Table<PlayerOrNone> = [
                 [O, X, O, X, O, X],
                 [X, O, X, O, X, O],
@@ -200,7 +200,7 @@ describe('PentagoRules', () => {
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
-        it('it should notice draw by double-victory', () => {
+        it('should notice draw by double-victory', () => {
             const board: Table<PlayerOrNone> = [
                 [_, X, _, _, _, _],
                 [X, _, _, _, _, _],
