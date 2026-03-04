@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { UserService } from '../UserService';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { fakeAsync, TestBed } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+
+import { UserService } from '../UserService';
 
 describe('UserService', () => {
 

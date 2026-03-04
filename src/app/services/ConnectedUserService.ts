@@ -1,14 +1,16 @@
+import { Injectable, OnDestroy } from '@angular/core';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
-import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { UserDAO } from '../dao/UserDAO';
-import { User } from '../domain/User';
 import { MinimalUser } from '../domain/MinimalUser';
-import { UserService } from './UserService';
+import { User } from '../domain/User';
 import { Debug } from '../utils/Debug';
+
+import { UserService } from './UserService';
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {

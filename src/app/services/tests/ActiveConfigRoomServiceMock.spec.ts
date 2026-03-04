@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-
-import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
-import { AbstractActiveConfigRoomsService } from '../ActiveConfigRoomsService';
 import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
+import { AbstractActiveConfigRoomsService } from '../ActiveConfigRoomsService';
 
 @Injectable({ providedIn: 'root' })
 export class ActiveConfigRoomsServiceMock extends AbstractActiveConfigRoomsService {

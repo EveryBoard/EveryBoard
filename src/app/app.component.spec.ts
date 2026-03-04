@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
-import { AppComponent } from './app.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+
+import { AppComponent } from './app.component';
 import { ErrorLoggerService } from './services/ErrorLoggerService';
 import { ErrorLoggerServiceMock } from './services/tests/ErrorLoggerServiceMock.spec';
 

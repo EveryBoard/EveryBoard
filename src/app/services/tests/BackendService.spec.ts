@@ -1,13 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { JSONValue } from 'lib/dist';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+import { MGPFallible } from '@everyboard/lib';
+
 import { BackendMessage, BackendService } from '../BackendService';
 import { ConnectedUserService } from '../ConnectedUserService';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
-import { environment } from 'src/environments/environment';
 import { MessageDisplayer } from '../MessageDisplayer';
-import { JSONValue } from 'lib/dist';
-import { MGPFallible } from '@everyboard/lib';
+
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 
 describe('BackendMessage', () => {
     describe('getArgument', () => {

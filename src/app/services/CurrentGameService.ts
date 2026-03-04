@@ -1,11 +1,13 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
-import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { AuthUser, ConnectedUserService } from './ConnectedUserService';
+
+import { CurrentGame, UserRoleInPart } from '../domain/User';
 import { Localized } from '../utils/LocaleUtils';
+
 import { BackendService, BackendMessage } from './BackendService';
+import { AuthUser, ConnectedUserService } from './ConnectedUserService';
 
 export class GameActionFailure {
 

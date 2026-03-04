@@ -1,5 +1,6 @@
 import * as Firestore from '@firebase/firestore';
 import { Subscription } from 'rxjs';
+
 import { JSONPrimitive, MGPOptional, Utils } from '@everyboard/lib';
 
 export type FirestoreJSONPrimitive = JSONPrimitive | Firestore.FieldValue;

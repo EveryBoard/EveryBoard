@@ -1,25 +1,24 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-
-import { GameCreationComponent, GameCreationComponentMessages } from './game-creation.component';
-import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
-
+import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from 'src/app/domain/ConfigRoom';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-
 import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from 'src/app/domain/ConfigRoom';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { WelcomeComponent } from '../../normal-component/welcome/welcome.component';
+import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
+
+import { GameCreationComponent, GameCreationComponentMessages } from './game-creation.component';
 
 describe('GameCreationComponent', () => {
 

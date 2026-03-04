@@ -2,6 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
+
 import { FirstPlayer, ConfigRoom, Status, GameType, GameDuration } from './ConfigRoom';
 import { UserMocks } from './UserMocks.spec';
 

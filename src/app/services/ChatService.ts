@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
-
-import { Debug } from '../utils/Debug';
-import { Message } from '../domain/Message';
-import { BackendService, BackendMessage } from './BackendService';
 import { Subscription } from 'rxjs';
+
+import { Message } from '../domain/Message';
+import { Debug } from '../utils/Debug';
+
+import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractChatService {
     public abstract subscribeToMessages(callback: (message: Message) => void): Subscription;

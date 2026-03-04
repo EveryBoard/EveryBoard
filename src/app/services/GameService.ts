@@ -1,10 +1,13 @@
 import { Injectable } from '@angular/core';
-import { JSONValue, MGPFallible } from '@everyboard/lib';
-import { GameEvent, Game } from '../domain/Game';
 import { Subscription } from 'rxjs';
-import { BackendService, BackendMessage } from './BackendService';
-import { Debug } from '../utils/Debug';
+
+import { JSONValue, MGPFallible } from '@everyboard/lib';
+
+import { GameEvent, Game } from '../domain/Game';
 import { Player, PlayerOrNone } from '../jscaip/Player';
+import { Debug } from '../utils/Debug';
+
+import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractGameService {
     /** Subscribe to the game, giving callbacks that will be called upon certain events */

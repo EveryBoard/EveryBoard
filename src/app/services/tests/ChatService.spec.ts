@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
-
 import { Message } from 'src/app/domain/Message';
-import { ChatService } from '../ChatService';
+
 import { AbstractBackendService, BackendService } from '../BackendService';
+import { ChatService } from '../ChatService';
+
 import { BackendServiceMock } from './BackendServiceMock.spec';
 
 describe('ChatService', () => {

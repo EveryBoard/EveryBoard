@@ -1,14 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
-import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
-import { GameService } from '../GameService';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Subscription } from 'rxjs';
-import { BackendServiceMock } from './BackendServiceMock.spec';
-import { AbstractBackendService, BackendMessage, BackendService } from '../BackendService';
 import { Game, GameEvent } from 'src/app/domain/Game';
 import { GameMocks } from 'src/app/domain/PartMocks.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
+
+import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
+
+import { AbstractBackendService, BackendMessage, BackendService } from '../BackendService';
+import { GameService } from '../GameService';
+
+import { BackendServiceMock } from './BackendServiceMock.spec';
 
 describe('GameService', () => {
 

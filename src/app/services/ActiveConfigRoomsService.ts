@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
+import { Subscription } from 'rxjs';
 
 import { MGPMap } from '@everyboard/lib';
 
-import { Subscription } from 'rxjs';
-import { BackendService, BackendMessage } from './BackendService';
 import { ConfigRoom } from '../domain/ConfigRoom';
+
+import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractActiveConfigRoomsService {
 

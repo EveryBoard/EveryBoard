@@ -1,9 +1,9 @@
 import { Subscription } from 'rxjs';
+import { Message } from 'src/app/domain/Message';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-
 import { AbstractChatService } from '../ChatService';
-import { Message } from 'src/app/domain/Message';
 
 export class ChatServiceMock extends AbstractChatService {
     private subscribedCallback: MGPOptional<(message: Message) => void> = MGPOptional.empty();

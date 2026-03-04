@@ -1,142 +1,141 @@
-import { BrowserModule } from '@angular/platform-browser';
-import { LOCALE_ID, NgModule } from '@angular/core';
 import { registerLocaleData } from '@angular/common';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { RouterModule, Route } from '@angular/router';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import * as Firebase from '@firebase/app';
-import * as Firestore from '@firebase/firestore';
-import * as Auth from '@firebase/auth';
 import localeFr from '@angular/common/locales/fr';
-
+import { LOCALE_ID, NgModule } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterModule, Route } from '@angular/router';
+import * as Firebase from '@firebase/app';
+import * as Auth from '@firebase/auth';
+import * as Firestore from '@firebase/firestore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-
-import { ChatService } from './services/ChatService';
-import { UserService } from './services/UserService';
-import { ConnectedUserService } from './services/ConnectedUserService';
-import { GameService } from './services/GameService';
-import { ConfigRoomService } from './services/ConfigRoomService';
-import { ThemeService } from './services/ThemeService';
+import { environment } from 'src/environments/environment';
 
 import { AppComponent } from './app.component';
-import { HeaderComponent } from './components/normal-component/header/header.component';
-import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
-import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
-import { LoginComponent } from './components/normal-component/login/login.component';
-import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
+import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
+import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { AccountComponent } from './components/normal-component/account/account.component';
-import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
-import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
+import { HeaderComponent } from './components/normal-component/header/header.component';
+import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { LoginComponent } from './components/normal-component/login/login.component';
+import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
+import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
+import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
+import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
+import { RegisterComponent } from './components/normal-component/register/register.component';
+import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
+import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TimerComponent } from './components/normal-component/timer/timer.component';
+import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
+import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
+import { AbaloneComponent } from './games/abalone/abalone.component';
+import { ApagosComponent } from './games/apagos/apagos.component';
+import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
+import { LascaComponent } from './games/checkers/lasca/lasca.component';
+import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { ConnectSixComponent } from './games/connect-six/connect-six.component';
+import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
+import { DiaballikComponent } from './games/diaballik/diaballik.component';
+import { DiamComponent } from './games/diam/diam.component';
+import { DvonnComponent } from './games/dvonn/dvonn.component';
+import { EncapsuleComponent } from './games/encapsule/encapsule.component';
+import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
+import { GipfComponent } from './games/gipf/gipf.component';
+import { GoComponent } from './games/gos/go/go.component';
+import { TrigoComponent } from './games/gos/trigo/trigo.component';
+import { HexodiaComponent } from './games/hexodia/hexodia.component';
+import { HivePieceComponent } from './games/hive/hive-piece.component';
+import { HiveComponent } from './games/hive/hive.component';
+import { KamisadoComponent } from './games/kamisado/kamisado.component';
+import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
+import { LodestoneLodestoneComponent } from './games/lodestone/lodestone-lodestone.component';
+import { LodestoneComponent } from './games/lodestone/lodestone.component';
+import { AwaleComponent } from './games/mancala/awale/awale.component';
+import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
+import { NumberedCircleComponent } from './games/mancala/common/numbered-circle.component';
+import { KalahComponent } from './games/mancala/kalah/kalah.component';
+import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
+import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
+import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
+import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
+import { P4Component } from './games/p4/p4.component';
+import { PentagoComponent } from './games/pentago/pentago.component';
+import { PenteComponent } from './games/pente/pente.component';
+import { PylosComponent } from './games/pylos/pylos.component';
+import { QuartoComponent } from './games/quarto/quarto.component';
+import { QuebecCastlesComponent } from './games/quebec-castles/quebec-castles.component';
+import { QuixoComponent } from './games/quixo/quixo.component';
+import { ReversiComponent } from './games/reversi/reversi.component';
+import { SaharaComponent } from './games/sahara/sahara.component';
+import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
+import { SiamComponent } from './games/siam/siam.component';
+import { SixComponent } from './games/six/six.component';
+import { SquarzComponent } from './games/squarz/squarz.component';
+import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
+import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
+import { TablutComponent } from './games/tafl/tablut/tablut.component';
+import { TeekoComponent } from './games/teeko/teeko.component';
+import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
+import { TrexoComponent } from './games/trexo/trexo.component';
+import { YinshComponent } from './games/yinsh/yinsh.component';
+import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
+import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
+import { NotConnectedGuard } from './guard/not-connected.guard';
+import { VerifiedAccountGuard } from './guard/verified-account.guard';
+import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
+import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
+import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
+import { ChatService } from './services/ChatService';
+import { ConfigRoomService } from './services/ConfigRoomService';
+import { ConnectedUserService } from './services/ConnectedUserService';
+import { GameService } from './services/GameService';
+import { ThemeService } from './services/ThemeService';
+import { UserService } from './services/UserService';
+import { LocaleUtils } from './utils/LocaleUtils';
+
 import { OnlineGameWrapperComponent }
     from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { TutorialGameWrapperComponent }
     from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { RegisterComponent } from './components/normal-component/register/register.component';
 import { LocalGameCreationComponent }
     from './components/normal-component/local-game-creation/local-game-creation.component';
 import { OnlineGameSelectionComponent }
     from './components/normal-component/online-game-selection/online-game-selection.component';
 import { TutorialGameCreationComponent }
     from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
-import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
-import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
-import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { SettingsComponent } from './components/normal-component/settings/settings.component';
-import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 
-import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
-import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
 
-import { AbaloneComponent } from './games/abalone/abalone.component';
-import { ApagosComponent } from './games/apagos/apagos.component';
-import { AwaleComponent } from './games/mancala/awale/awale.component';
 
-import { BaAwaComponent } from './games/mancala/ba-awa/ba-awa.component';
-import { BrandhubComponent } from './games/tafl/brandhub/brandhub.component';
 
-import { CoerceoComponent } from './games/coerceo/coerceo.component';
-import { ConnectSixComponent } from './games/connect-six/connect-six.component';
-import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 
-import { DiaballikComponent } from './games/diaballik/diaballik.component';
-import { DiamComponent } from './games/diam/diam.component';
-import { DvonnComponent } from './games/dvonn/dvonn.component';
 
-import { EncapsuleComponent } from './games/encapsule/encapsule.component';
-import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
 
-import { GipfComponent } from './games/gipf/gipf.component';
-import { GoComponent } from './games/gos/go/go.component';
 
-import { HexodiaComponent } from './games/hexodia/hexodia.component';
-import { HiveComponent } from './games/hive/hive.component';
-import { HivePieceComponent } from './games/hive/hive-piece.component';
-import { HnefataflComponent } from './games/tafl/hnefatafl/hnefatafl.component';
 
-import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
 
-import { KalahComponent } from './games/mancala/kalah/kalah.component';
-import { KamisadoComponent } from './games/kamisado/kamisado.component';
 
-import { LascaComponent } from './games/checkers/lasca/lasca.component';
-import { LinesOfActionComponent } from './games/lines-of-action/lines-of-action.component';
-import { LodestoneComponent } from './games/lodestone/lodestone.component';
-import { LodestoneLodestoneComponent } from './games/lodestone/lodestone-lodestone.component';
 
-import { MartianChessComponent } from './games/martian-chess/martian-chess.component';
-import { MartianChessQueenComponent } from './games/martian-chess/martian-chess-queen.component';
-import { MartianChessDroneComponent } from './games/martian-chess/martian-chess-drone.component';
-import { MartianChessPawnComponent } from './games/martian-chess/martian-chess-pawn.component';
 
-import { NumberedCircleComponent } from './games/mancala/common/numbered-circle.component';
 
-import { P4Component } from './games/p4/p4.component';
-import { PentagoComponent } from './games/pentago/pentago.component';
-import { PenteComponent } from './games/pente/pente.component';
-import { PylosComponent } from './games/pylos/pylos.component';
 
-import { QuartoComponent } from './games/quarto/quarto.component';
-import { QuebecCastlesComponent } from './games/quebec-castles/quebec-castles.component';
-import { QuixoComponent } from './games/quixo/quixo.component';
 
-import { ReversiComponent } from './games/reversi/reversi.component';
 
-import { SaharaComponent } from './games/sahara/sahara.component';
-import { SiamComponent } from './games/siam/siam.component';
-import { SiamOrientationArrowComponent } from './games/siam/siam-orientation-arrow.component';
-import { SixComponent } from './games/six/six.component';
-import { SquarzComponent } from './games/squarz/squarz.component';
 
-import { TablutComponent } from './games/tafl/tablut/tablut.component';
-import { TeekoComponent } from './games/teeko/teeko.component';
-import { TrexoComponent } from './games/trexo/trexo.component';
-import { TrexoHalfPieceComponent } from './games/trexo/trexo-half-piece.component';
-import { TrigoComponent } from './games/gos/trigo/trigo.component';
 
-import { YinshComponent } from './games/yinsh/yinsh.component';
 
-import { environment } from 'src/environments/environment';
 
-import { VerifiedAccountGuard } from './guard/verified-account.guard';
-import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified.guard';
-import { NotConnectedGuard } from './guard/not-connected.guard';
 
-import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
-import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
 
-import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
-import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
-import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { LocaleUtils } from './utils/LocaleUtils';
-import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
-import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
-import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
-import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 
 registerLocaleData(localeFr);
 

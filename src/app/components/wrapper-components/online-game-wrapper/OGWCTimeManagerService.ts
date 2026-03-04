@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { Player } from 'src/app/jscaip/Player';
+import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { GameEventMove, GameEventAction, Game } from '../../../domain/Game';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { Player } from 'src/app/jscaip/Player';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 /**
  * The time manager manages timers of each player.

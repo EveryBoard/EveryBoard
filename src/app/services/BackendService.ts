@@ -1,8 +1,10 @@
-import { ConnectedUserService } from './ConnectedUserService';
-import { environment } from 'src/environments/environment';
-import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
+
+import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
+import { ConnectedUserService } from './ConnectedUserService';
 import { MessageDisplayer } from './MessageDisplayer';
 
 export class BackendMessage {

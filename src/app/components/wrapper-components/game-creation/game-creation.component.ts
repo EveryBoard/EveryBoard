@@ -1,25 +1,25 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntil } from 'rxjs/operators';
 import { Subscription, Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GameState } from 'src/app/jscaip/state/GameState';
+import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { Debug } from 'src/app/utils/Debug';
+import { Localized } from 'src/app/utils/LocaleUtils';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
-import { Debug } from 'src/app/utils/Debug';
-import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
-import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
 export class GameCreationComponentMessages {
 

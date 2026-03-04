@@ -1,18 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { MGPFallible, MGPValidation } from '@everyboard/lib';
-
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
+import { GameService } from 'src/app/services/GameService';
 import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { MGPFallible, MGPValidation } from '@everyboard/lib';
+
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { NotFoundComponent } from '../not-found/not-found.component';
-import { OnlineGameCreationComponent } from './online-game-creation.component';
 import { WelcomeComponent } from '../welcome/welcome.component';
-import { GameService } from 'src/app/services/GameService';
+
+import { OnlineGameCreationComponent } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent for non-existing game', () => {
 

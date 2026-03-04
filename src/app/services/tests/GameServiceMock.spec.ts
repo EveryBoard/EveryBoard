@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
+import { Game, GameEvent } from 'src/app/domain/Game';
 
 import { JSONValue, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { AbstractGameService } from '../GameService';
-import { Game, GameEvent } from 'src/app/domain/Game';
 
 @Injectable({ providedIn: 'root' })
 export class GameServiceMock extends AbstractGameService {

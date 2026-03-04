@@ -1,4 +1,5 @@
 import { JSONValue } from '@everyboard/lib';
+
 import { MinimalUser } from './MinimalUser';
 
 export type Game = {

@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { ChatComponent } from './chat.component';
-import { AbstractChatService, ChatService } from 'src/app/services/ChatService';
 import { DebugElement } from '@angular/core';
-
-import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { UserDAO } from 'src/app/dao/UserDAO';
 import { Message } from 'src/app/domain/Message';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { AbstractChatService, ChatService } from 'src/app/services/ChatService';
 import { ChatServiceMock } from 'src/app/services/tests/ChatServiceMock.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { ChatComponent } from './chat.component';
 
 describe('ChatComponent', () => {
 

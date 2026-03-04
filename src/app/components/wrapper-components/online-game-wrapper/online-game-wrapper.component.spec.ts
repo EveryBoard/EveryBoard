@@ -1,27 +1,29 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { UserDAO } from 'src/app/dao/UserDAO';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { GameMocks } from 'src/app/domain/PartMocks.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { P4Component } from 'src/app/games/p4/p4.component';
+import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { AbstractGameService, GameService } from 'src/app/services/GameService';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
+
 import { MGPOptional } from '@everyboard/lib';
 
-import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { P4Component } from 'src/app/games/p4/p4.component';
-import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameWrapperMessages } from '../GameWrapper';
-import { AbstractGameService, GameService } from 'src/app/services/GameService';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
+
+import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 describe('OnlineGameWrapper for non-existing game', () => {
 

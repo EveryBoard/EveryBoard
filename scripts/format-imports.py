@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 import os
 import re
 from pathlib import Path
@@ -16,8 +17,14 @@ from pathlib import Path
 # Configuration
 # =========================
 
+# The "internal" libraries of the project
 PROJECT_LIBS = [
     "@everyboard/lib",
+]
+
+# The files that should not be touched
+EXCLUDED_PATHS = [
+    Path("src/test.ts") # shoul not be touched for preserving test executability
 ]
 
 # =========================
@@ -61,6 +68,7 @@ def map_internal_import(file_path: str, import_line: str) -> str:
     if not rel.startswith("."):
         rel = "./" + rel
     return rel
+
 # =========================
 # Core logic
 # =========================
@@ -105,11 +113,11 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
         elif is_project_lib_import(path):
             everyboard_libraries_imports.append(import_line)
         elif is_internal_parent_import(path):
-            mapped_internal_import = map_internal_import(file_path.as_uri(), path)
+            mapped_internal_import = map_internal_import(file_path, path)
             new_internal_parent_import_line = import_line.replace(path, mapped_internal_import)
             internal_parent_imports.append(new_internal_parent_import_line)
         elif is_internal_parent_sibling_import(path):
-            mapped_internal_import = map_internal_import(file_path.as_uri(), path)
+            mapped_internal_import = map_internal_import(file_path, path)
             new_internal_sibling_import_line = import_line.replace(path, mapped_internal_import)
             internal_sibling_imports.append(new_internal_sibling_import_line)
 
@@ -177,11 +185,13 @@ def run(root_dir: str, is_dry_run: bool, max_files: int):
             if not file.endswith(".ts"):
                 continue
 
-            if modified >= max_files:
+            if max_files > 0 and modified >= max_files:
                 print(f"Finished with {modified} modified files (max reached)")
                 return
 
             file_path = Path(root) / file
+            if file_path in EXCLUDED_PATHS:
+                continue
             if process_file(file_path, is_dry_run):
                 modified += 1
 
@@ -191,10 +201,11 @@ if __name__ == "__main__":
     import sys
 
     if len(sys.argv) != 4:
-        print("Usage: python format_imports.py <dossier> <is-dry-run> <max-files>")
-        sys.exit(1)
-    if int(sys.argv[3]) < 0:
-        print("max-files must be a non-negative integer, got:", sys.argv[3])
+        print(f"Usage: {sys.argv[0]} <path> <is-dry-run> <max-files>")
+        print("  <path> is the path where to recursively adapt imports (in all .ts files)")
+        print("  <is-dry-run> is true to do a dry run, anything else otherwise")
+        print("  <max-files> is a positive integer to only change this number of files, or a negative for unlimited changes")
+        print(f"  the usual way to run it is: {sys.argv[0]} src/ false -1")
         sys.exit(1)
 
     run(sys.argv[1],

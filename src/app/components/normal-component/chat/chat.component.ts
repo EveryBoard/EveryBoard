@@ -1,11 +1,11 @@
-import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy } from '@angular/core';
-import { Subscription } from 'rxjs';
-import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
-
-import { ChatService } from '../../../services/ChatService';
-import { Message } from '../../../domain/Message';
-import { Debug } from 'src/app/utils/Debug';
 import { formatDate } from '@angular/common';
+import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy } from '@angular/core';
+import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+import { Subscription } from 'rxjs';
+import { Debug } from 'src/app/utils/Debug';
+
+import { Message } from '../../../domain/Message';
+import { ChatService } from '../../../services/ChatService';
 
 @Component({
     selector: 'app-chat',

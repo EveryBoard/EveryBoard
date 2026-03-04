@@ -14,6 +14,9 @@ tidy:
 run: build
 	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' go run cmd/backend/main.go
 
+version:
+	@go run cmd/version/main.go
+
 run-postgres: build
 	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' \
 		DATABASE_TYPE=postgres DATABASE_DSN="postgresql://$$DB_USERNAME:$$DB_PASSWORD@$$DB_HOST:5432/$$DB_NAME?sslmode=disable" \

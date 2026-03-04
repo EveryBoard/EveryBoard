@@ -1,24 +1,25 @@
 import { TestBed, tick } from '@angular/core/testing';
+import { ConfigRoom } from 'src/app/domain/ConfigRoom';
+import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { GameMocks } from 'src/app/domain/PartMocks.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
+import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
+import { AbstractGameService, GameService } from 'src/app/services/GameService';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
+
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { AbstractGameService, GameService } from 'src/app/services/GameService';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
+import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;

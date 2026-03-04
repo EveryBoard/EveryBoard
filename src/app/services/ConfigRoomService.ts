@@ -3,8 +3,9 @@ import { Subscription } from 'rxjs';
 
 import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
-import { BackendService, BackendMessage } from './BackendService';
 import { Debug } from '../utils/Debug';
+
+import { BackendService, BackendMessage } from './BackendService';
 
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,

@@ -1,18 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { Subscription } from 'rxjs';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { CurrentGame } from 'src/app/domain/User';
-import { CurrentGameService, GameActionFailure } from '../CurrentGameService';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { AuthUser, ConnectedUserService } from '../ConnectedUserService';
+import { Subscription } from 'rxjs';
 import { UserDAO } from 'src/app/dao/UserDAO';
-import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
+import { CurrentGame } from 'src/app/domain/User';
 import { UserMocks } from 'src/app/domain/UserMocks.spec';
 import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
-import { BackendServiceMock } from './BackendServiceMock.spec';
+
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { AbstractBackendService, BackendService } from '../BackendService';
+import { AuthUser, ConnectedUserService } from '../ConnectedUserService';
+import { CurrentGameService, GameActionFailure } from '../CurrentGameService';
+
+import { BackendServiceMock } from './BackendServiceMock.spec';
+import { ConnectedUserServiceMock } from './ConnectedUserService.spec';
 
 describe('CurrentGameService', () => {
 

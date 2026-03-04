@@ -1,55 +1,58 @@
 /* eslint-disable max-lines-per-function */
+import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router, RouterModule } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameState } from '../../jscaip/state/GameState';
-import { Move } from '../../jscaip/Move';
-import { AppModule } from '../../app.module';
-import { UserDAO } from '../../dao/UserDAO';
-import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
-import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
-import { OnlineGameWrapperComponent }
-    from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
-import { LocalGameWrapperComponent }
-    from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { findMatchingRoute } from 'src/app/app.module.spec';
-import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
-import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router, RouterModule } from '@angular/router';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Player } from 'src/app/jscaip/Player';
-import { ConfigDescriptionType, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { TestVars } from 'src/TestVars.spec';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { SuperRules } from 'src/app/jscaip/Rules';
+import { findMatchingRoute } from 'src/app/app.module.spec';
+import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
+import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
 import { RulesConfigurationComponent } from 'src/app/components/wrapper-components/rules-configuration/rules-configuration.component';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { GameService } from 'src/app/services/GameService';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { ChatService } from 'src/app/services/ChatService';
-import { ChatServiceMock } from 'src/app/services/tests/ChatServiceMock.spec';
-import { ActiveConfigRoomsServiceMock } from 'src/app/services/tests/ActiveConfigRoomServiceMock.spec';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Player } from 'src/app/jscaip/Player';
+import { SuperRules } from 'src/app/jscaip/Rules';
+import { ConfigDescriptionType, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
+import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
 import { ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
 import { BackendService } from 'src/app/services/BackendService';
+import { ChatService } from 'src/app/services/ChatService';
+import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
+import { CurrentGameService } from 'src/app/services/CurrentGameService';
+import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
+import { GameService } from 'src/app/services/GameService';
+import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { ActiveConfigRoomsServiceMock } from 'src/app/services/tests/ActiveConfigRoomServiceMock.spec';
 import { BackendServiceMock } from 'src/app/services/tests/BackendServiceMock.spec';
+import { ChatServiceMock } from 'src/app/services/tests/ChatServiceMock.spec';
+import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
+import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+
+import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { AppModule } from '../../app.module';
+import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
+import { UserDAO } from '../../dao/UserDAO';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
+import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
+import { Move } from '../../jscaip/Move';
+import { GameState } from '../../jscaip/state/GameState';
+import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
+
+import { OnlineGameWrapperComponent }
+    from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 @Component({})
 export class BlankComponent {}

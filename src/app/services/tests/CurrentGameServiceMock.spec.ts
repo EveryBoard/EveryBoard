@@ -1,8 +1,8 @@
 import { TestBed } from '@angular/core/testing';
+import { CurrentGame } from 'src/app/domain/User';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { CurrentGame } from 'src/app/domain/User';
 import { AbstractCurrentGameService, CurrentGameService } from '../CurrentGameService';
 
 export class CurrentGameServiceMock extends AbstractCurrentGameService {

@@ -1,29 +1,29 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { Action, Game, GameResult, RequestType } from 'src/app/domain/Game';
+import { MinimalUser } from 'src/app/domain/MinimalUser';
+import { GameMocks } from 'src/app/domain/PartMocks.spec';
+import { User } from 'src/app/domain/User';
+import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
+import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
+import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
+import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { AuthUser } from 'src/app/services/ConnectedUserService';
+import { AbstractGameService, GameService } from 'src/app/services/GameService';
+import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
+import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Action, Game, GameResult, RequestType } from 'src/app/domain/Game';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { User } from 'src/app/domain/User';
-import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
-import { GameWrapperMessages } from '../GameWrapper';
-import { AbstractGameService, GameService } from 'src/app/services/GameService';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PreparationOptions, PreparationResult, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
+import { GameWrapperMessages } from '../GameWrapper';
 
+import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
+import { PreparationOptions, PreparationResult, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 

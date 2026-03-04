@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { UserMocks } from './UserMocks.spec';
 import { Game, GameResult } from './Game';
+import { UserMocks } from './UserMocks.spec';
 
 export class GameMocks {
 

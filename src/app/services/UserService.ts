@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
+
+import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { UserDAO } from '../dao/UserDAO';
 import { User } from '../domain/User';
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 
 /**
   * The aim of this service is to:

@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+import { Debug } from 'src/app/utils/Debug';
+import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirestoreCondition, FirestoreDocument, FirestoreJSONObject, FirestoreJSONValue, IFirestoreDAO } from '../FirestoreDAO';
-import { Debug } from 'src/app/utils/Debug';
-import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 

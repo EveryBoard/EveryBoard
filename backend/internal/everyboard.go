@@ -17,6 +17,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const Version = "1.0.0"
+
 type Configuration struct {
 	Firebase  auth.FirebaseLike
 	IDEncoder model.IDEncoder
@@ -156,6 +158,10 @@ func cors(origin string, next http.Handler) http.Handler {
 	})
 }
 
+var showVersion = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	w.Write([]byte(Version))
+})
+
 func Prepare(config Configuration) (*http.Server, error) {
 	auth.SetFirebaseClient(config.Firebase)
 	err := auth.InitFirebase()
@@ -183,6 +189,7 @@ func Prepare(config Configuration) (*http.Server, error) {
 	}
 	mux := http.NewServeMux()
 	mux.Handle("/ws", cors(config.Origin, config))
+	mux.Handle("/version", showVersion)
 	return &http.Server{
 		Addr:    config.ListenAddr,
 		Handler: mux,
