@@ -9,6 +9,7 @@ import * as Firebase from '@firebase/app';
 import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { environment } from 'src/environments/environment';
 
 import { AppComponent } from './app.component';
@@ -20,22 +21,27 @@ import { ChatComponent } from './components/normal-component/chat/chat.component
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
 import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
+import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TimerComponent } from './components/normal-component/timer/timer.component';
+import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
+import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
@@ -100,42 +106,6 @@ import { GameService } from './services/GameService';
 import { ThemeService } from './services/ThemeService';
 import { UserService } from './services/UserService';
 import { LocaleUtils } from './utils/LocaleUtils';
-
-import { OnlineGameWrapperComponent }
-    from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { TutorialGameWrapperComponent }
-    from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { LocalGameCreationComponent }
-    from './components/normal-component/local-game-creation/local-game-creation.component';
-import { OnlineGameSelectionComponent }
-    from './components/normal-component/online-game-selection/online-game-selection.component';
-import { TutorialGameCreationComponent }
-    from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 registerLocaleData(localeFr);
 

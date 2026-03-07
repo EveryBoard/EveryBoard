@@ -135,7 +135,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public async delete(id: string): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            const removed: FirestoreDocument<T> = optionalOS.get().subject.value.get();
             optionalOS.get().subject.next(MGPOptional.empty());
             this.getStaticDB().delete(id);
         } else {

@@ -69,6 +69,8 @@ export class OGWCRequestManagerService {
     public onReceivedRequest(request: GameEventRequest): void {
         Utils.assert(this.requestAwaitingReply.isAbsent(), 'Should not receive two requests in a row!');
         this.requestAwaitingReply = MGPOptional.of(request);
+        this.forbiddenRequests = new Set();
+        this.lastDeniedRequest = MGPOptional.empty();
     }
     /**
      * Called when a reply is received.

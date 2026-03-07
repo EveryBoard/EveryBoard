@@ -192,10 +192,10 @@ export class BackendService extends AbstractBackendService {
     }
 
     protected override async subscribeTo(subscription: string, gameId?: string): Promise<Subscription> {
-        if (gameId !== undefined) {
-            await this.send([subscription, { gameId }]);
-        } else {
+        if (gameId === undefined) {
             await this.send([subscription]);
+        } else {
+            await this.send([subscription, { gameId }]);
         }
         return new Subscription(async() => this.send(['Unsubscribe']));
     }
