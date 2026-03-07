@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRouteSnapshot, provideRouter, Router, RouterModule } from '@angular/router';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { ConnectedUserService } from '../../services/ConnectedUserService';
+import { CurrentGameService } from '../../services/CurrentGameService';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
+import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
+import { BlankComponent } from '../../utils/tests/TestUtils.spec';
 import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
 
 describe('ExclusiveOnlineGameGuard', () => {

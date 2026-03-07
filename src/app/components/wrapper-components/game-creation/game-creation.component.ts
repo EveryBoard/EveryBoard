@@ -3,19 +3,19 @@ import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { AuthUser, ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Debug } from 'src/app/utils/Debug';
-import { Localized } from 'src/app/utils/LocaleUtils';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
+import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
+import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';

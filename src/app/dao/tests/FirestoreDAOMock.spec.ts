@@ -2,11 +2,11 @@
 import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { Debug } from 'src/app/utils/Debug';
-import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
+import { Debug } from '../../utils/Debug';
+import { ObservableSubject } from '../../utils/ObservableSubject';
 import { FirestoreCondition, FirestoreDocument, FirestoreJSONObject, FirestoreJSONValue, IFirestoreDAO } from '../FirestoreDAO';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;

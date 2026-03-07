@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { Player } from 'src/app/jscaip/Player';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { TestUtils } from '@everyboard/lib';
+
+import { Player } from '../../../jscaip/Player';
+import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
 import { TimerComponent } from './timer.component';
 

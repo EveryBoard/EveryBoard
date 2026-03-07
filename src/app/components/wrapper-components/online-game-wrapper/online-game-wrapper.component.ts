@@ -2,23 +2,23 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { ActivatedRoute, Router } from '@angular/router';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { GameService } from 'src/app/services/GameService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Debug } from 'src/app/utils/Debug';
-import { Localized } from 'src/app/utils/LocaleUtils';
 
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Game';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
+import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { GameService } from '../../../services/GameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
+import { Localized } from '../../../utils/LocaleUtils';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';

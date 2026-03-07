@@ -2,17 +2,17 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from '../../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
+import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomServiceMock.spec';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { WelcomeComponent } from '../../normal-component/welcome/welcome.component';

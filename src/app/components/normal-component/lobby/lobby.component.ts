@@ -1,16 +1,16 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
-import { ConfigRoom, Status } from 'src/app/domain/ConfigRoom';
-import { CurrentGame } from 'src/app/domain/User';
-import { ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
-import { BackendMessage, BackendService } from 'src/app/services/BackendService';
-import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Debug } from 'src/app/utils/Debug';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ConfigRoom, Status } from '../../../domain/ConfigRoom';
+import { CurrentGame } from '../../../domain/User';
+import { ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
+import { BackendMessage, BackendService } from '../../../services/BackendService';
+import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 type Tab = 'games' | 'create' | 'chat';

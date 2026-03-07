@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Injectable } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
 
 type Foo = {

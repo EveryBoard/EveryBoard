@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
-import { Game, GameEvent } from 'src/app/domain/Game';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { Player } from 'src/app/jscaip/Player';
 
 import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
 
+import { Game, GameEvent } from '../../domain/Game';
+import { GameMocks } from '../../domain/PartMocks.spec';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { Player } from '../../jscaip/Player';
 import { AbstractBackendService, BackendMessage, BackendService } from '../BackendService';
 import { GameService } from '../GameService';
 

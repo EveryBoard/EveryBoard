@@ -2,12 +2,12 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { CurrentGame } from 'src/app/domain/User';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { CurrentGame } from '../../../domain/User';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({

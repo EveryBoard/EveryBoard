@@ -4,12 +4,12 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
 import { ReplaySubject, Subscription } from 'rxjs';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { UserDAO } from '../../dao/UserDAO';
+import { MinimalUser } from '../../domain/MinimalUser';
+import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { Auth, ConnectedUserService, AuthUser } from '../ConnectedUserService';
 import { UserService } from '../UserService';
 

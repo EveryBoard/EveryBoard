@@ -9,8 +9,8 @@ import * as Firebase from '@firebase/app';
 import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { environment } from 'src/environments/environment';
+
+import { environment } from '../environments/environment';
 
 import { AppComponent } from './app.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
@@ -39,6 +39,7 @@ import { WelcomeComponent } from './components/normal-component/welcome/welcome.
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
 import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';

@@ -2,14 +2,14 @@
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { UserDAOMock } from 'src/app/dao/tests/UserDAOMock.spec';
-import { CurrentGame } from 'src/app/domain/User';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { UserDAO } from '../../dao/UserDAO';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
+import { CurrentGame } from '../../domain/User';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { prepareUnsubscribeCheck } from '../../utils/tests/TestUtils.spec';
 import { AbstractBackendService, BackendService } from '../BackendService';
 import { AuthUser, ConnectedUserService } from '../ConnectedUserService';
 import { CurrentGameService, GameActionFailure } from '../CurrentGameService';

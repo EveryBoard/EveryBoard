@@ -1,7 +1,6 @@
-import { ObservableSubject } from 'src/app/utils/ObservableSubject';
-
 import { JSONValue, MGPMap, MGPOptional } from '@everyboard/lib';
 
+import { ObservableSubject } from '../../utils/ObservableSubject';
 import { ErrorDocument, MGPError } from '../ErrorDAO';
 
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';

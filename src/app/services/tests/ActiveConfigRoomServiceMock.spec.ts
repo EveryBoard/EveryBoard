@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
 
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
+import { ConfigRoom } from '../../domain/ConfigRoom';
 import { AbstractActiveConfigRoomsService } from '../ActiveConfigRoomsService';
 
 @Injectable({ providedIn: 'root' })

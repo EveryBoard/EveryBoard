@@ -2,10 +2,10 @@ import { formatDate } from '@angular/common';
 import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { Debug } from 'src/app/utils/Debug';
 
 import { Message } from '../../../domain/Message';
 import { ChatService } from '../../../services/ChatService';
+import { Debug } from '../../../utils/Debug';
 
 @Component({
     selector: 'app-chat',

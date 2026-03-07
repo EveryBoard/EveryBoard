@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { AwaleComponent } from 'src/app/games/mancala/awale/awale.component';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { AwaleComponent } from '../../../games/mancala/awale/awale.component';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';

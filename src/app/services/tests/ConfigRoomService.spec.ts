@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
-import { ConfigProposal, ConfigRoom, FirstPlayer, GameType } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { ConfigProposal, ConfigRoom, FirstPlayer, GameType } from '../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
+import { MinimalUser } from '../../domain/MinimalUser';
+import { UserMocks } from '../../domain/UserMocks.spec';
 import { AbstractBackendService, BackendService } from '../BackendService';
 import { ConfigRoomService } from '../ConfigRoomService';
 

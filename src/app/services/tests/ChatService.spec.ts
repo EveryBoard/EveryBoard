@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
-import { Message } from 'src/app/domain/Message';
 
+import { Message } from '../../domain/Message';
 import { AbstractBackendService, BackendService } from '../BackendService';
 import { ChatService } from '../ChatService';
 

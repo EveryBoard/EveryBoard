@@ -2,23 +2,23 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { Action, Game, GameResult, RequestType } from 'src/app/domain/Game';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
-import { User } from 'src/app/domain/User';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { AuthUser } from 'src/app/services/ConnectedUserService';
-import { AbstractGameService, GameService } from 'src/app/services/GameService';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { ComponentTestUtils, expectValidRouting } from 'src/app/utils/tests/TestUtils.spec';
 
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { GameMocks } from '../../../domain/PartMocks.spec';
+import { User } from '../../../domain/User';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { QuartoMove } from '../../../games/quarto/QuartoMove';
+import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
+import { QuartoComponent } from '../../../games/quarto/quarto.component';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { AuthUser } from '../../../services/ConnectedUserService';
+import { AbstractGameService, GameService } from '../../../services/GameService';
+import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
+import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
 import { NextGameLoadingComponent } from '../../normal-component/next-game-loading/next-game-loading.component';
 import { GameWrapperMessages } from '../GameWrapper';
 

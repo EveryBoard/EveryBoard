@@ -2,10 +2,10 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { JSONValue } from 'lib/dist';
 import { Subscription } from 'rxjs';
-import { environment } from 'src/environments/environment';
 
 import { MGPFallible } from '@everyboard/lib';
 
+import { environment } from '../../../environments/environment';
 import { BackendMessage, BackendService } from '../BackendService';
 import { ConnectedUserService } from '../ConnectedUserService';
 import { MessageDisplayer } from '../MessageDisplayer';

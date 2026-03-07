@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
-import { GameService } from 'src/app/services/GameService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
+import { GameService } from '../../../services/GameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { GameInfo } from '../pick-game/pick-game.component';
 

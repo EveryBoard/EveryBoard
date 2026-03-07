@@ -2,23 +2,23 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { UserDAO } from 'src/app/dao/UserDAO';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { GameMocks } from 'src/app/domain/PartMocks.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { P4Component } from 'src/app/games/p4/p4.component';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { AbstractConfigRoomService, ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { AbstractGameService, GameService } from 'src/app/services/GameService';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { UserDAO } from '../../../dao/UserDAO';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { GameMocks } from '../../../domain/PartMocks.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { P4Component } from '../../../games/p4/p4.component';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
+import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { AbstractGameService, GameService } from '../../../services/GameService';
+import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomServiceMock.spec';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
+import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameWrapperMessages } from '../GameWrapper';

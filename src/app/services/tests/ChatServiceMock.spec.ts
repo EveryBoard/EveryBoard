@@ -1,8 +1,8 @@
 import { Subscription } from 'rxjs';
-import { Message } from 'src/app/domain/Message';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { Message } from '../../domain/Message';
 import { AbstractChatService } from '../ChatService';
 
 export class ChatServiceMock extends AbstractChatService {

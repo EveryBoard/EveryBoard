@@ -37,24 +37,25 @@ def is_external_import(path: str) -> bool:
     """Returns true if the import is an external library (not relative, not from our project)"""
     return not path.startswith(".") and not any(
         path.startswith(lib) for lib in PROJECT_LIBS
-    )
+    ) and not path.startswith("src/")
 
 def is_project_lib_import(path: str) -> bool:
     """Returns true if the import is from our project, but not relative (e.g. @everyboard/lib)"""
     return any(path.startswith(lib) for lib in PROJECT_LIBS)
 
-def is_internal_parent_import(path: str) -> bool:
-    """Returns true if the import is relative (starts with "..")"""
-    return path.startswith("..")
+def is_internal_parent_import(path: Path) -> bool:
+    """Returns true if the import is relative and in a parent directory (starts with "..")"""
+    return len(path.parts) > 0 and path.parts[0] == ".."
 
-def is_internal_parent_sibling_import(path: str) -> bool:
-    """Returns true if the import is relative (starts with "./")"""
-    return path.startswith("./")
+def is_internal_parent_sibling_import(path: Path) -> bool:
+    """Returns true if the import is relative and in the current directory (starts with "./")"""
+    return not path.is_absolute() and (not path.parts or path.parts[0] != "..")
 
 def count_parent_refs(path: str) -> int:
     return path.count("../")
 
-def map_internal_import(file_path: str, import_line: str) -> str:
+def map_internal_import(file_path: Path, import_line: str) -> str:
+    print("map", file_path, import_line)
     current_dir = os.path.dirname(file_path)
     import_line = import_line.replace(os.sep, "/")
     if import_line.startswith("."):
@@ -69,11 +70,24 @@ def map_internal_import(file_path: str, import_line: str) -> str:
         rel = "./" + rel
     return rel
 
+def to_relative(target: Path, from_file: Path) -> Path:
+    """Change a possibly not-relative target to a relative one. For example, to_relative(Path('src/app/Foo.ts'), Path('src/app/Bar.ts')) returns './Bar.ts'"""
+    if not target.is_absolute() and not str(target).startswith("src/"):
+        return target
+
+    rel = Path(os.path.relpath(target, from_file.parent))
+
+    if not str(rel).startswith("."):
+        rel = Path("./") / rel
+
+    return rel
+
 # =========================
 # Core logic
 # =========================
 
 def process_file(file_path: Path, is_dry_run: bool) -> bool:
+    print(file_path)
     original: str = file_path.read_text(encoding="utf-8")
     lines: list[str] = original.splitlines()
     eslint_disable_header = None
@@ -112,30 +126,39 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
             external_imports.append(import_line)
         elif is_project_lib_import(path):
             everyboard_libraries_imports.append(import_line)
-        elif is_internal_parent_import(path):
-            mapped_internal_import = map_internal_import(file_path, path)
-            new_internal_parent_import_line = import_line.replace(path, mapped_internal_import)
-            internal_parent_imports.append(new_internal_parent_import_line)
-        elif is_internal_parent_sibling_import(path):
-            mapped_internal_import = map_internal_import(file_path, path)
-            new_internal_sibling_import_line = import_line.replace(path, mapped_internal_import)
-            internal_sibling_imports.append(new_internal_sibling_import_line)
+        else:
+            # It is an internal path, normalize it first
+            rel = to_relative(Path(path), file_path)
+            print(path, "becomes", rel)
+            if is_internal_parent_import(rel):
+                mapped_internal_import = map_internal_import(file_path.resolve(), str(rel))
+                new_internal_parent_import_line = import_line.replace(path, mapped_internal_import)
+                internal_parent_imports.append(new_internal_parent_import_line)
+            elif is_internal_parent_sibling_import(rel):
+                mapped_internal_import = map_internal_import(file_path.resolve(), "./" + str(rel))
+                new_internal_sibling_import_line = import_line.replace(path, mapped_internal_import)
+                internal_sibling_imports.append(new_internal_sibling_import_line)
+            else:
+                print(f"ERROR: unexpected path {path} from file {file_path}")
+                sys.exit(1)
+
 
     external_imports.sort(
-        # ortographical order of import path (not imported elements)
+        # alphabetical order of import path (not imported elements)
         key=lambda line: IMPORT_REGEXP.match(line.strip()).group(1)
     )
+    print(internal_parent_imports)
     internal_parent_imports.sort(
         key = lambda line: (
             # proximity to the file (number of "../" in the path, less is closer)
             -count_parent_refs(IMPORT_REGEXP.match(line.strip()).group(1)),
-            # ortographical order of import path (not imported elements)
+            # alphabetical order of import path (not imported elements)
             IMPORT_REGEXP.match(line.strip()).group(1),
         )
     )
     internal_sibling_imports.sort(
         key = lambda line: (
-            # ortographical order of import path (not imported elements)
+            # alphabetical order of import path (not imported elements)
             IMPORT_REGEXP.match(line.strip()).group(1),
         )
     )
@@ -167,8 +190,10 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
     new_content = "\n".join(new_content_parts).rstrip() + "\n"
 
     if new_content == original:
+        print("UNCHANGED")
         return False
     else:
+        print("CHANGED")
         if is_dry_run:
             print(f"[DRY-RUN] {file_path} is now:")
             print(os.linesep.join(new_imports))

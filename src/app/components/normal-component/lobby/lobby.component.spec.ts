@@ -2,21 +2,21 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomMocks } from 'src/app/domain/ConfigRoomMocks.spec';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { CurrentGameMocks } from 'src/app/domain/mocks/CurrentGameMocks.spec';
-import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from 'src/app/services/ActiveConfigRoomsService';
-import { AbstractBackendService, BackendService } from 'src/app/services/BackendService';
-import { CurrentGameService, GameActionFailure } from 'src/app/services/CurrentGameService';
-import { ActiveConfigRoomsServiceMock } from 'src/app/services/tests/ActiveConfigRoomServiceMock.spec';
-import { BackendServiceMock } from 'src/app/services/tests/BackendServiceMock.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameServiceMock.spec';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ConfigRoom } from '../../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
+import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
+import { AbstractBackendService, BackendService } from '../../../services/BackendService';
+import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
+import { ActiveConfigRoomsServiceMock } from '../../../services/tests/ActiveConfigRoomServiceMock.spec';
+import { BackendServiceMock } from '../../../services/tests/BackendServiceMock.spec';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameServiceMock.spec';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { WelcomeComponent } from '../welcome/welcome.component';
 

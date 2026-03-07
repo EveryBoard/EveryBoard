@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { Game, GameEvent } from 'src/app/domain/Game';
 
 import { JSONValue, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
+import { Game, GameEvent } from '../../domain/Game';
 import { AbstractGameService } from '../GameService';
 
 @Injectable({ providedIn: 'root' })

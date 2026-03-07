@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ConfigRoom } from 'src/app/domain/ConfigRoom';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { GameEventMove, GameEventAction, Game } from '../../../domain/Game';
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 
 /**
