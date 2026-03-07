@@ -204,7 +204,7 @@ jobs:
   deployment:
     runs-on: ubuntu-24.04
     permissions:
-      members: read
+      organization-members: read
     needs: [build-front, tests-front, tests-back, linter, images, translations]
     environment: netlify
     if: github.event_name == 'push' &&
@@ -312,7 +312,7 @@ jobs:
   deployment-netlify:
     runs-on: ubuntu-24.04
     permissions:
-      members: read
+      organization-members: read
     needs: [build-front]
     environment: netlify
     steps:
