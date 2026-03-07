@@ -400,6 +400,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         // Given a game where it is possible to pass
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+        await receiveSync();
         testUtils.expectElementToBeDisabled('#pass');
         wrapper.gameComponent.canPass = true;
         spyOn(wrapper.gameComponent, 'pass').and.resolveTo(MGPValidation.SUCCESS);
