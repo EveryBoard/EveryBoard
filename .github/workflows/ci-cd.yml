@@ -79,6 +79,10 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci  # Needed for auth tests
       - name: Build
@@ -199,6 +203,8 @@ jobs:
 
   deployment:
     runs-on: ubuntu-24.04
+    permissions:
+      members: read
     needs: [build-front, tests-front, tests-back, linter, images, translations]
     environment: netlify
     if: github.event_name == 'push' &&
@@ -234,11 +240,14 @@ jobs:
         run: cd backend && make
       - name: Check if push by an org member
         id: is_organization_member
-        uses: jamessingleton/is-organization-member@1.1.0
-        with:
-          organization: EveryBoard
-          username: ${{ github.actor }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api orgs/EveryBoard/members/${{ github.actor }} --silent 2>/dev/null; then
+            echo "result=true" >> $GITHUB_OUTPUT
+          else
+            echo "result=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy master on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
@@ -302,6 +311,8 @@ jobs:
 
   deployment-netlify:
     runs-on: ubuntu-24.04
+    permissions:
+      members: read
     needs: [build-front]
     environment: netlify
     steps:
@@ -329,11 +340,14 @@ jobs:
           sudo apt-get install -y musl-tools
       - name: Check if push by an org member
         id: is_organization_member
-        uses: jamessingleton/is-organization-member@1.1.0
-        with:
-          organization: EveryBoard
-          username: ${{ github.actor }}
-          token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if gh api orgs/EveryBoard/members/${{ github.actor }} --silent 2>/dev/null; then
+            echo "result=true" >> $GITHUB_OUTPUT
+          else
+            echo "result=false" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy feature branch if org member
         if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' }}
         run: |
