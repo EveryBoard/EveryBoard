@@ -17,6 +17,8 @@ import { findMatchingRoute } from '../../app.module.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
+import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { OnlineGameWrapperComponent } from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { RulesConfigurationComponent } from '../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
@@ -48,11 +50,6 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
-
-import { OnlineGameWrapperComponent }
-    from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent }
-    from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 @Component({})
 export class BlankComponent {}

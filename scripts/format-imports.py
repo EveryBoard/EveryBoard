@@ -55,7 +55,6 @@ def count_parent_refs(path: str) -> int:
     return path.count("../")
 
 def map_internal_import(file_path: Path, import_line: str) -> str:
-    print("map", file_path, import_line)
     current_dir = os.path.dirname(file_path)
     import_line = import_line.replace(os.sep, "/")
     if import_line.startswith("."):
@@ -87,7 +86,6 @@ def to_relative(target: Path, from_file: Path) -> Path:
 # =========================
 
 def process_file(file_path: Path, is_dry_run: bool) -> bool:
-    print(file_path)
     original: str = file_path.read_text(encoding="utf-8")
     lines: list[str] = original.splitlines()
     eslint_disable_header = None
@@ -129,7 +127,6 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
         else:
             # It is an internal path, normalize it first
             rel = to_relative(Path(path), file_path)
-            print(path, "becomes", rel)
             if is_internal_parent_import(rel):
                 mapped_internal_import = map_internal_import(file_path.resolve(), str(rel))
                 new_internal_parent_import_line = import_line.replace(path, mapped_internal_import)
@@ -147,7 +144,6 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
         # alphabetical order of import path (not imported elements)
         key=lambda line: IMPORT_REGEXP.match(line.strip()).group(1)
     )
-    print(internal_parent_imports)
     internal_parent_imports.sort(
         key = lambda line: (
             # proximity to the file (number of "../" in the path, less is closer)
@@ -190,10 +186,8 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
     new_content = "\n".join(new_content_parts).rstrip() + "\n"
 
     if new_content == original:
-        print("UNCHANGED")
         return False
     else:
-        print("CHANGED")
         if is_dry_run:
             print(f"[DRY-RUN] {file_path} is now:")
             print(os.linesep.join(new_imports))
@@ -220,7 +214,7 @@ def run(root_dir: str, is_dry_run: bool, max_files: int):
             if process_file(file_path, is_dry_run):
                 modified += 1
 
-    print(f"Finished with {modified} modified files (all files comply now)")
+    print(f"Finished with {modified} modified files")
 
 if __name__ == "__main__":
     import sys
