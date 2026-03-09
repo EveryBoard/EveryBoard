@@ -40,7 +40,7 @@ describe('ConfigRoomService', () => {
     }
 
     function addCandidate(candidate: MinimalUser): void {
-        backendService.mockReceivedMessage('CandidateJoined', { candidate });
+        backendService.mockReceivedMessage('CandidateJoined', { candidate, elo: 0 });
         tick(1);
     }
 
@@ -104,7 +104,7 @@ describe('ConfigRoomService', () => {
                 await configRoomService.join('gameId',
                                              ignore,
                                              ignore,
-                                             (candidate: MinimalUser): void => {
+                                             (candidate: MinimalUser, elo: number): void => {
                                                  candidates.push(candidate);
                                              },
                                              ignore,
@@ -126,7 +126,7 @@ describe('ConfigRoomService', () => {
                 await configRoomService.join('gameId',
                                              ignore,
                                              ignore,
-                                             (candidate: MinimalUser): void => {
+                                             (candidate: MinimalUser, elo: number): void => {
                                                  candidates.push(candidate);
                                              },
                                              (candidate: MinimalUser): void => {

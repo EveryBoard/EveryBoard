@@ -210,11 +210,24 @@ describe('GameCreationComponent', () => {
                 expectElementNotToExist('#chooseOpponent');
 
                 // When the candidate arrives
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
 
                 // Then it is possible to choose a candidate
                 expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
                 expectElementToExist('#chooseOpponent');
+            }));
+
+            it('should display the elo of the candidate', fakeAsync(async() => {
+                // Given a component that is loaded and there is no candidate
+                await awaitComponentInitialization();
+                expectElementNotToExist('#chooseOpponent');
+
+                // When the candidate with a given elo arrives
+                configRoomService.mockCandidateJoined(candidate, 42);
+
+                // Then the component displays the elo
+                const element: DebugElement = findElement('#candidate_' + candidate.name);
+                expect(element.nativeElement.textContent).toEqual(candidate.name + ' (42)');
             }));
         });
 
@@ -222,7 +235,7 @@ describe('GameCreationComponent', () => {
             it('should go back to start when ChosenOpponent leaves', fakeAsync(async() => {
                 // Given a page that has loaded, a candidate joined and has been chosen as opponent
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 expectElementToExist('#presenceOf_' + candidate.name);
                 await chooseOpponent();
                 expectElementToExist('#selected_' + candidate.name);
@@ -249,7 +262,7 @@ describe('GameCreationComponent', () => {
             it('should not display non chosen candidate anymore when they leaves', fakeAsync(async() => {
                 // Given a page that has loaded, and a candidate joined
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 expectElementToExist('#presenceOf_' + candidate.name);
 
                 // When the candidate leaves
@@ -265,7 +278,7 @@ describe('GameCreationComponent', () => {
             it('should modify config room, make proposal possible, and select opponent when choosing opponent', fakeAsync(async() => {
                 // Given a component with candidate present but not selected
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 expectElementToExist('#presenceOf_' + candidate.name);
 
                 const contextBefore: string = 'Proposing config should be impossible before there is a ChosenOpponent';
@@ -297,7 +310,7 @@ describe('GameCreationComponent', () => {
                 await clickElement('#gameTypeCustom');
                 Utils.getNonNullable(component.configFormGroup.get('moveDuration')).setValue(100);
                 Utils.getNonNullable(component.configFormGroup.get('gameDuration')).setValue(1000);
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 await chooseOpponent();
 
                 // When proposing the config
@@ -317,7 +330,7 @@ describe('GameCreationComponent', () => {
             it('should support blitz game', fakeAsync(async() => {
                 // Given a component with a chosen opponent where blitz is selected
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 await chooseOpponent();
                 await clickElement('#gameTypeBlitz');
 
@@ -338,7 +351,7 @@ describe('GameCreationComponent', () => {
             it('should change configRoom doc stored in component', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 await chooseOpponent();
 
                 // When proposing config and getting the update from the server
@@ -361,7 +374,7 @@ describe('GameCreationComponent', () => {
             it('should not emit rules config when modifying field', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 await chooseOpponent();
                 spyOn(configRoomService, 'proposeConfig');
 
@@ -375,7 +388,7 @@ describe('GameCreationComponent', () => {
             it('should emit rules config when proposing config', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 await chooseOpponent();
 
                 // When changing a rules config then proposing config
@@ -398,7 +411,7 @@ describe('GameCreationComponent', () => {
             it('should disable config proposition button when rules config is invalid', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 await awaitComponentInitialization();
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
                 await chooseOpponent();
 
                 // When changing a rules config to something illegal
@@ -487,7 +500,7 @@ describe('GameCreationComponent', () => {
                 await clickElement('#gameTypeBlitz');
 
                 // When a new candidate appears
-                configRoomService.mockCandidateJoined(candidate);
+                configRoomService.mockCandidateJoined(candidate, 0);
 
                 // Then the config does not change
                 expectElementToHaveClass('#firstPlayerCreator', 'is-selected');

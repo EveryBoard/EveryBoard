@@ -21,6 +21,8 @@ import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
+type Candidate = { user: MinimalUser, elo: number }
+
 export class GameCreationComponentMessages {
 
     public static readonly GAME_DOES_NOT_EXIST_OR_UNKNOWN: Localized = () => $localize`The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.`;
@@ -45,7 +47,7 @@ type GameCreationViewInfo = {
     gameTypeName?: string,
     moveDuration?: number;
     gameDuration?: number;
-    candidates: string[];
+    candidates: { name: string, elo: number }[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] },
 }
@@ -94,7 +96,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         candidates: [],
     };
     public currentConfigRoom: ConfigRoom | null = null;
-    public candidates: MinimalUser[] = [];
+    public candidates: Candidate[] = [];
 
     // Subscription
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -152,7 +154,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             this.gameId,
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
             (): Promise<void> => this.onGameCancelled(),
-            (candidate: MinimalUser): void => this.onCandidateJoined(candidate),
+            (candidate: MinimalUser, elo: number): void => this.onCandidateJoined(candidate, elo),
             (candidate: MinimalUser): void => this.onCandidateLeft(candidate),
             (error: string): void => void this.onError(error),
         );
@@ -236,7 +238,12 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
         this.viewInfo.creator = configRoom.creator.name;
-        this.viewInfo.candidates = this.candidates.map((candidate: MinimalUser) => candidate.name);
+        this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
+            return {
+                name: c.user.name,
+                elo: c.elo,
+            };
+        });
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
         } else {
@@ -267,8 +274,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         if (opponent == null || opponent === '') {
             opponent = configRoom.chosenOpponent?.name ?? '';
         } else {
-            const chosenOpponentIsCandidate: boolean = this.candidates.some((minimalUser: MinimalUser) => {
-                return minimalUser.name === opponent;
+            const chosenOpponentIsCandidate: boolean = this.candidates.some((c: { user: MinimalUser, elo: number }) => {
+                return c.user.name === opponent;
             });
             if (chosenOpponentIsCandidate === false) {
                 opponent = ''; // chosenOpponent left
@@ -298,8 +305,9 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private getUserFromName(username: string): MinimalUser {
-        const user: MinimalUser | undefined = this.candidates.find((c: MinimalUser) => c.name === username);
-        return Utils.getNonNullable(user);
+        const candidate: Candidate | undefined = this.candidates.find((c: Candidate) =>
+            c.user.name === username);
+        return Utils.getNonNullable(candidate).user;
     }
 
     public async changeConfig(): Promise<void> {
@@ -345,13 +353,13 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         }
     }
 
-    private onCandidateJoined(candidate: MinimalUser): void {
-        this.candidates.push(candidate);
+    private onCandidateJoined(user: MinimalUser, elo: number): void {
+        this.candidates.push({ user, elo });
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
 
-    private onCandidateLeft(candidate: MinimalUser): void {
-        this.candidates = this.candidates.filter((c: MinimalUser) => c.id !== candidate.id);
+    private onCandidateLeft(user: MinimalUser): void {
+        this.candidates = this.candidates.filter((c: Candidate) => c.user.id !== user.id);
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
 

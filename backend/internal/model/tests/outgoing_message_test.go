@@ -71,8 +71,9 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.CandidateJoinedMessage{
 			Candidate: minimalUser,
+			Elo:       42.0,
 		},
-		`{"candidate":{"id":"foo","name":"foo"}}`, "CandidateJoined")
+		`{"candidate":{"id":"foo","name":"foo"},"elo":42}`, "CandidateJoined")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.CandidateLeftMessage{

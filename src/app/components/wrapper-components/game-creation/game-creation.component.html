@@ -42,14 +42,14 @@
                                             </thead>
                                             <tbody>
                                                 <tr *ngFor="let candidate of viewInfo.candidates"
-                                                    id="presenceOf_{{ candidate }}"
-                                                    [ngClass]="viewInfo.candidateClasses[candidate]"
-                                                    (click)="selectOpponent(candidate)" >
-                                                    <td [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
+                                                    id="presenceOf_{{ candidate.name }}"
+                                                    [ngClass]="viewInfo.candidateClasses[candidate.name]"
+                                                    (click)="selectOpponent(candidate.name)" >
+                                                    <td [id]="(viewInfo.chosenOpponent === candidate.name ? 'selected_' : 'candidate_') + candidate.name"
                                                         class="td"
-                                                    >{{ candidate }}</td>
+                                                    >{{ candidate.name }} ({{ candidate.elo }})</td>
                                                     <td class="td">
-                                                        <button *ngIf="viewInfo.chosenOpponent !== candidate"
+                                                        <button *ngIf="viewInfo.chosenOpponent !== candidate.name"
                                                                 class="button is-primary"
                                                                 i18n
                                                         >Pick</button>
