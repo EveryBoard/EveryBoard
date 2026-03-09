@@ -881,7 +881,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 		for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
 			log.Printf("%s is is a subscriber", subscriber)
 			expectMessage(sb.t, sb.getConnection(subscriber),
-				fmt.Sprintf(`["CandidateJoined",{"candidate":%s}]`, candidateJSON))
+				fmt.Sprintf(`["CandidateJoined",{"candidate":%s,"elo":0}]`, candidateJSON))
 		}
 	}
 
