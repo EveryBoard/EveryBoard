@@ -76,7 +76,7 @@ export class TimerComponent implements OnDestroy {
     }
 
     public resume(): void {
-        Utils.assert(this.isPaused && this.started, 'Should only resume timer that are started and paused!');
+        Utils.assert(this.isPaused && this.started, 'Should only resume timers that are started and paused!');
 
         this.startTime = Date.now() / 1000;
         const remainingTimeOnResume: number = this.remainingSeconds;
