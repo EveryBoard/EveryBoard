@@ -67,7 +67,7 @@ export class TimerComponent implements OnDestroy {
     }
 
     public start(): void {
-        // duration is in ms
+        console.log('start()');
         Utils.assert(this.isSet, 'Should not start a timer that has not been set!');
         Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName + ')');
 
@@ -76,6 +76,7 @@ export class TimerComponent implements OnDestroy {
     }
 
     public resume(): void {
+        console.log('resume()');
         Utils.assert(this.isPaused && this.started, 'Should only resume timers that are started and paused!');
 
         this.startTime = Date.now() / 1000;

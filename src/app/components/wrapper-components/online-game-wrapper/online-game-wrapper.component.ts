@@ -37,6 +37,7 @@ export class OnlineGameWrapperMessages {
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    providers: [OGWCTimeManagerService, OGWCRequestManagerService],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
