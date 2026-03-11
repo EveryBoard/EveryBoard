@@ -75,14 +75,14 @@ describe('TimerComponent', () => {
     });
     describe('resume', () => {
         it('should throw when resuming not started timer', () => {
-            const error: string = 'Should only resume timer that are started and paused!';
+            const error: string = 'Should only resume timers that are started and paused!';
             TestUtils.expectToThrowAndLog(() => component.resume(), error);
         });
         it('should throw when resuming stopped timer', () => {
             component.setDuration(1);
             component.start();
             component.stop();
-            const error: string = 'Should only resume timer that are started and paused!';
+            const error: string = 'Should only resume timers that are started and paused!';
             TestUtils.expectToThrowAndLog(() => component.resume(), error);
         });
     });

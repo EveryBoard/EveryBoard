@@ -174,8 +174,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async onGameEvent(event: GameEvent, serverTime: number): Promise<void> {
-        console.log('onGameEvent')
-        console.log(event)
         this.timeManager.beforeEvent();
         switch (event.eventType) {
             case 'Move':

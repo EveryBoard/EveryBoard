@@ -1428,6 +1428,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             for (const forbiddenButton of forbiddenButtons) {
                 testUtils.expectElementNotToExist(forbiddenButton);
             }
+
+            // Need to finish the game to stop the timers
+            await receiveEndGame();
         }));
 
         it('should display the end game status when the game is ended', fakeAsync(async() => {
@@ -1454,6 +1457,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await wrapper.reachedOutOfTime(Player.ZERO);
             // Then we should not notify the timeout
             expect(gameService.notifyTimeout).not.toHaveBeenCalled();
+            // But someone else will
+            await receiveEndGame(GameResult.TIMEOUT_OF_ZERO);
         }));
 
         it('should display when someone resigned', fakeAsync(async() => {
@@ -1483,6 +1488,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Then gameComponent.updateBoard should have been called with true, to show animation
                 expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledOnceWith(true);
                 tick(wrapper.configRoom.moveDuration * 1000);
+
+                // Need to finish the game
+                await receiveEndGame(GameResult.VICTORY_OF_ZERO);
             }));
 
         });

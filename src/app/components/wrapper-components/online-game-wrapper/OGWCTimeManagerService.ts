@@ -89,8 +89,6 @@ export class OGWCTimeManagerService {
     }
 
     public onReceivedAction(action: GameEventAction): void {
-        console.log('onReceivedAction')
-        console.log(action)
         switch (action.action) {
             case 'AddMoveTime':
                 this.addMoveTime(this.playerOfMinimalUser(action.user));
@@ -166,7 +164,6 @@ export class OGWCTimeManagerService {
 
     // Continue the current player timer after receiving events
     public afterEvent(currentPlayer: Player, currentTime: number): void {
-        console.log('synchronized: ' + this.synchronized)
         if (this.synchronized === false) {
             // We'll wait until we are synchronized to do anything
             return;
