@@ -20,9 +20,7 @@ export interface RequestInfo {
  * The request manager manages the requests and replies.
  * It keeps state about whether a current request has been sent or is waiting for a reply.
  */
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class OGWCRequestManagerService {
 
     public static requestInfos: Record<RequestType, RequestInfo> = {

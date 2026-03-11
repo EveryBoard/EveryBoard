@@ -50,6 +50,8 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
+import { OGWCTimeManagerService } from 'src/app/components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
+import { OGWCRequestManagerService } from 'src/app/components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
 
 @Component({})
 export class BlankComponent {}
@@ -673,6 +675,8 @@ export class ConfigureTestingModuleUtils {
                 { provide: ChatService, useClass: ChatServiceMock },
                 { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
                 { provide: BackendService, useClass: BackendServiceMock },
+                OGWCTimeManagerService,
+                OGWCRequestManagerService,
             ],
         }).compileComponents();
     }
