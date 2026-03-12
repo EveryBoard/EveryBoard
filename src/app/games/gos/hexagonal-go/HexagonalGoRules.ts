@@ -4,7 +4,6 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GroupDataFactory } from '../../../jscaip/BoardData';
-import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
@@ -16,8 +15,6 @@ import { GoState } from '../GoState';
 export type HexagonalGoConfig = {
 
     size: number;
-
-    // hexagonal: boolean;
 
 };
 
@@ -33,9 +30,6 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
                     7,
                     RulesConfigDescriptionLocalizable.SIZE,
                     MGPValidators.range(1, 99)),
-                // hexagonal: new BooleanConfig(
-                //     false,
-                //     () => $localize`Hexagonal`),
             },
         });
 
@@ -47,20 +41,11 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
     }
 
     public override getInitialState(optionalConfig: MGPOptional<HexagonalGoConfig>): GoState {
-
-            const X: GoPiece = GoPiece.LIGHT;
-            const O: GoPiece = GoPiece.DARK;
-            const k: GoPiece = GoPiece.DEAD_LIGHT;
-            const u: GoPiece = GoPiece.DEAD_DARK;
-            const w: GoPiece = GoPiece.LIGHT_TERRITORY;
-            const b: GoPiece = GoPiece.DARK_TERRITORY;
-            const _: GoPiece = GoPiece.EMPTY;
-            const N: GoPiece = GoPiece.UNREACHABLE;
         const config: HexagonalGoConfig = optionalConfig.get();
         const size: number = config.size;
         const boardSize: number = (size * 2) - 1;
         const maximumDiagonalIndex: number = (3 * size) - 2;
-        let board: GoPiece[][] = TableUtils.create(boardSize, boardSize, GoPiece.UNREACHABLE);
+        const board: GoPiece[][] = TableUtils.create(boardSize, boardSize, GoPiece.UNREACHABLE);
         for (let y: number = 0; y < boardSize; y++) {
             for (let x: number = 0; x < boardSize; x++) {
                 const diagonalIndex: number = x + y;
@@ -69,23 +54,7 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
                 }
             }
         }
-        board = [
-                [N, N, N, N, N, N, _, _, _, _, _, X, _],
-                [N, N, N, N, N, _, _, _, _, _, _, X, _],
-                [N, N, N, N, _, _, _, _, _, _, _, _, _],
-                [N, N, N, _, _, _, _, _, _, _, _, _, _],
-                [N, N, _, _, _, _, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, O, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _, _, _, N],
-                [_, _, _, _, _, _, _, _, _, _, _, N, N],
-                [_, _, _, _, _, _, _, _, _, _, N, N, N],
-                [_, _, _, _, _, _, _, _, _, N, N, N, N],
-                [_, _, O, O, _, _, _, _, N, N, N, N, N],
-                [_, _, _, O, _, _, _, N, N, N, N, N, N],
-        ];
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
-        // return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.COUNTING);
     }
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<HexagonalGoConfig>> {

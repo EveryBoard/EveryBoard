@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { GoNode } from '../../AbstractGoRules';
 import { GoFailure } from '../../GoFailure';
@@ -13,7 +13,7 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
 
-fdescribe('HexagonalGoRules', () => {
+describe('HexagonalGoRules', () => {
 
     let rules: HexagonalGoRules;
 
@@ -235,10 +235,20 @@ fdescribe('HexagonalGoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('initial state should be on playing phase', () => {
+            // Given initial board
+            const state: GoState = HexagonalGoRules.get().getInitialState(defaultConfig);
+
+            // When fetching its phase
+            const phase: GoPhase = state.phase;
+
+            // Then it should be playing phase
+            expect(phase).toBe(GoPhase.PLAYING);
+        });
+
         it('GoPhase.PLAYING + GoMove.PASS = GoPhase.PASSED', () => {
             // Given initial board (so, playing phase)
             const state: GoState = HexagonalGoRules.get().getInitialState(defaultConfig);
-            expect(state.phase).toBe(GoPhase.PLAYING);
 
             // When passing
             const move: GoMove = GoMove.PASS;
@@ -677,7 +687,7 @@ fdescribe('HexagonalGoRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, _, _, N, N, N, N],
                 [O, O, O, O, _, _, _, _, N, N, N, N, N],
-                [w, w, w, O, _, _, _, N, N, N, N, N, N],
+                [b, b, b, O, _, _, _, N, N, N, N, N, N],
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(3, 1), 3, MGPOptional.empty(), GoPhase.ACCEPT);
@@ -690,7 +700,7 @@ fdescribe('HexagonalGoRules', () => {
                 [N, N, N, N, N, N, _, _, _, _, _, X, _],
                 [N, N, N, N, N, _, _, _, _, _, _, X, X],
                 [N, N, N, N, _, _, _, _, _, _, _, _, _],
-                [N, N, N, _, _, _, _, _, _, _, _, _, _],
+                [N, N, N, X, _, _, _, _, _, _, _, _, _],
                 [N, N, _, _, _, _, _, _, _, _, _, _, _],
                 [N, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, O, _, _, _, _, _, _],
@@ -721,10 +731,10 @@ fdescribe('HexagonalGoRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, _, _, N, N, N, N],
                 [O, O, O, O, _, _, _, _, N, N, N, N, N],
-                [w, w, w, O, _, _, _, N, N, N, N, N, N],
+                [b, b, b, O, _, _, _, N, N, N, N, N, N],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(3, 0), 3, MGPOptional.empty(), GoPhase.ACCEPT);
+                new GoState(board, PlayerNumberMap.of(3, 0), 5, MGPOptional.empty(), GoPhase.ACCEPT);
 
             // When clicking on an empty square that could capture (even if the piece so far is still "dead")
             const move: GoMove = new GoMove(12, 1);
@@ -746,45 +756,69 @@ fdescribe('HexagonalGoRules', () => {
                 [_, _, _, O, _, _, _, N, N, N, N, N, N],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 4, MGPOptional.empty(), GoPhase.PLAYING);
+                new GoState(expectedBoard, PlayerNumberMap.of(0, 1), 6, MGPOptional.empty(), GoPhase.PLAYING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('GoPhase.ACCEPT + GoMove/markAsDead = GoPhase.COUNTING', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
-                [N, N, N, N, b, N, N, N, N],
-                [N, N, N, _, O, _, N, N, N],
-                [N, N, _, _, _, _, _, N, N],
-                [N, X, _, _, _, _, _, _, N],
-                [O, _, X, _, _, _, _, X, w],
+                [N, N, N, N, N, N, _, _, _, _, _, X, O],
+                [N, N, N, N, N, _, _, _, _, _, _, X, _],
+                [N, N, N, N, _, _, _, _, _, _, _, X, X],
+                [N, N, N, _, _, _, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [O, O, O, O, _, _, _, _, N, N, N, N, N],
+                [b, b, b, O, _, _, _, N, N, N, N, N, N],
             ];
-            const state: GoState = new GoState(board, PlayerNumberMap.of(1, 1), 1, MGPOptional.empty(), GoPhase.ACCEPT);
+            const state: GoState = new GoState(board, PlayerNumberMap.of(3, 0), 1, MGPOptional.empty(), GoPhase.ACCEPT);
 
             // When clicking on a piece to mark it as dead
-            const move: GoMove = new GoMove(0, 4);
+            const move: GoMove = new GoMove(12, 0);
 
             // Then the piece should be marked as dead and the board back to counting phase
             const expectedBoard: Table<GoPiece> = [
-                [N, N, N, N, b, N, N, N, N],
-                [N, N, N, _, O, _, N, N, N],
-                [N, N, _, _, _, _, _, N, N],
-                [N, X, _, _, _, _, _, _, N],
-                [u, w, X, _, _, _, _, X, w],
+                [N, N, N, N, N, N, _, _, _, _, _, X, u],
+                [N, N, N, N, N, _, _, _, _, _, _, X, w],
+                [N, N, N, N, _, _, _, _, _, _, _, X, X],
+                [N, N, N, _, _, _, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [O, O, O, O, _, _, _, _, N, N, N, N, N],
+                [b, b, b, O, _, _, _, N, N, N, N, N, N],
             ];
             const expectedState: GoState =
-                new GoState(expectedBoard, PlayerNumberMap.of(1, 4), 2, MGPOptional.empty(), GoPhase.COUNTING);
+                new GoState(expectedBoard, PlayerNumberMap.of(3, 3), 2, MGPOptional.empty(), GoPhase.COUNTING);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('GoPhase.ACCEPT + GoMove.ACCEPT = Game Over', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
-                [N, N, N, N, b, N, N, N, N],
-                [N, N, N, _, O, _, N, N, N],
-                [N, N, _, _, _, _, _, N, N],
-                [N, _, _, _, _, _, _, X, N],
-                [O, _, _, _, _, _, X, w, w],
+                [N, N, N, N, N, N, _, _, _, _, _, X, O],
+                [N, N, N, N, N, _, _, _, _, _, _, X, _],
+                [N, N, N, N, _, _, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [O, O, O, O, _, _, _, _, N, N, N, N, N],
+                [w, w, w, O, _, _, _, N, N, N, N, N, N],
             ];
             const state: GoState = new GoState(board, PlayerNumberMap.of(1, 2), 1, MGPOptional.empty(), GoPhase.ACCEPT);
 
@@ -806,16 +840,22 @@ fdescribe('HexagonalGoRules', () => {
         it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
-                [N, N, N, N, N, N, _, N, N, N, N, N, N],
-                [N, N, N, N, N, _, _, _, N, N, N, N, N],
-                [N, N, N, N, _, _, _, _, _, N, N, N, N],
-                [N, N, N, _, _, _, _, _, _, _, N, N, N],
-                [N, N, _, _, _, _, _, _, _, _, _, N, N],
-                [N, X, _, _, _, _, _, _, _, _, _, O, N],
-                [w, u, u, X, _, _, _, _, _, O, k, k, b],
+                [N, N, N, N, N, N, _, _, _, _, _, X, u],
+                [N, N, N, N, N, _, _, _, _, _, _, X, b],
+                [N, N, N, N, _, _, _, _, _, _, _, X, b],
+                [N, N, N, _, _, _, _, _, _, _, _, X, X],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [O, O, O, O, _, _, _, _, N, N, N, N, N],
+                [k, w, w, O, _, _, _, N, N, N, N, N, N],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(5, 5), 4, MGPOptional.empty(), GoPhase.FINISHED);
+                new GoState(board, PlayerNumberMap.of(4, 4), 4, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
             // When evaluating its value
@@ -826,63 +866,27 @@ fdescribe('HexagonalGoRules', () => {
         it('should recognize victory', () => {
             // Given a board where Player.ZERO win
             const board: Table<GoPiece> = [
-                [N, N, N, N, N, N, _, N, N, N, N, N, N],
-                [N, N, N, N, N, _, _, _, N, N, N, N, N],
-                [N, N, N, N, _, _, _, _, _, N, N, N, N],
-                [N, N, N, _, _, _, _, _, _, _, N, N, N],
-                [N, N, _, _, _, _, _, _, _, _, _, N, N],
-                [N, X, _, _, _, _, _, _, _, _, _, O, N],
-                [_, O, O, X, _, _, _, _, _, _, O, b, b],
+                [N, N, N, N, N, N, _, _, _, _, _, X, u],
+                [N, N, N, N, N, _, _, _, _, _, _, X, b],
+                [N, N, N, N, _, _, _, _, _, _, _, X, b],
+                [N, N, N, _, _, _, _, _, _, _, _, X, X],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [O, O, O, O, O, _, _, _, N, N, N, N, N],
+                [k, w, w, w, O, _, _, N, N, N, N, N, N],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(2, 0), 2, MGPOptional.empty(), GoPhase.FINISHED);
+                new GoState(board, PlayerNumberMap.of(5, 4), 2, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
             // Then it should be recognized as a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
-        });
-
-    });
-
-    describe('alternative configs', () => {
-
-        it('should make valid shape on hexagonal mode (size 1)', () => {
-            // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<HexagonalGoConfig> = MGPOptional.of({
-                hexagonal: true,
-                size: 1,
-            });
-
-            // When getting initial board
-            const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
-
-            // Then it should have a correct table (trailing N because sizes are even)
-            const expectedBoard: Table<GoPiece> = [
-                [_, _, _, N],
-                [_, _, _, N],
-            ];
-            expect(TableUtils.equals(board, expectedBoard)).toBeTrue();
-        });
-
-        it('should make valid shape on hexagonal mode (size 2)', () => {
-            // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<HexagonalGoConfig> = MGPOptional.of({
-                hexagonal: true,
-                size: 2,
-            });
-
-            // When getting initial board
-            const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
-
-            // Then it should have a correct table
-            const expectedBoard: Table<GoPiece> = [
-                [N, N, _, _, _, _, _, N],
-                [N, _, _, _, _, _, _, _],
-                [N, _, _, _, _, _, _, _],
-                [N, N, _, _, _, _, _, N],
-            ];
-            expect(TableUtils.equals(board, expectedBoard)).toBeTrue();
         });
 
     });
