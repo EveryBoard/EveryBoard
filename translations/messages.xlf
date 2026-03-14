@@ -248,6 +248,9 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
+      <trans-unit id="7977813156502087485" datatype="html">
+        <source>A version of Go on a hexagonal board!</source>
+      </trans-unit>
       <trans-unit id="7267838821174516266" datatype="html">
         <source>A hexagonal alignment game with weird &quot;diagonals&quot;!</source>
       </trans-unit>
@@ -454,6 +457,9 @@
       </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
+      </trans-unit>
+      <trans-unit id="8244967285264131156" datatype="html">
+        <source>Hexagonal Go</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1908,14 +1914,29 @@
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
       </trans-unit>
-      <trans-unit id="35620818119550087" datatype="html">
-        <source>Hexagonal</source>
-      </trans-unit>
-      <trans-unit id="5525890868343399241" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      <trans-unit id="3924059417187590333" datatype="html">
+        <source>The game of HexagonalGo is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>
+      </trans-unit>
+      <trans-unit id="4774531702496891777" datatype="html">
+        <source>Since the board is hexagonal, pieces have three freedom in the corners.</source>
+      </trans-unit>
+      <trans-unit id="7911591321429642830" datatype="html">
+        <source>Since the board is hexagonal, pieces have four freedoms on the edges.</source>
+      </trans-unit>
+      <trans-unit id="4071554112464432613" datatype="html">
+        <source>Since the board is hexagonal, pieces have six freedoms when they don&apos;t touch the edge.</source>
+      </trans-unit>
+      <trans-unit id="6501501128968003048" datatype="html">
+        <source>Since the board is hexagonal, groups of two pieces have three more freedom (making ko impossible, and probably shisho too).</source>
+      </trans-unit>
+      <trans-unit id="35620818119550087" datatype="html">
+        <source>Hexagonal</source>
+      </trans-unit>
+      <trans-unit id="8684748448570517529" datatype="html">
+        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="8074559405875826310" datatype="html">
         <source>Since the board is triangular, pieces have only one freedom in the corners.</source>

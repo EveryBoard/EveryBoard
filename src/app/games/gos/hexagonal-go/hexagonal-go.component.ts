@@ -162,16 +162,11 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     public getTerritoryHexagonalTransform(): string {
-        return this.getSVGTranslation(20, 25) + ' scale(0.6)';
+        return 'scale(0.6) ';
     }
 
-    public getKoTranslationAt(koCoord: Coord): string {
-        const koTranslationCoord: Coord = this.getKoTranslationCoordAt(koCoord);
-        return this.getSVGTranslationAt(koTranslationCoord);
-    }
-
-    private getKoTranslationCoordAt(koCoord: Coord): Coord {
-        return new Coord(0, 0);
+    public getHexaDiagonalPoints(): string {
+        return this.hexaLayout.getHexaDiagonalPoints();
     }
 
 }

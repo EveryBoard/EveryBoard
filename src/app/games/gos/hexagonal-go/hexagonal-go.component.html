@@ -14,11 +14,8 @@
         />
         <g *ngIf="coordAndContent.content.isDead()"
            id="dead-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}">
-            <line [attr.x1]="25"
-                  [attr.y1]="50"
-                  [attr.x2]="SPACE_SIZE"
-                  [attr.y2]="SPACE_SIZE"
-                  class="base no-fill captured-stroke"
+            <polygon [attr.points]="getHexaDiagonalPoints()"
+                     class="base no-fill captured-stroke"/>
             />
         </g>
         <polygon *ngIf="coordAndContent.content.isTerritory()"
@@ -28,16 +25,6 @@
                  [ngClass]="getPlayerClass(coordAndContent.content.player)"
         />
     </g>
-
-    <rect *ngIf="ko.isPresent()"
-          id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
-          [attr.transform]="getKoTranslationAt(ko.get())"
-          [attr.width]="SPACE_SIZE * 0.25"
-          [attr.height]="SPACE_SIZE * 0.25"
-          [attr.x]="SPACE_SIZE * 0.375"
-          [attr.y]="SPACE_SIZE * 0.25"
-          class="captured-stroke mid-stroke no-fill"
-    />
 
     <polygon *ngIf="last.isPresent() && getState().isOnBoard(last.get())"
              id="last-{{ last.get().x }}-{{ last.get().y }}"

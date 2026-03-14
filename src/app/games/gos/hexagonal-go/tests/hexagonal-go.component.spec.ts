@@ -92,22 +92,26 @@ describe('HexagonalGoComponent', () => {
     it('should show captures on the center', fakeAsync(async() => {
         // Given a board with a possible capture
         const board: Table<GoPiece> = [
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, X, X, _, _, _],
-            [_, _, _, X, O, X, _, _, _],
-            [_, _, _, _, X, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
+            [N, N, N, N, N, N, _, _, _, _, _, _, _],
+            [N, N, N, N, N, _, _, _, _, _, _, _, _],
+            [N, N, N, N, _, _, _, _, _, _, _, _, _],
+            [N, N, N, _, _, _, _, _, _, _, _, _, _],
+            [N, N, _, _, _, _, _, _, _, _, _, _, _],
+            [N, _, _, _, _, _, X, X, _, _, _, _, _],
+            [_, _, _, _, _, X, O, X, _, _, _, _, _],
+            [_, _, _, _, _, _, X, _, _, _, _, _, N],
+            [_, _, _, _, _, _, _, _, _, _, _, N, N],
+            [_, _, _, _, _, _, _, _, _, _, N, N, N],
+            [_, _, _, _, _, _, _, _, _, N, N, N, N],
+            [O, O, _, _, _, _, _, _, N, N, N, N, N],
+            [X, _, _, _, _, _, _, N, N, N, N, N, N],
         ];
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
-        const move: GoMove = new GoMove(3, 5);
-        await testUtils.expectMoveSuccess('#click-3-5', move);
-        testUtils.expectElementToHaveClass('#polygon-4-4', 'captured-fill');
+        const move: GoMove = new GoMove(5, 7);
+        await testUtils.expectMoveSuccess('#click-5-7', move);
+        testUtils.expectElementToHaveClass('#polygon-6-6', 'captured-fill');
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {

@@ -35,11 +35,19 @@ describe('HexagonalGoMoveGenerator', () => {
         it('should count as many moves as empty spaces in GoPhase.PLAYING turn, + PASS', () => {
             // Given a board in playing phase
             const board: Table<GoPiece> = [
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
-                [_, _, _, _, _],
+                [N, N, N, N, N, N, _, _, _, _, _, _, _],
+                [N, N, N, N, N, _, _, _, _, _, _, _, _],
+                [N, N, N, N, _, _, _, _, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, _, _, _, _, N, N, N, N],
+                [_, _, _, _, _, _, _, _, N, N, N, N, N],
+                [_, _, _, _, _, _, _, N, N, N, N, N, N],
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
@@ -48,8 +56,8 @@ describe('HexagonalGoMoveGenerator', () => {
             // When listing the moves
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
 
-            // Then it should include one move per empty space (25) + the move PASS
-            expect(moves.length).toBe(25 + 1);
+            // Then it should include one move per empty space (127) + the move PASS
+            expect(moves.length).toBe(127 + 1);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
 
