@@ -24,7 +24,7 @@ PROJECT_LIBS = [
 
 # The files that should not be touched
 EXCLUDED_PATHS = [
-    Path("src/test.ts") # shoul not be touched for preserving test executability
+    Path("src/test.ts") # should not be touched for preserving test executability
 ]
 
 # =========================
@@ -45,7 +45,7 @@ def is_project_lib_import(path: str) -> bool:
 
 def is_internal_parent_import(path: Path) -> bool:
     """Returns true if the import is relative and in a parent directory (starts with "..")"""
-    return len(path.parts) > 0 and path.parts[0] == ".."
+    return path.parts[0] == ".."
 
 def is_internal_parent_sibling_import(path: Path) -> bool:
     """Returns true if the import is relative and in the current directory (starts with "./")"""
@@ -196,17 +196,13 @@ def process_file(file_path: Path, is_dry_run: bool) -> bool:
                 f.write(new_content)
         return True
 
-def run(root_dir: str, is_dry_run: bool, max_files: int):
+def run(root_dir: str, is_dry_run: bool):
     modified = 0
 
     for root, _, files in os.walk(root_dir):
         for file in files:
             if not file.endswith(".ts"):
                 continue
-
-            if max_files > 0 and modified >= max_files:
-                print(f"Finished with {modified} modified files (max reached)")
-                return
 
             file_path = Path(root) / file
             if file_path in EXCLUDED_PATHS:
@@ -219,15 +215,11 @@ def run(root_dir: str, is_dry_run: bool, max_files: int):
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 4:
-        print(f"Usage: {sys.argv[0]} <path> <is-dry-run> <max-files>")
+    if len(sys.argv) != 3:
+        print(f"Usage: {sys.argv[0]} <path> <is-dry-run>")
         print("  <path> is the path where to recursively adapt imports (in all .ts files)")
         print("  <is-dry-run> is true to do a dry run, anything else otherwise")
-        print("  <max-files> is a positive integer to only change this number of files, or a negative for unlimited changes")
         print(f"  the usual way to run it is: {sys.argv[0]} src/ false -1")
         sys.exit(1)
 
-    run(sys.argv[1],
-        sys.argv[2].lower() == "true",
-        int(sys.argv[3])
-    )
+    run(sys.argv[1], sys.argv[2].lower() == "true")

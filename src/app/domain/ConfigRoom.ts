@@ -19,13 +19,8 @@ export type ConfigRoom = {
 };
 
 // A proposal is a subset of ConfigRoom with only the relevant fields. It is safer than a Partial<ConfigRoom>
-export type ConfigProposal = {
-    readonly gameType: GameType;
-    readonly firstPlayer: FirstPlayer;
-    readonly moveDuration: number;
-    readonly gameDuration: number;
-    readonly rulesConfig: RulesConfig;
-}
+type ConfigProposalFields = 'gameType' | 'firstPlayer' | 'moveDuration' | 'gameDuration' | 'rulesConfig';
+export type ConfigProposal = Pick<ConfigRoom, ConfigProposalFields>;
 
 export type FirstPlayer = 'Creator' | 'Random' | 'ChosenOpponent';
 

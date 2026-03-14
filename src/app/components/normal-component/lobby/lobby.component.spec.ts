@@ -182,7 +182,7 @@ describe('LobbyComponent', () => {
 
         }));
 
-        it('should forbid user to join a game when not allowed to participate', fakeAsync(async() => {
+        it('should forbid user to join a game if they are not allowed to participate', fakeAsync(async() => {
             // Given a user not allowed to participate to the game
             spyOn(currentGameService, 'canUserJoin').and.returnValue(MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING()));
             testUtils.detectChanges();

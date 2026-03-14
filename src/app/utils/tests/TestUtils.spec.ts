@@ -18,6 +18,8 @@ import { AbstractGameComponent } from '../../components/game-components/game-com
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
+import { OGWCTimeManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
 import { OnlineGameWrapperComponent } from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { RulesConfigurationComponent } from '../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { UserDAO } from '../../dao/UserDAO';
@@ -50,8 +52,6 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
-import { OGWCTimeManagerService } from 'src/app/components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
-import { OGWCRequestManagerService } from 'src/app/components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
 
 @Component({})
 export class BlankComponent {}
@@ -760,9 +760,8 @@ export function expectValidRouting(router: Router,
 : void
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
-    if (path.length === 1 && path[0] === '/') {
-        // All good, the path is / so it must finish by /
-    } else {
+    if (!(path.length === 1 && path[0] === '/')) {
+        // Unless the path is / (in which case, it must finish by /), we need to ensure the presence of /
         for (const pathPart of path) {
             expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
         }
