@@ -23,8 +23,8 @@ export class TimerComponent implements OnDestroy {
     public remainingSeconds: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandle: number | null = null; // A number representing the timer handle. Not a unit.
-    private updateHandle: number | null = null; // A number representing the timer handle. Not a unit.
+    private timeoutHandle: number | null = null; // A number representing the timer handle. Not a time unit.
+    private updateHandle: number | null = null; // A number representing the timer handle. Not a time unit.
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;
