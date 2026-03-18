@@ -52,20 +52,22 @@ export class HiveRemainingPieces implements ComparableObject {
     }
     public toListOfStacks(): HivePieceStack[] {
         const remaining: HivePieceStack[] = [];
-        this.pieces.forEach((piece: {key: HivePiece, value: number}) => {
+        for (const [piece, value] of this.pieces) {
             const pieces: HivePiece[] = [];
-            for (let i: number = 0; i < piece.value; i++) {
-                pieces.push(piece.key);
+            for (let i: number = 0; i < value; i++) {
+                pieces.push(piece);
             }
             remaining.push(new HivePieceStack(pieces));
-        });
+        }
         return remaining;
     }
     public getPlayerPieces(player: Player): HivePiece[] {
         const remaining: HivePiece[] = [];
-        this.pieces.forEach((item: {key: HivePiece, value: number}) => {
-            if (item.key.owner === player && item.value > 0) remaining.push(item.key);
-        });
+        for (const [piece, value] of this.pieces) {
+            if (piece.owner === player && value > 0) {
+                remaining.push(piece);
+            }
+        }
         return remaining;
     }
 }

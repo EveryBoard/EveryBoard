@@ -1,5 +1,4 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import localeFr from '@angular/common/locales/fr';
 import { LOCALE_ID, NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
@@ -19,7 +18,6 @@ import { HexArrowComponent } from './components/game-components/arrow-component/
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
-import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
@@ -33,15 +31,16 @@ import { PickGameComponent } from './components/normal-component/pick-game/pick-
 import { RegisterComponent } from './components/normal-component/register/register.component';
 import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
+import { TimerComponent } from './components/normal-component/timer/timer.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
-import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component'; // might lead to bug
+import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component'; // might lead to bug
+import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { PartCreationComponent } from './components/wrapper-components/part-creation/part-creation.component';
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { AbaloneComponent } from './games/abalone/abalone.component';
@@ -99,13 +98,11 @@ import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 import { AutofocusDirective } from './pipes-and-directives/autofocus.directive';
-import { FirestoreTimePipe } from './pipes-and-directives/firestore-time.pipe';
 import { HumanDurationPipe } from './pipes-and-directives/human-duration.pipe';
 import { ToggleVisibilityDirective } from './pipes-and-directives/toggle-visibility.directive';
 import { ChatService } from './services/ChatService';
 import { ConfigRoomService } from './services/ConfigRoomService';
 import { ConnectedUserService } from './services/ConnectedUserService';
-import { GameEventService } from './services/GameEventService';
 import { GameService } from './services/GameService';
 import { ThemeService } from './services/ThemeService';
 import { UserService } from './services/UserService';
@@ -123,9 +120,9 @@ export const routes: Route[] = [
     { path: 'notFound/:message', component: NotFoundComponent },
     { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
     { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
-    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
-    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
-    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [VerifiedAccountGuard, ExclusiveOnlineGameGuard] },
+    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
     { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:game/config', component: LocalGameConfigurationComponent },
     { path: 'local/:game', component: LocalGameWrapperComponent },
@@ -145,11 +142,11 @@ export const routes: Route[] = [
         LobbyComponent,
         PickGameComponent,
         ChatComponent,
-        PartCreationComponent,
+        GameCreationComponent,
         RegisterComponent,
         NotFoundComponent,
         NextGameLoadingComponent,
-        CountDownComponent,
+        TimerComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         TutorialGameWrapperComponent,
@@ -214,13 +211,11 @@ export const routes: Route[] = [
         YinshComponent,
 
         HumanDurationPipe,
-        FirestoreTimePipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
     ],
     imports: [
         BrowserModule,
-        HttpClientModule,
         RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
@@ -230,7 +225,6 @@ export const routes: Route[] = [
     providers: [
         ConnectedUserService,
         GameService,
-        GameEventService,
         ConfigRoomService,
         UserService,
         ChatService,

@@ -15,11 +15,14 @@ import textwrap
 # - avoid time.sleep when wait_for can be used instead
 # - each scenario should end with the user *not* being in any game
 
+# Set to True to enable some useful debugging stuff (not headless, more waiting, highlight element that will be clicked)
+DEBUG=False
 # Set to False to see the script happening in real time. Useful for debugging
-HEADLESS = True
+HEADLESS = not DEBUG
 # Set to True if somehow the selenium driver is acting like a mobile device (with small screen)
 MOBILE = False
 USER_RESPONSE_TIME=0.2 # A typical user cannot click faster than once every 200ms, and we may need some more time for displaying some components
+MAX_WAIT=10
 
 class PlayerDriver():
     def __init__(self):
@@ -27,8 +30,9 @@ class PlayerDriver():
         if HEADLESS:
             options.add_argument('-headless')
         self.driver = webdriver.Chrome(options=options)
-        # If the browser (fake) window is too small, selenium complains that some elements are not clickable, so make sure it's big enough
-        self.driver.set_window_size(1920, 1080)
+        if HEADLESS:
+            # If the browser (fake) window is too small, selenium complains that some elements are not clickable, so make sure it's big enough
+            self.driver.set_window_size(1920, 1080)
         # Print the window size so that we can detect from the logs if it's done correctly
         print(self.driver.get_window_size())
 
@@ -88,10 +92,10 @@ class PlayerDriver():
         self.click('#finalizeVerification')
         time.sleep(0.5) # Need to wait a bit before the verification is done, otherwise we risk getting auth/network-request-failed
 
-    def wait_for(self, selector, timeout=120):
+    def wait_for(self, selector):
         '''Wait for an element to be present on the page. Timeout is in seconds'''
         print('Waiting for "{}"'.format(selector))
-        wait = WebDriverWait(self.driver, timeout)
+        wait = WebDriverWait(self.driver, MAX_WAIT)
         return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
 
     def click(self, selector):
@@ -100,7 +104,7 @@ class PlayerDriver():
             print('Clicking button: {}'.format(selector))
             # Force a small wait to mimick a real user. This is to stabilize these tests a bit more
             time.sleep(USER_RESPONSE_TIME)
-            button = self.wait_for(selector)
+            button = WebDriverWait(self.driver, MAX_WAIT).until(EC.element_to_be_clickable((By.CSS_SELECTOR, selector)))
             button.click()
         except Exception as e:
             print('Failed when clicking on button "{}": {}'.format(selector, e))
@@ -232,14 +236,18 @@ scenarios = {
     'two_drivers': [],
 }
 
-def launch_scenarios():
+def launch_scenarios(only_scenarios=None):
     '''
     Launches all the scenarios, stop at the first one that fails.
     It is important that each scenario finishes what it started, e.g., if a part is created, it should be canceled or ended
     '''
     driver = PlayerDriver()
-    #driver.get('http://localhost:4200')
 
+    if only_scenarios != None:
+        for kind in ['simple', 'registered', 'two_drivers']:
+            scenarios[kind] = list(filter(lambda x: x.__name__ in only_scenarios, scenarios[kind]))
+
+    scenarios['simple'].reverse() # so that they are run in order of appearance
     for simple_scenario in scenarios['simple']:
        # Always go back home for a new scenario
        driver.go_to_page('http://localhost:4200')
@@ -251,6 +259,7 @@ def launch_scenarios():
 
     # Now we need a registered account
     driver.register('1-')
+    scenarios['registered'].reverse() # so that they are run in order of appearance
     for registered_scenario in scenarios['registered']:
         driver.go_to_page('http://localhost:4200')
         driver.ensure_no_errors()
@@ -262,6 +271,7 @@ def launch_scenarios():
     # Now we need another driver
     driver2 = PlayerDriver()
     driver2.register('2-')
+    scenarios['two_drivers'].reverse() # so that they are run in order of appearance
     for two_drivers_scenario in scenarios['two_drivers']:
         driver.go_to_page('http://localhost:4200')
         driver2.go_to_page('http://localhost:4200')
@@ -275,26 +285,6 @@ def launch_scenarios():
 
     driver.close()
     driver2.close()
-
-@scenario('registered')
-def can_access_lobby_after_registration(user):
-    '''
-    Role: I am a logged in user
-    Action: I try to access the lobby
-    Result: It works
-    '''
-    user.access_game_list()
-
-@scenario('registered')
-def can_logout_and_login(user):
-    '''
-    Role: I am a registered and logged in user
-    Action: I want to be able to log out and log back in
-    Result: I am logged in and I can again access the lobby
-    '''
-    user.logout()
-    user.login()
-    user.access_game_list()
 
 @scenario('simple')
 def can_play_tutorial(user):
@@ -383,6 +373,49 @@ def can_play_local_vs_ai(user):
     # Now there should be a piece in #click-1-5 (the bottom row)
     user.wait_for('#click-1-5 > circle')
 
+@scenario('registered')
+def can_access_lobby_after_registration(user):
+    '''
+    Role: I am a logged in user
+    Action: I try to access the lobby
+    Result: It works
+    '''
+    user.access_game_list()
+
+@scenario('registered')
+def can_logout_and_login(user):
+    '''
+    Role: I am a registered and logged in user
+    Action: I want to be able to log out and log back in
+    Result: I am logged in and I can again access the lobby
+    '''
+    user.logout()
+    user.login()
+    user.access_game_list()
+
+@scenario('registered')
+def reload_game_creation(user):
+    '''
+    Role: I am a registered user with a game in creation
+    Action: I reload the page
+    Result: It works
+    '''
+    # I create a game
+    user.click('#createOnlineGame')
+    user.click('#image-P4')
+    user.wait_for('#gameCreation')
+
+    # I reload the page
+    user.reload_page()
+
+    # Now I should see that the game does not exist
+    user.wait_for('.message-body')
+    error = user.get_text_of('.message-body')
+    expected_error = 'does not exist'
+    if expected_error not in error:
+        print(f'error should contain "{expected_error}", but is actually {error}')
+        raise Exception('Test failed')
+
 @scenario('two_drivers')
 def can_create_part_and_play(user1, user2):
     '''
@@ -411,28 +444,6 @@ def can_create_part_and_play(user1, user2):
     # Now player 1 has won
     user1.wait_for('#youWonIndicator')
     user2.wait_for('#youLostIndicator')
-
-@scenario('registered')
-def can_reload_part_creation(user):
-    '''
-    Role: I am a registered user with a game in creation
-    Action: I reload the page
-    Result: It works
-    '''
-    # I create a part
-    user.click('#createOnlineGame')
-    user.click('#image-P4')
-    user.wait_for('#partCreation')
-
-    # I reload the page
-    user.reload_page()
-
-    # Now I should still be on the part creation page
-    user.wait_for('#partCreation')
-
-    # Cleanup
-    user.click('#cancel')
-    time.sleep(1) # needed to make sure that the request has been well handled, otherwise we receive "failed to fetch" errors
 
 @scenario('two_drivers')
 def can_reload_game(user1, user2):
@@ -465,15 +476,15 @@ def can_perform_time_actions(user1, user2):
         minutes, seconds = t.split(':')
         return int(minutes) * 60 + int(seconds)
 
-    def check_time_increase(chrono_name):
-        remainingTimeBeforeAddition = parse_time(user1.get_text_of('{} span'.format(chrono_name)))
+    def check_time_increase(timer_name):
+        remainingTimeBeforeAddition = parse_time(user1.get_text_of('{} span'.format(timer_name)))
 
         # I add time to the opponent
-        user1.click('{} .button'.format(chrono_name))
+        user1.click('{} .button'.format(timer_name))
         time.sleep(1) # wait a bit to receive the update
 
         # I can see they have more time now
-        remainingTimeAfterAddition = parse_time(user1.get_text_of('{} span'.format(chrono_name)))
+        remainingTimeAfterAddition = parse_time(user1.get_text_of('{} span'.format(timer_name)))
         if not(remainingTimeAfterAddition > remainingTimeBeforeAddition):
             print('Time was not added!')
             raise Exception('Test failed')
@@ -482,9 +493,9 @@ def can_perform_time_actions(user1, user2):
     user1.create_part(user2)
 
     # I can add global time
-    check_time_increase('#chrono-one-global')
+    check_time_increase('#timer-one-game')
     # I can add turn time
-    check_time_increase('#chrono-one-turn')
+    check_time_increase('#timer-one-move')
 
     # Cleanup
     user1.click('#resign')
@@ -610,6 +621,3 @@ def can_rematch(user1, user2):
 
     user1.click('#resign')
     user1.wait_for('#resignIndicator')
-
-if __name__ == '__main__':
-    launch_scenarios()

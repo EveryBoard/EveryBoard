@@ -161,8 +161,8 @@
       <trans-unit id="4060021930998903329" datatype="html">
         <source>Second player</source>
       </trans-unit>
-      <trans-unit id="8503767092684163333" datatype="html">
-        <source>Turn</source>
+      <trans-unit id="5611592591303869712" datatype="html">
+        <source>Status</source>
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
@@ -569,6 +569,135 @@
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
       </trans-unit>
+      <trans-unit id="3923856758825729241" datatype="html">
+        <source>Creation of a game of <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/> </source>
+      </trans-unit>
+      <trans-unit id="4247449258896721566" datatype="html">
+        <source>Opponents</source>
+      </trans-unit>
+      <trans-unit id="2561597132169540579" datatype="html">
+        <source>Potential opponents will appear here. If no one comes, you can:</source>
+      </trans-unit>
+      <trans-unit id="1406698782162165226" datatype="html">
+        <source>Look for other games</source>
+      </trans-unit>
+      <trans-unit id="5070629625537228486" datatype="html">
+        <source>Play against AI</source>
+      </trans-unit>
+      <trans-unit id="5056292777668083757" datatype="html">
+        <source>Click on the opponent against which you would like to play.</source>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="3193976279273491157" datatype="html">
+        <source>Actions</source>
+      </trans-unit>
+      <trans-unit id="8698515801873408462" datatype="html">
+        <source>Pick</source>
+      </trans-unit>
+      <trans-unit id="7709161982270147002" datatype="html">
+        <source>Random first player</source>
+      </trans-unit>
+      <trans-unit id="5246623381325349376" datatype="html">
+        <source>You start</source>
+      </trans-unit>
+      <trans-unit id="7738132709044699358" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.chosenOpponent }}"/> starts</source>
+      </trans-unit>
+      <trans-unit id="4492847529610715272" datatype="html">
+        <source>The opponent starts</source>
+      </trans-unit>
+      <trans-unit id="8926567047186783072" datatype="html">
+        <source>Standard time</source>
+      </trans-unit>
+      <trans-unit id="3120304451891406993" datatype="html">
+        <source>Maximal turn duration: </source>
+      </trans-unit>
+      <trans-unit id="6773728044030876768" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="ARD_GAME_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="4073116770334354573" datatype="html">
+        <source>Blitz</source>
+      </trans-unit>
+      <trans-unit id="3154403333894623756" datatype="html">
+        <source>Custom time</source>
+      </trans-unit>
+      <trans-unit id="594218318757354614" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="tion || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="1612262766071402559" datatype="html">
+        <source>Propose configuration</source>
+      </trans-unit>
+      <trans-unit id="326145407473587685" datatype="html">
+        <source>Change configuration</source>
+      </trans-unit>
+      <trans-unit id="6482290849972032593" datatype="html">
+        <source>Cancel game</source>
+      </trans-unit>
+      <trans-unit id="9099721398759347967" datatype="html">
+        <source>Configuration proposal for <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/></source>
+      </trans-unit>
+      <trans-unit id="7416818230860591701" datatype="html">
+        <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
+      </trans-unit>
+      <trans-unit id="6747612030990351046" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.gameTypeName }}"/> game</source>
+      </trans-unit>
+      <trans-unit id="7215535622740824911" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> plays first</source>
+      </trans-unit>
+      <trans-unit id="8496859383343230204" datatype="html">
+        <source>you play first</source>
+      </trans-unit>
+      <trans-unit id="8194858011161710862" datatype="html">
+        <source>the first player is selected randomly</source>
+      </trans-unit>
+      <trans-unit id="3649232689954543597" datatype="html">
+        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="tion || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="7852346564484185703" datatype="html">
+        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="tion || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="1012784993066568401" datatype="html">
+        <source>Accept and start</source>
+      </trans-unit>
+      <trans-unit id="7265061399015519876" datatype="html">
+        <source>One moment...</source>
+      </trans-unit>
+      <trans-unit id="5068486659312004369" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> is configuring the game.</source>
+      </trans-unit>
+      <trans-unit id="4218388977213486334" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
+      </trans-unit>
+      <trans-unit id="7593355192491237220" datatype="html">
+        <source>The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.</source>
+      </trans-unit>
+      <trans-unit id="5405832111463837320" datatype="html">
+        <source>You already have another tab open.</source>
+      </trans-unit>
+      <trans-unit id="3167850208641058102" datatype="html">
+        <source>Unexpected error from backend: <x id="PH" equiv-text="error"/></source>
+      </trans-unit>
+      <trans-unit id="9113418610979201447" datatype="html">
+        <source>The game has been cancelled.</source>
+      </trans-unit>
+      <trans-unit id="4412958068611913614" datatype="html">
+        <source>custom</source>
+      </trans-unit>
+      <trans-unit id="4002042094548821129" datatype="html">
+        <source>blitz</source>
+      </trans-unit>
+      <trans-unit id="4301395065979241317" datatype="html">
+        <source>standard</source>
+      </trans-unit>
+      <trans-unit id="7137133530752645682" datatype="html">
+        <source><x id="PH" equiv-text="userName"/> left the game, please pick another opponent.</source>
+      </trans-unit>
+      <trans-unit id="3852843717175527075" datatype="html">
+        <source>The game has been canceled!</source>
+      </trans-unit>
       <trans-unit id="5171566373349249449" datatype="html">
         <source>Start with this configuration</source>
       </trans-unit>
@@ -663,22 +792,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getWinner().get().name }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="getWinner().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="3492340771384313804" datatype="html">
         <source>Resign</source>
@@ -698,9 +827,6 @@
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>
       </trans-unit>
-      <trans-unit id="777716481777788338" datatype="html">
-        <source>The game you tried to join does not exist.</source>
-      </trans-unit>
       <trans-unit id="4517991218544205155" datatype="html">
         <source>You are an observer in this game, you cannot play.</source>
       </trans-unit>
@@ -712,123 +838,6 @@
       </trans-unit>
       <trans-unit id="4506170566742059239" datatype="html">
         <source>00:30</source>
-      </trans-unit>
-      <trans-unit id="3923856758825729241" datatype="html">
-        <source>Creation of a game of <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/> </source>
-      </trans-unit>
-      <trans-unit id="4247449258896721566" datatype="html">
-        <source>Opponents</source>
-      </trans-unit>
-      <trans-unit id="2561597132169540579" datatype="html">
-        <source>Potential opponents will appear here. If no one comes, you can:</source>
-      </trans-unit>
-      <trans-unit id="1406698782162165226" datatype="html">
-        <source>Look for other games</source>
-      </trans-unit>
-      <trans-unit id="5070629625537228486" datatype="html">
-        <source>Play against AI</source>
-      </trans-unit>
-      <trans-unit id="5056292777668083757" datatype="html">
-        <source>Click on the opponent against which you would like to play.</source>
-      </trans-unit>
-      <trans-unit id="8953033926734869941" datatype="html">
-        <source>Name</source>
-      </trans-unit>
-      <trans-unit id="3193976279273491157" datatype="html">
-        <source>Actions</source>
-      </trans-unit>
-      <trans-unit id="8698515801873408462" datatype="html">
-        <source>Pick</source>
-      </trans-unit>
-      <trans-unit id="7709161982270147002" datatype="html">
-        <source>Random first player</source>
-      </trans-unit>
-      <trans-unit id="5246623381325349376" datatype="html">
-        <source>You start</source>
-      </trans-unit>
-      <trans-unit id="7738132709044699358" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.chosenOpponent }}"/> starts</source>
-      </trans-unit>
-      <trans-unit id="4492847529610715272" datatype="html">
-        <source>The opponent starts</source>
-      </trans-unit>
-      <trans-unit id="8926567047186783072" datatype="html">
-        <source>Standard time</source>
-      </trans-unit>
-      <trans-unit id="3120304451891406993" datatype="html">
-        <source>Maximal turn duration: </source>
-      </trans-unit>
-      <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="RT_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="4073116770334354573" datatype="html">
-        <source>Blitz</source>
-      </trans-unit>
-      <trans-unit id="3154403333894623756" datatype="html">
-        <source>Custom time</source>
-      </trans-unit>
-      <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="tDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="1612262766071402559" datatype="html">
-        <source>Propose configuration</source>
-      </trans-unit>
-      <trans-unit id="326145407473587685" datatype="html">
-        <source>Change configuration</source>
-      </trans-unit>
-      <trans-unit id="6482290849972032593" datatype="html">
-        <source>Cancel game</source>
-      </trans-unit>
-      <trans-unit id="9099721398759347967" datatype="html">
-        <source>Configuration proposal for <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/></source>
-      </trans-unit>
-      <trans-unit id="7416818230860591701" datatype="html">
-        <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
-      </trans-unit>
-      <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
-      </trans-unit>
-      <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> plays first</source>
-      </trans-unit>
-      <trans-unit id="8496859383343230204" datatype="html">
-        <source>you play first</source>
-      </trans-unit>
-      <trans-unit id="8194858011161710862" datatype="html">
-        <source>the first player is selected randomly</source>
-      </trans-unit>
-      <trans-unit id="3649232689954543597" datatype="html">
-        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="oveDuration || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="7852346564484185703" datatype="html">
-        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="tDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="1012784993066568401" datatype="html">
-        <source>Accept and start</source>
-      </trans-unit>
-      <trans-unit id="7265061399015519876" datatype="html">
-        <source>One moment...</source>
-      </trans-unit>
-      <trans-unit id="5068486659312004369" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> is configuring the game.</source>
-      </trans-unit>
-      <trans-unit id="4218388977213486334" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
-      </trans-unit>
-      <trans-unit id="4412958068611913614" datatype="html">
-        <source>custom</source>
-      </trans-unit>
-      <trans-unit id="4002042094548821129" datatype="html">
-        <source>blitz</source>
-      </trans-unit>
-      <trans-unit id="4301395065979241317" datatype="html">
-        <source>standard</source>
-      </trans-unit>
-      <trans-unit id="7137133530752645682" datatype="html">
-        <source><x id="PH" equiv-text="userName"/> left the game, please pick another opponent.</source>
-      </trans-unit>
-      <trans-unit id="3852843717175527075" datatype="html">
-        <source>The game has been canceled!</source>
       </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
@@ -3533,29 +3542,8 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
       </trans-unit>
-      <trans-unit id="75196759111440200" datatype="html">
-        <source>You&apos;re not allowed to send a message here.</source>
-      </trans-unit>
-      <trans-unit id="4052977957517792171" datatype="html">
-        <source>This message is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="5527862698509020204" datatype="html">
-        <source>This game does not exist!</source>
-      </trans-unit>
-      <trans-unit id="2025949389316561274" datatype="html">
-        <source>You are already playing in another game.</source>
-      </trans-unit>
-      <trans-unit id="3355072499279505626" datatype="html">
-        <source>You are already the creator of another game.</source>
-      </trans-unit>
-      <trans-unit id="5005469579079717737" datatype="html">
-        <source>You are already the chosen opponent in another game.</source>
-      </trans-unit>
-      <trans-unit id="7540734974309484940" datatype="html">
-        <source>You are already candidate in another game.</source>
-      </trans-unit>
-      <trans-unit id="2152425747573072542" datatype="html">
-        <source>You are already observing another game.</source>
+      <trans-unit id="5497781928212420280" datatype="html">
+        <source>Connection to server failed or closed, trying again in <x id="PH" equiv-text="this.nextConnectionAttemptTime"/> seconds...</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>
@@ -3590,11 +3578,23 @@
       <trans-unit id="3618174181025506941" datatype="html">
         <source>This username is already in use, please select a different one.</source>
       </trans-unit>
+      <trans-unit id="2025949389316561274" datatype="html">
+        <source>You are already playing in another game.</source>
+      </trans-unit>
+      <trans-unit id="3355072499279505626" datatype="html">
+        <source>You are already the creator of another game.</source>
+      </trans-unit>
+      <trans-unit id="5005469579079717737" datatype="html">
+        <source>You are already the chosen opponent in another game.</source>
+      </trans-unit>
+      <trans-unit id="7540734974309484940" datatype="html">
+        <source>You are already candidate in another game.</source>
+      </trans-unit>
+      <trans-unit id="2152425747573072542" datatype="html">
+        <source>You are already observing another game.</source>
+      </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
-      </trans-unit>
-      <trans-unit id="3878208315329190575" datatype="html">
-        <source>This is the wrong game type!</source>
       </trans-unit>
       <trans-unit id="4408456168772857996" datatype="html">
         <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/></source>

@@ -12,7 +12,7 @@ import { clickableMethods } from '../../game-components/game-component/clickable
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
+import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
 
 describe('OnlineGameWrapperComponent (games)', () => {
 
@@ -47,7 +47,7 @@ describe('OnlineGameWrapperComponent (games)', () => {
                 // Then it should be refused, with the reason being that we are an observer
                 expect(clickResult).withContext(methodName).toEqual(refusal);
             }
-            tick(wrapper.configRoom.totalPartDuration * 1000);
+            tick(wrapper.configRoom.gameDuration * 1000);
         }));
 
     }

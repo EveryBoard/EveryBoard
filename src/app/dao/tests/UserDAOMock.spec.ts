@@ -1,7 +1,8 @@
-import { MGPMap, MGPOptional, ObservableSubject } from '@everyboard/lib';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { User, UserDocument } from '../../domain/User';
 import { Debug } from '../../utils/Debug';
+import { ObservableSubject } from '../../utils/ObservableSubject';
 
 import { FirestoreDAOMock } from './FirestoreDAOMock.spec';
 

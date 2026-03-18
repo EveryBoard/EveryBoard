@@ -12,7 +12,6 @@ export * from './Set';
 export * from './MGPUniqueList';
 export * from './MGPValidation';
 export * from './NumberMap';
-export * from './ObservableSubject';
 export * from './OptimizedSet';
 export * from './Sets';
 export * from './TestUtils';

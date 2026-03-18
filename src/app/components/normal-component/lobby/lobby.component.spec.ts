@@ -2,20 +2,23 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
 
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { PartDocument } from '../../../domain/Part';
-import { PartMocks } from '../../../domain/PartMocks.spec';
+import { ConfigRoom } from '../../../domain/ConfigRoom';
+import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { ActivePartsService } from '../../../services/ActivePartsService';
-import { GameActionFailure } from '../../../services/ConnectedUserService';
-import { CurrentGameService } from '../../../services/CurrentGameService';
+import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
+import { AbstractActiveConfigRoomsService, ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
+import { AbstractBackendService, BackendService } from '../../../services/BackendService';
+import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
+import { ActiveConfigRoomsServiceMock } from '../../../services/tests/ActiveConfigRoomServiceMock.spec';
+import { BackendServiceMock } from '../../../services/tests/BackendServiceMock.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
-import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameService.spec';
+import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameServiceMock.spec';
 import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { OnlineGameWrapperComponent } from '../../wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { WelcomeComponent } from '../welcome/welcome.component';
 
 import { LobbyComponent } from './lobby.component';
 
@@ -24,27 +27,66 @@ describe('LobbyComponent', () => {
     let testUtils: SimpleComponentTestUtils<LobbyComponent>;
     let component: LobbyComponent;
     let router: Router;
+    let currentGameService: CurrentGameService;
+
+    const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty());
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);
         ConnectedUserServiceMock.setUser(UserMocks.CREATOR_AUTH_USER);
         component = testUtils.getComponent();
         router = TestBed.inject(Router);
+        currentGameService = TestBed.inject(CurrentGameService);
         spyOn(router, 'navigate').and.resolveTo();
     }));
 
     it('should create', fakeAsync(async() => {
         expect(component).toBeDefined();
-        component.ngOnInit();
+        await component.ngOnInit();
     }));
+
+    describe('error management', () => {
+
+        it('should forbid user to join lobby when the backend rejects it because they are already subscribed', fakeAsync(async() => {
+            // Given loaded lobby
+            const backendService: BackendServiceMock =
+                TestBed.inject(BackendService) as AbstractBackendService as BackendServiceMock;
+            testUtils.detectChanges();
+            tick(0);
+            // When it receives an already-subscribed error from the backend
+            // Then it should toast and redirect to /
+            await testUtils.expectToDisplayCriticalMessage(
+                GameActionFailure.YOU_ALREADY_HAVE_ANOTHER_TAB(),
+                async() => {
+                    backendService.mockReceivedMessage('Error', { reason: 'already-subscribed' });
+                });
+            expectValidRouting(router, ['/'], WelcomeComponent);
+        }));
+
+        it('should forbid user to join lobby when the backend rejects it because of an unexpected failure', fakeAsync(async() => {
+            // Given loaded lobby
+            const backendService: BackendServiceMock =
+                TestBed.inject(BackendService) as AbstractBackendService as BackendServiceMock;
+            testUtils.detectChanges();
+            tick(0);
+            // When it receives an error from the backend
+            // Then it should toast and redirect to /
+            await testUtils.expectToDisplayCriticalMessage(
+                GameActionFailure.UNEXPECTED_BACKEND_ERROR('some-error'),
+                async() => {
+                    backendService.mockReceivedMessage('Error', { reason: 'some-error' });
+                });
+            expectValidRouting(router, ['/'], WelcomeComponent);
+        }));
+    });
+
 
     describe('tab-create element', () => {
 
         it('should display online-game-selection component when clicking on it when allowed by connectedUserService', fakeAsync(async() => {
-            // Given a server page
+            // Given a lobby
             testUtils.detectChanges();
             // where you are allowed by currentGameService
-            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
             spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.SUCCESS);
 
             // When clicking on the 'create game' tab
@@ -55,10 +97,9 @@ describe('LobbyComponent', () => {
         }));
 
         it('should refuse to change page when clicking on it while not allowed by connectedUserService, and toast the reason', fakeAsync(async() => {
-            // Given a server page
+            // Given a lobby
             testUtils.detectChanges();
             // where you are forbidden by connectedUserService
-            const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
             const error: string = `Si je dit non, c'est non!!!`;
             spyOn(currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(error));
 
@@ -68,316 +109,102 @@ describe('LobbyComponent', () => {
                 await testUtils.clickElement('#tab-create');
             });
 
-            testUtils.expectElementNotToExist('#online-game-selection');
+            testUtils.expectElementToHaveClass('#game-creator-tab', 'is-hidden');
+        }));
+
+        it('should disable the tab when the user already has a current game', fakeAsync(async() => {
+            // Given a lobby where current game is set
+            testUtils.detectChanges();
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(CurrentGameMocks.CREATOR_WITH_OPPONENT));
+
+            // When displaying the page
+            testUtils.detectChanges();
+
+            // Then the tab should be disabled
+            testUtils.expectElementToHaveClass('#tab-create', 'disabled-tab');
+        }));
+
+        it('should enable the tab when the user does not have a current game', fakeAsync(async() => {
+            // Given a lobby where current game is not set
+            testUtils.detectChanges();
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
+
+            // When displaying the page
+            testUtils.detectChanges();
+
+            // Then the tab should be enabled
+            testUtils.expectElementNotToHaveClass('#tab-create', 'disabled-tab');
         }));
 
     });
 
-    function setLobbyPartList(list: PartDocument[]): void {
-        const activePartsService: ActivePartsService = TestBed.inject(ActivePartsService);
-        spyOn(activePartsService, 'subscribeToActiveParts')
-            .and.callFake((callback: (parts: PartDocument[]) => void) => {
-                callback(list);
-                return new Subscription();
-            });
+    function setActiveConfigRooms(rooms: MGPMap<string, ConfigRoom>): void {
+        const activeConfigRoomsService: ActiveConfigRoomsServiceMock = TestBed.inject(ActiveConfigRoomsService) as
+          AbstractActiveConfigRoomsService as ActiveConfigRoomsServiceMock;
+        activeConfigRoomsService.updateRooms(rooms);
     }
 
-    async function shouldAllowJoinPart(partList: PartDocument[]): Promise<void> {
-        // Given a server with the given partList
-        setLobbyPartList(partList);
+    async function shouldAllowToJoinConfigRoom(room: ConfigRoom): Promise<void> {
+        // Given a lobby with the given config room
+        setActiveConfigRooms(MGPMap.from({ gameId: room }));
         testUtils.detectChanges();
 
         // When clicking on the first part
         await testUtils.clickElement('#part-0');
 
         // Then the component should have navigate to the part
-        expectValidRouting(router, ['/play', 'Quarto', partList[0].id], OnlineGameWrapperComponent);
+        expectValidRouting(router, ['/play', 'P4', 'gameId'], OnlineGameWrapperComponent);
     }
 
-    async function shouldForbidToJoinPart(partList: PartDocument[], reason: string): Promise<void> {
-        setLobbyPartList(partList);
+    async function shouldForbidToJoinConfigRoom(room: ConfigRoom, reason: string): Promise<void> {
+        // Given a lobby with the given config room
+        setActiveConfigRooms(MGPMap.from({ gameId: room }));
         testUtils.detectChanges();
 
-        // When clicking on the part
+        // When clicking on the first part
         // Then the refusal reason should be given
         await testUtils.expectToDisplayCriticalMessage(reason, async() => {
             await testUtils.clickElement('#part-0');
         });
     }
 
-    describe('clicking on a started game', () => {
 
-        let unstartedPartUserCreated: PartDocument;
-        let unstartedPartUserDidNotCreate: PartDocument;
-        let anotherUnstartedPartUserDidNotCreate: PartDocument;
+    describe('clicking on a game', () => {
 
-        let startedPartUserPlay: PartDocument;
-        let startedPartUserDoNotPlay: PartDocument;
-        let anotherStartedPartUserDoNotPlay: PartDocument;
+        it('should redirect to /play when the user is allowed to participate to the game', fakeAsync(async() => {
+            // Given a user not part of any game
+            spyOn(currentGameService, 'canUserJoin').and.returnValue(MGPValidation.SUCCESS);
+            testUtils.detectChanges();
 
-        beforeEach(fakeAsync(async() => {
-            // Unstarted
-            unstartedPartUserCreated = new PartDocument('I-create', PartMocks.INITIAL);
-            unstartedPartUserDidNotCreate = new PartDocument('I-did-not-create', PartMocks.OTHER_UNSTARTED);
-            anotherUnstartedPartUserDidNotCreate = new PartDocument('me-no-create-either', PartMocks.OTHER_UNSTARTED);
+            // And a lobby with one active config room
+            // Then the user should be able to join
+            await shouldAllowToJoinConfigRoom(configRoom);
 
-            // Started
-            startedPartUserPlay = new PartDocument('I-play', PartMocks.STARTED);
-            startedPartUserDoNotPlay = new PartDocument('I-do-not-play', PartMocks.OTHER_STARTED);
-            anotherStartedPartUserDoNotPlay = new PartDocument('me-no-play-either', PartMocks.OTHER_STARTED);
         }));
 
-        describe('as a user participating to no games', () => {
+        it('should forbid user to join a game if they are not allowed to participate', fakeAsync(async() => {
+            // Given a user not allowed to participate to the game
+            spyOn(currentGameService, 'canUserJoin').and.returnValue(MGPValidation.failure(GameActionFailure.YOU_ARE_ALREADY_PLAYING()));
+            testUtils.detectChanges();
 
-            beforeEach(() => {
-                // Given an user not part of any part
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
-            });
-
-            it('should redirect to /play', fakeAsync(async() => {
-                // And a server with one active part
-                await shouldAllowJoinPart([startedPartUserDoNotPlay]);
-            }));
-
-        });
-
-        describe('as a player', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as a Player
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: startedPartUserPlay.id,
-                    role: 'Player',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to join another game', fakeAsync(async() => {
-                // And a lobby where the a part user do not play is present
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
-                await shouldForbidToJoinPart([startedPartUserDoNotPlay], reason);
-            }));
-
-            it('should allow users to play their games from several tabs', fakeAsync(async() => {
-                // And a lobby where the part player plays is present
-                await shouldAllowJoinPart([startedPartUserPlay]);
-            }));
-
-        });
-
-        describe('as an observer', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as an Observer
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: startedPartUserDoNotPlay.id,
-                    role: 'Observer',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should allow to observe a second part', fakeAsync(async() => {
-                // And a lobby where another started part that user do not play is present
-                await shouldAllowJoinPart([anotherStartedPartUserDoNotPlay]);
-            }));
-
-            it('should allow to observe twice the same part', fakeAsync(async() => {
-                // Given a lobby where the connected user is already the observer in this part
-                await shouldAllowJoinPart([startedPartUserDoNotPlay]);
-            }));
-
-        });
-
-        describe('as a creator', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as a Creator
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: unstartedPartUserCreated.id,
-                    role: 'Creator',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to observe game while creating another one', fakeAsync(async() => {
-                // And a lobby where another started part that user do not play is present
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
-                await shouldForbidToJoinPart([startedPartUserDoNotPlay], reason);
-            }));
-
-        });
-
-        describe('as a candidate', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as a Candidate
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: unstartedPartUserDidNotCreate.id,
-                    role: 'Candidate',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to observe game while candidate in another one', fakeAsync((async() => {
-                // And a lobby where another unstarted part not linked to user is present
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
-                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
-            })));
-
-        });
-
-        describe('as chosen opponent', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as a Candidate
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: unstartedPartUserDidNotCreate.id,
-                    role: 'ChosenOpponent',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to observe game while chosen opponent in another one', fakeAsync((async() => {
-                // And a lobby where another unstarted part not linked to user is present
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
-            })));
-
-        });
+            // And a lobby with one active config room
+            // Then the user should not be able to join
+            await shouldForbidToJoinConfigRoom(configRoom, GameActionFailure.YOU_ARE_ALREADY_PLAYING());
+        }));
 
     });
 
-    describe('clicking on a unstarted game', () => {
-
-        let unstartedPartUserCreated: PartDocument;
-        let startedPartUserPlay: PartDocument;
-        let unstartedPartUserDidNotCreate: PartDocument;
-        let anotherUnstartedPartUserDidNotCreate: PartDocument;
-
-        beforeEach(fakeAsync(async() => {
-            unstartedPartUserCreated = new PartDocument('the-part-I-create', PartMocks.INITIAL);
-            startedPartUserPlay = new PartDocument('the-part-I-created', PartMocks.STARTED);
-            unstartedPartUserDidNotCreate = new PartDocument('a-part-I-do-not-create', PartMocks.OTHER_STARTED);
-            anotherUnstartedPartUserDidNotCreate = new PartDocument('another-part-user-did-not-createru', PartMocks.OTHER_STARTED);
-        }));
-
-        describe('as a user part of no games', () => {
-
-            beforeEach(() => {
-                // Given an user not part of any part
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.empty());
-            });
-
-            it('should redirect to /play', fakeAsync(async() => {
-                // And a server with one active part
-                await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
-            }));
-
-        });
-
-        describe('as a player', () => {
-
-            beforeEach(() => {
-                // Given an user already playing a part
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: startedPartUserPlay.id,
-                    role: 'Player',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to become candidate while already playing another game', fakeAsync(async() => {
-                // And a lobby where the connected user is already the Player in one part
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
-                await shouldForbidToJoinPart([unstartedPartUserDidNotCreate], reason);
-            }));
-
-        });
-
-        describe('as a creator', () => {
-
-            beforeEach(() => {
-                // Given an user already creator of a part
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: unstartedPartUserCreated.id,
-                    role: 'Creator',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to be candidate while already creating another game', fakeAsync(async() => {
-                // And a lobby where another unstarted part not linked to user is present
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
-                await shouldForbidToJoinPart([unstartedPartUserDidNotCreate], reason);
-            }));
-
-            it('should allow user to have their created part in two tabs', fakeAsync(async() => {
-                // And a lobby where the same part is obviously already
-                await shouldAllowJoinPart([unstartedPartUserCreated]);
-            }));
-
-        });
-
-        describe('as a chosen opponent', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as a chosen opponent
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: unstartedPartUserDidNotCreate.id,
-                    role: 'ChosenOpponent',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to be candidate while already chosen opponent in another game', fakeAsync(async() => {
-                // Given a lobby where the connected user is already the chosen opponent in one part
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
-                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
-            }));
-
-            it('should allow user to be candidate of the same part in several tabs', fakeAsync(async() => {
-                // And a lobby where the same part is obviously already
-                await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
-            }));
-
-        });
-
-        describe('as a candidate', () => {
-
-            beforeEach(() => {
-                // Given an user observing a part as a Candidate
-                CurrentGameServiceMock.setCurrentGame(MGPOptional.of({
-                    id: unstartedPartUserDidNotCreate.id,
-                    role: 'Candidate',
-                    typeGame: 'P4',
-                }));
-            });
-
-            it('should forbid user to be candidate in two part as once', fakeAsync(async() => {
-                // Given a lobby where the connected user is already the candidate in one part
-                const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
-                await shouldForbidToJoinPart([anotherUnstartedPartUserDidNotCreate], reason);
-            }));
-
-            it('should allow user to have be candidate of the same part in two tabs', fakeAsync(async() => {
-                // And a lobby where the same part is obviously already
-                await shouldAllowJoinPart([unstartedPartUserDidNotCreate]);
-            }));
-
-        });
-
-    });
-
-    it('should unsubscribe from active parts when destroying component', fakeAsync(async() => {
+    it('should unsubscribe from active config rooms when destroying component', fakeAsync(async() => {
         // Given the lobby
         const expectUnsubscribeToHaveBeenCalled: () => void =
-            prepareUnsubscribeCheck(TestBed.inject(ActivePartsService), 'subscribeToActiveParts');
+            prepareUnsubscribeCheck(TestBed.inject(ActiveConfigRoomsService), 'subscribe');
         testUtils.detectChanges();
+        tick(0);
 
         // When it is destroyed
-        component.ngOnDestroy();
+        await component.ngOnDestroy();
 
-        // Then it should have unsubscribed from active parts
+        // Then it should have unsubscribed from active config rooms
         expectUnsubscribeToHaveBeenCalled();
     }));
 
@@ -386,57 +213,54 @@ describe('LobbyComponent', () => {
         const expectUnsubscribeToHaveBeenCalled: () => void =
             prepareUnsubscribeCheck(TestBed.inject(CurrentGameService), 'subscribeToCurrentGame');
         testUtils.detectChanges();
+        tick(0);
 
         // When it is destroyed
-        component.ngOnDestroy();
+        await component.ngOnDestroy();
 
         // Then it should have unsubscribed from active users
         expectUnsubscribeToHaveBeenCalled();
     }));
 
-    it('should display turn for humans', fakeAsync(async() => {
-        // Given a server with an existing part
-        setLobbyPartList([new PartDocument('started', PartMocks.STARTED)]);
-
-        // When displaying it
+    it('should unsubscribe from error part when destroying component', fakeAsync(async() => {
+        // Given an initialized lobby
+        const expectUnsubscribeToHaveBeenCalled: () => void =
+            prepareUnsubscribeCheck(TestBed.inject(BackendService), 'setCallback');
         testUtils.detectChanges();
+        tick(0);
 
-        // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part-0 > .data-turn');
-        const turn: DebugElement = testUtils.findElement('#part-0 > .data-turn');
-        expect(turn.nativeElement.innerText).toEqual('1');
+        // When it is destroyed
+        await component.ngOnDestroy();
+
+        // Then it should have unsubscribed from active users
+        expectUnsubscribeToHaveBeenCalled();
     }));
 
     it('should display game name for humans', fakeAsync(async() => {
-        // Given a server with an existing part
-        setLobbyPartList([new PartDocument('started', {
-            ...PartMocks.STARTED,
-            typeGame: 'P4', // A game whose name is different from their URL name
-        })]);
+        // Given a lobby with an existing game, with a game name different from their URL name
+        testUtils.detectChanges();
+        setActiveConfigRooms(MGPMap.from({ gameId: { ...configRoom, gameName: 'P4' } }));
 
         // When displaying it
         testUtils.detectChanges();
 
-        // Then it should show the turn, starting at turn 0 instead of -1
-        testUtils.expectElementToExist('#part-0 > .data-turn');
+        // Then it should show the game name
+        testUtils.expectElementToExist('#part-0 > .data-game-name');
         const gameName: DebugElement = testUtils.findElement('#part-0 > .data-game-name');
         expect(gameName.nativeElement.innerText).toEqual('Four in a Row');
     }));
 
-    it('should display creator elo has a floor version', fakeAsync(async() => {
-        // Given a server with an existing part
-        setLobbyPartList([new PartDocument('started', {
-            ...PartMocks.STARTED,
-            typeGame: 'P4', // A game whose name is different from their URL name
-            playerZeroElo: 12.67865,
-        })]);
+    it('should display creator elo as a whole number', fakeAsync(async() => {
+        // Given a lobby with an existing game, with a creator elo
+        testUtils.detectChanges();
+        setActiveConfigRooms(MGPMap.from({ gameId: { ...configRoom, creatorElo: 12.67865 } }));
 
         // When displaying it
         testUtils.detectChanges();
 
-        // Then it should show the turn, starting at turn 0 instead of -1
-        const gameName: DebugElement = testUtils.findElement('#part-of-creator');
-        expect(gameName.nativeElement.innerText).toEqual('creator (12)');
+        // Then it should show the creator elo as a whole number
+        const creatorElo: DebugElement = testUtils.findElement('#part-of-creator');
+        expect(creatorElo.nativeElement.innerText).toEqual('creator (12)');
     }));
 
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {
@@ -450,5 +274,4 @@ describe('LobbyComponent', () => {
         // Then it should show the chat
         testUtils.expectElementToExist('#chat');
     }));
-
 });
