@@ -107,6 +107,16 @@ export class ArrayUtils {
         return total;
     }
 
+    public static countByPredicate<T>(array: ReadonlyArray<T>, predicate: (value: T) => boolean): number {
+        let total: number = 0;
+        for (const element of array) {
+            if (predicate(element)) {
+                total++;
+            }
+        }
+        return total;
+    }
+
     public static contains<T>(array: ReadonlyArray<T>, value: T): boolean {
         for (const element of array) {
             if (comparableEquals(value, element)) {

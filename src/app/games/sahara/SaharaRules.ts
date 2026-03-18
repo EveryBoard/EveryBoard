@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
@@ -75,18 +75,21 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return startingCoords;
     }
 
-    public static getBoardValuesFor(state: SaharaState, player: Player): number[] {
+    public static getBoardValuesByPiece(state: SaharaState, player: Player): MGPMap<Coord, number> {
         const playersPiece: Coord[] = SaharaRules.getStartingCoords(state, player);
-        const playerFreedoms: number[] = [];
+        const playerFreedoms: MGPMap<Coord, number> = new MGPMap();
         for (const piece of playersPiece) {
             const freedoms: number =
                 TriangularGameState.getEmptyNeighbors(state.board, piece, FourStatePiece.EMPTY).length;
-            if (freedoms === 0) {
-                return [0, 0, 0, 0, 0, 0]; // Because there are 6 pieces
-            }
-            playerFreedoms.push(freedoms);
+            playerFreedoms.set(piece, freedoms);
         }
-        return playerFreedoms.sort((a: number, b: number) => a - b);
+        return playerFreedoms;
+    }
+
+    public static getBoardValuesFor(state: SaharaState, player: Player): number[] {
+        const playerFreedomsMap: MGPMap<Coord, number> = SaharaRules.getBoardValuesByPiece(state, player);
+        const playerFreedomsValue: number[] = playerFreedomsMap.getValueList();
+        return playerFreedomsValue.sort((a: number, b: number) => a - b);
     }
 
     public override applyLegalMove(move: SaharaMove,
@@ -145,25 +148,40 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
     }
 
-    public getLandingCoords(state: SaharaState, coord: Coord): Coord[] {
-        const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
-            return state.hasPieceAt(c, FourStatePiece.EMPTY);
-        };
+    private static getLandingCoordsMatching(coord: Coord, state: SaharaState, premise: (c: Coord) => boolean): Coord[] {
         const landings: CoordSet =
-            new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
+            new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(premise));
         if (TriangularCheckerBoard.isSpaceDark(coord)) {
             return landings.toList();
         } else {
             let farLandings: CoordSet = new CoordSet(landings.toList()); // Deep copy
-            for (const neighbor of landings) {
+            const emptyNeighbors: CoordSet = landings.filter(
+                (c: Coord) => state.getPieceAt(c).equals(FourStatePiece.EMPTY),
+            );
+            for (const neighbor of emptyNeighbors) {
                 const secondStepNeighbors: Coord[] =
-                    TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
+                    TriangularCheckerBoard.getNeighbors(neighbor).filter(premise);
                 for (const secondStepNeighbor of secondStepNeighbors) {
                     farLandings = farLandings.addElement(secondStepNeighbor);
                 }
             }
             return farLandings.toList();
         }
+    }
+
+    public static getLegalLandingCoords(state: SaharaState, coord: Coord): Coord[] {
+        const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
+            return state.hasPieceAt(c, FourStatePiece.EMPTY);
+        };
+        return SaharaRules.getLandingCoordsMatching(coord, state, isOnBoardAndEmpty);
+    }
+
+    public static getValidLandingCoords(state: SaharaState, coord: Coord): Coord[] {
+        const isOnBoardAndReachable: (c: Coord) => boolean = (c: Coord) => {
+            return state.isOnBoard(c) &&
+                   state.getPieceAt(c).equals(FourStatePiece.UNREACHABLE) === false;
+        };
+        return SaharaRules.getLandingCoordsMatching(coord, state, isOnBoardAndReachable);
     }
 
     public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {

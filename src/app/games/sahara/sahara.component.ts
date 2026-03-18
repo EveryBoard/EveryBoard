@@ -9,12 +9,15 @@ import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 
+import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
 import { SaharaFailure } from './SaharaFailure';
 import { SaharaMinimax } from './SaharaMinimax';
+import { SaharaMobilityMinimax } from './SaharaMobilityMinimax';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
 import { SaharaState } from './SaharaState';
+import { SaharaTerritoryMinimax } from './SaharaTerritoryMinimax';
 
 @Component({
     selector: 'app-sahara',
@@ -38,7 +41,10 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         super(messageDisplayer, cdr);
         this.setRulesAndNode('Sahara');
         this.availableAIs = [
+            new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
             new SaharaMinimax(),
+            new SaharaTerritoryMinimax(),
+            new SaharaMobilityMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;
@@ -91,7 +97,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     private selectPiece(coord: Coord): void {
         this.chosenCoord = MGPOptional.of(coord);
-        this.possibleLandings = this.rules.getLandingCoords(this.getState(), coord);
+        this.possibleLandings = SaharaRules.getLegalLandingCoords(this.getState(), coord);
     }
 
     private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {

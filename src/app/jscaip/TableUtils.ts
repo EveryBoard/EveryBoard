@@ -100,6 +100,14 @@ export class TableUtils {
         return MGPOptional.empty();
     }
 
+    public static forEach<T>(table: Table<T>, fun: (coord: Coord, element: T) => void): void {
+        for (let y: number = 0; y < table.length; y++) {
+            for (let x: number = 0; x < table[y].length; x++) {
+                fun(new Coord(x, y), table[y][x]);
+            }
+        }
+    }
+
 }
 
 export type Cell<T> = {

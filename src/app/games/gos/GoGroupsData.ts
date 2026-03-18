@@ -71,7 +71,7 @@ export class GoGroupData extends GroupData<GoPiece> {
         }
     }
 
-    public isMonoWrapped(): boolean {
+    public override isMonoWrapped(): boolean {
         // If a group is empty, we assign him 1, else 2
         // If only the group of the group and the group of its wrapper are filled, result will be 2*2*1
         const darkWrapper: number = (this.darkCoords.length + this.deadLightCoords.length) === 0 ? 0 : 1;
@@ -99,7 +99,27 @@ export class GoGroupData extends GroupData<GoPiece> {
         return nonEmptyWrapper.getAnyPair().get().key;
     }
 
-    public getNeighborsEntryPoints(): Coord[] {
+    public override getNeighbors(): Coord[] {
+        const neighbors: Coord[] = [];
+        if (this.color !== GoPiece.EMPTY) {
+            neighbors.push(...this.emptyCoords);
+        }
+        if (this.color !== GoPiece.DEAD_DARK) {
+            neighbors.push(...this.darkCoords);
+        }
+        if (this.color !== GoPiece.LIGHT) {
+            neighbors.push(...this.lightCoords);
+        }
+        if (this.color !== GoPiece.DEAD_DARK) {
+            neighbors.push(...this.deadDarkCoords);
+        }
+        if (this.color !== GoPiece.DEAD_LIGHT) {
+            neighbors.push(...this.deadLightCoords);
+        }
+        return neighbors;
+    }
+
+    public override getNeighborsEntryPoints(): Coord[] {
         const neighborsEntryPoints: Coord[] = [];
         if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {
             neighborsEntryPoints.push(this.emptyCoords[0]);

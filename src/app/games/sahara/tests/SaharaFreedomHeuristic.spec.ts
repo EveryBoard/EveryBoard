@@ -5,13 +5,13 @@ import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
-import { SaharaHeuristic } from '../SaharaHeuristic';
+import { SaharaFreedomHeuristic } from '../SaharaFreedomHeuristic';
 import { SaharaRules } from '../SaharaRules';
 import { SaharaState } from '../SaharaState';
 
-describe('SaharaHeuristic', () => {
+describe('SaharaFreedomHeuristic', () => {
 
-    let heuristic: SaharaHeuristic;
+    let heuristic: SaharaFreedomHeuristic;
     const defaultConfig: NoConfig = SaharaRules.get().getDefaultRulesConfig();
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -20,7 +20,7 @@ describe('SaharaHeuristic', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     beforeEach(() => {
-        heuristic = new SaharaHeuristic();
+        heuristic = new SaharaFreedomHeuristic();
     });
 
     it('should prefer having more freedoms', () => {
