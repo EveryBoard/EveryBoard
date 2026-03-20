@@ -1,55 +1,71 @@
-all: bin
+# Regular build for local run. Default target because it's the first one
+build: deps
+	go build -o backend cmd/backend/main.go
 
-gamelist:
-	grep "new GameInfo" ../src/app/components/normal-component/pick-game/pick-game.component.ts | sed -E "s/.*new GameInfo\([^,]+, +'([^']+)'.*/\1/" > games.txt
+# Get the dependencies
+deps:
+	go mod download
 
-bin:
-	opam exec -- dune build main.exe
+# Get the dependencies and check the .mod file, possibly updating it
+tidy:
+	go mod tidy
 
-run: gamelist
-	GAMES=$$(cat games.txt)
-	opam exec -- dune exec -- ./main.exe
+# Run locally
+run: build
+	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' go run cmd/backend/main.go
 
-run-local: gamelist
-	GAMES=$$(cat games.txt)
-	opam exec -- dune exec -- ./main.exe -no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors
+version:
+	@go run cmd/version/main.go
 
-run-load-test: gamelist
-	GAMES=$$(cat games.txt)
-	opam exec -- dune exec -- ./main.exe -no-emulator -endpoint https://firestore.googleapis.com -show-errors -project everyboard-loadtest -origin '*' -service-account ../service-accounts/loadtest.json
+run-postgres: build
+	env USE_EMULATOR=yes PROJECT_ID=my-project ALLOW_ORIGIN='*' \
+		DATABASE_TYPE=postgres DATABASE_DSN="postgresql://$$DB_USERNAME:$$DB_PASSWORD@$$DB_HOST:5432/$$DB_NAME?sslmode=disable" \
+		go run cmd/backend/main.go
 
-test: bin gamelist
-	find . -name '*.coverage' | xargs rm -f
-	GAMES=$$(cat games.txt) \
-	opam exec -- dune exec --instrument-with bisect_ppx --force -- ./tests.exe test $(match) $(test-number)
-	opam exec -- bisect-ppx-report html
-	echo 'Coverage produced in _coverage/index.html'
+format:
+	go fmt ./...
 
-generate-coverage:
-	opam exec -- bisect-ppx-report html
-	echo 'Coverage produced in _coverage/index.html'
+test:
+	go test ./...
 
-check-coverage:
-	opam exec -- bisect-ppx-report summary
-	opam exec -- bisect-ppx-report summary | grep '100.00%' || ( echo 'Coverage too low!' && exit 1 )
-	find . -name '*.coverage' | xargs rm -f
+coverage:
+	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out
 
-docker: gamelist
-	sed -i 's/;; //' dune
-	docker build -t backend-build -f Dockerfile.build .
-	sed -i 's/(flags /;; (flags /' dune
-	docker run --rm --entrypoint cat backend-build /home/ocaml/_build/default/main.exe > main.static.exe
-	chmod +x main.static.exe
-	cp /etc/services services
-	cp /etc/ssl/certs/ca-certificates.crt ca-certificates.crt
-	echo "GAMES='$$(cat games.txt)'" > .env
-	docker build -t "backend-$(target)" -f Dockerfile.serve .
+view-coverage: coverage
+	go tool cover -html=coverage.out -o coverage.html
+
+# Check that coverage is above a certain threshold. Change the sed command to increase the threshold as needed
+check-coverage: coverage
+	go tool cover -func=coverage.out | grep total | grep -o '..\..%' | sed 's/%/>78/' | bc | grep -q 1
+
+# Make sure that sources are formatted according to gofmt
+check-fmt:
+	test -z "$$(gofmt -l .)"
+
+lint:
+	golangci-lint run
+
+clean:
+	go clean -testcache
+
+# Build for deploying. sqlite requires non-static build
+prod:
+	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
+#	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-s -w' -o backend cmd/backend/main.go
+
+docker: prod
+	docker build -t "backend-$(target)" \
+		--build-arg USE_EMULATOR="$$USE_EMULATOR" \
+		--build-arg PROJECT_ID="$$PROJECT_ID" \
+		--build-arg ALLOW_ORIGIN="$$ALLOW_ORIGIN" \
+		--build-arg DATABASE_HOST="$$DATABASE_HOST" \
+		--build-arg DATABASE_USERNAME="$$DATABASE_USERNAME" \
+		--build-arg DATABASE_PASSWORD="$$DATABASE_PASSWORD" \
+		--build-arg DATABASE_NAME="$$DATABASE_NAME" \
+		.
 	docker save "backend-$(target)" > "backend-$(target).tar"
 
 deploy: docker
-	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d -p $(listen-port):8081 backend-$(target) /main.static.exe $(args)" < "backend-$(target).tar"
+	ssh -p "$(port)" "$(user)@$(server)" "docker stop \$$(docker ps -q --filter publish=$(listen-port)) ; docker load && docker container prune -f && docker image prune -f && docker run -d --network everyboard -p $(listen-port):8081 backend-$(target) /backend $(args)" < "backend-$(target).tar"
 
-clean:
-	opam exec -- dune clean
-
-.PHONY: bin test clean install docker deploy all
+.PHONY: build deps tidy run test coverage view-coverage check-coverage lint clean prod deploy

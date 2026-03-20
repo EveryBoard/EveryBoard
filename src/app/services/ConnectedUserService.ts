@@ -9,22 +9,8 @@ import { UserDAO } from '../dao/UserDAO';
 import { MinimalUser } from '../domain/MinimalUser';
 import { User } from '../domain/User';
 import { Debug } from '../utils/Debug';
-import { Localized } from '../utils/LocaleUtils';
 
 import { UserService } from './UserService';
-
-export class GameActionFailure {
-
-    public static YOU_ARE_ALREADY_PLAYING: Localized = () => $localize`You are already playing in another game.`;
-
-    public static YOU_ARE_ALREADY_CREATING: Localized = () => $localize`You are already the creator of another game.`;
-
-    public static YOU_ARE_ALREADY_CHOSEN_OPPONENT: Localized = () => $localize`You are already the chosen opponent in another game.`;
-
-    public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
-
-    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing another game.`;
-}
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -262,9 +248,9 @@ export class ConnectedUserService implements OnDestroy {
      */
     public async createUser(uid: string, username?: string): Promise<void> {
         if (username == null) {
-            await this.userDAO.set(uid, { verified: false, currentGame: null });
+            await this.userDAO.set(uid, { verified: false });
         } else {
-            await this.userDAO.set(uid, { username, verified: false, currentGame: null });
+            await this.userDAO.set(uid, { username, verified: false });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
@@ -332,10 +318,6 @@ export class ConnectedUserService implements OnDestroy {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
-    }
-    public sendPresenceToken(): Promise<void> {
-        Utils.assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
-        return this.userService.updatePresenceToken(this.user.get().id);
     }
     public getIdToken(): Promise<string> {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);

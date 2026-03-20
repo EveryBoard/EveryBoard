@@ -55,7 +55,7 @@
 
             <div class="navbar-item">
                 <ng-container *ngIf="loading else showUsernameOrLogin">
-                    <fa-icon [icon]="faSpinner" class="navbar-item fa-spin"></fa-icon>
+                    <fa-icon [icon]="faSpinner" class="navbar-item"></fa-icon>
                 </ng-container>
                 <ng-template #showUsernameOrLogin>
                     <ng-container *ngIf="username.isPresent() else connect">

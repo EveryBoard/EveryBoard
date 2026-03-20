@@ -24,6 +24,8 @@ export abstract class MGPFallible<T> {
 
     public abstract toOptional(): MGPOptional<T>;
 
+    public abstract map<U>(f: (value: T) => U): MGPFallible<U>;
+
     public equals(other: MGPFallible<T>): boolean {
         if (this.isFailure()) {
             return other.isFailure() && this.getReason() === other.getReason();
@@ -42,27 +44,39 @@ class MGPFallibleSuccess<T> extends MGPFallible<T> {
     public constructor(private readonly value: T) {
         super();
     }
-    public isSuccess(): this is MGPFallibleSuccess<T> {
+
+    public override isSuccess(): this is MGPFallibleSuccess<T> {
         return true;
     }
-    public isFailure(): this is MGPFallibleFailure<T> {
+
+    public override isFailure(): this is MGPFallibleFailure<T> {
         return false;
     }
-    public get(): T {
+
+    public override get(): T {
         return this.value;
     }
-    public getReason(): string {
+
+    public override getReason(): string {
         throw new Error('Cannot get failure reason from a success');
     }
-    public getReasonOr(value: string): string {
+
+    public override getReasonOr(value: string): string {
         return value;
     }
-    public toOptional(): MGPOptional<T> {
+
+    public override toOptional(): MGPOptional<T> {
         return MGPOptional.of(this.value);
     }
+
+    public override map<U>(f: (value: T) => U): MGPFallible<U> {
+        return MGPFallible.success(f(this.value));
+    }
+
     public override toString(): string {
         return `MGPFallible.success(${this.value})`;
     }
+
 }
 
 class MGPFallibleFailure<T> extends MGPFallible<T> {
@@ -72,27 +86,39 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
     public constructor(private readonly reason: string) {
         super();
     }
-    public isSuccess(): this is MGPFallibleSuccess<T> {
+
+    public override isSuccess(): this is MGPFallibleSuccess<T> {
         return false;
     }
-    public isFailure(): this is MGPFallibleFailure<T> {
+
+    public override isFailure(): this is MGPFallibleFailure<T> {
         return true;
     }
-    public get(): T {
+
+    public override get(): T {
         throw new Error('Value is absent from failure, with the following reason: ' + this.reason);
     }
-    public getReason(): string {
+
+    public override getReason(): string {
         return this.reason;
     }
-    public getReasonOr(_value: string): string {
+
+    public override getReasonOr(_value: string): string {
         return this.getReason();
     }
-    public toOptional(): MGPOptional<T> {
+
+    public override toOptional(): MGPOptional<T> {
         return MGPOptional.empty();
     }
+
+    public override map<U>(f: (value: T) => U): MGPFallible<U> {
+        return this.toOtherFallible<U>();
+    }
+
     public override toString(): string {
         return `MGPFallible.failure(${this.reason})`;
     }
+
     public toOtherFallible<U>(): MGPFallible<U> {
         return MGPFallible.failure(this.reason);
     }

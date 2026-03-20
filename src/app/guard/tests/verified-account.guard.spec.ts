@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -20,12 +19,11 @@ describe('VerifiedAccountGuard', () => {
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
+            imports: [],
+            providers: [
+                provideRouter([
                     { path: '**', component: BlankComponent },
                 ]),
-            ],
-            providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
             ],
         }).compileComponents();
