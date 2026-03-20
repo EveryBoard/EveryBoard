@@ -1,62 +1,36 @@
 import { Injectable } from '@angular/core';
-import { serverTimestamp } from 'firebase/firestore';
 import { Subscription } from 'rxjs';
 
-import { MGPValidation } from '@everyboard/lib';
-
-import { ChatDAO } from '../dao/ChatDAO';
-import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { Message, MessageDocument } from '../domain/Message';
-import { MinimalUser } from '../domain/MinimalUser';
+import { Message } from '../domain/Message';
 import { Debug } from '../utils/Debug';
-import { Localized } from '../utils/LocaleUtils';
 
-export class ChatMessages {
-    public static readonly CANNOT_SEND_MESSAGE: Localized = () => $localize`You're not allowed to send a message here.`;
+import { BackendService, BackendMessage } from './BackendService';
 
-    public static readonly FORBIDDEN_MESSAGE: Localized = () => $localize`This message is forbidden.`;
+export abstract class AbstractChatService {
+    public abstract subscribeToMessages(callback: (message: Message) => void): Subscription;
+
+    public abstract sendMessage(message: string): Promise<void>;
 }
 
 @Injectable({
     providedIn: 'root',
 })
 @Debug.log
-export class ChatService {
+export class ChatService extends AbstractChatService {
 
-    public constructor(private readonly chatDAO: ChatDAO) {}
+    public constructor(private readonly backendService: BackendService) {
+        super();
+    }
 
-    public async addMessage(chatId: string, message: Message): Promise<string> {
-        return this.chatDAO.subCollectionDAO(chatId, 'messages').create(message);
+    public override subscribeToMessages(callback: (message: Message) => void): Subscription {
+        // Make a new subscription to receive new messages
+        return this.backendService.setCallback('ChatMessage', (message: BackendMessage): void => {
+            callback(message.getArgument('message'));
+        });
     }
-    public async getLastMessages(chatId: string, limit: number): Promise<MessageDocument[]> {
-        const ordering: string = 'postedTime';
-        return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').findWhere([], ordering, limit);
+
+    public override async sendMessage(message: string): Promise<void> {
+        await this.backendService.send(['ChatSend', { message }]);
     }
-    public subscribeToMessages(chatId: string, callback: FirestoreCollectionObserver<Message>): Subscription {
-        return this.chatDAO.subCollectionDAO<Message>(chatId, 'messages').observingWhere([], callback, 'postedTime');
-    }
-    public async sendMessage(chatId: string, sender: MinimalUser, content: string, currentTurn?: number)
-    : Promise<MGPValidation>
-    {
-        if (this.userCanSendMessage(sender.name, chatId) === false) {
-            return MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE());
-        }
-        if (this.isForbiddenMessage(content)) {
-            return MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE());
-        }
-        const newMessage: Message = {
-            content,
-            sender,
-            postedTime: serverTimestamp(),
-            currentTurn,
-        };
-        await this.addMessage(chatId, newMessage);
-        return MGPValidation.SUCCESS;
-    }
-    private userCanSendMessage(userName: string, _chatId: string): boolean {
-        return userName !== ''; // In practice, no user can have this username. This may be extended to other reasons in the future.
-    }
-    private isForbiddenMessage(message: string): boolean {
-        return (message === '');
-    }
+
 }

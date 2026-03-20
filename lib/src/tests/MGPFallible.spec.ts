@@ -35,6 +35,10 @@ describe('MGPFallible', () => {
             expect(value.equals(MGPFallible.failure('foo'))).toBeFalse();
         });
 
+        it('should support mapping a function over', () => {
+            expect(value.map((x: number): string => x.toString())).toEqual(MGPFallible.success('42'));
+        });
+
         it('should be convertible to string', () => {
             expect(value.toString()).toBe('MGPFallible.success(42)');
         });
@@ -61,6 +65,10 @@ describe('MGPFallible', () => {
 
         it('should extract the reason with getReasonOr', () => {
             expect(value.getReasonOr('foo')).toBe('reason');
+        });
+
+        it('should support mapping a function over', () => {
+            expect(value.map((x: number): string => x.toString())).toEqual(value);
         });
 
         it('should have a well-defined equality', () => {

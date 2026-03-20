@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
 
 import { JSONValue, MGPOptional } from '@everyboard/lib';
@@ -21,13 +21,12 @@ describe('ErrorLoggerService', () => {
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-            ],
+            imports: [],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                provideRouter([
+                    { path: '**', component: BlankComponent },
+                ]),
                 { provide: ErrorDAO, useClass: ErrorDAOMock },
             ],
         }).compileComponents();

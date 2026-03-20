@@ -1,6 +1,3 @@
-import { Utils } from '@everyboard/lib';
-
-import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 
 import { MinimalUser } from './MinimalUser';
@@ -8,78 +5,61 @@ import { MinimalUser } from './MinimalUser';
 // On top of these fields, a config room has a subcollection of candidates, which are MinimalUsers
 export type ConfigRoom = {
     readonly creator: MinimalUser;
-    readonly chosenOpponent: MinimalUser | null;
-    readonly partStatus: IPartStatus;
+    readonly creatorElo: number;
 
-    readonly firstPlayer: IFirstPlayer;
-    readonly partType: IPartType;
-    readonly maximalMoveDuration: number;
-    readonly totalPartDuration: number;
+    readonly chosenOpponent: MinimalUser | null;
+    readonly status: Status;
+
+    readonly firstPlayer: FirstPlayer;
+    readonly gameType: GameType;
+    readonly moveDuration: number;
+    readonly gameDuration: number;
     readonly rulesConfig: RulesConfig;
+    readonly gameName: string;
 };
 
-export type ConfigRoomDocument = FirestoreDocument<ConfigRoom>;
+// A proposal is a subset of ConfigRoom with only the relevant fields. It is safer than a Partial<ConfigRoom>
+type ConfigProposalFields = 'gameType' | 'firstPlayer' | 'moveDuration' | 'gameDuration' | 'rulesConfig';
+export type ConfigProposal = Pick<ConfigRoom, ConfigProposalFields>;
 
-export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
+export type FirstPlayer = 'Creator' | 'Random' | 'ChosenOpponent';
 
-export class FirstPlayer {
-
-    private constructor(public value: IFirstPlayer) {}
-
-    public static readonly CREATOR: FirstPlayer = new FirstPlayer('CREATOR');
-
-    public static readonly RANDOM: FirstPlayer = new FirstPlayer('RANDOM');
-
-    public static readonly CHOSEN_PLAYER: FirstPlayer = new FirstPlayer('CHOSEN_PLAYER');
-
-    public static of(value: string): FirstPlayer {
-        switch (value) {
-            case 'CREATOR': return FirstPlayer.CREATOR;
-            case 'RANDOM': return FirstPlayer.RANDOM;
-            default:
-                Utils.assert(value === 'CHOSEN_PLAYER', 'Invalid value for FirstPlayer: ' + value + '.');
-                return FirstPlayer.CHOSEN_PLAYER;
-        }
-    }
-}
-export type IPartType = 'STANDARD' | 'BLITZ' | 'CUSTOM';
-
-export class PartType {
-    private constructor(public value: IPartType) {}
-
-    public static readonly STANDARD: PartType = new PartType('STANDARD');
-
-    public static readonly BLITZ: PartType = new PartType('BLITZ');
-
-    public static readonly CUSTOM: PartType = new PartType('CUSTOM');
-
-    public static NORMAL_MOVE_DURATION: number = 2 * 60;
-    public static NORMAL_PART_DURATION: number = 30 * 60;
-    public static BLITZ_MOVE_DURATION: number = 30;
-    public static BLITZ_PART_DURATION: number = 15 * 60;
-
-    public static of(value: string): PartType {
-        switch (value) {
-            case 'STANDARD': return PartType.STANDARD;
-            case 'BLITZ': return PartType.BLITZ;
-            case 'CUSTOM': return PartType.CUSTOM;
-            default: throw new Error('Invalid part type: ' + value + '.');
-        }
-    }
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace FirstPlayer {
+    export const CREATOR: FirstPlayer = 'Creator';
+    export const RANDOM: FirstPlayer = 'Random';
+    export const CHOSEN_OPPONENT: FirstPlayer = 'ChosenOpponent';
 }
 
-export type IPartStatus = number;
+export type GameType = 'Standard' | 'Blitz' | 'Custom';
 
-export class PartStatus {
-    private constructor(public value: IPartStatus) {}
-    // part created, no ChosenOpponent => waiting for acceptable candidate
-    public static PART_CREATED: PartStatus = new PartStatus(0);
-    // part created, ChosenOpponent selected, config proposed by the creator
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace GameType {
+    export const STANDARD: GameType = 'Standard';
+    export const BLITZ: GameType = 'Blitz';
+    export const CUSTOM: GameType = 'Custom';
+}
+
+export namespace GameDuration {
+    export const STANDARD_MOVE_DURATION: number = 2 * 60;
+    export const STANDARD_GAME_DURATION: number = 30 * 60;
+    export const BLITZ_MOVE_DURATION: number = 30;
+    export const BLITZ_GAME_DURATION: number = 15 * 60;
+}
+
+export type Status = 'Created' | 'ConfigProposed' | 'Started' | 'Finished';
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export namespace Status {
+    // game created, no ChosenOpponent => waiting for acceptable candidate
+    export const CREATED: Status = 'Created';
+    // game created, ChosenOpponent selected, config proposed by the creator
     // => waiting the config room to accept them
-    public static CONFIG_PROPOSED: PartStatus = new PartStatus(2);
-    // part created, ChosenOpponent selected, config proposed by the created, accepted by the config room
-    // => part started
-    public static PART_STARTED: PartStatus = new PartStatus(3);
+    export const CONFIG_PROPOSED: Status = 'ConfigProposed';
+    // gamecreated, ChosenOpponent selected, config proposed by the created, accepted by the config room
+    // => game started
+    export const STARTED: Status = 'Started';
 
-    public static PART_FINISHED: PartStatus = new PartStatus(4);
+    export const FINISHED: Status = 'Finished';
+
 }

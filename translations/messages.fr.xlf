@@ -745,9 +745,9 @@
         <source>Second player</source>
         <target>Deuxième joueur</target>
       </trans-unit>
-      <trans-unit id="8503767092684163333" datatype="html">
-        <source>Turn</source>
-        <target>Tour</target>
+      <trans-unit id="5611592591303869712" datatype="html">
+        <source>Status</source>
+        <target>Status</target>
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
@@ -845,10 +845,6 @@
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
         <target>Ce jeu (<x id="PH" equiv-text="gameName"/>) n'existe pas.</target>
       </trans-unit>
-      <trans-unit id="777716481777788338" datatype="html">
-        <source>The game you tried to join does not exist.</source>
-        <target>La partie que vous essayez de rejoindre n'existe pas.</target>
-      </trans-unit>
       <trans-unit id="7285945849261218681" datatype="html">
         <source>This game has ended.</source>
         <target>Cette partie est terminée.</target>
@@ -938,8 +934,8 @@
         <target>Proposer un match nul</target>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit. You won.</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé son temps. Vous avez gagné.</target>
+        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has reached their time limit. You won.</source>
+        <target><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> a épuisé son temps. Vous avez gagné.</target>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
@@ -966,16 +962,16 @@
         <target>Vous avez abandonné.</target>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé son temps.</target>
+        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has reached their time limit.</source>
+        <target><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> a épuisé son temps.</target>
       </trans-unit>
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>
         <target>Retour à la liste des parties</target>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
-        <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a abandonné.</target>
+        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has resigned.</source>
+        <target><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> a abandonné.</target>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
@@ -994,8 +990,8 @@
         <target>Vous avez perdu.</target>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/> won.</source>
-        <target>Victoire de <x id="INTERPOLATION" equiv-text="{{ currentPart.getWinner() }}"/>.</target>
+        <source><x id="INTERPOLATION" equiv-text="getWinner().name }}"/> won.</source>
+        <target>Victoire de <x id="INTERPOLATION" equiv-text="getWinner().name }}"/>.</target>
       </trans-unit>
       <trans-unit id="4073116770334354573" datatype="html">
         <source>Blitz</source>
@@ -1136,6 +1132,22 @@
       <trans-unit id="8926567047186783072" datatype="html">
         <source>Standard time</source>
         <target>Temps standard</target>
+      </trans-unit>
+      <trans-unit id="7593355192491237220" datatype="html">
+        <source>The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.</source>
+        <target>La partie que vous essayez de joindre n'existe pas. Sa salle de configuration aurait pu exister dans le passé, mais son créateur l'a quitté avant que la partie démarre.</target>
+      </trans-unit>
+      <trans-unit id="5405832111463837320" datatype="html">
+        <source>You already have another tab open.</source>
+        <target>Vous avez déjà un autre onglet ouvert.</target>
+      </trans-unit>
+      <trans-unit id="3167850208641058102" datatype="html">
+        <source>Unexpected error from backend: <x id="PH" equiv-text="error"/></source>
+        <target>Erreur inattendue du serveur : <x id="PH" equiv-text="error"/></target>
+      </trans-unit>
+      <trans-unit id="9113418610979201447" datatype="html">
+        <source>The game has been cancelled.</source>
+        <target>La partie a été annulée.</target>
       </trans-unit>
       <trans-unit id="4412958068611913614" datatype="html">
         <source>custom</source>
@@ -4833,6 +4845,10 @@
         <source>There are missing fields in the registration form, please check that you filled in all fields.</source>
         <target>Il manque certains champs dans le formulaire, vérifiez que vous avez complété tous les champs.</target>
       </trans-unit>
+      <trans-unit id="5497781928212420280" datatype="html">
+        <source>Connection to server failed or closed, trying again in <x id="PH" equiv-text="this.nextConnectionAttemptTime"/> seconds...</source>
+        <target>La connexion au serveur a échouée ou a été fermée. Reconnection dans <x id="PH" equiv-text="this.nextConnectionAttemptTime"/> secondes...</target>
+        </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>
         <target>Ce nom d'utilisateur est déjà utilisé.</target>
@@ -4877,25 +4893,9 @@
         <source>This username is already in use, please select a different one.</source>
         <target>Ce nom d'utilisateur est déjà utilisé, veuillez en utiliser un autre.</target>
       </trans-unit>
-      <trans-unit id="5527862698509020204" datatype="html">
-        <source>This game does not exist!</source>
-        <target>Cette partie n'existe pas !</target>
-      </trans-unit>
-      <trans-unit id="75196759111440200" datatype="html">
-        <source>You&apos;re not allowed to send a message here.</source>
-        <target>Vous n'êtes pas autorisé à envoyer un message ici.</target>
-      </trans-unit>
-      <trans-unit id="4052977957517792171" datatype="html">
-        <source>This message is forbidden.</source>
-        <target>Ce message est interdit.</target>
-      </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
         <target>Une erreur inattendue est arrivée. Nous l'avons notée et essayerons de la réparer au plus vite.</target>
-      </trans-unit>
-      <trans-unit id="3878208315329190575" datatype="html">
-        <source>This is the wrong game type!</source>
-        <target>C'est le mauvais type de jeu !</target>
       </trans-unit>
       <trans-unit id="682801679843744749" datatype="html">
         <source><x id="PH" equiv-text="hours"/> hours</source>

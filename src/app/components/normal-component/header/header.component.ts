@@ -8,7 +8,6 @@ import { MGPOptional } from '@everyboard/lib';
 import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
-import { UserService } from '../../../services/UserService';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
@@ -32,10 +31,10 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public constructor(public router: Router,
                        public connectedUserService: ConnectedUserService,
-                       public currentGameService: CurrentGameService,
-                       public userService: UserService)
+                       public currentGameService: CurrentGameService)
     {
     }
+
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
@@ -56,7 +55,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public async navigateToPart(): Promise<boolean> {
-        return this.router.navigate(['/play', this.currentGame.get().typeGame, this.currentGame.get().id]);
+        return this.router.navigate(['/play', this.currentGame.get().gameName, this.currentGame.get().id]);
     }
 
     public ngOnDestroy(): void {
@@ -65,6 +64,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public getCurrentGameName(): string {
-        return GameInfo.getByUrlName(this.currentGame.get().typeGame).get().name;
+        return GameInfo.getByUrlName(this.currentGame.get().gameName).get().name;
     }
 }

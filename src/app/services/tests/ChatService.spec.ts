@@ -1,78 +1,67 @@
 /* eslint-disable max-lines-per-function */
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { fakeAsync, TestBed } from '@angular/core/testing';
-import { serverTimestamp } from 'firebase/firestore';
+import { fakeAsync, tick } from '@angular/core/testing';
+import { Subscription } from 'rxjs';
 
-import { MGPValidation } from '@everyboard/lib';
-
-import { ChatDAO } from '../../dao/ChatDAO';
-import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
 import { Message } from '../../domain/Message';
-import { MinimalUser } from '../../domain/MinimalUser';
-import { ChatMessages, ChatService } from '../ChatService';
+import { AbstractBackendService, BackendService } from '../BackendService';
+import { ChatService } from '../ChatService';
+
+import { BackendServiceMock } from './BackendServiceMock.spec';
 
 describe('ChatService', () => {
 
     let chatService: ChatService;
-    let chatDAO: ChatDAO;
+    let backendService: BackendServiceMock;
 
-    const MESSAGE: Message = {
+    const message: Message = {
         content: 'foo',
         sender: { name: 'sender', id: 'senderId' },
-        postedTime: serverTimestamp(),
-        currentTurn: 2,
+        timestamp: 0,
     };
 
     beforeEach(fakeAsync(async() => {
-        await TestBed.configureTestingModule({
-            imports: [],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ChatDAO, useClass: ChatDAOMock },
-            ],
-        }).compileComponents();
-
-        chatDAO = TestBed.inject(ChatDAO);
-        chatService = new ChatService(chatDAO);
+        backendService = new BackendServiceMock();
+        chatService = new ChatService(backendService as AbstractBackendService as BackendService);
     }));
+
     it('should be created', () => {
         expect(chatService).toBeTruthy();
     });
+
     describe('sendMessage', () => {
-        it('should not send message if the user is not allowed to send a message in the chat', fakeAsync(async() => {
+        it('should send the message to the backend', fakeAsync(async() => {
+            spyOn(backendService, 'send').and.callThrough();
             // Given a chat
-            await chatDAO.set('id', {});
-            // When sending a message without a username
-            const sender: MinimalUser = { name: '', id: 'fooId' };
-            const result: Promise<MGPValidation> = chatService.sendMessage('id', sender, 'foo', 2);
-            // Then the message is rejected
-            await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.CANNOT_SEND_MESSAGE()));
-        }));
-        it('should not send message if it is empty', fakeAsync(async() => {
-            // Given a chat
-            await chatDAO.set('id', {});
-
-            // When sending an empty message
-            const sender: MinimalUser = { name: 'sender', id: 'senderId' };
-            const result: Promise<MGPValidation> = chatService.sendMessage('id', sender, '', 2);
-
-            // Then the message is rejected
-            await expectAsync(result).toBeResolvedTo(MGPValidation.failure(ChatMessages.FORBIDDEN_MESSAGE()));
-        }));
-        it('should update the chat with the new message in the DAO', fakeAsync(async() => {
-            spyOn(Date, 'now').and.returnValue(42);
-            spyOn(chatService, 'addMessage').and.callThrough();
-            // Given an empty chat
-            await chatDAO.set('id', {});
-
-            // When a message is sent on that chat
-            const sender: MinimalUser = { name: 'sender', id: 'senderId' };
-            await chatService.sendMessage('id', sender, 'foo', 2);
-
-            // Then the chat should be updated with the new message
-            expect(chatService.addMessage).toHaveBeenCalledWith('id', MESSAGE);
+            // When sending a message
+            await chatService.sendMessage('hello');
+            // Then the message is forwarded to the backend
+            expect(backendService.send).toHaveBeenCalledOnceWith(['ChatSend', { message: 'hello' }]);
         }));
 
+    });
+
+    describe('subscribeToMessage', () => {
+        it('should receive messages from the backend', fakeAsync(async() => {
+            // Given a chat where we subscribed to the messages
+            const receivedMessages: Message[] = [];
+            chatService.subscribeToMessages((m: Message): void => {
+                receivedMessages.push(m);
+            });
+            // When a message is received by the backend
+            backendService.mockReceivedMessage('ChatMessage', { message: message });
+            tick(1);
+            // Then we receive it too
+            expect(receivedMessages.length).toBe(1);
+        }));
+
+        it('should unsubscribe from callback upon unsubscription', fakeAsync(async() => {
+            // Given a chat where we subscribed to the messages
+            const subscription: Subscription = chatService.subscribeToMessages(() => {});
+            // When we unsubscribe
+            subscription.unsubscribe();
+            // Then the subscription should be unsubscribed
+            expect(subscription.closed).toBe(true);
+        }));
     });
 
 });

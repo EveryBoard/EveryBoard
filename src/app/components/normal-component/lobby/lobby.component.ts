@@ -2,16 +2,22 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { PartDocument } from '../../../domain/Part';
+import { ConfigRoom, Status } from '../../../domain/ConfigRoom';
 import { CurrentGame } from '../../../domain/User';
-import { ActivePartsService } from '../../../services/ActivePartsService';
-import { CurrentGameService } from '../../../services/CurrentGameService';
+import { ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
+import { BackendMessage, BackendService } from '../../../services/BackendService';
+import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
+import { GameInfo } from '../pick-game/pick-game.component';
 
 type Tab = 'games' | 'create' | 'chat';
+
+type WithId<T> = T & {
+    id : string;
+};
 
 @Component({
     selector: 'app-lobby',
@@ -20,25 +26,28 @@ type Tab = 'games' | 'create' | 'chat';
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
 
-    public activeParts: PartDocument[] = [];
+    private activeConfigRooms: MGPMap<string, ConfigRoom> = new MGPMap();
 
-    private activePartsSubscription!: Subscription; // initialized in ngOnInit
+    private activeConfigRoomsSubscription!: Subscription; // initialized in ngOnInit
     private currentGameSubscription!: Subscription; // initialized in ngOnInit
+    private lobbySubscription!: Subscription; // initialized in ngOnInit
+    private errorSubscription!: Subscription; // initialized in ngOnInit
 
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
 
     public constructor(public readonly router: Router,
                        public readonly messageDisplayer: MessageDisplayer,
-                       private readonly activePartsService: ActivePartsService,
-                       private readonly currentGameService: CurrentGameService)
+                       private readonly activeConfigRoomsService: ActiveConfigRoomsService,
+                       private readonly currentGameService: CurrentGameService,
+                       private readonly backendService: BackendService)
     {
     }
 
-    public ngOnInit(): void {
-        this.activePartsSubscription = this.activePartsService.subscribeToActiveParts(
-            (activeParts: PartDocument[]) => {
-                this.activeParts = activeParts;
+    public async ngOnInit(): Promise<void> {
+        this.activeConfigRoomsSubscription = this.activeConfigRoomsService.subscribe(
+            (rooms: MGPMap<string, ConfigRoom>) => {
+                this.activeConfigRooms = rooms;
             });
         this.currentGameSubscription = this.currentGameService.subscribeToCurrentGame(
             (observed: MGPOptional<CurrentGame>) => {
@@ -47,20 +56,56 @@ export class LobbyComponent implements OnInit, OnDestroy {
                     this.createTabClasses = ['disabled-tab'];
                 }
             });
+
+        this.lobbySubscription = await this.backendService.subscribeToLobby();
+        this.errorSubscription = this.backendService.setCallback('Error', async(message: BackendMessage): Promise<void> => {
+            await this.onError(message.getArgument('reason'));
+        });
     }
 
-    public ngOnDestroy(): void {
-        this.activePartsSubscription.unsubscribe();
+    private async onError(error: string): Promise<void> {
+        switch (error) {
+            case 'already-subscribed':
+                this.messageDisplayer.criticalMessage(GameActionFailure.YOU_ALREADY_HAVE_ANOTHER_TAB());
+                await this.router.navigate(['/']);
+                break;
+            default:
+                this.messageDisplayer.criticalMessage(GameActionFailure.UNEXPECTED_BACKEND_ERROR(error));
+                await this.router.navigate(['/']);
+                break;
+        }
+    }
+
+    public async ngOnDestroy(): Promise<void> {
+        this.lobbySubscription.unsubscribe();
+        this.activeConfigRoomsSubscription.unsubscribe();
         this.currentGameSubscription.unsubscribe();
+        this.errorSubscription.unsubscribe();
     }
 
-    public async joinGame(part: PartDocument): Promise<void> {
-        const partId: string = part.id;
-        const typeGame: string = part.data.typeGame;
-        const gameStarted: boolean = part.data.beginning != null;
-        const canUserJoin: MGPValidation = this.currentGameService.canUserJoin(partId, gameStarted);
+    public getActiveConfigRooms(): WithId<ConfigRoom>[] {
+        const all: WithId<ConfigRoom>[] = [];
+        for (const [id, data] of this.activeConfigRooms) {
+            all.push({ id, ...data });
+        }
+        return all;
+    }
+
+    public getGameName(configRoom: ConfigRoom): string {
+        return GameInfo.getByUrlName(configRoom.gameName).get().name;
+    }
+
+    public getCreatorLine(configRoom: ConfigRoom): string {
+        return `${configRoom.creator.name} (${Math.floor(configRoom.creatorElo)})`;
+    }
+
+    public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {
+        const gameId: string = configRoom.id;
+        const gameName: string = configRoom.gameName;
+        const gameStarted: boolean = configRoom.status === Status.STARTED;
+        const canUserJoin: MGPValidation = this.currentGameService.canUserJoin(gameId, gameStarted);
         if (canUserJoin.isSuccess()) {
-            await this.router.navigate(['/play', typeGame, partId]);
+            await this.router.navigate(['/play', gameName, gameId]);
         } else {
             this.messageDisplayer.criticalMessage(canUserJoin.getReason());
         }
@@ -76,6 +121,14 @@ export class LobbyComponent implements OnInit, OnDestroy {
             }
         } else {
             this.currentTab = tab;
+        }
+    }
+
+    public getVisibility(tab: Tab): string {
+        if (this.currentTab === tab) {
+            return '';
+        } else {
+            return 'is-hidden';
         }
     }
 

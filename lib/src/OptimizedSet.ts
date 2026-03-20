@@ -63,7 +63,7 @@ export abstract class OptimizedSet<T extends Comparable> extends Set<T> {
         return indirection[finalField] !== undefined;
     }
 
-    [Symbol.iterator](): IterableIterator<T> {
+    override [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }
 }

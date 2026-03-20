@@ -6,6 +6,9 @@ import time
 import threading
 import e2e
 import killport
+import os
+import sys
+import traceback
 
 failed = False
 
@@ -22,11 +25,39 @@ def open_urls(process):
             except Exception as e:
                 print(f'[e2e] Failed to visit {url}: {e}')
 
-def run_e2e():
+def log(process):
+    for line in iter(process.stdout.readline, ""):
+        print(f'[back] {line}', end='')
+
+def run_e2e(only_scenario):
+    backend_process = None
+    frontend_process = None
+    watch_thread = None
+    backend_log_thread = None
+    docker_id = None
     try:
         print('[e2e] Launching processes')
-        frontend_process = subprocess.Popen(['npm', 'run', 'start:emulator'], stdout=subprocess.PIPE, universal_newlines=True)
-        backend_process = subprocess.Popen(['make', '-C', 'backend', 'run'])
+        postgres_user = 'everyboard_e2e'
+        postgres_password = 'everyboard_e2e'
+        postgres_db = 'everyboard_e2e'
+        docker_id = subprocess.check_output(['docker', 'run', '-d',
+                                             '-e', f'POSTGRES_USER={postgres_user}',
+                                             '-e', f'POSTGRES_PASSWORD={postgres_password}',
+                                             '-e', f'POSTGRES_DB={postgres_db}',
+                                             '-p', '5432:5432',
+                                             'postgres:17']).decode().strip()
+        time.sleep(5) # wait for postgres to start
+
+        env = os.environ.copy()
+        env['DB_USERNAME'] = postgres_user
+        env['DB_PASSWORD'] = postgres_password
+        env['DB_NAME'] = postgres_db
+        env['DB_HOST'] = 'localhost'
+        backend_process = subprocess.Popen(['make', '-C', 'backend', 'run-postgres'], env=env, stdout=subprocess.PIPE, universal_newlines=True)
+        backend_log_thread = threading.Thread(target=log, args=(backend_process,))
+        backend_log_thread.start()
+
+        frontend_process = subprocess.Popen(['npm', 'run', 'start:emulator'], stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
 
         print('[e2e] Watching URLs')
         watch_thread = threading.Thread(target=open_urls, args=(frontend_process,))
@@ -45,12 +76,13 @@ def run_e2e():
                 print(f'[e2e] Got {e}')
 
         print('[e2e] Starting e2e tests')
-        e2e.launch_scenarios()
+        e2e.launch_scenarios(only_scenario)
         print('[e2e] e2e tests done with success')
         return True
 
     except Exception as e:
         print(f'[e2e] Failed! {e}')
+        traceback.print_exc()
         return False
 
     finally:
@@ -58,13 +90,22 @@ def run_e2e():
         # We can't just kill the processes as they have created detached children
         killport.kill_ports(ports = [9000, 8080, 8081, 4200, 4000])
 
-        frontend_process.kill()
-        backend_process.kill()
-        watch_thread.join()
-
+        if docker_id != None:
+            subprocess.run(["docker", "rm", "-f", docker_id])
+        if backend_process != None:
+            backend_process.kill()
+        if frontend_process != None:
+            frontend_process.kill()
+        if watch_thread != None:
+            watch_thread.join()
+        if backend_log_thread != None:
+            backend_log_thread.join()
 
 if __name__ == '__main__':
-    success = run_e2e()
+    only_scenarios = None
+    if len(sys.argv) >= 2:
+        only_scenarios = sys.argv[1:]
+    success = run_e2e(only_scenarios)
     print('[e2e] Done.')
     if success == False:
         exit(1)

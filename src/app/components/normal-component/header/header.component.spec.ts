@@ -12,7 +12,7 @@ import { CurrentGameMocks } from '../../../domain/mocks/CurrentGameMocks.spec';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
-import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameService.spec';
+import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameServiceMock.spec';
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AccountComponent } from '../account/account.component';
 import { GameInfo } from '../pick-game/pick-game.component';
@@ -28,11 +28,13 @@ describe('HeaderComponent', () => {
         const userDAO: UserDAO = TestBed.inject(UserDAO);
         await userDAO.set(UserMocks.CONNECTED_AUTH_USER.id, UserMocks.CONNECTED);
     }));
+
     it('should create', fakeAsync(() => {
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
+
     it('should bring to account settings when clicking on the account button', fakeAsync(async() => {
         // Given a connected user
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -42,6 +44,7 @@ describe('HeaderComponent', () => {
         const button: DebugElement = testUtils.findElement('#account');
         expectValidRoutingLink(button, '/account', AccountComponent);
     }));
+
     describe('disconnection', () => {
         it('should disconnect when connected user clicks on the logout button', fakeAsync(async() => {
             // Given a connected user
@@ -53,6 +56,7 @@ describe('HeaderComponent', () => {
             const component: HeaderComponent = testUtils.getComponent();
             expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
         }));
+
         it('should remove comment in header when disconnecting', fakeAsync(async() => {
             // Given a connected user that has an currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -72,18 +76,21 @@ describe('HeaderComponent', () => {
         }));
 
     });
+
     it('should have empty username when user is not connected', fakeAsync(async() => {
         ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
         testUtils.detectChanges();
         tick(0);
         expect(testUtils.getComponent().username).toEqual(MGPOptional.empty());
     }));
+
     it('should show user email if the user has not set its username yet', fakeAsync(async() => {
         const email: string = 'jean@jaja.us';
         ConnectedUserServiceMock.setUser(new AuthUser('id', MGPOptional.of(email), MGPOptional.empty(), false));
         testUtils.detectChanges();
         expect(testUtils.getComponent().username).toEqual(MGPOptional.of(email));
     }));
+
     it('should redirect to your current part when clicking on its reference on the header', fakeAsync(async() => {
         // Given a component where connected user is observing a part
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -98,8 +105,9 @@ describe('HeaderComponent', () => {
         await testUtils.clickElement('#currentGameLink');
 
         // Then it should have redirect to the part
-        expect(router.navigate).toHaveBeenCalledOnceWith(['/play', currentGame.typeGame, currentGame.id]);
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/play', currentGame.gameName, currentGame.id]);
     }));
+
     describe('currentGame', () => {
         it('should display "<TypeGame> (waiting for opponent)" when creator without chosenOpponent', fakeAsync(async() => {
             // Given a connected user that has no currentGame
@@ -116,9 +124,10 @@ describe('HeaderComponent', () => {
 
             // Then "Four in a Row (waiting for opponent)" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
+            const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' (waiting for opponent)');
         }));
+
         it('should display "<TypeGame> against <Opponent>" when creator with chosenOpponent', fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -134,10 +143,11 @@ describe('HeaderComponent', () => {
 
             // Then "<Game> against <Opponent>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
+            const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
             const opponentName: string = Utils.getNonNullable(currentGame.opponent?.name);
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' against ' + opponentName);
         }));
+
         it(`should display '<TypeGame> by <Creator>' when watching as observer`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -153,10 +163,11 @@ describe('HeaderComponent', () => {
 
             // Then "<TypeGame> by <Opponent, that should contain the creator>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
+            const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
             const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
         }));
+
         it(`should display '<TypeGame> by <Creator>' when watching as candidate`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -172,12 +183,13 @@ describe('HeaderComponent', () => {
 
             // Then "Epaminondas by El Creatoro" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
-            const gameName: string = GameInfo.getByUrlName(currentGame.typeGame).get().name;
+            const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
             const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
         }));
 
     });
+
     it('should unsubscribe from connectedUserService when destroying component', fakeAsync(async() => {
         // Given a header
         const connectedUserService: ConnectedUserService = TestBed.inject(ConnectedUserService);
@@ -192,6 +204,7 @@ describe('HeaderComponent', () => {
         // By hitting it in the ... HEAD.
         expectUnsubscribeToHaveBeenCalled();
     }));
+
     it('should unsubscribe from currentGameService when destroying component', fakeAsync(async() => {
         // Given a header
         const currentGameService: CurrentGameService = TestBed.inject(CurrentGameService);
