@@ -234,8 +234,9 @@ jobs:
         uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
-      - name: Build backend
-        run: cd backend && make
+      - name: Install OS dependencies
+        run: |
+          sudo apt-get install -y musl-tools
       - name: Check if push by an org member
         id: is_organization_member
         uses: jamessingleton/is-organization-member@1.1.0
@@ -347,7 +348,7 @@ jobs:
             npm install netlify-cli
             npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
             # deploy backend
-            if true || ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then # TODO: remove true, implement backend check
+            if ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then
                 mkdir -p ~/.ssh/
                 cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
@@ -356,7 +357,7 @@ jobs:
                 cd backend && \
                   USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='*' \
                     DATABASE_HOST=db DATABASE_USERNAME=everyboard_test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
-                    make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8011 # 8011 because new backend, old one is on 8001
+                    make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8001
             fi
           fi
         env:
