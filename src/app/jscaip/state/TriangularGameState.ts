@@ -38,16 +38,4 @@ export abstract class FourStatePieceTriangularGameState extends TriangularGameSt
         }
     }
 
-    public getNeighbors(coord: Coord): Coord[] {
-        const neighbors: Coord[] = [];
-        for (const neighbor of TriangularCheckerBoard.getNeighbors(coord)) {
-            if (neighbor.isInRange(this.board[0].length, this.board.length) &&
-                (this.board[neighbor.y][neighbor.x] !== FourStatePiece.UNREACHABLE))
-            {
-                neighbors.push(neighbor);
-            }
-        }
-        return neighbors;
-    }
-
 }

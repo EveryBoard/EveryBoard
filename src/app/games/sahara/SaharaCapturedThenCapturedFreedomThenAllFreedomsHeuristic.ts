@@ -63,11 +63,7 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic
                 depth++;
             }
         }
-        if (newWaveOfNeighbors.size() === 0) {
-            return Number.MAX_SAFE_INTEGER;
-        } else {
-            return depth;
-        }
+        return Number.MAX_SAFE_INTEGER;
     }
 
     private getLandingCoords(state: SaharaState, coords: CoordSet): CoordSet {

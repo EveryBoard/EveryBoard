@@ -56,11 +56,7 @@ export class SaharaMobilityHeuristic extends PlayerMetricHeuristic<SaharaMove, S
                 depth++;
             }
         }
-        if (newWaveOfNeighbors.size() === 0) {
-            return Number.MIN_SAFE_INTEGER;
-        } else {
-            return depth;
-        }
+        return Number.MIN_SAFE_INTEGER;
     }
 
     private getLandingCoords(state: SaharaState, coords: CoordSet): CoordSet {
