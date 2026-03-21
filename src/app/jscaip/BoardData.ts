@@ -1,4 +1,4 @@
-import { Set, MGPMap } from '@everyboard/lib';
+import { Set } from '@everyboard/lib';
 
 import { Debug } from '../utils/Debug';
 
@@ -10,7 +10,6 @@ export class BoardData {
 
     private constructor(public readonly groupIndices: Table<number>,
                         public readonly groups: ReadonlyArray<GroupInfos>,
-                        public readonly indexToGroupInfos: MGPMap<number, GroupInfos>,
     ) {}
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDataFactory<T, GroupData<T>>): BoardData {
@@ -42,7 +41,7 @@ export class BoardData {
             const groupInfos: GroupInfos = new GroupInfos(coords, neighborsEntryPoints, new Set(neighboringGroups));
             groupsInfos.push(groupInfos);
         }
-        return new BoardData(groupIndices, groupsInfos, new MGPMap()); // TODO
+        return new BoardData(groupIndices, groupsInfos);
     }
 }
 

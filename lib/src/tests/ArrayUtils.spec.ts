@@ -115,6 +115,17 @@ describe('ArrayUtils', () => {
         });
     });
 
+    describe('countByPredicate', () => {
+        it('should count the given value', () => {
+            // Given an array
+            const array: number[] = [0, 1, 2, 3, 4];
+            // When counting the number of times a number pass the predicate
+            const count: number = ArrayUtils.countByPredicate(array, value => value % 2 === 0);
+            // Then it should return the correct value
+            expect(count).toBe(3);
+        });
+    });
+
     describe('isGreaterThan && isLessThan', () => {
 
         function expectComparisonCorrectness(left: number[], status: '<' | '=' | '>', right: number[]): void {

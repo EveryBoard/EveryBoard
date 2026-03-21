@@ -6,7 +6,7 @@ import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
 import { SaharaState } from './SaharaState';
 
-export class SaharaMinimax extends Minimax<SaharaMove, SaharaState> {
+export class SaharaFreedomMinimax extends Minimax<SaharaMove, SaharaState> {
 
     public constructor() {
         super($localize`Freedom`,

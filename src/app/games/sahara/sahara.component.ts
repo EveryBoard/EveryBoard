@@ -11,13 +11,12 @@ import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
 import { SaharaFailure } from './SaharaFailure';
-import { SaharaMinimax } from './SaharaMinimax';
+import { SaharaFreedomMinimax } from './SaharaMinimax';
 import { SaharaMobilityMinimax } from './SaharaMobilityMinimax';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
 import { SaharaState } from './SaharaState';
-import { SaharaTerritoryMinimax } from './SaharaTerritoryMinimax';
 
 @Component({
     selector: 'app-sahara',
@@ -42,8 +41,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.setRulesAndNode('Sahara');
         this.availableAIs = [
             new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
-            new SaharaMinimax(),
-            new SaharaTerritoryMinimax(),
+            new SaharaFreedomMinimax(),
             new SaharaMobilityMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
