@@ -16,9 +16,9 @@
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
   },
   "devDependencies": {
-    "@types/jasmine": "^5.1.13",
-    "jasmine": "^5.1.0",
-    "nyc": "^17.0.0",
+    "@types/jasmine": "^6.0.0",
+    "jasmine": "^6.1.0",
+    "nyc": "^18.0.0",
     "ts-node": "^10.9.2"
   }
 }

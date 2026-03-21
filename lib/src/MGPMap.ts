@@ -42,7 +42,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
     }
 
-    [Symbol.iterator](): IterableIterator<[K, V]> {
+    public [Symbol.iterator](): IterableIterator<[K, V]> {
         const entries: {key: K, value: V}[] = this.map; // cache the current entries
         let index: number = 0;
 
