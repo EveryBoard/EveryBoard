@@ -48,7 +48,7 @@ lint:
 clean:
 	go clean -testcache
 
-# Build for deploying. sqlite requires non-static build
+# Build for deploying.
 prod:
 	CGO_ENABLED=1 CC=musl-gcc GOOS=linux GOARCH=amd64 go build -ldflags '-extldflags "-static" -s -w -linkmode external' -o backend cmd/backend/main.go
 #	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -ldflags '-s -w' -o backend cmd/backend/main.go
