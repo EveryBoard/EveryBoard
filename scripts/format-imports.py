@@ -12,8 +12,6 @@ from pathlib import Path
 #    3. internal imports
 # 4. each category are then sorted in alphabetical order or import path (enforced by linter)
 
-# TODO: make it refuse imports in 'src' and replace them
-
 # =========================
 # Configuration
 # =========================
