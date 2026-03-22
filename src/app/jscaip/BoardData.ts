@@ -101,8 +101,6 @@ export abstract class GroupDataFactory<T, G extends GroupData<T>> {
 
 export abstract class GroupData<T> {
 
-    public readonly index: number = Math.floor(Math.random() * 1000);
-
     public constructor(public readonly color: T) {}
 
     public abstract getCoords(): Coord[];
