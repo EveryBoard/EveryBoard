@@ -99,26 +99,6 @@ export class GoGroupData extends GroupData<GoPiece> {
         return nonEmptyWrapper.getAnyPair().get().key;
     }
 
-    public override getNeighbors(): Coord[] {
-        const neighbors: Coord[] = [];
-        if (this.color !== GoPiece.EMPTY) {
-            neighbors.push(...this.emptyCoords);
-        }
-        if (this.color !== GoPiece.DEAD_DARK) {
-            neighbors.push(...this.darkCoords);
-        }
-        if (this.color !== GoPiece.LIGHT) {
-            neighbors.push(...this.lightCoords);
-        }
-        if (this.color !== GoPiece.DEAD_DARK) {
-            neighbors.push(...this.deadDarkCoords);
-        }
-        if (this.color !== GoPiece.DEAD_LIGHT) {
-            neighbors.push(...this.deadLightCoords);
-        }
-        return neighbors;
-    }
-
     public override getNeighborsEntryPoints(): Coord[] {
         const neighborsEntryPoints: Coord[] = [];
         if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {

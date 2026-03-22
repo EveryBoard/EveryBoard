@@ -1,5 +1,3 @@
-import { Set } from '@everyboard/lib';
-
 import { Debug } from '../utils/Debug';
 
 import { Coord } from './Coord';
@@ -34,11 +32,7 @@ export class BoardData {
         for (const groupDatas of groupsDatas) {
             const coords: Coord[] = groupDatas.getCoords();
             const neighborsEntryPoints: Coord[] = groupDatas.getNeighborsEntryPoints();
-            const neighboringGroups: number[] = groupDatas.getNeighbors()
-                .map(
-                    (neighboringEntryPoint: Coord) => groupIndices[neighboringEntryPoint.y][neighboringEntryPoint.x],
-                );
-            const groupInfos: GroupInfos = new GroupInfos(coords, neighborsEntryPoints, new Set(neighboringGroups));
+            const groupInfos: GroupInfos = new GroupInfos(coords, neighborsEntryPoints);
             groupsInfos.push(groupInfos);
         }
         return new BoardData(groupIndices, groupsInfos);
@@ -52,7 +46,6 @@ export class GroupInfos {
     public constructor(
         public readonly coords: ReadonlyArray<Coord>,
         public readonly neighborsEntryPoints: ReadonlyArray<Coord>,
-        public readonly neighboringGroups: Set<number>,
     ) {}
 }
 
@@ -119,8 +112,6 @@ export abstract class GroupData<T> {
     public abstract addPawn(coord: Coord, color: T): void;
 
     public abstract getNeighborsEntryPoints(): Coord[];
-
-    public abstract getNeighbors(): Coord[];
 
     public selfContains(coord: Coord): boolean {
         const ownCoords: Coord[] = this.getCoords();
