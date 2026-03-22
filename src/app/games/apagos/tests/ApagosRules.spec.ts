@@ -15,14 +15,12 @@ describe('ApagosRules', () => {
 
     let stateWithOneFullSquare: ApagosState;
 
-    beforeAll(() => {
+    beforeEach(() => {
         stateWithOneFullSquare = ApagosState.fromRepresentation(3, [
             [0, 0, 2, 0],
             [0, 0, 1, 0],
             [7, 5, 3, 1],
         ], 8, 9);
-    });
-    beforeEach(() => {
         rules = ApagosRules.get();
     });
 
@@ -186,6 +184,25 @@ describe('ApagosRules', () => {
             // Then it should be detected as a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
+    });
+
+    describe('Custom Config', () => {
+
+        it('should give by default just enough piece to dominate odd square and own half in even square', () => {
+            // Given the initial state with a custom config with increment = 1
+            const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                increment: 1,
+            });
+
+            // When creating initial state with it
+            const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
+
+            // Then the number of piece by player should be correct
+            expect(state.getRemaining(Player.ZERO)).toBe(6);
+        });
+
     });
 
 });
