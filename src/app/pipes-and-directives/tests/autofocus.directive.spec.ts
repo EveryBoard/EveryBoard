@@ -9,6 +9,7 @@ import { AutofocusDirective } from '../autofocus.directive';
 
 @Component({
     template: `<input type="text" autofocus />`,
+    standalone: false
 })
 class AutofocusTestComponent {}
 

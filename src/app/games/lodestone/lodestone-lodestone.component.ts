@@ -8,6 +8,7 @@ import { LodestoneInfo } from './lodestone.component';
     selector: '[app-lodestone-lodestone]',
     templateUrl: './lodestone-lodestone.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class LodestoneLodestoneComponent extends BaseGameComponent {
 

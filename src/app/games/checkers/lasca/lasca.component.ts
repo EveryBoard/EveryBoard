@@ -9,6 +9,7 @@ import { LascaRules } from './LascaRules';
     selector: 'app-lasca',
     templateUrl: '../common/checkers.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class LascaComponent extends CheckersComponent<LascaRules> {
 

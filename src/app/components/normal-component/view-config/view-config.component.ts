@@ -9,6 +9,7 @@ import { RulesConfigDescription } from '../../wrapper-components/rules-configura
 @Component({
     selector: 'app-view-config',
     templateUrl: './view-config.html',
+    standalone: false
 })
 export class ViewConfigComponent {
 

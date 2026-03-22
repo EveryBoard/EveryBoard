@@ -22,6 +22,7 @@ import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './Enca
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,

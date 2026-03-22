@@ -25,7 +25,10 @@ export class GameWrapperMessages {
 
 }
 
-@Component({ template: '' })
+@Component({
+    template: '',
+    standalone: false
+})
 export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
 
     // This holds the #board html element

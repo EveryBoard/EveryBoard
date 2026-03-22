@@ -11,6 +11,7 @@ import { KalahRules } from './KalahRules';
     selector: 'app-kalah-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class KalahComponent extends MancalaComponent<KalahRules> {
 

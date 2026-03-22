@@ -22,6 +22,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
+    standalone: false
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {

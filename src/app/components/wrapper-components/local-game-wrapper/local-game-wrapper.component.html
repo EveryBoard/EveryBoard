@@ -44,7 +44,7 @@
                         <option selected
                                 value="none"
                                 i18n>Pick the options</option>
-                        <option *ngFor="let option of this.availableAIOptions(player.getValue())"
+                        <option *ngFor="let option of availableAIOptions(player.getValue())"
                                 id="player-{{ player.getValue() }}-option-{{ option.name }}"
                                 [value]="option.name"
                                 >{{ option.name }}</option>

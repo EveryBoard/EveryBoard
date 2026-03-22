@@ -9,6 +9,7 @@ import { MessageDisplayer } from '../../../services/MessageDisplayer';
 @Component({
     selector: 'app-online-game-selection',
     templateUrl: './online-game-selection.component.html',
+    standalone: false
 })
 export class OnlineGameSelectionComponent {
 

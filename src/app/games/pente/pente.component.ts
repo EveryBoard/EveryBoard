@@ -21,6 +21,7 @@ import { PenteState } from './PenteState';
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class PenteComponent extends GobanGameComponent<PenteRules,
                                                        PenteMove,

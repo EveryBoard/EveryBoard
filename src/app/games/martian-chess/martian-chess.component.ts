@@ -48,6 +48,7 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
     selector: 'app-martian-chess',
     templateUrl: './martian-chess.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class MartianChessComponent extends RectangularGameComponent<MartianChessRules,
                                                                     MartianChessMove,

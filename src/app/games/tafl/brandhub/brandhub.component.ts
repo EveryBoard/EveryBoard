@@ -10,6 +10,7 @@ import { BrandhubRules } from './BrandhubRules';
     selector: 'app-brandhub',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove> {
 

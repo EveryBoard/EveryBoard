@@ -16,6 +16,7 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
 @Component({
     selector: 'app-verify-account',
     templateUrl: './verify-account.component.html',
+    standalone: false
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
 

@@ -342,6 +342,7 @@ export class GameInfo {
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
+    standalone: false
 })
 export class PickGameComponent {
 

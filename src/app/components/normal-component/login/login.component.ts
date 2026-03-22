@@ -11,6 +11,7 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
+    standalone: false
 })
 export class LoginComponent implements OnInit, OnDestroy {
 

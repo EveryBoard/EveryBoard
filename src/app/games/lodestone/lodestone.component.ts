@@ -66,6 +66,7 @@ type PreCaptureInfo = {
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>

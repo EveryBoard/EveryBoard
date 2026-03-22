@@ -18,6 +18,7 @@ import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 @Component({
     selector: 'app-local-game-configuration',
     templateUrl: './local-game-configuration.component.html',
+    standalone: false
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {
 

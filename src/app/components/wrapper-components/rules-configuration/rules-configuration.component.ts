@@ -18,6 +18,7 @@ type ConfigFormJSON = {
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 

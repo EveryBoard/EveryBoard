@@ -9,6 +9,7 @@ import { Debug } from '../../../utils/Debug';
     selector: 'app-timer',
     templateUrl: './timer.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 @Debug.log
 export class TimerComponent implements OnDestroy {

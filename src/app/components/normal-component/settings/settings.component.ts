@@ -8,6 +8,7 @@ type SettingOption = { value: string, name: string }
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
+    standalone: false
 })
 export class SettingsComponent {
 

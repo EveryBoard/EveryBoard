@@ -20,6 +20,7 @@ import { QuixoConfig, QuixoState } from './QuixoState';
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class QuixoComponent extends RectangularGameComponent<QuixoRules,
                                                              QuixoMove,

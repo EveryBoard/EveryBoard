@@ -8,6 +8,7 @@ import { MartianChessComponent, MartianChessFace } from './martian-chess.compone
     selector: '[app-martian-chess-pawn]',
     templateUrl: './martian-chess-pawn.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class MartianChessPawnComponent {
 

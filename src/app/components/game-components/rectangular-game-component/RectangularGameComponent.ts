@@ -10,6 +10,7 @@ import { GameComponent } from '../game-component/GameComponent';
 
 @Component({
     template: '',
+    standalone: false
 })
 export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                M extends Move,

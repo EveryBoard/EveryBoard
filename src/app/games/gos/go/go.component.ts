@@ -24,6 +24,7 @@ import { GoConfig, GoRules } from './GoRules';
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 @Debug.log
 export class GoComponent extends GobanGameComponent<GoRules,

@@ -22,6 +22,7 @@ import { NewGameState } from './NewGameState';
     selector: 'app-new-game',
     templateUrl: './new-game.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 /**
  * This is the component.

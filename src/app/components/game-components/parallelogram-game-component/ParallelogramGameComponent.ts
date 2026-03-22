@@ -21,6 +21,7 @@ export interface ModeConfig {
 
 @Component({
     template: '',
+    standalone: false
 })
 export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,

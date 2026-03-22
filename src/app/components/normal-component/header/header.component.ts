@@ -13,6 +13,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
+    standalone: false
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

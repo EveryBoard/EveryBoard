@@ -2,7 +2,10 @@ import { Pipe, PipeTransform } from '@angular/core';
 
 export type Duration = number
 
-@Pipe({ name: 'humanDuration' })
+@Pipe({
+    name: 'humanDuration',
+    standalone: false
+})
 export class HumanDurationPipe implements PipeTransform {
     public transform(duration: Duration): string {
         const seconds: number = duration % 60;

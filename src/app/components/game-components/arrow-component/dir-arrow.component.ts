@@ -9,6 +9,7 @@ import { Arrow } from './Arrow';
     selector: '[app-dir-arrow]',
     templateUrl: './arrow.component.svg',
     styleUrls: ['../game-component/game-component.scss'],
+    standalone: false
 })
 export class DirArrowComponent extends BaseGameComponent {
 

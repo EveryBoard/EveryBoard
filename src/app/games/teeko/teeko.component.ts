@@ -19,6 +19,7 @@ import { TeekoState } from './TeekoState';
     selector: 'app-teeko',
     templateUrl: './teeko.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 
 export class TeekoComponent extends RectangularGameComponent<TeekoRules,

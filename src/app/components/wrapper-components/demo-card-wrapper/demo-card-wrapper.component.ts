@@ -25,6 +25,7 @@ export type DemoNodeWithConfig = DemoNodeInfo & {
 @Component({
     selector: 'app-demo-card',
     template: `<div class="is-fullheight"><div #board></div></div>`,
+    standalone: false
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 

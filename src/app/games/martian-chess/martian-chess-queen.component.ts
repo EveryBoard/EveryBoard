@@ -6,6 +6,7 @@ import { MartianChessComponent, MartianChessFace } from './martian-chess.compone
     selector: '[app-martian-chess-queen]',
     templateUrl: './martian-chess-queen.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class MartianChessQueenComponent {
 

@@ -3,15 +3,15 @@
             class="button is-primary is-fullwidth"
             (click)="switchChatVisibility()">
         <ng-container *ngIf="visible else showChat" i18n>Hide chat</ng-container>
-        <ng-template #showChat i18n>Show chat ({{ this.unreadMessagesText }})</ng-template>
+        <ng-template #showChat i18n>Show chat ({{ unreadMessagesText }})</ng-template>
     </button>
 
     <div *ngIf="visible">
-        <button *ngIf="this.showUnreadMessagesButton"
+        <button *ngIf="showUnreadMessagesButton"
                 id="scrollToBottomIndicator"
                 class="notification button is-info is-fullwidth"
                 (click)="scrollToBottom()"
-        >{{ this.unreadMessagesText }} &darr;</button>
+        >{{ unreadMessagesText }} &darr;</button>
 
         <div #chatDiv
              id="chatDiv"

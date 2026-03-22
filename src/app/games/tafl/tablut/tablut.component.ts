@@ -10,6 +10,7 @@ import { TablutRules } from './TablutRules';
     selector: 'app-tablut',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
 

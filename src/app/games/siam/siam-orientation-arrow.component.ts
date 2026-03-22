@@ -13,6 +13,7 @@ import { SiamConfig } from './SiamRules';
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 

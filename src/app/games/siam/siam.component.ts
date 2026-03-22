@@ -32,6 +32,7 @@ export type SiamIndicatorArrow = {
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 @Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,

@@ -25,6 +25,7 @@ import { CoerceoState } from './CoerceoState';
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,

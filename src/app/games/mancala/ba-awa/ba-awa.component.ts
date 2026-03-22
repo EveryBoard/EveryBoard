@@ -11,6 +11,7 @@ import { BaAwaRules } from './BaAwaRules';
     selector: 'app-ba-awa-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class BaAwaComponent extends MancalaComponent<BaAwaRules> {
 

@@ -12,6 +12,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
+    standalone: false
 })
 export class WelcomeComponent {
     public readonly numberOfColumns: number = 5;

@@ -7,6 +7,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
+    standalone: false
 })
 export class ResetPasswordComponent {
 

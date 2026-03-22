@@ -29,6 +29,7 @@ import { GipfState } from './GipfState';
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                           GipfMove,

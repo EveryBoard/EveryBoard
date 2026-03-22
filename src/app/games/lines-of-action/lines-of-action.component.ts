@@ -20,6 +20,7 @@ import { LinesOfActionState } from './LinesOfActionState';
     selector: 'app-lines-of-action',
     templateUrl: './lines-of-action.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
                                                                      LinesOfActionMove,

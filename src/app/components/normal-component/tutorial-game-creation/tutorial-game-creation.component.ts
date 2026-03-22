@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-tutorial-game-creation',
     templateUrl: './tutorial-game-creation.component.html',
+    standalone: false
 })
 export class TutorialGameCreationComponent {
 

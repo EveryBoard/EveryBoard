@@ -11,6 +11,7 @@ import { AwaleRules } from './AwaleRules';
     selector: 'app-awale-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class AwaleComponent extends MancalaComponent<AwaleRules> {
 

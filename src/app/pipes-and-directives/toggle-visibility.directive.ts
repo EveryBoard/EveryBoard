@@ -2,6 +2,7 @@ import { Directive, ElementRef } from '@angular/core';
 
 @Directive({
     selector: '[toggleVisibility]',
+    standalone: false
 })
 
 export class ToggleVisibilityDirective {

@@ -21,6 +21,7 @@ import { QuebecCastlesState } from './QuebecCastlesState';
     selector: 'app-quebec-castles',
     templateUrl: './quebec-castles.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastlesRules,
                                                                      QuebecCastlesMove,

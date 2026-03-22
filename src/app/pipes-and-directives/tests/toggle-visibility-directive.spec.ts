@@ -10,6 +10,7 @@ import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';
 <p id="toggle" class="clickable-icon" toggleVisibility>show</p>
 </span>
 `,
+    standalone: false
 })
 class ToggleVisibilityTestComponent {}
 

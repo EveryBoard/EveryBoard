@@ -27,6 +27,7 @@ import { TrigoConfig, TrigoRules } from './TrigoRules';
     selector: 'app-trigo',
     templateUrl: './trigo.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 @Debug.log
 export class TrigoComponent extends TriangularGameComponent<TrigoRules,

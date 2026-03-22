@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-local-game-creation',
     templateUrl: './local-game-creation.component.html',
+    standalone: false
 })
 export class LocalGameCreationComponent {
 

@@ -10,6 +10,7 @@ import { Debug } from '../../../utils/Debug';
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
+    standalone: false
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {

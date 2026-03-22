@@ -52,6 +52,7 @@ interface LastMoved {
     selector: 'app-diam',
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
 

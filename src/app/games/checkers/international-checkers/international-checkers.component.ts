@@ -9,6 +9,7 @@ import { InternationalCheckersRules } from './InternationalCheckersRules';
     selector: 'app-international-checkers',
     templateUrl: '../common/checkers.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class InternationalCheckersComponent extends CheckersComponent<InternationalCheckersRules> {
 

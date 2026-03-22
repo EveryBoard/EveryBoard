@@ -11,6 +11,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
+    standalone: false
 })
 export class RegisterComponent {
 

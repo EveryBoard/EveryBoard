@@ -21,6 +21,7 @@ import { PylosState } from './PylosState';
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 

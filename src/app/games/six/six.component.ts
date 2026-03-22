@@ -31,6 +31,7 @@ type CoordAndClass = {
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixConfig, SixLegalityInformation>

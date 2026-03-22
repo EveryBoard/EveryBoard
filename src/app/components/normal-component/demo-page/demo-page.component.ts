@@ -17,6 +17,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
     selector: 'app-demo-page',
     templateUrl: './demo-page.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class DemoPageComponent {
 

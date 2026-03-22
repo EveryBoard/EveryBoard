@@ -10,6 +10,7 @@ import { HivePiece } from './HivePiece';
     selector: '[app-hive-piece]',
     templateUrl: './hive-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 

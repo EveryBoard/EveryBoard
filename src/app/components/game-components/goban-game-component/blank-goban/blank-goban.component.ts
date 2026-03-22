@@ -8,6 +8,7 @@ import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
     selector: '[app-blank-goban]',
     templateUrl: './blank-goban.component.svg',
     styleUrls: ['../../game-component/game-component.scss'],
+    standalone: false
 })
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {
 

@@ -14,6 +14,7 @@ import { TrexoComponent } from './trexo.component';
     selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class TrexoHalfPieceComponent {
 

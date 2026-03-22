@@ -6,6 +6,7 @@ import { MGPOptional } from '@everyboard/lib';
     selector: '[app-numbered-circle]',
     templateUrl: './numbered-circle.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    standalone: false
 })
 export class NumberedCircleComponent {
 
