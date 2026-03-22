@@ -2,8 +2,8 @@
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { SaharaRules } from '../SaharaRules';
 import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from '../SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
+import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax', () => {
 

@@ -45,14 +45,4 @@ export class FourStatePiece implements ComparableObject {
         return this.player;
     }
 
-    public toString(): string {
-        return (this.player === Player.ZERO) ?
-            'O' :
-            (
-                (this.player === Player.ONE) ?
-                    'X' :
-                    (this.reachable ? '_' : 'N')
-            );
-    }
-
 }

@@ -120,7 +120,10 @@ describe('ArrayUtils', () => {
             // Given an array
             const array: number[] = [0, 1, 2, 3, 4];
             // When counting the number of times a number pass the predicate
-            const count: number = ArrayUtils.countByPredicate(array, value => value % 2 === 0);
+            const count: number = ArrayUtils.countByPredicate(
+                array,
+                (value: number) => value % 2 === 0,
+            );
             // Then it should return the correct value
             expect(count).toBe(3);
         });

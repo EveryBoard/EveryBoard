@@ -100,7 +100,7 @@ export class ArrayUtils {
     public static count<T>(array: ReadonlyArray<T>, value: T): number {
         return ArrayUtils.countByPredicate(
             array,
-            (element: T) => comparableEquals(element, value)
+            (element: T) => comparableEquals(element, value),
         );
     }
 
