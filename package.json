@@ -37,7 +37,6 @@
     "bulmaswatch": "^0.8.1",
     "core-js": "^3.39.0",
     "firebase": "^12.11.0",
-    "firebase-tools": "^15.11.0",
     "rxjs": "^7.8.1",
     "zone.js": "^0.15.1"
   },
@@ -73,6 +72,7 @@
     "nyc": "^18.0.0",
     "sass": "^1.81.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "firebase-tools": "^15.11.0"
   }
 }
