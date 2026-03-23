@@ -1,4 +1,4 @@
-import { enableProdMode } from '@angular/core';
+import { enableProdMode, provideZoneChangeDetection } from '@angular/core';
 import { loadTranslations } from '@angular/localize';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
@@ -11,7 +11,7 @@ function bootstrapApp(): void {
         enableProdMode();
     }
     platformBrowserDynamic()
-        .bootstrapModule(AppModule)
+        .bootstrapModule(AppModule, { applicationProviders: [provideZoneChangeDetection()], })
         .catch((err: unknown) => console.error(err));
 }
 

@@ -1,57 +1,67 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     class="board"
-     viewBox="-110 -120 800 710"
-     preserveAspectRatio="xMidYMid meet">
-    <defs>
-        <g id="piece">
-            <path d="M 0 15 v 35 A 40 15, 0, 0, 0, 80 50 v -35 A 40 15, 0, 0, 0, 0 15 Z"/>
-            <ellipse cx="40" cy="15" rx="40" ry="15"/>
-        </g>
-    </defs>
-    <g *ngFor="let x of [0, 1, 2, 3, 4, 5, 6, 7]"
-       id="board-space-{{ x }}">
-        <path id="click-{{ x }}"
-              class="base mid-stroke"
-              [ngClass]="viewInfo.boardInfo[x].spaceClasses"
-              (click)="onSpaceClick(x)"
-              [attr.d]="BOARD_PATHS[x]"/>
-        <path class="base mid-stroke high-brightness"
-              [ngClass]="viewInfo.boardInfo[x].spaceClasses"
-              (click)="onSpaceClick(x)"
-              [attr.d]="DECORATION_PATHS[x]"/>
+  class="board"
+  viewBox="-110 -120 800 710"
+  preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <g id="piece">
+      <path d="M 0 15 v 35 A 40 15, 0, 0, 0, 80 50 v -35 A 40 15, 0, 0, 0, 0 15 Z"/>
+      <ellipse cx="40" cy="15" rx="40" ry="15"/>
     </g>
-    <g *ngFor="let x of [2, 1, 3, 0, 4, 7, 5, 6]"> <!-- This is the required order for drawing the piece because they could overlap otherwise -->
-        <g *ngFor="let piece of viewInfo.boardInfo[x].pieces"
-            id="click-{{ x }}-{{ piece.y }}"
-            pointer-events="fill"
-            (click)="onPieceInGameClick(x, piece.y)"
-            class="base no-fill mid-small-stroke"
-            [ngClass]="piece.foregroundClasses" >
-            <use [attr.x]="piece.drawPosition.x"
-                 [attr.y]="piece.drawPosition.y"
-                 xlink:href="#piece"
-                 class="base mid-stroke"
-                 [ngClass]="piece.backgroundClasses"/>
-            <use [attr.x]="piece.drawPosition.x"
-                 [attr.y]="piece.drawPosition.y"
-                 xlink:href="#piece"/>
-        </g>
+  </defs>
+  @for (x of [0, 1, 2, 3, 4, 5, 6, 7]; track x) {
+    <g
+      id="board-space-{{ x }}">
+      <path id="click-{{ x }}"
+        class="base mid-stroke"
+        [ngClass]="viewInfo.boardInfo[x].spaceClasses"
+        (click)="onSpaceClick(x)"
+        [attr.d]="BOARD_PATHS[x]"/>
+      <path class="base mid-stroke high-brightness"
+        [ngClass]="viewInfo.boardInfo[x].spaceClasses"
+        (click)="onSpaceClick(x)"
+        [attr.d]="DECORATION_PATHS[x]"/>
     </g>
+  }
+  @for (x of [2, 1, 3, 0, 4, 7, 5, 6]; track x) {
+    <g> <!-- This is the required order for drawing the piece because they could overlap otherwise -->
+      @for (piece of viewInfo.boardInfo[x].pieces; track piece) {
+        <g
+          id="click-{{ x }}-{{ piece.y }}"
+          pointer-events="fill"
+          (click)="onPieceInGameClick(x, piece.y)"
+          class="base no-fill mid-small-stroke"
+          [ngClass]="piece.foregroundClasses" >
+          <use [attr.x]="piece.drawPosition.x"
+            [attr.y]="piece.drawPosition.y"
+            xlink:href="#piece"
+            class="base mid-stroke"
+            [ngClass]="piece.backgroundClasses"/>
+          <use [attr.x]="piece.drawPosition.x"
+            [attr.y]="piece.drawPosition.y"
+            xlink:href="#piece"/>
+        </g>
+      }
+    </g>
+  }
 
-    <g *ngFor="let player of Player.PLAYERS">
-        <g *ngFor="let piece of viewInfo.remainingPieces.get(player).get(); index as z"
-           (click)="onRemainingPieceClick(piece.actualPiece, z)"
-           id="piece-{{ piece.actualPiece.owner.toString() }}-{{ piece.actualPiece.otherPieceType ? 1 : 0 }}-{{ z }}"
-           class="base no-fill mid-small-stroke"
-           [ngClass]="piece.foregroundClasses">
-            <use [attr.x]="piece.drawPosition.x"
-                 [attr.y]="piece.drawPosition.y"
-                 xlink:href="#piece"
-                 class="base mid-stroke"
-                 [ngClass]="piece.backgroundClasses"/>
-            <use [attr.x]="piece.drawPosition.x"
-                 [attr.y]="piece.drawPosition.y"
-                 xlink:href="#piece"/>
+  @for (player of Player.PLAYERS; track player) {
+    <g>
+      @for (piece of viewInfo.remainingPieces.get(player).get(); track piece; let z = $index) {
+        <g
+          (click)="onRemainingPieceClick(piece.actualPiece, z)"
+          id="piece-{{ piece.actualPiece.owner.toString() }}-{{ piece.actualPiece.otherPieceType ? 1 : 0 }}-{{ z }}"
+          class="base no-fill mid-small-stroke"
+          [ngClass]="piece.foregroundClasses">
+          <use [attr.x]="piece.drawPosition.x"
+            [attr.y]="piece.drawPosition.y"
+            xlink:href="#piece"
+            class="base mid-stroke"
+            [ngClass]="piece.backgroundClasses"/>
+          <use [attr.x]="piece.drawPosition.x"
+            [attr.y]="piece.drawPosition.y"
+            xlink:href="#piece"/>
         </g>
+      }
     </g>
+  }
 </svg>

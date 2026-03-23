@@ -1,61 +1,64 @@
 <div class="tabs is-toggle is-fullwidth">
-    <ul>
-        <li ngClass="if (currentTab === 'games') 'is-active'">
-            <a id="tab-games" (click)="selectTab('games')" i18n>Games</a>
-        </li>
-        <li ngClass="if (currentTab === 'create') 'is-active'">
-            <a id="tab-create" [ngClass]="createTabClasses" (click)="selectTab('create')" i18n>Create</a>
-        </li>
-        <li ngClass="if (currentTab === 'chat') 'is-active'">
-            <a id="tab-chat" (click)="selectTab('chat')" i18n>Chat</a>
-        </li>
-    </ul>
+  <ul>
+    <li ngClass="if (currentTab === 'games') 'is-active'">
+      <a id="tab-games" (click)="selectTab('games')" i18n>Games</a>
+    </li>
+    <li ngClass="if (currentTab === 'create') 'is-active'">
+      <a id="tab-create" [ngClass]="createTabClasses" (click)="selectTab('create')" i18n>Create</a>
+    </li>
+    <li ngClass="if (currentTab === 'chat') 'is-active'">
+      <a id="tab-chat" (click)="selectTab('chat')" i18n>Chat</a>
+    </li>
+  </ul>
 </div>
 
 <div id="game-list-tab"
-     class="box"
-     [ngClass]="getVisibility('games')">
-    <div class="table-container">
-        <table class="table is-fullwidth is-hoverable is-striped">
-            <thead>
-                <tr>
-                    <th class="th" scope="col" i18n>Game</th>
-                    <th class="th" scope="col" i18n>First player</th>
-                    <th class="th" scope="col" i18n>Second player</th>
-                    <th class="th" scope="col" i18n>Status</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let configRoom of getActiveConfigRooms(); index as i"
-                    id="part-{{ i }}"
-                    (click)="joinGame(configRoom)">
-                    <td class="td data-game-name">{{ getGameName(configRoom) }}</td>
-                    <td class="td" id="part-of-{{ configRoom.creator.name}}">{{ getCreatorLine(configRoom) }} </td>
-                    <td class="td">
-                        <ng-container *ngIf="configRoom.chosenOpponent else waitingForOpponent">{{ configRoom.chosenOpponent.name }}</ng-container>
-                        <ng-template #waitingForOpponent>
-                            <ng-container i18n>Waiting for opponent</ng-container>
-                        </ng-template>
-                    </td>
-                    <td class="td data-status">{{ configRoom.status }}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+  class="box"
+  [ngClass]="getVisibility('games')">
+  <div class="table-container">
+    <table class="table is-fullwidth is-hoverable is-striped">
+      <thead>
+        <tr>
+          <th class="th" scope="col" i18n>Game</th>
+          <th class="th" scope="col" i18n>First player</th>
+          <th class="th" scope="col" i18n>Second player</th>
+          <th class="th" scope="col" i18n>Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (configRoom of getActiveConfigRooms(); track configRoom; let i = $index) {
+          <tr
+            id="part-{{ i }}"
+            (click)="joinGame(configRoom)">
+            <td class="td data-game-name">{{ getGameName(configRoom) }}</td>
+            <td class="td" id="part-of-{{ configRoom.creator.name}}">{{ getCreatorLine(configRoom) }} </td>
+            <td class="td">
+              @if (configRoom.chosenOpponent) {
+                {{ configRoom.chosenOpponent.name }}
+              } @else {
+                <ng-container i18n>Waiting for opponent</ng-container>
+              }
+            </td>
+            <td class="td data-status">{{ configRoom.status }}</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div id="game-creator-tab"
-     class="box"
-     [ngClass]="getVisibility('create')">
-    <app-online-game-selection id="online-game-selection"></app-online-game-selection>
+  class="box"
+  [ngClass]="getVisibility('create')">
+  <app-online-game-selection id="online-game-selection"></app-online-game-selection>
 </div>
 
 <div id="chat-tab"
-     class="columns"
-     [ngClass]="getVisibility('chat')">
-    <div class="column is-12">
-        <div id="chat" class="box">
-            <app-chat></app-chat>
-        </div>
+  class="columns"
+  [ngClass]="getVisibility('chat')">
+  <div class="column is-12">
+    <div id="chat" class="box">
+      <app-chat></app-chat>
     </div>
+  </div>
 </div>
