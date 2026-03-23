@@ -36,8 +36,8 @@
     "bulma-toast": "^2.4.4",
     "bulmaswatch": "^0.8.1",
     "core-js": "^3.39.0",
-    "firebase": "^10.14.1",
-    "firebase-tools": "^13.27.0",
+    "firebase": "^12.11.0",
+    "firebase-tools": "^15.11.0",
     "rxjs": "^7.8.1",
     "zone.js": "^0.15.1"
   },
