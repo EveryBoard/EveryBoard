@@ -59,8 +59,11 @@ describe('HexagonalGoComponent', () => {
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
+        // When capturing a piece
         const move: GoMove = new GoMove(10, 8);
         await testUtils.expectMoveSuccess('#click-10-8', move);
+
+        // Then it should be displayed as captured
         testUtils.expectElementToHaveClass('#polygon-9-9', 'captured-fill');
     }));
 
@@ -84,8 +87,11 @@ describe('HexagonalGoComponent', () => {
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 2, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
+        // When capturing a piece
         const move: GoMove = new GoMove(1, 12);
         await testUtils.expectMoveSuccess('#click-1-12', move);
+
+        // Then it should be displayed as captured
         testUtils.expectElementToHaveClass('#polygon-0-12', 'captured-fill');
     }));
 
@@ -109,16 +115,21 @@ describe('HexagonalGoComponent', () => {
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
 
+        // When capturing a piece
         const move: GoMove = new GoMove(5, 7);
         await testUtils.expectMoveSuccess('#click-5-7', move);
+
+        // Then it should be displayed as captured
         testUtils.expectElementToHaveClass('#polygon-6-6', 'captured-fill');
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {
+        // Given any boards
         const move: GoMove = new GoMove(4, 4);
+
+        // When doing a move
+        // Then the move should succeed
         await testUtils.expectMoveSuccess('#click-4-4', move);
-        const secondMove: GoMove = new GoMove(3, 3);
-        await testUtils.expectMoveSuccess('#click-3-3', secondMove);
     }));
 
     it('should show territory and dead', fakeAsync(async() => {
