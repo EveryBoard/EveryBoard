@@ -2630,7 +2630,7 @@
       </trans-unit>
       <trans-unit id="3924059417187590333" datatype="html">
         <source>The game of HexagonalGo is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
-        <target>HexagonalGo est une adaptation hexagonale du jeu de Go. Le Go est présent sur Everyboard, vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;içi&lt;/a&gt;. Ce tutorial ne va que montrer les petites différences que cette expérimentation introduit.</target>
+        <target>HexagonalGo est une adaptation hexagonale du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
       </trans-unit>
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
@@ -2638,7 +2638,7 @@
       </trans-unit>
       <trans-unit id="8684748448570517529" datatype="html">
         <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
-        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;içi&lt;/a&gt;. Ce tutorial ne va que montrer les petites différences que cette expérimentation introduit.</target>
+        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>
