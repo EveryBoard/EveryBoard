@@ -208,28 +208,6 @@
         }
       }
     },
-    "everyboard-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "everyboard:serve:production"
-            },
-            "development": {
-              "devServerTarget": "everyboard:serve:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        }
-      }
-    }
-  },
   "cli": {
     "analytics": false
   },
