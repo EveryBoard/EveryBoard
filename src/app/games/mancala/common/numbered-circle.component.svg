@@ -1,20 +1,19 @@
 <svg:circle id="circle-{{ x }}-{{ y }}"
-  [ngClass]="spaceClasses"
-  class="base"
-  r="45"
-  />
+            [ngClass]="spaceClasses"
+            class="base"
+            r="45"
+/>
 <svg:text id="number-{{ x }}-{{ y }}"
-  [attr.x]="0"
-  [attr.y]="16"
-  [attr.transform]="rotation"
-  class="text-big text-center"
-  > {{ content }} </svg:text>
+          [attr.x]="0"
+          [attr.y]="16"
+          [attr.transform]="rotation"
+          class="text-big text-center"
+> {{ content }} </svg:text>
 
-  @if (secondaryContent.isPresent()) {
-    <svg:text id="secondary-message-{{ x }}-{{ y }}"
-      [attr.x]="15"
-      [attr.y]="31"
-      [attr.transform]="rotation"
-      class="text-20 text-center"
-      > {{ secondaryContent.get() }} </svg:text>
-    }
+<svg:text id="secondary-message-{{ x }}-{{ y }}"
+          *ngIf="secondaryContent.isPresent()"
+          [attr.x]="15"
+          [attr.y]="31"
+          [attr.transform]="rotation"
+          class="text-20 text-center"
+> {{ secondaryContent.get() }} </svg:text>

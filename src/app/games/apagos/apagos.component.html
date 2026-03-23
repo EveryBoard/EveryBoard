@@ -1,70 +1,58 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  preserveAspectRatio="xMidYMid meet"
-  >
-  <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
-    @for (x of ArrayUtils.range(remainingOne); track x) {
-      <circle
-        [attr.cx]="getRemainingPieceCx(x)"
-        [attr.cy]="PIECE_RADIUS"
-        [attr.r]="PIECE_RADIUS - 5"
-        class="base mid-stroke player1-fill"/>
-    }
-    @for (x of ArrayUtils.range(remainingZero); track x) {
-      <circle
-        [attr.cx]="BOARD_WIDTH - getRemainingPieceCx(x)"
-        [attr.cy]="BOARD_HEIGHT - PIECE_RADIUS"
-        [attr.r]="PIECE_RADIUS - 5"
-        class="base mid-stroke player0-fill"/>
-    }
-  </g>
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet"
+>
+    <g [attr.transform]="'rotate(' + getPointOfView().getValue() * 180 + ' ' + (BOARD_WIDTH / 2) + ' ' + (BOARD_HEIGHT / 2) + ')'">
+        <circle *ngFor="let x of ArrayUtils.range(remainingOne)"
+                [attr.cx]="getRemainingPieceCx(x)"
+                [attr.cy]="PIECE_RADIUS"
+                [attr.r]="PIECE_RADIUS - 5"
+                class="base mid-stroke player1-fill"/>
+        <circle *ngFor="let x of ArrayUtils.range(remainingZero)"
+                [attr.cx]="BOARD_WIDTH - getRemainingPieceCx(x)"
+                [attr.cy]="BOARD_HEIGHT - PIECE_RADIUS"
+                [attr.r]="PIECE_RADIUS - 5"
+                class="base mid-stroke player0-fill"/>
+    </g>
 
-  <g id="board">
-    @for (square of board; track square; let x = $index) {
-      <g
-        [attr.transform]="getBlockTransform(x)">
-        @if (canDisplayArrow(x, PlayerOrNone.ZERO)) {
-          <polygon
-            id="dropArrow_zero_{{ x }}"
-            class="base mid-stroke"
-            [ngClass]="getArrowClasses(PlayerOrNone.ZERO)"
-            (click)="onArrowClick(x, PlayerOrNone.ZERO)"
-            [attr.points]="ARROW_COORD"
-            [attr.transform]="getSVGTranslation(SPACE_SIZE / 2, -SPACE_SIZE / 2)"
+    <g id="board">
+        <g *ngFor="let square of board; index as x"
+           [attr.transform]="getBlockTransform(x)">
+            <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ZERO)"
+                     id="dropArrow_zero_{{ x }}"
+                     class="base mid-stroke"
+                     [ngClass]="getArrowClasses(PlayerOrNone.ZERO)"
+                     (click)="onArrowClick(x, PlayerOrNone.ZERO)"
+                     [attr.points]="ARROW_COORD"
+                     [attr.transform]="getSVGTranslation(SPACE_SIZE / 2, -SPACE_SIZE / 2)"
             />
-        }
-        @if (canDisplayArrow(x, PlayerOrNone.ONE)) {
-          <polygon
-            id="dropArrow_one_{{ x }}"
-            class="base mid-stroke"
-            [ngClass]="getArrowClasses(PlayerOrNone.ONE)"
-            (click)="onArrowClick(x, PlayerOrNone.ONE)"
-            [attr.points]="ARROW_COORD"
-            [attr.transform]="getSVGTranslation(0, -SPACE_SIZE / 2)"
+            <polygon *ngIf="canDisplayArrow(x, PlayerOrNone.ONE)"
+                     id="dropArrow_one_{{ x }}"
+                     class="base mid-stroke"
+                     [ngClass]="getArrowClasses(PlayerOrNone.ONE)"
+                     (click)="onArrowClick(x, PlayerOrNone.ONE)"
+                     [attr.points]="ARROW_COORD"
+                     [attr.transform]="getSVGTranslation(0, -SPACE_SIZE / 2)"
             />
-        }
-        <rect id="square_{{ x }}"
-          (click)="onSquareClick(x)"
-          x="0"
-          y="0"
-          [attr.width]="SPACE_SIZE"
-          [attr.height]="SPACE_SIZE"
-          [ngClass]="getSquareClasses(x)"
-          class="base mid-stroke"
-          />
-        @for (i of ArrayUtils.range(square.count(PlayerOrNone.NONE)); track i) {
-          <ng-container>
-            <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(PlayerOrNone.NONE) }}"
-              [attr.transform]="getCircleTransform(i, square)"
-              (click)="onSquareClick(x)"
-              r="10"
-              [ngClass]="getPieceClasses(x, i, square)"
-              class="base mid-stroke"
-              />
-          </ng-container>
-        }
-      </g>
-    }
-  </g>
+            <rect id="square_{{ x }}"
+                  (click)="onSquareClick(x)"
+                  x="0"
+                  y="0"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  [ngClass]="getSquareClasses(x)"
+                  class="base mid-stroke"
+            />
+            <ng-container *ngFor="let i of ArrayUtils.range(square.count(PlayerOrNone.NONE))">
+                <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(PlayerOrNone.NONE) }}"
+                        [attr.transform]="getCircleTransform(i, square)"
+                        (click)="onSquareClick(x)"
+                        r="10"
+                        [ngClass]="getPieceClasses(x, i, square)"
+                        class="base mid-stroke"
+                />
+            </ng-container>
+        </g>
+    </g>
 </svg>

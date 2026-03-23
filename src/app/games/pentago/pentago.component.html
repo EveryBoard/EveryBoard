@@ -1,134 +1,120 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()">
-  <defs>
-    <marker id="blue-arrow-head"
-      markerWidth="5"
-      markerHeight="3.5"
-      refX="2.5"
-      refY="1.75"
-      orient="auto"
-      fill="blue"
-      >
-      <polygon points="0 0, 5 1.75, 0 3.5"/>
-    </marker>
-  </defs>
-  <defs>
-    <marker id="moved-arrow-head"
-      class="last-move-fill"
-      markerWidth="5"
-      markerHeight="3.5"
-      refX="2.5"
-      refY="1.75"
-      orient="auto"
-      >
-      <polygon points="0 0, 5 1.75, 0 3.5"/>
-    </marker>
-  </defs>
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()">
+    <defs>
+        <marker id="blue-arrow-head"
+                markerWidth="5"
+                markerHeight="3.5"
+                refX="2.5"
+                refY="1.75"
+                orient="auto"
+                fill="blue"
+        >
+            <polygon points="0 0, 5 1.75, 0 3.5"/>
+        </marker>
+    </defs>
+    <defs>
+        <marker id="moved-arrow-head"
+                class="last-move-fill"
+                markerWidth="5"
+                markerHeight="3.5"
+                refX="2.5"
+                refY="1.75"
+                orient="auto"
+        >
+            <polygon points="0 0, 5 1.75, 0 3.5"/>
+        </marker>
+    </defs>
 
-  @for (blockY of [0, BLOCK_WIDTH + BLOCK_SEPARATION]; track blockY; let by = $index) {
-    <ng-container>
-      @for (blockX of [0, BLOCK_WIDTH + BLOCK_SEPARATION]; track blockX; let bx = $index) {
-        <rect
-          id="block-{{ bx }}-{{ by }}"
-          x="0"
-          y="0"
-          [attr.transform]="getSVGTranslation(blockX, blockY)"
-          [attr.rx]="3 * STROKE_WIDTH"
-          [attr.ry]="3 * STROKE_WIDTH"
-          [attr.width]="BLOCK_WIDTH"
-          [attr.height]="BLOCK_WIDTH"
-          [ngClass]="getBlockClasses(bx, by)"
-          class="base no-fill"
-          />
-      }
-    </ng-container>
-  }
-
-  @for (coordAndContent of state.getCoordsAndContents(); track coordAndContent) {
-    <circle
-      id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-      [attr.transform]="getPieceTranslate(coordAndContent.coord)"
-      (click)="onClick(coordAndContent.coord)"
-      [attr.cx]="0.5 * SPACE_SIZE"
-      [attr.cy]="0.5 * SPACE_SIZE"
-      [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-      [ngClass]="getSquareClasses(coordAndContent.coord)"
-      class="base"
-      pointer-events="fill"
-      />
-  }
-
-  @if (currentDrop.isPresent()) {
-    <circle
-      id="current-drop-{{ currentDrop.get().x }}-{{ currentDrop.get().y }}"
-      class="base"
-      [ngClass]="getPlayerClass(getCurrentPlayer())"
-      [attr.transform]="getPieceTranslate(currentDrop.get())"
-      (click)="onClick(currentDrop.get())"
-      [attr.cx]="0.5 * SPACE_SIZE"
-      [attr.cy]="0.5 * SPACE_SIZE"
-      [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-      pointer-events="fill"
-      />
-  }
-
-  @for (arrow of arrows; track arrow) {
-    <ng-container>
-      <path id="rotate-{{ arrow.blockIndex }}-{{ arrow.clockwise ? 'clockwise' : 'counterclockwise' }}"
-        class="no-fill"
-        [attr.d]="arrow.path"
-        stroke="blue"
-        (click)="rotate(arrow)"
-        [attr.stroke-width]="2 * STROKE_WIDTH"
-        marker-end="url(#blue-arrow-head)"
+    <ng-container *ngFor="let blockY of [0, BLOCK_WIDTH + BLOCK_SEPARATION]; index as by">
+        <rect *ngFor="let blockX of [0, BLOCK_WIDTH + BLOCK_SEPARATION]; index as bx"
+              id="block-{{ bx }}-{{ by }}"
+              x="0"
+              y="0"
+              [attr.transform]="getSVGTranslation(blockX, blockY)"
+              [attr.rx]="3 * STROKE_WIDTH"
+              [attr.ry]="3 * STROKE_WIDTH"
+              [attr.width]="BLOCK_WIDTH"
+              [attr.height]="BLOCK_WIDTH"
+              [ngClass]="getBlockClasses(bx, by)"
+              class="base no-fill"
         />
     </ng-container>
-  }
 
-  @if (lastRotation.isPresent()) {
-    <path
-      [attr.d]="lastRotation.get().path"
-      id="last-rotation-{{ lastRotation.get().blockIndex }}-{{ lastRotation.get().clockwise ? 'clockwise' : 'counterclockwise' }}"
-      class="no-fill last-move-stroke"
-      [attr.stroke-width]="2 * STROKE_WIDTH"
-      marker-end="url(#moved-arrow-head)"
-      />
-  }
+    <circle *ngFor="let coordAndContent of state.getCoordsAndContents()"
+            id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+            [attr.transform]="getPieceTranslate(coordAndContent.coord)"
+            (click)="onClick(coordAndContent.coord)"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
+            [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
+            [ngClass]="getSquareClasses(coordAndContent.coord)"
+            class="base"
+            pointer-events="fill"
+    />
 
-  @for (victoryCoord of victoryCoords; track victoryCoord) {
-    <circle
-      id="victory-coord-{{ victoryCoord.x }}-{{ victoryCoord.y }}"
-      [attr.transform]="getPieceTranslate(victoryCoord)"
-      [attr.cx]="0.5 * SPACE_SIZE"
-      [attr.cy]="0.5 * SPACE_SIZE"
-      [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
-      [ngClass]="getSquareClasses(victoryCoord)"
-      class="base victory-stroke"
-      [attr.stroke-width]="STROKE_WIDTH"
-      />
-  }
+    <circle *ngIf="currentDrop.isPresent()"
+            id="current-drop-{{ currentDrop.get().x }}-{{ currentDrop.get().y }}"
+            class="base"
+            [ngClass]="getPlayerClass(getCurrentPlayer())"
+            [attr.transform]="getPieceTranslate(currentDrop.get())"
+            (click)="onClick(currentDrop.get())"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
+            [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
+            pointer-events="fill"
+    />
 
-  @if (canSkipRotation) {
-    <g
-      id="skip-rotation"
-      (click)="skipRotation()"
-      [attr.transform]="getSkipRotationCircleTranslate()">
-      <circle [attr.cx]="0"
-        [attr.cy]=""
-        [attr.r]="0.75 * SPACE_SIZE"
-        stroke="red"
-        [attr.stroke-width]="2 * STROKE_WIDTH"
-        class="background"
+    <ng-container *ngFor="let arrow of arrows">
+
+        <path id="rotate-{{ arrow.blockIndex }}-{{ arrow.clockwise ? 'clockwise' : 'counterclockwise' }}"
+              class="no-fill"
+              [attr.d]="arrow.path"
+              stroke="blue"
+              (click)="rotate(arrow)"
+              [attr.stroke-width]="2 * STROKE_WIDTH"
+              marker-end="url(#blue-arrow-head)"
         />
-      <line [attr.x1]="- DIAGONAL_BAR_OFFSET"
-        [attr.y1]="+ DIAGONAL_BAR_OFFSET"
-        [attr.x2]="+ DIAGONAL_BAR_OFFSET"
-        [attr.y2]="- DIAGONAL_BAR_OFFSET"
-        stroke="red"
-        [attr.stroke-width]="2 * STROKE_WIDTH"
+
+    </ng-container>
+
+    <path *ngIf="lastRotation.isPresent()"
+          [attr.d]="lastRotation.get().path"
+          id="last-rotation-{{ lastRotation.get().blockIndex }}-{{ lastRotation.get().clockwise ? 'clockwise' : 'counterclockwise' }}"
+          class="no-fill last-move-stroke"
+          [attr.stroke-width]="2 * STROKE_WIDTH"
+          marker-end="url(#moved-arrow-head)"
+    />
+
+    <circle *ngFor="let victoryCoord of victoryCoords"
+            id="victory-coord-{{ victoryCoord.x }}-{{ victoryCoord.y }}"
+            [attr.transform]="getPieceTranslate(victoryCoord)"
+            [attr.cx]="0.5 * SPACE_SIZE"
+            [attr.cy]="0.5 * SPACE_SIZE"
+            [attr.r]="(SPACE_SIZE - STROKE_WIDTH) / 2"
+            [ngClass]="getSquareClasses(victoryCoord)"
+            class="base victory-stroke"
+            [attr.stroke-width]="STROKE_WIDTH"
+    />
+
+    <g *ngIf="canSkipRotation"
+       id="skip-rotation"
+       (click)="skipRotation()"
+       [attr.transform]="getSkipRotationCircleTranslate()">
+       <circle [attr.cx]="0"
+               [attr.cy]=""
+               [attr.r]="0.75 * SPACE_SIZE"
+               stroke="red"
+               [attr.stroke-width]="2 * STROKE_WIDTH"
+               class="background"
+        />
+        <line [attr.x1]="- DIAGONAL_BAR_OFFSET"
+              [attr.y1]="+ DIAGONAL_BAR_OFFSET"
+              [attr.x2]="+ DIAGONAL_BAR_OFFSET"
+              [attr.y2]="- DIAGONAL_BAR_OFFSET"
+              stroke="red"
+              [attr.stroke-width]="2 * STROKE_WIDTH"
         />
     </g>
-  }
 
 </svg>

@@ -1,44 +1,36 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  preserveAspectRatio="xMidYMid meet"
-  >
-  @for (line of board; track line; let y = $index) {
-    <g>
-      @for (spaceContent of line; track spaceContent; let x = $index) {
-        <g>
-          <g id="click_{{ x }}_{{ y }}"
-            (click)="onClick(x, y)">
-            <!-- Background -->
-            <rect id="space_{{ x }}_{{ y }}"
-              [attr.x]="x * SPACE_SIZE"
-              [attr.y]="y * SPACE_SIZE"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              [ngClass]="getSquareClasses(x, y)"
-              class="base"/>
-            <!-- Piece -->
-            @if (spaceContent !== EMPTY) {
-              <circle
-                id="piece_{{ x }}_{{ y }}"
-                [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
-                [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
-                [ngClass]="getPieceClasses(x, y)"
-                [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-                class="base"/>
-            }
-          </g>
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet"
+>
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let spaceContent of line; index as x">
+            <g id="click_{{ x }}_{{ y }}"
+               (click)="onClick(x, y)">
+                <!-- Background -->
+                <rect id="space_{{ x }}_{{ y }}"
+                      [attr.x]="x * SPACE_SIZE"
+                      [attr.y]="y * SPACE_SIZE"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      [ngClass]="getSquareClasses(x, y)"
+                      class="base"/>
+                <!-- Piece -->
+                <circle *ngIf="spaceContent !== EMPTY"
+                        id="piece_{{ x }}_{{ y }}"
+                        [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
+                        [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
+                        [ngClass]="getPieceClasses(x, y)"
+                        [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                        class="base"/>
+            </g>
         </g>
-      }
     </g>
-  }
-  @for (coord of targets; track coord) {
-    <rect
-      [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-      [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
-      [attr.width]="INDICATOR_SIZE"
-      [attr.height]="INDICATOR_SIZE"
-      (click)="onClick(coord.x, coord.y)"
-      class="indicator"/>
-  }
+    <rect *ngFor="let coord of targets"
+          [attr.x]="coord.x * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.y]="coord.y * SPACE_SIZE + (SPACE_SIZE/2 - INDICATOR_SIZE/2)"
+          [attr.width]="INDICATOR_SIZE"
+          [attr.height]="INDICATOR_SIZE"
+          (click)="onClick(coord.x, coord.y)"
+          class="indicator"/>
 </svg>

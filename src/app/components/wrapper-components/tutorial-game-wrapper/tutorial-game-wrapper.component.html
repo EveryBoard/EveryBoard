@@ -1,104 +1,90 @@
 <div class="columns is-vcentered is-align-items-stretch">
-  <div class="column is-one-third">
-    @if (gameComponent) {
-      <div
-        id="infos"
-        class="box is-fullheight">
-        <app-view-config [rulesConfig]="getConfig()"
-          [rulesConfigDescription]="getRulesConfigDescription()"
-          [gameName]="getGameName().getOrElse('')">
-        </app-view-config>
-        <progress class="progress is-primary" [attr.value]="successfulSteps" [attr.max]="getNumberOfSteps()"></progress>
-        <div class="content is-medium">
-          <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex + 1}}/{{ getNumberOfSteps() }}]</p>
-          <p id='currentMessage' [innerHTML]="currentMessage"></p>
+    <div class="column is-one-third">
+        <div *ngIf="gameComponent"
+             id="infos"
+             class="box is-fullheight">
+            <app-view-config [rulesConfig]="getConfig()"
+                             [rulesConfigDescription]="getRulesConfigDescription()"
+                             [gameName]="getGameName().getOrElse('')">
+            </app-view-config>
+            <progress class="progress is-primary" [attr.value]="successfulSteps" [attr.max]="getNumberOfSteps()"></progress>
+            <div class="content is-medium">
+                <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex + 1}}/{{ getNumberOfSteps() }}]</p>
+                <p id='currentMessage' [innerHTML]="currentMessage"></p>
+            </div>
+            <div *ngIf="currentReason.isPresent()" class="message is-danger" role="alert">
+                <div class="message-header" i18n>Failure</div>
+                <div class="message-body" id="currentReason" [innerHTML]="currentReason.get()"></div>
+            </div>
+            <div class="block">
+                <button id="retryButton"
+                        class="button mr-3"
+                        *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex]) || moveAttemptMade)"
+                        (click)="retry()"
+                        i18n
+                >Try again</button>
+                <button id="nextButton"
+                        class="button is-primary mr-3 mb-1"
+                        *ngIf="tutorialOver === false"
+                        (click)="next()"
+                >
+                    <ng-container *ngIf="steps[stepIndex] && steps[stepIndex].isInformation() else notInfo" i18n>Ok</ng-container>
+                    <ng-template #notInfo>
+                        <ng-container *ngIf="stepFinished && stepFinished[stepIndex] else notFinished" i18n>Continue</ng-container>
+                    </ng-template>
+                    <ng-template #notFinished>
+                        <ng-container i18n>Skip</ng-container>
+                    </ng-template>
+                </button>
+                <button id="restartButton"
+                        class="button"
+                        *ngIf="tutorialOver"
+                        (click)="start()"
+                        i18n
+                >Try again</button>
+                <button id="playLocallyButton"
+                        class="button"
+                        *ngIf="tutorialOver"
+                        (click)="playLocally()"
+                        i18n
+                >Play locally</button>
+                <button id="playOnlineButton"
+                        class="button"
+                        *ngIf="tutorialOver"
+                        (click)="createGame()"
+                        i18n
+                >Create an online game</button>
+                <button id="showSolutionButton"
+                        class="button"
+                        *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
+                        (click)="showSolution()"
+                        i18n
+                >See solution</button>
+                <div class="select">
+                    <select id="steps" (change)="changeStep($event)">
+                        <ng-container *ngFor="let step of steps; index as i">
+                            <ng-container *ngIf="i === stepIndex else otherstep">
+                                <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>
+                            </ng-container>
+                            <ng-template #otherstep>
+                                <option [value]="i">
+                                    <ng-container *ngIf="stepFinished[i] else notdone">v </ng-container>
+                                    <ng-template #notdone>x </ng-template>
+                                    <span id="step_{{ i }}">{{ step.title }}</span>
+                                </option>
+                            </ng-template>
+                        </ng-container>
+                    </select>
+                </div>
+            </div>
         </div>
-        @if (currentReason.isPresent()) {
-          <div class="message is-danger" role="alert">
-            <div class="message-header" i18n>Failure</div>
-            <div class="message-body" id="currentReason" [innerHTML]="currentReason.get()"></div>
-          </div>
-        }
-        <div class="block">
-          @if (tutorialOver === false && ((stepFinished && stepFinished[stepIndex]) || moveAttemptMade)) {
-            <button id="retryButton"
-              class="button mr-3"
-              (click)="retry()"
-              i18n
-            >Try again</button>
-          }
-          @if (tutorialOver === false) {
-            <button id="nextButton"
-              class="button is-primary mr-3 mb-1"
-              (click)="next()"
-              >
-              @if (steps[stepIndex] && steps[stepIndex].isInformation()) {
-                <ng-container i18n>Ok</ng-container>
-              } @else {
-                @if (stepFinished && stepFinished[stepIndex]) {
-                  <ng-container i18n>Continue</ng-container>
-                } @else {
-                  <ng-container i18n>Skip</ng-container>
-                }
-              }
-            </button>
-          }
-          @if (tutorialOver) {
-            <button id="restartButton"
-              class="button"
-              (click)="start()"
-              i18n
-            >Try again</button>
-          }
-          @if (tutorialOver) {
-            <button id="playLocallyButton"
-              class="button"
-              (click)="playLocally()"
-              i18n
-            >Play locally</button>
-          }
-          @if (tutorialOver) {
-            <button id="playOnlineButton"
-              class="button"
-              (click)="createGame()"
-              i18n
-            >Create an online game</button>
-          }
-          @if (moveAttemptMade && stepFinished[stepIndex] === false) {
-            <button id="showSolutionButton"
-              class="button"
-              (click)="showSolution()"
-              i18n
-            >See solution</button>
-          }
-          <div class="select">
-            <select id="steps" (change)="changeStep($event)">
-              @for (step of steps; track step; let i = $index) {
-                @if (i === stepIndex) {
-                  <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>
-                } @else {
-                  <option [value]="i">
-                    @if (stepFinished[i]) {
-                      v
-                    } @else {
-                      x
-                    }
-                    <span id="step_{{ i }}">{{ step.title }}</span>
-                  </option>
-                }
-              }
-            </select>
-          </div>
-        </div>
-      </div>
-    }
-  </div>
-  <div class="column">
-    <div class="box is-fullheight p-5"
-      [ngClass]="getBoardHighlight()">
-      <div id="board" class="box is-fullheight">
-        <div #board></div>
-      </div>
     </div>
-  </div>
+    <div class="column">
+        <div class="box is-fullheight p-5"
+             [ngClass]="getBoardHighlight()">
+            <div id="board" class="box is-fullheight">
+                <div #board></div>
+            </div>
+        </div>
+    </div>
 </div>
