@@ -11,7 +11,7 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends Min
     public constructor() {
         super($localize`Capture > Captured Freedom > All Freedoms`,
               SaharaRules.get(),
-              new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(),
+              new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
               new SaharaMoveGenerator());
         this.random = true;
     }

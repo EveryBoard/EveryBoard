@@ -65,7 +65,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return new SaharaState(board, 0);
     }
 
-    public static getStartingCoords(state: SaharaState, player: Player): Coord[] {
+    public getStartingCoords(state: SaharaState, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             if (coordAndContent.content.is(player)) {
@@ -75,8 +75,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return startingCoords;
     }
 
-    public static getBoardValuesByPiece(state: SaharaState, player: Player): MGPMap<Coord, number> {
-        const playersPiece: Coord[] = SaharaRules.getStartingCoords(state, player);
+    public getBoardValueByPiece(state: SaharaState, player: Player): MGPMap<Coord, number> {
+        const playersPiece: Coord[] = this.getStartingCoords(state, player);
         const playerFreedoms: MGPMap<Coord, number> = new MGPMap();
         for (const piece of playersPiece) {
             const freedoms: number =
@@ -86,8 +86,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return playerFreedoms;
     }
 
-    public static getBoardValuesFor(state: SaharaState, player: Player): number[] {
-        const playerFreedomsMap: MGPMap<Coord, number> = SaharaRules.getBoardValuesByPiece(state, player);
+    public getBoardValuesFor(state: SaharaState, player: Player): number[] {
+        const playerFreedomsMap: MGPMap<Coord, number> = this.getBoardValueByPiece(state, player);
         const playerFreedomsValue: number[] = playerFreedomsMap.getValueList();
         return playerFreedomsValue.sort((a: number, b: number) => a - b);
     }
@@ -143,12 +143,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public override getGameStatus(node: SaharaNode): GameStatus {
         const board: SaharaState = node.gameState;
-        const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
-        const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
-        return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+        const zeroFreedoms: number[] = this.getBoardValuesFor(board, Player.ZERO);
+        const oneFreedoms: number[] = this.getBoardValuesFor(board, Player.ONE);
+        return this.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
     }
 
-    private static getLandingCoordsMatching(coord: Coord, state: SaharaState, premise: (c: Coord) => boolean): Coord[] {
+    private getLandingCoordsMatching(coord: Coord, state: SaharaState, premise: (c: Coord) => boolean): Coord[] {
         const landings: CoordSet =
             new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(premise));
         if (TriangularCheckerBoard.isSpaceDark(coord)) {
@@ -169,22 +169,22 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
     }
 
-    public static getLegalLandingCoords(state: SaharaState, coord: Coord): Coord[] {
+    public getLegalLandingCoords(state: SaharaState, coord: Coord): Coord[] {
         const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
             return state.hasPieceAt(c, FourStatePiece.EMPTY);
         };
-        return SaharaRules.getLandingCoordsMatching(coord, state, isOnBoardAndEmpty);
+        return this.getLandingCoordsMatching(coord, state, isOnBoardAndEmpty);
     }
 
-    public static getValidLandingCoords(state: SaharaState, coord: Coord): Coord[] {
+    public getValidLandingCoords(state: SaharaState, coord: Coord): Coord[] {
         const isOnBoardAndReachable: (c: Coord) => boolean = (c: Coord) => {
             return state.isOnBoard(c) &&
                    state.getPieceAt(c).equals(FourStatePiece.UNREACHABLE) === false;
         };
-        return SaharaRules.getLandingCoordsMatching(coord, state, isOnBoardAndReachable);
+        return this.getLandingCoordsMatching(coord, state, isOnBoardAndReachable);
     }
 
-    public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
+    public getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
         if (zeroFreedoms[0] === 0) {
             return GameStatus.ONE_WON;
         } else if (oneFreedoms[0] === 0) {

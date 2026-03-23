@@ -15,7 +15,8 @@ export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> 
         const moves: SaharaMove[] = [];
         const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
         const player: Player = node.gameState.getCurrentPlayer();
-        const startingCoords: Coord[] = SaharaRules.getStartingCoords(node.gameState, player);
+        const startingCoords: Coord[] = SaharaRules.get().getStartingCoords(node.gameState, player); // TODO for review:
+        // TODO: we prefer this or this.rules and an added constructor ?
         for (const start of startingCoords) {
             const neighbors: Coord[] =
                 TriangularGameState.getEmptyNeighbors(board, start, FourStatePiece.EMPTY);

@@ -10,8 +10,8 @@ import { SaharaState } from './SaharaState';
 export class SaharaFreedomHeuristic extends PlayerMetricHeuristic<SaharaMove, SaharaState> {
 
     public override getMetrics(node: SaharaNode, _config: NoConfig): PlayerNumberTable {
-        const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(node.gameState, Player.ZERO);
-        const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(node.gameState, Player.ONE);
+        const zeroFreedoms: number[] = SaharaRules.get().getBoardValuesFor(node.gameState, Player.ZERO);
+        const oneFreedoms: number[] = SaharaRules.get().getBoardValuesFor(node.gameState, Player.ONE);
         return PlayerNumberTable.of(zeroFreedoms, oneFreedoms);
     }
 

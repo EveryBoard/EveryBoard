@@ -20,7 +20,7 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     beforeEach(() => {
-        heuristic = new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic();
+        heuristic = new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get());
     });
 
     describe('Behavior Tests', () => {
@@ -53,7 +53,7 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                                                                    defaultConfig);
         });
 
-        it(`at equal number of surrounded ennemy, should prefer that surrounded ennemy than to have less freedom`, () => {
+        it(`at equal number of surrounded ennemies, should prefer that surrounded ennemy than to have less freedom`, () => {
             // In this board Player.ZERO surround one piece
             const weakBoard: FourStatePiece[][] = [
                 [N, N, _, O, _, X, _, _, _, N, N],
@@ -81,7 +81,7 @@ describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic', () => {
                                                                    defaultConfig);
         });
 
-        it(`at equal number of freedom for surrounded ennemy, should prefer tho have more freedom`, () => {
+        it(`should prefer to have more freedoms for other pieces (at equal number of freedoms for surrounded ennemies)`, () => {
             // In this board Player.ZERO surround one piece
             const weakBoard: FourStatePiece[][] = [
                 [N, N, _, _, _, O, _, X, _, N, N],
