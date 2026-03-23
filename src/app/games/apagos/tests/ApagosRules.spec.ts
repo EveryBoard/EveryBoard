@@ -7,8 +7,9 @@ import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
+import { ApagosSquare } from '../ApagosSquare';
 
-describe('ApagosRules', () => {
+fdescribe('ApagosRules', () => {
 
     let rules: ApagosRules;
     const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
@@ -189,6 +190,20 @@ describe('ApagosRules', () => {
 
     describe('Custom Config', () => {
 
+        it('should give a [4, 3, 2, 1] board when increment is 1 and size is 4', () => {
+            // Given the initial state with a custom config with increment = 1
+            const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                increment: 1,
+            });
+
+            // When creating initial state with it
+            const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
+            const actualTotalSpace: number[] = state.board.map((value: ApagosSquare) => value.getCapacity());
+            // Then the actual total space per square should look like this: [4, 3, 2, 1]
+            expect([4, 3, 2, 1]).toEqual(actualTotalSpace);
+        });
+
         it('should give by default just enough piece to dominate odd square and own half in even square', () => {
             // Given the initial state with a custom config with increment = 1
             const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
@@ -200,6 +215,8 @@ describe('ApagosRules', () => {
             const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
 
             // Then the number of piece by player should be correct
+            // For [4, 3, 2, 1] visible in previous test, it should be:
+            //     [2, 2, 1, 1] = 6 total
             expect(state.getRemaining(Player.ZERO)).toBe(6);
         });
 
