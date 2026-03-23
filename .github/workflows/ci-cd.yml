@@ -181,10 +181,10 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
+      - name: Build lib
+        run: cd lib && npm ci && npm run build
       - name: Setup dependencies (install dependencies)
         run: npm ci
-      - name: Build lib
-        run: cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Install python dependencies
