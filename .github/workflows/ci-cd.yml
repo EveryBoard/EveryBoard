@@ -1,7 +1,7 @@
 name: CI/CD On Action
 
 env:
-  GO_VERSION: 1.24
+  GO_VERSION: 1.26
   NODE_VERSION: 20
   PYTHON_VERSION: 3.13
 
@@ -23,7 +23,7 @@ jobs:
           node-version: ${{ env.NODE_VERSION }}
           cache: 'npm'
       - name: Setup dependencies (install dependencies)
-        run: cd lib && npm ci && cd ../ && npm ci
+        run: npm ci
       - name: Build lib
         run: cd lib && npm run build
       - name: Setup dependencies (setup dummy Firebase config)
