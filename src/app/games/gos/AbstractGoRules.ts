@@ -23,8 +23,14 @@ export type GoLegalityInformation = Coord[];
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
+export interface AbstractGoConfig extends RulesConfig {
+
+    playOnIntersection: boolean;
+
+}
+
 @Debug.log
-export abstract class AbstractGoRules<C extends RulesConfig>
+export abstract class AbstractGoRules<C extends AbstractGoConfig>
     extends ConfigurableRules<GoMove, GoState, C, GoLegalityInformation>
 {
 
@@ -344,7 +350,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         return this.markTerritoryAndCount(resultingState);
     }
 
-    public override isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
+    public override isLegal(move: GoMove, state: GoState, config: MGPOptional<C>): MGPFallible<GoLegalityInformation> {
         if (this.isPass(move)) {
             const playing: boolean = state.phase.isPlaying();
             const passed: boolean = state.phase.isPassed();
@@ -370,7 +376,11 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             if (legal) {
                 return MGPFallible.success([]);
             } else {
-                return MGPFallible.failure(GoFailure.OCCUPIED_INTERSECTION());
+                if (config.get().playOnIntersection) {
+                    return MGPFallible.failure(GoFailure.OCCUPIED_INTERSECTION());
+                } else {
+                    return MGPFallible.failure(GoFailure.OCCUPIED_SPACE());
+                }
             }
         } else {
             Debug.display('GoRules', 'isLegal', 'move is normal stuff: ' + move.toString());

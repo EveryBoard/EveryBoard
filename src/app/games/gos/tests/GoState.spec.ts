@@ -44,7 +44,12 @@ describe('GoState for Go', () => {
 
         it('should put the first two handicaps in opposite corner', () => {
             // Given a config with a 19x19 board and a handicap of two
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 2 });
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                width: 19,
+                height: 19,
+                handicap: 2,
+                playOnIntersection: true,
+            });
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -81,7 +86,12 @@ describe('GoState for Go', () => {
 
         it('should put the first four handicaps in corner', () => {
             // Given a custom with a 19x19 board and a handicap of four
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 4 });
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                width: 19,
+                height: 19,
+                handicap: 4,
+                playOnIntersection: true,
+            });
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -118,7 +128,12 @@ describe('GoState for Go', () => {
 
         it('should put the fifth handicap in tengen', () => {
             // Given a custom with a 19x19 board and a handicap of five
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 5 });
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                width: 19,
+                height: 19,
+                handicap: 5,
+                playOnIntersection: true,
+            });
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -155,7 +170,12 @@ describe('GoState for Go', () => {
 
         it('should put the sixth to ninth handicaps in "edge hoshis"', () => {
             // Given a custom with a 19x19 board and a handicap of 9
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 9 });
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                width: 19,
+                height: 19,
+                handicap: 9,
+                playOnIntersection: true,
+            });
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);

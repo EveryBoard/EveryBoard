@@ -1,26 +1,25 @@
-import { MGPFallible } from '@everyboard/lib';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Debug } from '../../utils/Debug';
 
-import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
+import { GoLegalityInformation, GoNode, AbstractGoRules, AbstractGoConfig } from './AbstractGoRules';
 import { GoGroupData } from './GoGroupsData';
 import { GoMove } from './GoMove';
 import { GoPiece } from './GoPiece';
 import { GoState } from './GoState';
 
 @Debug.log
-export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerator<GoMove, GoState, C> {
+export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGenerator<GoMove, GoState, C> {
 
     public constructor(private readonly rules: AbstractGoRules<C>) {
         super();
     }
 
-    public override getListMoves(node: GoNode): GoMove[] {
+    public override getListMoves(node: GoNode, config: MGPOptional<C>): GoMove[] {
         const currentState: GoState = node.gameState;
-        const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
+        const playingMoves: GoMove[] = this.getPlayingMovesList(currentState, config);
         if (currentState.phase.isPlaying() || currentState.phase.isPassed()) {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
@@ -34,14 +33,14 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
         }
     }
 
-    public getPlayingMovesList(state: GoState): GoMove[] {
+    public getPlayingMovesList(state: GoState, config: MGPOptional<C>): GoMove[] {
         const choices: GoMove[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
             const content: GoPiece = coordAndContent.content;
             const newMove: GoMove = new GoMove(coord.x, coord.y);
             if (content === GoPiece.EMPTY) {
-                const legality: MGPFallible<GoLegalityInformation> = this.rules.isLegal(newMove, state);
+                const legality: MGPFallible<GoLegalityInformation> = this.rules.isLegal(newMove, state, config);
                 if (legality.isSuccess()) {
                     choices.push(newMove);
                 }

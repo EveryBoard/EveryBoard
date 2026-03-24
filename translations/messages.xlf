@@ -1939,7 +1939,7 @@
         <source>Since the board is hexagonal, pieces have six freedoms when they don&apos;t touch the edge.</source>
       </trans-unit>
       <trans-unit id="6501501128968003048" datatype="html">
-        <source>Since the board is hexagonal, groups of two pieces have three more freedom (making ko impossible, and probably shisho too).</source>
+        <source>Since the board is hexagonal, groups of two pieces have three more freedom (making ko impossible).</source>
       </trans-unit>
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>

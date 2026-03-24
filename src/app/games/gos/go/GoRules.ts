@@ -1,22 +1,25 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, BooleanConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { GobanUtils } from '../../../jscaip/GobanUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoRules, AbstractGoConfig } from '../AbstractGoRules';
 import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type GoConfig = GobanConfig & {
 
+// TODO: kill GobanConfig ?
+
+export interface GoConfig extends AbstractGoConfig {
+    width: number;
+    height: number;
     handicap: number;
-};
+}
 
 export class GoRules extends AbstractGoRules<GoConfig> {
 
@@ -29,6 +32,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                 handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
+                playOnIntersection: new BooleanConfig(true, () => $localize`Play on intersection`),
             },
         }, [{
             name: (): string => $localize`13 x 13`,
@@ -36,6 +40,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
                 width: 13,
                 height: 13,
                 handicap: 0,
+                playOnIntersection: true,
             },
         }, {
             name: (): string => $localize`9 x 9`,
@@ -43,6 +48,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
                 width: 9,
                 height: 9,
                 handicap: 0,
+                playOnIntersection: true,
             },
         }]);
 

@@ -324,7 +324,7 @@ describe('TrigoRules', () => {
             const move: GoMove = new GoMove(1, 6);
 
             // Then the move should be illegal
-            const reason: string = GoFailure.OCCUPIED_INTERSECTION();
+            const reason: string = GoFailure.OCCUPIED_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -770,6 +770,7 @@ describe('TrigoRules', () => {
             const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 1,
+                playOnIntersection: false,
             });
 
             // When getting initial board
@@ -788,6 +789,7 @@ describe('TrigoRules', () => {
             const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 2,
+                playOnIntersection: false,
             });
 
             // When getting initial board

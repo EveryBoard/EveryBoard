@@ -82,7 +82,7 @@ export class HexagonalGoTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Freedom` + ' (4/4)',
-            $localize`Since the board is hexagonal, groups of two pieces have three more freedom (making ko impossible, and probably shisho too).`,
+            $localize`Since the board is hexagonal, groups of two pieces have three more freedoms (making ko impossible).`,
             new GoState([
                 [N, N, N, N, N, N, _, _, _, _, _, _, _],
                 [N, N, N, N, N, _, _, _, _, _, _, _, _],

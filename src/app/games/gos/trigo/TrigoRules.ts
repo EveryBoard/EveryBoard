@@ -6,19 +6,19 @@ import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoRules, AbstractGoConfig } from '../AbstractGoRules';
 import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type TrigoConfig = {
+export interface TrigoConfig extends AbstractGoConfig {
 
     size: number;
 
     hexagonal: boolean;
 
-};
+}
 
 export class TrigoRules extends AbstractGoRules<TrigoConfig> {
 
@@ -28,13 +28,9 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         new RulesConfigDescription<TrigoConfig>({
             name: (): string => $localize`Standard`,
             config: {
-                size: new NumberConfig(
-                    7,
-                    RulesConfigDescriptionLocalizable.SIZE,
-                    MGPValidators.range(1, 99)),
-                hexagonal: new BooleanConfig(
-                    false,
-                    () => $localize`Hexagonal`),
+                size: new NumberConfig(7, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 99)),
+                hexagonal: new BooleanConfig(false, () => $localize`Hexagonal`),
+                playOnIntersection: new BooleanConfig(false, () => $localize`Play on intersection`),
             },
         });
 

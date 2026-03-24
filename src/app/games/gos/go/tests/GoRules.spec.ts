@@ -26,7 +26,8 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const defaultConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
+    const config: GoConfig = { width: 5, height: 5, handicap: 0, playOnIntersection: true };
+    const defaultConfig: MGPOptional<GoConfig> = MGPOptional.of(config);
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 

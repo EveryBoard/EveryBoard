@@ -298,7 +298,7 @@ describe('HexagonalGoRules', () => {
             const move: GoMove = new GoMove(6, 6);
 
             // Then the move should be illegal
-            const reason: string = GoFailure.OCCUPIED_INTERSECTION();
+            const reason: string = GoFailure.OCCUPIED_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -841,8 +841,8 @@ describe('HexagonalGoRules', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, _, X, u],
-                [N, N, N, N, N, _, _, _, _, _, _, X, b],
-                [N, N, N, N, _, _, _, _, _, _, _, X, b],
+                [N, N, N, N, N, _, _, _, _, _, _, X, w],
+                [N, N, N, N, _, _, _, _, _, _, _, X, w],
                 [N, N, N, _, _, _, _, _, _, _, _, X, X],
                 [N, N, _, _, _, _, _, _, _, _, _, _, _],
                 [N, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -852,7 +852,7 @@ describe('HexagonalGoRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, N, N, N],
                 [_, _, _, _, _, _, _, _, _, N, N, N, N],
                 [O, O, O, O, _, _, _, _, N, N, N, N, N],
-                [k, w, w, O, _, _, _, N, N, N, N, N, N],
+                [k, b, b, O, _, _, _, N, N, N, N, N, N],
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(4, 4), 4, MGPOptional.empty(), GoPhase.FINISHED);

@@ -6,17 +6,17 @@ import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable
 import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
 import { HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type HexagonalGoConfig = {
+export interface HexagonalGoConfig extends AbstractGoConfig {
 
     size: number;
 
-};
+}
 
 export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
 

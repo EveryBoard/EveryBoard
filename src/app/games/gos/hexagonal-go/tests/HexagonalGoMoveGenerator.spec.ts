@@ -24,7 +24,11 @@ describe('HexagonalGoMoveGenerator', () => {
 
     let moveGenerator: HexagonalGoMoveGenerator;
 
-    const config: MGPOptional<HexagonalGoConfig> = MGPOptional.of({ size: 2, hexagonal: false });
+    const config: MGPOptional<HexagonalGoConfig> = MGPOptional.of({
+        size: 2,
+        hexagonal: false,
+        playOnIntersection: false,
+    });
 
     beforeEach(() => {
         moveGenerator = new HexagonalGoMoveGenerator();
@@ -54,7 +58,7 @@ describe('HexagonalGoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then it should include one move per empty space (127) + the move PASS
             expect(moves.length).toBe(127 + 1);
@@ -72,7 +76,7 @@ describe('HexagonalGoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then there should only be 'ACCEPT'
             expect(moves).toEqual([GoMove.ACCEPT]);
@@ -90,7 +94,7 @@ describe('HexagonalGoMoveGenerator', () => {
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then there should only be 'ACCEPT'
             expect(moves).toEqual([GoMove.ACCEPT]);
@@ -105,7 +109,7 @@ describe('HexagonalGoMoveGenerator', () => {
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
 
             // When generating the list of move
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then the list of move should be the disagreements
             expect(moves).toEqual([new GoMove(1, 1)]);
@@ -125,7 +129,7 @@ describe('HexagonalGoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then it should include the moves that puts them back alive
             expect(moves.length).toBe(1);
@@ -146,7 +150,7 @@ describe('HexagonalGoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then it should include the moves that puts them back alive
             expect(moves.length).toBe(1);
