@@ -83,16 +83,13 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     public getViewBox(): ViewBox {
-        const abstractSize: number = this.getState().getWidth() + 2;
-        const pieceSize: number = this.SPACE_SIZE * 1.5;
-        const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
-        const configSize: number = Math.floor(abstractSize / 2);
-        const halfStroke: number = this.STROKE_WIDTH / 2;
-        const left: number = ((configSize - 3) * (this.SPACE_SIZE - halfStroke)) - (this.STROKE_WIDTH);
-        const up: number = (-1 * (this.SPACE_SIZE - halfStroke)) - (2 * 1.25 * this.STROKE_WIDTH);
-        const width: number = size + (1.75 * configSize * this.STROKE_WIDTH);
-        const height: number = size + this.STROKE_WIDTH;
-        return new ViewBox(left, up, width, height);
+        return ViewBox.fromHexa(
+            this.getState().allCoords(),
+            this.hexaLayout,
+            this.STROKE_WIDTH,
+        )
+            .expandAbove(this.SPACE_SIZE)
+            .expandBelow(this.SPACE_SIZE);
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
