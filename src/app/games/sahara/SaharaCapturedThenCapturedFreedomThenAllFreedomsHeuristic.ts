@@ -3,8 +3,8 @@ import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { NoConfig } from '../../jscaip/RulesConfigUtil';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
-import { SaharaMobilityHeuristic } from './SaharaMobilityHeuristic';
 
+import { SaharaMobilityHeuristic } from './SaharaMobilityHeuristic';
 import { SaharaNode } from './SaharaRules';
 import { SaharaState } from './SaharaState';
 
