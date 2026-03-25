@@ -204,7 +204,7 @@ fdescribe('ApagosRules', () => {
             expect([4, 3, 2, 1]).toEqual(actualTotalSpace);
         });
 
-        it('should give by default just enough piece to dominate odd square and own half in even square', () => {
+        it('should give by default just enough piece to dominate odd squares and occupy half in even squares', () => {
             // Given the initial state with a custom config with increment = 1
             const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
