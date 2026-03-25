@@ -190,7 +190,7 @@ describe('ArrayUtils', () => {
             // Given a list being inferior in the early number
             const inferior: number[] = [9876156];
             // and another list being superior in the early number
-            const superior: number[] = [Number.MAX_SAFE_INTEGER];
+            const superior: number[] = [Number.POSITIVE_INFINITY];
 
             // When comparing them
             // Then isGreaterThan should be false and isLessThan true

@@ -30,8 +30,8 @@ export class SaharaMobilityHeuristic extends PlayerMetricHeuristic<SaharaMove, S
 
     /**
      * @returns a list of number sorted from biggest to smallest
-     *          each of those number represent the number of move that one piece must take to reach the closest ally
-     *          hence, the higher is considered the worst, as MAX_SAFE_INTEGER means surrounded
+     *          each of those number represents the number of moves that one piece must take to reach the closest ally
+     *          hence, the higher is considered the worst, as POSITIVE_INFINITY means surrounded
      */
     private getMobilities(state: SaharaState, player: Player): number[] {
         const mobilities: number[] = [];
@@ -66,7 +66,7 @@ export class SaharaMobilityHeuristic extends PlayerMetricHeuristic<SaharaMove, S
                 depth++;
             }
         }
-        return Number.MAX_SAFE_INTEGER;
+        return Number.POSITIVE_INFINITY;
     }
 
     private getLandingCoords(state: SaharaState, coords: CoordSet): CoordSet {

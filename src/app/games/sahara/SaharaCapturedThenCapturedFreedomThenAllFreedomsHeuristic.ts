@@ -31,7 +31,7 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic
     private getCapturedAndFreedom(state: SaharaState, player: Player): { captured: boolean, freedoms: number } {
         for (const coord of state.allCoords()) {
             if (state.hasPieceBelongingTo(coord, player)) {
-                if (this.countMovesToClosestAlly(state, coord) === Number.MAX_SAFE_INTEGER) {
+                if (this.countMovesToClosestAlly(state, coord) === Number.POSITIVE_INFINITY) {
                     const freedoms: number =
                          TriangularGameState.getEmptyNeighbors(state.board, coord, FourStatePiece.EMPTY).length;
                     return { captured: true, freedoms };

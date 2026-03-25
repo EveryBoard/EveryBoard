@@ -72,7 +72,7 @@ describe('SaharaMobilityHeuristic', () => {
             expect(heuristic.countMovesToClosestAlly(state, coordUnderTest)).toBe(1);
         });
 
-        it('should count pieces that are unable to reach ally as Number.MAX_SAFE_INTEGER', () => {
+        it('should count pieces that are unable to reach ally as Number.POSITIVE_INFINITY', () => {
             const board: FourStatePiece[][] = [
                 [N, N, _, O, _, _, X, _, O, N, N],
                 [N, _, _, _, _, _, X, _, O, _, N],
@@ -83,7 +83,7 @@ describe('SaharaMobilityHeuristic', () => {
             ];
             const state: SaharaState = new SaharaState(board, 0);
             const coordUnderTest: Coord = new Coord(3, 0);
-            expect(heuristic.countMovesToClosestAlly(state, coordUnderTest)).toBe(Number.MAX_SAFE_INTEGER);
+            expect(heuristic.countMovesToClosestAlly(state, coordUnderTest)).toBe(Number.POSITIVE_INFINITY);
         });
 
         it('should count pieces that are one double step away from another as one', () => {

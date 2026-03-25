@@ -100,9 +100,9 @@ export class Player implements ComparableObject {
 
     public getVictoryValue(): number {
         if (this === Player.ZERO) {
-            return Number.MIN_SAFE_INTEGER;
+            return Number.NEGATIVE_INFINITY;
         } else {
-            return Number.MAX_SAFE_INTEGER;
+            return Number.POSITIVE_INFINITY;
         }
     }
 
