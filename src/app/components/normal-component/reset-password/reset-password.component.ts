@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -13,8 +13,8 @@ import { NgIf } from '@angular/common';
     imports: [ReactiveFormsModule, AutofocusDirective, FormsModule, NgIf]
 })
 export class ResetPasswordComponent {
+    connectedUserService = inject(ConnectedUserService);
 
-    public constructor(public connectedUserService: ConnectedUserService) {}
 
     public success: boolean = false;
     public errorMessage: MGPOptional<string> = MGPOptional.empty();

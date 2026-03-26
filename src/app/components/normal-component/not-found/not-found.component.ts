@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 @Component({
@@ -6,10 +6,11 @@ import { ActivatedRoute } from '@angular/router';
     templateUrl: './not-found.component.html'
 })
 export class NotFoundComponent {
+    readonly route: ActivatedRoute = inject(ActivatedRoute);
 
     public message: string;
 
-    public constructor(readonly route: ActivatedRoute) {
-        this.message = route.snapshot.paramMap.get('message') ?? $localize`This page does not exist.`;
+    public constructor() {
+        this.message = this.route.snapshot.paramMap.get('message') ?? $localize`This page does not exist.`;
     }
 }

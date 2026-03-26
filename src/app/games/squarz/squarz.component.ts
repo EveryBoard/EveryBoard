@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -22,7 +22,7 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
     selector: 'app-squarz',
     templateUrl: './squarz.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class SquarzComponent extends RectangularGameComponent<SquarzRules,
                                                                  SquarzMove,
@@ -40,8 +40,8 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
 
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Squarz');
         this.availableAIs = [
             new SquarzMinimax(),

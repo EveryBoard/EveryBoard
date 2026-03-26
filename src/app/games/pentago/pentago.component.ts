@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -29,7 +29,7 @@ interface ArrowInfo {
     selector: 'app-pentago',
     templateUrl: './pentago.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,
@@ -53,8 +53,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: ArrowInfo[];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Pentago');
         this.availableAIs = [
             new PentagoDummyMinimax(),

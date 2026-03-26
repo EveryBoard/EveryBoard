@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -15,15 +15,13 @@ import { GameInfo } from '../pick-game/pick-game.component';
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
 })
 export class OnlineGameCreationComponent implements OnInit {
+    private readonly route = inject(ActivatedRoute);
+    private readonly router = inject(Router);
+    private readonly connectedUserService = inject(ConnectedUserService);
+    private readonly currentGameService = inject(CurrentGameService);
+    private readonly messageDisplayer = inject(MessageDisplayer);
+    private readonly gameService = inject(GameService);
 
-    public constructor(private readonly route: ActivatedRoute,
-                       private readonly router: Router,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly currentGameService: CurrentGameService,
-                       private readonly messageDisplayer: MessageDisplayer,
-                       private readonly gameService: GameService)
-    {
-    }
 
     public async ngOnInit(): Promise<void> {
         await this.createGameAndRedirectOrShowError(this.extractGameFromURL());

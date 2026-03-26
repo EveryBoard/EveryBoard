@@ -1,5 +1,5 @@
 
-import { Inject, Injectable, DOCUMENT } from '@angular/core';
+import { Injectable, DOCUMENT, inject } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -11,12 +11,14 @@ type Theme = 'dark' | 'light';
     providedIn: 'root',
 })
 export class ThemeService {
+    private readonly document = inject<Document>(DOCUMENT);
+    private readonly userSettingsService = inject(UserSettingsService);
+
 
     private theme: Theme;
     private readonly availableThemes: Theme[] = ['dark', 'light'];
 
-    public constructor(@Inject(DOCUMENT) private readonly document: Document,
-                       private readonly userSettingsService: UserSettingsService)
+    public constructor()
     {
         const storedTheme: MGPOptional<Theme> = this.getStoredTheme();
         if (storedTheme.isPresent()) {

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
@@ -48,7 +48,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public errorMessages: string[] = [];
 
-    public constructor(activatedRoute: ActivatedRoute) {
+    public constructor() {
+        const activatedRoute = inject(ActivatedRoute);
+
         super(activatedRoute);
     }
 

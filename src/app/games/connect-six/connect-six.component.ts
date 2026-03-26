@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -7,7 +7,6 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
@@ -21,7 +20,7 @@ import { NgFor, NgIf, NgClass } from '@angular/common';
     selector: 'app-connect-six',
     templateUrl: './connect-six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgFor, NgIf, NgClass]
+    imports: [BlankGobanComponent, NgFor, NgIf, NgClass],
 })
 export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixMove,
@@ -35,8 +34,8 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('ConnectSix');
         this.availableAIs = [
             new ConnectSixAlignmentMinimax(),

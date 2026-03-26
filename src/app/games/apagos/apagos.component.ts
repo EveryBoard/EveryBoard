@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -6,7 +6,6 @@ import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
@@ -36,7 +35,7 @@ interface DropArrow {
     selector: 'app-apagos',
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass]
+    imports: [NgFor, NgIf, NgClass],
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
 
@@ -78,8 +77,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Apagos');
         this.availableAIs = [
             new ApagosRightmostMinimax(),

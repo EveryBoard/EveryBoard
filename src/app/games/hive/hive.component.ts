@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -13,7 +13,6 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';
@@ -127,8 +126,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Hive');
         this.availableAIs = [
             new HiveMinimax(),

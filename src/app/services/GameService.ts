@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible } from '@everyboard/lib';
@@ -117,10 +117,7 @@ export abstract class AbstractGameService {
 })
 @Debug.log
 export class GameService extends AbstractGameService {
-
-    public constructor(private readonly backendService: BackendService) {
-        super();
-    }
+    private readonly backendService: BackendService = inject(BackendService);
 
     public override async subscribeTo(gameId: string,
                                       gameUpdate: (game: Game) => Promise<void>,

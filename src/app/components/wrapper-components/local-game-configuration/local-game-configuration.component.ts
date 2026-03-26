@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
@@ -23,15 +23,18 @@ import { NgIf } from '@angular/common';
     imports: [RulesConfigurationComponent, NgIf, DemoCardWrapperComponent]
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {
+    private readonly router = inject(Router);
+    private readonly cdr = inject(ChangeDetectorRef);
+
 
     public configDemo: DemoNodeInfo;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       private readonly router: Router,
-                       private readonly cdr: ChangeDetectorRef)
+    public constructor()
     {
+        const activatedRoute = inject(ActivatedRoute);
+
         super(activatedRoute);
     }
 

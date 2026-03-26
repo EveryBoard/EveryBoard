@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
@@ -105,6 +105,9 @@ export abstract class AbstractBackendService {
     providedIn: 'root',
 })
 export class BackendService extends AbstractBackendService {
+    private readonly connectedUserService = inject(ConnectedUserService);
+    private readonly messageDisplayer = inject(MessageDisplayer);
+
 
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
 
@@ -114,8 +117,7 @@ export class BackendService extends AbstractBackendService {
     private nextConnectionAttemptTime: number = 1;
     private disconnectRequested: boolean = false;
 
-    public constructor(private readonly connectedUserService: ConnectedUserService,
-                       private readonly messageDisplayer: MessageDisplayer)
+    public constructor()
     {
         super();
         this.connectionPromise = new Promise((resolve: () => void) => {

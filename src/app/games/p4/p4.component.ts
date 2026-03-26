@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -6,7 +6,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { P4Minimax } from './P4Minimax';
 import { P4Move } from './P4Move';
@@ -19,7 +18,7 @@ import { NgFor, NgIf, NgClass } from '@angular/common';
     selector: 'app-p4',
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass]
+    imports: [NgFor, NgIf, NgClass],
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
@@ -27,8 +26,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public last: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('P4');
         this.availableAIs = [
             new P4Minimax(),

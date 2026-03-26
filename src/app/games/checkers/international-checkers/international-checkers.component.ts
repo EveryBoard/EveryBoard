@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { CheckersComponent } from '../common/checkers.component';
 
 import { InternationalCheckersRules } from './InternationalCheckersRules';
@@ -14,8 +13,8 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
 })
 export class InternationalCheckersComponent extends CheckersComponent<InternationalCheckersRules> {
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('InternationalCheckers');
     }
 

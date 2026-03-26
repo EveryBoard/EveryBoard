@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MGPOptional, Utils, Set } from '@everyboard/lib';
@@ -22,6 +22,8 @@ export interface RequestInfo {
  */
 @Injectable()
 export class OGWCRequestManagerService {
+    private readonly connectedUserService = inject(ConnectedUserService);
+
 
     public static requestInfos: Record<RequestType, RequestInfo> = {
         'TakeBack': {
@@ -50,9 +52,6 @@ export class OGWCRequestManagerService {
     private requestAwaitingReply: MGPOptional<GameEventRequest> = MGPOptional.empty();
     private lastDeniedRequest: MGPOptional<RequestType> = MGPOptional.empty();
     private forbiddenRequests: Set<RequestType> = new Set();
-
-    public constructor(private readonly connectedUserService: ConnectedUserService) {
-    }
 
     public onGameStart(): void {
         // Upon game start, clear out requests

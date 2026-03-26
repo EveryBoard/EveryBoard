@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
@@ -21,12 +21,14 @@ import { NgFor } from '@angular/common';
     imports: [ReactiveFormsModule, FormsModule, NgFor, DemoCardWrapperComponent]
 })
 export class DemoPageComponent {
+    private readonly cdr = inject(ChangeDetectorRef);
+
 
     public numberOfColumns: FormControl = new FormControl(5);
 
     public columns: DemoNodeInfo[][] = [];
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {
+    public constructor() {
         this.fillColumns(this.numberOfColumns.value);
         this.numberOfColumns.valueChanges.subscribe((columns: number) => {
             this.fillColumns(columns);

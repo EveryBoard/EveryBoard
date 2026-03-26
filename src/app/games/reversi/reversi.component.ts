@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -8,7 +8,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { ReversiMinimax } from './ReversiMinimax';
 import { ReversiMove } from './ReversiMove';
@@ -34,8 +33,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Reversi');
         this.availableAIs = [
             new ReversiMinimax(),

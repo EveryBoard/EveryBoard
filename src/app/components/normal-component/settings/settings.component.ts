@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 
 import { ThemeService } from '../../../services/ThemeService';
 import { UserSettingsService } from '../../../services/UserSettingsService';
@@ -13,6 +13,8 @@ type SettingOption = { value: string, name: string }
     imports: [NgFor, ReactiveFormsModule]
 })
 export class SettingsComponent {
+    private readonly userSettingsService = inject(UserSettingsService);
+
 
     public readonly availableLanguages: SettingOption[] = [
         { value: 'fr', name: 'Français' },
@@ -25,8 +27,9 @@ export class SettingsComponent {
     public currentTheme: string;
     public currentLanguage: string;
 
-    public constructor(private readonly userSettingsService: UserSettingsService,
-                       themeService: ThemeService) {
+    public constructor() {
+        const themeService = inject(ThemeService);
+
         this.currentTheme = themeService.getTheme();
         this.currentLanguage = this.userSettingsService.getLanguage();
     }

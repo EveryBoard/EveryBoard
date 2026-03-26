@@ -39,11 +39,8 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef,
-                       public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
-    {
-        super(messageDisplayer, cdr);
+    public constructor(public generateMove: (start: Coord, end: Coord) => MGPFallible<M>) {
+        super();
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {

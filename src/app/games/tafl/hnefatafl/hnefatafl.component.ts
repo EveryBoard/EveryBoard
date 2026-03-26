@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
@@ -11,12 +11,12 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
     selector: 'app-hnefatafl',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr, HnefataflMove.from);
+    public constructor() {
+        super(HnefataflMove.from);
         this.setRulesAndNode('Hnefatafl');
         this.availableAIs = this.createAIs();
         this.encoder = HnefataflMove.encoder;

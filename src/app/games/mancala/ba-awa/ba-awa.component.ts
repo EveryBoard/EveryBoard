@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { MancalaComponent } from '../common/MancalaComponent';
 import { MancalaMove } from '../common/MancalaMove';
 
@@ -13,14 +12,13 @@ import { NumberedCircleComponent } from '../common/numbered-circle.component';
     selector: 'app-ba-awa-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NumberedCircleComponent]
+    imports: [NgFor, NumberedCircleComponent],
 })
 export class BaAwaComponent extends MancalaComponent<BaAwaRules> {
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef)
+    public constructor()
     {
-        super(messageDisplayer, cdr);
+        super();
         this.setRulesAndNode('BaAwa');
         this.availableAIs = this.createAIs(new BaAwaMoveGenerator());
         this.encoder = MancalaMove.encoder;

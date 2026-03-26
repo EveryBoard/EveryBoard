@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -11,7 +11,6 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasFailure } from './EpaminondasFailure';
@@ -37,7 +36,7 @@ export type PossibleMove = {
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf, DirArrowComponent]
+    imports: [NgFor, NgClass, NgIf, DirArrowComponent],
 })
 export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
                                                                    EpaminondasMove,
@@ -58,8 +57,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private moveds: Coord[] = [];
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),

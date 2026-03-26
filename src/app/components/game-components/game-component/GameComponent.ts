@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -97,6 +97,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     L = void>
     extends BaseGameComponent
 {
+    private readonly messageDisplayer = inject(MessageDisplayer);
+    protected readonly cdr = inject(ChangeDetectorRef);
+
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
@@ -146,10 +149,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public animationOngoing: boolean = false;
 
     public state: S;
-
-    public constructor(private readonly messageDisplayer: MessageDisplayer, protected readonly cdr: ChangeDetectorRef) {
-        super();
-    }
 
     public hasScores(): boolean {
         return this.scores.isPresent();

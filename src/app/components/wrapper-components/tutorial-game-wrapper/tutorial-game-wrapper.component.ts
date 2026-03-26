@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -37,6 +37,8 @@ type TutorialPlayer = 'tutorial-player';
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
     public stepIndex: number = 0;
@@ -45,14 +47,6 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public moveAttemptMade: boolean = false;
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       public cdr: ChangeDetectorRef)
-    {
-        super(activatedRoute, router, messageDisplayer);
-    }
 
     public override async canUserPlay(elementName: string): Promise<MGPValidation> {
         this.currentReason = MGPOptional.empty();

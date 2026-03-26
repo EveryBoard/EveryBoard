@@ -1,5 +1,5 @@
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, inject } from '@angular/core';
+import { ParamMap } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
@@ -11,7 +11,6 @@ import { Player } from '../../../jscaip/Player';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapper } from '../GameWrapper';
@@ -24,10 +23,12 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, ViewConfigComponent, NgFor, NgClass, ReactiveFormsModule, FormsModule]
+    imports: [NgIf, ViewConfigComponent, NgFor, NgClass, ReactiveFormsModule, FormsModule],
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
 
     public static readonly AI_TIMEOUT: number = 1500;
 
@@ -39,12 +40,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public rulesConfig: MGPOptional<RulesConfig>; // Set in constructor and in ngAfterViewInit
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
+    public constructor()
     {
-        super(activatedRoute, router, messageDisplayer);
+        super();
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
     }

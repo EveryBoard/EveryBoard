@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { PickGameComponent } from '../pick-game/pick-game.component';
 
@@ -8,9 +8,8 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
     imports: [PickGameComponent]
 })
 export class TutorialGameCreationComponent {
+    router = inject(Router);
 
-    public constructor(public router: Router) {
-    }
 
     public async pickGame(pickedGame: string): Promise<void> {
         await this.router.navigate(['/tutorial/', pickedGame]);

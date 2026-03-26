@@ -1,5 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -7,7 +6,6 @@ import { AbstractNode } from '../../../jscaip/AI/GameNode';
 import { Move } from '../../../jscaip/Move';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { GameWrapper } from '../GameWrapper';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
@@ -24,9 +22,12 @@ export type DemoNodeWithConfig = DemoNodeInfo & {
 
 @Component({
     selector: 'app-demo-card',
-    template: `<div class="is-fullheight"><div #board></div></div>`
+    template: `<div class="is-fullheight"><div #board></div></div>`,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
+
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+    private readonly elementRef: ElementRef = inject(ElementRef);
 
     @Input() public demoNodeInfo: DemoNodeInfo;
 
@@ -34,15 +35,6 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public override boardRef: ViewContainerRef | null = null;
 
     private gameComponentIsSetup: boolean = false;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef,
-                       private readonly elementRef: ElementRef)
-    {
-        super(activatedRoute, router, messageDisplayer);
-    }
 
     public async ngAfterViewInit(): Promise<void> {
         setTimeout(async() => {

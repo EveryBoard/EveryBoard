@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { MGPValidation } from '@everyboard/lib';
@@ -13,11 +13,10 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
     imports: [PickGameComponent]
 })
 export class OnlineGameSelectionComponent {
+    readonly router = inject(Router);
+    readonly currentGameService = inject(CurrentGameService);
+    readonly messageDisplayer = inject(MessageDisplayer);
 
-    public constructor(public readonly router: Router,
-                       public readonly currentGameService: CurrentGameService,
-                       public readonly messageDisplayer: MessageDisplayer) {
-    }
 
     public async pickGame(pickedGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.currentGameService.canUserCreate();

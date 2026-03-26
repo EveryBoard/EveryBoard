@@ -1,4 +1,4 @@
-import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, Type, ViewChild, ViewContainerRef, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -30,6 +30,9 @@ export class GameWrapperMessages {
     standalone: false
 })
 export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
+    protected readonly router = inject(Router);
+    protected readonly messageDisplayer = inject(MessageDisplayer);
+
 
     // This holds the #board html element
     @ViewChild('board', { read: ViewContainerRef })
@@ -51,10 +54,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public Player: typeof Player = Player;
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       protected readonly router: Router,
-                       protected readonly messageDisplayer: MessageDisplayer)
+    public constructor()
     {
+        const activatedRoute = inject(ActivatedRoute);
+
         super(activatedRoute);
     }
 

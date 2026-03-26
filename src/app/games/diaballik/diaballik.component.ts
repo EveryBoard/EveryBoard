@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -10,7 +10,6 @@ import { Line } from '../../jscaip/Line';
 import { Player } from '../../jscaip/Player';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
 import { DiaballikFailure } from './DiaballikFailure';
@@ -25,7 +24,7 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
     selector: 'app-diaballik',
     templateUrl: './diaballik.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 
 export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
@@ -60,8 +59,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Diaballik');
         this.hasAsymmetricBoard = true;
         this.WIDTH = this.getState().getWidth();

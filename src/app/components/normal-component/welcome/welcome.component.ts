@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,6 +17,10 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [RouterLink, NgIf, FaIconComponent, PickGameComponent]
 })
 export class WelcomeComponent {
+    readonly router = inject(Router);
+    readonly messageDisplayer = inject(MessageDisplayer);
+    readonly currentGameService = inject(CurrentGameService);
+
     public readonly numberOfColumns: number = 5;
     public readonly games: GameInfo[][] = [];
     public readonly theme: 'dark' | 'light';
@@ -26,11 +30,10 @@ export class WelcomeComponent {
 
     public gameInfoDetails: MGPOptional<GameInfo> = MGPOptional.empty();
 
-    public constructor(public readonly router: Router,
-                       public readonly messageDisplayer: MessageDisplayer,
-                       public readonly currentGameService: CurrentGameService,
-                       themeService: ThemeService)
+    public constructor()
     {
+        const themeService = inject(ThemeService);
+
         this.theme = themeService.getTheme();
         const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;

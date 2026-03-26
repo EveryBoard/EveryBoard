@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -68,7 +68,7 @@ type PreCaptureInfo = {
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass, LodestoneLodestoneComponent]
+    imports: [NgFor, NgIf, NgClass, LodestoneLodestoneComponent],
 })
 export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>
@@ -134,8 +134,8 @@ export class LodestoneComponent
     private lastMoves: Coord[] = [];
     private lastCaptures: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Lodestone');
         this.availableAIs = [
             new LodestoneScoreMinimax(),

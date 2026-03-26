@@ -1,6 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { MancalaComponent } from '../common/MancalaComponent';
 import { MancalaMove } from '../common/MancalaMove';
 
@@ -17,10 +16,8 @@ import { NumberedCircleComponent } from '../common/numbered-circle.component';
 })
 export class KalahComponent extends MancalaComponent<KalahRules> {
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef)
-    {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Kalah');
         this.availableAIs = this.createAIs(new KalahMoveGenerator());
         this.encoder = MancalaMove.encoder;

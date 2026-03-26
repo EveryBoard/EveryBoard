@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
@@ -9,7 +9,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { QuebecCastlesMinimax } from './QuebecCastlesMinimax';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
@@ -22,7 +21,7 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
     selector: 'app-quebec-castles',
     templateUrl: './quebec-castles.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastlesRules,
                                                                      QuebecCastlesMove,
@@ -53,8 +52,8 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private maxX: number = 0;
     private minY: number = 0;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('QuebecCastles');
         this.availableAIs = [
             new QuebecCastlesMinimax(),

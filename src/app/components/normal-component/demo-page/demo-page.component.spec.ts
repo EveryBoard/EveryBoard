@@ -12,7 +12,6 @@ describe('DemoPageComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(DemoPageComponent);
         testUtils.detectChanges();
-        console.log('setTimeout patched:', setTimeout.toString());
     }));
 
     it('should create', fakeAsync(() => {

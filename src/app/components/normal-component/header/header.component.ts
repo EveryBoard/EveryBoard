@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -18,6 +18,10 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
     imports: [RouterLink, NgClass, NgIf, FaIconComponent]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+    router = inject(Router);
+    connectedUserService = inject(ConnectedUserService);
+    currentGameService = inject(CurrentGameService);
+
 
     public loading: boolean = true;
     public username: MGPOptional<string> = MGPOptional.empty();
@@ -31,12 +35,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public showMenu: boolean = false;
 
     public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
-
-    public constructor(public router: Router,
-                       public connectedUserService: ConnectedUserService,
-                       public currentGameService: CurrentGameService)
-    {
-    }
 
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {

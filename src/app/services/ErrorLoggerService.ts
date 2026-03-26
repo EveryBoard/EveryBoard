@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
 
@@ -13,6 +13,10 @@ import { MessageDisplayer } from './MessageDisplayer';
     providedIn: 'root',
 })
 export class ErrorLoggerService {
+    private readonly errorDAO = inject(ErrorDAO);
+    private readonly router = inject(Router);
+    private readonly messageDisplayer = inject(MessageDisplayer);
+
 
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
 
@@ -29,9 +33,7 @@ export class ErrorLoggerService {
         return MGPValidation.failure(component + ': ' + message);
     }
 
-    private constructor(private readonly errorDAO: ErrorDAO,
-                        private readonly router: Router,
-                        private readonly messageDisplayer: MessageDisplayer)
+    private constructor()
     {
         ErrorLoggerService.singleton = MGPOptional.of(this);
     }

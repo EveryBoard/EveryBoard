@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -29,6 +29,12 @@ type WithId<T> = T & {
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
+    readonly router = inject(Router);
+    readonly messageDisplayer = inject(MessageDisplayer);
+    private readonly activeConfigRoomsService = inject(ActiveConfigRoomsService);
+    private readonly currentGameService = inject(CurrentGameService);
+    private readonly backendService = inject(BackendService);
+
 
     private activeConfigRooms: MGPMap<string, ConfigRoom> = new MGPMap();
 
@@ -39,14 +45,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
-
-    public constructor(public readonly router: Router,
-                       public readonly messageDisplayer: MessageDisplayer,
-                       private readonly activeConfigRoomsService: ActiveConfigRoomsService,
-                       private readonly currentGameService: CurrentGameService,
-                       private readonly backendService: BackendService)
-    {
-    }
 
     public async ngOnInit(): Promise<void> {
         this.activeConfigRoomsSubscription = this.activeConfigRoomsService.subscribe(

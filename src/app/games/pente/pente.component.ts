@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -8,7 +8,6 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 import { PenteConfig } from './PenteConfig';
@@ -23,7 +22,7 @@ import { NgFor, NgClass } from '@angular/common';
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgFor, NgClass]
+    imports: [BlankGobanComponent, NgFor, NgClass],
 })
 export class PenteComponent extends GobanGameComponent<PenteRules,
                                                        PenteMove,
@@ -36,8 +35,8 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public victoryCoords: Coord[] = [];
     public captured: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Pente');
         this.availableAIs = [
             new PenteAlignmentMinimax(),

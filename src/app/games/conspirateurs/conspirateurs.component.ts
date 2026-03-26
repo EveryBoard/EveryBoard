@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -10,7 +10,6 @@ import { PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
@@ -40,7 +39,7 @@ interface SquareInfo {
     selector: 'app-conspirateurs',
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
 
@@ -69,8 +68,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     private lastStep: MGPOptional<ConspirateursMoveSimple> = MGPOptional.empty();
     private victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Conspirateurs');
         this.availableAIs = [
             new ConspirateursJumpMinimax(),

@@ -1,9 +1,9 @@
-import { Directive, ElementRef, OnInit } from '@angular/core';
+import { Directive, ElementRef, OnInit, inject } from '@angular/core';
 
 @Directive({ selector: '[autofocus]' })
 export class AutofocusDirective implements OnInit {
+    private readonly element = inject(ElementRef);
 
-    public constructor(private readonly element: ElementRef) {}
 
     public ngOnInit(): void {
         // focus need to be called after a bit, otherwise it doesn't do anything.

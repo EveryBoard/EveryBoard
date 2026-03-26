@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { Component, EventEmitter, Output, Type, inject } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -356,7 +356,9 @@ export class PickGameComponent {
 
     @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
 
-    public constructor(themeService: ThemeService) {
+    public constructor() {
+        const themeService = inject(ThemeService);
+
         this.theme = themeService.getTheme();
     }
 

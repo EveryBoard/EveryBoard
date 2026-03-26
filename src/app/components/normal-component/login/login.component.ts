@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -18,6 +18,9 @@ import { NgIf } from '@angular/common';
     imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgIf, RouterLink]
 })
 export class LoginComponent implements OnInit, OnDestroy {
+    router = inject(Router);
+    connectedUserService = inject(ConnectedUserService);
+
 
     public faEye: IconDefinition = faEye;
 
@@ -28,12 +31,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         password: new FormControl(),
     });
 
-    private userSubscription!: Subscription; // Initialized in ngOnInit
-
-    public constructor(public router: Router,
-                       public connectedUserService: ConnectedUserService)
-    {
-    }
+    private userSubscription!: Subscription;
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             if (user !== AuthUser.NOT_CONNECTED) {

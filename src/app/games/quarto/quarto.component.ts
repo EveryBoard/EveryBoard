@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
@@ -6,7 +6,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoMove } from './QuartoMove';
@@ -20,7 +19,7 @@ import { NgFor, NgClass, NgIf } from '@angular/common';
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoMove,
@@ -39,8 +38,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Set<Coord> = new Set();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Quarto');
         this.availableAIs = [
             new QuartoMinimax(),

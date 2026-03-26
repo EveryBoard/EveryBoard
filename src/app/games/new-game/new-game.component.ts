@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -6,7 +6,6 @@ import { GameComponent } from '../../components/game-components/game-component/G
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { NewGameMinimax } from './NewGameMinimax';
 import { NewGameMove } from './NewGameMove';
@@ -22,7 +21,6 @@ import { NewGameState } from './NewGameState';
     selector: 'app-new-game',
     templateUrl: './new-game.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
 })
 /**
  * This is the component.
@@ -40,8 +38,8 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * It must set up the `rules`, `encoder`, `node`, and `availableMinimaxes` fields.
      * The minimax list can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),

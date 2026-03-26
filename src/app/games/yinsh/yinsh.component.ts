@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -37,7 +37,7 @@ interface ViewInfo {
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass]
+    imports: [NgFor, NgIf, NgClass],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,
@@ -93,8 +93,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         sideRingClass: PlayerMap.ofValues('player0-stroke', 'player1-stroke'),
     };
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Yinsh');
         this.availableAIs = [
             new YinshScoreMinimax(),

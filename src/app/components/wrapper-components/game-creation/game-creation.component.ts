@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
@@ -58,6 +58,13 @@ type GameCreationViewInfo = {
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
+    private readonly router = inject(Router);
+    private readonly connectedUserService = inject(ConnectedUserService);
+    private readonly configRoomService = inject(ConfigRoomService);
+    private readonly formBuilder = inject(FormBuilder);
+    private readonly messageDisplayer = inject(MessageDisplayer);
+    private readonly cdr = inject(ChangeDetectorRef);
+
     /*
      * Lifecycle:
      * 1. Creator chooses config and opponent
@@ -115,14 +122,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     public configDemo: DemoNodeInfo | undefined = undefined;
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       private readonly router: Router,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly configRoomService: ConfigRoomService,
-                       private readonly formBuilder: FormBuilder,
-                       private readonly messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
+    public constructor()
     {
+        const activatedRoute = inject(ActivatedRoute);
+
         super(activatedRoute);
     }
 

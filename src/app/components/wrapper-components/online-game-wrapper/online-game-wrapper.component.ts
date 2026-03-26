@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
@@ -43,10 +43,18 @@ export class OnlineGameWrapperMessages {
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
-    imports: [NgIf, GameCreationComponent, ViewConfigComponent, TimerComponent, NgFor, FaIconComponent, RouterLink, NgClass, ChatComponent]
+    imports: [NgIf, GameCreationComponent, ViewConfigComponent, TimerComponent, NgFor,
+              FaIconComponent, RouterLink, NgClass, ChatComponent],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
+
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly gameService: GameService = inject(GameService);
+    private readonly timeManager: OGWCTimeManagerService = inject(OGWCTimeManagerService);
+    private readonly requestManager: OGWCRequestManagerService = inject(OGWCRequestManagerService);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
 
     @ViewChild('timerZeroGame') public timerZeroGame: TimerComponent;
     @ViewChild('timerOneGame') public timerOneGame: TimerComponent;
@@ -76,18 +84,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private moveSentButNotReceivedYet: boolean = false;
 
     public viewConfig: boolean = false;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly gameService: GameService,
-                       private readonly timeManager: OGWCTimeManagerService,
-                       private readonly requestManager: OGWCRequestManagerService,
-                       private readonly cdr: ChangeDetectorRef)
-    {
-        super(activatedRoute, router, messageDisplayer);
-    }
 
     private extractGameIdFromURL(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('id'));

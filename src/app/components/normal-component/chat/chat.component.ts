@@ -1,5 +1,5 @@
 import { formatDate, NgIf, NgFor } from '@angular/common';
-import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy } from '@angular/core';
+import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy, inject } from '@angular/core';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
@@ -16,6 +16,8 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
+    private readonly chatService = inject(ChatService);
+
 
     public userMessage: string = '';
 
@@ -36,19 +38,14 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     private chatSubscription!: Subscription;
 
-    public constructor(private readonly chatService: ChatService) {
-    }
-
     public ngOnInit(): void {
         this.loadChatContent();
     }
 
     private loadChatContent(): void {
-        console.log('LOADCHATCONTENT')
         this.chatSubscription = this.chatService.subscribeToMessages((message: Message) => {
             this.onMessageReceived(message);
         });
-        console.log('LOADCHATCONTENT DONE')
     }
 
     public ngOnDestroy(): void {

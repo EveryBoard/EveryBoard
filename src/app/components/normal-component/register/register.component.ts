@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import * as FireAuth from '@firebase/auth';
@@ -18,6 +18,9 @@ import { NgClass, NgIf } from '@angular/common';
     imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgClass, NgIf, RouterLink]
 })
 export class RegisterComponent {
+    connectedUserService = inject(ConnectedUserService);
+    router = inject(Router);
+
 
     public faEye: IconDefinition = faEye;
 
@@ -28,11 +31,6 @@ export class RegisterComponent {
         username: new FormControl(),
         password: new FormControl(),
     });
-
-    public constructor(public connectedUserService: ConnectedUserService,
-                       public router: Router)
-    {
-    }
     public async registerWithEmail(): Promise<void> {
         const username: string | null = this.registrationForm.value.username;
         const email: string | null = this.registrationForm.value.email;

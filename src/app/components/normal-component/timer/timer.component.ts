@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
 
 import { Utils } from '@everyboard/lib';
 
@@ -14,6 +14,8 @@ import { NgClass, NgIf, DecimalPipe } from '@angular/common';
 })
 @Debug.log
 export class TimerComponent implements OnDestroy {
+    private readonly cdr = inject(ChangeDetectorRef);
+
 
     @Input() player: Player;
     @Input() debugName: string;
@@ -41,8 +43,6 @@ export class TimerComponent implements OnDestroy {
     public static readonly SAFE_TIME: string = '';
 
     public cssClasses: string = TimerComponent.SAFE_TIME;
-
-    public constructor(private readonly cdr: ChangeDetectorRef) {}
 
     // Set the duration (in seconds, floating number) for a non-started timer
     public setDuration(seconds: number): void {

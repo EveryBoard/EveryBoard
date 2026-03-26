@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, Injectable } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -9,7 +9,6 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
@@ -106,8 +105,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     ];
     public clockNeedlesPoints: string;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('MartianChess');
         this.availableAIs = [
             new MartianChessScoreMinimax(),
