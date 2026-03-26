@@ -16,12 +16,13 @@ import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from '
 import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-quebec-castles',
     templateUrl: './quebec-castles.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastlesRules,
                                                                      QuebecCastlesMove,

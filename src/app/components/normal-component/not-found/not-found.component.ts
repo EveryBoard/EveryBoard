@@ -3,8 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-not-found',
-    templateUrl: './not-found.component.html',
-    standalone: false
+    templateUrl: './not-found.component.html'
 })
 export class NotFoundComponent {
 

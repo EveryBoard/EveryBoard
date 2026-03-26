@@ -5,11 +5,14 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
+import { NgIf } from '@angular/common';
+import { RulesConfigurationComponent } from '../../wrapper-components/rules-configuration/rules-configuration.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-view-config',
     templateUrl: './view-config.html',
-    standalone: false
+    imports: [NgIf, RulesConfigurationComponent, FaIconComponent]
 })
 export class ViewConfigComponent {
 

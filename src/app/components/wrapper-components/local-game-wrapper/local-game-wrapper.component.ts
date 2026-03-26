@@ -16,12 +16,15 @@ import { Debug } from '../../../utils/Debug';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, ViewConfigComponent, NgFor, NgClass, ReactiveFormsModule, FormsModule]
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
@@ -55,7 +58,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        window.setTimeout(async() => {
+        setTimeout(async() => {
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
                 await this.restartGame();
@@ -196,7 +199,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // It is AI's turn, let it play after a small delay
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
-                window.setTimeout(async() => {
+                setTimeout(async() => {
                     const config: MGPOptional<RulesConfig> = this.getConfig();
                     const gameIsOngoing: boolean =
                         this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;

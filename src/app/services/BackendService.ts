@@ -133,14 +133,14 @@ export class BackendService extends AbstractBackendService {
 
         return new Promise((resolve: (sub: Subscription) => void) => {
             const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
-            let timeout: MGPOptional<number> = MGPOptional.empty();
+            let timeout: MGPOptional<ReturnType<typeof setTimeout>> = MGPOptional.empty();
             const reconnect: () => void = (): void => {
                 if (timeout.isPresent()) {
                     // not trying to reconnect because there's already an attempt scheduled
                     return;
                 }
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                timeout = MGPOptional.of(window.setTimeout(
+                timeout = MGPOptional.of(setTimeout(
                     async() => {
                         const subscription: Subscription = await this.connect();
                         resolve(subscription);

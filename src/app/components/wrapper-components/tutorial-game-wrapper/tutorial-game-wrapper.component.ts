@@ -14,6 +14,9 @@ import { GameWrapper } from '../GameWrapper';
 
 import { TutorialFailure } from './TutorialFailure';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export class TutorialGameWrapperMessages {
 
@@ -29,7 +32,7 @@ type TutorialPlayer = 'tutorial-player';
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, ViewConfigComponent, NgFor, ReactiveFormsModule, NgClass]
 })
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {

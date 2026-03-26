@@ -14,12 +14,14 @@ import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectS
 import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
 import { ConnectSixRules } from './ConnectSixRules';
 import { ConnectSixState } from './ConnectSixState';
+import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-connect-six',
     templateUrl: './connect-six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [BlankGobanComponent, NgFor, NgIf, NgClass]
 })
 export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixMove,

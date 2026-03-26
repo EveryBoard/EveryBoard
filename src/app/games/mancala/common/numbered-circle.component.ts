@@ -1,12 +1,13 @@
 import { Component, Input } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: '[app-numbered-circle]',
     templateUrl: './numbered-circle.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgClass, NgIf]
 })
 export class NumberedCircleComponent {
 

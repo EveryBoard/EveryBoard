@@ -16,6 +16,7 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 interface ArrowInfo {
     path: string;
@@ -28,7 +29,7 @@ interface ArrowInfo {
     selector: 'app-pentago',
     templateUrl: './pentago.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,

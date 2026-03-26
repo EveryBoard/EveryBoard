@@ -1,10 +1,6 @@
 import { Directive, ElementRef } from '@angular/core';
 
-@Directive({
-    selector: '[toggleVisibility]',
-    standalone: false
-})
-
+@Directive({ selector: '[toggleVisibility]' })
 export class ToggleVisibilityDirective {
 
     private shown: boolean = false;

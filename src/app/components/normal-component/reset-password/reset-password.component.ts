@@ -3,11 +3,14 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
+import { NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
-    standalone: false
+    imports: [ReactiveFormsModule, AutofocusDirective, FormsModule, NgIf]
 })
 export class ResetPasswordComponent {
 

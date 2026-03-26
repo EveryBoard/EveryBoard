@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, OnDestroy, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -24,8 +24,7 @@ export type DemoNodeWithConfig = DemoNodeInfo & {
 
 @Component({
     selector: 'app-demo-card',
-    template: `<div class="is-fullheight"><div #board></div></div>`,
-    standalone: false
+    template: `<div class="is-fullheight"><div #board></div></div>`
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
@@ -39,13 +38,14 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public constructor(activatedRoute: ActivatedRoute,
                        router: Router,
                        messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
+                       private readonly cdr: ChangeDetectorRef,
+                       private readonly elementRef: ElementRef)
     {
         super(activatedRoute, router, messageDisplayer);
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        window.setTimeout(async() => {
+        setTimeout(async() => {
             await this.createMatchingGameComponent();
             this.gameComponent.node = this.demoNodeInfo.node;
             // The component needs to be interactive in order to show all possible stylistic elements
@@ -57,7 +57,9 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             this.cdr.detectChanges();
             // We perform a click if necessary
             if (this.demoNodeInfo.click.isPresent()) {
-                const element: Element = Utils.getNonNullable(document.querySelector(this.demoNodeInfo.click.get()));
+                const clickSelector: string = this.demoNodeInfo.click.get();
+                const element: Element =
+                    Utils.getNonNullable(this.elementRef.nativeElement.querySelector(clickSelector));
                 element.dispatchEvent(new Event('click'));
                 // Update the view after the click
                 this.cdr.detectChanges();

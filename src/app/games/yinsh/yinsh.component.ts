@@ -20,6 +20,7 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshScoreMinimax } from './YinshScoreMinimax';
 import { YinshState } from './YinshState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 interface ViewInfo {
     targets: Coord[],
@@ -36,7 +37,7 @@ interface ViewInfo {
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,

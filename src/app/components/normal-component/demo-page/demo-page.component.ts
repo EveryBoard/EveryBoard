@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
@@ -9,15 +9,16 @@ import { Move } from '../../../jscaip/Move';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { DemoNodeInfo, DemoNodeWithConfig } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { DemoNodeInfo, DemoNodeWithConfig, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { TutorialStep, TutorialStepClick } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
+import { NgFor } from '@angular/common';
 
 @Component({
     selector: 'app-demo-page',
     templateUrl: './demo-page.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [ReactiveFormsModule, FormsModule, NgFor, DemoCardWrapperComponent]
 })
 export class DemoPageComponent {
 

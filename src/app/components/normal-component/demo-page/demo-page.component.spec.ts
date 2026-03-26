@@ -1,4 +1,4 @@
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, tick } from '@angular/core/testing';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
@@ -12,11 +12,12 @@ describe('DemoPageComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(DemoPageComponent);
         testUtils.detectChanges();
+        console.log('setTimeout patched:', setTimeout.toString());
     }));
 
-    it('should create', () => {
+    it('should create', fakeAsync(() => {
         expect(testUtils.getComponent()).toBeTruthy();
-    });
+    }));
 
     it('should display demo nodes', () => {
         const numberOfDemos: number = testUtils.findElements('app-demo-card').length;
@@ -36,14 +37,15 @@ describe('DemoPageComponent', () => {
             .toBeFalse();
     });
 
-    it('should adapt the number of columns upon change', () => {
+    it('should adapt the number of columns upon change', fakeAsync(() => {
         // Given a demo page component
         // When changing the number of columns
         const newNumberOfColumns: number = 3;
         testUtils.getComponent().numberOfColumns.setValue(newNumberOfColumns);
         testUtils.detectChanges();
+        tick(1);
         // Then the right number of columns should have been regenerated
         expect(testUtils.findElements('.column').length).toBe(newNumberOfColumns);
-    });
+    }));
 
 });

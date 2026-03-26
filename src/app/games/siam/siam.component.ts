@@ -20,6 +20,8 @@ import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamPiece } from './SiamPiece';
 import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
 import { SiamState } from './SiamState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
+import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -32,7 +34,7 @@ export type SiamIndicatorArrow = {
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf, SiamOrientationArrowComponent]
 })
 @Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,

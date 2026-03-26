@@ -18,12 +18,13 @@ import { HexodiaMove } from './HexodiaMove';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 import { HexodiaState } from './HexodiaState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-hexodia',
     templateUrl: './hexodia.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                                              HexodiaMove,

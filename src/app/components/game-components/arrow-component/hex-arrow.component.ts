@@ -8,8 +8,7 @@ import { Arrow } from './Arrow';
 @Component({
     selector: '[app-hex-arrow]',
     templateUrl: './arrow.component.svg',
-    styleUrls: ['../game-component/game-component.scss'],
-    standalone: false
+    styleUrls: ['../game-component/game-component.scss']
 })
 export class HexArrowComponent extends BaseGameComponent {
 

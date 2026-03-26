@@ -137,6 +137,8 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
+import { NgFor } from '@angular/common';
 
 class GameDescription {
 
@@ -342,7 +344,7 @@ export class GameInfo {
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
-    standalone: false
+    imports: [AutofocusDirective, NgFor]
 })
 export class PickGameComponent {
 

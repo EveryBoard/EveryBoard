@@ -9,7 +9,7 @@ import { AutofocusDirective } from '../autofocus.directive';
 
 @Component({
     template: `<input type="text" autofocus />`,
-    standalone: false
+    imports: [AutofocusDirective],
 })
 class AutofocusTestComponent {}
 
@@ -18,8 +18,7 @@ describe('AutofocusDirective', () => {
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [],
-            declarations: [AutofocusTestComponent, AutofocusDirective],
+            imports: [AutofocusTestComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },

@@ -17,6 +17,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -39,7 +40,7 @@ interface SquareInfo {
     selector: 'app-conspirateurs',
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
 

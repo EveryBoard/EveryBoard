@@ -8,15 +8,16 @@ import { Coord3D } from '../../jscaip/Coord3D';
 import { Vector } from '../../jscaip/Vector';
 
 import { TrexoMove } from './TrexoMove';
-import { TrexoComponent } from './trexo.component';
+import { NgClass, NgIf } from '@angular/common';
+import { BaseGameComponent } from 'src/app/components/game-components/base-game-component/BaseGameComponent';
 
 @Component({
     selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgClass, NgIf]
 })
-export class TrexoHalfPieceComponent {
+export class TrexoHalfPieceComponent extends BaseGameComponent {
 
     @Input() coord: Coord3D;
     @Input() move: TrexoMove | undefined; // When move is null, it is the first click (only one dropped piece)
@@ -24,7 +25,7 @@ export class TrexoHalfPieceComponent {
     @Input() mode: ModeConfig;
     @Input() mustDisplayHeight: boolean;
 
-    public static STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH / 2;
+    public readonly STROKE_OFFSET: number = this.STROKE_WIDTH / 2;
 
     public mustForceStrokeDisplay(): boolean {
 
@@ -93,8 +94,8 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[0];
         const upRight: Coord = parallelogramPoints[1];
-        const STROKE_OFFSET: number = -1 * this.mode.offsetRatio * TrexoComponent.STROKE_WIDTH;
-        const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, TrexoComponent.STROKE_WIDTH);
+        const STROKE_OFFSET: number = -1 * this.mode.offsetRatio * this.STROKE_WIDTH;
+        const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, this.STROKE_WIDTH);
         const downLeft: Coord = upLeft.getNext(STROKE_VECTOR);
         const downRight: Coord = upRight.getNext(STROKE_VECTOR);
         return [upLeft, upRight, downRight, downLeft];
@@ -109,8 +110,8 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const downLeft: Coord = parallelogramPoints[2];
         const downRight: Coord = parallelogramPoints[3];
-        const STROKE_OFFSET: number = -1 * this.mode.offsetRatio * TrexoComponent.STROKE_WIDTH;
-        const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, TrexoComponent.STROKE_WIDTH);
+        const STROKE_OFFSET: number = -1 * this.mode.offsetRatio * this.STROKE_WIDTH;
+        const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, this.STROKE_WIDTH);
         const upLeft: Coord = downLeft.getNext(STROKE_VECTOR, -1);
         const upRight: Coord = downRight.getNext(STROKE_VECTOR, -1);
         return [upLeft, upRight, downRight, downLeft];
@@ -125,7 +126,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const downLeft: Coord = parallelogramPoints[5];
         const downRight: Coord = parallelogramPoints[6];
-        const STROKE_VECTOR: Vector = new Vector(0, TrexoComponent.STROKE_WIDTH);
+        const STROKE_VECTOR: Vector = new Vector(0, this.STROKE_WIDTH);
         const upLeft: Coord = downLeft.getNext(STROKE_VECTOR, -1);
         const upRight: Coord = downRight.getNext(STROKE_VECTOR, -1);
         const coords: Coord[] = [upLeft, upRight, downRight, downLeft];
@@ -136,7 +137,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[0];
         const downLeft: Coord = parallelogramPoints[2];
-        const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = this.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upRight: Coord = upLeft.getNext(STROKE_VECTOR, 1);
         const downRight: Coord = downLeft.getNext(STROKE_VECTOR, 1);
@@ -148,7 +149,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[1];
         const downRight: Coord = parallelogramPoints[3];
-        const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = this.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);
@@ -160,7 +161,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[4];
         const downRight: Coord = parallelogramPoints[6];
-        const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = this.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(0, STROKE_OFFSET);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);
@@ -172,7 +173,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upLeft: Coord = parallelogramPoints[2];
         const downLeft: Coord = parallelogramPoints[5];
-        const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = this.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upRight: Coord = upLeft.getNext(STROKE_VECTOR, 1);
         const downRight: Coord = downLeft.getNext(STROKE_VECTOR, 1);
@@ -184,7 +185,7 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[3];
         const downRight: Coord = parallelogramPoints[6];
-        const STROKE_OFFSET: number = TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET: number = this.STROKE_WIDTH;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET, 0);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);
@@ -196,10 +197,10 @@ export class TrexoHalfPieceComponent {
         const parallelogramPoints: Coord[] = this.getParallelogramPoints();
         const upRight: Coord = parallelogramPoints[1];
         const downRight: Coord = parallelogramPoints[4];
-        const STROKE_OFFSET_X: number = TrexoComponent.STROKE_WIDTH;
+        const STROKE_OFFSET_X: number = this.STROKE_WIDTH;
         const STROKE_OFFSET_Y: number = this.mode.offsetRatio === 0 ?
-            TrexoComponent.STROKE_WIDTH :
-            TrexoComponent.STROKE_WIDTH / this.mode.offsetRatio;
+            this.STROKE_WIDTH :
+            this.STROKE_WIDTH / this.mode.offsetRatio;
         const STROKE_VECTOR: Vector = new Vector(STROKE_OFFSET_X, - STROKE_OFFSET_Y);
         const upLeft: Coord = upRight.getNext(STROKE_VECTOR, -1);
         const downLeft: Coord = downRight.getNext(STROKE_VECTOR, -1);

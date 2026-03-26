@@ -15,12 +15,13 @@ import { QuixoMove } from './QuixoMove';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { QuixoRules } from './QuixoRules';
 import { QuixoConfig, QuixoState } from './QuixoState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class QuixoComponent extends RectangularGameComponent<QuixoRules,
                                                              QuixoMove,

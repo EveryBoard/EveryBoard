@@ -6,12 +6,14 @@ import { MancalaMove } from '../common/MancalaMove';
 
 import { BaAwaMoveGenerator } from './BaAwaMoveGenerator';
 import { BaAwaRules } from './BaAwaRules';
+import { NgFor } from '@angular/common';
+import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 @Component({
     selector: 'app-ba-awa-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NumberedCircleComponent]
 })
 export class BaAwaComponent extends MancalaComponent<BaAwaRules> {
 

@@ -1,5 +1,5 @@
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -17,9 +17,11 @@ import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
-import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 
 export class GameCreationComponentMessages {
 
@@ -52,7 +54,7 @@ type GameCreationViewInfo = {
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
-    standalone: false
+    imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, HumanDurationPipe],
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
@@ -111,7 +113,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     // Provided by RulesConfigurationComponent
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
-    public configDemo: DemoNodeInfo;
+    public configDemo: DemoNodeInfo | undefined = undefined;
 
     public constructor(activatedRoute: ActivatedRoute,
                        private readonly router: Router,
@@ -406,7 +408,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     private setConfigDemo(config: RulesConfig): void {
         const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
         if (stateProvider.isPresent()) {
-            const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
+            const state = stateProvider.get()(MGPOptional.of(config));
+            const node: AbstractNode = new GameNode(state);
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
@@ -417,7 +420,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         }
     }
 
-    public getConfigDemo(): DemoNodeInfo {
+    public getConfigDemo(): DemoNodeInfo | undefined {
         return this.configDemo;
     }
 

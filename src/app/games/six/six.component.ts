@@ -21,6 +21,7 @@ import { SixMove } from './SixMove';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { SixState } from './SixState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 type CoordAndClass = {
     coord: Coord,
@@ -31,7 +32,7 @@ type CoordAndClass = {
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixConfig, SixLegalityInformation>

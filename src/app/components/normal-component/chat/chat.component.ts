@@ -1,4 +1,4 @@
-import { formatDate } from '@angular/common';
+import { formatDate, NgIf, NgFor } from '@angular/common';
 import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy } from '@angular/core';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
@@ -6,11 +6,13 @@ import { Subscription } from 'rxjs';
 import { Message } from '../../../domain/Message';
 import { ChatService } from '../../../services/ChatService';
 import { Debug } from '../../../utils/Debug';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    standalone: false
+    imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule, FaIconComponent]
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
@@ -42,9 +44,11 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     }
 
     private loadChatContent(): void {
+        console.log('LOADCHATCONTENT')
         this.chatSubscription = this.chatService.subscribeToMessages((message: Message) => {
             this.onMessageReceived(message);
         });
+        console.log('LOADCHATCONTENT DONE')
     }
 
     public ngOnDestroy(): void {

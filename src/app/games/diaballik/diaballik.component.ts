@@ -19,12 +19,13 @@ import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslatio
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-diaballik',
     templateUrl: './diaballik.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 
 export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,

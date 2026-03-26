@@ -16,12 +16,13 @@ import { PylosMove, PylosMoveFailure } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosRules } from './PylosRules';
 import { PylosState } from './PylosState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 

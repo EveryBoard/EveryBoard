@@ -16,12 +16,13 @@ import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnRules } from './DvonnRules';
 import { DvonnScoreMinimax } from './DvonnScoreMinimax';
 import { DvonnState } from './DvonnState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {

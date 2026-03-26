@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -7,12 +7,14 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { ThemeService } from '../../../services/ThemeService';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { GameInfo, PickGameComponent } from '../pick-game/pick-game.component';
+import { NgIf } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
-    standalone: false
+    imports: [RouterLink, NgIf, FaIconComponent, PickGameComponent]
 })
 export class WelcomeComponent {
     public readonly numberOfColumns: number = 5;

@@ -25,6 +25,8 @@ import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
 import { AbaloneState } from './AbaloneState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 
 type CapturedInfo = {
     coord: Coord,
@@ -44,7 +46,7 @@ type AbaloneArrowInfo = {
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass, HexArrowComponent]
 })
 export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,

@@ -20,12 +20,13 @@ import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMin
 import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { CoerceoState } from './CoerceoState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,

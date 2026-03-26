@@ -1,17 +1,21 @@
 import { Component } from '@angular/core';
-import { FormGroup, FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import * as FireAuth from '@firebase/auth';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { ToggleVisibilityDirective } from '../../../pipes-and-directives/toggle-visibility.directive';
+import { NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    standalone: false
+    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgClass, NgIf, RouterLink]
 })
 export class RegisterComponent {
 

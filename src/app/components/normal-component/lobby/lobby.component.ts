@@ -12,6 +12,9 @@ import { CurrentGameService, GameActionFailure } from '../../../services/Current
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../pick-game/pick-game.component';
+import { NgClass, NgFor, NgIf } from '@angular/common';
+import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
+import { ChatComponent } from '../chat/chat.component';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -22,7 +25,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
-    standalone: false
+    imports: [NgClass, NgFor, NgIf, OnlineGameSelectionComponent, ChatComponent]
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {

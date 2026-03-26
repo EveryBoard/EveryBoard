@@ -23,6 +23,8 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
+import { HivePieceComponent } from './hive-piece.component';
 
 interface GroundInfo {
 
@@ -103,7 +105,7 @@ class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
     selector: 'app-hive',
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf, HivePieceComponent]
 })
 export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 

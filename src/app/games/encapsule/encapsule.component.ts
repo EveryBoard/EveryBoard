@@ -17,12 +17,13 @@ import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,

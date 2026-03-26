@@ -1,5 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
@@ -9,11 +9,13 @@ import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { GameInfo } from '../pick-game/pick-game.component';
+import { NgClass, NgIf } from '@angular/common';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    standalone: false
+    imports: [RouterLink, NgClass, NgIf, FaIconComponent]
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

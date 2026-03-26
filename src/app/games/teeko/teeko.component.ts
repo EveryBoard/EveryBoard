@@ -14,12 +14,13 @@ import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from './TeekoRules';
 import { TeekoState } from './TeekoState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-teeko',
     templateUrl: './teeko.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 
 export class TeekoComponent extends RectangularGameComponent<TeekoRules,

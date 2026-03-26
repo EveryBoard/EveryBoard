@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -9,6 +9,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
 import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
+import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -18,7 +19,7 @@ type ConfigFormJSON = {
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgIf, ReactiveFormsModule, NgFor, NgSwitch, NgSwitchCase, NgClass]
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 

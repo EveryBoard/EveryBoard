@@ -4,12 +4,13 @@ import { Utils } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
 import { Debug } from '../../../utils/Debug';
+import { NgClass, NgIf, DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-timer',
     templateUrl: './timer.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false
+    imports: [NgClass, NgIf, DecimalPipe]
 })
 @Debug.log
 export class TimerComponent implements OnDestroy {
@@ -24,8 +25,8 @@ export class TimerComponent implements OnDestroy {
     public remainingSeconds: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandle: number | null = null; // A number representing the timer handle. Not a time unit.
-    private updateHandle: number | null = null; // A number representing the timer handle. Not a time unit.
+    private timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+    private updateHandle: ReturnType<typeof setTimeout> | null = null;
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;
@@ -81,7 +82,7 @@ export class TimerComponent implements OnDestroy {
         this.startTime = Date.now() / 1000;
         const remainingTimeOnResume: number = this.remainingSeconds;
         this.isPaused = false;
-        this.timeoutHandle = window.setTimeout(() => {
+        this.timeoutHandle = setTimeout(() => {
             this.onEndReached();
         }, remainingTimeOnResume * 1000);
         this.countSeconds();
@@ -96,7 +97,7 @@ export class TimerComponent implements OnDestroy {
     }
 
     private countSeconds(): void {
-        this.updateHandle = window.setTimeout(() => {
+        this.updateHandle = setTimeout(() => {
             this.updateShownTime();
         }, 300); // update a bit more frequently than every second to account for drifts
     }

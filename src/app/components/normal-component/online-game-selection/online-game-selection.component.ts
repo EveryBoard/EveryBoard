@@ -5,11 +5,12 @@ import { MGPValidation } from '@everyboard/lib';
 
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { PickGameComponent } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-online-game-selection',
     templateUrl: './online-game-selection.component.html',
-    standalone: false
+    imports: [PickGameComponent]
 })
 export class OnlineGameSelectionComponent {
 

@@ -693,8 +693,6 @@ export class ConfigureTestingModuleUtils {
                 FormsModule,
                 ReactiveFormsModule,
                 NoopAnimationsModule,
-            ],
-            declarations: [
                 componentType,
                 HumanDurationPipe,
                 ToggleVisibilityDirective,

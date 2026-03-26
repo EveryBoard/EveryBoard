@@ -22,12 +22,13 @@ import { GoState } from '../GoState';
 import { TrigoMinimax } from './TrigoMinimax';
 import { TrigoMoveGenerator } from './TrigoMoveGenerator';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-trigo',
     templateUrl: './trigo.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 @Debug.log
 export class TrigoComponent extends TriangularGameComponent<TrigoRules,

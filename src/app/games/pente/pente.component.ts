@@ -16,12 +16,14 @@ import { PenteMove } from './PenteMove';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
 import { PenteRules } from './PenteRules';
 import { PenteState } from './PenteState';
+import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { NgFor, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [BlankGobanComponent, NgFor, NgClass]
 })
 export class PenteComponent extends GobanGameComponent<PenteRules,
                                                        PenteMove,

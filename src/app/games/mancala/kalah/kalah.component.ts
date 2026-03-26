@@ -6,12 +6,14 @@ import { MancalaMove } from '../common/MancalaMove';
 
 import { KalahMoveGenerator } from './KalahMoveGenerator';
 import { KalahRules } from './KalahRules';
+import { NgFor } from '@angular/common';
+import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 @Component({
     selector: 'app-kalah-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NumberedCircleComponent]
 })
 export class KalahComponent extends MancalaComponent<KalahRules> {
 

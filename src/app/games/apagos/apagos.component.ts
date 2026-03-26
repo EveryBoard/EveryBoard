@@ -16,6 +16,7 @@ import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 interface PieceLocation {
 
@@ -35,7 +36,7 @@ interface DropArrow {
     selector: 'app-apagos',
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
 

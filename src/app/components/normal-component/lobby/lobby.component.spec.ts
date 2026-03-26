@@ -41,8 +41,8 @@ describe('LobbyComponent', () => {
     }));
 
     it('should create', fakeAsync(async() => {
+        testUtils.detectChanges();
         expect(component).toBeDefined();
-        await component.ngOnInit();
     }));
 
     describe('error management', () => {

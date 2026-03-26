@@ -1,10 +1,11 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { PickGameComponent } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-local-game-creation',
     templateUrl: './local-game-creation.component.html',
-    standalone: false
+    imports: [PickGameComponent]
 })
 export class LocalGameCreationComponent {
 

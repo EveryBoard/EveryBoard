@@ -16,12 +16,13 @@ import { SquarzMove as SquarzMove } from './SquarzMove';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
 import { SquarzState } from './SquarzState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-squarz',
     templateUrl: './squarz.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class SquarzComponent extends RectangularGameComponent<SquarzRules,
                                                                  SquarzMove,

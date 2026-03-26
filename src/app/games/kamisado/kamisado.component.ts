@@ -18,12 +18,13 @@ import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoPiece } from './KamisadoPiece';
 import { KamisadoRules } from './KamisadoRules';
 import { KamisadoState } from './KamisadoState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoMove,

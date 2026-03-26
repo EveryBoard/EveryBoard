@@ -24,12 +24,13 @@ import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfLegalityInformation, GipfRules } from './GipfRules';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
 import { GipfState } from './GipfState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                           GipfMove,

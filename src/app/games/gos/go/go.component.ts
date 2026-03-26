@@ -19,12 +19,14 @@ import { GoState } from '../GoState';
 import { GoMinimax } from './GoMinimax';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
+import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [BlankGobanComponent, NgFor, NgIf, NgClass]
 })
 @Debug.log
 export class GoComponent extends GobanGameComponent<GoRules,

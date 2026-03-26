@@ -16,6 +16,8 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
+import { TrexoHalfPieceComponent } from './trexo-half-piece.component';
 
 interface PieceOnBoard {
 
@@ -32,11 +34,9 @@ type ModeType = '2D' | '3D';
     selector: 'app-trexo',
     templateUrl: './trexo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf, TrexoHalfPieceComponent],
 })
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
-
-    public static STROKE_WIDTH: number;
 
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
@@ -86,7 +86,6 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
-        TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
     }
 

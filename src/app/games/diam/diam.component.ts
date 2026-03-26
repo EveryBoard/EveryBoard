@@ -17,6 +17,7 @@ import { DiamMoveGenerator } from './DiamMoveGenerator';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
+import { NgFor, NgClass } from '@angular/common';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],
@@ -52,7 +53,7 @@ interface LastMoved {
     selector: 'app-diam',
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass]
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
 

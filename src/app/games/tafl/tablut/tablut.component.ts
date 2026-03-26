@@ -5,12 +5,13 @@ import { TaflComponent } from '../tafl.component';
 
 import { TablutMove } from './TablutMove';
 import { TablutRules } from './TablutRules';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-tablut',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
 

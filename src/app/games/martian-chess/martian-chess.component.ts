@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, Injectable } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -17,6 +17,11 @@ import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
 import { MartianChessState } from './MartianChessState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
+import { MartianChessPawnComponent } from './martian-chess-pawn.component';
+import { MartianChessDroneComponent } from './martian-chess-drone.component';
+import { MartianChessQueenComponent } from './martian-chess-queen.component';
+import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,
@@ -48,7 +53,7 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
     selector: 'app-martian-chess',
     templateUrl: './martian-chess.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf, MartianChessPawnComponent, MartianChessDroneComponent, MartianChessQueenComponent],
 })
 export class MartianChessComponent extends RectangularGameComponent<MartianChessRules,
                                                                     MartianChessMove,
@@ -57,20 +62,18 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
                                                                     EmptyRulesConfig,
                                                                     MartianChessMoveResult>
 {
-    public static SPACE_SIZE: number = 100;
-    public static STROKE_WIDTH: number = 8;
-
     public INDICATOR_SIZE: number = 20;
-    public readonly HORIZONTAL_CENTER: number = 0.5 * MartianChessState.WIDTH * MartianChessComponent.SPACE_SIZE;
-    private readonly UNSTROKED_HEIGHT: number = MartianChessState.HEIGHT * MartianChessComponent.SPACE_SIZE;
-    public readonly VERTICAL_CENTER: number = (0.5 * this.UNSTROKED_HEIGHT) + MartianChessComponent.STROKE_WIDTH;
+    public readonly HORIZONTAL_CENTER: number = 0.5 * MartianChessState.WIDTH * MartianChessComponentUtils.SPACE_SIZE;
+    private readonly UNSTROKED_HEIGHT: number = MartianChessState.HEIGHT * MartianChessComponentUtils.SPACE_SIZE;
+    public readonly VERTICAL_CENTER: number = (0.5 * this.UNSTROKED_HEIGHT) + MartianChessComponentUtils.STROKE_WIDTH;
 
-    public readonly LEFT: number = (MartianChessComponent.SPACE_SIZE / -4) + (MartianChessComponent.STROKE_WIDTH / -2);
-    private readonly UNSTROKED_WIDTH: number = MartianChessState.WIDTH * MartianChessComponent.SPACE_SIZE;
-    public readonly UP: number = - MartianChessComponent.STROKE_WIDTH / 2;
+    public readonly LEFT: number = (MartianChessComponentUtils.SPACE_SIZE / -4) +
+        (MartianChessComponentUtils.STROKE_WIDTH / -2);
+    private readonly UNSTROKED_WIDTH: number = MartianChessState.WIDTH * MartianChessComponentUtils.SPACE_SIZE;
+    public readonly UP: number = - MartianChessComponentUtils.STROKE_WIDTH / 2;
     public readonly WIDTH: number =
-        this.UNSTROKED_WIDTH + (2.5 * MartianChessComponent.SPACE_SIZE) + MartianChessComponent.STROKE_WIDTH;
-    public readonly HEIGHT: number = this.UNSTROKED_HEIGHT + (3 * MartianChessComponent.STROKE_WIDTH);
+        this.UNSTROKED_WIDTH + (2.5 * MartianChessComponentUtils.SPACE_SIZE) + MartianChessComponentUtils.STROKE_WIDTH;
+    public readonly HEIGHT: number = this.UNSTROKED_HEIGHT + (3 * MartianChessComponentUtils.STROKE_WIDTH);
 
     public MartianChessComponent: typeof MartianChessComponent = MartianChessComponent;
 
@@ -103,65 +106,6 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     ];
     public clockNeedlesPoints: string;
 
-    public static getRegularPolygon(nbSide: number, yOffset: number = 0): string {
-        const coords: Coord[] = MartianChessComponent.getRegularPolygonCoords(nbSide, yOffset);
-        return MartianChessComponent.mapCoordsToString(coords);
-    }
-
-    public static getNPointedStar(nbSide: number, degreeOffset: number): string {
-        const coords: Coord[] = this.getNPointedStarCoords(nbSide, degreeOffset);
-        return MartianChessComponent.mapCoordsToString(coords);
-    }
-
-    private static getNPointedStarCoords(nbSide: number, degreeOffset: number): Coord[] {
-        const points: Coord[] = [];
-        const cx: number = 0.5 * MartianChessComponent.SPACE_SIZE;
-        const cy: number = 0.5 * MartianChessComponent.SPACE_SIZE;
-        nbSide *= 2;
-        for (let indexDot: number = 0; indexDot < nbSide; indexDot++) {
-            const degree: number = (indexDot * (360 / nbSide)) + degreeOffset;
-            const radian: number = (degree / 180) * Math.PI;
-            const radius: number = (indexDot % 2 === 0) ?
-                MartianChessComponent.SPACE_SIZE/2 :
-                MartianChessComponent.SPACE_SIZE/6;
-            const px: number = cx + (0.8 * radius * Math.cos(radian));
-            const py: number = cy + (0.8 * radius * Math.sin(radian));
-            points.push(new Coord(px, py));
-        }
-        return points;
-    }
-
-    /**
-     * coord are based on a 100 x 100 containing square, in which the shape is centered
-     * yOffset describe the offset "pixel wise" (concrete offset in "svg unit")
-     */
-    public static getRegularPolygonCoords(nbSide: number, yOffset: number = 0): Coord[] {
-        const points: Coord[] = [];
-        const cx: number = 0.5 * MartianChessComponent.SPACE_SIZE;
-        const cy: number = 0.5 * MartianChessComponent.SPACE_SIZE;
-        for (let indexCorner: number = 0; indexCorner < nbSide; indexCorner++) {
-            const degree: number = (indexCorner * (360 / nbSide)) - 90;
-            const radian: number = (degree / 180) * Math.PI;
-            const radius: number = 0.5 * MartianChessComponent.SPACE_SIZE;
-            const px: number = cx + (0.8 * radius * Math.cos(radian));
-            const py: number = cy + (0.8 * radius * Math.sin(radian)) + yOffset;
-            points.push(new Coord(px, py));
-        }
-        return points;
-    }
-
-    public static mapCoordsToString(coords: Coord[]): string {
-        let points: string = '';
-        for (const coord of coords) {
-            points += coord.x + ', ' + coord.y + ' ';
-        }
-        return points;
-    }
-
-    public static getRadius(circle: number): number {
-        return this.SPACE_SIZE * circle / 10;
-    }
-
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
         this.setRulesAndNode('MartianChess');
@@ -173,7 +117,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
-        this.SPACE_SIZE = MartianChessComponent.SPACE_SIZE;
+        this.SPACE_SIZE = MartianChessComponentUtils.SPACE_SIZE;
         this.configCogTransformation = this.getConfigCogTransformation();
         this.configViewTranslation = this.getConfigViewTranslation();
         this.clockNeedlesPoints = this.getClockNeedlesPoints();

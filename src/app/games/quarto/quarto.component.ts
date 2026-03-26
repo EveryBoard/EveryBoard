@@ -14,12 +14,13 @@ import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 import { QuartoPiece } from './QuartoPiece';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoState } from './QuartoState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf]
 })
 export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoMove,

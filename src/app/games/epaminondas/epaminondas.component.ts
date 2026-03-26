@@ -21,6 +21,8 @@ import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { EpaminondasState } from './EpaminondasState';
+import { NgFor, NgClass, NgIf } from '@angular/common';
+import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
 
 export type PossibleMove = {
 
@@ -35,7 +37,7 @@ export type PossibleMove = {
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass, NgIf, DirArrowComponent]
 })
 export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
                                                                    EpaminondasMove,

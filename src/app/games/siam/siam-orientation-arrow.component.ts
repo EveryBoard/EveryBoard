@@ -8,12 +8,13 @@ import { Player } from '../../jscaip/Player';
 
 import { SiamMove } from './SiamMove';
 import { SiamConfig } from './SiamRules';
+import { NgFor, NgClass } from '@angular/common';
 
 @Component({
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgClass]
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 

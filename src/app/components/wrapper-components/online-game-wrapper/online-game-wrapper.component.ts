@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
 
@@ -25,6 +25,11 @@ import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
 
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
+import { NgIf, NgFor, NgClass } from '@angular/common';
+import { GameCreationComponent } from '../game-creation/game-creation.component';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
+import { ChatComponent } from '../../normal-component/chat/chat.component';
 
 export class OnlineGameWrapperMessages {
 
@@ -38,7 +43,7 @@ export class OnlineGameWrapperMessages {
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
-    standalone: false
+    imports: [NgIf, GameCreationComponent, ViewConfigComponent, TimerComponent, NgFor, FaIconComponent, RouterLink, NgClass, ChatComponent]
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
@@ -119,7 +124,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.configRoom = configRoom;
         this.gameStarted = true;
 
-        window.setTimeout(async() => {
+        setTimeout(async() => {
             // the small waiting is there to make sure that the timers are loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             this.timeManager.setTimers([this.timerZeroMove, this.timerOneMove],

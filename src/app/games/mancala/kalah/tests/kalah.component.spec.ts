@@ -177,7 +177,7 @@ describe('KalahComponent', () => {
                 // When starting the second turn
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-0-0');
                 element.triggerEventHandler('click', null);
-                tick(0); // Just start the click effect but we don't need to wait any window.setTimeout
+                tick(0); // Just start the click effect but we don't need to wait any setTimeout
 
                 // Then the capture of last turn should be hidden
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1

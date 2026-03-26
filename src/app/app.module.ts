@@ -134,8 +134,14 @@ export const routes: Route[] = [
 ];
 
 @NgModule({
-    declarations: [
-        AppComponent,
+    declarations: [AppComponent],
+    imports: [
+        BrowserModule,
+        RouterModule.forRoot(routes, { useHash: false }),
+        ReactiveFormsModule,
+        FormsModule,
+        BrowserAnimationsModule,
+        FontAwesomeModule,
         HeaderComponent,
         WelcomeComponent,
         LoginComponent,
@@ -162,10 +168,8 @@ export const routes: Route[] = [
         DemoPageComponent,
         RulesConfigurationComponent,
         ViewConfigComponent,
-
         DirArrowComponent,
         HexArrowComponent,
-
         AbaloneComponent,
         ApagosComponent,
         AwaleComponent, NumberedCircleComponent,
@@ -209,18 +213,9 @@ export const routes: Route[] = [
         TrexoComponent, TrexoHalfPieceComponent,
         TrigoComponent,
         YinshComponent,
-
         HumanDurationPipe,
         AutofocusDirective,
         ToggleVisibilityDirective,
-    ],
-    imports: [
-        BrowserModule,
-        RouterModule.forRoot(routes, { useHash: false }),
-        ReactiveFormsModule,
-        FormsModule,
-        BrowserAnimationsModule,
-        FontAwesomeModule,
     ],
     providers: [
         ConnectedUserService,

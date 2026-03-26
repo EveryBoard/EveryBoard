@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 
 import { ThemeService } from '../../../services/ThemeService';
 import { UserSettingsService } from '../../../services/UserSettingsService';
+import { NgFor } from '@angular/common';
+import { ReactiveFormsModule } from '@angular/forms';
 
 type SettingOption = { value: string, name: string }
 
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
-    standalone: false
+    imports: [NgFor, ReactiveFormsModule]
 })
 export class SettingsComponent {
 

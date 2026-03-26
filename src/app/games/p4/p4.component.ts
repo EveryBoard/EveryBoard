@@ -13,12 +13,13 @@ import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Config, P4Rules } from './P4Rules';
 import { P4State } from './P4State';
+import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass]
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 

@@ -20,6 +20,8 @@ import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePiec
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
+import { NgFor, NgIf, NgClass } from '@angular/common';
+import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
@@ -66,7 +68,7 @@ type PreCaptureInfo = {
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    standalone: false
+    imports: [NgFor, NgIf, NgClass, LodestoneLodestoneComponent]
 })
 export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>

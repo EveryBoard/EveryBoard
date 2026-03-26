@@ -13,7 +13,6 @@ import { GameInfo } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-online-game-creation',
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
-    standalone: false
 })
 export class OnlineGameCreationComponent implements OnInit {
 
