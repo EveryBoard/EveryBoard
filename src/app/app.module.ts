@@ -16,33 +16,33 @@ import { AppComponent } from './app.component';
 import { DirArrowComponent } from './components/game-components/arrow-component/dir-arrow.component';
 import { HexArrowComponent } from './components/game-components/arrow-component/hex-arrow.component';
 import { BlankGobanComponent } from './components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { AccountComponent } from './components/normal-component/account/account.component';
+
 import { ChatComponent } from './components/normal-component/chat/chat.component';
-import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
+
 import { HeaderComponent } from './components/normal-component/header/header.component';
-import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
-import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
-import { LoginComponent } from './components/normal-component/login/login.component';
-import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
-import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
-import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
-import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
+
+
+
+
+
+
+
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
-import { RegisterComponent } from './components/normal-component/register/register.component';
-import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
-import { SettingsComponent } from './components/normal-component/settings/settings.component';
+
+
+
 import { TimerComponent } from './components/normal-component/timer/timer.component';
-import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
-import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+
+
 import { ViewConfigComponent } from './components/normal-component/view-config/view-config.component';
-import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+
 import { DemoCardWrapperComponent } from './components/wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { GameCreationComponent } from './components/wrapper-components/game-creation/game-creation.component';
-import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
-import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+
+
+
 import { RulesConfigurationComponent } from './components/wrapper-components/rules-configuration/rules-configuration.component';
-import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
+
 import { AbaloneComponent } from './games/abalone/abalone.component';
 import { ApagosComponent } from './games/apagos/apagos.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
@@ -107,31 +107,51 @@ import { GameService } from './services/GameService';
 import { ThemeService } from './services/ThemeService';
 import { UserService } from './services/UserService';
 import { LocaleUtils } from './utils/LocaleUtils';
+import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { LoginComponent } from './components/normal-component/login/login.component';
+import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
+import { RegisterComponent } from './components/normal-component/register/register.component';
+import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
+import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
+import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
+import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
+import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
+import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
+import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
+import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
+import { SettingsComponent } from './components/normal-component/settings/settings.component';
+import { AccountComponent } from './components/normal-component/account/account.component';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 
 registerLocaleData(localeFr);
 
+/* eslint-disable @typescript-eslint/typedef */
 export const routes: Route[] = [
-    { path: 'login', component: LoginComponent },
-    { path: 'lobby', component: LobbyComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'account', component: AccountComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'settings', component: SettingsComponent },
-    { path: 'register', component: RegisterComponent, canActivate: [NotConnectedGuard] },
-    { path: 'reset-password', component: ResetPasswordComponent },
-    { path: 'notFound/:message', component: NotFoundComponent },
-    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [VerifiedAccountGuard] },
-    { path: 'verify-account', component: VerifyAccountComponent, canActivate: [ConnectedButNotVerifiedGuard] },
-    { path: 'play', component: OnlineGameSelectionComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
-    { path: 'play/:game', component: OnlineGameCreationComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
-    { path: 'play/:game/:id', component: OnlineGameWrapperComponent, canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
-    { path: 'local', component: LocalGameCreationComponent },
-    { path: 'local/:game/config', component: LocalGameConfigurationComponent },
-    { path: 'local/:game', component: LocalGameWrapperComponent },
-    { path: 'tutorial', component: TutorialGameCreationComponent },
-    { path: 'tutorial/:game', component: TutorialGameWrapperComponent },
-    { path: '', component: WelcomeComponent },
-    { path: 'demo', component: DemoPageComponent },
-    { path: '**', component: NotFoundComponent },
+    { path: 'login', loadComponent: () => import('./components/normal-component/login/login.component').then((m) => m.LoginComponent) },
+    { path: 'lobby', loadComponent: () => import('./components/normal-component/lobby/lobby.component').then((m) => m.LobbyComponent), canActivate: [VerifiedAccountGuard] },
+    { path: 'account', loadComponent: () => import('./components/normal-component/account/account.component').then((m) => m.AccountComponent), canActivate: [VerifiedAccountGuard] },
+    { path: 'settings', loadComponent: () => import('./components/normal-component/settings/settings.component').then((m) => m.SettingsComponent) },
+    { path: 'register', loadComponent: () => import('./components/normal-component/register/register.component').then((m) => m.RegisterComponent), canActivate: [NotConnectedGuard] },
+    { path: 'reset-password', loadComponent: () => import('./components/normal-component/reset-password/reset-password.component').then((m) => m.ResetPasswordComponent) },
+    { path: 'notFound/:message', loadComponent: () => import('./components/normal-component/not-found/not-found.component').then((m) => m.NotFoundComponent) },
+    { path: 'nextGameLoading', loadComponent: () => import('./components/normal-component/next-game-loading/next-game-loading.component').then((m) => m.NextGameLoadingComponent), canActivate: [VerifiedAccountGuard] },
+    { path: 'verify-account', loadComponent: () => import('./components/normal-component/verify-account/verify-account.component').then((m) => m.VerifyAccountComponent), canActivate: [ConnectedButNotVerifiedGuard] },
+    { path: 'play', loadComponent: () => import('./components/normal-component/online-game-selection/online-game-selection.component').then((m) => m.OnlineGameSelectionComponent), canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'play/:game', loadComponent: () => import('./components/normal-component/online-game-creation/online-game-creation.component').then((m) => m.OnlineGameCreationComponent), canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'play/:game/:id', loadComponent: () => import('./components/wrapper-components/online-game-wrapper/online-game-wrapper.component').then((m) => m.OnlineGameWrapperComponent), canActivate: [ExclusiveOnlineGameGuard, VerifiedAccountGuard] },
+    { path: 'local', loadComponent: () => import('./components/normal-component/local-game-creation/local-game-creation.component').then((m) => m.LocalGameCreationComponent) },
+    { path: 'local/:game/config', loadComponent: () => import('./components/wrapper-components/local-game-configuration/local-game-configuration.component').then((m) => m.LocalGameConfigurationComponent) },
+    { path: 'local/:game', loadComponent: () => import('./components/wrapper-components/local-game-wrapper/local-game-wrapper.component').then((m) => m.LocalGameWrapperComponent) },
+    { path: 'tutorial', loadComponent: () => import('./components/normal-component/tutorial-game-creation/tutorial-game-creation.component').then((m) => m.TutorialGameCreationComponent) },
+    { path: 'tutorial/:game', loadComponent: () => import('./components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component').then((m) => m.TutorialGameWrapperComponent) },
+    { path: '', loadComponent: () => import('./components/normal-component/welcome/welcome.component').then((m) => m.WelcomeComponent) },
+    { path: 'demo', loadComponent: () => import('./components/normal-component/demo-page/demo-page.component').then((m) => m.DemoPageComponent) },
+    { path: '**', loadComponent: () => import('./components/normal-component/not-found/not-found.component').then((m) => m.NotFoundComponent) },
 ];
+/* eslint-enable @typescript-eslint/typedef */
 
 @NgModule({
     declarations: [AppComponent],
