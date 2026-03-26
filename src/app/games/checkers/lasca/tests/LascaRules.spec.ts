@@ -619,8 +619,6 @@ describe('LascaRules', () => {
 
         it(`should declare current player winner when opponent commands no more stack`, () => {
             // Given a board where Player.ONE have no more commander
-            // When evaluating its value
-            // Then the current Player.ZERO should win
             const expectedState: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -631,13 +629,14 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
             ], 1);
             const node: CheckersNode = new CheckersNode(expectedState);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it(`should declare current player winner when blocking all opponent's pieces`, () => {
             // Given a board where the last commander(s) of Player.ZERO are stucked
-            // When evaluating its value
-            // Then the board should be considered as a victory of Player.ONE
             const expectedState: CheckersState = CheckersState.of([
                 [__O, ___, __X, ___, ___, ___, ___],
                 [___, __X, ___, ___, ___, ___, ___],
@@ -648,6 +647,9 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
             ], 2);
             const node: CheckersNode = new CheckersNode(expectedState);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

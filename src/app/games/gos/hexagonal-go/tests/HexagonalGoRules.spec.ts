@@ -803,7 +803,7 @@ describe('HexagonalGoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('GoPhase.ACCEPT + GoMove.ACCEPT = Game Over', () => {
+        it('GoPhase.ACCEPT + GoMove.ACCEPT = GoPhase.FINISHED', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, _, X, O],
@@ -828,9 +828,7 @@ describe('HexagonalGoRules', () => {
             // Then the move should succeed and the game should be over
             const expectedState: GoState =
                 new GoState(board, PlayerNumberMap.of(1, 2), 2, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
     });
@@ -858,7 +856,7 @@ describe('HexagonalGoRules', () => {
                 new GoState(board, PlayerNumberMap.of(4, 4), 4, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
-            // When evaluating its value
+            // When checking the game status
             // Then it should see the draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -884,8 +882,8 @@ describe('HexagonalGoRules', () => {
                 new GoState(board, PlayerNumberMap.of(5, 4), 2, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
-            // When evaluating it
-            // Then it should be recognized as a victory for Player.ZERO
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 

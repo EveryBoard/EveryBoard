@@ -242,6 +242,9 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -259,6 +262,9 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -444,7 +450,7 @@ describe('AbaloneRules', () => {
             const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
             const node: AbaloneNode = new AbaloneNode(winningState);
 
-            // When evaluating the state status
+            // When checking the game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
         });

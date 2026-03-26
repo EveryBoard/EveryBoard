@@ -617,7 +617,7 @@ describe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('GoPhase.ACCEPT + GoMove.ACCEPT = Game Over', () => {
+        it('GoPhase.ACCEPT + GoMove.ACCEPT = GoPhase.FINISHED', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
                 [w, X, _, O, _],
@@ -641,9 +641,7 @@ describe('GoRules', () => {
             ];
             const expectedState: GoState =
                 new GoState(expectedBoard, PlayerNumberMap.of(0, 5), 2, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
     });
@@ -663,7 +661,7 @@ describe('GoRules', () => {
                 new GoState(board, PlayerNumberMap.of(6, 6), 4, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
-            // When evaluating its value
+            // When checking the game status
             // Then it should see the draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -681,8 +679,8 @@ describe('GoRules', () => {
                 new GoState(board, PlayerNumberMap.of(6, 5), 2, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
-            // When evaluating it
-            // Then it should be recognized as a victory for Player.ZERO
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 

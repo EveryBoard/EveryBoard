@@ -143,6 +143,7 @@ describe('ApagosRules', () => {
                 [7, 5, 3, 1],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);

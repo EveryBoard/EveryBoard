@@ -506,9 +506,10 @@ describe('SiamRules', () => {
             ];
             const expectedState: SiamState = new SiamState(expectedBoard, 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            // and victory should be for player zero
-            const node: SiamNode =
-            new SiamNode(expectedState, undefined, MGPOptional.of(move));
+            const node: SiamNode = new SiamNode(expectedState, undefined, MGPOptional.of(move));
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 

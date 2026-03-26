@@ -335,6 +335,9 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -393,6 +396,9 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -425,6 +431,9 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -470,8 +479,8 @@ describe('HexodiaRules', () => {
                 state = state.incrementTurn();
                 const node: HexodiaNode = new HexodiaNode(state);
 
-                // When evaluating its board status
-                // Then it should be a victory
+                // When checking the game status
+                // Then it should be a victory for Player.ONE
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
         }

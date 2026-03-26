@@ -256,6 +256,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -269,6 +272,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

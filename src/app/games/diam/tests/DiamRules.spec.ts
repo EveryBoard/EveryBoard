@@ -249,7 +249,9 @@ describe('DiamRules', () => {
                 [B1, __, __, __, B2, __, __, __],
             ], 4);
             const node: DiamNode = new DiamNode(state);
-            // Then it is detected as a v ictory for player zero
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -262,7 +264,9 @@ describe('DiamRules', () => {
                 [B1, __, __, __, B2, __, __, __],
             ], 4);
             const node: DiamNode = new DiamNode(state);
-            // Then the winner is the one with the highest alignment
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE (who has the highest alignement)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

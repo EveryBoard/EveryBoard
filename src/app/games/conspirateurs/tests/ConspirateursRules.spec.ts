@@ -646,7 +646,9 @@ describe('ConspirateursRules', () => {
                 [X, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then the victory should be detected for player 0
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -672,7 +674,9 @@ describe('ConspirateursRules', () => {
                 [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then the victory should be detected for player 1
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
