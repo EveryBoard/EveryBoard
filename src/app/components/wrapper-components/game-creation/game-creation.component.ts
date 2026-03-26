@@ -411,7 +411,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     private setConfigDemo(config: RulesConfig): void {
         const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
         if (stateProvider.isPresent()) {
-            const state = stateProvider.get()(MGPOptional.of(config));
+            const state: GameState = stateProvider.get()(MGPOptional.of(config));
             const node: AbstractNode = new GameNode(state);
             this.configDemo = {
                 click: MGPOptional.empty(),

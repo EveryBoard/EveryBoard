@@ -18,9 +18,10 @@ import { GameInfo } from '../pick-game/pick-game.component';
     imports: [RouterLink, NgClass, NgIf, FaIconComponent],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
-    router = inject(Router);
-    connectedUserService = inject(ConnectedUserService);
-    currentGameService = inject(CurrentGameService);
+
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
 
 
     public loading: boolean = true;

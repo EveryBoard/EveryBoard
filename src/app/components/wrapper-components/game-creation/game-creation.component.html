@@ -206,7 +206,7 @@
                 <app-demo-card id="demoCard"
                                class="box is-fullheight"
                                *ngIf="getConfigDemo() !== undefined"
-                               [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+                               [demoNodeInfo]="getConfigDemo()!"></app-demo-card>
             </div>
         </div>
     </div>
@@ -252,7 +252,7 @@
                     <div class="box is-fullheight">
                         <app-demo-card id="demoCard"
                                        *ngIf="getConfigDemo() !== undefined"
-                                       [demoNodeInfo]="getConfigDemo()"></app-demo-card>
+                                       [demoNodeInfo]="getConfigDemo()!"></app-demo-card>
                     </div>
                 </div>
             </div>

@@ -233,13 +233,13 @@ export class AppModule {
     public constructor() {
         Firebase.initializeApp(environment.firebaseConfig);
         const firestore: Firestore.Firestore = Firestore.getFirestore();
-        const host: string = firestore.toJSON().settings.host;
+        const host: string = firestore.toJSON()['settings'].host;
         if (environment.useEmulators && host !== 'localhost:8080') {
             Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
         }
 
         const fireauth: Auth.Auth = Auth.getAuth();
-        if (environment.useEmulators && fireauth.config.emulator == null) {
+        if (environment.useEmulators && fireauth.config['emulator'] == null) {
             Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
         }
     }
