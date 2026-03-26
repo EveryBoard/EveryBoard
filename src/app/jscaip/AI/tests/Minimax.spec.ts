@@ -104,7 +104,7 @@ describe('Minimax', () => {
         const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
 
         // When calling getBestChildren on it
-        const bestChildrens: P4Node[] = minimax['getBestChildren'](
+        const bestChildrens: P4Node[] = minimax.getBestChildren(
             node,
             possibleMoves,
             1,

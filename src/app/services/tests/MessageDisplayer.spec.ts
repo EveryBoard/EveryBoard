@@ -17,7 +17,7 @@ describe('MessageDisplayer', () => {
 
     function durationInMs(message: string): number {
         // The getDuration method is private, but let's use it to calculate durations here too
-        return messageDisplayer['getDurationInMs'](message);
+        return messageDisplayer.getDurationInMs(message);
     }
 
     it('should display a toast for the requested duration', fakeAsync(() => {
@@ -38,7 +38,7 @@ describe('MessageDisplayer', () => {
         // When calling infoMessage
         messageDisplayer.infoMessage(message);
         // Then toast should be called
-        expect(messageDisplayer['toast']).toHaveBeenCalledOnceWith(message, 'is-info', durationInMs(message));
+        expect(messageDisplayer.toast).toHaveBeenCalledOnceWith(message, 'is-info', durationInMs(message));
     });
 
     it('shoud display in-game message with is-warning class', () => {
@@ -47,7 +47,7 @@ describe('MessageDisplayer', () => {
         // When calling gameMessage
         messageDisplayer.gameMessage(message);
         // Then toast should be called
-        expect(messageDisplayer['toast']).toHaveBeenCalledOnceWith(message, 'is-warning', durationInMs(message));
+        expect(messageDisplayer.toast).toHaveBeenCalledOnceWith(message, 'is-warning', durationInMs(message));
     });
 
     it('should display critical message with is-danger class', () => {
@@ -56,7 +56,7 @@ describe('MessageDisplayer', () => {
         // When calling criticalMessage
         messageDisplayer.criticalMessage(message);
         // Then toast should be called
-        expect(messageDisplayer['toast']).toHaveBeenCalledOnceWith(message, 'is-danger', durationInMs(message));
+        expect(messageDisplayer.toast).toHaveBeenCalledOnceWith(message, 'is-danger', durationInMs(message));
     });
 
     it('should display a message for a time proportional to its length', () => {

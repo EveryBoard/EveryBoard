@@ -1,4 +1,5 @@
 /* eslint-disable no-multi-spaces */
+import { NgFor } from '@angular/common';
 import { Component, EventEmitter, Output, Type, inject } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
@@ -132,13 +133,12 @@ import { YinshComponent } from '../../../games/yinsh/yinsh.component';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
 import { Localized } from '../../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
-import { NgFor } from '@angular/common';
 
 class GameDescription {
 
@@ -344,7 +344,7 @@ export class GameInfo {
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
-    imports: [AutofocusDirective, NgFor]
+    imports: [AutofocusDirective, NgFor],
 })
 export class PickGameComponent {
 

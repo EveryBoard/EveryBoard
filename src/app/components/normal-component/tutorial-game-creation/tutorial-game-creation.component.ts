@@ -1,11 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
+
 import { PickGameComponent } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-tutorial-game-creation',
     templateUrl: './tutorial-game-creation.component.html',
-    imports: [PickGameComponent]
+    imports: [PickGameComponent],
 })
 export class TutorialGameCreationComponent {
     router = inject(Router);

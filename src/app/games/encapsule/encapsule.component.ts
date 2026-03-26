@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
@@ -16,7 +17,6 @@ import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-encapsule',

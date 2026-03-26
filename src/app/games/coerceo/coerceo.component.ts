@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -19,7 +20,6 @@ import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMin
 import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { CoerceoState } from './CoerceoState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-coerceo',

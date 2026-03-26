@@ -35,7 +35,7 @@ describe('PylosOrderedMoveGenerator', () => {
                 PylosMove.ofDrop(coord0, [coord1]), // 0 piece used
             ].sort(() => Math.random() - 0.5);
 
-            const orderedMoves: PylosMove[] = moveGenerator['orderMoves'](moves);
+            const orderedMoves: PylosMove[] = moveGenerator.orderMoves(moves);
 
             const expectedOrderedMoves: PylosMove[] = [
                 PylosMove.ofClimb(coord0, coord1, [coord1, coord2]), // -2 piece used

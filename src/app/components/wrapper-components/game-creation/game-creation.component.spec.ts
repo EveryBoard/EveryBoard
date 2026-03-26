@@ -2,6 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -19,7 +20,6 @@ import { WelcomeComponent } from '../../normal-component/welcome/welcome.compone
 import { LocalGameConfigurationComponent } from '../local-game-configuration/local-game-configuration.component';
 
 import { GameCreationComponent, GameCreationComponentMessages } from './game-creation.component';
-import { P4Config, P4Rules } from 'src/app/games/p4/P4Rules';
 
 describe('GameCreationComponent', () => {
 

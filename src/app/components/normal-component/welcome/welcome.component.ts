@@ -1,5 +1,7 @@
+import { NgIf } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -8,13 +10,11 @@ import { CurrentGameService } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { ThemeService } from '../../../services/ThemeService';
 import { GameInfo, PickGameComponent } from '../pick-game/pick-game.component';
-import { NgIf } from '@angular/common';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
-    imports: [RouterLink, NgIf, FaIconComponent, PickGameComponent]
+    imports: [RouterLink, NgIf, FaIconComponent, PickGameComponent],
 })
 export class WelcomeComponent {
     readonly router = inject(Router);

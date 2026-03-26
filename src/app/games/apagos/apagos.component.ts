@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -15,7 +16,6 @@ import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 interface PieceLocation {
 

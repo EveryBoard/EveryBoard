@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -17,7 +18,6 @@ import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoPiece } from './KamisadoPiece';
 import { KamisadoRules } from './KamisadoRules';
 import { KamisadoState } from './KamisadoState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-kamisado',

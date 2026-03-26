@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -21,7 +22,6 @@ import { GoState } from '../GoState';
 import { TrigoMinimax } from './TrigoMinimax';
 import { TrigoMoveGenerator } from './TrigoMoveGenerator';
 import { TrigoConfig, TrigoRules } from './TrigoRules';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-trigo',

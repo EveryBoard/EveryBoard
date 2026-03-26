@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -10,17 +11,16 @@ import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
+import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
 import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
 import { MartianChessState } from './MartianChessState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
-import { MartianChessPawnComponent } from './martian-chess-pawn.component';
 import { MartianChessDroneComponent } from './martian-chess-drone.component';
+import { MartianChessPawnComponent } from './martian-chess-pawn.component';
 import { MartianChessQueenComponent } from './martian-chess-queen.component';
-import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 
 type SelectedPieceInfo = {
     selectedPiece: Coord,

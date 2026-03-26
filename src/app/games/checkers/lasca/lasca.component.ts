@@ -1,9 +1,9 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { CheckersComponent } from '../common/checkers.component';
 
 import { LascaRules } from './LascaRules';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-lasca',

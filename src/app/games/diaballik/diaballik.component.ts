@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -18,7 +19,6 @@ import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslatio
 import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
 import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-diaballik',

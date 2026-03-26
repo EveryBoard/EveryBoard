@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -14,13 +15,12 @@ import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf]
+    imports: [NgFor, NgClass, NgIf],
 })
 export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,

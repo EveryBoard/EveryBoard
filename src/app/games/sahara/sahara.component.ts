@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -14,13 +15,12 @@ import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
 import { SaharaState } from './SaharaState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-sahara',
     templateUrl: './sahara.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass]
+    imports: [NgFor, NgIf, NgClass],
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaMove,

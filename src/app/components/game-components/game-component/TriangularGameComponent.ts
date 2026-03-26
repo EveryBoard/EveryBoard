@@ -11,7 +11,7 @@ import { GameComponent } from './GameComponent';
 
 @Component({
     template: '',
-    standalone: false
+    standalone: false,
 })
 export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               M extends Move,

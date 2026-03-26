@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 
 @Component({
     selector: 'app-not-found',
-    templateUrl: './not-found.component.html'
+    templateUrl: './not-found.component.html',
 })
 export class NotFoundComponent {
     readonly route: ActivatedRoute = inject(ActivatedRoute);

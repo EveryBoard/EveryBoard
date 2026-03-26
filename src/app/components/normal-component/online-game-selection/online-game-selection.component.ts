@@ -10,7 +10,7 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-online-game-selection',
     templateUrl: './online-game-selection.component.html',
-    imports: [PickGameComponent]
+    imports: [PickGameComponent],
 })
 export class OnlineGameSelectionComponent {
     readonly router = inject(Router);

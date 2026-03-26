@@ -1,3 +1,4 @@
+import { NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -9,7 +10,6 @@ import { GameState } from '../../../jscaip/state/GameState';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { NgIf } from '@angular/common';
 
 /**
  * This component appears when we start a local game.
@@ -20,7 +20,7 @@ import { NgIf } from '@angular/common';
 @Component({
     selector: 'app-local-game-configuration',
     templateUrl: './local-game-configuration.component.html',
-    imports: [RulesConfigurationComponent, NgIf, DemoCardWrapperComponent]
+    imports: [RulesConfigurationComponent, NgIf, DemoCardWrapperComponent],
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {
     private readonly router = inject(Router);

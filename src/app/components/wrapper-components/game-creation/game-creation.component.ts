@@ -1,3 +1,4 @@
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -11,6 +12,7 @@ import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
@@ -20,8 +22,6 @@ import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-import { NgIf, NgFor, NgClass } from '@angular/common';
-import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 
 export class GameCreationComponentMessages {
 

@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -16,7 +17,6 @@ import { SquarzMove as SquarzMove } from './SquarzMove';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
 import { SquarzState } from './SquarzState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-squarz',

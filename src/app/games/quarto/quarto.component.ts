@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
@@ -13,7 +14,6 @@ import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 import { QuartoPiece } from './QuartoPiece';
 import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoState } from './QuartoState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-quarto',

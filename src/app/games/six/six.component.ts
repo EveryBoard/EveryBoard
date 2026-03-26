@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
@@ -20,7 +21,6 @@ import { SixMove } from './SixMove';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { SixState } from './SixState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 type CoordAndClass = {
     coord: Coord,

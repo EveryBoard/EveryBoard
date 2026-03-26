@@ -1,4 +1,6 @@
+import { NgClass, NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { BaseGameComponent } from 'src/app/components/game-components/base-game-component/BaseGameComponent';
 
 import { Utils } from '@everyboard/lib';
 
@@ -8,14 +10,12 @@ import { Coord3D } from '../../jscaip/Coord3D';
 import { Vector } from '../../jscaip/Vector';
 
 import { TrexoMove } from './TrexoMove';
-import { NgClass, NgIf } from '@angular/common';
-import { BaseGameComponent } from 'src/app/components/game-components/base-game-component/BaseGameComponent';
 
 @Component({
     selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass, NgIf]
+    imports: [NgClass, NgIf],
 })
 export class TrexoHalfPieceComponent extends BaseGameComponent {
 

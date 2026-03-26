@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -20,7 +21,6 @@ import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePiec
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
 export type LodestoneInfo = {

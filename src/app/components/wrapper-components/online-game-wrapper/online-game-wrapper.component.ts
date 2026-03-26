@@ -1,5 +1,7 @@
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
 
@@ -19,17 +21,16 @@ import { GameService } from '../../../services/GameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
+import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
+import { GameCreationComponent } from '../game-creation/game-creation.component';
 
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
-import { NgIf, NgFor, NgClass } from '@angular/common';
-import { GameCreationComponent } from '../game-creation/game-creation.component';
-import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { ChatComponent } from '../../normal-component/chat/chat.component';
+
 
 export class OnlineGameWrapperMessages {
 
@@ -44,7 +45,7 @@ export class OnlineGameWrapperMessages {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
     imports: [NgIf, GameCreationComponent, ViewConfigComponent, TimerComponent, NgFor,
-              FaIconComponent, RouterLink, NgClass, ChatComponent],
+        FaIconComponent, RouterLink, NgClass, ChatComponent],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {

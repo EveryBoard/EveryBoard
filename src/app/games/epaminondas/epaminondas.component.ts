@@ -1,8 +1,10 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
@@ -20,8 +22,6 @@ import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
 import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { EpaminondasState } from './EpaminondasState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
-import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
 
 export type PossibleMove = {
 

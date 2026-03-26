@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -19,7 +20,6 @@ import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamPiece } from './SiamPiece';
 import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
 import { SiamState } from './SiamState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {

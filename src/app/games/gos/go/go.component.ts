@@ -1,9 +1,11 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
+import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
@@ -18,8 +20,6 @@ import { GoState } from '../GoState';
 import { GoMinimax } from './GoMinimax';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
-import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-go',

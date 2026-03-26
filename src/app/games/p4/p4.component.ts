@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -12,7 +13,6 @@ import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Config, P4Rules } from './P4Rules';
 import { P4State } from './P4State';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-p4',

@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
@@ -5,7 +6,6 @@ import { TaflComponent } from '../tafl.component';
 
 import { HnefataflMove } from './HnefataflMove';
 import { HnefataflRules } from './HnefataflRules';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-hnefatafl',

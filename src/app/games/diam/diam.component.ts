@@ -1,3 +1,4 @@
+import { NgFor, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -16,7 +17,6 @@ import { DiamMoveGenerator } from './DiamMoveGenerator';
 import { DiamPiece } from './DiamPiece';
 import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { NgFor, NgClass } from '@angular/common';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[],

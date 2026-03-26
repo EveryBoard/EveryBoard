@@ -1,3 +1,4 @@
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -11,10 +12,9 @@ import { BackendMessage, BackendService } from '../../../services/BackendService
 import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
-import { GameInfo } from '../pick-game/pick-game.component';
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
 import { ChatComponent } from '../chat/chat.component';
+import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
+import { GameInfo } from '../pick-game/pick-game.component';
 
 type Tab = 'games' | 'create' | 'chat';
 
@@ -25,7 +25,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
-    imports: [NgClass, NgFor, NgIf, OnlineGameSelectionComponent, ChatComponent]
+    imports: [NgClass, NgFor, NgIf, OnlineGameSelectionComponent, ChatComponent],
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {

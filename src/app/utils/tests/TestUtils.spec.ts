@@ -54,7 +54,7 @@ import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceM
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
 
 @Component({
-    standalone: false
+    standalone: false,
 })
 export class BlankComponent {}
 
@@ -776,10 +776,10 @@ export function expectValidRouting(router: Router,
     const args: [string[], ...NavigationExtras[]] = [path];
     const extraArgs: NavigationExtras = {};
     if (options != null && options.queryParams != null) {
-        extraArgs['queryParams'] = options.queryParams;
+        extraArgs.queryParams = options.queryParams;
     }
     if (options != null && options.skipLocationChange != null) {
-        extraArgs['skipLocationChange'] = options.skipLocationChange;
+        extraArgs.skipLocationChange = options.skipLocationChange;
     }
     if (Object.keys(extraArgs).length > 0) {
         args.push(extraArgs);
@@ -839,7 +839,7 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
         spy.and.callThrough();
         // The subscription method could be a promise, we need to deal with both cases
         const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
-        if (subscription['unsubscribe'] !== undefined) {
+        if (subscription.unsubscribe !== undefined) {
             // This is not a promise, we can wrap it directly
             return new Subscription(() => {
                 unsubscribed = true;

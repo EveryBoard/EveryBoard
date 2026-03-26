@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -20,7 +21,6 @@ import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
 import { YinshScoreMinimax } from './YinshScoreMinimax';
 import { YinshState } from './YinshState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 interface ViewInfo {
     targets: Coord[],

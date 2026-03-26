@@ -1,18 +1,18 @@
 import { formatDate, NgIf, NgFor } from '@angular/common';
 import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy, inject } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
 import { Message } from '../../../domain/Message';
 import { ChatService } from '../../../services/ChatService';
 import { Debug } from '../../../utils/Debug';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule, FaIconComponent]
+    imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule, FaIconComponent],
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {

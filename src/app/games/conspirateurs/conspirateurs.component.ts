@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -16,7 +17,6 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],

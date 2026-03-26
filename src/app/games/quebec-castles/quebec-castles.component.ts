@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
@@ -15,7 +16,6 @@ import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from '
 import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-quebec-castles',

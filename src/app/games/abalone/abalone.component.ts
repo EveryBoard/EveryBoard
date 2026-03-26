@@ -1,9 +1,11 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
@@ -24,8 +26,6 @@ import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
 import { AbaloneState } from './AbaloneState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
-import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 
 type CapturedInfo = {
     coord: Coord,
@@ -45,7 +45,7 @@ type AbaloneArrowInfo = {
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass, HexArrowComponent]
+    imports: [NgFor, NgIf, NgClass, HexArrowComponent],
 })
 export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,

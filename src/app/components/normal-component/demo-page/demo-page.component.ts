@@ -1,3 +1,4 @@
+import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -12,13 +13,12 @@ import { GameState } from '../../../jscaip/state/GameState';
 import { DemoNodeInfo, DemoNodeWithConfig, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { TutorialStep, TutorialStepClick } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
-import { NgFor } from '@angular/common';
 
 @Component({
     selector: 'app-demo-page',
     templateUrl: './demo-page.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule, FormsModule, NgFor, DemoCardWrapperComponent]
+    imports: [ReactiveFormsModule, FormsModule, NgFor, DemoCardWrapperComponent],
 })
 export class DemoPageComponent {
     private readonly cdr = inject(ChangeDetectorRef);

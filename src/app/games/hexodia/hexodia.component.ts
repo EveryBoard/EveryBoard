@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -17,7 +18,6 @@ import { HexodiaMove } from './HexodiaMove';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 import { HexodiaState } from './HexodiaState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-hexodia',

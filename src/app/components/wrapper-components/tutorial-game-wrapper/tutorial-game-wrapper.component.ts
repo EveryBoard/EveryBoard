@@ -1,4 +1,6 @@
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -10,13 +12,12 @@ import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
 
 import { TutorialFailure } from './TutorialFailure';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
-import { NgIf, NgFor, NgClass } from '@angular/common';
-import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
-import { ReactiveFormsModule } from '@angular/forms';
+
 
 export class TutorialGameWrapperMessages {
 
@@ -32,7 +33,7 @@ type TutorialPlayer = 'tutorial-player';
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, ViewConfigComponent, NgFor, ReactiveFormsModule, NgClass]
+    imports: [NgIf, ViewConfigComponent, NgFor, ReactiveFormsModule, NgClass],
 })
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {

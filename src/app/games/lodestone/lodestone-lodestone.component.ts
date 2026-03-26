@@ -1,15 +1,15 @@
+import { NgClass, NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 
 import { LodestoneInfo } from './lodestone.component';
-import { NgClass, NgFor } from '@angular/common';
 
 @Component({
     selector: '[app-lodestone-lodestone]',
     templateUrl: './lodestone-lodestone.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass, NgFor]
+    imports: [NgClass, NgFor],
 })
 export class LodestoneLodestoneComponent extends BaseGameComponent {
 

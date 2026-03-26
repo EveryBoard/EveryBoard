@@ -1,4 +1,6 @@
+import { NgIf, NgFor, NgClass } from '@angular/common';
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, inject } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ParamMap } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
@@ -13,11 +15,10 @@ import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../j
 import { GameState } from '../../../jscaip/state/GameState';
 import { Debug } from '../../../utils/Debug';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
-import { NgIf, NgFor, NgClass } from '@angular/common';
-import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+
 
 @Component({
     selector: 'app-local-game-wrapper',

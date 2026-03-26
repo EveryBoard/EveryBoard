@@ -27,7 +27,7 @@ export class GameWrapperMessages {
 
 @Component({
     template: '',
-    standalone: false
+    standalone: false,
 })
 export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
     protected readonly router = inject(Router);

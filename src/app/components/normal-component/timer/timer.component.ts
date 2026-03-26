@@ -1,16 +1,16 @@
+import { NgClass, NgIf, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
 
 import { Utils } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
 import { Debug } from '../../../utils/Debug';
-import { NgClass, NgIf, DecimalPipe } from '@angular/common';
 
 @Component({
     selector: 'app-timer',
     templateUrl: './timer.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgClass, NgIf, DecimalPipe]
+    imports: [NgClass, NgIf, DecimalPipe],
 })
 @Debug.log
 export class TimerComponent implements OnDestroy {

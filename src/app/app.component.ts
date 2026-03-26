@@ -7,7 +7,7 @@ import { ThemeService } from './services/ThemeService';
 @Component({
     selector: 'app-root',
     templateUrl: './app.component.html',
-    standalone: false
+    standalone: false,
 })
 export class AppComponent {
     private readonly _themeService = inject(ThemeService);

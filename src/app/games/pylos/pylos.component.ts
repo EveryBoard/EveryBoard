@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
@@ -15,7 +16,6 @@ import { PylosMove, PylosMoveFailure } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosRules } from './PylosRules';
 import { PylosState } from './PylosState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-pylos',

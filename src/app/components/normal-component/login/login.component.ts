@@ -1,21 +1,21 @@
+import { NgIf } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
 import { MGPValidation } from '@everyboard/lib';
 
-import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { ToggleVisibilityDirective } from '../../../pipes-and-directives/toggle-visibility.directive';
-import { NgIf } from '@angular/common';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgIf, RouterLink]
+    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgIf, RouterLink],
 })
 export class LoginComponent implements OnInit, OnDestroy {
     router = inject(Router);

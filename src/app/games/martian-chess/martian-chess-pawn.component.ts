@@ -1,10 +1,10 @@
+import { NgIf, NgClass } from '@angular/common';
 import { Component, Input } from '@angular/core';
 
 import { Coord } from '../../jscaip/Coord';
 
-import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
-import { NgIf, NgClass } from '@angular/common';
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
+import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
 
 @Component({
     selector: '[app-martian-chess-pawn]',

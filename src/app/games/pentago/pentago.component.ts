@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -16,7 +17,6 @@ import { PentagoMove } from './PentagoMove';
 import { PentagoMoveGenerator } from './PentagoMoveGenerator';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 interface ArrowInfo {
     path: string;

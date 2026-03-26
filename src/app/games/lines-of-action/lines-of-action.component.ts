@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -14,7 +15,6 @@ import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
 import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionState } from './LinesOfActionState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-lines-of-action',

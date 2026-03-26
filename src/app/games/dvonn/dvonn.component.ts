@@ -1,3 +1,4 @@
+import { NgFor, NgIf, NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -15,13 +16,12 @@ import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnRules } from './DvonnRules';
 import { DvonnScoreMinimax } from './DvonnScoreMinimax';
 import { DvonnState } from './DvonnState';
-import { NgFor, NgIf, NgClass } from '@angular/common';
 
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass]
+    imports: [NgFor, NgIf, NgClass],
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {

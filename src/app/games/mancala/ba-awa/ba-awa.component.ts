@@ -1,12 +1,12 @@
+import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MancalaComponent } from '../common/MancalaComponent';
 import { MancalaMove } from '../common/MancalaMove';
+import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 import { BaAwaMoveGenerator } from './BaAwaMoveGenerator';
 import { BaAwaRules } from './BaAwaRules';
-import { NgFor } from '@angular/common';
-import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 @Component({
     selector: 'app-ba-awa-component',

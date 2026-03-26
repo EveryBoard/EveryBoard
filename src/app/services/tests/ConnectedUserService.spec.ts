@@ -663,7 +663,7 @@ describe('ConnectedUserService', () => {
 
         // When mapping it
         // Then it should throw
-        expect(() => connectedUserService['catchFirebaseError'](error)).toThrow(error);
+        expect(() => connectedUserService.catchFirebaseError(error)).toThrow(error);
     });
 
     describe('getIdToken', () => {

@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
@@ -23,7 +24,6 @@ import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfLegalityInformation, GipfRules } from './GipfRules';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
 import { GipfState } from './GipfState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: 'app-gipf',

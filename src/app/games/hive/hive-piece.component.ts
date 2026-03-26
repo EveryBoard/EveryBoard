@@ -1,3 +1,4 @@
+import { NgClass, NgIf } from '@angular/common';
 import { AfterContentChecked, Component, Input } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
@@ -5,13 +6,12 @@ import { Coord } from '../../jscaip/Coord';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 
 import { HivePiece } from './HivePiece';
-import { NgClass, NgIf } from '@angular/common';
 
 @Component({
     selector: '[app-hive-piece]',
     templateUrl: './hive-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass, NgIf]
+    imports: [NgClass, NgIf],
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 

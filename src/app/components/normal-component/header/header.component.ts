@@ -1,5 +1,7 @@
+import { NgClass, NgIf } from '@angular/common';
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
@@ -9,13 +11,11 @@ import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { GameInfo } from '../pick-game/pick-game.component';
-import { NgClass, NgIf } from '@angular/common';
-import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    imports: [RouterLink, NgClass, NgIf, FaIconComponent]
+    imports: [RouterLink, NgClass, NgIf, FaIconComponent],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
     router = inject(Router);

@@ -1,3 +1,4 @@
+import { NgFor, NgClass, NgIf } from '@angular/common';
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -16,7 +17,6 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
-import { NgFor, NgClass, NgIf } from '@angular/common';
 import { TrexoHalfPieceComponent } from './trexo-half-piece.component';
 
 interface PieceOnBoard {
