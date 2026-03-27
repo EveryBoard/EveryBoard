@@ -6,10 +6,10 @@ import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';
-import { ApagosState } from '../ApagosState';
 import { ApagosSquare } from '../ApagosSquare';
+import { ApagosState } from '../ApagosState';
 
-fdescribe('ApagosRules', () => {
+describe('ApagosRules', () => {
 
     let rules: ApagosRules;
     const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
