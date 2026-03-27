@@ -5,14 +5,15 @@ import { MGPOptional } from '@everyboard/lib';
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoRules } from '../AbstractGoRules';
 import { HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export interface HexagonalGoConfig extends AbstractGoConfig {
+export interface HexagonalGoConfig extends RulesConfig {
 
     size: number;
 
@@ -35,7 +36,7 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
 
     public static get(): HexagonalGoRules {
         if (HexagonalGoRules.singleton.isAbsent()) {
-            HexagonalGoRules.singleton = MGPOptional.of(new HexagonalGoRules());
+            HexagonalGoRules.singleton = MGPOptional.of(new HexagonalGoRules(false));
         }
         return HexagonalGoRules.singleton.get();
     }

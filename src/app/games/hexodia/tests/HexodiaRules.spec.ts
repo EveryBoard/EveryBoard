@@ -364,10 +364,10 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
             ], 91);
-
-            // When evaluating the node
-            // Then the board should be a draw
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -460,7 +460,8 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X],
             ], 25);
             const node: HexodiaNode = new HexodiaNode(state);
-            // When checking it game status
+
+            // When checking the game status
             // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });

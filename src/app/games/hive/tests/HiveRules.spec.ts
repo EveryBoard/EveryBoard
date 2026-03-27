@@ -1021,7 +1021,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player it is a draw
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

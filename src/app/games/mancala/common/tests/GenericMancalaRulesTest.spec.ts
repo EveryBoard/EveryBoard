@@ -166,6 +166,8 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds, halfOfTotalSeeds));
                         const node: MancalaNode = new GameNode(state);
+
+                        // When checking the game status
                         // Then it should be a draw
                         RulesUtils.expectToBeDraw(rules, node, MGPOptional.of(config));
                     });

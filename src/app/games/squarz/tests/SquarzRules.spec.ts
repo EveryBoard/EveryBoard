@@ -226,8 +226,10 @@ describe('SquarzRules', () => {
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],
             ], 64);
-            // Then it should be a draw
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

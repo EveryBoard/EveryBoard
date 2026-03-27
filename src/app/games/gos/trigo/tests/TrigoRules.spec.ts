@@ -719,7 +719,7 @@ describe('TrigoRules', () => {
 
     describe('End Game', () => {
 
-        it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
+        it('should recognize draw on a board with dead stones', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
                 [N, N, N, N, N, N, _, N, N, N, N, N, N],
@@ -735,7 +735,7 @@ describe('TrigoRules', () => {
             const node: GoNode = new GoNode(state);
 
             // When checking the game status
-            // Then it should see the draw
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -768,7 +768,6 @@ describe('TrigoRules', () => {
             const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 1,
-                playOnIntersection: false,
             });
 
             // When getting initial board
@@ -787,7 +786,6 @@ describe('TrigoRules', () => {
             const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 2,
-                playOnIntersection: false,
             });
 
             // When getting initial board

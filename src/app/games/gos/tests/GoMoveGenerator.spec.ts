@@ -2,9 +2,10 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { GoNode, AbstractGoConfig } from '../AbstractGoRules';
+import { GoNode } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
@@ -22,14 +23,12 @@ const _: GoPiece = GoPiece.EMPTY;
 
 describe('GoMoveGenerator', () => {
 
-    let moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig>;
+    let moveGenerator: AbstractGoMoveGenerator<RulesConfig>;
 
     const config: MGPOptional<GoConfig> = MGPOptional.of({
         width: 5,
         height: 5,
         handicap: 0,
-        playOnIntersection: true,
-        // TODO: somewhoere something is not default but is called defaultConfig! !!
     });
 
     beforeEach(() => {

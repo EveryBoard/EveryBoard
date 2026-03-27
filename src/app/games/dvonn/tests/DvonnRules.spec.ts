@@ -288,6 +288,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

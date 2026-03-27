@@ -24,7 +24,7 @@ describe('TrigoMoveGenerator', () => {
 
     let moveGenerator: TrigoMoveGenerator;
 
-    const config: MGPOptional<TrigoConfig> = MGPOptional.of({ size: 2, hexagonal: false, playOnIntersection: false });
+    const config: MGPOptional<TrigoConfig> = MGPOptional.of({ size: 2, hexagonal: false });
 
     beforeEach(() => {
         moveGenerator = new TrigoMoveGenerator();

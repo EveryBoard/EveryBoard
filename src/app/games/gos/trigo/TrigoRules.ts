@@ -4,15 +4,16 @@ import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescrip
 import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules, AbstractGoConfig } from '../AbstractGoRules';
+import { AbstractGoRules } from '../AbstractGoRules';
 import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export interface TrigoConfig extends AbstractGoConfig {
+export interface TrigoConfig extends RulesConfig {
 
     size: number;
 
@@ -30,13 +31,12 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
             config: {
                 size: new NumberConfig(7, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 99)),
                 hexagonal: new BooleanConfig(false, () => $localize`Hexagonal`),
-                playOnIntersection: new BooleanConfig(false, () => $localize`Play on intersection`),
             },
         });
 
     public static get(): TrigoRules {
         if (TrigoRules.singleton.isAbsent()) {
-            TrigoRules.singleton = MGPOptional.of(new TrigoRules());
+            TrigoRules.singleton = MGPOptional.of(new TrigoRules(false));
         }
         return TrigoRules.singleton.get();
     }

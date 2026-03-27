@@ -216,6 +216,8 @@ describe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
         ], PlayerNumberMap.of(8, 8), 1337);
         const node: PenteNode = new PenteNode(state);
+
+        // When checking the game status
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });

@@ -835,7 +835,7 @@ describe('HexagonalGoRules', () => {
 
     describe('End Game', () => {
 
-        it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
+        it('should recognize draw on a board with dead stones', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, _, X, u],
@@ -857,7 +857,7 @@ describe('HexagonalGoRules', () => {
             const node: GoNode = new GoNode(state);
 
             // When checking the game status
-            // Then it should see the draw
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

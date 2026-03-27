@@ -1,12 +1,13 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { AbstractGoHeuristic } from './AbstractGoHeuristic';
 import { AbstractGoMoveGenerator } from './AbstractGoMoveGenerator';
-import { AbstractGoRules, GoLegalityInformation, AbstractGoConfig } from './AbstractGoRules';
+import { AbstractGoRules, GoLegalityInformation } from './AbstractGoRules';
 import { GoMove } from './GoMove';
 import { GoState } from './GoState';
 
-export abstract class AbstractGoMinimax<C extends AbstractGoConfig>
+export abstract class AbstractGoMinimax<C extends RulesConfig>
     extends Minimax<GoMove, GoState, C, GoLegalityInformation>
 {
 

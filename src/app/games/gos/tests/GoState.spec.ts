@@ -48,7 +48,6 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 2,
-                playOnIntersection: true,
             });
 
             // When creating an initialState with it
@@ -90,7 +89,6 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 4,
-                playOnIntersection: true,
             });
 
             // When creating an initialState with it
@@ -132,7 +130,6 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 5,
-                playOnIntersection: true,
             });
 
             // When creating an initialState with it
@@ -174,7 +171,6 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 9,
-                playOnIntersection: true,
             });
 
             // When creating an initialState with it
