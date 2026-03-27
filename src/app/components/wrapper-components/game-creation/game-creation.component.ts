@@ -1,5 +1,5 @@
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, Signal, inject, viewChild, input, InputSignal } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChild, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
@@ -88,7 +88,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
-    @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
+    public readonly gameStartNotification: OutputEmitterRef<ConfigRoom> = output<ConfigRoom>();
 
     public readonly rulesConfigurationComponent: Signal<RulesConfigurationComponent | undefined> =
         viewChild(RulesConfigurationComponent);

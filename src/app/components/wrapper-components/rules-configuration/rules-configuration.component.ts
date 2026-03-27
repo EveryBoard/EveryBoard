@@ -1,5 +1,5 @@
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, InputSignal, ModelSignal, OnInit, Output, Signal, WritableSignal, inject, input, model, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnInit, Signal, WritableSignal, inject, input, model, signal, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -38,7 +38,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
      * we do want to emit something when the current config is invalid,
      * so that the parent component knows that the situation is not ok
      */
-    @Output() updateCallback: EventEmitter<MGPOptional<RulesConfig>> = new EventEmitter<MGPOptional<RulesConfig>>();
+    public readonly updateCallback: OutputEmitterRef<MGPOptional<RulesConfig>> = output<MGPOptional<RulesConfig>>();
 
     public rulesConfigForm: FormGroup = new FormGroup({});
 

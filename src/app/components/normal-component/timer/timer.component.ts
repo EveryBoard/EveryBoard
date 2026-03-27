@@ -1,5 +1,5 @@
 import { NgClass, NgIf, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, InputSignal, OnDestroy, Output, inject, input } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, InputSignal, OnDestroy, OutputEmitterRef, inject, input, output } from '@angular/core';
 
 import { Utils } from '@everyboard/lib';
 
@@ -34,8 +34,8 @@ export class TimerComponent implements OnDestroy {
     private started: boolean = false;
     private startTime: number;
 
-    @Output() outOfTimeAction: EventEmitter<void> = new EventEmitter<void>();
-    @Output() addTimeToOpponent: EventEmitter<void> = new EventEmitter<void>();
+    public readonly outOfTimeAction: OutputEmitterRef<void> = output();
+    public readonly addTimeToOpponent: OutputEmitterRef<void> = output();
 
     public static readonly DANGER_TIME_EVEN: string = 'has-background-danger has-text-white';
     public static readonly DANGER_TIME_ODD: string = 'has-background-warning has-text-white';
@@ -108,7 +108,7 @@ export class TimerComponent implements OnDestroy {
     }
 
     public pause(): void {
-        const debugName = this.debugName();
+        const debugName: string = this.debugName();
         Utils.assert(this.started, 'Should not pause not started timer (' + debugName + ')');
         Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + debugName + ')');
 

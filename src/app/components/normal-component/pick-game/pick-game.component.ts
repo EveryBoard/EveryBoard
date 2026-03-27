@@ -1,6 +1,6 @@
 /* eslint-disable no-multi-spaces */
 import { NgFor } from '@angular/common';
-import { Component, EventEmitter, Output, Type, inject } from '@angular/core';
+import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -350,18 +350,12 @@ export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.getAllGames();
 
-    public readonly theme: 'dark' | 'light';
+    public readonly theme: 'dark' | 'light' = inject(ThemeService).getTheme();
 
     public matchingGames: GameInfo[] = this.games;
 
-    @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
-
-    public constructor() {
-        const themeService = inject(ThemeService);
-
-        this.theme = themeService.getTheme();
-    }
-
+    public readonly pickGame: OutputEmitterRef<string> = output<string>();
+    
     public selectGame(gameName: string): void {
         this.pickGame.emit(gameName);
     }

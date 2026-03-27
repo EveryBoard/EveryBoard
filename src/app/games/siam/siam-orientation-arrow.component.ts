@@ -1,5 +1,5 @@
 import { NgFor, NgClass } from '@angular/common';
-import { Component, EventEmitter, InputSignal, Output, input } from '@angular/core';
+import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 import { Coord } from '../../jscaip/Coord';
@@ -18,10 +18,10 @@ import { SiamConfig } from './SiamRules';
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 
-    readonly orientations: InputSignal<SiamMove[]> = input.required<SiamMove[]>();
-    readonly currentPlayer: InputSignal<Player> = input.required<Player>();
-    readonly config: InputSignal<SiamConfig> = input.required<SiamConfig>();
-    @Output() moveEmitter: EventEmitter<SiamMove> = new EventEmitter<SiamMove>();
+    public readonly orientations: InputSignal<SiamMove[]> = input.required<SiamMove[]>();
+    public readonly currentPlayer: InputSignal<Player> = input.required<Player>();
+    public readonly config: InputSignal<SiamConfig> = input.required<SiamConfig>();
+    public readonly moveEmitter: OutputEmitterRef<SiamMove> = output<SiamMove>();
 
     public getCurrentPlayerClass(): string {
         return this.getPlayerClass(this.currentPlayer());

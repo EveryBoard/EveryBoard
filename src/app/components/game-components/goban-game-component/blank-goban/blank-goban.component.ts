@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component, EventEmitter, InputSignal, OnChanges, Output, input } from '@angular/core';
+import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { GobanUtils } from '../../../../jscaip/GobanUtils';
@@ -15,7 +15,7 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
 
     public readonly width: InputSignal<number> = input.required<number>();
     public readonly height: InputSignal<number> = input.required<number>();
-    @Output() clickCallBack: EventEmitter<Coord> = new EventEmitter<Coord>();
+    public readonly clickCallBack: OutputEmitterRef<Coord> = output<Coord>();
     public hoshis: Coord[] = [];
 
     public ngOnChanges(): void {
