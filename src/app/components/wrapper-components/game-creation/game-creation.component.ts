@@ -1,5 +1,5 @@
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, Signal, inject, viewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, OnDestroy, OnInit, Output, Signal, inject, viewChild, input, InputSignal } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
@@ -82,9 +82,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     public GameDuration: typeof GameDuration = GameDuration;
     public FirstPlayer: typeof FirstPlayer = FirstPlayer;
 
-    @Input() gameId: string;
+    public readonly gameId: InputSignal<string> = input.required<string>();
 
-    @Input() rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>>;
+    public readonly rulesConfigDescription: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> =
+        input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
@@ -135,7 +136,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
         Utils.assert(user.isPresent(), 'GameCreationComponent should not be called without connected user');
         Utils.assert(user.get() !== AuthUser.NOT_CONNECTED, 'GameCreationComponent should not be created with an empty userName');
-        Utils.assert(this.gameId !== '', 'GameCreationComponent should not be created with an empty gameId');
+        Utils.assert(this.gameId() !== '', 'GameCreationComponent should not be created with an empty gameId');
     }
 
     private createForms(): void {
@@ -150,7 +151,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private async joinAndSubscribeToConfigRoom(): Promise<void> {
         this.configRoomSubscription = await this.configRoomService.join(
-            this.gameId,
+            this.gameId(),
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
             (): Promise<void> => this.onGameCancelled(),
             (candidate: MinimalUser): void => this.onCandidateJoined(candidate),

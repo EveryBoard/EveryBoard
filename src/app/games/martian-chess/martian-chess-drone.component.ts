@@ -1,8 +1,8 @@
 import { NgIf, NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
-import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
+import { MartianChessFace } from './martian-chess.component';
 
 @Component({
     selector: '[app-martian-chess-drone]',
@@ -12,11 +12,10 @@ import { MartianChessComponent, MartianChessFace } from './martian-chess.compone
 })
 export class MartianChessDroneComponent {
 
-    @Input() mainShapeId: string;
-    @Input() pieceClasses: string[];
-    @Input() style: MartianChessFace;
+    readonly mainShapeId: InputSignal<string | undefined> = input<string>();
+    readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
 
-    // TODO: make them all inherit MartianChessComponentUtils (or BaseComponent) instead
     public readonly MartianChessComponentUtils: typeof MartianChessComponentUtils = MartianChessComponentUtils;
     public readonly FOUR_POINTED_STAR_VERTICAL: string = MartianChessComponentUtils.getNPointedStar(4, 0);
     public readonly PENTAGON: string = MartianChessComponentUtils.getRegularPolygon(5);

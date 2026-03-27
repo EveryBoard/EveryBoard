@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
@@ -12,6 +12,6 @@ import { Arrow } from './Arrow';
 })
 export class HexArrowComponent extends BaseGameComponent {
 
-    @Input() arrow: Arrow<HexaDirection>;
+    readonly arrow: InputSignal<Arrow<HexaDirection>> = input.required<Arrow<HexaDirection>>();
 
 }

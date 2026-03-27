@@ -1,5 +1,5 @@
 import { NgFor } from '@angular/common';
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, EventEmitter, InputSignal, OnChanges, Output, input } from '@angular/core';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { GobanUtils } from '../../../../jscaip/GobanUtils';
@@ -13,8 +13,8 @@ import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 })
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {
 
-    @Input() width: number;
-    @Input() height: number;
+    public readonly width: InputSignal<number> = input.required<number>();
+    public readonly height: InputSignal<number> = input.required<number>();
     @Output() clickCallBack: EventEmitter<Coord> = new EventEmitter<Coord>();
     public hoshis: Coord[] = [];
 
@@ -31,7 +31,7 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
      * Must be called after `this.board` has been set, usually in `updateBoard`.
      */
     public createHoshis(): void {
-        this.hoshis = GobanUtils.getHoshis(this.width, this.height);
+        this.hoshis = GobanUtils.getHoshis(this.width(), this.height());
     }
 
 }

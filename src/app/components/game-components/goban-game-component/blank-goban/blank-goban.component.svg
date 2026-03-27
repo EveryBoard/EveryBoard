@@ -1,27 +1,27 @@
 <svg:g id="blank-board">
     <svg:rect x="0" y="0"
-              [attr.width]="width * SPACE_SIZE"
-              [attr.height]="height * SPACE_SIZE"
+              [attr.width]="width() * SPACE_SIZE"
+              [attr.height]="height() * SPACE_SIZE"
               class="base mid-small-stroke"
     />
-    <svg:line *ngFor="let line of ArrayUtils.range(height); index as y"
+    <svg:line *ngFor="let line of ArrayUtils.range(height()); index as y"
               id="horizontal-line-{{ y }}"
               [attr.x1]="0"
               [attr.y1]="(0.5 * SPACE_SIZE) + SPACE_SIZE * y"
-              [attr.x2]="SPACE_SIZE * width"
+              [attr.x2]="SPACE_SIZE * width()"
               [attr.y2]="(0.5 * SPACE_SIZE) + SPACE_SIZE * y"
               class="base"
     />
-    <svg:line *ngFor="let line of ArrayUtils.range(width); index as x"
+    <svg:line *ngFor="let line of ArrayUtils.range(width()); index as x"
               id="vertical-line-{{ x }}"
               [attr.x1]="(0.5 * SPACE_SIZE) + SPACE_SIZE * x"
               [attr.y1]="0"
               [attr.x2]="(0.5 * SPACE_SIZE) + SPACE_SIZE * x"
-              [attr.y2]="SPACE_SIZE * height"
+              [attr.y2]="SPACE_SIZE * height()"
               class="base"
     />
-    <svg:g *ngFor="let line of ArrayUtils.range(height); index as y">
-        <svg:rect *ngFor="let spaceContent of ArrayUtils.range(width); index as x"
+    <svg:g *ngFor="let line of ArrayUtils.range(height()); index as y">
+        <svg:rect *ngFor="let spaceContent of ArrayUtils.range(width()); index as x"
                   id="click-{{ x }}-{{ y }}"
                   (click)="onClick(x, y)"
                   [attr.width]="SPACE_SIZE"

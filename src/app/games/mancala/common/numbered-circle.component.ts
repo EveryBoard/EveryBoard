@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -11,10 +11,10 @@ import { MGPOptional } from '@everyboard/lib';
 })
 export class NumberedCircleComponent {
 
-    @Input() x: number;
-    @Input() y: number;
-    @Input() spaceClasses: string[];
-    @Input() content: number;
-    @Input() secondaryContent: MGPOptional<string>;
-    @Input() rotation: string;
+    readonly x: InputSignal<number> = input.required<number>();
+    readonly y: InputSignal<number> = input.required<number>();
+    readonly spaceClasses: InputSignal<string[]> = input.required<string[]>();
+    readonly content: InputSignal<number> = input.required<number>();
+    readonly secondaryContent: InputSignal<MGPOptional<string>> = input.required<MGPOptional<string>>();
+    readonly rotation: InputSignal<string> = input.required<string>();
 }

@@ -1,5 +1,5 @@
 import { NgClass, NgIf, DecimalPipe } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, InputSignal, OnDestroy, Output, inject, input } from '@angular/core';
 
 import { Utils } from '@everyboard/lib';
 
@@ -14,15 +14,15 @@ import { Debug } from '../../../utils/Debug';
 })
 @Debug.log
 export class TimerComponent implements OnDestroy {
-    private readonly cdr = inject(ChangeDetectorRef);
 
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-    @Input() player: Player;
-    @Input() debugName: string;
-    @Input() timeToAdd: string;
-    @Input() dangerTimeLimit: number;
-    @Input() active: boolean;
-    @Input() canAddTime: boolean;
+    public readonly player: InputSignal<Player> = input.required<Player>();
+    public readonly debugName: InputSignal<string> = input.required<string>();
+    public readonly timeToAdd: InputSignal<string> = input.required<string>();
+    public readonly dangerTimeLimit: InputSignal<number> = input.required<number>();
+    public readonly active: InputSignal<boolean> = input.required<boolean>();
+    public readonly canAddTime: InputSignal<boolean> = input.required<boolean>();
 
     public remainingSeconds: number;
     public displayedSec: number;
@@ -46,7 +46,7 @@ export class TimerComponent implements OnDestroy {
 
     // Set the duration (in seconds, floating number) for a non-started timer
     public setDuration(seconds: number): void {
-        Utils.assert(this.started === false, 'Should not set a timer that has already been started (' + this.debugName + ')!');
+        Utils.assert(this.started === false, 'Should not set a timer that has already been started (' + this.debugName() + ')!');
 
         this.isSet = true;
         this.changeDuration(seconds);
@@ -70,7 +70,7 @@ export class TimerComponent implements OnDestroy {
 
     public start(): void {
         Utils.assert(this.isSet, 'Should not start a timer that has not been set!');
-        Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName + ')');
+        Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName() + ')');
 
         this.started = true;
         this.resume();
@@ -108,8 +108,9 @@ export class TimerComponent implements OnDestroy {
     }
 
     public pause(): void {
-        Utils.assert(this.started, 'Should not pause not started timer (' + this.debugName + ')');
-        Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + this.debugName + ')');
+        const debugName = this.debugName();
+        Utils.assert(this.started, 'Should not pause not started timer (' + debugName + ')');
+        Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + debugName + ')');
 
         this.clearTimeouts();
         this.isPaused = true;
@@ -131,10 +132,10 @@ export class TimerComponent implements OnDestroy {
     }
 
     public getTimeClass(): string {
-        if (this.active === false) {
+        if (this.active() === false) {
             return TimerComponent.PASSIVE_STYLE;
         }
-        if (this.remainingSeconds < this.dangerTimeLimit) {
+        if (this.remainingSeconds < this.dangerTimeLimit()) {
             if (this.remainingSeconds % 2 < 1) {
                 return TimerComponent.DANGER_TIME_ODD;
             } else {

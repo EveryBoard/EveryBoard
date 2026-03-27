@@ -93,8 +93,8 @@ describe('GameCreationComponent', () => {
         destroyed = false;
         configRoomService = TestBed.inject(ConfigRoomService) as AbstractConfigRoomService as ConfigRoomServiceMock;
         component = testUtils.getComponent();
-        component.gameId = 'configRoomId';
-        component.rulesConfigDescription = MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION);
+        testUtils.setInput('gameId', 'configRoomId');
+        testUtils.setInput('rulesConfigDescription', MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION));
         router = TestBed.inject(Router);
     }));
 

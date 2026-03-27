@@ -1,5 +1,5 @@
 import { NgFor, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -9,7 +9,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 import { TrexoFailure } from './TrexoFailure';

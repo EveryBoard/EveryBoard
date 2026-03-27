@@ -1,5 +1,5 @@
 import { NgIf, NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessFace } from './martian-chess.component';
@@ -12,9 +12,9 @@ import { MartianChessFace } from './martian-chess.component';
 })
 export class MartianChessQueenComponent {
 
-    @Input() mainShapeId: string;
-    @Input() pieceClasses: string[];
-    @Input() style: MartianChessFace;
+    readonly mainShapeId: InputSignal<string | undefined> = input<string>();
+    readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
 
     public readonly MartianChessComponentUtils: typeof MartianChessComponentUtils = MartianChessComponentUtils;
     public readonly HEPTAGON: string = MartianChessComponentUtils.getRegularPolygon(7);

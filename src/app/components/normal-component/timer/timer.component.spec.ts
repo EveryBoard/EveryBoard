@@ -18,7 +18,12 @@ describe('TimerComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(TimerComponent);
         component = testUtils.getComponent();
-        component.player = Player.ZERO;
+        testUtils.setInput('player', Player.ZERO);
+        testUtils.setInput('debugName', 'test-timer');
+        testUtils.setInput('active', 'false');
+        testUtils.setInput('dangerTimeLimit', 30);
+        testUtils.setInput('canAddTime', false);
+        testUtils.setInput('timeToAdd', 30);
     }));
     it('should create', () => {
         expect(component).toBeTruthy();
@@ -27,7 +32,7 @@ describe('TimerComponent', () => {
         it('should throw when setting timer already started', () => {
             component.setDuration(1);
             component.start();
-            const error: string = 'Should not set a timer that has already been started (undefined)!';
+            const error: string = 'Should not set a timer that has already been started (test-timer)!';
             TestUtils.expectToThrowAndLog(() => component.setDuration(1), error);
         });
     });
@@ -39,7 +44,7 @@ describe('TimerComponent', () => {
         it('should throw when starting twice', () => {
             component.setDuration(1);
             component.start();
-            const error: string = 'Should not start timer that has already been started (undefined)';
+            const error: string = 'Should not start timer that has already been started (test-timer)';
             TestUtils.expectToThrowAndLog(() => component.start(), error);
         });
         it('should show remaining time once set', () => {
@@ -65,11 +70,11 @@ describe('TimerComponent', () => {
             component.start();
             component.pause();
 
-            const error: string = 'Should not pause already paused timer (undefined)';
+            const error: string = 'Should not pause already paused timer (test-timer)';
             TestUtils.expectToThrowAndLog(() => component.pause(), error);
         });
         it('should throw when pausing not started timer', () => {
-            const error: string = 'Should not pause not started timer (undefined)';
+            const error: string = 'Should not pause not started timer (test-timer)';
             TestUtils.expectToThrowAndLog(() => component.pause(), error);
         });
     });
@@ -146,8 +151,8 @@ describe('TimerComponent', () => {
     describe('Add Time Button', () => {
         it('should offer opportunity to add time if allowed', fakeAsync(async() => {
             // Given a TimerComponent allowed to add time
-            component.canAddTime = true;
-            component.remainingSeconds = 60;
+            testUtils.setInput('canAddTime', true);
+            testUtils.setInput('remainingSeconds', 60);
             testUtils.detectChanges();
 
             // When clicking the add time button
@@ -159,7 +164,7 @@ describe('TimerComponent', () => {
         }));
         it('should not display button when not allowed to add time', fakeAsync(async() => {
             // Given a TimerComponent not allowed to add time
-            component.canAddTime = false;
+            testUtils.setInput('canAddTime', false);
             testUtils.detectChanges();
 
             // Then the component should not have that button
@@ -169,17 +174,17 @@ describe('TimerComponent', () => {
     });
     describe('Style depending of remaining time', () => {
         it('should be safe style when upper than limit', () => {
-            component.dangerTimeLimit = 10;
+            testUtils.setInput('dangerTimeLimit', 10);
             component.setDuration(12);
             expect(component.getTimeClass()).toEqual(TimerComponent.SAFE_TIME);
         });
         it('should be first danger style when lower than limit and even remaining second', () => {
-            component.dangerTimeLimit = 10;
+            testUtils.setInput('dangerTimeLimit', 10);
             component.setDuration(9);
             expect(component.getTimeClass()).toEqual(TimerComponent.DANGER_TIME_EVEN);
         });
         it('should be second danger style when lower than limit and odd remaining second', () => {
-            component.dangerTimeLimit = 10;
+            testUtils.setInput('dangerTimeLimit', 10);
             component.setDuration(8);
             expect(component.getTimeClass()).toEqual(TimerComponent.DANGER_TIME_ODD);
         });
@@ -188,7 +193,7 @@ describe('TimerComponent', () => {
             component.setDuration(8);
 
             // When it become passive
-            component.active = false;
+            testUtils.setInput('active', false);
 
             // Then it should still be in passive style
             expect(component.getTimeClass()).toEqual(TimerComponent.PASSIVE_STYLE);

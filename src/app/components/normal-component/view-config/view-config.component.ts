@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
@@ -17,9 +17,10 @@ import { RulesConfigurationComponent } from '../../wrapper-components/rules-conf
 })
 export class ViewConfigComponent {
 
-    @Input() rulesConfig: MGPOptional<RulesConfig>;
-    @Input() rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>>;
-    @Input() gameName: string;
+    public readonly rulesConfig: InputSignal<MGPOptional<RulesConfig>> = input.required<MGPOptional<RulesConfig>>();
+    public readonly rulesConfigDescription: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> = 
+        input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
+    public readonly gameName: InputSignal<string> = input.required<string>();
 
     public faCog: IconDefinition = faCog;
     public viewConfig: boolean = false;

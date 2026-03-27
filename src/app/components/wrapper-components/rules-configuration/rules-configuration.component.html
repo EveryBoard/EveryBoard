@@ -7,7 +7,7 @@
         <div class="control">
             <div class="select is-primary is-fullwidth">
                 <select id="ruleSelect"
-                        [disabled]="editable === false"
+                        [disabled]="isEditable() === false"
                         (change)="onChange($event)">
                     <option id="config-dropdown-{{ rulesConfigDescription.getDefaultConfig().name() }}"
                             [value]="rulesConfigDescription.getDefaultConfig().name()"

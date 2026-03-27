@@ -1,10 +1,10 @@
 import { NgIf, NgClass } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { Coord } from '../../jscaip/Coord';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
-import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
+import { MartianChessFace } from './martian-chess.component';
 
 @Component({
     selector: '[app-martian-chess-pawn]',
@@ -14,9 +14,9 @@ import { MartianChessComponent, MartianChessFace } from './martian-chess.compone
 })
 export class MartianChessPawnComponent {
 
-    @Input() mainShapeId: string;
-    @Input() pieceClasses: string[];
-    @Input() style: MartianChessFace;
+    readonly mainShapeId: InputSignal<string | undefined> = input<string>();
+    readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
 
     public readonly FOUR_POINTED_STAR_DIAGONAL: string = MartianChessComponentUtils.getNPointedStar(4, 45);
     private readonly TRIANGLE_Y_OFFSET: number = this.yOffsetForVerticalCentering();
@@ -41,7 +41,7 @@ export class MartianChessPawnComponent {
         return halfFreeRoom;
     }
     public getConcreteTriangleYOffset(): number {
-        if (this.style.shape === 'Polygon') {
+        if (this.style().shape === 'Polygon') {
             return this.TRIANGLE_Y_OFFSET;
         } else {
             return 0;

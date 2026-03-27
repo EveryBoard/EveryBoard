@@ -13,17 +13,17 @@
         </header>
         <section class="modal-card-body">
             <app-rules-configuration id="rules-config-component"
-                                     [rulesConfigDescriptionOptional]="rulesConfigDescription"
-                                     [rulesConfigToDisplay]="rulesConfig.get()"
+                                     [rulesConfigDescriptionOptional]="rulesConfigDescription()"
+                                     [rulesConfigToDisplay]="rulesConfig().get()"
                                      [editable]="false">
             </app-rules-configuration>
         </section>
     </div>
 </div>
 <p class="title">
-    {{ gameName }}
+    {{ gameName() }}
     <a id="show-config"
-       *ngIf="rulesConfig.isPresent()"
+       *ngIf="rulesConfig().isPresent()"
        (click)="openConfig()"
        class="primary-fg"
        i18n-data-tooltip

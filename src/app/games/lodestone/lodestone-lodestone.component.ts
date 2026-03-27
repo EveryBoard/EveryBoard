@@ -1,5 +1,5 @@
 import { NgClass, NgFor } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 
@@ -13,7 +13,7 @@ import { LodestoneInfo } from './lodestone.component';
 })
 export class LodestoneLodestoneComponent extends BaseGameComponent {
 
-    @Input() lodestoneInfo: LodestoneInfo;
+    readonly lodestoneInfo: InputSignal<LodestoneInfo> = input.required<LodestoneInfo>();
 
     public PIECE_RADIUS: number;
     public TRIANGLE_OUT: string;
@@ -31,7 +31,7 @@ export class LodestoneLodestoneComponent extends BaseGameComponent {
 
     public getArrowRotate(i: number): string {
         let rotate: number = i * 90;
-        if (this.lodestoneInfo.orientation === 'diagonal') {
+        if (this.lodestoneInfo().orientation === 'diagonal') {
             rotate += 45;
         }
         return 'rotate(' + rotate + ')';

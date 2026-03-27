@@ -349,6 +349,9 @@ export class SimpleComponentTestUtils<T> {
         this.detectChanges();
     }
 
+    public setInput(input: string, value: unknown): void {
+        this.fixture.componentRef.setInput(input, value);
+    }
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
