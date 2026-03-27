@@ -87,7 +87,6 @@ export class ScoreName {
     template: '',
     styleUrls: ['./game-component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush,
-    standalone: false,
 })
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,

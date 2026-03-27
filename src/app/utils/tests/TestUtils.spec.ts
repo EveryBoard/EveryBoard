@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
+import { BrowserModule, By } from '@angular/platform-browser';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router, RouterModule } from '@angular/router';
 import { FirebaseError } from 'firebase/app';
@@ -12,7 +12,7 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
-import { AppModule } from '../../app.module';
+import { AppModule, routes } from '../../app.module';
 import { findMatchingRoute } from '../../app.module.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
@@ -52,6 +52,7 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({})
 export class BlankComponent {}
@@ -658,15 +659,11 @@ export class ConfigureTestingModuleUtils {
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-            ],
+            imports: [],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                provideRouter([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
@@ -689,24 +686,13 @@ export class ConfigureTestingModuleUtils {
     : Promise<void>
     {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule,
-                componentType,
-                HumanDurationPipe,
-                ToggleVisibilityDirective,
-                RulesConfigurationComponent,
-            ],
-            schemas: [
-                CUSTOM_ELEMENTS_SCHEMA,
-            ],
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                provideRouter([
-                    { path: '**', component: BlankComponent },
-                ]),
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },

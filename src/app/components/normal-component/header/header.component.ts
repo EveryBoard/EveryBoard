@@ -30,8 +30,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public faCog: IconDefinition = faCog;
     public faSpinner: IconDefinition = faSpinner;
 
-    private userSubscription: Subscription;
-    private currentGameSubscription: Subscription;
+    private userSubscription: Subscription = new Subscription();
+    private currentGameSubscription: Subscription = new Subscription();
 
     public showMenu: boolean = false;
 

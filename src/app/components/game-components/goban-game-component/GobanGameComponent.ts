@@ -16,7 +16,6 @@ import { RectangularGameComponent } from '../rectangular-game-component/Rectangu
  */
 @Component({
     template: '',
-    standalone: false,
 })
 export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
                                          M extends Move,
