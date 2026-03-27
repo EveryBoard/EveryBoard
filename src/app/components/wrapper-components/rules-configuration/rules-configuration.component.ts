@@ -1,7 +1,6 @@
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -47,12 +46,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private chosenConfigName: string = '';
 
     public errorMessages: string[] = [];
-
-    public constructor() {
-        const activatedRoute = inject(ActivatedRoute);
-
-        super(activatedRoute);
-    }
 
     private checkInputs(): void {
         if (this.editable === false) {

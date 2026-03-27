@@ -1,5 +1,5 @@
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChild } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Mutex } from 'async-mutex';
@@ -57,10 +57,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
 
-    @ViewChild('timerZeroGame') public timerZeroGame: TimerComponent;
-    @ViewChild('timerOneGame') public timerOneGame: TimerComponent;
-    @ViewChild('timerZeroMove') public timerZeroMove: TimerComponent;
-    @ViewChild('timerOneMove') public timerOneMove: TimerComponent;
+    public readonly timerZeroGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroGame');
+    public readonly timerOneGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneGame');
+    public readonly timerZeroMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroMove');
+    public readonly timerOneMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneMove');
 
     public game: Game | null = null;
     public gameId!: string; // Initialized in ngOnInit
@@ -124,8 +124,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         setTimeout(async() => {
             // the small waiting is there to make sure that the timers are loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
-            this.timeManager.setTimers([this.timerZeroMove, this.timerOneMove],
-                                       [this.timerZeroGame, this.timerOneGame]);
+            this.timeManager.setTimers([this.timerZeroMove()!, this.timerOneMove()!],
+                                       [this.timerZeroGame()!, this.timerOneGame()!]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise game-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);

@@ -23,6 +23,7 @@ import { LocalGameWrapperComponent } from './components/wrapper-components/local
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
+import { fakeAsync } from '@angular/core/testing';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [
@@ -74,17 +75,17 @@ export function findMatchingRoute(url: string): MGPOptional<Route> {
 }
 
 describe('App module', () => {
-    it('should provide all necessary firebase components', async() => {
+    it('should provide all necessary firebase components', async() => { // this needs to be without fakeAsync
         await setupEmulators();
         expect(Firestore.getFirestore()).toBeDefined();
         expect(Auth.getAuth()).toBeDefined();
     });
-    it('router should map all urls to their expected components', () => {
+    it('router should map all urls to their expected components', fakeAsync(async() => {
         for (const [url, expectedComponent] of routingSpecification) {
             const matchingRoute: MGPOptional<Route> = findMatchingRoute(url);
             expect(matchingRoute.isPresent()).withContext(`Expected route to be present for url: ${url}`).toBeTrue();
-            expect(matchingRoute.get().component).toEqual(expectedComponent);
+            expect(await matchingRoute.get().loadComponent!()).toEqual(expectedComponent);
         }
-    });
+    }));
 
 });

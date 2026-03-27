@@ -23,20 +23,13 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
     imports: [RulesConfigurationComponent, NgIf, DemoCardWrapperComponent],
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {
-    private readonly router = inject(Router);
-    private readonly cdr = inject(ChangeDetectorRef);
 
+    private readonly router: Router = inject(Router);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public configDemo: DemoNodeInfo;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
-
-    public constructor()
-    {
-        const activatedRoute = inject(ActivatedRoute);
-
-        super(activatedRoute);
-    }
 
     private setConfigDemo(config: RulesConfig): void {
         const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();

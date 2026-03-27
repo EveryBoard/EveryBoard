@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef, inject } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, Input, OnChanges, Signal, SimpleChanges, ViewContainerRef, inject, viewChild } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -31,8 +31,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
 
     @Input() public demoNodeInfo: DemoNodeInfo;
 
-    @ViewChild('board', { read: ViewContainerRef })
-    public override boardRef: ViewContainerRef | null = null;
+    // public override readonly boardRef: Signal<ViewContainerRef | undefined> = viewChild('board', { read: ViewContainerRef });
 
     private gameComponentIsSetup: boolean = false;
 

@@ -105,7 +105,7 @@ describe('BackendService', () => {
 
     function expectCriticalMessage(message: string): void {
         expect(messageDisplayer.criticalMessage).toHaveBeenCalledOnceWith(message);
-        messageDisplayer.criticalMessage.calls.reset();
+        messageDisplayer.criticalMessage['calls'].reset();
     }
 
     async function connect(): Promise<Subscription> {
@@ -126,7 +126,7 @@ describe('BackendService', () => {
             expect(webSocketInstances.length).toBe(1);
             const ws: WebSocket = webSocketInstances[0];
             expect(ws.url).toContain(environment.backendURL.replace(/^http/, 'ws') + '/ws');
-            expect(ws.protocols).toEqual(['Authorization', 'idToken']);
+            expect(ws['protocols']).toEqual(['Authorization', 'idToken']);
             subscription.unsubscribe();
         }));
 
@@ -214,7 +214,7 @@ describe('BackendService', () => {
 
             // Then there should still be one connection attempt
             expectCriticalMessage('Connection to server failed or closed, trying again in 1 seconds...');
-            messageDisplayer.criticalMessage.calls.reset();
+            messageDisplayer.criticalMessage['calls'].reset();
             expect(webSocketInstances.length).toBe(2);
             ws = webSocketInstances[1];
             ws.onopen!(new Event('open'));

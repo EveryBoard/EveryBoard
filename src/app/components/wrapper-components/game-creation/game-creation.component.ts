@@ -1,7 +1,7 @@
 import { NgIf, NgFor, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, Signal, inject, viewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -54,16 +54,18 @@ type GameCreationViewInfo = {
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
-    imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, HumanDurationPipe],
+    imports: [NgIf, ReactiveFormsModule, NgFor, NgClass, RulesConfigurationComponent,
+        DemoCardWrapperComponent, HumanDurationPipe],
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
-    private readonly router = inject(Router);
-    private readonly connectedUserService = inject(ConnectedUserService);
-    private readonly configRoomService = inject(ConfigRoomService);
-    private readonly formBuilder = inject(FormBuilder);
-    private readonly messageDisplayer = inject(MessageDisplayer);
-    private readonly cdr = inject(ChangeDetectorRef);
+
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly configRoomService: ConfigRoomService = inject(ConfigRoomService);
+    private readonly formBuilder: FormBuilder = inject(FormBuilder);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     /*
      * Lifecycle:
@@ -87,8 +89,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
 
-    @ViewChild(RulesConfigurationComponent)
-    public rulesConfigurationComponent: RulesConfigurationComponent | undefined;
+    public readonly rulesConfigurationComponent: Signal<RulesConfigurationComponent | undefined> =
+        viewChild(RulesConfigurationComponent);
 
     public gameStarted: boolean = false;
 
@@ -121,13 +123,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
     public configDemo: DemoNodeInfo | undefined = undefined;
-
-    public constructor()
-    {
-        const activatedRoute = inject(ActivatedRoute);
-
-        super(activatedRoute);
-    }
 
     public async ngOnInit(): Promise<void> {
         this.checkInputs();
@@ -202,8 +197,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 const status: Status = Utils.getNonNullable(this.currentConfigRoom).status;
                 const configProposed: boolean = status === Status.CONFIG_PROPOSED;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
-                if (this.rulesConfigurationComponent != null) {
-                    this.rulesConfigurationComponent.setEditable(configProposed === false);
+                if (this.rulesConfigurationComponent() != null) {
+                    this.rulesConfigurationComponent()!.setEditable(configProposed === false);
                 }
             });
         this.getForm('gameType').valueChanges

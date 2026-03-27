@@ -8,12 +8,11 @@ import { BaseComponent } from '../BaseComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
+import { inject } from '@angular/core';
 
 export abstract class BaseWrapperComponent extends BaseComponent {
 
-    public constructor(public readonly activatedRoute: ActivatedRoute) {
-        super();
-    }
+    protected readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
     protected getGameUrlName(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('game'));

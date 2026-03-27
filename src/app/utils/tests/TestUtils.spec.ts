@@ -751,13 +751,13 @@ function getComponentClassName(component: Type<any>): string {
  * routed to matches `component`. In case multiple router.navigate calls happen,
  * set otherRoutes to true.
  */
-export function expectValidRouting(router: Router,
-                                   path: string[],
-                                   component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                   options?: { otherRoutes?: boolean,
-                                               skipLocationChange?: boolean,
-                                               queryParams?: Record<string, string> })
-: void
+export async function expectValidRouting(router: Router,
+                                         path: string[],
+                                         component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+                                         options?: { otherRoutes?: boolean,
+                                                     skipLocationChange?: boolean,
+                                                     queryParams?: Record<string, string> })
+: Promise<void>
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
     if (!(path.length === 1 && path[0] === '/')) {
@@ -769,7 +769,9 @@ export function expectValidRouting(router: Router,
     const fullPath: string = path.join('/');
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${path}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
     const otherRoutes: boolean = options != null && options.otherRoutes != null && options.otherRoutes;
@@ -794,14 +796,18 @@ export function expectValidRouting(router: Router,
 /**
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
-export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>): void {
+export async function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>)
+  : Promise<void>
+{
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();
     expect(element.attributes.routerLink).toEqual(fullPath);
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${fullPath}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }
@@ -839,7 +845,7 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
         spy.and.callThrough();
         // The subscription method could be a promise, we need to deal with both cases
         const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
-        if (subscription.unsubscribe !== undefined) {
+        if (subscription['unsubscribe'] !== undefined) {
             // This is not a promise, we can wrap it directly
             return new Subscription(() => {
                 unsubscribed = true;
