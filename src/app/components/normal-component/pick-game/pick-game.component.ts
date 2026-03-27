@@ -355,7 +355,7 @@ export class PickGameComponent {
     public matchingGames: GameInfo[] = this.games;
 
     public readonly pickGame: OutputEmitterRef<string> = output<string>();
-    
+
     public selectGame(gameName: string): void {
         this.pickGame.emit(gameName);
     }

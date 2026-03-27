@@ -1,5 +1,5 @@
 import { NgFor, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -10,7 +10,6 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 import { PentagoMove } from './PentagoMove';

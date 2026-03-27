@@ -17,7 +17,7 @@ export class ErrorLoggerService {
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
 
     private readonly errorDAO: ErrorDAO = inject(ErrorDAO);
-    private readonly router: Router = inject(Router);
+    private readonly router: Router = inject(Router);
     private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {

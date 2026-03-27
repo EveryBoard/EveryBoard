@@ -32,7 +32,7 @@ describe('LocalGameConfigurationComponent', () => {
 
         // Then it should start the game with the default config
         const expectedRoute: string[] = ['/local', 'P4']; // no config specified means it will use the default config
-        expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
     }));
 
     it('should support updating config and starting it', fakeAsync(async() => {
@@ -54,7 +54,7 @@ describe('LocalGameConfigurationComponent', () => {
 
         // Then it should start the game with the custom config
         const expectedRoute: string[] = ['/local', 'P4'];
-        expectValidRouting(router, expectedRoute, LocalGameWrapperComponent, { queryParams: { width: '4', height: '4' } });
+        await expectValidRouting(router, expectedRoute, LocalGameWrapperComponent, { queryParams: { width: '4', height: '4' } });
     }));
 
     it('should start with the default config if we change the config and end up with the same as the default', fakeAsync(async() => {
@@ -69,7 +69,7 @@ describe('LocalGameConfigurationComponent', () => {
 
         // Then it should start the game with the custom config
         const expectedRoute: string[] = ['/local', 'P4'];
-        expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
     }));
 
 });
@@ -93,6 +93,6 @@ describe('LocalGameConfigurationComponent (configless game)', () => {
 
         // Then it should start the game directly
         const expectedRoute: string[] = ['/local', gameName];
-        expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
     }));
 });

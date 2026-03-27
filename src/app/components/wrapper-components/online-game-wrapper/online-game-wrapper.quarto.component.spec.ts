@@ -1399,8 +1399,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveAction(Player.ONE, 'EndGame');
 
             // Then it should redirect to new part
-            expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
-            expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
+            await expectValidRouting(router, ['/nextGameLoading'], NextGameLoadingComponent, { otherRoutes: true });
+            await expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
         }));
 
     });

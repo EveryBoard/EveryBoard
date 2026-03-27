@@ -18,7 +18,7 @@ import { RulesConfigurationComponent } from '../../wrapper-components/rules-conf
 export class ViewConfigComponent {
 
     public readonly rulesConfig: InputSignal<MGPOptional<RulesConfig>> = input.required<MGPOptional<RulesConfig>>();
-    public readonly rulesConfigDescription: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> = 
+    public readonly rulesConfigDescription: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> =
         input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
     public readonly gameName: InputSignal<string> = input.required<string>();
 

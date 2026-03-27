@@ -40,7 +40,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
     it('should redirect to configuration if the provided config is invalid (due to invalid value of number)', fakeAsync(async() => {
@@ -59,7 +59,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
     it('should redirect to configuration if the provided config is invalid (due to invalid value of string/enum)', fakeAsync(async() => {
@@ -78,7 +78,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
     describe('should redirect to configuration if the provided config is invalid (due to invalid type of element)', () => {
@@ -99,7 +99,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
             // Then it should redirect to the configuration page
             const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-            expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+            await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
         }));
 
         it('string as number', fakeAsync(async() => {
@@ -118,7 +118,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
             // Then it should redirect to the configuration page
             const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-            expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+            await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
         }));
 
     });
@@ -139,7 +139,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
     it('should redirect to configuration if the provided config is missing elements', fakeAsync(async() => {
@@ -157,7 +157,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
     it('should redirect to configuration if the provided config is nesting JSON objects', fakeAsync(async() => {
@@ -178,7 +178,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
     it('should redirect to configuration if the provided config is not valid JSON', fakeAsync(async() => {
@@ -199,7 +199,7 @@ describe('LocalGameWrapperComponent (rules config phase)', () => {
 
         // Then it should redirect to the configuration page
         const expectedRoute: string[] = ['/local', 'QuebecCastles', 'config'];
-        expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
+        await expectValidRouting(router, expectedRoute, LocalGameConfigurationComponent);
     }));
 
 });

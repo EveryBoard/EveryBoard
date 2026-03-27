@@ -1,7 +1,6 @@
 import { NgFor, NgClass, NgIf } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 
 import { BrandhubMove } from './BrandhubMove';

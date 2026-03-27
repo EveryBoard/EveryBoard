@@ -1,5 +1,5 @@
 import { NgFor, NgIf, NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -12,7 +12,6 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { YinshFailure } from './YinshFailure';
 import { YinshCapture, YinshMove } from './YinshMove';

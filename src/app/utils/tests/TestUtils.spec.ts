@@ -4,8 +4,8 @@ import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, imp
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
@@ -20,8 +20,6 @@ import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
 import { OGWCTimeManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
-import { OnlineGameWrapperComponent } from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { RulesConfigurationComponent } from '../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
@@ -33,8 +31,6 @@ import { Player } from '../../jscaip/Player';
 import { SuperRules } from '../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { GameState } from '../../jscaip/state/GameState';
-import { HumanDurationPipe } from '../../pipes-and-directives/human-duration.pipe';
-import { ToggleVisibilityDirective } from '../../pipes-and-directives/toggle-visibility.directive';
 import { ActiveConfigRoomsService } from '../../services/ActiveConfigRoomsService';
 import { BackendService } from '../../services/BackendService';
 import { ChatService } from '../../services/ChatService';
@@ -52,7 +48,7 @@ import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserServ
 import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+
 
 @Component({})
 export class BlankComponent {}

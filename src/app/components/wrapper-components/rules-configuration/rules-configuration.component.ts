@@ -1,5 +1,5 @@
 import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnInit, Signal, WritableSignal, inject, input, model, signal, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnInit, input, model, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';

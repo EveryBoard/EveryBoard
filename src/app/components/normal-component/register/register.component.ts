@@ -15,7 +15,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, 
+    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent,
         ToggleVisibilityDirective, NgClass, NgIf, RouterLink],
 })
 export class RegisterComponent {

@@ -1,5 +1,5 @@
 import { Component, ComponentRef, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 

@@ -15,7 +15,7 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
 export class OnlineGameSelectionComponent {
 
     private readonly router: Router = inject(Router);
-    public readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
     private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 
     public async pickGame(pickedGame: string): Promise<void> {

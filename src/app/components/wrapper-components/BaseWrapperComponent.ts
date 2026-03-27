@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
@@ -8,7 +9,7 @@ import { BaseComponent } from '../BaseComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
-import { inject } from '@angular/core';
+
 
 export abstract class BaseWrapperComponent extends BaseComponent {
 

@@ -1,4 +1,5 @@
 import { Type } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
 import { Route } from '@angular/router';
 import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
@@ -23,7 +24,6 @@ import { LocalGameWrapperComponent } from './components/wrapper-components/local
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [

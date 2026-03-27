@@ -557,7 +557,7 @@ describe('GameCreationComponent', () => {
                 'The game has been cancelled.',
                 async() => {
                     await receiveCancellation();
-                    expectValidRouting(router, ['/'], WelcomeComponent);
+                    await expectValidRouting(router, ['/'], WelcomeComponent);
                 });
         }));
 
