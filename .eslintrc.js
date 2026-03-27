@@ -70,7 +70,10 @@ module.exports = {
             '@typescript-eslint/prefer-for-of': ['warn'],
             '@typescript-eslint/prefer-nullish-coalescing': ['warn'],
             '@typescript-eslint/prefer-readonly': ['warn'],
-            '@typescript-eslint/switch-exhaustiveness-check': ['warn'],
+            '@typescript-eslint/switch-exhaustiveness-check': [
+                'warn',
+                { 'allowDefaultCaseForExhaustiveSwitch': true, 'considerDefaultExhaustiveForUnions': true }
+            ],
             '@typescript-eslint/no-unused-expressions': ['warn'],
             '@typescript-eslint/no-unused-vars': ['warn'],
             '@typescript-eslint/no-useless-constructor': ['warn'],

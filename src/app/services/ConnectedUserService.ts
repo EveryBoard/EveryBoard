@@ -85,9 +85,9 @@ export class AuthUser {
 })
 @Debug.log
 export class ConnectedUserService implements OnDestroy {
-    private readonly userDAO = inject(UserDAO);
-    private readonly userService = inject(UserService);
 
+    private readonly userDAO: UserDAO = inject(UserDAO);
+    private readonly userService: UserService = inject(UserService);
 
     private readonly authSubscription: Subscription;
 

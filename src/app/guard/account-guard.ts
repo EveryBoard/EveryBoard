@@ -11,8 +11,8 @@ import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService
  * This abstract guard can be used to implement guards based on the current user
  */
 export abstract class AccountGuard {
-    protected readonly connectedUserService = inject(ConnectedUserService);
 
+    protected readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     protected userSubscription!: Subscription;
 

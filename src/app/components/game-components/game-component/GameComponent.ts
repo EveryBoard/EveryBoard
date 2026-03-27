@@ -97,8 +97,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     L = void>
     extends BaseGameComponent
 {
-    private readonly messageDisplayer = inject(MessageDisplayer);
-    protected readonly cdr = inject(ChangeDetectorRef);
+
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    protected readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public encoder: Encoder<M>;
 

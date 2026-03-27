@@ -32,7 +32,7 @@ describe('OnlineGameCreationComponent for non-existing game', () => {
 
         // Then it goes to /notFound with the expected error message
         const route: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
-        expectValidRouting(router, route, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, route, NotFoundComponent, { skipLocationChange: true });
     }));
 
 });
@@ -58,7 +58,7 @@ describe('OnlineGameCreationComponent', () => {
         tick(0);
 
         // Then the user should be redirected to the game
-        expectValidRouting(router, ['/play', game, 'gameId'], OnlineGameWrapperComponent);
+        await expectValidRouting(router, ['/play', game, 'gameId'], OnlineGameWrapperComponent);
     }));
 
     it('should show toast and navigate to / when creator has a current game', fakeAsync(async() => {
@@ -76,7 +76,7 @@ describe('OnlineGameCreationComponent', () => {
             testUtils.detectChanges();
         });
 
-        expectValidRouting(router, ['/'], WelcomeComponent);
+        await expectValidRouting(router, ['/'], WelcomeComponent);
     }));
 
     it('should show toast and navigate to / when there is a backend error', fakeAsync(async() => {
@@ -93,7 +93,7 @@ describe('OnlineGameCreationComponent', () => {
             testUtils.detectChanges();
         });
 
-        expectValidRouting(router, ['/'], WelcomeComponent);
+        await expectValidRouting(router, ['/'], WelcomeComponent);
     }));
 
 });

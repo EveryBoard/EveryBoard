@@ -15,13 +15,13 @@ import { GameInfo } from '../pick-game/pick-game.component';
     template: '<p i18n>Creating online game, please wait, it should not take long.</p>',
 })
 export class OnlineGameCreationComponent implements OnInit {
-    private readonly route = inject(ActivatedRoute);
-    private readonly router = inject(Router);
-    private readonly connectedUserService = inject(ConnectedUserService);
-    private readonly currentGameService = inject(CurrentGameService);
-    private readonly messageDisplayer = inject(MessageDisplayer);
-    private readonly gameService = inject(GameService);
 
+    private readonly route: ActivatedRoute = inject(ActivatedRoute);
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    private readonly gameService: GameService = inject(GameService);
 
     public async ngOnInit(): Promise<void> {
         await this.createGameAndRedirectOrShowError(this.extractGameFromURL());

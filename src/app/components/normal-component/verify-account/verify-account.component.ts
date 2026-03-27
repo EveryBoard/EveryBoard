@@ -20,9 +20,9 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
     imports: [NgIf, ReactiveFormsModule, RouterLink],
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
-    private readonly connectedUserService = inject(ConnectedUserService);
-    router = inject(Router);
 
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly router: Router = inject(Router);
 
     public verificationType: 'send-email' | 'enter-username' | null = null;
 

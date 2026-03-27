@@ -18,9 +18,9 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
     imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgIf, RouterLink],
 })
 export class LoginComponent implements OnInit, OnDestroy {
-    router = inject(Router);
-    connectedUserService = inject(ConnectedUserService);
 
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     public faEye: IconDefinition = faEye;
 

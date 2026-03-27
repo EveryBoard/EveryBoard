@@ -60,7 +60,7 @@ describe('LobbyComponent', () => {
                 async() => {
                     backendService.mockReceivedMessage('Error', { reason: 'already-subscribed' });
                 });
-            expectValidRouting(router, ['/'], WelcomeComponent);
+            await expectValidRouting(router, ['/'], WelcomeComponent);
         }));
 
         it('should forbid user to join lobby when the backend rejects it because of an unexpected failure', fakeAsync(async() => {
@@ -76,10 +76,9 @@ describe('LobbyComponent', () => {
                 async() => {
                     backendService.mockReceivedMessage('Error', { reason: 'some-error' });
                 });
-            expectValidRouting(router, ['/'], WelcomeComponent);
+            await expectValidRouting(router, ['/'], WelcomeComponent);
         }));
     });
-
 
     describe('tab-create element', () => {
 
@@ -153,7 +152,7 @@ describe('LobbyComponent', () => {
         await testUtils.clickElement('#part-0');
 
         // Then the component should have navigate to the part
-        expectValidRouting(router, ['/play', 'P4', 'gameId'], OnlineGameWrapperComponent);
+        await expectValidRouting(router, ['/play', 'P4', 'gameId'], OnlineGameWrapperComponent);
     }
 
     async function shouldForbidToJoinConfigRoom(room: ConfigRoom, reason: string): Promise<void> {

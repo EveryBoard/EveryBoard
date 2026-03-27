@@ -13,12 +13,12 @@ import { MessageDisplayer } from './MessageDisplayer';
     providedIn: 'root',
 })
 export class ErrorLoggerService {
-    private readonly errorDAO = inject(ErrorDAO);
-    private readonly router = inject(Router);
-    private readonly messageDisplayer = inject(MessageDisplayer);
-
 
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
+
+    private readonly errorDAO: ErrorDAO = inject(ErrorDAO);
+    private readonly router: Router = inject(Router);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
         if (this.singleton.isAbsent()) {

@@ -7,7 +7,7 @@ export class ToggleVisibilityDirective {
     private readonly input: HTMLElement;
 
     public constructor() {
-        const element = inject(ElementRef);
+        const element: ElementRef = inject(ElementRef);
 
         this.input = element.nativeElement.parentNode.previousSibling;
         element.nativeElement.addEventListener('click', (_: Event) => {

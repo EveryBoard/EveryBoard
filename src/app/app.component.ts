@@ -10,9 +10,9 @@ import { ThemeService } from './services/ThemeService';
     standalone: false,
 })
 export class AppComponent {
-    private readonly _themeService = inject(ThemeService);
-    private readonly _errorLoggerService = inject(ErrorLoggerService);
 
+    private readonly _themeService: ThemeService = inject(ThemeService);
+    private readonly _errorLoggerService: ErrorLoggerService = inject(ErrorLoggerService);
 
     public faTwitter: IconDefinition = faTwitter;
     public faFacebook: IconDefinition = faFacebook;

@@ -22,8 +22,8 @@ export interface RequestInfo {
  */
 @Injectable()
 export class OGWCRequestManagerService {
-    private readonly connectedUserService = inject(ConnectedUserService);
 
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     public static requestInfos: Record<RequestType, RequestInfo> = {
         'TakeBack': {

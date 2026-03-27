@@ -42,7 +42,7 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         // Then the account link should point to the account component
         const button: DebugElement = testUtils.findElement('#account');
-        expectValidRoutingLink(button, '/account', AccountComponent);
+        await expectValidRoutingLink(button, '/account', AccountComponent);
     }));
 
     describe('disconnection', () => {

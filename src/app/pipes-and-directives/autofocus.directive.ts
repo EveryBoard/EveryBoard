@@ -2,8 +2,8 @@ import { Directive, ElementRef, OnInit, inject } from '@angular/core';
 
 @Directive({ selector: '[autofocus]' })
 export class AutofocusDirective implements OnInit {
-    private readonly element = inject(ElementRef);
 
+    private readonly element: ElementRef = inject(ElementRef);
 
     public ngOnInit(): void {
         // focus need to be called after a bit, otherwise it doesn't do anything.

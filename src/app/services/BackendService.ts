@@ -105,9 +105,9 @@ export abstract class AbstractBackendService {
     providedIn: 'root',
 })
 export class BackendService extends AbstractBackendService {
-    private readonly connectedUserService = inject(ConnectedUserService);
-    private readonly messageDisplayer = inject(MessageDisplayer);
 
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
 

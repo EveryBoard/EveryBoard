@@ -13,10 +13,10 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
     imports: [PickGameComponent],
 })
 export class OnlineGameSelectionComponent {
-    readonly router = inject(Router);
-    readonly currentGameService = inject(CurrentGameService);
-    readonly messageDisplayer = inject(MessageDisplayer);
 
+    private readonly router: Router = inject(Router);
+    public readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 
     public async pickGame(pickedGame: string): Promise<void> {
         const canUserJoin: MGPValidation = this.currentGameService.canUserCreate();

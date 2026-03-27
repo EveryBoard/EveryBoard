@@ -16,8 +16,8 @@ import { User } from '../domain/User';
     providedIn: 'root',
 })
 export class UserService {
-    private readonly userDAO = inject(UserDAO);
 
+    private readonly userDAO: UserDAO = inject(UserDAO);
 
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);

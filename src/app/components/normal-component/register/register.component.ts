@@ -15,14 +15,15 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgClass, NgIf, RouterLink],
+    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, 
+        ToggleVisibilityDirective, NgClass, NgIf, RouterLink],
 })
 export class RegisterComponent {
-    connectedUserService = inject(ConnectedUserService);
-    router = inject(Router);
 
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly router: Router = inject(Router);
 
-    public faEye: IconDefinition = faEye;
+    public readonly faEye: IconDefinition = faEye;
 
     public errorMessage: string;
 

@@ -11,7 +11,7 @@ import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { DemoNodeInfo, DemoNodeWithConfig, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
-import { TutorialStep, TutorialStepClick } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
@@ -21,8 +21,8 @@ import { GameInfo } from '../pick-game/pick-game.component';
     imports: [ReactiveFormsModule, FormsModule, NgFor, DemoCardWrapperComponent],
 })
 export class DemoPageComponent {
-    private readonly cdr = inject(ChangeDetectorRef);
 
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public numberOfColumns: FormControl = new FormControl(5);
 

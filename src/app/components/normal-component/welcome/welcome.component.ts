@@ -17,9 +17,10 @@ import { GameInfo, PickGameComponent } from '../pick-game/pick-game.component';
     imports: [RouterLink, NgIf, FaIconComponent, PickGameComponent],
 })
 export class WelcomeComponent {
-    readonly router = inject(Router);
-    readonly messageDisplayer = inject(MessageDisplayer);
-    readonly currentGameService = inject(CurrentGameService);
+
+    public readonly router: Router = inject(Router);
+    public readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    public readonly currentGameService: CurrentGameService = inject(CurrentGameService);
 
     public readonly numberOfColumns: number = 5;
     public readonly games: GameInfo[][] = [];
@@ -32,9 +33,7 @@ export class WelcomeComponent {
 
     public constructor()
     {
-        const themeService = inject(ThemeService);
-
-        this.theme = themeService.getTheme();
+        this.theme = inject(ThemeService).getTheme();
         const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         for (let i: number = 0; i < allGames.length; i++) {

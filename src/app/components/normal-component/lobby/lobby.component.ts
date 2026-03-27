@@ -29,13 +29,12 @@ type WithId<T> = T & {
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
-    readonly router = inject(Router);
-    readonly messageDisplayer = inject(MessageDisplayer);
-    private readonly activeConfigRoomsService = inject(ActiveConfigRoomsService);
-    private readonly currentGameService = inject(CurrentGameService);
-    private readonly backendService = inject(BackendService);
 
-
+    private readonly router: Router = inject(Router);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    private readonly activeConfigRoomsService: ActiveConfigRoomsService = inject(ActiveConfigRoomsService);
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+    private readonly backendService: BackendService = inject(BackendService);
     private activeConfigRooms: MGPMap<string, ConfigRoom> = new MGPMap();
 
     private activeConfigRoomsSubscription!: Subscription; // initialized in ngOnInit

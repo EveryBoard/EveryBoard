@@ -121,7 +121,7 @@ describe('GameCreationComponent', () => {
             'You already have another tab open.',
             async() => {
                 await receiveError('already-subscribed');
-                expectValidRouting(router, ['/'], WelcomeComponent);
+                await expectValidRouting(router, ['/'], WelcomeComponent);
             });
     }));
 
@@ -135,7 +135,7 @@ describe('GameCreationComponent', () => {
 
         // Then it should navigate to /notFound
         const expectedRoute: string[] = ['/notFound', GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN()];
-        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
     it('should display an error if it receives game-does-not-exist from the server', fakeAsync(async() => {
@@ -148,7 +148,7 @@ describe('GameCreationComponent', () => {
 
         // Then it should navigate to /
         const expectedRoute: string[] = ['/notFound', GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN()];
-        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
     it('should display an error if it receives one from the backend', fakeAsync(async() => {
@@ -162,7 +162,7 @@ describe('GameCreationComponent', () => {
             'Unexpected error from backend: unknown-message',
             async() => {
                 await receiveError('unknown-message');
-                expectValidRouting(router, ['/'], WelcomeComponent);
+                await expectValidRouting(router, ['/'], WelcomeComponent);
             });
 
     }));
@@ -196,7 +196,7 @@ describe('GameCreationComponent', () => {
                 });
 
                 // Then it should navigate to the lobby
-                expectValidRouting(router, ['/lobby'], LobbyComponent);
+                await expectValidRouting(router, ['/lobby'], LobbyComponent);
             }));
 
             it('should have button to play against AI and cancel game', fakeAsync(async() => {
@@ -210,7 +210,7 @@ describe('GameCreationComponent', () => {
                     await clickElement('#play-against-ai');
                 });
                 // Then it should navigate to local game
-                expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
+                await expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
             }));
         });
 
@@ -480,7 +480,8 @@ describe('GameCreationComponent', () => {
             it('should send for review when clicking on review config button', fakeAsync(async() => {
                 // Given a game creation where the config has been proposed
                 await awaitComponentInitialization();
-                configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
+                configRoomService.mockConfigRoomUpdate(
+                    ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
 
                 // When the config is reviewed
                 spyOn(configRoomService, 'reviewConfig');

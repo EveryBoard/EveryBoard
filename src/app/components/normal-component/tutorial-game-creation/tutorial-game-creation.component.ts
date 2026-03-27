@@ -9,8 +9,8 @@ import { PickGameComponent } from '../pick-game/pick-game.component';
     imports: [PickGameComponent],
 })
 export class TutorialGameCreationComponent {
-    router = inject(Router);
-
+    
+    private readonly router: Router = inject(Router);
 
     public async pickGame(pickedGame: string): Promise<void> {
         await this.router.navigate(['/tutorial/', pickedGame]);

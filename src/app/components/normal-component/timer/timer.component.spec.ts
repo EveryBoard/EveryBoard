@@ -152,7 +152,6 @@ describe('TimerComponent', () => {
         it('should offer opportunity to add time if allowed', fakeAsync(async() => {
             // Given a TimerComponent allowed to add time
             testUtils.setInput('canAddTime', true);
-            testUtils.setInput('remainingSeconds', 60);
             testUtils.detectChanges();
 
             // When clicking the add time button

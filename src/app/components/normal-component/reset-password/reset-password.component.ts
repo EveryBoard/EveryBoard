@@ -13,8 +13,8 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
     imports: [ReactiveFormsModule, AutofocusDirective, FormsModule, NgIf],
 })
 export class ResetPasswordComponent {
-    connectedUserService = inject(ConnectedUserService);
 
+    public readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     public success: boolean = false;
     public errorMessage: MGPOptional<string> = MGPOptional.empty();

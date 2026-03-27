@@ -11,9 +11,9 @@ type Theme = 'dark' | 'light';
     providedIn: 'root',
 })
 export class ThemeService {
-    private readonly document = inject<Document>(DOCUMENT);
-    private readonly userSettingsService = inject(UserSettingsService);
 
+    private readonly document: Document = inject<Document>(DOCUMENT);
+    private readonly userSettingsService: UserSettingsService = inject(UserSettingsService);
 
     private theme: Theme;
     private readonly availableThemes: Theme[] = ['dark', 'light'];

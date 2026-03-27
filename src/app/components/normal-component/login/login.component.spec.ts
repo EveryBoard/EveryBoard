@@ -54,7 +54,7 @@ describe('LoginComponent', () => {
             testUtils.detectChanges();
 
             // Then a redirection happens
-            expectValidRouting(router, ['/lobby'], LobbyComponent);
+            await expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
             spyOn(router, 'navigate').and.resolveTo();
