@@ -13,6 +13,6 @@ export class RingComponent {
 
     @Input() ringInnerSize: number;
 
-    @Input() midRingClasses: string[];
+    @Input() midRingClasses: string | string[];
 
 }

@@ -18,15 +18,13 @@
                    [ngClass]="getPieceGroupClasses(x, y)"
                    [attr.transform]="getSVGTranslationAt(getCenterAtXY(x, y))"
                 >
-                    <g *ngIf="isRing(x, y)">
-                        <circle [attr.r]="viewInfo.ringOuterSize"
-                                class="base no-fill mid-stroke"/>
-                        <circle id="ring_{{ x }}_{{ y }}"
-                                [attr.r]="viewInfo.ringMidSize"
-                                [ngClass]="getRingClasses(x, y)"
-                                class="base no-fill"/>
-                        <circle [attr.r]="viewInfo.ringInnerSize"
-                                class="base no-fill mid-stroke"/>
+                    <g id="ring_{{ x }}_{{ y }}"
+                       *ngIf="isRing(x, y)"
+                       app-ring
+                       [ringOuterSize]="viewInfo.ringOuterSize"
+                       [ringMidSize]="viewInfo.ringMidSize"
+                       [ringInnerSize]="viewInfo.ringInnerSize"
+                       [midRingClasses]="getRingClasses(x, y)">
                     </g>
                     <circle id="marker_{{ x }}_{{ y }}"
                             *ngIf="isMarker(x, y)"
@@ -66,21 +64,15 @@
           class="indicator"/>
     <g *ngFor="let player of Player.PLAYERS"
        [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
-        <g *ngFor="let _ of [].constructor(viewInfo.sideRings.get(player)); index as ring">
-            <circle id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
-                    [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="player === Player.ZERO ? 300 : 1260"
-                    [attr.r]="viewInfo.ringOuterSize"
-                    class="base no-fill mid-stroke"/>
-            <circle [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="(player === Player.ZERO ? 300 : 1260)"
-                    [attr.r]="viewInfo.ringInnerSize"
-                    class="base no-fill mid-stroke"/>
-            <circle [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="player === Player.ZERO ? 300 : 1260"
-                    [attr.r]="viewInfo.ringMidSize"
-                    [ngClass]="viewInfo.sideRingClass.get(player)"
-                    class="base no-fill"/>
+        <g *ngFor="let _ of [].constructor(viewInfo.sideRings.get(player)); index as ring"
+           id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
+           [attr.transform]="translateRing(player, ring)"
+           app-ring
+           [ringOuterSize]="viewInfo.ringOuterSize"
+           [ringMidSize]="viewInfo.ringMidSize"
+           [ringInnerSize]="viewInfo.ringInnerSize"
+           [midRingClasses]="viewInfo.sideRingClass.get(player)"
+        >
         </g>
     </g>
 </svg>

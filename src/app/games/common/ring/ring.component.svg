@@ -1,7 +1,7 @@
 <svg:circle [attr.r]="ringOuterSize"
-            class="base no-fill mid-stroke"/>
+            class="base no-fill small-stroke"/>
 <svg:circle [attr.r]="ringMidSize"
             [ngClass]="midRingClasses"
             class="base no-fill"/>
 <svg:circle [attr.r]="ringInnerSize"
-            class="base no-fill mid-stroke"/>
+            class="base no-fill small-stroke"/>

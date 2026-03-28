@@ -500,4 +500,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         }
     }
 
+    protected translateRing(player: Player, ring: number): string {
+        const playerBase: number = player === Player.ZERO ? 15 : 1050;
+        const playerSign: number = player === Player.ZERO ? 1 : -1;
+        const translateX: number = playerBase + playerSign * 1.2 * this.viewInfo.ringOuterSize * (ring + 1);
+        const translateY: number = player === Player.ZERO ? 300 : 1260;
+        return 'translate(' + translateX + ', ' + translateY + ')';
+    }
+
 }

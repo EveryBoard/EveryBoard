@@ -48,6 +48,7 @@ import { ApagosComponent } from './games/apagos/apagos.component';
 import { InternationalCheckersComponent } from './games/checkers/international-checkers/international-checkers.component';
 import { LascaComponent } from './games/checkers/lasca/lasca.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { RingComponent } from './games/common/ring/ring.component';
 import { ConnectSixComponent } from './games/connect-six/connect-six.component';
 import { ConspirateursComponent } from './games/conspirateurs/conspirateurs.component';
 import { DiaballikComponent } from './games/diaballik/diaballik.component';
@@ -165,6 +166,7 @@ export const routes: Route[] = [
 
         DirArrowComponent,
         HexArrowComponent,
+        RingComponent,
 
         AbaloneComponent,
         ApagosComponent,
