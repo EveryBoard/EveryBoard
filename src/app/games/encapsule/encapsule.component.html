@@ -8,21 +8,21 @@
            id="remaining-piece-{{ piece.toString() }}"
            (click)="onPieceClick(piece)"
            [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
-            <!-- <circle [attr.r]="getPieceRadius(piece)"
+            <circle [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="0"
                     [attr.cy]="0"
                     [ngClass]="getSidePieceClasses(piece)"
                     [attr.stroke-width]="pieceStrokeWidth"
                     class="no-fill"
                     pointer-events="fill"
-            /> -->
-            <g app-ring
+            />
+            <!-- <g app-ring
                [ringOuterSize]="getPieceRadius(piece)"
                [ringMidSize]="getPieceRadius(piece) - 5"
                [ringInnerSize]="getPieceRadius(piece) - 10"
                [midRingClasses]="getSidePieceClasses(piece)"
                pointer-events="fill">
-            </g>
+            </g> -->
             <text id="player-zero-tiles-count"
                   class="backgrounded-text text-big"
                   dominant-baseline="middle"
@@ -44,15 +44,15 @@
                       [ngClass]="getRectClasses(x, y)"
                       class="base"
                 />
-                <!-- <circle *ngFor="let piece of getListPieces(spaceContent)"
+                <circle *ngFor="let piece of getListPieces(spaceContent)"
                         (click)="onBoardClick(x, y)"
                         [attr.r]="getPieceRadius(piece)"
                         [attr.transform]="getPieceTranslate(x, y)"
                         [ngClass]="getPieceClasses(piece)"
                         [attr.stroke-width]="pieceStrokeWidth"
                         class='no-fill'
-                /> -->
-                <g *ngFor="let piece of getListPieces(spaceContent)"
+                />
+                <!-- <g *ngFor="let piece of getListPieces(spaceContent)"
                    app-ring
                    (click)="onBoardClick(x, y)"
                    [attr.transform]="getPieceTranslate(x, y)"
@@ -60,7 +60,7 @@
                    [ringMidSize]="getPieceRadius(piece) - 5"
                    [ringInnerSize]="getPieceRadius(piece) - 10"
                    [midRingClasses]="getPieceClasses(piece)">
-                </g>
+                </g> -->
             </g>
         </g>
         <rect *ngIf="chosenCoord.isPresent()"

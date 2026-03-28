@@ -20,10 +20,10 @@
                 >
                     <g id="ring_{{ x }}_{{ y }}"
                        *ngIf="isRing(x, y)"
+                       transform="scale(0.43)"
                        app-ring
-                       [ringOuterSize]="viewInfo.ringOuterSize"
-                       [ringMidSize]="viewInfo.ringMidSize"
-                       [ringInnerSize]="viewInfo.ringInnerSize"
+                       [strokeWidth]="10"
+                       [width]="20"
                        [midRingClasses]="getRingClasses(x, y)">
                     </g>
                     <circle id="marker_{{ x }}_{{ y }}"
@@ -66,11 +66,10 @@
        [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
         <g *ngFor="let _ of [].constructor(viewInfo.sideRings.get(player)); index as ring"
            id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
-           [attr.transform]="translateRing(player, ring)"
+           [attr.transform]="translateRing(player, ring) + 'scale(0.43)'"
            app-ring
-           [ringOuterSize]="viewInfo.ringOuterSize"
-           [ringMidSize]="viewInfo.ringMidSize"
-           [ringInnerSize]="viewInfo.ringInnerSize"
+           [strokeWidth]="10"
+           [width]="20"
            [midRingClasses]="viewInfo.sideRingClass.get(player)"
         >
         </g>
