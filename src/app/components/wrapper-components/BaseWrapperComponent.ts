@@ -10,7 +10,6 @@ import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
 
-
 export abstract class BaseWrapperComponent extends BaseComponent {
 
     protected readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);

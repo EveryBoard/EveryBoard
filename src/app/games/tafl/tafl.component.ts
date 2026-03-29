@@ -1,4 +1,3 @@
-
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';

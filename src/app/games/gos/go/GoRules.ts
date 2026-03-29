@@ -4,7 +4,7 @@ import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable
 import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { GobanUtils } from 'src/app/jscaip/GobanUtils';
+import { GobanUtils } from '../../../jscaip/GobanUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';

@@ -1,15 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
 
 import { MGPValidation } from '@everyboard/lib';
 
+import { CurrentGameService } from '../../../services/CurrentGameService';
 import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
 
 import { OnlineGameSelectionComponent } from './online-game-selection.component';
-
 
 describe('OnlineGameSelectionComponent', () => {
 

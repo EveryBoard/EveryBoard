@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../jscaip/Coord';
 
 export class MartianChessComponentUtils {
     public static readonly SPACE_SIZE: number = 100;

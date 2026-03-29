@@ -49,7 +49,6 @@ import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceM
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
 
-
 @Component({})
 export class BlankComponent {}
 

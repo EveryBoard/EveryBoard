@@ -1,4 +1,3 @@
-
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';

@@ -1,4 +1,3 @@
-
 import { Injectable, DOCUMENT, inject } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';

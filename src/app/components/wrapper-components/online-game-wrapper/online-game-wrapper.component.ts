@@ -30,7 +30,6 @@ import { GameCreationComponent } from '../game-creation/game-creation.component'
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 
-
 export class OnlineGameWrapperMessages {
 
     public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
@@ -43,7 +42,8 @@ export class OnlineGameWrapperMessages {
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
-    imports: [GameCreationComponent, ViewConfigComponent, TimerComponent, FaIconComponent, RouterLink, NgClass, ChatComponent],
+    imports: [GameCreationComponent, ViewConfigComponent, TimerComponent,
+        FaIconComponent, RouterLink, NgClass, ChatComponent],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {

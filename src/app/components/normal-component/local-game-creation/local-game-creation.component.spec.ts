@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-
 import { Router } from '@angular/router';
+
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
 import { LocalGameCreationComponent } from './local-game-creation.component';
-
 
 describe('LocalGameCreationComponent', () => {
 

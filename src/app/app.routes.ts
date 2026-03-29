@@ -1,6 +1,3 @@
-
-import { registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
 import { Route } from '@angular/router';
 import * as Firebase from '@firebase/app';
 import * as Auth from '@firebase/auth';
@@ -12,8 +9,6 @@ import { ConnectedButNotVerifiedGuard } from './guard/connected-but-not-verified
 import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
-
-
 
 /* eslint-disable @typescript-eslint/typedef */
 export const routes: Route[] = [

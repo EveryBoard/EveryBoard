@@ -1,29 +1,23 @@
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
 import { enableProdMode, LOCALE_ID, importProvidersFrom } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { loadTranslations } from '@angular/localize';
-
-import { LocaleUtils } from './app/utils/LocaleUtils';
-import { environment } from './environments/environment';
-import { ConnectedUserService } from './app/services/ConnectedUserService';
-import { GameService } from './app/services/GameService';
-import { ConfigRoomService } from './app/services/ConfigRoomService';
-import { UserService } from './app/services/UserService';
-import { ChatService } from './app/services/ChatService';
-import { ThemeService } from './app/services/ThemeService';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { provideRouter } from '@angular/router';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app/app.component';
 import { initializeFirebase, routes } from './app/app.routes';
-
-import localeFr from '@angular/common/locales/fr';
-
-import * as Firebase from '@firebase/app';
-import * as Auth from '@firebase/auth';
-import * as Firestore from '@firebase/firestore';
-import { registerLocaleData } from '@angular/common';
+import { ChatService } from './app/services/ChatService';
+import { ConfigRoomService } from './app/services/ConfigRoomService';
+import { ConnectedUserService } from './app/services/ConnectedUserService';
+import { GameService } from './app/services/GameService';
+import { ThemeService } from './app/services/ThemeService';
+import { UserService } from './app/services/UserService';
+import { LocaleUtils } from './app/utils/LocaleUtils';
+import { environment } from './environments/environment';
 
 registerLocaleData(localeFr);
 

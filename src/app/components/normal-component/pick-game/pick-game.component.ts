@@ -1,5 +1,4 @@
 /* eslint-disable no-multi-spaces */
-
 import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';

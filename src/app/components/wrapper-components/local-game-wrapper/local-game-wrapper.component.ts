@@ -19,7 +19,6 @@ import { ViewConfigComponent } from '../../normal-component/view-config/view-con
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
-
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',

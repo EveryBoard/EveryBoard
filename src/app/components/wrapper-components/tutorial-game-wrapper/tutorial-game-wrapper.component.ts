@@ -16,7 +16,6 @@ import { GameWrapper } from '../GameWrapper';
 import { TutorialFailure } from './TutorialFailure';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 
-
 export class TutorialGameWrapperMessages {
 
     public static readonly COMPLETED_TUTORIAL_MESSAGE: Localized = () => $localize`Congratulations, you completed the tutorial.`;
