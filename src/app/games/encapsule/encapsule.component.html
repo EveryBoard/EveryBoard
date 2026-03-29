@@ -3,19 +3,18 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <g #remainingPieces
-       *ngFor="let player of Player.PLAYERS">
-        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX"
+       *ngFor="let player of Player.PLAYERS; trackBy: trackByPlayer">
+        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX; trackBy: trackByPiece"
            id="remaining-piece-{{ piece.toString() }}"
            (click)="onPieceClick(piece)"
            [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
-            <circle [attr.r]="getPieceRadius(piece)"
-                    [attr.cx]="0"
-                    [attr.cy]="0"
-                    [ngClass]="getSidePieceClasses(piece)"
-                    [attr.stroke-width]="pieceStrokeWidth"
-                    class="no-fill"
-                    pointer-events="fill"
-            />
+            <g app-ring
+               [radius]="getPieceRadius(piece)"
+               [width]="this.pieceStrokeWidth / 2"
+               [strokeWidth]="this.pieceStrokeWidth / 4"
+               [midRingClasses]="getSidePieceClasses(piece)"
+               pointer-events="fill"
+            ></g>
             <text id="player-zero-tiles-count"
                   class="backgrounded-text text-big"
                   dominant-baseline="middle"
@@ -26,7 +25,7 @@
         </g>
     </g>
     <g #boardDiv>
-        <g *ngFor="let line of board; index as y">
+        <g *ngFor="let line of board; index as y; trackBy: trackByIndex">
             <g *ngFor="let spaceContent of line; index as x">
                 <rect id="click-{{ x }}-{{ y }}"
                       (click)="onBoardClick(x, y)"
@@ -34,17 +33,18 @@
                       [attr.y]="SPACE_SIZE * y"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
-                      [ngClass]="getRectClasses(x, y)"
+                      [ngClass]="boardPieces[y][x].coordClasses"
                       class="base"
                 />
-                <circle *ngFor="let pieceData of boardPieces[y][x]"
-                        (click)="onBoardClick(x, y)"
-                        [attr.r]="pieceData.radius"
-                        [attr.transform]="pieceData.transform"
-                        [ngClass]="pieceData.classes"
-                        [attr.stroke-width]="pieceStrokeWidth"
-                        class='no-fill'
-                />
+                <g *ngFor="let pieceData of boardPieces[y][x].piecesData"
+                   (click)="onBoardClick(x, y)"
+                   [attr.transform]="pieceData.translate"
+                   app-ring
+                   [radius]="pieceData.radius"
+                   [width]="this.pieceStrokeWidth / 2"
+                   [strokeWidth]="this.pieceStrokeWidth / 4"
+                   [midRingClasses]="pieceData.classes"
+                ></g>
             </g>
         </g>
         <rect *ngIf="chosenCoord.isPresent()"
