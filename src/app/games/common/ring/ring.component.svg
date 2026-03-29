@@ -13,3 +13,4 @@
             [attr.stroke]="strokeColor"
             class="no-fill"
 />
+<svg:text>{{ outsideStrokeRadius }} {{ midRingRadius }} {{ insideStrokeRadius }}</svg:text>

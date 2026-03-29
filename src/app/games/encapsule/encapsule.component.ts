@@ -1,6 +1,6 @@
 import { ChangeDetectorRef, Component } from '@angular/core';
 
-import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
+import { MGPMap, MGPOptional, MGPValidation, Utils, Set, ArrayUtils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -18,6 +18,13 @@ import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
 
+type PieceData = {
+    piece: EncapsulePiece;
+    radius: number;
+    classes: string[];
+    transform: string;
+}
+
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
@@ -32,11 +39,12 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 {
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    public pieceStrokeWidth: number = this.STROKE_WIDTH;
-    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
+    protected pieceStrokeWidth: number = this.STROKE_WIDTH;
+    protected chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     private remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
-    public victoryCoords: Coord[] = [];
+    protected victoryCoords: Coord[] = [];
+    protected boardPieces: PieceData[][][] = [];
 
     public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
         super(messageDisplayer, cdr);
@@ -68,6 +76,22 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.state = this.getState();
         const config: MGPOptional<EncapsuleConfig> = this.getConfig();
         this.board = this.state.getCopiedBoard();
+        this.boardPieces = this.board.map(
+            (line: EncapsuleSpace[], y: number) => {
+                return line.map((space: EncapsuleSpace, x) => {
+                    return this
+                        .getListPieces(space)
+                        .map(
+                            (piece: EncapsulePiece) => ({
+                                piece,
+                                radius: this.getPieceRadius(piece),
+                                classes: this.getPieceClasses(piece),
+                                transform: this.getPieceTranslate(x, y),
+                            }),
+                        );
+                });
+            },
+        );
         this.calculateLeftPieceCoords();
         this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(this.state, config.get());
         this.setPieceStrokeWidth();
@@ -168,6 +192,9 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     }
 
     public getPieceClasses(piece: EncapsulePiece): string[] {
+        console.log("flaffef hein", [
+            this.getPieceStrokeClass(piece),
+        ])
         return [
             this.getPieceStrokeClass(piece),
         ];

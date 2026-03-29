@@ -15,7 +15,7 @@ import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { EncapsuleComponent } from '../encapsule.component';
 
-fdescribe('EncapsuleComponent', () => {
+describe('EncapsuleComponent', () => {
 
     let testUtils: ComponentTestUtils<EncapsuleComponent>;
     const rules: EncapsuleRules = EncapsuleRules.get();
@@ -219,7 +219,7 @@ fdescribe('EncapsuleComponent', () => {
             await testUtils.expectClickFailure('#remaining-piece-size-1-PLAYER_ZERO');
 
             // Then that piece should be selected no more
-            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > [app-ring] > circle:nth-child(2)', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > g > circle:nth-child(2)', 'selected-stroke');
         }));
 
         it('should change select piece when clicking another', fakeAsync(async() => {
@@ -230,8 +230,8 @@ fdescribe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#remaining-piece-size-2-PLAYER_ZERO');
 
             // Then that other piece should be selected
-            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > [app-ring] > circle:nth-child(2)', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#remaining-piece-size-2-PLAYER_ZERO > [app-ring] > circle:nth-child(2)', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > g > circle:nth-child(2)', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#remaining-piece-size-2-PLAYER_ZERO > g > circle:nth-child(2)', 'selected-stroke');
         }));
 
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {
