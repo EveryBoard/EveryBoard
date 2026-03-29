@@ -1,4 +1,4 @@
-import { ComparableObject, MGPOptional, Utils } from '@everyboard/lib';
+import { ComparableObject, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';

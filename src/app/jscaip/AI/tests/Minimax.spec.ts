@@ -26,7 +26,7 @@ describe('Minimax', () => {
         heuristic = new P4Heuristic();
         minimax = new Minimax('Dummy', P4Rules.get(), heuristic, moveGenerator);
     });
-    
+
     it('should be convertible to a string', () => {
         expect(minimax.toString()).toEqual('Dummy');
     });

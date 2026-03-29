@@ -8,6 +8,7 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { routes } from './app.routes';
 import { AccountComponent } from './components/normal-component/account/account.component';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
@@ -24,7 +25,6 @@ import { LocalGameWrapperComponent } from './components/wrapper-components/local
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
-import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [
