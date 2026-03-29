@@ -24,6 +24,7 @@ import { LocalGameWrapperComponent } from './components/wrapper-components/local
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
 import { setupEmulators } from './utils/tests/TestUtils.spec';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const routingSpecification: [string, Type<any>][] = [
@@ -43,6 +44,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['tutorial', TutorialGameCreationComponent],
     ['tutorial/P4', TutorialGameWrapperComponent],
     ['', WelcomeComponent],
+    ['demo', DemoPageComponent],
     ['unknown-url', NotFoundComponent],
 ];
 
