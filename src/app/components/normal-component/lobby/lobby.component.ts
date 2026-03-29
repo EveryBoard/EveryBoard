@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
@@ -25,7 +25,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
-    imports: [NgClass, NgFor, NgIf, OnlineGameSelectionComponent, ChatComponent],
+    imports: [NgClass, OnlineGameSelectionComponent, ChatComponent],
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {

@@ -1,3 +1,4 @@
+
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
 import { Route } from '@angular/router';
@@ -12,7 +13,7 @@ import { ExclusiveOnlineGameGuard } from './guard/exclusive-online-game-guard';
 import { NotConnectedGuard } from './guard/not-connected.guard';
 import { VerifiedAccountGuard } from './guard/verified-account.guard';
 
-registerLocaleData(localeFr);
+
 
 /* eslint-disable @typescript-eslint/typedef */
 export const routes: Route[] = [
@@ -39,20 +40,16 @@ export const routes: Route[] = [
 ];
 /* eslint-enable @typescript-eslint/typedef */
 
-export class AppModule {
-
-    public constructor() {
-        Firebase.initializeApp(environment.firebaseConfig);
-        const firestore: Firestore.Firestore = Firestore.getFirestore();
-        const host: string = firestore.toJSON()['settings'].host;
-        if (environment.useEmulators && host !== 'localhost:8080') {
-            Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
-        }
-
-        const fireauth: Auth.Auth = Auth.getAuth();
-        if (environment.useEmulators && fireauth.config['emulator'] == null) {
-            Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
-        }
+export function initializeFirebase(): void {
+    Firebase.initializeApp(environment.firebaseConfig);
+    const firestore: Firestore.Firestore = Firestore.getFirestore();
+    const host: string = firestore.toJSON()['settings'].host;
+    if (environment.useEmulators && host !== 'localhost:8080') {
+        Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
     }
 
+    const fireauth: Auth.Auth = Auth.getAuth();
+    if (environment.useEmulators && fireauth.config['emulator'] == null) {
+        Auth.connectAuthEmulator(fireauth, 'http://localhost:9099', { disableWarnings: true });
+    }
 }

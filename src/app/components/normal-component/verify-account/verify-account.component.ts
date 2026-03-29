@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -17,7 +17,7 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
 @Component({
     selector: 'app-verify-account',
     templateUrl: './verify-account.component.html',
-    imports: [NgIf, ReactiveFormsModule, RouterLink],
+    imports: [ReactiveFormsModule, RouterLink],
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
 

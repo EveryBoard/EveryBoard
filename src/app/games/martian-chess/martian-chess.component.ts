@@ -1,4 +1,4 @@
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -52,7 +52,7 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
     selector: 'app-martian-chess',
     templateUrl: './martian-chess.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf, MartianChessPawnComponent, MartianChessDroneComponent, MartianChessQueenComponent],
+    imports: [NgClass, MartianChessPawnComponent, MartianChessDroneComponent, MartianChessQueenComponent],
 })
 export class MartianChessComponent extends RectangularGameComponent<MartianChessRules,
                                                                     MartianChessMove,

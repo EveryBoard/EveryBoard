@@ -1,4 +1,4 @@
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -33,7 +33,7 @@ export type SiamIndicatorArrow = {
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf, SiamOrientationArrowComponent],
+    imports: [NgClass, SiamOrientationArrowComponent],
 })
 @Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,

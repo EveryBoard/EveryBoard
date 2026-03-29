@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { Component } from '@angular/core';
 
 import { MancalaComponent } from '../common/MancalaComponent';
@@ -12,7 +12,7 @@ import { AwaleRules } from './AwaleRules';
     selector: 'app-awale-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NumberedCircleComponent],
+    imports: [NumberedCircleComponent],
 })
 export class AwaleComponent extends MancalaComponent<AwaleRules> {
 

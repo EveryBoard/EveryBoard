@@ -1,4 +1,4 @@
-import { NgIf, NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ParamMap } from '@angular/router';
@@ -24,7 +24,7 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, ViewConfigComponent, NgFor, NgClass, ReactiveFormsModule, FormsModule],
+    imports: [ViewConfigComponent, NgClass, ReactiveFormsModule, FormsModule],
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {

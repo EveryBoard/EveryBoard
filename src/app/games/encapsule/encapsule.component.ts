@@ -1,4 +1,4 @@
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
@@ -22,7 +22,7 @@ import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './Enca
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf],
+    imports: [NgClass],
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,

@@ -1,4 +1,4 @@
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
@@ -31,7 +31,7 @@ type CoordAndClass = {
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf],
+    imports: [NgClass],
 })
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixConfig, SixLegalityInformation>

@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -15,7 +15,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
-    imports: [RouterLink, NgClass, NgIf, FaIconComponent],
+    imports: [RouterLink, NgClass, FaIconComponent],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
 

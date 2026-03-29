@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -25,7 +25,7 @@ import { GoConfig, GoRules } from './GoRules';
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgFor, NgIf, NgClass],
+    imports: [BlankGobanComponent, NgClass],
 })
 @Debug.log
 export class GoComponent extends GobanGameComponent<GoRules,

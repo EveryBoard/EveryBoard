@@ -12,8 +12,8 @@ import { firstValueFrom, Subscription } from 'rxjs';
 import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
-import { AppModule, routes } from '../../app.module';
-import { findMatchingRoute } from '../../app.module.spec';
+import { initializeFirebase, routes } from '../../app.routes';
+import { findMatchingRoute } from '../../app.routes.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
@@ -704,7 +704,7 @@ export class ConfigureTestingModuleUtils {
 }
 
 export async function setupEmulators(): Promise<unknown> {
-    new AppModule(); // This will initialize firebase with the emulators
+    initializeFirebase();
     await TestBed.configureTestingModule({
         providers: [
             provideHttpClient(),

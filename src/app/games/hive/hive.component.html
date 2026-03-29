@@ -1,91 +1,119 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     class="board"
-     [attr.viewBox]="viewBox"
-     preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let groundInfo of ground">
-        <polygon id="space-{{ groundInfo.x }}-{{ groundInfo.y }}"
-                 [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
-                 class="base mid-stroke"
-                 [ngClass]="groundInfo.content.spaceClasses"
-                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+  class="board"
+  [attr.viewBox]="viewBox"
+  preserveAspectRatio="xMidYMid meet">
+  @for (groundInfo of ground; track groundInfo.x + '-' + groundInfo.y) {
+    <g>
+      <polygon id="space-{{ groundInfo.x }}-{{ groundInfo.y }}"
+        [attr.points]="getHexaPoints()"
+        [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
+        class="base mid-stroke"
+        [ngClass]="groundInfo.content.spaceClasses"
+        (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
     </g>
-    <!-- Need to show the highlights after the pieces, and the selected highlight after the other highlights.
-         Otherwise the view doesn't look good with overlapping highlights. -->
-    <g *ngFor="let groundInfo of ground">
-        <polygon *ngIf="groundInfo.content.strokeClasses.length > 0"
-                 id="ground-stroke-{{ groundInfo.x }}-{{ groundInfo.y }}"
-                 [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
-                 class="base no-fill small-stroke"
-                 [ngClass]="groundInfo.content.strokeClasses"
-                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+  }
+  <!-- Need to show the highlights after the pieces, and the selected highlight after the other highlights.
+  Otherwise the view doesn't look good with overlapping highlights. -->
+  @for (groundInfo of ground; track groundInfo.x + '-' + groundInfo.y) {
+    <g>
+      @if (groundInfo.content.strokeClasses.length > 0) {
+        <polygon
+          id="ground-stroke-{{ groundInfo.x }}-{{ groundInfo.y }}"
+          [attr.points]="getHexaPoints()"
+          [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
+          class="base no-fill small-stroke"
+          [ngClass]="groundInfo.content.strokeClasses"
+          (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+      }
     </g>
-    <g *ngFor="let groundInfo of ground">
-        <polygon *ngIf="groundInfo.content.selected"
-                 id="selected-{{ groundInfo.x }}-{{ groundInfo.y }}"
-                 [attr.points]="getHexaPoints()"
-                 [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
-                 class="base no-fill small-stroke"
-                 ngClass="selected-stroke"
-                 (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+  }
+  @for (groundInfo of ground; track groundInfo.x + '-' + groundInfo.y) {
+    <g>
+      @if (groundInfo.content.selected) {
+        <polygon
+          id="selected-{{ groundInfo.x }}-{{ groundInfo.y }}"
+          [attr.points]="getHexaPoints()"
+          [attr.transform]="getHexaCenterTranslationAtXY(groundInfo.x, groundInfo.y)"
+          class="base no-fill small-stroke"
+          ngClass="selected-stroke"
+          (click)="selectSpace(groundInfo.x, groundInfo.y)"/>
+      }
     </g>
-    <g *ngFor="let layer of layers; index as z">
-        <g *ngFor="let pieceInfo of layer">
-            <g id="piece-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ z }}"
-               app-hive-piece
-               [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)"
-               [piece]="pieceInfo.content.piece"
-               [x]="0"
-               [y]="0"
-               [pieceHeight]="PIECE_HEIGHT"
-               [hexaLayout]="hexaLayout"
-               [layer]="z"
-               (click)="selectPiece(pieceInfo.x, pieceInfo.y, z)"/>
-        </g>
-        <!-- Need to be done after all pieces have been drawn, so that highlights are on top of the pieces of the same level. -->
-        <g *ngFor="let pieceInfo of layer"
-            [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)">
-            <polygon *ngIf="pieceInfo.content.strokeClasses.length > 0"
-                     id="piece-stroke-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ z }}"
-                     [attr.points]="getHexaPoints()"
-                     [attr.transform]="getSVGTranslation(0, -(z+1) * PIECE_HEIGHT)"
-                     class="base no-fill small-stroke"
-                     [ngClass]="pieceInfo.content.strokeClasses"
-                     (click)="selectPiece(pieceInfo.x, pieceInfo.y, z)"/>
-        </g>
-    </g>
-    <g *ngFor="let stack of remainingStacks"
-       [attr.transform]="getHexaCenterTranslationAt(ORIGIN)">
-        <g *ngFor="let piece of stack.pieces; index as z"
-            id="remaining-piece-{{ piece.toString() }}-{{ z }}"
+  }
+  @for (layer of layers; track $index; let z = $index) {
+    <g>
+      @for (pieceInfo of layer; track pieceInfo.x + '-' + pieceInfo.y) {
+        <g>
+          <g id="piece-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ z }}"
             app-hive-piece
-            [attr.transform]="getRemainingPieceTransform(piece)"
-            [piece]="piece"
-            [pieceHeight]="PIECE_HEIGHT"
+            [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)"
+            [piece]="pieceInfo.content.piece"
             [x]="0"
             [y]="0"
-            [layer]="z"
+            [pieceHeight]="PIECE_HEIGHT"
             [hexaLayout]="hexaLayout"
-            (click)="selectRemaining(piece, z)"/>
+            [layer]="z"
+            (click)="selectPiece(pieceInfo.x, pieceInfo.y, z)"/>
+        </g>
+      }
+      <!-- Need to be done after all pieces have been drawn, so that highlights are on top of the pieces of the same level. -->
+      @for (pieceInfo of layer; track pieceInfo.x + '-' + pieceInfo.y) {
+        <g
+          [attr.transform]="getHexaCenterTranslationAtXY(pieceInfo.x, pieceInfo.y)">
+          @if (pieceInfo.content.strokeClasses.length > 0) {
+            <polygon
+              id="piece-stroke-{{ pieceInfo.x }}-{{ pieceInfo.y }}-{{ z }}"
+              [attr.points]="getHexaPoints()"
+              [attr.transform]="getSVGTranslation(0, -(z+1) * PIECE_HEIGHT)"
+              class="base no-fill small-stroke"
+              [ngClass]="pieceInfo.content.strokeClasses"
+              (click)="selectPiece(pieceInfo.x, pieceInfo.y, z)"/>
+          }
+        </g>
+      }
     </g>
-    <g [attr.transform]="getHexaCenterTranslationAt(ORIGIN)">
-        <polygon *ngIf="selectedRemaining.isPresent()"
-                 id="remaining-highlight"
-                 [attr.points]="getHexaPoints()"
-                 [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
-                 class="base no-fill small-stroke selected-stroke" />
+  }
+  @for (stack of remainingStacks; track $index) {
+    <g
+      [attr.transform]="getHexaCenterTranslationAt(ORIGIN)">
+      @for (piece of stack.pieces; track $index; let z = $index) {
+        <g
+          id="remaining-piece-{{ piece.toString() }}-{{ z }}"
+          app-hive-piece
+          [attr.transform]="getRemainingPieceTransform(piece)"
+          [piece]="piece"
+          [pieceHeight]="PIECE_HEIGHT"
+          [x]="0"
+          [y]="0"
+          [layer]="z"
+          [hexaLayout]="hexaLayout"
+          (click)="selectRemaining(piece, z)"/>
+      }
     </g>
-    <g *ngIf="inspectedStack.isPresent()">
-        <g *ngFor="let piece of inspectedStack.get().pieces.slice().reverse(); index as z"
-           id="inspected-stack-{{ z }}"
-           [attr.transform]="inspectedStackTransform"
-           app-hive-piece
-           [piece]="piece"
-           [pieceHeight]="PIECE_HEIGHT"
-           [x]="0"
-           [y]="0"
-           [hexaLayout]="hexaLayout"
-           [layer]="z*6"/>
+  }
+  <g [attr.transform]="getHexaCenterTranslationAt(ORIGIN)">
+    @if (selectedRemaining.isPresent()) {
+      <polygon
+        id="remaining-highlight"
+        [attr.points]="getHexaPoints()"
+        [attr.transform]="getRemainingPieceHighlightTransform(selectedRemaining.get())"
+        class="base no-fill small-stroke selected-stroke" />
+    }
+  </g>
+  @if (inspectedStack.isPresent()) {
+    <g>
+      @for (piece of inspectedStack.get().pieces.slice().reverse(); track $index; let z = $index) {
+        <g
+          id="inspected-stack-{{ z }}"
+          [attr.transform]="inspectedStackTransform"
+          app-hive-piece
+          [piece]="piece"
+          [pieceHeight]="PIECE_HEIGHT"
+          [x]="0"
+          [y]="0"
+          [hexaLayout]="hexaLayout"
+          [layer]="z*6"/>
+      }
     </g>
+  }
 </svg>

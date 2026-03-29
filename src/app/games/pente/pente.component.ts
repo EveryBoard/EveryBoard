@@ -1,4 +1,4 @@
-import { NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -22,7 +22,7 @@ import { PenteState } from './PenteState';
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgFor, NgClass],
+    imports: [BlankGobanComponent, NgClass],
 })
 export class PenteComponent extends GobanGameComponent<PenteRules,
                                                        PenteMove,

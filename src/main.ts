@@ -16,12 +16,22 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app/app.component';
-import { routes } from './app/app.module';
+import { initializeFirebase, routes } from './app/app.routes';
+
+import localeFr from '@angular/common/locales/fr';
+
+import * as Firebase from '@firebase/app';
+import * as Auth from '@firebase/auth';
+import * as Firestore from '@firebase/firestore';
+import { registerLocaleData } from '@angular/common';
+
+registerLocaleData(localeFr);
 
 function bootstrapApp(): void {
     if (environment.production) {
         enableProdMode();
     }
+    initializeFirebase();
     bootstrapApplication(AppComponent, {
         providers: [
             importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),

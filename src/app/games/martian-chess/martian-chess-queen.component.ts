@@ -1,4 +1,4 @@
-import { NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
@@ -8,7 +8,7 @@ import { MartianChessFace } from './martian-chess.component';
     selector: '[app-martian-chess-queen]',
     templateUrl: './martian-chess-queen.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgIf, NgClass],
+    imports: [NgClass],
 })
 export class MartianChessQueenComponent {
 

@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -14,7 +14,7 @@ import { GameInfo, PickGameComponent } from '../pick-game/pick-game.component';
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
-    imports: [RouterLink, NgIf, FaIconComponent, PickGameComponent],
+    imports: [RouterLink, FaIconComponent, PickGameComponent],
 })
 export class WelcomeComponent {
 

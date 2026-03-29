@@ -1,4 +1,4 @@
-import { formatDate, NgIf, NgFor } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { Component, ElementRef, OnInit, AfterViewChecked, OnDestroy, inject, viewChild, Signal } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
@@ -12,7 +12,7 @@ import { Debug } from '../../../utils/Debug';
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    imports: [NgIf, NgFor, ReactiveFormsModule, FormsModule, FaIconComponent],
+    imports: [ReactiveFormsModule, FormsModule, FaIconComponent],
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {

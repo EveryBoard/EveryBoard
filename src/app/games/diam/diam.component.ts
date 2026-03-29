@@ -1,4 +1,4 @@
-import { NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -52,7 +52,7 @@ interface LastMoved {
     selector: 'app-diam',
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass],
+    imports: [NgClass],
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
 

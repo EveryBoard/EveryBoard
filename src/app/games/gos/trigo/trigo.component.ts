@@ -1,4 +1,4 @@
-import { NgFor, NgIf, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
@@ -27,7 +27,7 @@ import { TrigoConfig, TrigoRules } from './TrigoRules';
     selector: 'app-trigo',
     templateUrl: './trigo.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgIf, NgClass],
+    imports: [NgClass],
 })
 @Debug.log
 export class TrigoComponent extends TriangularGameComponent<TrigoRules,

@@ -1,15 +1,14 @@
-import { NgFor } from '@angular/common';
 import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
 
 import { Coord } from '../../../../jscaip/Coord';
-import { GobanUtils } from '../../../../jscaip/GobanUtils';
+import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 
 @Component({
     selector: '[app-blank-goban]',
     templateUrl: './blank-goban.component.svg',
     styleUrls: ['../../game-component/game-component.scss'],
-    imports: [NgFor],
+    imports: [],
 })
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {
 

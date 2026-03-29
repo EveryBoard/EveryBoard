@@ -1,4 +1,4 @@
-import { NgIf, NgFor, NgSwitch, NgSwitchCase, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnInit, input, model, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
@@ -18,7 +18,7 @@ type ConfigFormJSON = {
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [NgIf, ReactiveFormsModule, NgFor, NgSwitch, NgSwitchCase, NgClass],
+    imports: [ReactiveFormsModule, NgClass],
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 

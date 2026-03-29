@@ -1,4 +1,4 @@
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { TaflComponent } from '../tafl.component';
@@ -10,7 +10,7 @@ import { HnefataflRules } from './HnefataflRules';
     selector: 'app-hnefatafl',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf],
+    imports: [NgClass],
 })
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 

@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
@@ -15,8 +15,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-register',
     templateUrl: './register.component.html',
-    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent,
-        ToggleVisibilityDirective, NgClass, NgIf, RouterLink],
+    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, NgClass, RouterLink],
 })
 export class RegisterComponent {
 

@@ -1,29 +1,37 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     class="board"
-     [attr.viewBox]="getViewBox().toSVGString()"
-     preserveAspectRatio="xMidYMid meet">
-    <defs>
-        <polygon id="triangle" points="0 0, 100 50, 0 100"/>
-    </defs>
+  class="board"
+  [attr.viewBox]="getViewBox().toSVGString()"
+  preserveAspectRatio="xMidYMid meet">
+  <defs>
+    <polygon id="triangle" points="0 0, 100 50, 0 100"/>
+  </defs>
 
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let c of line; index as x">
-            <circle id="click_{{ x }}_{{ y }}"
-                    (click)="onBoardClick(x, y)"
-                    [attr.r]="0.45 * SPACE_SIZE"
-                    [attr.cx]="(x + 0.5) * SPACE_SIZE"
-                    [attr.cy]="(y + 0.5) * SPACE_SIZE"
-                    [ngClass]="getPieceClasses(x, y)"
-                    class="base"
+  @for (line of board; track $index; let y = $index) {
+    <g>
+      @for (c of line; track $index; let x = $index) {
+        <g>
+          <circle id="click_{{ x }}_{{ y }}"
+            (click)="onBoardClick(x, y)"
+            [attr.r]="0.45 * SPACE_SIZE"
+            [attr.cx]="(x + 0.5) * SPACE_SIZE"
+            [attr.cy]="(y + 0.5) * SPACE_SIZE"
+            [ngClass]="getPieceClasses(x, y)"
+            class="base"
             />
         </g>
+      }
     </g>
-    <g *ngIf="chosenCoord.isPresent()">
-        <use *ngFor="let direction of getPossiblesDirections()"
-             xlink:href="#triangle"
-             id="chooseDirection_{{ direction }}"
-             (click)="chooseDirection(direction)"
-             [attr.transform]="getQuixoArrowTransform(direction)"
-             class="semi-transparent"/>
+  }
+  @if (chosenCoord.isPresent()) {
+    <g>
+      @for (direction of getPossiblesDirections(); track direction.toString()) {
+        <use
+          xlink:href="#triangle"
+          id="chooseDirection_{{ direction }}"
+          (click)="chooseDirection(direction)"
+          [attr.transform]="getQuixoArrowTransform(direction)"
+          class="semi-transparent"/>
+      }
     </g>
+  }
 </svg>

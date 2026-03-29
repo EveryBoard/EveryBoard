@@ -1,9 +1,11 @@
+import { Set } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 
 export class GobanUtils {
 
     public static getHoshis(width: number, height: number): Coord[] {
-        const hoshis: Coord[] = [];
+        let hoshis: Set<Coord> = new Set<Coord>();
         const horizontalMiddle: number = GobanUtils.getHorizontalCenter(width);
         const verticalMiddle: number = GobanUtils.getVerticalCenter(height);
         const left: number = GobanUtils.getHorizontalLeft(width);
@@ -11,29 +13,24 @@ export class GobanUtils {
         const right: number = GobanUtils.getHorizontalRight(width);
         const down: number = GobanUtils.getVerticalDown(height);
         if (12 < height && height % 2 === 1 ) {
-            hoshis.push(
-                new Coord(left, verticalMiddle),
-                new Coord(right, verticalMiddle),
-            );
+            hoshis = hoshis
+                .addElement(new Coord(left, verticalMiddle))
+                .addElement(new Coord(right, verticalMiddle));
         }
         if (12 < width && width % 2 === 1 ) {
-            hoshis.push(
-                new Coord(horizontalMiddle, up),
-                new Coord(horizontalMiddle, down),
-            );
+            hoshis = hoshis
+                .addElement(new Coord(horizontalMiddle, up))
+                .addElement(new Coord(horizontalMiddle, down));
         }
         if (width % 2 === 1 && height % 2 === 1) {
-            hoshis.push(
-                new Coord(horizontalMiddle, verticalMiddle),
-            );
+            hoshis = hoshis.addElement(new Coord(horizontalMiddle, verticalMiddle));
         }
-        hoshis.push(
-            new Coord(left, up),
-            new Coord(left, down),
-            new Coord(right, up),
-            new Coord(right, down),
-        );
-        return hoshis;
+        hoshis = hoshis
+            .addElement(new Coord(left, up))
+            .addElement(new Coord(left, down))
+            .addElement(new Coord(right, up))
+            .addElement(new Coord(right, down));
+        return hoshis.toList();
     }
 
     public static getHorizontalLeft(width: number): number {

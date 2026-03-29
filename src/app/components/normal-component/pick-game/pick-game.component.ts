@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { NgFor } from '@angular/common';
+
 import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
@@ -344,7 +344,7 @@ export class GameInfo {
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
-    imports: [AutofocusDirective, NgFor],
+    imports: [AutofocusDirective],
 })
 export class PickGameComponent {
 

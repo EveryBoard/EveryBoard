@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -10,7 +10,7 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 @Component({
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
-    imports: [ReactiveFormsModule, AutofocusDirective, FormsModule, NgIf],
+    imports: [ReactiveFormsModule, AutofocusDirective, FormsModule],
 })
 export class ResetPasswordComponent {
 

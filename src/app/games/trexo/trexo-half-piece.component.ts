@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
 import { BaseGameComponent } from 'src/app/components/game-components/base-game-component/BaseGameComponent';
 
@@ -15,7 +15,7 @@ import { TrexoMove } from './TrexoMove';
     selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass, NgIf],
+    imports: [NgClass],
 })
 export class TrexoHalfPieceComponent extends BaseGameComponent {
 

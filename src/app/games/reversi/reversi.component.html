@@ -1,25 +1,31 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     class="board"
-     [attr.viewBox]="getViewBox().toSVGString()"
-     preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y">
-        <g *ngFor="let c of line; index as x">
-            <rect id="click_{{ x }}_{{ y }}"
-                  (click)="onClick(x, y)"
-                  [attr.x]="SPACE_SIZE * x"
-                  [attr.y]="SPACE_SIZE * y"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-                  [ngClass]="getRectClasses(x, y)"
-                  class="base"
+  class="board"
+  [attr.viewBox]="getViewBox().toSVGString()"
+  preserveAspectRatio="xMidYMid meet">
+  @for (line of board; track $index; let y = $index) {
+    <g>
+      @for (c of line; track $index; let x = $index) {
+        <g>
+          <rect id="click_{{ x }}_{{ y }}"
+            (click)="onClick(x, y)"
+            [attr.x]="SPACE_SIZE * x"
+            [attr.y]="SPACE_SIZE * y"
+            [attr.width]="SPACE_SIZE"
+            [attr.height]="SPACE_SIZE"
+            [ngClass]="getRectClasses(x, y)"
+            class="base"
             />
-            <circle *ngIf="board[y][x] !== PlayerOrNone.NONE"
-                    [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-                    [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                    [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-                    [ngClass]="getPieceClass(x, y)"
-                    class="base"
-            />
+          @if (board[y][x] !== PlayerOrNone.NONE) {
+            <circle
+              [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+              [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+              [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+              [ngClass]="getPieceClass(x, y)"
+              class="base"
+              />
+          }
         </g>
+      }
     </g>
+  }
 </svg>

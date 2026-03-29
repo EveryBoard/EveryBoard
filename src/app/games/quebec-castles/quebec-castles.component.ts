@@ -1,4 +1,4 @@
-import { NgFor, NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
@@ -21,7 +21,7 @@ import { QuebecCastlesState } from './QuebecCastlesState';
     selector: 'app-quebec-castles',
     templateUrl: './quebec-castles.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass, NgIf],
+    imports: [NgClass],
 })
 export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastlesRules,
                                                                      QuebecCastlesMove,

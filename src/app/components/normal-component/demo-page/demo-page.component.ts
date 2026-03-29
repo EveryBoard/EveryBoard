@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
@@ -18,7 +18,7 @@ import { GameInfo } from '../pick-game/pick-game.component';
     selector: 'app-demo-page',
     templateUrl: './demo-page.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [ReactiveFormsModule, FormsModule, NgFor, DemoCardWrapperComponent],
+    imports: [ReactiveFormsModule, FormsModule, DemoCardWrapperComponent],
 })
 export class DemoPageComponent {
 

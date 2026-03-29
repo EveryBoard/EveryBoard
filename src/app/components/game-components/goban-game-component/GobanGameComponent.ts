@@ -4,7 +4,7 @@ import { Comparable } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { GobanUtils } from '../../../jscaip/GobanUtils';
+import { GobanUtils } from 'src/app/jscaip/GobanUtils';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';

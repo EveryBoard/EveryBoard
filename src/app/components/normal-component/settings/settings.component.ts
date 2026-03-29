@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -10,7 +10,7 @@ type SettingOption = { value: string, name: string }
 @Component({
     selector: 'app-settings',
     templateUrl: './settings.component.html',
-    imports: [NgFor, ReactiveFormsModule],
+    imports: [ReactiveFormsModule],
 })
 export class SettingsComponent {
 

@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+
 import { ChangeDetectorRef, Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -20,7 +20,7 @@ import { RulesConfigurationComponent } from '../rules-configuration/rules-config
 @Component({
     selector: 'app-local-game-configuration',
     templateUrl: './local-game-configuration.component.html',
-    imports: [RulesConfigurationComponent, NgIf, DemoCardWrapperComponent],
+    imports: [RulesConfigurationComponent, DemoCardWrapperComponent],
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {
 

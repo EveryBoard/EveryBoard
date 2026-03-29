@@ -1,4 +1,4 @@
-import { NgFor, NgClass } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
@@ -14,7 +14,7 @@ import { SiamConfig } from './SiamRules';
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgFor, NgClass],
+    imports: [NgClass],
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 

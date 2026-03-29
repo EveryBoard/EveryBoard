@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { AfterContentChecked, Component, input, InputSignal } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
@@ -11,7 +11,7 @@ import { HivePiece } from './HivePiece';
     selector: '[app-hive-piece]',
     templateUrl: './hive-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass, NgIf],
+    imports: [NgClass],
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 
