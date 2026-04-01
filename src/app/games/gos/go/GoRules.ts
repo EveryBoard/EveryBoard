@@ -48,9 +48,13 @@ export class GoRules extends AbstractGoRules<GoConfig> {
 
     public static get(): GoRules {
         if (GoRules.singleton.isAbsent()) {
-            GoRules.singleton = MGPOptional.of(new GoRules(true));
+            GoRules.singleton = MGPOptional.of(new GoRules());
         }
         return GoRules.singleton.get();
+    }
+
+    public constructor() {
+        super(true);
     }
 
     public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {

@@ -36,9 +36,13 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
 
     public static get(): TrigoRules {
         if (TrigoRules.singleton.isAbsent()) {
-            TrigoRules.singleton = MGPOptional.of(new TrigoRules(false));
+            TrigoRules.singleton = MGPOptional.of(new TrigoRules());
         }
         return TrigoRules.singleton.get();
+    }
+
+    public constructor() {
+        super(false);
     }
 
     public override getInitialState(optionalConfig: MGPOptional<TrigoConfig>): GoState {

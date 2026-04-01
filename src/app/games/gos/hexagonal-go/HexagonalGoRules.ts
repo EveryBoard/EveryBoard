@@ -36,9 +36,13 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
 
     public static get(): HexagonalGoRules {
         if (HexagonalGoRules.singleton.isAbsent()) {
-            HexagonalGoRules.singleton = MGPOptional.of(new HexagonalGoRules(false));
+            HexagonalGoRules.singleton = MGPOptional.of(new HexagonalGoRules());
         }
         return HexagonalGoRules.singleton.get();
+    }
+
+    public constructor() {
+        super(false);
     }
 
     public override getInitialState(optionalConfig: MGPOptional<HexagonalGoConfig>): GoState {
