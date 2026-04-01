@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { ArrayUtils, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
@@ -87,9 +87,11 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
 
     public getBoardValuesFor(state: SaharaState, player: Player): number[] {
+        // Returns a sorted table of the freedom of player's pieces
         const playerFreedomsMap: MGPMap<Coord, number> = this.getBoardValueByPiece(state, player);
         const playerFreedomsValue: number[] = playerFreedomsMap.getValueList();
-        return playerFreedomsValue.sort((a: number, b: number) => a - b);
+        ArrayUtils.sortByDescending(playerFreedomsValue, Utils.identity);
+        return playerFreedomsValue;
     }
 
     public override applyLegalMove(move: SaharaMove,
