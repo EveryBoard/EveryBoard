@@ -215,8 +215,8 @@ describe('ApagosRules', () => {
             const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
 
             // Then the number of piece by player should be correct
-            // For [4, 3, 2, 1] visible in previous test, it should be:
-            //     [2, 2, 1, 1] = 6 total
+            // For squares being of size                 [4, 3, 2, 1],
+            // the number of available pieces should be: [2, 2, 1, 1] = 6 in total
             expect(state.getRemaining(Player.ZERO)).toBe(6);
         });
 
