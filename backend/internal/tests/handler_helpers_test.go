@@ -1367,6 +1367,7 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 		RulesConfig: configRoom.RulesConfig,
 		GameName: configRoom.GameName,
 	}
+	sb.configRooms[rematchConfigRoom.ID] = &rematchConfigRoom
 	ExpectConfigRoomInsertion(sb.mock, rematchConfigRoom)
 
 	// Second, the game is created

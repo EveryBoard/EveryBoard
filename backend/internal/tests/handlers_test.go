@@ -135,7 +135,6 @@ func TestGameFlow(t *testing.T) {
 	sb.ProposeDraw(opponent)                       // opponent proposes draw
 	sb.AcceptDraw(player)                          // player accepts
 
-	// TODO: test rematch
 	sb.ProposeRematch(player)           // player proposes a rematch
 	gameId = sb.AcceptRematch(opponent) // opponent accepts the rematch
 	sb.Unsubscribe(player)              // player leaves the finished game
