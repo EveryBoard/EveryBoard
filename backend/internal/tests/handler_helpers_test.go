@@ -220,11 +220,11 @@ func ExpectConfigRoomInsertion(mock sqlmock.Sqlmock, configRoom model.ConfigRoom
 		configRoom.MoveDuration,
 		configRoom.GameDuration,
 	}
-	
+
 	if configRoom.RulesConfig != nil {
 		configRoomValues = append(configRoomValues, configRoom.RulesConfig)
 	}
-	
+
 	configRoomValues = append(configRoomValues, configRoom.GameName)
 
 	query := `INSERT INTO "config_rooms"`
@@ -1330,18 +1330,18 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	opponentElo := sb.getElo(opponent, configRoom.GameName)
 
 	rematchConfigRoom := model.ConfigRoom{
-		ID: sb.getNextConfigRoomId(),
-		Creator: creator,
-		CreatorElo: creatorElo.CurrentElo,
-		FirstPlayer: firstPlayer,
-		ChosenOpponent: &opponent,
+		ID:                sb.getNextConfigRoomId(),
+		Creator:           creator,
+		CreatorElo:        creatorElo.CurrentElo,
+		FirstPlayer:       firstPlayer,
+		ChosenOpponent:    &opponent,
 		ChosenOpponentElo: &opponentElo.CurrentElo,
-		Status: model.StatusStarted,
-		GameType: configRoom.GameType,
-		MoveDuration: configRoom.MoveDuration,
-		GameDuration: configRoom.GameDuration,
-		RulesConfig: configRoom.RulesConfig,
-		GameName: configRoom.GameName,
+		Status:            model.StatusStarted,
+		GameType:          configRoom.GameType,
+		MoveDuration:      configRoom.MoveDuration,
+		GameDuration:      configRoom.GameDuration,
+		RulesConfig:       configRoom.RulesConfig,
+		GameName:          configRoom.GameName,
 	}
 	sb.configRooms[rematchConfigRoom.ID] = &rematchConfigRoom
 	ExpectConfigRoomInsertion(sb.mock, rematchConfigRoom)
@@ -1364,51 +1364,50 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	}
 
 	rematchGame := model.Game{
-		GameID: rematchConfigRoom.ID,
-		GameName: game.GameName,
-		PlayerZero: playerZero,
+		GameID:        rematchConfigRoom.ID,
+		GameName:      game.GameName,
+		PlayerZero:    playerZero,
 		PlayerZeroElo: playerZeroElo,
-		PlayerOne: playerOne,
-		PlayerOneElo: playerOneElo,
-		Result: model.ResultInProgress,
-		Beginning: 42,
+		PlayerOne:     playerOne,
+		PlayerOneElo:  playerOneElo,
+		Result:        model.ResultInProgress,
+		Beginning:     42,
 	}
 	ExpectGameInsertion(sb.mock, rematchGame)
 	sb.addGame(&rematchGame)
 	rematchId := rematchGame.GameID
 
-
 	// Third, current games of both players is set
 	currentGameCreator := model.CurrentGame{
-		ID: uint(len(sb.currentGames)),
-		User: creator,
-		GameID: rematchId,
+		ID:       uint(len(sb.currentGames)),
+		User:     creator,
+		GameID:   rematchId,
 		GameName: configRoom.GameName,
-		Creator: creator,
+		Creator:  creator,
 		Opponent: &opponent,
-		Role: model.UserRolePlayer,
+		Role:     model.UserRolePlayer,
 	}
 	ExpectCurrentGameInsertion(sb.mock, currentGameCreator)
 	sb.currentGames[creator.ID] = &currentGameCreator
 	currentGameOpponent := model.CurrentGame{
-		ID: uint(len(sb.currentGames)),
-		User: opponent,
-		GameID: rematchId,
+		ID:       uint(len(sb.currentGames)),
+		User:     opponent,
+		GameID:   rematchId,
 		GameName: configRoom.GameName,
-		Creator: creator,
+		Creator:  creator,
 		Opponent: &opponent,
-		Role: model.UserRolePlayer,
+		Role:     model.UserRolePlayer,
 	}
 	ExpectCurrentGameInsertion(sb.mock, currentGameOpponent)
 	sb.currentGames[opponent.ID] = &currentGameOpponent
 
 	// Fourth, the start event is added
 	eventStartGame := model.GameEvent{
-		ID: sb.getNextEventId(),
-		GameID: rematchId,
+		ID:        sb.getNextEventId(),
+		GameID:    rematchId,
 		Timestamp: 42,
-		User: creator,
-		Data: model.EventDataStartGame,
+		User:      creator,
+		Data:      model.EventDataStartGame,
 	}
 	sb.addEvent(rematchId, eventStartGame)
 	ExpectEventInsertion(sb.mock, eventStartGame)
@@ -1419,11 +1418,11 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 		sb.t.Fatalf("cannot marshal game id")
 	}
 	eventAcceptRematch := model.GameEvent{
-		ID: sb.getNextEventId(),
-		GameID: configRoom.ID,
+		ID:        sb.getNextEventId(),
+		GameID:    configRoom.ID,
 		Timestamp: 42,
-		User: creator,
-		Data: model.EventDataReplyAccept(model.PropositionRematch, json.RawMessage(rawId)),
+		User:      creator,
+		Data:      model.EventDataReplyAccept(model.PropositionRematch, json.RawMessage(rawId)),
 	}
 	sb.addEvent(configRoom.ID, eventAcceptRematch)
 	ExpectEventInsertion(sb.mock, eventAcceptRematch)

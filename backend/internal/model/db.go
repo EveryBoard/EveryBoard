@@ -113,7 +113,6 @@ func CreateConfigRoom(creator MinimalUser, gameName string) (*ConfigRoom, error)
 		return nil, error
 	}
 
-
 	configRoom := ConfigRoom{
 		Creator:           creator,
 		CreatorElo:        creatorElo.CurrentElo,
