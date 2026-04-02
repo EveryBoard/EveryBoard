@@ -95,10 +95,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
         return GameInfo.getByUrlName(configRoom.gameName).get().name;
     }
 
-    public getCreatorLine(configRoom: ConfigRoom): string {
-        return `${configRoom.creator.name} (${Math.floor(configRoom.creatorElo)})`;
-    }
-
     public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {
         const gameId: string = configRoom.id;
         const gameName: string = configRoom.gameName;

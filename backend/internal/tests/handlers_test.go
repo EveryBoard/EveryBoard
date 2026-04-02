@@ -61,7 +61,7 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		GameType:          model.GameTypeStandard,
 		MoveDuration:      model.StandardMoveDuration,
 		GameDuration:      model.StandardGameDuration,
-		RulesConfig:       json.RawMessage(`null`),
+		RulesConfig:       nil,
 		GameName:          "P4",
 	}
 	ExpectMessageInsertion(mock, message)

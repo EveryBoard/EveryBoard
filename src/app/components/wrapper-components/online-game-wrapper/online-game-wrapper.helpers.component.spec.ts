@@ -5,7 +5,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { GameMocks } from '../../../domain/PartMocks.spec';
+import { GameMocks } from '../../../domain/GameMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';

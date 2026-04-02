@@ -5,7 +5,7 @@ import { Subscription } from 'rxjs';
 import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Game, GameEvent } from '../../domain/Game';
-import { GameMocks } from '../../domain/PartMocks.spec';
+import { GameMocks } from '../../domain/GameMocks.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { Player } from '../../jscaip/Player';
 import { AbstractBackendService, BackendMessage, BackendService } from '../BackendService';

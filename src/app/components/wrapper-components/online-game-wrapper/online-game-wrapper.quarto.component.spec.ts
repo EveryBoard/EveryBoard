@@ -7,7 +7,7 @@ import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { GameMocks } from '../../../domain/PartMocks.spec';
+import { GameMocks } from '../../../domain/GameMocks.spec';
 import { User } from '../../../domain/User';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
@@ -370,10 +370,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // Then the usernames should be shown
             testUtils.expectElementToExist('#playerZeroIndicator');
-            const playerIndicator: HTMLElement = testUtils.findElement('#playerZeroIndicator').nativeElement;
+            const playerIndicator: HTMLElement = testUtils.findElement('#playerZeroName').nativeElement;
             expect(playerIndicator.innerText).toBe(UserMocks.CREATOR_AUTH_USER.username.get());
             testUtils.expectElementToExist('#playerOneIndicator');
-            const opponentIndicator: HTMLElement = testUtils.findElement('#playerOneIndicator').nativeElement;
+            const opponentIndicator: HTMLElement = testUtils.findElement('#playerOneName').nativeElement;
             expect(opponentIndicator.innerText).toBe(UserMocks.OPPONENT_AUTH_USER.username.get());
 
             await receiveEndGame();

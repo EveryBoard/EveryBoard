@@ -8,7 +8,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { GameMocks } from '../../../domain/PartMocks.spec';
+import { GameMocks } from '../../../domain/GameMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { P4Component } from '../../../games/p4/p4.component';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
