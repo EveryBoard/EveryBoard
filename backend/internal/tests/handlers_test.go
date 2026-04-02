@@ -51,17 +51,18 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		Content:   "hello",
 	}
 	configRoom := model.ConfigRoom{
-		ID:             2,
-		Creator:        userFoo,
-		CreatorElo:     0,
-		ChosenOpponent: nil,
-		Status:         model.StatusCreated,
-		FirstPlayer:    model.FirstPlayerRandom,
-		GameType:       model.GameTypeStandard,
-		MoveDuration:   model.StandardMoveDuration,
-		GameDuration:   model.StandardGameDuration,
-		RulesConfig:    json.RawMessage(`null`),
-		GameName:       "P4",
+		ID:                2,
+		Creator:           userFoo,
+		CreatorElo:        0,
+		ChosenOpponent:    nil,
+		ChosenOpponentElo: nil,
+		Status:            model.StatusCreated,
+		FirstPlayer:       model.FirstPlayerRandom,
+		GameType:          model.GameTypeStandard,
+		MoveDuration:      model.StandardMoveDuration,
+		GameDuration:      model.StandardGameDuration,
+		RulesConfig:       json.RawMessage(`null`),
+		GameName:          "P4",
 	}
 	ExpectMessageInsertion(mock, message)
 	sendMessage(t, otherConnection, `["ChatSend",{"message":"hello"}]`)
@@ -99,10 +100,10 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 
 	// Then we should receive one message for the chat message and one for the config room
 	expectMessage(t, c, `["ChatMessage",{"message":{"sender":{"id":"foo","name":"foo"},"timestamp":42,"content":"hello"}}]`)
-	expectMessage(t, c, `["ConfigRoomUpdate",{"gameId":"gbHJd","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`)
+	expectMessage(t, c, `["ConfigRoomUpdate",{"gameId":"gbHJd","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`)
 }
 
-func TestGameFlowSimpler(t *testing.T) {
+func TestGameFlow(t *testing.T) {
 	sb := NewScenarioBuilder(t)
 	player := sb.EstablishConnection("player")
 	opponent := sb.EstablishConnection("opponent")
@@ -133,6 +134,15 @@ func TestGameFlowSimpler(t *testing.T) {
 	sb.Move(player, json.RawMessage(`{"x":42}`))   // player plays one move
 	sb.ProposeDraw(opponent)                       // opponent proposes draw
 	sb.AcceptDraw(player)                          // player accepts
+
+	// TODO: test rematch
+	sb.ProposeRematch(player)           // player proposes a rematch
+	gameId = sb.AcceptRematch(opponent) // opponent accepts the rematch
+	sb.Unsubscribe(player)              // player leaves the finished game
+	sb.Unsubscribe(opponent)            // opponent too
+	sb.SubscribeGame(player, gameId)    // player joins the rematch
+	sb.SubscribeGame(opponent, gameId)  // opponent too
+	sb.Resign(player)                   // player resigns
 
 	sb.Cleanup()
 }

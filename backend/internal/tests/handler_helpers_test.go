@@ -140,7 +140,7 @@ func expectMessage(t *testing.T, c *websocket.Conn, expected string) {
 		if msgType == -1 {
 			t.Fatal("invalid message type")
 		}
-		log.Printf("GOT: %s", expected)
+		log.Printf("GOT:      %s", expected)
 	}
 }
 
@@ -170,31 +170,32 @@ func ExpectMessageInsertion(mock sqlmock.Sqlmock, message model.Message) {
 	mock.ExpectCommit()
 }
 
-func ConfigRoomsToRows(configRooms []model.ConfigRoom) *sqlmock.Rows {
+func configRoomsToRows(configRooms []model.ConfigRoom) *sqlmock.Rows {
 	rows := sqlmock.NewRows(model.ConfigRoomRows)
 	for _, c := range configRooms {
 		var opponentId driver.Value = nil
 		var opponentName driver.Value = nil
+		var opponentElo driver.Value = nil
 		if c.ChosenOpponent != nil {
 			opponentId = c.ChosenOpponent.ID
 			opponentName = c.ChosenOpponent.Name
+			opponentElo = c.ChosenOpponentElo
 		}
 		rows.AddRow(
-			c.ID, c.Creator.ID, c.Creator.Name, c.CreatorElo, opponentId, opponentName,
-
+			c.ID, c.Creator.ID, c.Creator.Name, c.CreatorElo, opponentId, opponentName, opponentElo,
 			c.Status, c.FirstPlayer, c.GameType, c.MoveDuration, c.GameDuration, c.RulesConfig, c.GameName,
 		)
 	}
 	return rows
 }
 func ExpectInGameConfigRoomSelection(mock sqlmock.Sqlmock, configRooms []model.ConfigRoom) {
-	rows := ConfigRoomsToRows(configRooms)
+	rows := configRoomsToRows(configRooms)
 	query := `SELECT \* FROM "config_rooms" WHERE status != \$1`
 	mock.ExpectQuery(query).WithArgs("Finished").WillReturnRows(rows)
 }
 
 func ExpectSpecificConfigRoomSelection(mock sqlmock.Sqlmock, configRoom model.ConfigRoom) {
-	rows := ConfigRoomsToRows([]model.ConfigRoom{configRoom})
+	rows := configRoomsToRows([]model.ConfigRoom{configRoom})
 	query := `SELECT \* FROM "config_rooms" WHERE id = \$1 ORDER BY "config_rooms"\."id" LIMIT \$2`
 	mock.ExpectQuery(query).WithArgs(configRoom.ID, 1).WillReturnRows(rows)
 }
@@ -212,13 +213,19 @@ func ExpectConfigRoomInsertion(mock sqlmock.Sqlmock, configRoom model.ConfigRoom
 		configRoom.CreatorElo,
 		opponentId,
 		opponentName,
+		configRoom.ChosenOpponentElo,
 		configRoom.Status,
 		configRoom.FirstPlayer,
 		configRoom.GameType,
 		configRoom.MoveDuration,
 		configRoom.GameDuration,
-		configRoom.GameName,
 	}
+	
+	if configRoom.RulesConfig != nil {
+		configRoomValues = append(configRoomValues, configRoom.RulesConfig)
+	}
+	
+	configRoomValues = append(configRoomValues, configRoom.GameName)
 
 	query := `INSERT INTO "config_rooms"`
 	mock.ExpectBegin()
@@ -231,15 +238,17 @@ func ExpectConfigRoomInsertion(mock sqlmock.Sqlmock, configRoom model.ConfigRoom
 func ExpectConfigRoomUpdateSelectOpponent(mock sqlmock.Sqlmock, configRoom model.ConfigRoom) {
 	var opponentId driver.Value = nil
 	var opponentName driver.Value = nil
+	var opponentElo driver.Value = nil
 	if configRoom.ChosenOpponent != nil {
 		opponentId = configRoom.ChosenOpponent.ID
 		opponentName = configRoom.ChosenOpponent.Name
+		opponentElo = configRoom.ChosenOpponentElo
 	}
 
-	query := `UPDATE "config_rooms" SET "chosen_opponent_id"=\$1,"chosen_opponent_name"=\$2 WHERE id = \$3`
+	query := `UPDATE "config_rooms" SET "chosen_opponent_id"=\$1,"chosen_opponent_name"=\$2,"chosen_opponent_elo"=\$3 WHERE id = \$4`
 	mock.ExpectBegin()
 	mock.ExpectExec(query).
-		WithArgs(opponentId, opponentName, configRoom.ID).
+		WithArgs(opponentId, opponentName, opponentElo, configRoom.ID).
 		WillReturnResult(sqlmock.NewResult(0, 1)) // 1 row affected
 	mock.ExpectCommit()
 }
@@ -277,12 +286,12 @@ func ExpectCandidateInsertion(mock sqlmock.Sqlmock, candidate model.Candidate) {
 	mock.ExpectCommit()
 }
 
-func GameToDriverValues(game model.Game) []driver.Value {
+func gameToDriverValues(game model.Game) []driver.Value {
 	return []driver.Value{
 		game.GameID,
 		game.GameName,
-		game.PlayerZero.ID, game.PlayerZero.Name,
-		game.PlayerOne.ID, game.PlayerOne.Name,
+		game.PlayerZero.ID, game.PlayerZero.Name, game.PlayerZeroElo,
+		game.PlayerOne.ID, game.PlayerOne.Name, game.PlayerOneElo,
 		game.Result,
 		game.Beginning,
 	}
@@ -290,21 +299,13 @@ func GameToDriverValues(game model.Game) []driver.Value {
 
 func ExpectSpecificGameSelection(mock sqlmock.Sqlmock, game model.Game) {
 	rows := sqlmock.NewRows(model.GameRows)
-	rows.AddRow(GameToDriverValues(game)...)
+	rows.AddRow(gameToDriverValues(game)...)
 	query := `SELECT \* FROM "games" WHERE game_id = \$1 ORDER BY "games"."game_id" LIMIT \$2`
 	mock.ExpectQuery(query).WithArgs(game.GameID, 1).WillReturnRows(rows)
 }
 
 func ExpectGameInsertion(mock sqlmock.Sqlmock, game model.Game) {
-	gameValues := []driver.Value{
-		game.GameID,
-		game.GameName,
-		game.PlayerZero.ID, game.PlayerZero.Name,
-		game.PlayerOne.ID, game.PlayerOne.Name,
-		game.Result,
-		game.Beginning,
-	}
-
+	gameValues := gameToDriverValues(game)
 	query := `INSERT INTO "games"`
 	mock.ExpectBegin()
 	mock.ExpectExec(query).
@@ -369,7 +370,14 @@ func ExpectCandidateSelection(mock sqlmock.Sqlmock, gameId model.GameID, candida
 	mock.ExpectQuery(query).WithArgs(gameId).WillReturnRows(rows)
 }
 
-func CurrentGameToDriverValues(currentGame model.CurrentGame) []driver.Value {
+func ExpectSpecificCandidateSelection(mock sqlmock.Sqlmock, gameId model.GameID, user model.MinimalUser) {
+	query := `SELECT \* FROM "candidates" WHERE game_id = \$1 AND user_id = \$2`
+	mock.ExpectQuery(query).
+		WithArgs(gameId, user.ID).
+		WillReturnRows(sqlmock.NewRows([]string{"elo"}).AddRow(0))
+}
+
+func currentGameToDriverValues(currentGame model.CurrentGame) []driver.Value {
 	var opponentId driver.Value = nil
 	var opponentName driver.Value = nil
 	if currentGame.Opponent != nil {
@@ -395,7 +403,7 @@ func ExpectCurrentGameInsertion(mock sqlmock.Sqlmock, currentGame model.CurrentG
 	query := `INSERT INTO "current_games"`
 	mock.ExpectBegin()
 	mock.ExpectQuery(query).
-		WithArgs(CurrentGameToDriverValues(currentGame)[1:]...).
+		WithArgs(currentGameToDriverValues(currentGame)[1:]...).
 		WillReturnRows(sqlmock.NewRows([]string{"id"}).AddRow(currentGame.ID))
 	mock.ExpectCommit()
 }
@@ -680,13 +688,17 @@ func (sb ScenarioBuilder) getSubscribedGameId(userId string) model.GameID {
 	return subscription
 }
 
+func (sb ScenarioBuilder) getNextConfigRoomId() model.GameID {
+	return model.GameID(len(sb.configRooms) + 2) // +2 because of lobby
+}
+
 func (sb ScenarioBuilder) Create(userId string, gameName string) model.GameID {
 	user := sb.getUser(userId)
 	conn := sb.getConnection(userId)
 
 	elo := sb.getElo(user, gameName)
 	configRoom := model.ConfigRoom{
-		ID:             model.GameID(len(sb.configRooms) + 2), // +2 because of lobby
+		ID:             sb.getNextConfigRoomId(),
 		Creator:        user,
 		CreatorElo:     elo.CurrentElo,
 		ChosenOpponent: nil,
@@ -695,7 +707,7 @@ func (sb ScenarioBuilder) Create(userId string, gameName string) model.GameID {
 		GameType:       model.GameTypeStandard,
 		MoveDuration:   model.StandardMoveDuration,
 		GameDuration:   model.StandardGameDuration,
-		RulesConfig:    json.RawMessage(`null`),
+		RulesConfig:    nil,
 		GameName:       gameName,
 	}
 	ExpectConfigRoomInsertion(sb.mock, configRoom)
@@ -881,7 +893,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 		for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
 			log.Printf("%s is is a subscriber", subscriber)
 			expectMessage(sb.t, sb.getConnection(subscriber),
-				fmt.Sprintf(`["CandidateJoined",{"candidate":%s}]`, candidateJSON))
+				fmt.Sprintf(`["CandidateJoined",{"candidate":%s,"elo":0}]`, candidateJSON))
 		}
 	}
 
@@ -997,7 +1009,10 @@ func (sb ScenarioBuilder) SelectOpponent(creator string, opponent string) {
 	currentGameOpponent := sb.getCurrentGame(opponent)
 
 	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	// ExpectSpecificCandidateSelection(sb.mock, configRoom.ID, userOpponent)
 	configRoom.ChosenOpponent = &userOpponent
+	zeroElo := float64(0)
+	configRoom.ChosenOpponentElo = &zeroElo
 	ExpectConfigRoomUpdateSelectOpponent(sb.mock, *configRoom)
 	currentGamePlayer.Opponent = &userOpponent
 	ExpectCurrentGameUpdate(sb.mock, *currentGamePlayer)
@@ -1305,4 +1320,146 @@ func (sb ScenarioBuilder) EndGame(userId string, winner int) {
 				return model.ResultVictoryOfZero
 			}
 		}, true, false)
+}
+
+func (sb ScenarioBuilder) ProposeRematch(userId string) {
+	data := model.EventDataRequest(model.PropositionRematch)
+	sb.doEvent(userId, data, `["Propose",{"proposition":"Rematch"}]`)
+}
+
+func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
+	creator := sb.getUser(userId)
+	// conn := sb.getConnection(userId)
+
+	gameId := sb.getSubscribedGameId(userId)
+	configRoom := *sb.getConfigRoom(gameId)
+	ExpectSpecificConfigRoomSelection(sb.mock, configRoom)
+	game := *sb.getGame(gameId)
+	ExpectSpecificGameSelection(sb.mock, game)
+
+	var firstPlayer model.FirstPlayer
+	var opponent model.MinimalUser
+	if game.PlayerZero.ID == creator.ID {
+		firstPlayer = model.FirstPlayerChosenOpponent
+		opponent = game.PlayerOne
+	} else {
+		firstPlayer = model.FirstPlayerCreator
+		opponent = game.PlayerZero
+	}
+
+	// First, the config room is created (with selection of both elos, creator and opponent)
+	log.Printf("getting elo of %v", creator.ID)
+	creatorElo := sb.getElo(creator, configRoom.GameName)
+	log.Printf("getting elo of %v", opponent.ID)
+	opponentElo := sb.getElo(opponent, configRoom.GameName)
+
+	rematchConfigRoom := model.ConfigRoom{
+		ID: sb.getNextConfigRoomId(),
+		Creator: creator,
+		CreatorElo: creatorElo.CurrentElo,
+		FirstPlayer: firstPlayer,
+		ChosenOpponent: &opponent,
+		ChosenOpponentElo: &opponentElo.CurrentElo,
+		Status: model.StatusStarted,
+		GameType: configRoom.GameType,
+		MoveDuration: configRoom.MoveDuration,
+		GameDuration: configRoom.GameDuration,
+		RulesConfig: configRoom.RulesConfig,
+		GameName: configRoom.GameName,
+	}
+	ExpectConfigRoomInsertion(sb.mock, rematchConfigRoom)
+
+	// Second, the game is created
+	var playerZero model.MinimalUser
+	var playerZeroElo float64
+	var playerOne model.MinimalUser
+	var playerOneElo float64
+	if firstPlayer == model.FirstPlayerChosenOpponent {
+		playerZero = opponent
+		playerZeroElo = opponentElo.CurrentElo
+		playerOne = creator
+		playerOneElo = creatorElo.CurrentElo
+	} else {
+		playerZero = creator
+		playerZeroElo = creatorElo.CurrentElo
+		playerOne = opponent
+		playerOneElo = opponentElo.CurrentElo
+	}
+
+	rematchGame := model.Game{
+		GameID: rematchConfigRoom.ID,
+		GameName: game.GameName,
+		PlayerZero: playerZero,
+		PlayerZeroElo: playerZeroElo,
+		PlayerOne: playerOne,
+		PlayerOneElo: playerOneElo,
+		Result: model.ResultInProgress,
+		Beginning: 42,
+	}
+	ExpectGameInsertion(sb.mock, rematchGame)
+	sb.addGame(&rematchGame)
+	rematchId := rematchGame.GameID
+
+
+	// Third, current games of both players is set
+	currentGameCreator := model.CurrentGame{
+		ID: uint(len(sb.currentGames)),
+		User: creator,
+		GameID: rematchId,
+		GameName: configRoom.GameName,
+		Creator: creator,
+		Opponent: &opponent,
+		Role: model.UserRolePlayer,
+	}
+	ExpectCurrentGameInsertion(sb.mock, currentGameCreator)
+	sb.currentGames[creator.ID] = &currentGameCreator
+	currentGameOpponent := model.CurrentGame{
+		ID: uint(len(sb.currentGames)),
+		User: opponent,
+		GameID: rematchId,
+		GameName: configRoom.GameName,
+		Creator: creator,
+		Opponent: &opponent,
+		Role: model.UserRolePlayer,
+	}
+	ExpectCurrentGameInsertion(sb.mock, currentGameOpponent)
+	sb.currentGames[opponent.ID] = &currentGameOpponent
+
+	// Fourth, the start event is added
+	eventStartGame := model.GameEvent{
+		ID: sb.getNextEventId(),
+		GameID: rematchId,
+		Timestamp: 42,
+		User: creator,
+		Data: model.EventDataStartGame,
+	}
+	sb.addEvent(rematchId, eventStartGame)
+	ExpectEventInsertion(sb.mock, eventStartGame)
+
+	// Fifth, the rematch accept event is added
+	rawId, err := json.Marshal(rematchConfigRoom.ID)
+	if err != nil {
+		sb.t.Fatalf("cannot marshal game id")
+	}
+	eventAcceptRematch := model.GameEvent{
+		ID: sb.getNextEventId(),
+		GameID: configRoom.ID,
+		Timestamp: 42,
+		User: creator,
+		Data: model.EventDataReplyAccept(model.PropositionRematch, json.RawMessage(rawId)),
+	}
+	sb.addEvent(configRoom.ID, eventAcceptRematch)
+	ExpectEventInsertion(sb.mock, eventAcceptRematch)
+
+	sendMessage(sb.t, sb.getConnection(creator.ID), `["Accept", {"proposition":"Rematch"}]`)
+	expectMessage(sb.t, sb.getConnection(creator.ID),
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, sb.getCurrentGame(creator.ID))))
+	expectMessage(sb.t, sb.getConnection(opponent.ID),
+		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, sb.getCurrentGame(opponent.ID))))
+	expectMessage(sb.t, sb.getConnection(creator.ID),
+		fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, toJSON(sb.t, eventAcceptRematch)))
+	expectMessage(sb.t, sb.getConnection(opponent.ID),
+		fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, toJSON(sb.t, eventAcceptRematch)))
+
+	return rematchId
 }

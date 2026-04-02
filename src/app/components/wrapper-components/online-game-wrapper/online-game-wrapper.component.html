@@ -24,7 +24,7 @@
                 <div class="block player0-bg">
                     <p id="playerZeroIndicator"
                        class="has-text-black player0-bg-darker is-size-5"
-                       *ngIf="players[0].isPresent()">{{ players[0].get().name }}</p>
+                       *ngIf="players[0].isPresent()">{{ players[0].get().name }} ({{ game?.playerZeroElo || 0 | number:'1.0-0' }})</p>
                     <p id="scoreZeroIndicator"
                        *ngIf="game !== null && gameComponent && gameComponent.hasScores()"
                        class="has-text-black"
@@ -59,7 +59,7 @@
                 <div class="block player1-bg">
                     <p id="playerOneIndicator"
                        class="has-text-black player1-bg-darker is-size-5"
-                       *ngIf="players[1].isPresent()">{{ players[1].get().name }}</p>
+                       *ngIf="players[1].isPresent()">{{ players[1].get().name }} ({{ game?.playerOneElo || 0 | number:'1.0-0' }})</p>
                     <p id="scoreOneIndicator"
                        *ngIf="game !== null && gameComponent && gameComponent.hasScores()"
                        class="has-text-black"
