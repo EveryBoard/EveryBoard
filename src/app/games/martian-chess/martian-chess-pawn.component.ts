@@ -14,9 +14,9 @@ import { MartianChessFace } from './martian-chess.component';
 })
 export class MartianChessPawnComponent {
 
-    readonly mainShapeId: InputSignal<string | undefined> = input<string>();
-    readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
-    readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
+    public readonly mainShapeId: InputSignal<string | undefined> = input<string>();
+    public readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    public readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
 
     public readonly FOUR_POINTED_STAR_DIAGONAL: string = MartianChessComponentUtils.getNPointedStar(4, 45);
     private readonly TRIANGLE_Y_OFFSET: number = this.yOffsetForVerticalCentering();

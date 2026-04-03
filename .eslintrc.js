@@ -100,6 +100,12 @@ module.exports = {
                 'error',
                 { 'ignoreDeclarationMerge': true },
             ],
+            '@typescript-eslint/explicit-member-accessibility': [
+                'error',
+                {
+                    accessibility: 'explicit', // require public/private/protected everywhere
+                },
+            ],
             'dot-notation': ['warn'],
             'max-len': ['error', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
             'require-jsdoc': ['error', { 'require': {

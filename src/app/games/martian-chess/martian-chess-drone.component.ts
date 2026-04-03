@@ -12,9 +12,9 @@ import { MartianChessFace } from './martian-chess.component';
 })
 export class MartianChessDroneComponent {
 
-    readonly mainShapeId: InputSignal<string | undefined> = input<string>();
-    readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
-    readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
+    public readonly mainShapeId: InputSignal<string | undefined> = input<string>();
+    public readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    public readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
 
     public readonly MartianChessComponentUtils: typeof MartianChessComponentUtils = MartianChessComponentUtils;
     public readonly FOUR_POINTED_STAR_VERTICAL: string = MartianChessComponentUtils.getNPointedStar(4, 0);

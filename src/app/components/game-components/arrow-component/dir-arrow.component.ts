@@ -12,6 +12,6 @@ import { Arrow } from './Arrow';
 })
 export class DirArrowComponent extends BaseGameComponent {
 
-    readonly arrow: InputSignal<Arrow<Ordinal>> = input.required<Arrow<Ordinal>>();
+    public readonly arrow: InputSignal<Arrow<Ordinal>> = input.required<Arrow<Ordinal>>();
 
 }

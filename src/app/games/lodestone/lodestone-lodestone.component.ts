@@ -13,7 +13,7 @@ import { LodestoneInfo } from './lodestone.component';
 })
 export class LodestoneLodestoneComponent extends BaseGameComponent {
 
-    readonly lodestoneInfo: InputSignal<LodestoneInfo> = input.required<LodestoneInfo>();
+    public readonly lodestoneInfo: InputSignal<LodestoneInfo> = input.required<LodestoneInfo>();
 
     public PIECE_RADIUS: number;
     public TRIANGLE_OUT: string;

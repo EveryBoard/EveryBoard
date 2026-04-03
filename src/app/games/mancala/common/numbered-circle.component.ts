@@ -11,10 +11,10 @@ import { MGPOptional } from '@everyboard/lib';
 })
 export class NumberedCircleComponent {
 
-    readonly x: InputSignal<number> = input.required<number>();
-    readonly y: InputSignal<number> = input.required<number>();
-    readonly spaceClasses: InputSignal<string[]> = input.required<string[]>();
-    readonly content: InputSignal<number> = input.required<number>();
-    readonly secondaryContent: InputSignal<MGPOptional<string>> = input.required<MGPOptional<string>>();
-    readonly rotation: InputSignal<string> = input.required<string>();
+    public readonly x: InputSignal<number> = input.required<number>();
+    public readonly y: InputSignal<number> = input.required<number>();
+    public readonly spaceClasses: InputSignal<string[]> = input.required<string[]>();
+    public readonly content: InputSignal<number> = input.required<number>();
+    public readonly secondaryContent: InputSignal<MGPOptional<string>> = input.required<MGPOptional<string>>();
+    public readonly rotation: InputSignal<string> = input.required<string>();
 }

@@ -15,12 +15,12 @@ import { HivePiece } from './HivePiece';
 })
 export class HivePieceComponent extends BaseGameComponent implements AfterContentChecked {
 
-    readonly piece: InputSignal<HivePiece> = input.required<HivePiece>();
-    readonly x: InputSignal<number> = input.required<number>();
-    readonly y: InputSignal<number> = input.required<number>();
-    readonly hexaLayout: InputSignal<HexaLayout> = input.required<HexaLayout>();
-    readonly layer: InputSignal<number> = input.required<number>();
-    readonly pieceHeight: InputSignal<number> = input.required<number>();
+    public readonly piece: InputSignal<HivePiece> = input.required<HivePiece>();
+    public readonly x: InputSignal<number> = input.required<number>();
+    public readonly y: InputSignal<number> = input.required<number>();
+    public readonly hexaLayout: InputSignal<HexaLayout> = input.required<HexaLayout>();
+    public readonly layer: InputSignal<number> = input.required<number>();
+    public readonly pieceHeight: InputSignal<number> = input.required<number>();
 
     public hexaPoints: string = '';
     public pieceClass: string = '';

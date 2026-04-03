@@ -12,6 +12,6 @@ import { Arrow } from './Arrow';
 })
 export class HexArrowComponent extends BaseGameComponent {
 
-    readonly arrow: InputSignal<Arrow<HexaDirection>> = input.required<Arrow<HexaDirection>>();
+    public readonly arrow: InputSignal<Arrow<HexaDirection>> = input.required<Arrow<HexaDirection>>();
 
 }

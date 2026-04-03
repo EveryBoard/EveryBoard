@@ -4,7 +4,7 @@ import { TrigoConfig, TrigoRules } from './TrigoRules';
 
 export class TrigoHeuristic extends AbstractGoHeuristic<TrigoConfig> {
 
-    constructor() {
+    public constructor() {
         super(TrigoRules.get());
     }
 

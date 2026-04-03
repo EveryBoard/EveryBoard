@@ -19,12 +19,12 @@ import { TrexoMove } from './TrexoMove';
 })
 export class TrexoHalfPieceComponent extends BaseGameComponent {
 
-    readonly coord: InputSignal<Coord3D> = input.required<Coord3D>();
-    readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
-    readonly mode: InputSignal<ModeConfig> = input.required<ModeConfig>();
-    readonly mustDisplayHeight: InputSignal<boolean> = input<boolean>(false);
+    public readonly coord: InputSignal<Coord3D> = input.required<Coord3D>();
+    public readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    public readonly mode: InputSignal<ModeConfig> = input.required<ModeConfig>();
+    public readonly mustDisplayHeight: InputSignal<boolean> = input<boolean>(false);
     // When absent, this represents only the first click
-    readonly move: InputSignal<TrexoMove | undefined> = input<TrexoMove>();
+    public readonly move: InputSignal<TrexoMove | undefined> = input<TrexoMove>();
 
     public readonly STROKE_OFFSET: number = this.STROKE_WIDTH / 2;
 

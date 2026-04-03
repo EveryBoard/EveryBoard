@@ -19,8 +19,6 @@
       "noImplicitThis": true,
       "useUnknownInCatchVariables": true,
       "strictBindCallApply": true,
-      "noUncheckedIndexedAccess": false,
-      "noImplicitAny": false,
       "module": "es2020",
       "moduleResolution": "bundler",
       "target": "es2022",

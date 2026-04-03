@@ -4,7 +4,7 @@ import { TrigoConfig, TrigoRules } from './TrigoRules';
 
 export class TrigoMoveGenerator extends AbstractGoMoveGenerator<TrigoConfig> {
 
-    constructor() {
+    public constructor() {
         super(TrigoRules.get());
     }
 
