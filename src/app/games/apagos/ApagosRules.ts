@@ -57,7 +57,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
             zeroPieces.push(0);
             onePieces.push(0);
             sizes.push(currentSize);
-            numberOfPieces += Math.floor(currentSize / 2) + 1;
+            numberOfPieces += Math.ceil(currentSize / 2);
             currentSize += increment;
         }
 
