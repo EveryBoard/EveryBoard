@@ -86,11 +86,15 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return playerFreedoms;
     }
 
+    /**
+     * @param state the evaluated state
+     * @param player the player for which returned values apply
+     * @returns a sorted table of the freedom of player's pieces
+     */
     public getBoardValuesFor(state: SaharaState, player: Player): number[] {
-        // Returns a sorted table of the freedom of player's pieces
         const playerFreedomsMap: MGPMap<Coord, number> = this.getBoardValueByPiece(state, player);
         const playerFreedomsValue: number[] = playerFreedomsMap.getValueList();
-        ArrayUtils.sortByDescending(playerFreedomsValue, Utils.identity);
+        ArrayUtils.sortByDescending(playerFreedomsValue, (value: number) => -value);
         return playerFreedomsValue;
     }
 
@@ -187,6 +191,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
 
     public getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
+        console.log('get game status from freedoms', zeroFreedoms, oneFreedoms)
         if (zeroFreedoms[0] === 0) {
             return GameStatus.ONE_WON;
         } else if (oneFreedoms[0] === 0) {
