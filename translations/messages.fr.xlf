@@ -2465,6 +2465,10 @@
         <source>This intersection is already occupied.</source>
         <target>Cette intersection est déjà occupée.</target>
       </trans-unit>
+      <trans-unit id="7089556689288687433" datatype="html">
+        <source>This space is already occupied.</source>
+        <target>Cette case est déjà occupée.</target>
+      </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
         <target>Vous ne pouvez pas vous suicider.</target>
@@ -2656,7 +2660,7 @@
         <source>Since the board is hexagonal, pieces have six freedoms when they don&apos;t touch the edge.</source>
         <target>Étant donné que le plateau est hexagonal, les pièces n'ont que six libertés quand elles ne touchent pas les bords.</target>
       </trans-unit>
-      <trans-unit id="6501501128968003048" datatype="html">
+      <trans-unit id="1525911055936719410" datatype="html">
         <source>Since the board is hexagonal, groups of two pieces have three more freedoms (making ko impossible).</source>
         <target>Étant donné que le plateau est hexagonal, les groupes de deux pièces ont trois libertés en plus (rendant le ko impossible).</target>
       </trans-unit>

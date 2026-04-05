@@ -1801,6 +1801,9 @@
       <trans-unit id="7258684846942631624" datatype="html">
         <source>This intersection is already occupied.</source>
       </trans-unit>
+      <trans-unit id="7089556689288687433" datatype="html">
+        <source>This space is already occupied.</source>
+      </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
       </trans-unit>
@@ -1938,8 +1941,8 @@
       <trans-unit id="4071554112464432613" datatype="html">
         <source>Since the board is hexagonal, pieces have six freedoms when they don&apos;t touch the edge.</source>
       </trans-unit>
-      <trans-unit id="6501501128968003048" datatype="html">
-        <source>Since the board is hexagonal, groups of two pieces have three more freedom (making ko impossible).</source>
+      <trans-unit id="1525911055936719410" datatype="html">
+        <source>Since the board is hexagonal, groups of two pieces have three more freedoms (making ko impossible).</source>
       </trans-unit>
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
