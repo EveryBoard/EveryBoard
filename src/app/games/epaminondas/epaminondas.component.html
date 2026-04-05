@@ -1,55 +1,47 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  [attr.transform]="rotation"
-  preserveAspectRatio="xMidYMid meet">
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.transform]="rotation"
+     preserveAspectRatio="xMidYMid meet">
 
-  @for (line of board; track $index; let y = $index) {
-    <g>
-      @for (c of line; track $index; let x = $index) {
-        <g
-          [attr.transform]="getTranslationAtXY(x, y)"
-          id="click-{{ x }}-{{ y }}"
-          (click)="onClick(x, y)">
-          <rect id="space-{{ x }}-{{ y }}"
-            x="0"
-            y="0"
-            [attr.width]="SPACE_SIZE"
-            [attr.height]="SPACE_SIZE"
-            [ngClass]="getRectClasses(x, y)"
-            class="base"
-            />
-          @if (board[y][x] !== NONE) {
-            <circle
-              id="piece-{{ x }}-{{ y }}"
-              [attr.cx]="SPACE_SIZE / 2"
-              [attr.cy]="SPACE_SIZE / 2"
-              [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-              [ngClass]="getPieceClasses(x, y)"
-              class="base"
-              />
-          }
+    @for (line of board; track $index; let y = $index) {
+        <g>
+            @for (c of line; track $index; let x = $index) {
+                <g [attr.transform]="getTranslationAtXY(x, y)"
+                   id="click-{{ x }}-{{ y }}"
+                   (click)="onClick(x, y)">
+                    <rect id="space-{{ x }}-{{ y }}"
+                          x="0"
+                          y="0"
+                          [attr.width]="SPACE_SIZE"
+                          [attr.height]="SPACE_SIZE"
+                          [ngClass]="getRectClasses(x, y)"
+                          class="base"/>
+                    @if (board[y][x] !== NONE) {
+                        <circle id="piece-{{ x }}-{{ y }}"
+                                [attr.cx]="SPACE_SIZE / 2"
+                                [attr.cy]="SPACE_SIZE / 2"
+                                [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                                [ngClass]="getPieceClasses(x, y)"
+                                class="base"/>
+                    }
+                </g>
+            }
         </g>
-      }
-    </g>
-  }
+    }
 
-  @for (coord of getHighlightedCoords(); track coord.toString()) {
-    <rect
-      id="clickable-{{ coord.x }}-{{ coord.y }}"
-      (click)="onClick(coord.x, coord.y)"
-      [attr.x] = "SPACE_SIZE * coord.x"
-      [attr.y] = "SPACE_SIZE * coord.y"
-      [attr.width]="SPACE_SIZE"
-      [attr.height]="SPACE_SIZE"
-      class="no-fill mid-stroke clickable-stroke"
-      />
-  }
-  @for (possibleMove of possibleMoves; track $index) {
-    <g
-      id="arrow-{{ possibleMove.arrow.start.x }}-{{ possibleMove.arrow.start.y }}-to-{{ possibleMove.arrow.landing.x }}-{{ possibleMove.arrow.landing.y }}"
-      app-dir-arrow
-      [arrow]="possibleMove.arrow"
-      />
-  }
+    @for (coord of getHighlightedCoords(); track coord.toString()) {
+        <rect id="clickable-{{ coord.x }}-{{ coord.y }}"
+              (click)="onClick(coord.x, coord.y)"
+              [attr.x]="SPACE_SIZE * coord.x"
+              [attr.y]="SPACE_SIZE * coord.y"
+              [attr.width]="SPACE_SIZE"
+              [attr.height]="SPACE_SIZE"
+              class="no-fill mid-stroke clickable-stroke"/>
+    }
+    @for (possibleMove of possibleMoves; track $index) {
+        <g id="arrow-{{ possibleMove.arrow.start.x }}-{{ possibleMove.arrow.start.y }}-to-{{ possibleMove.arrow.landing.x }}-{{ possibleMove.arrow.landing.y }}"
+           app-dir-arrow
+           [arrow]="possibleMove.arrow"/>
+    }
 </svg>

@@ -1,89 +1,79 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  preserveAspectRatio="xMidYMid meet">
-  <!-- PIECES AND NEIGHBORS -->
-  @for (piece of pieces; track piece.toString()) {
-    <polygon
-      id="piece-{{ piece.x }}-{{ piece.y }}"
-      (click)="onPieceClick(piece)"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(piece.x, piece.y)"
-      [ngClass]="getPieceClass(piece)"
-      class="base round"/>
-  }
-  @for (neighbor of neighbors; track neighbor.toString()) {
-    <polygon
-      id="neighbor-{{ neighbor.x }}-{{ neighbor.y }}"
-      (click)="onNeighborClick(neighbor)"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(neighbor.x, neighbor.y)"
-      class="base round"/>
-  }
-  @if (chosenLanding.isPresent()) {
-    <polygon
-      id="chosen-landing-{{ chosenLanding.get().x }}-{{ chosenLanding.get().y }}"
-      (click)="onPieceClick(chosenLanding.get())"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(chosenLanding.get().x, chosenLanding.get().y)"
-      [ngClass]="getPlayerClass(state.getCurrentPlayer())"
-      class="base round"/>
-  }
-  <!-- LAST MOVE -->
-  @if (leftCoord.isPresent()) {
-    <polygon
-      id="left-coord-{{ leftCoord.get().x }}-{{ leftCoord.get().y }}"
-      (click)="onNeighborClick(leftCoord.get())"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(leftCoord.get().x, leftCoord.get().y)"
-      class="base round moved-fill mid-stroke"/>
-  }
-  @for (disconnected of disconnectedCoords; track disconnected.coord.toString()) {
-    <polygon
-      id="disconnected-{{ disconnected.coord.x }}-{{ disconnected.coord.y }}"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAt(disconnected.coord)"
-      class="base round captured-stroke"
-      [ngClass]="disconnected.class"/>
-  }
-  @if (lastDrop.isPresent()) {
-    <polygon
-      id="last-drop-{{ lastDrop.get().x }}-{{ lastDrop.get().y }}"
-      (click)="onPieceClick(lastDrop.get())"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(lastDrop.get().x, lastDrop.get().y)"
-      class="base no-fill round last-move-stroke mid-stroke"/>
-  }
-  <!-- HIGHLIGHTS -->
-  @if (selectedPiece.isPresent()) {
-    <polygon
-      id="selected-piece-{{ selectedPiece.get().x }}-{{ selectedPiece.get().y }}"
-      (click)="onPieceClick(selectedPiece.get())"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(selectedPiece.get().x, selectedPiece.get().y)"
-      [ngClass]="getSelectedPieceClass()"
-      class="base no-fill round"/>
-  }
-  @for (victoryCoord of victoryCoords; track victoryCoord.toString()) {
-    <polygon
-      id="victory-coord-{{ victoryCoord.x }}-{{ victoryCoord.y }}"
-      [attr.points]="getHexaPoints()"
-      [attr.transform]="getHexaCenterTranslationAtXY(victoryCoord.x, victoryCoord.y)"
-      class="base no-fill round victory-stroke mid-stroke"/>
-  }
-  @for (cuttableGroup of cuttableGroups; track $index) {
-    <g
-      pointer-events="fill"
-      class="capturable-stroke">
-      @for (cuttable of cuttableGroup; track cuttable.toString()) {
-        <polygon
-          id="cuttable-{{ cuttable.x }}-{{ cuttable.y }}"
-          (click)="onPieceClick(cuttable)"
-          [attr.points]="getHexaPoints()"
-          [attr.transform]="getHexaCenterTranslationAtXY(cuttable.x, cuttable.y)"
-          class="no-fill"
-          stroke-linecap="round"/>
-      }
-    </g>
-  }
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    <!-- PIECES AND NEIGHBORS -->
+    @for (piece of pieces; track piece.toString()) {
+        <polygon id="piece-{{ piece.x }}-{{ piece.y }}"
+                 (click)="onPieceClick(piece)"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(piece.x, piece.y)"
+                 [ngClass]="getPieceClass(piece)"
+                 class="base round"/>
+    }
+    @for (neighbor of neighbors; track neighbor.toString()) {
+        <polygon id="neighbor-{{ neighbor.x }}-{{ neighbor.y }}"
+                 (click)="onNeighborClick(neighbor)"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(neighbor.x, neighbor.y)"
+                 class="base round"/>
+    }
+    @if (chosenLanding.isPresent()) {
+        <polygon id="chosen-landing-{{ chosenLanding.get().x }}-{{ chosenLanding.get().y }}"
+                 (click)="onPieceClick(chosenLanding.get())"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(chosenLanding.get().x, chosenLanding.get().y)"
+                 [ngClass]="getPlayerClass(state.getCurrentPlayer())"
+                 class="base round"/>
+    }
+    <!-- LAST MOVE -->
+    @if (leftCoord.isPresent()) {
+        <polygon id="left-coord-{{ leftCoord.get().x }}-{{ leftCoord.get().y }}"
+                 (click)="onNeighborClick(leftCoord.get())"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(leftCoord.get().x, leftCoord.get().y)"
+                 class="base round moved-fill mid-stroke"/>
+    }
+    @for (disconnected of disconnectedCoords; track disconnected.coord.toString()) {
+        <polygon id="disconnected-{{ disconnected.coord.x }}-{{ disconnected.coord.y }}"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAt(disconnected.coord)"
+                 class="base round captured-stroke"
+                 [ngClass]="disconnected.class"/>
+    }
+    @if (lastDrop.isPresent()) {
+        <polygon id="last-drop-{{ lastDrop.get().x }}-{{ lastDrop.get().y }}"
+                 (click)="onPieceClick(lastDrop.get())"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(lastDrop.get().x, lastDrop.get().y)"
+                 class="base no-fill round last-move-stroke mid-stroke"/>
+    }
+    <!-- HIGHLIGHTS -->
+    @if (selectedPiece.isPresent()) {
+        <polygon id="selected-piece-{{ selectedPiece.get().x }}-{{ selectedPiece.get().y }}"
+                 (click)="onPieceClick(selectedPiece.get())"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(selectedPiece.get().x, selectedPiece.get().y)"
+                 [ngClass]="getSelectedPieceClass()"
+                 class="base no-fill round"/>
+    }
+    @for (victoryCoord of victoryCoords; track victoryCoord.toString()) {
+        <polygon id="victory-coord-{{ victoryCoord.x }}-{{ victoryCoord.y }}"
+                 [attr.points]="getHexaPoints()"
+                 [attr.transform]="getHexaCenterTranslationAtXY(victoryCoord.x, victoryCoord.y)"
+                 class="base no-fill round victory-stroke mid-stroke"/>
+    }
+    @for (cuttableGroup of cuttableGroups; track $index) {
+        <g pointer-events="fill"
+           class="capturable-stroke">
+            @for (cuttable of cuttableGroup; track cuttable.toString()) {
+                <polygon id="cuttable-{{ cuttable.x }}-{{ cuttable.y }}"
+                         (click)="onPieceClick(cuttable)"
+                         [attr.points]="getHexaPoints()"
+                         [attr.transform]="getHexaCenterTranslationAtXY(cuttable.x, cuttable.y)"
+                         class="no-fill"
+                         stroke-linecap="round"/>
+            }
+        </g>
+    }
 </svg>

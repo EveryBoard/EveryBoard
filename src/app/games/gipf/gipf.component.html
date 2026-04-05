@@ -1,104 +1,103 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  [attr.transform]="rotation"
-  preserveAspectRatio="xMidYMid meet">
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.transform]="rotation"
+     preserveAspectRatio="xMidYMid meet">
 
-  <defs>
-    <marker id="arrowhead" markerWidth="10" markerHeight="7"
-      refX="5" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7"/>
-    </marker>
-    <marker id="arrowhead-moved" markerWidth="10" markerHeight="7"
-      refX="5" refY="3.5" orient="auto">
-      <polygon points="0 0, 10 3.5, 0 7" class="moved-fill moved-stroke"/>
-    </marker>
-  </defs>
+    <defs>
+        <marker id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="5"
+                refY="3.5"
+                orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7"/>
+        </marker>
+        <marker id="arrowhead-moved"
+                markerWidth="10"
+                markerHeight="7"
+                refX="5"
+                refY="3.5"
+                orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7"
+                     class="moved-fill moved-stroke"/>
+        </marker>
+    </defs>
 
-  @for (coord of getAllCoords(); track coord.toString()) {
-    <g
-      (click)="onClick(coord)"
-      id="click-{{ coord.x }}-{{ coord.y }}"
-      [attr.transform]="getHexaCenterTranslationAt(coord)">
-      <polygon [attr.points]="getHexaPoints()"
-        id="space-{{ coord.x }}-{{ coord.y }}"
-        [ngClass]="getSpaceClass(coord)"
-        class="base"
-        stroke-linecap="round"/>
-      @if (isPlayerAt(coord)) {
-        <circle
-          cx="0"
-          cy="0"
-          [attr.r]="SPACE_SIZE"
-          [ngClass]="getPieceClass(coord)"
-          class="base"/>
-      }
-      @if (isCapturedPiece(coord)) {
-        <circle
-          id="dead-piece-{{ coord.x }}-{{ coord.y }}"
-          cx="0"
-          cy="0"
-          [attr.r]="SPACE_SIZE"
-          [ngClass]="getCapturedPieceClass(coord)"
-          class="base semi-transparent"/>
-      }
-    </g>
-  }
-
-  @for (capture of possibleCaptures; track $index; let i = $index) {
-    <g
-      pointer-events="fill"
-      class="capturable-stroke">
-      @for (coord of capture.capturedSpaces; track coord.toString()) {
-        <polygon
-          [attr.points]="getHexaPoints()"
-          [attr.transform]="getHexaCenterTranslationAt(coord)"
-          (click)="onClick(coord)"
-          class="no-fill"
-          stroke-linecap="round"/>
-      }
-    </g>
-  }
-
-  @for (arrow of arrows; track $index) {
-    <line
-      [attr.x1]="arrow.startCenter.x"
-      [attr.y1]="arrow.startCenter.y"
-      [attr.x2]="arrow.landingCenter.x"
-      [attr.y2]="arrow.landingCenter.y"
-      class="arrow click-delegator"
-      marker-end="url(#arrowhead)"/>
-  }
-
-  @for (player of Player.PLAYERS; track player) {
-    <g>
-      @for (p of getPlayerSidePieces(player); track $index) {
-        <g>
-          <circle id="piece-{{ player.toString() }}-{{ p }}"
-            [attr.cx]="getRemainingPieceCx(player, p)"
-            [attr.cy]="getRemainingPieceCy(player)"
-            [attr.r]="SPACE_SIZE * 0.5"
-            [ngClass]="getPlayerClass(player)"
-            class="base small-stroke"
-            />
+    @for (coord of getAllCoords(); track coord.toString()) {
+        <g (click)="onClick(coord)"
+           id="click-{{ coord.x }}-{{ coord.y }}"
+           [attr.transform]="getHexaCenterTranslationAt(coord)">
+            <polygon [attr.points]="getHexaPoints()"
+                     id="space-{{ coord.x }}-{{ coord.y }}"
+                     [ngClass]="getSpaceClass(coord)"
+                     class="base"
+                     stroke-linecap="round"/>
+            @if (isPlayerAt(coord)) {
+                <circle cx="0"
+                        cy="0"
+                        [attr.r]="SPACE_SIZE"
+                        [ngClass]="getPieceClass(coord)"
+                        class="base"/>
+            }
+            @if (isCapturedPiece(coord)) {
+                <circle id="dead-piece-{{ coord.x }}-{{ coord.y }}"
+                        cx="0"
+                        cy="0"
+                        [attr.r]="SPACE_SIZE"
+                        [ngClass]="getCapturedPieceClass(coord)"
+                        class="base semi-transparent"/>
+            }
         </g>
-      }
-      <text [attr.x]="getRemainingPieceCx(player, getPlayerSidePieces(player).length - 1)"
-        [attr.y]="getRemainingPieceCy(player) + 9"
-        class="text-small text-center"
-      >{{ getPlayerSidePieces(player).length }}</text>
-    </g>
-  }
+    }
 
-  @if (inserted.isPresent()) {
-    <line
-      [attr.x1]="inserted.get().startCenter.x"
-      [attr.y1]="inserted.get().startCenter.y"
-      [attr.x2]="inserted.get().landingCenter.x"
-      [attr.y2]="inserted.get().landingCenter.y"
-      class="arrow moved-stroke click-delegator"
-      marker-end="url(#arrowhead-moved)"
-      />
-  }
+    @for (capture of possibleCaptures; track $index; let i = $index) {
+        <g pointer-events="fill"
+           class="capturable-stroke">
+            @for (coord of capture.capturedSpaces; track coord.toString()) {
+                <polygon [attr.points]="getHexaPoints()"
+                         [attr.transform]="getHexaCenterTranslationAt(coord)"
+                         (click)="onClick(coord)"
+                         class="no-fill"
+                         stroke-linecap="round"/>
+            }
+        </g>
+    }
+
+    @for (arrow of arrows; track $index) {
+        <line [attr.x1]="arrow.startCenter.x"
+              [attr.y1]="arrow.startCenter.y"
+              [attr.x2]="arrow.landingCenter.x"
+              [attr.y2]="arrow.landingCenter.y"
+              class="arrow click-delegator"
+              marker-end="url(#arrowhead)"/>
+    }
+
+    @for (player of Player.PLAYERS; track player) {
+        <g>
+            @for (p of getPlayerSidePieces(player); track $index) {
+                <g>
+                    <circle id="piece-{{ player.toString() }}-{{ p }}"
+                            [attr.cx]="getRemainingPieceCx(player, p)"
+                            [attr.cy]="getRemainingPieceCy(player)"
+                            [attr.r]="SPACE_SIZE * 0.5"
+                            [ngClass]="getPlayerClass(player)"
+                            class="base small-stroke"/>
+                </g>
+            }
+            <text [attr.x]="getRemainingPieceCx(player, getPlayerSidePieces(player).length - 1)"
+                  [attr.y]="getRemainingPieceCy(player) + 9"
+                  class="text-small text-center">{{ getPlayerSidePieces(player).length }}</text>
+        </g>
+    }
+
+    @if (inserted.isPresent()) {
+        <line [attr.x1]="inserted.get().startCenter.x"
+              [attr.y1]="inserted.get().startCenter.y"
+              [attr.x2]="inserted.get().landingCenter.x"
+              [attr.y2]="inserted.get().landingCenter.y"
+              class="arrow moved-stroke click-delegator"
+              marker-end="url(#arrowhead-moved)"/>
+    }
 
 </svg>

@@ -1,212 +1,177 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="'0 0 ' + (4 * SPACE_SIZE + STROKE_WIDTH) + ' ' + (10.75 * SPACE_SIZE + STROKE_WIDTH)"
-  preserveAspectRatio="xMidYMid meet"
-  >
-  <g transform="translate(5 5)">
-    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
-      <g
-        [attr.transform]="getTranslationAt(coordAndContent.coord)">
-        <rect id="click-coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-          (click)="clickCoord(coordAndContent.coord)"
-          x="0"
-          y="0"
-          [attr.width]="SPACE_SIZE"
-          [attr.height]="SPACE_SIZE"
-          [ngClass]="getSquareClasses(coordAndContent.coord)"
-          class="base"
-          />
-        @if (coordAndContent.content !== EMPTY) {
-          <g>
-            @if (coordAndContent.content.isRectangle()) {
-              <rect
-                [attr.x]="SPACE_SIZE/2 - getPieceSize(coordAndContent.content.value)"
-                [attr.y]="SPACE_SIZE/2 - getPieceSize(coordAndContent.content.value)"
-                [attr.width]="getPieceSize(coordAndContent.content.value) * 2"
-                [attr.height]="getPieceSize(coordAndContent.content.value) * 2"
-                [ngClass]="getPieceClasses(coordAndContent.content.value)"
-                class="base"
-                />
-            } @else {
-              <circle [attr.cx]="SPACE_SIZE / 2"
-                [attr.cy]="SPACE_SIZE / 2"
-                [attr.r]="getPieceSize(coordAndContent.content.value)"
-                [ngClass]="getPieceClasses(coordAndContent.content.value)"
-                class="base"
-                />
-            }
-            @if (pieceHasDot(coordAndContent.content.value)) {
-              <circle
-                [attr.cx]="SPACE_SIZE / 2"
-                [attr.cy]="SPACE_SIZE / 2"
-                [attr.r]="10"
-                />
-            }
-          </g>
-        }
-      </g>
-    }
-    @if (lastMove.isPresent()) {
-      <rect
-        id="last-move-{{ lastMove.get().x }}-{{ lastMove.get().y }}"
-        [attr.x]="SPACE_SIZE * lastMove.get().x"
-        [attr.y]="SPACE_SIZE * lastMove.get().y"
-        [attr.width]="SPACE_SIZE"
-        [attr.height]="SPACE_SIZE"
-        class="base no-fill last-move-stroke mid-stroke" />
-    }
-
-    @if (chosen.isPresent()) {
-      <g
-        id="dropped-piece-{{ chosen.get().x }}-{{ chosen.get().y }}"
-        (click)="clickCoord(chosen.get())"
-        [attr.transform]="getTranslationAt(chosen.get())"
-        >
-        <rect id="dropped-piece-highlight"
-          x="0"
-          y="0"
-          [attr.width]="SPACE_SIZE"
-          [attr.height]="SPACE_SIZE"
-          class="base no-fill selected-stroke mid-stroke"
-          />
-        @if (pieceInHand.isRectangle()) {
-          <rect
-            x="0"
-            y="0"
-            [attr.x]="(SPACE_SIZE / 2) - getPieceSize(pieceInHand.value)"
-            [attr.y]="(SPACE_SIZE / 2) - getPieceSize(pieceInHand.value)"
-            [attr.width]="getPieceSize(pieceInHand.value) * 2"
-            [attr.height]="getPieceSize(pieceInHand.value) * 2"
-            [ngClass]="getPieceClasses(pieceInHand.value)"
-            class="base"
-            />
-        } @else {
-          <circle [attr.cx]="SPACE_SIZE / 2"
-            [attr.cy]="SPACE_SIZE / 2"
-            [attr.r]="getPieceSize(pieceInHand.value)"
-            [ngClass]="getPieceClasses(pieceInHand.value)"
-            class="base"
-            />
-        }
-        @if (pieceHasDot(pieceInHand.value)) {
-          <circle
-            [attr.cx]="SPACE_SIZE / 2"
-            [attr.cy]="SPACE_SIZE / 2"
-            [attr.r]="10"
-            />
-        }
-      </g>
-    }
-
-    @for (coord of victoriousCoords; track coord.toString()) {
-      <g >
-        <rect id="victory-{{ coord.x }}-{{ coord.y }}"
-          x="0"
-          y="0"
-          [attr.width]="SPACE_SIZE"
-          [attr.height]="SPACE_SIZE"
-          [attr.transform]="getTranslationAt(coord)"
-          class="base no-fill victory-stroke"
-          />
-      </g>
-    }
-
-    <g [attr.transform]="getTranslationAtXY(2, 4.5)" >
-      <rect x="0"
-        y="0"
-        [attr.width]="1.5 * SPACE_SIZE"
-        [attr.height]="1.5 * SPACE_SIZE"
-        [attr.transform]="getTranslationAtXY(-0.75, 0)"
-        class="base no-fill"
-        />
-      @if (chosen.isAbsent() && pieceInHand !== EMPTY) {
-        <g
-          id="piece-in-hand">
-          @if (pieceInHand.isRectangle()) {
-            <rect
-              [attr.x]="0"
-              [attr.y]="SPACE_SIZE * 0.75"
-              [attr.transform]="getSVGTranslation(- getPieceSize(pieceInHand.value), - getPieceSize(pieceInHand.value))"
-              [attr.width]="getPieceSize(pieceInHand.value) * 2"
-              [attr.height]="getPieceSize(pieceInHand.value) * 2"
-              [ngClass]="getPieceClasses(pieceInHand.value)"
-              class="base"
-              />
-          } @else {
-            <circle cx="0"
-              [attr.cy]="SPACE_SIZE * 0.75"
-              [attr.r]="getPieceSize(pieceInHand.value)"
-              [ngClass]="getPieceClasses(pieceInHand.value)"
-              class="base"
-              />
-          }
-          @if (pieceHasDot(pieceInHand.value)) {
-            <circle
-              cx="0"
-              [attr.cy]="SPACE_SIZE * 0.75"
-              [attr.r]="10"
-              />
-          }
-        </g>
-      }
-    </g>
-    <g [attr.transform]="getTranslationAtXY(0, 6.5)" >
-      <rect [attr.x]="0"
-        [attr.y]="0"
-        [attr.width]="SPACE_SIZE * 4"
-        [attr.height]="SPACE_SIZE * 4"
-        stroke-dasharray="10, 10"
-        class="base no-fill"
-        />
-      @for (line of board; track $index; let y = $index) {
-        <g>
-          @for (spaceContent of line; track $index; let x = $index) {
-            <g>
-              @if (isRemaining((4 * y) + x)) {
-                <g
-                  id="click-piece-{{ (4 * y) + x }}"
-                  (click)="clickPiece((4 * y) + x)"
-                  >
-                  @if (pieceToGive.equalsValue(QuartoPiece.ofInt((4 * y) + x))) {
-                    <rect
-                      id="chosen-piece-{{ (4 * y) + x }}"
-                      [attr.x]="SPACE_SIZE * x"
-                      [attr.y]="SPACE_SIZE * y"
+     class="board"
+     [attr.viewBox]="'0 0 ' + (4 * SPACE_SIZE + STROKE_WIDTH) + ' ' + (10.75 * SPACE_SIZE + STROKE_WIDTH)"
+     preserveAspectRatio="xMidYMid meet">
+    <g transform="translate(5 5)">
+        @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+            <g [attr.transform]="getTranslationAt(coordAndContent.coord)">
+                <rect id="click-coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                      (click)="clickCoord(coordAndContent.coord)"
+                      x="0"
+                      y="0"
                       [attr.width]="SPACE_SIZE"
                       [attr.height]="SPACE_SIZE"
-                      class="base no-fill selected-stroke mid-stroke"
-                      />
-                  }
-                  @if (((4*y)+x) % 4 < 2) {
-                    <rect
-                      [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"
-                      [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"
-                      [attr.width]="getPieceSize((4*y)+x)*2"
-                      [attr.height]="getPieceSize((4*y)+x)*2"
-                      [ngClass]="getPieceClasses((4*y)+x)"
-                      class="base"
-                      />
-                  } @else {
-                    <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                      [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-                      [attr.r]="getPieceSize((4*y)+x)"
-                      [ngClass]="getPieceClasses((4*y)+x)"
-                      class="base"
-                      />
-                  }
-                  @if (pieceHasDot((4*y)+x)) {
-                    <circle
-                      [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-                      [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-                      [attr.r]="10"
-                      />
-                  }
-                </g>
-              }
+                      [ngClass]="getSquareClasses(coordAndContent.coord)"
+                      class="base"/>
+                @if (coordAndContent.content !== EMPTY) {
+                    <g>
+                        @if (coordAndContent.content.isRectangle()) {
+                            <rect [attr.x]="SPACE_SIZE/2 - getPieceSize(coordAndContent.content.value)"
+                                  [attr.y]="SPACE_SIZE/2 - getPieceSize(coordAndContent.content.value)"
+                                  [attr.width]="getPieceSize(coordAndContent.content.value) * 2"
+                                  [attr.height]="getPieceSize(coordAndContent.content.value) * 2"
+                                  [ngClass]="getPieceClasses(coordAndContent.content.value)"
+                                  class="base"/>
+                        } @else {
+                            <circle [attr.cx]="SPACE_SIZE / 2"
+                                    [attr.cy]="SPACE_SIZE / 2"
+                                    [attr.r]="getPieceSize(coordAndContent.content.value)"
+                                    [ngClass]="getPieceClasses(coordAndContent.content.value)"
+                                    class="base"/>
+                        }
+                        @if (pieceHasDot(coordAndContent.content.value)) {
+                            <circle [attr.cx]="SPACE_SIZE / 2"
+                                    [attr.cy]="SPACE_SIZE / 2"
+                                    [attr.r]="10"/>
+                        }
+                    </g>
+                }
             </g>
-          }
+        }
+        @if (lastMove.isPresent()) {
+            <rect id="last-move-{{ lastMove.get().x }}-{{ lastMove.get().y }}"
+                  [attr.x]="SPACE_SIZE * lastMove.get().x"
+                  [attr.y]="SPACE_SIZE * lastMove.get().y"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  class="base no-fill last-move-stroke mid-stroke"/>
+        }
+
+        @if (chosen.isPresent()) {
+            <g id="dropped-piece-{{ chosen.get().x }}-{{ chosen.get().y }}"
+               (click)="clickCoord(chosen.get())"
+               [attr.transform]="getTranslationAt(chosen.get())">
+                <rect id="dropped-piece-highlight"
+                      x="0"
+                      y="0"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      class="base no-fill selected-stroke mid-stroke"/>
+                @if (pieceInHand.isRectangle()) {
+                    <rect x="0"
+                          y="0"
+                          [attr.x]="(SPACE_SIZE / 2) - getPieceSize(pieceInHand.value)"
+                          [attr.y]="(SPACE_SIZE / 2) - getPieceSize(pieceInHand.value)"
+                          [attr.width]="getPieceSize(pieceInHand.value) * 2"
+                          [attr.height]="getPieceSize(pieceInHand.value) * 2"
+                          [ngClass]="getPieceClasses(pieceInHand.value)"
+                          class="base"/>
+                } @else {
+                    <circle [attr.cx]="SPACE_SIZE / 2"
+                            [attr.cy]="SPACE_SIZE / 2"
+                            [attr.r]="getPieceSize(pieceInHand.value)"
+                            [ngClass]="getPieceClasses(pieceInHand.value)"
+                            class="base"/>
+                }
+                @if (pieceHasDot(pieceInHand.value)) {
+                    <circle [attr.cx]="SPACE_SIZE / 2"
+                            [attr.cy]="SPACE_SIZE / 2"
+                            [attr.r]="10"/>
+                }
+            </g>
+        }
+
+        @for (coord of victoriousCoords; track coord.toString()) {
+            <g>
+                <rect id="victory-{{ coord.x }}-{{ coord.y }}"
+                      x="0"
+                      y="0"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"
+                      [attr.transform]="getTranslationAt(coord)"
+                      class="base no-fill victory-stroke"/>
+            </g>
+        }
+
+        <g [attr.transform]="getTranslationAtXY(2, 4.5)">
+            <rect x="0"
+                  y="0"
+                  [attr.width]="1.5 * SPACE_SIZE"
+                  [attr.height]="1.5 * SPACE_SIZE"
+                  [attr.transform]="getTranslationAtXY(-0.75, 0)"
+                  class="base no-fill"/>
+            @if (chosen.isAbsent() && pieceInHand !== EMPTY) {
+                <g id="piece-in-hand">
+                    @if (pieceInHand.isRectangle()) {
+                        <rect [attr.x]="0"
+                              [attr.y]="SPACE_SIZE * 0.75"
+                              [attr.transform]="getSVGTranslation(- getPieceSize(pieceInHand.value), - getPieceSize(pieceInHand.value))"
+                              [attr.width]="getPieceSize(pieceInHand.value) * 2"
+                              [attr.height]="getPieceSize(pieceInHand.value) * 2"
+                              [ngClass]="getPieceClasses(pieceInHand.value)"
+                              class="base"/>
+                    } @else {
+                        <circle cx="0"
+                                [attr.cy]="SPACE_SIZE * 0.75"
+                                [attr.r]="getPieceSize(pieceInHand.value)"
+                                [ngClass]="getPieceClasses(pieceInHand.value)"
+                                class="base"/>
+                    }
+                    @if (pieceHasDot(pieceInHand.value)) {
+                        <circle cx="0"
+                                [attr.cy]="SPACE_SIZE * 0.75"
+                                [attr.r]="10"/>
+                    }
+                </g>
+            }
         </g>
-      }
+        <g [attr.transform]="getTranslationAtXY(0, 6.5)">
+            <rect [attr.x]="0"
+                  [attr.y]="0"
+                  [attr.width]="SPACE_SIZE * 4"
+                  [attr.height]="SPACE_SIZE * 4"
+                  stroke-dasharray="10, 10"
+                  class="base no-fill"/>
+            @for (line of board; track $index; let y = $index) {
+                <g>
+                    @for (spaceContent of line; track $index; let x = $index) {
+                        <g>
+                            @if (isRemaining((4 * y) + x)) {
+                                <g id="click-piece-{{ (4 * y) + x }}"
+                                   (click)="clickPiece((4 * y) + x)">
+                                    @if (pieceToGive.equalsValue(QuartoPiece.ofInt((4 * y) + x))) {
+                                        <rect id="chosen-piece-{{ (4 * y) + x }}"
+                                              [attr.x]="SPACE_SIZE * x"
+                                              [attr.y]="SPACE_SIZE * y"
+                                              [attr.width]="SPACE_SIZE"
+                                              [attr.height]="SPACE_SIZE"
+                                              class="base no-fill selected-stroke mid-stroke"/>
+                                    }
+                                    @if (((4*y)+x) % 4 < 2) {
+                                        <rect [attr.x]="(SPACE_SIZE * x) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"
+                                              [attr.y]="(SPACE_SIZE * y) + (SPACE_SIZE / 2) - getPieceSize((4 * y) + x)"
+                                              [attr.width]="getPieceSize((4*y)+x)*2"
+                                              [attr.height]="getPieceSize((4*y)+x)*2"
+                                              [ngClass]="getPieceClasses((4*y)+x)"
+                                              class="base"/>
+                                    } @else {
+                                        <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                                                [attr.r]="getPieceSize((4*y)+x)"
+                                                [ngClass]="getPieceClasses((4*y)+x)"
+                                                class="base"/>
+                                    }
+                                    @if (pieceHasDot((4*y)+x)) {
+                                        <circle [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
+                                                [attr.r]="10"/>
+                                    }
+                                </g>
+                            }
+                        </g>
+                    }
+                </g>
+            }
+        </g>
     </g>
-  </g>
 </svg>

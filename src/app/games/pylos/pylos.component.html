@@ -1,114 +1,106 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="'0 0 ' + boardWidth + ' ' + boardHeight"
-  preserveAspectRatio="xMidYMid meet">
+     class="board"
+     [attr.viewBox]="'0 0 ' + boardWidth + ' ' + boardHeight"
+     preserveAspectRatio="xMidYMid meet">
 
-  <g [attr.transform]="'rotate(' + (getPointOfView().getValue() * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
-    @for (player of Player.PLAYERS; track player) {
-      <g>
-        @for (p of getPlayerSidePieces(player); track $index) {
-          <circle
-            id="piece_{{ player.toString() }}_{{ p }}"
-            [attr.cx]="(SPACE_SIZE / 4) + ((boardWidth - (SPACE_SIZE / 4)) * (p / 15))"
-            [attr.cy]="getPiecesCyForPlayer(player)"
-            [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
-            [ngClass]="getPlayerClass(player)"
-            class="base mid-stroke"/>
-        }
-      </g>
-    }
-  </g>
-
-  <g #boardInItself
-    [attr.transform]="getSVGTranslation(STROKE_WIDTH / 2, (STROKE_WIDTH / 2) + pieceRowHeight)">
-    <rect x="-3"
-      y="-3"
-      [attr.width]="(4 * SPACE_SIZE) + 6"
-      [attr.height]="(4 * SPACE_SIZE) + 6"
-      class="base mid-stroke"
-      />
-    @for (z of [0, 1, 2]; track z) {
-      <g>
-        @for (y of getLevelRange(z); track y) {
-          <g>
-            @for (x of getLevelRange(z); track x) {
-              <g>
-                @if (mustDraw(x, y, z)) {
-                  <ng-container>
-                    @if (isOccupied(x, y, z)) {
-                      <circle
-                        id="piece_{{ x }}_{{ y }}_{{ z }}"
-                        (click)="onPieceClick(x, y, z)"
-                        [attr.r]="getPieceRadius(z) - STROKE_WIDTH"
-                        [attr.cx]="getPieceCx(x, y, z)"
-                        [attr.cy]="getPieceCy(x, y, z)"
-                        [ngClass]="getPieceClasses(x, y, z)"
-                        class="base mid-stroke"
-                        />
-                    } @else {
-                      @if (mustDisplayLandingCoord(x, y, z)) {
-                        <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
-                          (click)="onDrop(x, y, z)"
-                          [attr.width]="getPieceRadius(z) * 2"
-                          [attr.height]="getPieceRadius(z) * 2"
-                          [attr.x]="getPieceCx(x, y, z) - getPieceRadius(z)"
-                          [attr.y]="getPieceCy(x, y, z) - getPieceRadius(z)"
-                          [ngClass]="getSquareClasses(x, y, z)"
-                          class="base mid-stroke"
-                          />
-                      }
-                    }
-                  </ng-container>
+    <g [attr.transform]="'rotate(' + (getPointOfView().getValue() * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
+        @for (player of Player.PLAYERS; track player) {
+            <g>
+                @for (p of getPlayerSidePieces(player); track $index) {
+                    <circle id="piece_{{ player.toString() }}_{{ p }}"
+                            [attr.cx]="(SPACE_SIZE / 4) + ((boardWidth - (SPACE_SIZE / 4)) * (p / 15))"
+                            [attr.cy]="getPiecesCyForPlayer(player)"
+                            [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
+                            [ngClass]="getPlayerClass(player)"
+                            class="base mid-stroke"/>
                 }
-              </g>
-            }
-          </g>
+            </g>
         }
-      </g>
-    }
-    @if (highCapture.isPresent()) {
-      <rect
-        id="highCapture_{{ highCapture.get().x }}_{{ highCapture.get().y }}_{{ highCapture.get().z }}"
-        [attr.width]="getPieceRadius(highCapture.get().z) * 2"
-        [attr.height]="getPieceRadius(highCapture.get().z) * 2"
-        [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
-        [attr.y]="getPieceCyByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
-        class="base captured-fill mid-stroke"/>
-    }
-    @if (chosenLandingCoord.isPresent()) {
-      <g
-        id="capture_validation"
-        (click)="validateCapture()"
-        [attr.transform]="getTranslationAtXY(4, 4)">
-        <circle [attr.cx]="STROKE_WIDTH / 2"
-          [attr.cy]="STROKE_WIDTH / 2"
-          [attr.r]="SPACE_SIZE / 2"
-          fill="red"
-          class="base-no-fill mid-stroke"
-          [ngClass]="getCaptureValidationButtonClasses()"/>
-        <polygon points="-32.5,-2.5 -32.5,12.5 -10,35 -2.5,35 35,-21.25 25,-21.275 -5,25 -32.5,-2.5"
-          fill="green"
-          class="base-no-fill mid-stroke"/>
-      </g>
-    }
-    @for (capturable of capturables; track capturable.toString()) {
-      <g
-        (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
-        id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
-        [attr.transform]="getSVGTranslation(getPieceCxByCoord(capturable), getPieceCyByCoord(capturable))">
-        <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"
-          [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
-          [attr.x2]="+0.25 * getPieceRadius(capturable.z)"
-          [attr.y2]="+0.25 * getPieceRadius(capturable.z)"
-          stroke-width="8"
-          stroke="red"/>
-        <line [attr.x1]="+0.25 * getPieceRadius(capturable.z)"
-          [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
-          [attr.x2]="-0.25 * getPieceRadius(capturable.z)"
-          [attr.y2]="+0.25 * getPieceRadius(capturable.z)"
-          stroke-width="8"
-          stroke="red"/>
-      </g>
-    }
-  </g>
+    </g>
+
+    <g #boardInItself
+       [attr.transform]="getSVGTranslation(STROKE_WIDTH / 2, (STROKE_WIDTH / 2) + pieceRowHeight)">
+        <rect x="-3"
+              y="-3"
+              [attr.width]="(4 * SPACE_SIZE) + 6"
+              [attr.height]="(4 * SPACE_SIZE) + 6"
+              class="base mid-stroke"/>
+        @for (z of [0, 1, 2]; track z) {
+            <g>
+                @for (y of getLevelRange(z); track y) {
+                    <g>
+                        @for (x of getLevelRange(z); track x) {
+                            <g>
+                                @if (mustDraw(x, y, z)) {
+                                    <ng-container>
+                                        @if (isOccupied(x, y, z)) {
+                                            <circle id="piece_{{ x }}_{{ y }}_{{ z }}"
+                                                    (click)="onPieceClick(x, y, z)"
+                                                    [attr.r]="getPieceRadius(z) - STROKE_WIDTH"
+                                                    [attr.cx]="getPieceCx(x, y, z)"
+                                                    [attr.cy]="getPieceCy(x, y, z)"
+                                                    [ngClass]="getPieceClasses(x, y, z)"
+                                                    class="base mid-stroke"/>
+                                        } @else {
+                                            @if (mustDisplayLandingCoord(x, y, z)) {
+                                                <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
+                                                      (click)="onDrop(x, y, z)"
+                                                      [attr.width]="getPieceRadius(z) * 2"
+                                                      [attr.height]="getPieceRadius(z) * 2"
+                                                      [attr.x]="getPieceCx(x, y, z) - getPieceRadius(z)"
+                                                      [attr.y]="getPieceCy(x, y, z) - getPieceRadius(z)"
+                                                      [ngClass]="getSquareClasses(x, y, z)"
+                                                      class="base mid-stroke"/>
+                                            }
+                                        }
+                                    </ng-container>
+                                }
+                            </g>
+                        }
+                    </g>
+                }
+            </g>
+        }
+        @if (highCapture.isPresent()) {
+            <rect id="highCapture_{{ highCapture.get().x }}_{{ highCapture.get().y }}_{{ highCapture.get().z }}"
+                  [attr.width]="getPieceRadius(highCapture.get().z) * 2"
+                  [attr.height]="getPieceRadius(highCapture.get().z) * 2"
+                  [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
+                  [attr.y]="getPieceCyByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
+                  class="base captured-fill mid-stroke"/>
+        }
+        @if (chosenLandingCoord.isPresent()) {
+            <g id="capture_validation"
+               (click)="validateCapture()"
+               [attr.transform]="getTranslationAtXY(4, 4)">
+                <circle [attr.cx]="STROKE_WIDTH / 2"
+                        [attr.cy]="STROKE_WIDTH / 2"
+                        [attr.r]="SPACE_SIZE / 2"
+                        fill="red"
+                        class="base-no-fill mid-stroke"
+                        [ngClass]="getCaptureValidationButtonClasses()"/>
+                <polygon points="-32.5,-2.5 -32.5,12.5 -10,35 -2.5,35 35,-21.25 25,-21.275 -5,25 -32.5,-2.5"
+                         fill="green"
+                         class="base-no-fill mid-stroke"/>
+            </g>
+        }
+        @for (capturable of capturables; track capturable.toString()) {
+            <g (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
+               id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
+               [attr.transform]="getSVGTranslation(getPieceCxByCoord(capturable), getPieceCyByCoord(capturable))">
+                <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"
+                      [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
+                      [attr.x2]="+0.25 * getPieceRadius(capturable.z)"
+                      [attr.y2]="+0.25 * getPieceRadius(capturable.z)"
+                      stroke-width="8"
+                      stroke="red"/>
+                <line [attr.x1]="+0.25 * getPieceRadius(capturable.z)"
+                      [attr.y1]="-0.25 * getPieceRadius(capturable.z)"
+                      [attr.x2]="-0.25 * getPieceRadius(capturable.z)"
+                      [attr.y2]="+0.25 * getPieceRadius(capturable.z)"
+                      stroke-width="8"
+                      stroke="red"/>
+            </g>
+        }
+    </g>
 </svg>

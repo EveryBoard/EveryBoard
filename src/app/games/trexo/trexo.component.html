@@ -1,73 +1,70 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="left + ' ' + up + ' ' + width + ' ' + height">
+     class="board"
+     [attr.viewBox]="left + ' ' + up + ' ' + width + ' ' + height">
 
-  @for (line of board; track $index; let y = $index) {
-    <g>
-      @for (space of line; track $index; let x = $index) {
+    @for (line of board; track $index; let y = $index) {
         <g>
-          <polygon id="space_{{ x }}_{{ y }}"
-            [attr.points]="getParallelogramPoints()"
-            [attr.transform]="getTranslationAtXYZ(x, y, 0)"
-            (click)="onClick(x, y)"
-            class="base"
-            [ngClass]="getSpaceClasses(x, y)"/>
+            @for (space of line; track $index; let x = $index) {
+                <g>
+                    <polygon id="space_{{ x }}_{{ y }}"
+                             [attr.points]="getParallelogramPoints()"
+                             [attr.transform]="getTranslationAtXYZ(x, y, 0)"
+                             (click)="onClick(x, y)"
+                             class="base"
+                             [ngClass]="getSpaceClasses(x, y)"/>
+                </g>
+            }
         </g>
-      }
-    </g>
-  }
-  @for (moveZ of pieceOnBoard; track $index; let z = $index) {
-    <g>
-      @for (moveYZ of moveZ; track $index; let y = $index) {
-        <g>
-          @for (piece of moveYZ; track $index; let x = $index) {
-            <g>
-              @if (piece.move.isPresent()) {
-                <g
-                  app-trexo-half-piece
-                  id="half_tile_{{ x }}_{{ y }}_{{ z }}"
-                  (click)="onClick(x, y)"
-                  [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
-                  [mode]="mode"
-                  [coord]="Coord3D.of(x, y, z)"
-                  [mustDisplayHeight]="chosenMode === '2D'"
-                  [move]="piece.move.get()"
-                  [pieceClasses]="getPieceClasses(x, y, z)"/>
-              }
-              @if (piece.isDroppedPiece) {
-                <g
-                  app-trexo-half-piece
-                  [mode]="mode"
-                  id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
-                  (click)="onClick(x, y)"
-                  [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
-                  [coord]="Coord3D.of(x, y, z)"
-                  [pieceClasses]="[currentOpponentClass]"/>
-              }
-            </g>
-          }
-        </g>
-      }
-    </g>
-  }
-  <g #switchModeIndicator>
-    @if (chosenMode === '2D') {
-      <g
-        id="switchTo3D"
-        app-trexo-half-piece
-        (click)="switchToMode('3D')"
-        [mode]="TrexoComponent.modeMap['3D']"
-        [attr.transform]="get3DSwitcherTransform()"
-        [coord]="Coord3D.of(10.5, 8.5, 0)"
-        [pieceClasses]="['player0-fill']"/>
-    } @else {
-      <g app-trexo-half-piece
-        id="switchTo2D"
-        (click)="switchToMode('2D')"
-        [mode]="TrexoComponent.modeMap['2D']"
-        [attr.transform]="getTranslationAtXYZ(12, 9, 0)"
-        [coord]="Coord3D.of(12, 9, 0)"
-        [pieceClasses]="[currentPlayerClass]"/>
     }
-  </g>
+    @for (moveZ of pieceOnBoard; track $index; let z = $index) {
+        <g>
+            @for (moveYZ of moveZ; track $index; let y = $index) {
+                <g>
+                    @for (piece of moveYZ; track $index; let x = $index) {
+                        <g>
+                            @if (piece.move.isPresent()) {
+                                <g app-trexo-half-piece
+                                   id="half_tile_{{ x }}_{{ y }}_{{ z }}"
+                                   (click)="onClick(x, y)"
+                                   [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
+                                   [mode]="mode"
+                                   [coord]="Coord3D.of(x, y, z)"
+                                   [mustDisplayHeight]="chosenMode === '2D'"
+                                   [move]="piece.move.get()"
+                                   [pieceClasses]="getPieceClasses(x, y, z)"/>
+                            }
+                            @if (piece.isDroppedPiece) {
+                                <g app-trexo-half-piece
+                                   [mode]="mode"
+                                   id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
+                                   (click)="onClick(x, y)"
+                                   [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
+                                   [coord]="Coord3D.of(x, y, z)"
+                                   [pieceClasses]="[currentOpponentClass]"/>
+                            }
+                        </g>
+                    }
+                </g>
+            }
+        </g>
+    }
+    <g #switchModeIndicator>
+        @if (chosenMode === '2D') {
+            <g id="switchTo3D"
+               app-trexo-half-piece
+               (click)="switchToMode('3D')"
+               [mode]="TrexoComponent.modeMap['3D']"
+               [attr.transform]="get3DSwitcherTransform()"
+               [coord]="Coord3D.of(10.5, 8.5, 0)"
+               [pieceClasses]="['player0-fill']"/>
+        } @else {
+            <g app-trexo-half-piece
+               id="switchTo2D"
+               (click)="switchToMode('2D')"
+               [mode]="TrexoComponent.modeMap['2D']"
+               [attr.transform]="getTranslationAtXYZ(12, 9, 0)"
+               [coord]="Coord3D.of(12, 9, 0)"
+               [pieceClasses]="[currentPlayerClass]"/>
+        }
+    </g>
 </svg>

@@ -1,50 +1,44 @@
 <!-- Shape -->
 @if (style().shape === 'Polygon') {
-  <svg:polygon
-    [id]="mainShapeId()"
-    class="base"
-    [attr.points]="TRIANGLE"
-    [ngClass]="pieceClasses()"
-    stroke-linecap="round"/>
+    <svg:polygon [id]="mainShapeId()"
+                 class="base"
+                 [attr.points]="TRIANGLE"
+                 [ngClass]="pieceClasses()"
+                 stroke-linecap="round"/>
 }
 @if (style().shape === 'Star') {
-  <svg:polygon
-    [id]="mainShapeId()"
-    class="base"
-    [attr.points]="FOUR_POINTED_STAR_DIAGONAL"
-    [ngClass]="pieceClasses()"
-    stroke-linecap="round"/>
+    <svg:polygon [id]="mainShapeId()"
+                 class="base"
+                 [attr.points]="FOUR_POINTED_STAR_DIAGONAL"
+                 [ngClass]="pieceClasses()"
+                 stroke-linecap="round"/>
 }
 @if (style().shape === 'Circle') {
-  <svg:circle
-    [id]="mainShapeId()"
-    class="base"
-    [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-    [attr.cy]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-    [attr.r]="(0.5 * MartianChessComponentUtils.SPACE_SIZE) - MartianChessComponentUtils.STROKE_WIDTH"
-    [ngClass]="pieceClasses()"/>
+    <svg:circle [id]="mainShapeId()"
+                class="base"
+                [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                [attr.cy]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                [attr.r]="(0.5 * MartianChessComponentUtils.SPACE_SIZE) - MartianChessComponentUtils.STROKE_WIDTH"
+                [ngClass]="pieceClasses()"/>
 }
 <!-- Points -->
 @if (style().points === 'Concentric Circles') {
-  <svg:circle
-    class="base no-fill mid-stroke"
-    [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-    [attr.cy]="(0.5 * MartianChessComponentUtils.SPACE_SIZE) + getConcreteTriangleYOffset()"
-    [attr.r]="MartianChessComponentUtils.getRadius(1)"/>
+    <svg:circle class="base no-fill mid-stroke"
+                [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                [attr.cy]="(0.5 * MartianChessComponentUtils.SPACE_SIZE) + getConcreteTriangleYOffset()"
+                [attr.r]="MartianChessComponentUtils.getRadius(1)"/>
 }
 @if (style().points === 'Dots') {
-  <svg:circle
-    class="base mid-stroke"
-    [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-    [attr.cy]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-    [attr.r]="(0.2 / 3) * MartianChessComponentUtils.SPACE_SIZE"/>
+    <svg:circle class="base mid-stroke"
+                [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                [attr.cy]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                [attr.r]="(0.2 / 3) * MartianChessComponentUtils.SPACE_SIZE"/>
 }
 @if (style().points === 'Horizontal Points') {
-  <svg:g
-    [ngClass]="pieceClasses()">
-    <svg:circle class="base-no-stroke"
-      [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-      [attr.cy]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
-      [attr.r]="1.5 * horizontalDotsRadius"/>
+    <svg:g [ngClass]="pieceClasses()">
+        <svg:circle class="base-no-stroke"
+                    [attr.cx]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                    [attr.cy]="0.5 * MartianChessComponentUtils.SPACE_SIZE"
+                    [attr.r]="1.5 * horizontalDotsRadius"/>
     </svg:g>
-  }
+}

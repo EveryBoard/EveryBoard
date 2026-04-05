@@ -1,118 +1,104 @@
 <div class="columns is-vcentered is-align-items-stretch">
-  <div class="column is-one-quarter has-text-centered">
-    @if (gameComponent) {
-      <div
-        id="infos"
-        class="box is-fullheight">
-        <app-view-config [rulesConfig]="rulesConfig"
-          [rulesConfigDescription]="getRulesConfigDescription()"
-          [gameName]="getGameName().getOrElse('')">
-        </app-view-config>
-        <p class="subtitle" i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
-        @if (endGame) {
-          <div
-            id="game-result"
-            class="block">
-            @if (winnerMessage.isPresent()) {
-              <p
-                id="winner"
-              class="title">{{ winnerMessage.get() }}</p>
-            }
-            @if (winnerMessage.isAbsent()) {
-              <p
-                id="draw"
-                class="title"
-              i18n>Draw</p>
-            }
-          </div>
-        }
-        @for (player of [Player.of(0), Player.of(1)]; track player) {
-          <div
-            class="px-2 py-4 mb-4"
-            [ngClass]="player.getHTMLClass('-bg')">
-            <p class="mb-2 subtitle"
-              [ngClass]="player.getHTMLClass('-fg')"
-            i18n>Player {{ player.getValue()+1 }}</p>
-            <div class="select is-fullwidth">
-              <select id="player-select-{{ player.getValue() }}"
-                (change)="updatePlayer(player)"
-                [(ngModel)]="playerSelection[player.getValue()]">
-                <option selected
-                value="human" i18n>Human</option>
-                @for (ai of gameComponent.availableAIs; track ai.name) {
-                  <option
-                    id="player-{{ player.getValue() }}-ai-{{ ai.name }}"
-                  [value]="ai.name">{{ ai.name }}</option>
+    <div class="column is-one-quarter has-text-centered">
+        @if (gameComponent) {
+            <div id="infos"
+                 class="box is-fullheight">
+                <app-view-config [rulesConfig]="rulesConfig"
+                                 [rulesConfigDescription]="getRulesConfigDescription()"
+                                 [gameName]="getGameName().getOrElse('')">
+                </app-view-config>
+                <p class="subtitle"
+                   i18n>Turn n°{{ gameComponent.getTurn() + 1 }}</p>
+                @if (endGame) {
+                    <div id="game-result"
+                         class="block">
+                        @if (winnerMessage.isPresent()) {
+                            <p id="winner"
+                               class="title">{{ winnerMessage.get() }}</p>
+                        }
+                        @if (winnerMessage.isAbsent()) {
+                            <p id="draw"
+                               class="title"
+                               i18n>Draw</p>
+                        }
+                    </div>
                 }
-              </select>
+                @for (player of [Player.of(0), Player.of(1)]; track player) {
+                    <div class="px-2 py-4 mb-4"
+                         [ngClass]="player.getHTMLClass('-bg')">
+                        <p class="mb-2 subtitle"
+                           [ngClass]="player.getHTMLClass('-fg')"
+                           i18n>Player {{ player.getValue()+1 }}</p>
+                        <div class="select is-fullwidth">
+                            <select id="player-select-{{ player.getValue() }}"
+                                    (change)="updatePlayer(player)"
+                                    [(ngModel)]="playerSelection[player.getValue()]">
+                                <option selected
+                                        value="human"
+                                        i18n>Human</option>
+                                @for (ai of gameComponent.availableAIs; track ai.name) {
+                                    <option id="player-{{ player.getValue() }}-ai-{{ ai.name }}"
+                                            [value]="ai.name">{{ ai.name }}</option>
+                                }
+                            </select>
+                        </div>
+                        @if (players[player.getValue()].equalsValue('human') === false) {
+                            <div class="select is-fullwidth">
+                                <select id="ai-option-select-{{ player.getValue() }}"
+                                        [(ngModel)]="aiOptions[player.getValue()]"
+                                        (change)="updatePlayer(player)">
+                                    <option selected
+                                            value="none"
+                                            i18n>Pick the options</option>
+                                    @for (option of availableAIOptions(player.getValue()); track option.name) {
+                                        <option id="player-{{ player.getValue() }}-option-{{ option.name }}"
+                                                [value]="option.name">{{ option.name }}</option>
+                                    }
+                                </select>
+                            </div>
+                        }
+                        @if (gameComponent.hasScores()) {
+                            <p id="score-{{ player.getValue() }}"
+                               [ngClass]="player.getHTMLClass('-fg')">{{ gameComponent.getScoreString(player) }}</p>
+                        }
+                    </div>
+                }
+                @if (endGame === false && gameComponent.canPass) {
+                    <button id="pass-button"
+                            class="button is-primary is-fullwidth mb-1"
+                            (click)="gameComponent.pass()"
+                            i18n>Pass a turn</button>
+                }
+                @if (canTakeBack()) {
+                    <button id="take-back"
+                            class="button is-fullwidth mb-1"
+                            (click)="takeBack()"
+                            i18n>Take back move</button>
+                }
+                <button id="restart-button"
+                        class="button is-fullwidth"
+                        (click)="restartGame()"
+                        i18n>Start a new game</button>
+                @if (gameComponent.node.previousMove.isPresent() && displayAIInfo()) {
+                    <div id="ai-info">
+                        @for (ai of gameComponent.availableAIs; track ai.name) {
+                            {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
+                        }
+                        Created {{ getCreatedNodes() }} nodes.<br/>
+                        Minimax time: {{ getMinimaxTime() }}ms.<br/>
+                    </div>
+                }
             </div>
-            @if (players[player.getValue()].equalsValue('human') === false) {
-              <div
-                class="select is-fullwidth">
-                <select id="ai-option-select-{{ player.getValue() }}"
-                  [(ngModel)]="aiOptions[player.getValue()]"
-                  (change)="updatePlayer(player)">
-                  <option selected
-                    value="none"
-                  i18n>Pick the options</option>
-                  @for (option of availableAIOptions(player.getValue()); track option.name) {
-                    <option
-                      id="player-{{ player.getValue() }}-option-{{ option.name }}"
-                      [value]="option.name"
-                    >{{ option.name }}</option>
-                  }
-                </select>
-              </div>
-            }
-            @if (gameComponent.hasScores()) {
-              <p
-                id="score-{{ player.getValue() }}"
-                [ngClass]="player.getHTMLClass('-fg')"
-              >{{ gameComponent.getScoreString(player) }}</p>
-            }
-          </div>
         }
-        @if (endGame === false && gameComponent.canPass) {
-          <button
-            id="pass-button"
-            class="button is-primary is-fullwidth mb-1"
-            (click)="gameComponent.pass()"
-            i18n
-          >Pass a turn</button>
-        }
-        @if (canTakeBack()) {
-          <button
-            id="take-back"
-            class="button is-fullwidth mb-1"
-            (click)="takeBack()"
-            i18n
-          >Take back move</button>
-        }
-        <button id="restart-button"
-          class="button is-fullwidth"
-          (click)="restartGame()"
-          i18n
-        >Start a new game</button>
-        @if (gameComponent.node.previousMove.isPresent() && displayAIInfo()) {
-          <div
-            id="ai-info">
-            @for (ai of gameComponent.availableAIs; track ai.name) {
-              {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
-            }
-            Created {{ getCreatedNodes() }} nodes.<br/>
-            Minimax time: {{ getMinimaxTime() }}ms.<br/>
-          </div>
-        }
-      </div>
-    }
-  </div>
-  <div class="column">
-    <div class="p-5 is-fullheight"
-      id="board-highlight"
-      [ngClass]="getBoardHighlight()">
-      <div id="board" class="box is-fullheight">
-        <div #board></div>
-      </div>
     </div>
-  </div>
+    <div class="column">
+        <div class="p-5 is-fullheight"
+             id="board-highlight"
+             [ngClass]="getBoardHighlight()">
+            <div id="board"
+                 class="box is-fullheight">
+                <div #board></div>
+            </div>
+        </div>
+    </div>
 </div>

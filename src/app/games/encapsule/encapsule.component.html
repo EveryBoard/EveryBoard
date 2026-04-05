@@ -1,83 +1,72 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  preserveAspectRatio="xMidYMid meet">
-  @for (player of Player.PLAYERS; track player) {
-    <g #remainingPieces
-      >
-      @for (piece of getRemainingPiecesTypeOfPlayer(player); track $index; let pieceIdX = $index) {
-        <g
-          id="remaining-piece-{{ piece.toString() }}"
-          (click)="onPieceClick(piece)"
-          [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
-          <circle [attr.r]="getPieceRadius(piece)"
-            [attr.cx]="0"
-            [attr.cy]="0"
-            [ngClass]="getSidePieceClasses(piece)"
-            [attr.stroke-width]="pieceStrokeWidth"
-            class="no-fill"
-            pointer-events="fill"
-            />
-          <text id="player-zero-tiles-count"
-            class="backgrounded-text text-big"
-            dominant-baseline="middle"
-            dy="0.1em"
-            text-anchor="middle"
-            [attr.transform]="getRemainingPieceQuantityTransform(piece, pieceIdX)"
-          >{{ getRemainingPieceQuantity(piece) }}</text>
-        </g>
-      }
-    </g>
-  }
-  <g #boardDiv>
-    @for (line of board; track $index; let y = $index) {
-      <g>
-        @for (spaceContent of line; track $index; let x = $index) {
-          <g>
-            <rect id="click-{{ x }}-{{ y }}"
-              (click)="onBoardClick(x, y)"
-              [attr.x]="SPACE_SIZE * x"
-              [attr.y]="SPACE_SIZE * y"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              [ngClass]="getRectClasses(x, y)"
-              class="base"
-              />
-            @for (piece of getListPieces(spaceContent); track $index) {
-              <circle
-                (click)="onBoardClick(x, y)"
-                [attr.r]="getPieceRadius(piece)"
-                [attr.transform]="getPieceTranslate(x, y)"
-                [ngClass]="getPieceClasses(piece)"
-                [attr.stroke-width]="pieceStrokeWidth"
-                class='no-fill'
-                />
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    @for (player of Player.PLAYERS; track player) {
+        <g #remainingPieces>
+            @for (piece of getRemainingPiecesTypeOfPlayer(player); track $index; let pieceIdX = $index) {
+                <g id="remaining-piece-{{ piece.toString() }}"
+                   (click)="onPieceClick(piece)"
+                   [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
+                    <circle [attr.r]="getPieceRadius(piece)"
+                            [attr.cx]="0"
+                            [attr.cy]="0"
+                            [ngClass]="getSidePieceClasses(piece)"
+                            [attr.stroke-width]="pieceStrokeWidth"
+                            class="no-fill"
+                            pointer-events="fill"/>
+                    <text id="player-zero-tiles-count"
+                          class="backgrounded-text text-big"
+                          dominant-baseline="middle"
+                          dy="0.1em"
+                          text-anchor="middle"
+                          [attr.transform]="getRemainingPieceQuantityTransform(piece, pieceIdX)">{{ getRemainingPieceQuantity(piece) }}</text>
+                </g>
             }
-          </g>
+        </g>
+    }
+    <g #boardDiv>
+        @for (line of board; track $index; let y = $index) {
+            <g>
+                @for (spaceContent of line; track $index; let x = $index) {
+                    <g>
+                        <rect id="click-{{ x }}-{{ y }}"
+                              (click)="onBoardClick(x, y)"
+                              [attr.x]="SPACE_SIZE * x"
+                              [attr.y]="SPACE_SIZE * y"
+                              [attr.width]="SPACE_SIZE"
+                              [attr.height]="SPACE_SIZE"
+                              [ngClass]="getRectClasses(x, y)"
+                              class="base"/>
+                        @for (piece of getListPieces(spaceContent); track $index) {
+                            <circle (click)="onBoardClick(x, y)"
+                                    [attr.r]="getPieceRadius(piece)"
+                                    [attr.transform]="getPieceTranslate(x, y)"
+                                    [ngClass]="getPieceClasses(piece)"
+                                    [attr.stroke-width]="pieceStrokeWidth"
+                                    class="no-fill"/>
+                        }
+                    </g>
+                }
+            </g>
         }
-      </g>
-    }
-    @if (chosenCoord.isPresent()) {
-      <rect
-        id="chosen-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
-        (click)="onBoardClick(chosenCoord.get().x, chosenCoord.get().y)"
-        [attr.x]="SPACE_SIZE * chosenCoord.get().x"
-        [attr.y]="SPACE_SIZE * chosenCoord.get().y"
-        [attr.width]="SPACE_SIZE"
-        [attr.height]="SPACE_SIZE"
-        class="base no-fill selected-stroke"
-        pointer-events="fill"
-        />
-    }
-    @for (coord of victoryCoords; track coord.toString()) {
-      <rect
-        id="victory-{{ coord.x }}-{{ coord.y }}"
-        class="base no-fill victory-stroke mid-stroke"
-        [attr.x]="SPACE_SIZE * coord.x"
-        [attr.y]="SPACE_SIZE * coord.y"
-        [attr.width]="SPACE_SIZE"
-        [attr.height]="SPACE_SIZE"
-        />
-    }
-  </g>
+        @if (chosenCoord.isPresent()) {
+            <rect id="chosen-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
+                  (click)="onBoardClick(chosenCoord.get().x, chosenCoord.get().y)"
+                  [attr.x]="SPACE_SIZE * chosenCoord.get().x"
+                  [attr.y]="SPACE_SIZE * chosenCoord.get().y"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  class="base no-fill selected-stroke"
+                  pointer-events="fill"/>
+        }
+        @for (coord of victoryCoords; track coord.toString()) {
+            <rect id="victory-{{ coord.x }}-{{ coord.y }}"
+                  class="base no-fill victory-stroke mid-stroke"
+                  [attr.x]="SPACE_SIZE * coord.x"
+                  [attr.y]="SPACE_SIZE * coord.y"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"/>
+        }
+    </g>
 </svg>

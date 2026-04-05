@@ -1,75 +1,68 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  [attr.transform]="rotation"
-  preserveAspectRatio="xMidYMid meet"
-  >
-  @for (line of board; track $index; let y = $index) {
-    <g>
-      @for (spaceContent of line; track $index; let x = $index) {
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.transform]="rotation"
+     preserveAspectRatio="xMidYMid meet">
+    @for (line of board; track $index; let y = $index) {
         <g>
-          <g id="click_{{ x }}_{{ y }}"
-            (click)="onClick(x, y)">
-            <!-- Background -->
-            <rect [attr.x]="x * SPACE_SIZE"
-              [attr.y]="y * SPACE_SIZE"
-              [attr.width]="SPACE_SIZE"
-              [attr.height]="SPACE_SIZE"
-              class="base-no-fill"
-              [attr.fill]="backgroundColor(x, y)"
-              fill-opacity="0.7"
-              />
-            <!-- Piece -->
-            @if (spaceContent !== UNOCCUPIED) {
-              <circle
-                [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
-                [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
-                [ngClass]="piecePlayerClass(spaceContent)"
-                [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-                class="base-no-fill"
-                />
+            @for (spaceContent of line; track $index; let x = $index) {
+                <g>
+                    <g id="click_{{ x }}_{{ y }}"
+                       (click)="onClick(x, y)">
+                        <!-- Background -->
+                        <rect [attr.x]="x * SPACE_SIZE"
+                              [attr.y]="y * SPACE_SIZE"
+                              [attr.width]="SPACE_SIZE"
+                              [attr.height]="SPACE_SIZE"
+                              class="base-no-fill"
+                              [attr.fill]="backgroundColor(x, y)"
+                              fill-opacity="0.7"/>
+                        <!-- Piece -->
+                        @if (spaceContent !== UNOCCUPIED) {
+                            <circle [attr.cx]="SPACE_SIZE/2 + (x * SPACE_SIZE)"
+                                    [attr.cy]="SPACE_SIZE/2 + (y * SPACE_SIZE)"
+                                    [ngClass]="piecePlayerClass(spaceContent)"
+                                    [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                                    class="base-no-fill"/>
+                        }
+                        @if (spaceContent !== UNOCCUPIED) {
+                            <rect [attr.x]="SPACE_SIZE/2 + (x * SPACE_SIZE) - SPACE_SIZE/8"
+                                  [attr.y]="SPACE_SIZE/2 + (y * SPACE_SIZE) - SPACE_SIZE/8"
+                                  [attr.rx]="isPlayerZero(spaceContent) ? SPACE_SIZE : 0"
+                                  [attr.ry]="isPlayerZero(spaceContent) ? SPACE_SIZE : 0"
+                                  [attr.width]="SPACE_SIZE/4"
+                                  [attr.height]="SPACE_SIZE/4"
+                                  [attr.fill]="pieceColor(spaceContent)"
+                                  class="no-stroke"/>
+                        }
+                    </g>
+                </g>
             }
-            @if (spaceContent !== UNOCCUPIED) {
-              <rect
-                [attr.x]="SPACE_SIZE/2 + (x * SPACE_SIZE) - SPACE_SIZE/8"
-                [attr.y]="SPACE_SIZE/2 + (y * SPACE_SIZE) - SPACE_SIZE/8"
-                [attr.rx]="isPlayerZero(spaceContent) ? SPACE_SIZE : 0"
-                [attr.ry]="isPlayerZero(spaceContent) ? SPACE_SIZE : 0"
-                [attr.width]="SPACE_SIZE/4"
-                [attr.height]="SPACE_SIZE/4"
-                [attr.fill]="pieceColor(spaceContent)"
-                class="no-stroke"
-                />
-            }
-          </g>
         </g>
-      }
-    </g>
-  }
-  <!-- Highlight last move -->
-  @if (lastPieceMove.isPresent()) {
-    <g>
-      <rect id="last_move_start_{{ lastPieceMove.get().getStart().x }}_{{ lastPieceMove.get().getStart().y }}"
-        [attr.x]="lastPieceMove.get().getStart().x * SPACE_SIZE"
-        [attr.y]="lastPieceMove.get().getStart().y * SPACE_SIZE"
-        [attr.width]="SPACE_SIZE"
-        [attr.height]="SPACE_SIZE"
-        class="base no-fill mid-stroke last-move-stroke"/>
-      <rect id="last_move_start_{{ lastPieceMove.get().getEnd().x }}_{{ lastPieceMove.get().getEnd().y }}"
-        [attr.x]="lastPieceMove.get().getEnd().x * SPACE_SIZE"
-        [attr.y]="lastPieceMove.get().getEnd().y * SPACE_SIZE"
-        [attr.width]="SPACE_SIZE"
-        [attr.height]="SPACE_SIZE"
-        class="base no-fill mid-stroke last-move-stroke"/>
-    </g>
-  }
-  <!-- Highlight selected piece -->
-  @if (chosen.isPresent()) {
-    <circle
-      id="selectedPiece"
-      [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
-      [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
-      [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
-      class="base mid-stroke no-fill selected-stroke"/>
-  }
+    }
+    <!-- Highlight last move -->
+    @if (lastPieceMove.isPresent()) {
+        <g>
+            <rect id="last_move_start_{{ lastPieceMove.get().getStart().x }}_{{ lastPieceMove.get().getStart().y }}"
+                  [attr.x]="lastPieceMove.get().getStart().x * SPACE_SIZE"
+                  [attr.y]="lastPieceMove.get().getStart().y * SPACE_SIZE"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  class="base no-fill mid-stroke last-move-stroke"/>
+            <rect id="last_move_start_{{ lastPieceMove.get().getEnd().x }}_{{ lastPieceMove.get().getEnd().y }}"
+                  [attr.x]="lastPieceMove.get().getEnd().x * SPACE_SIZE"
+                  [attr.y]="lastPieceMove.get().getEnd().y * SPACE_SIZE"
+                  [attr.width]="SPACE_SIZE"
+                  [attr.height]="SPACE_SIZE"
+                  class="base no-fill mid-stroke last-move-stroke"/>
+        </g>
+    }
+    <!-- Highlight selected piece -->
+    @if (chosen.isPresent()) {
+        <circle id="selectedPiece"
+                [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
+                [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
+                [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
+                class="base mid-stroke no-fill selected-stroke"/>
+    }
 </svg>

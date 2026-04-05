@@ -1,75 +1,63 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  [attr.transform]="rotation"
-  preserveAspectRatio="xMidYMid meet"
-  >
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.transform]="rotation"
+     preserveAspectRatio="xMidYMid meet">
 
-  @for (invisibleSpace of boardNeighboringCoords; track invisibleSpace) {
-    <polygon
-      id="invisible-space-{{ invisibleSpace.x }}-{{ invisibleSpace.y }}"
-      [attr.transform]="getHexaCenterTranslationAt(invisibleSpace)"
-      (click)="onInvisibleSpaceClick(invisibleSpace)"
-      class="transparent"
-      [attr.points]="getHexaPoints()"
-      stroke-linecap="round"
-      />
-  }
+    @for (invisibleSpace of boardNeighboringCoords; track invisibleSpace) {
+        <polygon id="invisible-space-{{ invisibleSpace.x }}-{{ invisibleSpace.y }}"
+                 [attr.transform]="getHexaCenterTranslationAt(invisibleSpace)"
+                 (click)="onInvisibleSpaceClick(invisibleSpace)"
+                 class="transparent"
+                 [attr.points]="getHexaPoints()"
+                 stroke-linecap="round"/>
+    }
 
-  @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord) {
-    <g>
-      @if (isReachable(coordAndContent.content)) {
-        <g
-          [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">
-          <polygon id="space-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-            (click)="onSpaceClick(coordAndContent.coord)"
-            [ngClass]="getSquareClassesAt(coordAndContent.coord)"
-            class="base"
-            [attr.points]="getHexaPoints()"
-            stroke-linecap="round"
-            />
-          @if (coordAndContent.content.isPlayer()) {
-            <circle
-              id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-              (click)="onPieceClick(coordAndContent.coord)"
-              cx="0"
-              cy="0"
-              [attr.r]="SPACE_SIZE * 0.5"
-              [ngClass]="getPieceClasses(coordAndContent.coord)"
-              class="base"
-              />
-          }
+    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord) {
+        <g>
+            @if (isReachable(coordAndContent.content)) {
+                <g [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">
+                    <polygon id="space-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                             (click)="onSpaceClick(coordAndContent.coord)"
+                             [ngClass]="getSquareClassesAt(coordAndContent.coord)"
+                             class="base"
+                             [attr.points]="getHexaPoints()"
+                             stroke-linecap="round"/>
+                    @if (coordAndContent.content.isPlayer()) {
+                        <circle id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                                (click)="onPieceClick(coordAndContent.coord)"
+                                cx="0"
+                                cy="0"
+                                [attr.r]="SPACE_SIZE * 0.5"
+                                [ngClass]="getPieceClasses(coordAndContent.coord)"
+                                class="base"/>
+                    }
+                </g>
+            }
         </g>
-      }
-    </g>
-  }
+    }
 
-  @for (captured of captureds; track captured.coord) {
-    <g
-      [attr.transform]="getHexaCenterTranslationAt(captured.coord)">
-      <polygon id="captured-space-{{ captured.coord.x }}-{{ captured.coord.y }}"
-        [ngClass]="getSquareClassesAt(captured.coord)"
-        class="base captured-fill"
-        [attr.points]="getHexaPoints()"
-        stroke-linecap="round"
-        />
-      <circle id="captured-piece-{{ captured.coord.x }}-{{ captured.coord.y }}"
-        cx="0"
-        cy="0"
-        [attr.r]="SPACE_SIZE * 0.5"
-        [ngClass]="captured.pieceClasses"
-        class="base semi-transparent"
-        />
-    </g>
-  }
+    @for (captured of captureds; track captured.coord) {
+        <g [attr.transform]="getHexaCenterTranslationAt(captured.coord)">
+            <polygon id="captured-space-{{ captured.coord.x }}-{{ captured.coord.y }}"
+                     [ngClass]="getSquareClassesAt(captured.coord)"
+                     class="base captured-fill"
+                     [attr.points]="getHexaPoints()"
+                     stroke-linecap="round"/>
+            <circle id="captured-piece-{{ captured.coord.x }}-{{ captured.coord.y }}"
+                    cx="0"
+                    cy="0"
+                    [attr.r]="SPACE_SIZE * 0.5"
+                    [ngClass]="captured.pieceClasses"
+                    class="base semi-transparent"/>
+        </g>
+    }
 
-  @for (arrow of directions; track arrow.start.toString() + arrow.landing.toString()) {
-    <g
-      id="arrow-{{ arrow.start.x }}-{{ arrow.start.y }}-to-{{ arrow.landing.x }}-{{ arrow.landing.y }}"
-      (click)="chooseDirection(arrow.dir)"
-      app-hex-arrow
-      [arrow]="arrow"
-      />
-  }
+    @for (arrow of directions; track arrow.start.toString() + arrow.landing.toString()) {
+        <g id="arrow-{{ arrow.start.x }}-{{ arrow.start.y }}-to-{{ arrow.landing.x }}-{{ arrow.landing.y }}"
+           (click)="chooseDirection(arrow.dir)"
+           app-hex-arrow
+           [arrow]="arrow"/>
+    }
 
 </svg>

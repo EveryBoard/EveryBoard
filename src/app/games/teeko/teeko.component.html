@@ -1,33 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  preserveAspectRatio="xMidYMid meet">
-  @for (line of board; track $index; let y = $index) {
-    <g>
-      @for (square of line; track $index; let x = $index) {
-        <g
-          id="click_{{ x }}_{{ y }}"
-          (click)="onClick(x, y)">
-          <rect id="space_{{ x }}_{{ y }}"
-            class="base"
-            [ngClass]="getSpaceClasses(x, y)"
-            [attr.x]="SPACE_SIZE * x"
-            [attr.y]="SPACE_SIZE * y"
-            [attr.width]="SPACE_SIZE"
-            [attr.height]="SPACE_SIZE"
-            />
-          @if (square.isPlayer()) {
-            <circle
-              id="piece_{{ x }}_{{ y }}"
-              class="base"
-              [ngClass]="getPieceClasses(x, y)"
-              [attr.r]="42"
-              [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
-              [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"
-              />
-          }
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    @for (line of board; track $index; let y = $index) {
+        <g>
+            @for (square of line; track $index; let x = $index) {
+                <g id="click_{{ x }}_{{ y }}"
+                   (click)="onClick(x, y)">
+                    <rect id="space_{{ x }}_{{ y }}"
+                          class="base"
+                          [ngClass]="getSpaceClasses(x, y)"
+                          [attr.x]="SPACE_SIZE * x"
+                          [attr.y]="SPACE_SIZE * y"
+                          [attr.width]="SPACE_SIZE"
+                          [attr.height]="SPACE_SIZE"/>
+                    @if (square.isPlayer()) {
+                        <circle id="piece_{{ x }}_{{ y }}"
+                                class="base"
+                                [ngClass]="getPieceClasses(x, y)"
+                                [attr.r]="42"
+                                [attr.cx]="(SPACE_SIZE * x) + (SPACE_SIZE / 2)"
+                                [attr.cy]="(SPACE_SIZE * y) + (SPACE_SIZE / 2)"/>
+                    }
+                </g>
+            }
         </g>
-      }
-    </g>
-  }
+    }
 </svg>

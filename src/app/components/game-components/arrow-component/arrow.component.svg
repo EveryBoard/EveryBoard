@@ -3,10 +3,8 @@
           [attr.x1]="arrow().startCenter.x"
           [attr.y1]="arrow().startCenter.y"
           [attr.x2]="arrow().landingCenter.x"
-          [attr.y2]="arrow().landingCenter.y"
-/>
+          [attr.y2]="arrow().landingCenter.y"/>
 <svg:polygon id="direction-{{ arrow().dir.toHTMLClassName() }}"
              points="-10 -5, 10 -5, 0 15, -10 -5"
              class="arrow click-delegator"
-             [attr.transform]="arrow().transformation"
-/>
+             [attr.transform]="arrow().transformation"/>

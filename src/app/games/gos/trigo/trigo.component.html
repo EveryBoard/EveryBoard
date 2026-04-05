@@ -1,74 +1,60 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-  class="board"
-  [attr.viewBox]="getViewBox().toSVGString()"
-  preserveAspectRatio="xMidYMid meet">
-  @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
-    <g
-      id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-      [attr.transform]="getTriangleTranslationAt(coordAndContent.coord)"
-      (click)="onClick(coordAndContent.coord)">
-      @if (coordAndContent.content.isReachable()) {
-        <polygon
-          id="polygon-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-          [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
-          [ngClass]="getPlayerClassAt(coordAndContent.coord)"
-          class="base mid-stroke"
-          />
-      }
-      @if (coordAndContent.content.isDead()) {
-        <g
-          id="dead-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}">
-          @if (isUpward(coordAndContent.coord)) {
-            <line
-              [attr.x1]="25"
-              [attr.y1]="50"
-              [attr.x2]="SPACE_SIZE"
-              [attr.y2]="SPACE_SIZE"
-              class="base no-fill captured-stroke"
-              />
-          }
-          @if (isDownward(coordAndContent.coord)) {
-            <line
-              [attr.x1]="0"
-              [attr.y1]="0"
-              [attr.x2]="75"
-              [attr.y2]="50"
-              class="base no-fill captured-stroke"
-              />
-          }
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+        <g id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+           [attr.transform]="getTriangleTranslationAt(coordAndContent.coord)"
+           (click)="onClick(coordAndContent.coord)">
+            @if (coordAndContent.content.isReachable()) {
+                <polygon id="polygon-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
+                         [ngClass]="getPlayerClassAt(coordAndContent.coord)"
+                         class="base mid-stroke"/>
+            }
+            @if (coordAndContent.content.isDead()) {
+                <g id="dead-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}">
+                    @if (isUpward(coordAndContent.coord)) {
+                        <line [attr.x1]="25"
+                              [attr.y1]="50"
+                              [attr.x2]="SPACE_SIZE"
+                              [attr.y2]="SPACE_SIZE"
+                              class="base no-fill captured-stroke"/>
+                    }
+                    @if (isDownward(coordAndContent.coord)) {
+                        <line [attr.x1]="0"
+                              [attr.y1]="0"
+                              [attr.x2]="75"
+                              [attr.y2]="50"
+                              class="base no-fill captured-stroke"/>
+                    }
+                </g>
+            }
+            @if (coordAndContent.content.isTerritory()) {
+                <polygon id="territory-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
+                         [attr.transform]="getTerritoryTriangleTransform(coordAndContent.coord)"
+                         [ngClass]="getPlayerClass(coordAndContent.content.player)"/>
+            }
         </g>
-      }
-      @if (coordAndContent.content.isTerritory()) {
-        <polygon
-          id="territory-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-          [attr.points]="getTrianglePointsAt(coordAndContent.coord)"
-          [attr.transform]="getTerritoryTriangleTransform(coordAndContent.coord)"
-          [ngClass]="getPlayerClass(coordAndContent.content.player)"
-          />
-      }
-    </g>
-  }
+    }
 
-  @if (ko.isPresent()) {
-    <rect
-      id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
-      [attr.transform]="getKoTranslationAt(ko.get())"
-      [attr.width]="SPACE_SIZE * 0.25"
-      [attr.height]="SPACE_SIZE * 0.25"
-      [attr.x]="SPACE_SIZE * 0.375"
-      [attr.y]="SPACE_SIZE * 0.25"
-      class="captured-stroke mid-stroke no-fill"
-      />
-  }
+    @if (ko.isPresent()) {
+        <rect id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
+              [attr.transform]="getKoTranslationAt(ko.get())"
+              [attr.width]="SPACE_SIZE * 0.25"
+              [attr.height]="SPACE_SIZE * 0.25"
+              [attr.x]="SPACE_SIZE * 0.375"
+              [attr.y]="SPACE_SIZE * 0.25"
+              class="captured-stroke mid-stroke no-fill"/>
+    }
 
-  @if (last.isPresent() && getState().isOnBoard(last.get())) {
-    <polygon
-      id="last-{{ last.get().x }}-{{ last.get().y }}"
-      [attr.transform]="getTriangleTranslationAt(last.get())"
-      [attr.points]="getTrianglePointsAt(last.get())"
-      [ngClass]="getPlayerClassAt(last.get())"
-      class="last-move-stroke big-stroke no-fill"
-      />
-  }
+    @if (last.isPresent() && getState().isOnBoard(last.get())) {
+        <polygon id="last-{{ last.get().x }}-{{ last.get().y }}"
+                 [attr.transform]="getTriangleTranslationAt(last.get())"
+                 [attr.points]="getTrianglePointsAt(last.get())"
+                 [ngClass]="getPlayerClassAt(last.get())"
+                 class="last-move-stroke big-stroke no-fill"/>
+    }
 
 </svg>
