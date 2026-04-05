@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
@@ -191,7 +191,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
 
     public getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
-        console.log('get game status from freedoms', zeroFreedoms, oneFreedoms)
         if (zeroFreedoms[0] === 0) {
             return GameStatus.ONE_WON;
         } else if (oneFreedoms[0] === 0) {
