@@ -9,13 +9,13 @@
            (click)="onPieceClick(piece)"
            [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
             <g app-ring
-               [radius]="getPieceRadius(piece)"
-               [width]="this.pieceStrokeWidth / 2"
-               [strokeWidth]="this.pieceStrokeWidth / 4"
+               [outsideRadius]="pieceSizeToRadius.get(piece).get()"
+               [width]="ringStrokeWidth / 2"
+               [strokeWidth]="ringStrokeWidth / 4"
                [midRingClasses]="getSidePieceClasses(piece)"
                pointer-events="fill"
             ></g>
-            <text id="player-zero-tiles-count"
+            <text id="player-{{ player.toString() }}-pieces-{{ piece.toString() }}-count"
                   class="backgrounded-text text-big"
                   dominant-baseline="middle"
                   dy="0.1em"
@@ -26,7 +26,7 @@
     </g>
     <g #boardDiv>
         <g *ngFor="let line of board; index as y; trackBy: trackByIndex">
-            <g *ngFor="let spaceContent of line; index as x">
+            <g *ngFor="let spaceContent of line; index as x; trackBy: trackByIndex">
                 <rect id="click-{{ x }}-{{ y }}"
                       (click)="onBoardClick(x, y)"
                       [attr.x]="SPACE_SIZE * x"
@@ -37,12 +37,13 @@
                       class="base"
                 />
                 <g *ngFor="let pieceData of boardPieces[y][x].piecesData"
+                   id="piece-{{ x }}-{{ y }}"
                    (click)="onBoardClick(x, y)"
                    [attr.transform]="pieceData.translate"
                    app-ring
-                   [radius]="pieceData.radius"
-                   [width]="this.pieceStrokeWidth / 2"
-                   [strokeWidth]="this.pieceStrokeWidth / 4"
+                   [outsideRadius]="pieceData.radius"
+                   [width]="ringStrokeWidth / 2"
+                   [strokeWidth]="ringStrokeWidth / 4"
                    [midRingClasses]="pieceData.classes"
                 ></g>
             </g>
