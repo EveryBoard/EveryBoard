@@ -49,8 +49,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return GameNodeStats.createdNodes;
     }
 
-    public getMinimaxTime(): number {
-        return AIStats.aiTime;
+    public getMinimaxTime(): string {
+        return Array.from(AIStats.aiTime.entries())
+            .map(([key, value]) => `${key}: ${value.toFixed(2)} ms`)
+            .join(',');
     }
 
     public async ngAfterViewInit(): Promise<void> {

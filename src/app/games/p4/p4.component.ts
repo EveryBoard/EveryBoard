@@ -8,7 +8,7 @@ import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 
-import { P4Minimax } from './P4Minimax';
+import { P4IDMinimax, P4Minimax } from './P4Minimax';
 import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Config, P4Rules } from './P4Rules';
@@ -30,6 +30,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.setRulesAndNode('P4');
         this.availableAIs = [
             new P4Minimax(),
+            new P4IDMinimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
         ];
         this.encoder = P4Move.encoder;

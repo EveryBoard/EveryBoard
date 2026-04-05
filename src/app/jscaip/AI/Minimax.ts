@@ -8,7 +8,7 @@ import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
-import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
+import { AI, AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, MoveGenerator } from './AI';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 
@@ -53,51 +53,80 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
 
 }
 
+
+// Bound used by transposition tables
+type TTBound = 'EXACT' | 'LOWER' | 'UPPER';
+// A transposition table entry
+interface TTEntry<M> {
+    depth: number;
+    score: BoardValue;
+    bound: TTBound;
+    bestMove: M;
+}
+
 /**
  * This implements the minimax algorithm with alpha-beta pruning.
  */
-export class Minimax<M extends Move,
-                     S extends GameState,
-                     C extends RulesConfig = EmptyRulesConfig,
-                     L = void>
-implements AI<M, S, AIDepthLimitOptions, C>
+export abstract class AbstractMinimax<M extends Move,
+                                      S extends GameState,
+                                      O extends AIOptions,
+                                      C extends RulesConfig = EmptyRulesConfig,
+                                      L = void>
+implements AI<M, S, O, C>
 {
 
     // States whether the minimax takes random moves from the list of best moves.
-    public random: boolean = false;
+    protected random: boolean = false;
     // States whether alpha-beta pruning must be done. It probably is never useful to set it to false.
-    public prune: boolean = true;
+    protected prune: boolean = true;
+    // States whether transposition tables should be used. It's rare you don't want this, as you get 1-2 level extra in the same duration.
+    protected transpositionTables: boolean = true; 
+    
+    // The options of this minimax. Usually filled in by the constructor.
+    public availableOptions: O[] = [];
 
-    public readonly availableOptions: AIDepthLimitOptions[] = [];
+    // Can be set dynamically to stop the search early and return the current best results
+    protected endSearchBy: MGPOptional<number> = MGPOptional.empty();
+
+    private readonly transpositionTable: Map<string, TTEntry<M>> = new Map<string, TTEntry<M>>();
 
     public constructor(public readonly name: string,
-                       private readonly rules: SuperRules<M, S, C, L>,
-                       private readonly heuristic: Heuristic<M, S, BoardValue, C>,
-                       private readonly moveGenerator: MoveGenerator<M, S, C>)
+                       protected readonly rules: SuperRules<M, S, C, L>,
+                       protected readonly heuristic: Heuristic<M, S, BoardValue, C>,
+                       protected readonly moveGenerator: MoveGenerator<M, S, C>)
     {
-        for (let i: number = 1; i < 10; i++) {
-            this.availableOptions.push({ name: `Level ${i}`, maxDepth: i });
-        }
     }
-
     public toString(): string {
         return this.name;
     }
-
-    public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
-        Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
-                     'Minimax has been asked to choose a move from a finished game');
-        const boardValue: BoardValue = this.getExpectedExtremum(node, config);
-        let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
-                                                            options.maxDepth,
-                                                            boardValue.toMinimum(),
-                                                            boardValue.toMaximum(),
-                                                            config);
-        while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
-            bestDescendant = bestDescendant.parent.get();
-        }
-        return bestDescendant.previousMove.get();
+    
+    // Hash used for transposition tables
+    protected hash(state: S): string {
+        // This dumb hash works surprisingly well, but it can be useful to redefine it
+        // in particular to take benefit of symmetries etc. (but it has to be fast)
+        // Typical stuff we want to do:
+        // - remove turn information
+        // - remove any score information
+        return JSON.stringify(state);
     }
+
+
+    public abstract doChooseNextMove(node: GameNode<M, S>, options: O, config: MGPOptional<C>): M;
+
+    public chooseNextMove(node: GameNode<M, S>, options: O, config: MGPOptional<C>): M {
+        const start: number = performance.now();
+
+        try {
+            return this.doChooseNextMove(node, options, config);
+        } finally {
+            const duration: number = performance.now() - start;
+
+            const key: string = this.toString();
+            const previous: number = AIStats.aiTime.get(key) ?? 0;
+            AIStats.aiTime.set(key, previous + duration);
+        }
+    }
+
 
     public alphaBeta(node: GameNode<M, S>,
                      depth: number,
@@ -107,16 +136,72 @@ implements AI<M, S, AIDepthLimitOptions, C>
     : GameNode<M, S>
     {
         if (depth < 1) {
-            return node; // leaf by calculation
+            return node; // this is the end of our search as we attained the required depth
         } else if (this.rules.getGameStatus(node, config).isEndGame) {
-            return node; // rules - leaf or calculation - leaf
+            return node; // this is a leaf as the game has ended
+        } 
+        
+        let ttKey: string = '';
+        let ttEntry: TTEntry<M> | undefined = undefined;
+        let alphaOrig: BoardValue = alpha;
+        let betaOrig: BoardValue = beta;
+        if (this.transpositionTables) {
+            // Use the transposition table to either already find the best move without searching, or to restrict alpha/beta further if possible
+            ttKey = this.hash(node.gameState);
+            ttEntry = this.transpositionTable.get(ttKey);
+            if (ttEntry && ttEntry.depth >= depth) {
+                if (ttEntry.bound === 'EXACT') {
+                    this.setScore(node, ttEntry.score);
+                    // return this.getOrCreateChild(node, ttEntry.bestMove, config);
+                    return node;
+                }
+                if (ttEntry.bound === 'LOWER') {
+                    alpha = BoardValue.max(alpha, ttEntry.score);
+                } else if (ttEntry.bound === 'UPPER') {
+                    beta = BoardValue.min(beta, ttEntry.score);
+                }
+                if (BoardValue.isGreaterThan(alpha, beta) || alpha.equals(beta)) {
+                    this.setScore(node, ttEntry.score);
+                    // return this.getOrCreateChild(node, ttEntry.bestMove, config);
+                    return node;
+                }
+            }
         }
-        const possibleMoves: Set<M> = this.getPossibleMoves(node, config);
+        
+        let possibleMoves: Set<M> = this.getPossibleMoves(node, config);
         Utils.assert(possibleMoves.size() > 0, 'Minimax ' + this.name + ' should give move, received none!');
+
+        if (this.transpositionTables && ttEntry?.bestMove) {
+            // reorder possible moves for more pruning: best move goes first
+            Utils.assert(possibleMoves.contains(ttEntry.bestMove), 
+                         'TT bestMove ' + ttEntry.bestMove.toString() + ' is not in possible moves for state ' + this.hash(node.gameState));
+            possibleMoves.removeElement(ttEntry.bestMove);
+            possibleMoves = new Set([ttEntry.bestMove, ...possibleMoves]);
+        }
+
         const bestChildren: GameNode<M, S>[] = this.getBestChildren(node, possibleMoves, depth, alpha, beta, config);
         const bestChild: GameNode<M, S> = this.getBestChildAmong(bestChildren);
         const bestChildScore: BoardValue = this.getScore(bestChild, config);
         this.setScore(node, bestChildScore);
+
+        if (this.transpositionTables) {
+            // Update the transposition table
+            let bound: TTBound;
+            if (BoardValue.isLessThan(bestChildScore, alphaOrig)) {
+                bound = 'UPPER';
+            } else if (BoardValue.isGreaterThan(bestChildScore, betaOrig)) {
+                bound = 'LOWER';
+            } else {
+                bound = 'EXACT';
+            }
+
+            this.transpositionTable.set(ttKey, {
+                depth,
+                score: bestChildScore,
+                bound,
+                bestMove: bestChild.previousMove.get(),
+            });
+        }
         return bestChild;
     }
 
@@ -145,14 +230,17 @@ implements AI<M, S, AIDepthLimitOptions, C>
         const newValueIsBetter: (newValue: BoardValue, currentValue: BoardValue) => boolean =
             currentPlayer === Player.ZERO ? BoardValue.isLessThan : BoardValue.isGreaterThan;
         for (const move of possibleMoves) {
+            if (this.endSearchBy.isPresent() && Date.now() > this.endSearchBy.get() && bestChildren.length > 0) {
+                return bestChildren;
+            }
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
             const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
             const bestChildValue: BoardValue = this.getScore(bestChildDescendant, config);
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
                 extremumExpected = bestChildValue;
-                bestChildren = [bestChildDescendant];
+                bestChildren = [child];
             } else if (bestChildValue.equals(extremumExpected)) {
-                bestChildren.push(bestChildDescendant);
+                bestChildren.push(child);
             }
             if (this.prune && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
                 // cut-off, no need to explore the other children
@@ -167,7 +255,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return bestChildren;
     }
 
-    private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+    protected getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
         const childValue: BoardValue = this.getScore(node, config);
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         if (currentPlayer === Player.ZERO) {
@@ -178,6 +266,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
     }
 
     private getBestChildAmong(bestChildren: GameNode<M, S>[]): GameNode<M, S> {
+        Utils.assert(bestChildren.length > 0, 'getBestChildAmong expects at least one child')
         if (this.random) {
             return ArrayUtils.getRandomElement(bestChildren);
         } else {
@@ -241,4 +330,92 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return 'BoardValue=' + this.heuristic.getBoardValue(node, config).metrics;
     }
 
+}
+
+export class Minimax<M extends Move,
+                     S extends GameState,
+                     C extends RulesConfig = EmptyRulesConfig,
+                     L = void>
+extends AbstractMinimax<M, S, AIDepthLimitOptions, C, L> {
+
+    public constructor(name: string,
+                       rules: SuperRules<M, S, C, L>,
+                       heuristic: Heuristic<M, S, BoardValue, C>,
+                       moveGenerator: MoveGenerator<M, S, C>) {
+        super(name, rules, heuristic, moveGenerator);
+        for (let i: number = 1; i < 10; i++) {
+            this.availableOptions.push({ name: `Level ${i}`, maxDepth: i });
+        }
+    }
+
+    public doChooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
+        Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
+                     'Minimax has been asked to choose a move from a finished game');
+        const boardValue: BoardValue = this.getExpectedExtremum(node, config);
+        let bestDescendant: GameNode<M, S> = this.alphaBeta(node,
+                                                            options.maxDepth,
+                                                            boardValue.toMinimum(),
+                                                            boardValue.toMaximum(),
+                                                            config);
+        while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
+            bestDescendant = bestDescendant.parent.get();
+        }
+        return bestDescendant.previousMove.get();
+    }
+}
+
+export class IterativeDeepeningMinimax<M extends Move,
+                                       S extends GameState,
+                                       C extends RulesConfig = EmptyRulesConfig,
+                                       L = void>
+extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
+
+    public constructor(name: string,
+                       rules: SuperRules<M, S, C, L>,
+                       heuristic: Heuristic<M, S, BoardValue, C>,
+                       moveGenerator: MoveGenerator<M, S, C>) {
+        super(name, rules, heuristic, moveGenerator);
+        for (let i: number = 1; i < 10; i++) {
+            this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
+        }
+    }
+    
+    public doChooseNextMove(node: GameNode<M, S>, options: AITimeLimitOptions, config: MGPOptional<C>): M {
+        Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
+                     'Minimax has been asked to choose a move from a finished game');
+        const boardValue: BoardValue = this.getExpectedExtremum(node, config);
+
+        const start: number = Date.now();
+        const endTime: number = Date.now() + options.maxSeconds * 1000;
+        this.endSearchBy = MGPOptional.of(endTime);
+        let currentDepth: number = 1;
+        let bestDescendant: GameNode<M, S> | null = null;
+        while (Date.now() < endTime) {
+            console.log('current depth: ' + currentDepth)
+            const candidate = this.alphaBeta(node, currentDepth, boardValue.toMinimum(), boardValue.toMaximum(), config);
+            if (Date.now() < this.endSearchBy.get()) {
+                bestDescendant = candidate;
+            }
+            currentDepth++;
+            const gameStatus: GameStatus = this.rules.getGameStatus(candidate, config);
+            if (gameStatus.isEndGame) {
+                break; // no need to explore further
+            }
+        }
+        if (bestDescendant == null) {
+            throw new Error('no best descendent')
+            // default to depth 1 if nothing has been computed
+            bestDescendant = this.alphaBeta(node, 1, boardValue.toMinimum(), boardValue.toMaximum(), config);
+        }
+        console.log('achieved depth: ' + currentDepth + ' in ' + (Date.now() - start) + 'ms')
+
+        while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
+            bestDescendant = bestDescendant.parent.get();
+        }
+        this.endSearchBy = MGPOptional.empty();
+        console.log('best descendant: ' + JSON.stringify(bestDescendant.gameState))
+        console.log('previous move selected: ' + bestDescendant.previousMove.get().toString())
+        return bestDescendant.previousMove.get();
+    }
+        
 }

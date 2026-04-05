@@ -16,7 +16,7 @@ import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
-import { MancalaScoreMinimax } from './MancalaScoreMinimax';
+import { IDMancalaScoreMinimax, MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MancalaState } from './MancalaState';
 
 export type SeedDropResult = {
@@ -412,6 +412,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     {
         return [
             new MancalaScoreMinimax(this.rules, moveGenerator),
+            new IDMancalaScoreMinimax(this.rules, moveGenerator),
             new MCTS($localize`MCTS`, moveGenerator, this.rules),
         ];
     }

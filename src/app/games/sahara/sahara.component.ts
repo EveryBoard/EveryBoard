@@ -10,7 +10,7 @@ import { Player } from '../../jscaip/Player';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { SaharaFailure } from './SaharaFailure';
-import { SaharaMinimax } from './SaharaMinimax';
+import { IDSaharaMinimax, SaharaMinimax } from './SaharaMinimax';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
@@ -39,6 +39,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.setRulesAndNode('Sahara');
         this.availableAIs = [
             new SaharaMinimax(),
+            new IDSaharaMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;

@@ -1,4 +1,4 @@
-import { Minimax } from '../../jscaip/AI/Minimax';
+import { DummyHeuristic, IterativeDeepeningMinimax, Minimax } from '../../jscaip/AI/Minimax';
 
 import { P4Heuristic } from './P4Heuristic';
 import { P4Move } from './P4Move';
@@ -12,6 +12,18 @@ export class P4Minimax extends Minimax<P4Move, P4State, P4Config> {
         super($localize`Minimax`,
               P4Rules.get(),
               new P4Heuristic(),
+              new P4OrderedMoveGenerator(),
+        );
+        this.transpositionTables = false;
+    }
+}
+
+export class P4IDMinimax extends IterativeDeepeningMinimax<P4Move, P4State, P4Config> {
+
+    public constructor() {
+        super($localize`IDMinimax`,
+              P4Rules.get(),
+              new DummyHeuristic(),
               new P4OrderedMoveGenerator(),
         );
     }
