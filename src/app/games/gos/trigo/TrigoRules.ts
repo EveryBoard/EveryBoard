@@ -1,14 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
-import { TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
+import { GoGroupDataFactory, TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
@@ -61,7 +60,7 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         return MGPOptional.of(TrigoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getGoGroupDataFactory(): GroupDataFactory<GoPiece> {
+    public override getGoGroupDataFactory(): GoGroupDataFactory {
         return new TriangularGoGroupDataFactory();
     }
 

@@ -3001,6 +3001,9 @@
         <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
         Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
       </trans-unit>
+      <trans-unit id="3293657922924170725" datatype="html">
+        <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
+      </trans-unit>
       <trans-unit id="1982783281923413187" datatype="html">
         <source>You can only rebound on dark spaces.</source>
       </trans-unit>
@@ -3018,6 +3021,9 @@
       </trans-unit>
       <trans-unit id="5908478672900888285" datatype="html">
         <source>Those two spaces have no intermediary neighbor.</source>
+      </trans-unit>
+      <trans-unit id="545011647716248042" datatype="html">
+        <source>Mobility</source>
       </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>

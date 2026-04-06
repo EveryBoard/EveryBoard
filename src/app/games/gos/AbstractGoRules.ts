@@ -1,7 +1,6 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
-import { GroupDataFactory } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -13,6 +12,7 @@ import { Table } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
 
 import { GoFailure } from './GoFailure';
+import { GoGroupDataFactory } from './GoGroupDataFactory';
 import { GoGroupData } from './GoGroupsData';
 import { GoMove } from './GoMove';
 import { GoPhase } from './GoPhase';
@@ -32,16 +32,15 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         super();
     }
 
-    protected abstract getGoGroupDataFactory(): GroupDataFactory<GoPiece>;
+    public abstract getGoGroupDataFactory(): GoGroupDataFactory;
 
     private getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
         if (captures.length === 1) {
             const captured: Coord = captures[0];
             const capturerCoord: Coord = move.coord;
             const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
-            const goGroupDataFactory: GroupDataFactory<GoPiece> = this.getGoGroupDataFactory();
-            const capturersInfo: GoGroupData =
-                goGroupDataFactory.getGroupData(capturerCoord, newBoard) as GoGroupData;
+            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
+            const capturersInfo: GoGroupData = goGroupDataFactory.getGroupData(capturerCoord, newBoard);
             const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
             const capturersGroup: Coord[] =
                 GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.darkCoords : capturersInfo.lightCoords;
@@ -95,28 +94,11 @@ export abstract class AbstractGoRules<C extends RulesConfig>
     }
 
     private getEmptyZones(deadlessState: GoState): GoGroupData[] {
-        return this.getGroupsDataWhere(deadlessState.getCopiedBoard(), (piece: GoPiece) => piece.isEmpty());
-    }
-
-    public getGroupsDataWhere(board: GoPiece[][], condition: (piece: GoPiece) => boolean): GoGroupData[] {
-        const groups: GoGroupData[] = [];
-        let coord: Coord;
-        let group: GoGroupData;
-        let currentSpace: GoPiece;
-        const goGroupDataFactory: GroupDataFactory<GoPiece> = this.getGoGroupDataFactory();
-        for (let y: number = 0; y < board.length; y++) {
-            for (let x: number = 0; x < board[0].length; x++) {
-                coord = new Coord(x, y);
-                currentSpace = board[y][x];
-                if (condition(currentSpace)) {
-                    if (groups.some((currentGroup: GoGroupData) => currentGroup.selfContains(coord)) === false) {
-                        group = goGroupDataFactory.getGroupData(coord, board) as GoGroupData;
-                        groups.push(group);
-                    }
-                }
-            }
-        }
-        return groups;
+        return this.getGoGroupDataFactory()
+            .getGroupsDataWhere(
+                deadlessState.getCopiedBoard(),
+                (piece: GoPiece) => piece.isEmpty(),
+            );
     }
 
     public switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
@@ -124,8 +106,8 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
         Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
-        const goGroupDataFactory: GroupDataFactory<GoPiece> = this.getGoGroupDataFactory();
-        const group: GoGroupData = goGroupDataFactory.getGroupData(groupCoord, switchedBoard) as GoGroupData;
+        const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
+        const group: GoGroupData = goGroupDataFactory.getGroupData(groupCoord, switchedBoard);
         const captured: PlayerNumberMap = switchedState.getCapturedCopy();
         switch (group.color) {
             case GoPiece.DEAD_DARK:
@@ -187,9 +169,8 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             return MGPFallible.success(captureState.capturedCoords);
         } else {
             boardCopy[move.coord.y][move.coord.x] = state.turn%2 === 0 ? GoPiece.DARK : GoPiece.LIGHT;
-            const goGroupDataFactory: GroupDataFactory<GoPiece> = this.getGoGroupDataFactory();
-            const goGroupsData: GoGroupData =
-                goGroupDataFactory.getGroupData(move.coord, boardCopy) as GoGroupData;
+            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
+            const goGroupsData: GoGroupData = goGroupDataFactory.getGroupData(move.coord, boardCopy);
             const isSuicide: boolean = goGroupsData.emptyCoords.length === 0;
             boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
 
@@ -234,9 +215,9 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             const opponent: GoPiece = state.turn%2 === 0 ? GoPiece.LIGHT : GoPiece.DARK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === opponent) {
                 Debug.display('GoRules', 'getCapturedInDirection', 'a group could be captured');
-                const goGroupDataFactory: GroupDataFactory<GoPiece> = this.getGoGroupDataFactory();
+                const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
                 const neightbooringGroup: GoGroupData =
-                    goGroupDataFactory.getGroupData(neightbooringCoord, copiedBoard) as GoGroupData;
+                    goGroupDataFactory.getGroupData(neightbooringCoord, copiedBoard);
                 const koCoord: MGPOptional<Coord> = state.koCoord;
                 if (this.isCapturableGroup(neightbooringGroup, koCoord)) {
                     Debug.display('GoRules', 'getCapturedInDirection', {
