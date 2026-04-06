@@ -98,9 +98,16 @@ export class ArrayUtils {
      * Counts the number of element in an array that have the provided value
      */
     public static count<T>(array: ReadonlyArray<T>, value: T): number {
+        return ArrayUtils.countByPredicate(
+            array,
+            (element: T) => comparableEquals(element, value),
+        );
+    }
+
+    public static countByPredicate<T>(array: ReadonlyArray<T>, predicate: (value: T) => boolean): number {
         let total: number = 0;
         for (const element of array) {
-            if (comparableEquals(element, value)) {
+            if (predicate(element)) {
                 total++;
             }
         }

@@ -86,7 +86,7 @@ export class TrexoTutorial extends Tutorial {
             TrexoMove.from(new Coord(2, 0), new Coord(2, 1)).get(),
             (lastMove: TrexoMove, _: TrexoState, resultingState: TrexoState) => {
                 const moveScore: number = TrexoRules.TREXO_HELPER.getSquareScore(resultingState, lastMove.getOne());
-                if (moveScore === Number.MAX_SAFE_INTEGER) {
+                if (moveScore === Number.POSITIVE_INFINITY) {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure(TutorialStepMessage.FAILED_TRY_AGAIN());

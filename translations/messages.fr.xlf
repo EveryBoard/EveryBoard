@@ -4107,6 +4107,10 @@
         <target>Si, à son tour de jeu, un joueur n&apos;a aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
         Si d&apos;aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.</target>
       </trans-unit>
+      <trans-unit id="3293657922924170725" datatype="html">
+        <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
+        <target>Capture &gt; Liberté du prisonnier &gt; Autres libertés</target>
+      </trans-unit>
       <trans-unit id="1982783281923413187" datatype="html">
         <source>You can only rebound on dark spaces.</source>
         <target>On ne peux rebondir que sur les cases foncées.</target>
@@ -4130,6 +4134,10 @@
       <trans-unit id="5908478672900888285" datatype="html">
         <source>Those two spaces have no intermediary neighbor.</source>
         <target>Ces deux cases n&apos;ont pas de voisin commun.</target>
+      </trans-unit>
+      <trans-unit id="545011647716248042" datatype="html">
+        <source>Mobility</source>
+        <target>Mobilité</target>
       </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
