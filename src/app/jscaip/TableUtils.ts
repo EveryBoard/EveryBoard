@@ -130,7 +130,8 @@ export class TableWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
         }
         line.set(coord.x, value);
     }
-    [Symbol.iterator](): IterableIterator<Cell<T>> {
+
+    public [Symbol.iterator](): IterableIterator<Cell<T>> {
         const elements: Cell<T>[] = [];
         const ys: number[] = this.content.getKeySet().toList();
         ys.sort(ArrayUtils.smallerFirst);
