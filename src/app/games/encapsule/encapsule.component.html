@@ -3,8 +3,8 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <g #remainingPieces
-       *ngFor="let player of Player.PLAYERS; trackBy: trackByPlayer">
-        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX; trackBy: trackByPiece"
+       *ngFor="let player of Player.PLAYERS">
+        <g *ngFor="let piece of getRemainingPiecesTypeOfPlayer(player); index as pieceIdX"
            id="remaining-piece-{{ piece.toString() }}"
            (click)="onPieceClick(piece)"
            [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
@@ -25,8 +25,8 @@
         </g>
     </g>
     <g #boardDiv>
-        <g *ngFor="let line of board; index as y; trackBy: trackByIndex">
-            <g *ngFor="let spaceContent of line; index as x; trackBy: trackByIndex">
+        <g *ngFor="let line of board; index as y">
+            <g *ngFor="let spaceContent of line; index as xt">
                 <rect id="click-{{ x }}-{{ y }}"
                       (click)="onBoardClick(x, y)"
                       [attr.x]="SPACE_SIZE * x"

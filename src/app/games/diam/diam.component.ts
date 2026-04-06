@@ -256,7 +256,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     }
 
     public override hideLastMove(): void {
-        return; // TODO FOR REVIEW: why ?
+        return;
     }
 
     private showLastMoveOnSpaces(move: DiamMove): void {

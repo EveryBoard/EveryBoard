@@ -8,15 +8,15 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 export class RingComponent implements OnChanges {
 
     // outside radius meaning circle.r + (circle.strokeWidth / 2)
-    @Input() outsideRadius: number = 100;
+    @Input() public outsideRadius: number = 100;
 
-    @Input() strokeColor: string = 'black';
+    @Input() public strokeColor: string = 'black';
 
-    @Input() strokeWidth: number;
+    @Input() public strokeWidth: number;
 
-    @Input() width: number;
+    @Input() public width: number;
 
-    @Input() midRingClasses: string | string[];
+    @Input() public midRingClasses: string | string[];
 
     public outsideStrokeRadius: number;
 

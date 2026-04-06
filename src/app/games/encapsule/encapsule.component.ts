@@ -247,18 +247,6 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return 1.5 * size * this.ringStrokeWidth;
     }
 
-    public trackByPlayer(_idx: number, player: Player): number {
-        return player.getValue();
-    }
-
-    public trackByIndex(idx: number): number {
-        return idx;
-    }
-
-    public trackByPiece(_idx: number, piece: EncapsulePiece): string {
-        return piece.toString();
-    }
-
     protected getSidePieceClasses(piece: EncapsulePiece): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece)) {

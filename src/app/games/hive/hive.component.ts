@@ -278,8 +278,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     public override hideLastMove(): void {
-        // Not really usefull here, until viewInfo is replace by a more simple system
-        // TODO FOR REVIEW: why keep it ?
+        return;
     }
 
     private getLastMoveCoords(move: HiveMove): Coord[] {
