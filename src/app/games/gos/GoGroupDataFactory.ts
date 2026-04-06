@@ -32,7 +32,7 @@ export class TriangularGoGroupDataFactory extends GoGroupDataFactory {
 
 }
 
-export class HexagonalGoGroupDataFactory extends GoGroupDatasFactory {
+export class HexagonalGoGroupDataFactory extends GoGroupDataFactory {
 
     public getDirections(_: Coord): ReadonlyArray<Direction> {
         return HexaDirection.factory.all;
