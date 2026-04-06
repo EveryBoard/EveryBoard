@@ -8,7 +8,7 @@ import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiComponent } from '../reversi.component';
 
-describe('ReversiComponent', () => {
+fdescribe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
 

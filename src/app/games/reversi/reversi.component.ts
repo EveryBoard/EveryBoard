@@ -62,6 +62,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     }
 
     public override async showLastMove(move: ReversiMove): Promise<void> {
+        console.log('jaaj > showLastMove 0', this.capturedCoords.length)
+        // this.capturedCoords = [];
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
@@ -74,10 +76,12 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                 captured = captured.getNext(dir, 1);
             }
         }
+        console.log('jaaj > showLastMove 1', this.capturedCoords.length)
     }
 
     public override hideLastMove(): void {
         this.capturedCoords = [];
+        console.log('jaaj > hideLastMove', this.capturedCoords.length)
         this.lastMove = MGPOptional.empty();
     }
 
