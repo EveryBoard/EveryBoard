@@ -115,6 +115,20 @@ describe('ArrayUtils', () => {
         });
     });
 
+    describe('countByPredicate', () => {
+        it('should count the given value', () => {
+            // Given an array
+            const array: number[] = [0, 1, 2, 3, 4];
+            // When counting the number of times a number pass the predicate
+            const count: number = ArrayUtils.countByPredicate(
+                array,
+                (value: number) => value % 2 === 0,
+            );
+            // Then it should return the correct value
+            expect(count).toBe(3);
+        });
+    });
+
     describe('isGreaterThan && isLessThan', () => {
 
         function expectComparisonCorrectness(left: number[], status: '<' | '=' | '>', right: number[]): void {
@@ -176,7 +190,7 @@ describe('ArrayUtils', () => {
             // Given a list being inferior in the early number
             const inferior: number[] = [9876156];
             // and another list being superior in the early number
-            const superior: number[] = [Number.MAX_SAFE_INTEGER];
+            const superior: number[] = [Number.POSITIVE_INFINITY];
 
             // When comparing them
             // Then isGreaterThan should be false and isLessThan true

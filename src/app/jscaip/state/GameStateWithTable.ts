@@ -78,9 +78,9 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         }
     }
 
-    public findMatchingCoord(premise: (coord: Coord, content: P) => boolean): MGPOptional<Coord> {
+    public findMatchingCoord(predicate: (coord: Coord, content: P) => boolean): MGPOptional<Coord> {
         for (const { coord, content } of this.getCoordsAndContents()) {
-            const result: boolean = premise(coord, content);
+            const result: boolean = predicate(coord, content);
             if (result) {
                 return MGPOptional.of(coord);
             }

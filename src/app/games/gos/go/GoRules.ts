@@ -1,14 +1,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { GobanUtils } from '../../../jscaip/GobanUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
-import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
+import { GoGroupDataFactory, OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
@@ -88,7 +87,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getGoGroupDataFactory(): GroupDataFactory<GoPiece> {
+    public override getGoGroupDataFactory(): GoGroupDataFactory {
         return new OrthogonalGoGroupDataFactory();
     }
 

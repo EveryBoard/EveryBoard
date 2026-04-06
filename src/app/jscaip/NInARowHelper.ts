@@ -72,7 +72,7 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
             const lineAllies: number = directionAllies + oppositeDirectionAllies;
             if (this.N <= lineAllies + 1) {
-                return Number.MAX_SAFE_INTEGER;
+                return Number.POSITIVE_INFINITY;
             }
             const directionFreeSpaces: number = freeSpaceByDirs.get(dir).get();
             const oppositeDirectionFreeSpaces: number = freeSpaceByDirs.get(dir.getOpposite()).get();
