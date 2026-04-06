@@ -26,7 +26,7 @@
     </g>
     <g #boardDiv>
         <g *ngFor="let line of board; index as y">
-            <g *ngFor="let spaceContent of line; index as xt">
+            <g *ngFor="let spaceContent of line; index as x">
                 <rect id="click-{{ x }}-{{ y }}"
                       (click)="onBoardClick(x, y)"
                       [attr.x]="SPACE_SIZE * x"
