@@ -69,7 +69,7 @@ module.exports = {
             '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
             '@typescript-eslint/prefer-for-of': ['warn'],
             '@typescript-eslint/prefer-nullish-coalescing': ['warn'],
-            '@typescript-eslint/prefer-readonly': ['warn'],
+            '@typescript-eslint/prefer-readonly': ['error'],
             '@typescript-eslint/switch-exhaustiveness-check': [
                 'warn',
                 { 'allowDefaultCaseForExhaustiveSwitch': true, 'considerDefaultExhaustiveForUnions': true }

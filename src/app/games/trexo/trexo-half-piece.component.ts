@@ -66,10 +66,11 @@ export class TrexoHalfPieceComponent extends BaseGameComponent {
     }
 
     private getParallelogramPoints(): [Coord, Coord, Coord, Coord, Coord, Coord, Coord] {
-        const parallelogramWidth: number = this.mode()!.parallelogramHeight * this.mode()!.horizontalWidthRatio;
-        const parallelogramHeight: number = this.mode()!.parallelogramHeight;
-        const parallelogramOffset: number = this.mode()!.offsetRatio * this.mode()!.parallelogramHeight;
-        const pieceHeight: number = this.mode()!.parallelogramHeight * this.mode()!.pieceHeightRatio;
+        const mode: ModeConfig = this.mode();
+        const parallelogramWidth: number = mode.parallelogramHeight * mode.horizontalWidthRatio;
+        const parallelogramHeight: number = mode.parallelogramHeight;
+        const parallelogramOffset: number = mode.offsetRatio * mode.parallelogramHeight;
+        const pieceHeight: number = mode.parallelogramHeight * mode.pieceHeightRatio;
         const x1: number = parallelogramWidth;
         const y1: number = 0;
         const x3: number = parallelogramWidth - parallelogramOffset;
