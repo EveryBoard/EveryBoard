@@ -99,7 +99,7 @@ implements AI<M, S, O, C>
     public toString(): string {
         return this.name;
     }
-    
+
     // Hash used for transposition tables
     protected hash(state: S): string {
         // This dumb hash works surprisingly well, but it can be useful to redefine it
@@ -139,35 +139,36 @@ implements AI<M, S, O, C>
             return node; // this is the end of our search as we attained the required depth
         } else if (this.rules.getGameStatus(node, config).isEndGame) {
             return node; // this is a leaf as the game has ended
-        } 
-        
+        }
+
         let ttKey: string = '';
         let ttEntry: TTEntry<M> | undefined = undefined;
-        let alphaOrig: BoardValue = alpha;
-        let betaOrig: BoardValue = beta;
+        const alphaOrig: BoardValue = alpha;
+        const betaOrig: BoardValue = beta;
         if (this.transpositionTables) {
-            // Use the transposition table to either already find the best move without searching, or to restrict alpha/beta further if possible
+            // Use the transposition table to either already find the best move without searching, 
+            // or to restrict alpha/beta further if possible
             ttKey = this.hash(node.gameState);
             ttEntry = this.transpositionTable.get(ttKey);
             if (ttEntry && ttEntry.depth >= depth) {
-                if (ttEntry.bound === 'EXACT') {
-                    this.setScore(node, ttEntry.score);
-                    // return this.getOrCreateChild(node, ttEntry.bestMove, config);
-                    return node;
-                }
-                if (ttEntry.bound === 'LOWER') {
-                    alpha = BoardValue.max(alpha, ttEntry.score);
-                } else if (ttEntry.bound === 'UPPER') {
-                    beta = BoardValue.min(beta, ttEntry.score);
+                switch (ttEntry.bound) {
+                    case 'EXACT':
+                        this.setScore(node, ttEntry.score);
+                        return node;
+                    case 'LOWER':
+                        alpha = BoardValue.max(alpha, ttEntry.score);
+                        break;
+                    case 'UPPER':
+                        beta = BoardValue.min(beta, ttEntry.score);
+                        break;
                 }
                 if (BoardValue.isGreaterThan(alpha, beta) || alpha.equals(beta)) {
                     this.setScore(node, ttEntry.score);
-                    // return this.getOrCreateChild(node, ttEntry.bestMove, config);
                     return node;
                 }
             }
         }
-        
+
         let possibleMoves: Set<M> = this.getPossibleMoves(node, config);
         Utils.assert(possibleMoves.size() > 0, 'Minimax ' + this.name + ' should give move, received none!');
 
@@ -234,12 +235,12 @@ implements AI<M, S, O, C>
                 return bestChildren;
             }
             const child: GameNode<M, S> = this.getOrCreateChild(node, move, config);
-            const bestChildDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
-            const bestChildValue: BoardValue = this.getScore(bestChildDescendant, config);
-            if (newValueIsBetter(bestChildValue, extremumExpected) || bestChildren.length === 0) {
-                extremumExpected = bestChildValue;
+            const bestDescendant: GameNode<M, S> = this.alphaBeta(child, depth - 1, alpha, beta, config);
+            const bestDescendantValue: BoardValue = this.getScore(bestDescendant, config);
+            if (newValueIsBetter(bestDescendantValue, extremumExpected) || bestChildren.length === 0) {
+                extremumExpected = bestDescendantValue;
                 bestChildren = [child];
-            } else if (bestChildValue.equals(extremumExpected)) {
+            } else if (bestDescendantValue.equals(extremumExpected)) {
                 bestChildren.push(child);
             }
             if (this.prune && newValueIsBetter(extremumExpected, currentPlayer === Player.ZERO ? alpha : beta)) {
@@ -383,18 +384,21 @@ extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
     public doChooseNextMove(node: GameNode<M, S>, options: AITimeLimitOptions, config: MGPOptional<C>): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
+        console.log('next move for ' + this.hash(node.gameState))
         const boardValue: BoardValue = this.getExpectedExtremum(node, config);
 
         const start: number = Date.now();
         const endTime: number = Date.now() + options.maxSeconds * 1000;
         this.endSearchBy = MGPOptional.of(endTime);
         let currentDepth: number = 1;
+        let achievedDepth: number = 1; // only for logging
         let bestDescendant: GameNode<M, S> | null = null;
         while (Date.now() < endTime) {
             console.log('current depth: ' + currentDepth)
             const candidate = this.alphaBeta(node, currentDepth, boardValue.toMinimum(), boardValue.toMaximum(), config);
             if (Date.now() < this.endSearchBy.get()) {
                 bestDescendant = candidate;
+                achievedDepth = currentDepth;
             }
             currentDepth++;
             const gameStatus: GameStatus = this.rules.getGameStatus(candidate, config);
@@ -407,7 +411,7 @@ extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
             // default to depth 1 if nothing has been computed
             bestDescendant = this.alphaBeta(node, 1, boardValue.toMinimum(), boardValue.toMaximum(), config);
         }
-        console.log('achieved depth: ' + currentDepth + ' in ' + (Date.now() - start) + 'ms')
+        console.log('achieved depth: ' + achievedDepth + ' in ' + (Date.now() - start) + 'ms')
 
         while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
             bestDescendant = bestDescendant.parent.get();

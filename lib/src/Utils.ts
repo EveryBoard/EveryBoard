@@ -9,7 +9,8 @@ export class Utils {
      * Utils.logError = myErrorLogger;
      */
     public static logError: (kind: string, message: string, data?: JSONValue) => MGPValidation =
-        (_kind: string, message: string, _data?: JSONValue) => {
+        (kind: string, message: string, data?: JSONValue) => {
+            console.log(kind, message, data)
             return MGPValidation.failure(message);
         };
 
