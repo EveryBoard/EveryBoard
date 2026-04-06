@@ -3,12 +3,11 @@ import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GroupDataFactory } from '../../../jscaip/BoardData';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
-import { HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
+import { GoGroupDataFactory, HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
@@ -66,7 +65,7 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
         return MGPOptional.of(HexagonalGoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getGoGroupDataFactory(): GroupDataFactory<GoPiece> {
+    public override getGoGroupDataFactory(): GoGroupDataFactory {
         return new HexagonalGoGroupDataFactory();
     }
 
