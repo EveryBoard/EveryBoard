@@ -9,6 +9,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
@@ -17,11 +18,12 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneState } from './AbaloneState';
 
-export type AbaloneConfig = {
+export type AbaloneConfig = RulesConfig & {
 
     nbToCapture: number;
 
     maximumPushingGroupSize: number;
+
 }
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;

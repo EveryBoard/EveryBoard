@@ -13,7 +13,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export interface HexagonalGoConfig extends RulesConfig {
+export type HexagonalGoConfig = RulesConfig & {
 
     size: number;
 

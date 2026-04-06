@@ -13,7 +13,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export interface TrigoConfig extends RulesConfig {
+export type TrigoConfig = RulesConfig & {
 
     size: number;
 

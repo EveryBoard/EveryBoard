@@ -8,6 +8,7 @@ import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 
@@ -16,8 +17,10 @@ import { TeekoState } from './TeekoState';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 
-export type TeekoConfig = {
+export type TeekoConfig = RulesConfig & {
+
     teleport: boolean;
+
 };
 
 export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoConfig> {

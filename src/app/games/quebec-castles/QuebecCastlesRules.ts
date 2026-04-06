@@ -10,6 +10,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Localized } from '../../utils/LocaleUtils';
@@ -58,7 +59,7 @@ export const DropModes: Record<DropMode, Localized> = {
     'BY_BATCH': () => $localize`By batch`,
 };
 
-export type QuebecCastlesConfig = {
+export type QuebecCastlesConfig = RulesConfig & {
 
     width: number;
 

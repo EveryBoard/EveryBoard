@@ -8,6 +8,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -28,9 +29,12 @@ export class ReversiMoveWithSwitched {
 
 export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
-export type ReversiConfig = {
-    width: number,
-    height: number,
+export type ReversiConfig = RulesConfig & {
+
+    width: number;
+
+    height: number;
+
 };
 
 @Debug.log
