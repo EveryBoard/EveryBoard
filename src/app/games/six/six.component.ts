@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
@@ -13,7 +14,6 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { SixFailure } from './SixFailure';
 import { SixMinimax } from './SixMinimax';
@@ -31,6 +31,7 @@ type CoordAndClass = {
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SixComponent
     extends HexagonalGameComponent<SixRules, SixMove, SixState, Player, SixConfig, SixLegalityInformation>
@@ -49,8 +50,8 @@ export class SixComponent
 
     private nextClickShouldSelectGroup: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Six');
         this.availableAIs = [
             new SixMinimax(),

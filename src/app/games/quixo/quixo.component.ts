@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -8,7 +9,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { QuixoMinimax } from './QuixoMinimax';
 import { QuixoMove } from './QuixoMove';
@@ -20,6 +20,7 @@ import { QuixoConfig, QuixoState } from './QuixoState';
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class QuixoComponent extends RectangularGameComponent<QuixoRules,
                                                              QuixoMove,
@@ -38,8 +39,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 
     private victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Quixo');
         this.availableAIs = [
             new QuixoMinimax(),

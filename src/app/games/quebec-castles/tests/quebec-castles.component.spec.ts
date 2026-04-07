@@ -716,8 +716,8 @@ describe('QuebecCastles Custom Configs', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
-        component.rulesConfigDescriptionOptional = rules.getRulesConfigDescription();
-        component.editable = true;
+        testUtils.setInput('rulesConfigDescriptionOptional', rules.getRulesConfigDescription());
+        testUtils.setInput('editable', true);
     });
 
     it('should forbid config with too little room for pieces (invader)', fakeAsync(async() => {

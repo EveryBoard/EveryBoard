@@ -125,7 +125,7 @@ describe('VerifyAccountComponent', () => {
 
             // Then no failure message is shown and user is redirected to the lobby
             testUtils.expectElementNotToExist('#errorMessage');
-            expectValidRouting(router, ['/lobby'], LobbyComponent);
+            await expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
 
     });

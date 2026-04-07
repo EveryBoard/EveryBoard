@@ -1,4 +1,5 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -11,6 +12,8 @@ import { BackendMessage, BackendService } from '../../../services/BackendService
 import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
+import { ChatComponent } from '../chat/chat.component';
+import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 type Tab = 'games' | 'create' | 'chat';
@@ -22,10 +25,16 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
+    imports: [NgClass, OnlineGameSelectionComponent, ChatComponent],
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
 
+    private readonly router: Router = inject(Router);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    private readonly activeConfigRoomsService: ActiveConfigRoomsService = inject(ActiveConfigRoomsService);
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+    private readonly backendService: BackendService = inject(BackendService);
     private activeConfigRooms: MGPMap<string, ConfigRoom> = new MGPMap();
 
     private activeConfigRoomsSubscription!: Subscription; // initialized in ngOnInit
@@ -35,14 +44,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public currentTab: Tab = 'games';
     public createTabClasses: string[] = [];
-
-    public constructor(public readonly router: Router,
-                       public readonly messageDisplayer: MessageDisplayer,
-                       private readonly activeConfigRoomsService: ActiveConfigRoomsService,
-                       private readonly currentGameService: CurrentGameService,
-                       private readonly backendService: BackendService)
-    {
-    }
 
     public async ngOnInit(): Promise<void> {
         this.activeConfigRoomsSubscription = this.activeConfigRoomsService.subscribe(

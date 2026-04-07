@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Router, UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -12,12 +12,10 @@ import { CurrentGameService } from '../services/CurrentGameService';
 })
 export class ExclusiveOnlineGameGuard {
 
-    protected currentGameSubscription: MGPOptional<Subscription> = MGPOptional.empty();
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+    private readonly router: Router = inject(Router);
 
-    public constructor(private readonly currentGameService: CurrentGameService,
-                       private readonly router: Router)
-    {
-    }
+    protected currentGameSubscription: MGPOptional<Subscription> = MGPOptional.empty();
 
     public async canActivate(route: ActivatedRouteSnapshot): Promise<boolean | UrlTree> {
         const currentGame: MGPOptional<CurrentGame> = await this.currentGameService.getCurrentGame();

@@ -35,8 +35,8 @@ describe('ViewConfigComponent', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(ViewConfigComponent, activatedRoute);
         component = testUtils.getComponent();
-        component.rulesConfigDescription = MGPOptional.of(rulesConfigDescription);
-        component.gameName = 'whatever-game';
+        testUtils.setInput('rulesConfigDescription', MGPOptional.of(rulesConfigDescription));
+        testUtils.setInput('gameName', 'whatever-game');
     });
 
     it('should create', () => {
@@ -45,7 +45,7 @@ describe('ViewConfigComponent', () => {
 
     it('should show config when clicking on "show config" (default config)', fakeAsync(async() => {
         // Given a game with default config
-        component.rulesConfig = MGPOptional.of(defaultConfig);
+        testUtils.setInput('rulesConfig', MGPOptional.of(defaultConfig));
         testUtils.expectElementNotToExist('#rules-config-component');
         // When clicking on "show config" button
         await testUtils.clickElement('#show-config');
@@ -53,12 +53,12 @@ describe('ViewConfigComponent', () => {
         testUtils.expectElementToExist('#rules-config-component');
         const rulesConfigurationComponent: RulesConfigurationComponent =
             testUtils.findElementByDirective(RulesConfigurationComponent).componentInstance;
-        expect(rulesConfigurationComponent.rulesConfigToDisplay).toEqual(defaultConfig);
+        expect(rulesConfigurationComponent.rulesConfigToDisplay()).toEqual(defaultConfig);
     }));
 
     it('should hide config when clicking on close button', fakeAsync(async() => {
         // Given a game with config shown
-        component.rulesConfig = MGPOptional.of(defaultConfig);
+        testUtils.setInput('rulesConfig', MGPOptional.of(defaultConfig));
         testUtils.expectElementNotToExist('#rules-config-component');
         await testUtils.clickElement('#show-config');
         testUtils.expectElementToExist('#rules-config-component');
@@ -70,12 +70,12 @@ describe('ViewConfigComponent', () => {
 
     it('should show config when clicking on "show config" (custom config)', fakeAsync(async() => {
         // Given a game with custom config
-        component.rulesConfig = MGPOptional.of(customConfig);
+        testUtils.setInput('rulesConfig', MGPOptional.of(customConfig));
         // When clicking on "show config" button
         await testUtils.clickElement('#show-config');
         // Then it should rules config, with the custom config selected
         const rulesConfigurationComponent: RulesConfigurationComponent =
             testUtils.findElementByDirective(RulesConfigurationComponent).componentInstance;
-        expect(rulesConfigurationComponent.rulesConfigToDisplay).toEqual(customConfig);
+        expect(rulesConfigurationComponent.rulesConfigToDisplay()).toEqual(customConfig);
     }));
 });

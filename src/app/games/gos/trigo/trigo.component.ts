@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -11,7 +12,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TableUtils } from '../../../jscaip/TableUtils';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
@@ -27,6 +27,7 @@ import { TrigoConfig, TrigoRules } from './TrigoRules';
     selector: 'app-trigo',
     templateUrl: './trigo.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 @Debug.log
 export class TrigoComponent extends TriangularGameComponent<TrigoRules,
@@ -47,8 +48,8 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Trigo');
         this.availableAIs = [
             new TrigoMinimax(),

@@ -10,26 +10,30 @@
     </g>
 
     <g id="pieces">
-        <g *ngFor="let line of board; index as y">
-            <g *ngFor="let spaceContent of line; index as x">
-                <circle *ngIf="spaceContent.isPlayer()"
-                        id="piece-{{ x }}-{{ y }}"
-                        [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
-                        [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
-                        [attr.r]="SPACE_SIZE * 0.44"
-                        [ngClass]="getSpaceClass(x, y)"
-                        class="base"
-                />
+        @for (line of board; track $index; let y = $index) {
+            <g>
+                @for (spaceContent of line; track $index; let x = $index) {
+                    <g>
+                        @if (spaceContent.isPlayer()) {
+                            <circle id="piece-{{ x }}-{{ y }}"
+                                    [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * x)"
+                                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * y)"
+                                    [attr.r]="SPACE_SIZE * 0.44"
+                                    [ngClass]="getSpaceClass(x, y)"
+                                    class="base"/>
+                        }
+                    </g>
+                }
             </g>
-        </g>
+        }
     </g>
-    <circle *ngIf="droppedCoord.isPresent()"
-            id="dropped"
-            (click)="onClick(droppedCoord.get())"
-            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().x)"
-            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().y)"
-            [attr.r]="SPACE_SIZE * 0.44"
-            [ngClass]="getSpaceClass(droppedCoord.get().x, droppedCoord.get().y)"
-            class="base moved-stroke"
-    />
+    @if (droppedCoord.isPresent()) {
+        <circle id="dropped"
+                (click)="onClick(droppedCoord.get())"
+                [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().x)"
+                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().y)"
+                [attr.r]="SPACE_SIZE * 0.44"
+                [ngClass]="getSpaceClass(droppedCoord.get().x, droppedCoord.get().y)"
+                class="base moved-stroke"/>
+    }
 </svg>

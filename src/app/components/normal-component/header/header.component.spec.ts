@@ -42,7 +42,7 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         // Then the account link should point to the account component
         const button: DebugElement = testUtils.findElement('#account');
-        expectValidRoutingLink(button, '/account', AccountComponent);
+        await expectValidRoutingLink(button, '/account', AccountComponent);
     }));
 
     describe('disconnection', () => {
@@ -50,11 +50,10 @@ describe('HeaderComponent', () => {
             // Given a connected user
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
-            spyOn(testUtils.getComponent().connectedUserService, 'disconnect').and.callThrough();
+            spyOn(TestBed.inject(ConnectedUserService), 'disconnect').and.callThrough();
             await testUtils.clickElement('#logout');
             tick(0);
-            const component: HeaderComponent = testUtils.getComponent();
-            expect(component.connectedUserService.disconnect).toHaveBeenCalledTimes(1);
+            expect(TestBed.inject(ConnectedUserService).disconnect).toHaveBeenCalledTimes(1);
         }));
 
         it('should remove comment in header when disconnecting', fakeAsync(async() => {
