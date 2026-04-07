@@ -137,17 +137,20 @@ func (configRoom ConfigRoom) Delete() error {
 }
 
 func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
-	var candidate Candidate
-	result := db.Model(&Candidate{}).Select("elo").Where("game_id = ? and user_id = ?", configRoom.ID, opponent.ID)
+	var candidateElo float64
+	result := db.Model(&Candidate{}).
+		Select("elo").
+		Where("game_id = ? and user_id = ?", configRoom.ID, opponent.ID).
+		Scan(&candidateElo)
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
-	result = db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidate.Elo})
+	result = db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidateElo})
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
 	configRoom.ChosenOpponent = &opponent
-	configRoom.ChosenOpponentElo = &candidate.Elo
+	configRoom.ChosenOpponentElo = &candidateElo
 	return result.Error
 }
 

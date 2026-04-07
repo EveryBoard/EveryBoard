@@ -47,7 +47,7 @@
                                                     (click)="selectOpponent(candidate.name)" >
                                                     <td [id]="(viewInfo.chosenOpponent === candidate.name ? 'selected_' : 'candidate_') + candidate.name"
                                                         class="td"
-                                                    >{{ candidate.name }} ({{ candidate.elo | number:'1.0-0' }})</td>
+                                                    >{{ candidate.name }} ({{ candidate.elo | elo }})</td>
                                                     <td class="td">
                                                         <button *ngIf="viewInfo.chosenOpponent !== candidate.name"
                                                                 class="button is-primary"

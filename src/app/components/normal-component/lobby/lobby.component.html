@@ -30,9 +30,9 @@
                     id="part-{{ i }}"
                     (click)="joinGame(configRoom)">
                     <td class="td data-game-name">{{ getGameName(configRoom) }}</td>
-                    <td class="td" id="part-of-{{ configRoom.creator.name}}">{{ configRoom.creator.name }} ({{ configRoom.creatorElo | number:'1.0-0' }}) </td>
+                    <td class="td" id="part-of-{{ configRoom.creator.name}}">{{ configRoom.creator.name }} ({{ configRoom.creatorElo | elo }}) </td>
                     <td class="td">
-                        <ng-container *ngIf="configRoom.chosenOpponent else waitingForOpponent">{{ configRoom.chosenOpponent.name }} ({{ configRoom.chosenOpponentElo | number:'1.0-0' }}) </ng-container>
+                        <ng-container *ngIf="configRoom.chosenOpponent else waitingForOpponent">{{ configRoom.chosenOpponent.name }} ({{ configRoom.chosenOpponentElo | elo }}) </ng-container>
                         <ng-template #waitingForOpponent>
                             <ng-container i18n>Waiting for opponent</ng-container>
                         </ng-template>

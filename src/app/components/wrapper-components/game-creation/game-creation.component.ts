@@ -274,9 +274,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         if (opponent == null || opponent === '') {
             opponent = configRoom.chosenOpponent?.name ?? '';
         } else {
-            const chosenOpponentIsCandidate: boolean = this.candidates.some((c: { user: MinimalUser, elo: number }) => {
-                return c.user.name === opponent;
-            });
+            const chosenOpponentIsCandidate: boolean = this.candidates.some(
+                (candidate: { user: MinimalUser, elo: number }) => {
+                    return candidate.user.name === opponent;
+                });
             if (chosenOpponentIsCandidate === false) {
                 opponent = ''; // chosenOpponent left
             }
@@ -305,8 +306,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private getUserFromName(username: string): MinimalUser {
-        const candidate: Candidate | undefined = this.candidates.find((c: Candidate) =>
-            c.user.name === username);
+        const candidate: Candidate | undefined = this.candidates.find(
+            (c: Candidate) => c.user.name === username);
         return Utils.getNonNullable(candidate).user;
     }
 

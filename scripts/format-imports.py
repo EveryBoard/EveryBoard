@@ -215,13 +215,12 @@ def run(root_dir: str, is_dry_run: bool):
 if __name__ == "__main__":
     import sys
 
-    # TODO FOR REVIEW: on ferait pas simplement le script qui roule comme il faut par défaut ? Remplacer ceci par:
-    # run("src/", true)
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <path> <is-dry-run>")
-        print("  <path> is the path where to recursively adapt imports (in all .ts files)")
-        print("  <is-dry-run> is true to do a dry run, anything else otherwise")
-        print(f"  the usual way to run it is: {sys.argv[0]} src/ false")
+    path = "./src/"
+    if len(sys.argv) == 1:
+        path = sys.argv[1]
+    else:
+        print(f"Usage: {sys.argv[0]} [<path>]")
+        print("  <path> is the path where to recursively adapt imports (in all .ts files), ./src by default")
         sys.exit(1)
 
-    run(sys.argv[1], sys.argv[2].lower() == "true")
+    run(path, True)
