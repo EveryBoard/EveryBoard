@@ -106,8 +106,8 @@ describe('GameCreationComponent', () => {
         // Given a component
         expect(component).toBeTruthy();
         // When it is loaded
-        await awaitComponentInitialization();
         // Then it should not trigger any error
+        await awaitComponentInitialization();
     }));
 
     it('should display an error if it receives already-subscribed from the server', fakeAsync(async() => {
