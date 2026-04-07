@@ -1,5 +1,7 @@
 import { formatDate } from '@angular/common';
-import { Component, ElementRef, ViewChild, OnInit, AfterViewChecked, OnDestroy } from '@angular/core';
+import { Component, ElementRef, OnInit, AfterViewChecked, OnDestroy, inject, viewChild, Signal } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
@@ -10,9 +12,12 @@ import { Debug } from '../../../utils/Debug';
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
+    imports: [ReactiveFormsModule, FormsModule, FaIconComponent],
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
+
+    private readonly chatService: ChatService = inject(ChatService);
 
     public userMessage: string = '';
 
@@ -28,13 +33,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
 
-    @ViewChild('chatDiv')
-    private readonly chatDiv: ElementRef<HTMLElement>;
+    private readonly chatDiv: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('chatDiv');
 
     private chatSubscription!: Subscription;
-
-    public constructor(private readonly chatService: ChatService) {
-    }
 
     public ngOnInit(): void {
         this.loadChatContent();
@@ -93,22 +94,24 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
     public updateCurrentScrollPosition(): void {
         const threshold: number = 10;
-        const position: number = this.chatDiv.nativeElement.scrollTop + this.chatDiv.nativeElement.offsetHeight;
-        const height: number = this.chatDiv.nativeElement.scrollHeight;
+        const position: number = this.chatDiv()!.nativeElement.scrollTop + this.chatDiv()!.nativeElement.offsetHeight;
+        const height: number = this.chatDiv()!.nativeElement.scrollHeight;
         this.isNearBottom = position > height - threshold;
     }
 
     public scrollToBottom(): void {
-        if (this.chatDiv == null) {
+        const chatDiv: ElementRef<HTMLElement> | undefined = this.chatDiv();
+        if (chatDiv == null) {
             return;
         }
         this.updateUnreadMessagesText(0);
-        this.scrollTo(this.chatDiv.nativeElement.scrollHeight);
+        this.scrollTo(chatDiv.nativeElement.scrollHeight);
         this.notYetScrolled = false;
     }
 
+    // public for testing purpose only
     public scrollTo(position: number): void {
-        this.chatDiv.nativeElement.scroll({
+        this.chatDiv()!.nativeElement.scroll({
             top: position,
             left: 0,
             behavior: 'smooth',

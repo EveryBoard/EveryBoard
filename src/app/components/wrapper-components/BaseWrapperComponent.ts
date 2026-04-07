@@ -1,3 +1,4 @@
+import { inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
@@ -11,9 +12,7 @@ import { RulesConfigDescription } from './rules-configuration/RulesConfigDescrip
 
 export abstract class BaseWrapperComponent extends BaseComponent {
 
-    public constructor(public readonly activatedRoute: ActivatedRoute) {
-        super();
-    }
+    protected readonly activatedRoute: ActivatedRoute = inject(ActivatedRoute);
 
     protected getGameUrlName(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('game'));

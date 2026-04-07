@@ -188,14 +188,9 @@ class PlayerDriver():
         self.click('#loginButton')
 
     def use_default_config(self):
-        '''Pick the default config on a game, if there is one'''
-        try:
-            # Click on 'accept config' for configurable games
-            accept_config_button = self.driver.find_element(By.ID, 'start-game-with-config')
-            accept_config_button.click()
-        except:
-            # Games that do not have start-game-with-config are not configurable so we already use the default config
-            pass
+        '''Pick the default config on a game. Don't use if there's no config.'''
+        # Click on 'accept config' for configurable games
+        self.click('#start-game-with-config')
 
     def create_part(self, opponent):
         '''
@@ -223,7 +218,7 @@ class PlayerDriver():
         self.wait_for('#playerTurn')
 
     def should_see_element(self, selector):
-        self.driver.find_element(By.CSS_SELECTOR, selector)
+        self.driver.find_element(By.CSS_SELECTOR, selector) # will throw if the element is not there
 
 def scenario(kind):
     def decorator(func):

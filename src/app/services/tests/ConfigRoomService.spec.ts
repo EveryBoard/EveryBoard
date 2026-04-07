@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 
 import { MGPOptional } from '@everyboard/lib';
@@ -8,7 +8,7 @@ import { ConfigProposal, ConfigRoom, FirstPlayer, GameType } from '../../domain/
 import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../domain/MinimalUser';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { AbstractBackendService, BackendService } from '../BackendService';
+import { BackendService } from '../BackendService';
 import { ConfigRoomService } from '../ConfigRoomService';
 
 import { BackendServiceMock } from './BackendServiceMock.spec';
@@ -20,7 +20,13 @@ describe('ConfigRoomService', () => {
 
     beforeEach(fakeAsync(async() => {
         backendService = new BackendServiceMock();
-        configRoomService = new ConfigRoomService(backendService as AbstractBackendService as BackendService);
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: BackendService, useValue: backendService },
+                ConfigRoomService,
+            ],
+        });
+        configRoomService = TestBed.inject(ConfigRoomService);
     }));
 
     it('should create', fakeAsync(() => {

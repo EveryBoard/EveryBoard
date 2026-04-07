@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
@@ -106,6 +106,9 @@ export abstract class AbstractBackendService {
 })
 export class BackendService extends AbstractBackendService {
 
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+
     private webSocket: MGPOptional<WebSocket> = MGPOptional.empty();
 
     private connectionPromise: Promise<void>;
@@ -114,8 +117,7 @@ export class BackendService extends AbstractBackendService {
     private nextConnectionAttemptTime: number = 1;
     private disconnectRequested: boolean = false;
 
-    public constructor(private readonly connectedUserService: ConnectedUserService,
-                       private readonly messageDisplayer: MessageDisplayer)
+    public constructor()
     {
         super();
         this.connectionPromise = new Promise((resolve: () => void) => {
@@ -133,14 +135,14 @@ export class BackendService extends AbstractBackendService {
 
         return new Promise((resolve: (sub: Subscription) => void) => {
             const ws: WebSocket = new WebSocket(environment.backendURL.replace(/^http/, 'ws') + '/ws', ['Authorization', token]);
-            let timeout: MGPOptional<number> = MGPOptional.empty();
+            let timeout: MGPOptional<ReturnType<typeof setTimeout>> = MGPOptional.empty();
             const reconnect: () => void = (): void => {
                 if (timeout.isPresent()) {
                     // not trying to reconnect because there's already an attempt scheduled
                     return;
                 }
                 this.messageDisplayer.criticalMessage($localize`Connection to server failed or closed, trying again in ${this.nextConnectionAttemptTime} seconds...`);
-                timeout = MGPOptional.of(window.setTimeout(
+                timeout = MGPOptional.of(setTimeout(
                     async() => {
                         const subscription: Subscription = await this.connect();
                         resolve(subscription);

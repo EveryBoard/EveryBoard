@@ -8,11 +8,7 @@ describe('NextGameLoadingComponent', () => {
     let fixture: ComponentFixture<NextGameLoadingComponent>;
 
     beforeEach(async() => {
-        await TestBed.configureTestingModule({
-            declarations: [
-                NextGameLoadingComponent,
-            ],
-        }).compileComponents();
+        await TestBed.configureTestingModule({ imports: [NextGameLoadingComponent] }).compileComponents();
         fixture = TestBed.createComponent(NextGameLoadingComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();

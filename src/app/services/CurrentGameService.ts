@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
@@ -110,14 +110,15 @@ export abstract class AbstractCurrentGameService {
 })
 export class CurrentGameService extends AbstractCurrentGameService implements OnDestroy {
 
+    private readonly backendService: BackendService = inject(BackendService);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+
     private readonly authSubscription: Subscription;
 
     private currentGameSubscription: Subscription = new Subscription();
     private backendSubscription: Subscription = new Subscription();
 
-    public constructor(private readonly backendService: BackendService,
-                       private readonly connectedUserService: ConnectedUserService)
-    {
+    public constructor() {
         super();
         this.authSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             await this.onUserUpdate(user);

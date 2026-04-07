@@ -1,13 +1,14 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
+import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
@@ -19,6 +20,7 @@ import { ConnectSixState } from './ConnectSixState';
     selector: 'app-connect-six',
     templateUrl: './connect-six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [BlankGobanComponent, NgClass],
 })
 export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             ConnectSixMove,
@@ -32,8 +34,8 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('ConnectSix');
         this.availableAIs = [
             new ConnectSixAlignmentMinimax(),

@@ -27,6 +27,10 @@ describe('Minimax', () => {
         minimax = new Minimax('Dummy', P4Rules.get(), heuristic, moveGenerator);
     });
 
+    it('should be convertible to a string', () => {
+        expect(minimax.toString()).toEqual('Dummy');
+    });
+
     it('Minimax should prune when instructed to do so', () => {
         const getBoardValueSpy: jasmine.Spy = spyOn(heuristic, 'getBoardValue').and.callThrough();
         const getListMovesSpy: jasmine.Spy = spyOn(moveGenerator, 'getListMoves').and.callThrough();

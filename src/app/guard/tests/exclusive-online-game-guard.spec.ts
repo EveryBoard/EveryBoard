@@ -15,7 +15,6 @@ import { ExclusiveOnlineGameGuard } from '../exclusive-online-game-guard';
 describe('ExclusiveOnlineGameGuard', () => {
 
     let exclusiveOnlineGameGuard: ExclusiveOnlineGameGuard;
-    let currentGameService: CurrentGameService;
     let router: Router;
     const gameId: string = 'gameId';
 
@@ -30,12 +29,12 @@ describe('ExclusiveOnlineGameGuard', () => {
                 ]),
                 { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                ExclusiveOnlineGameGuard,
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        currentGameService = TestBed.inject(CurrentGameService);
-        exclusiveOnlineGameGuard = new ExclusiveOnlineGameGuard(currentGameService, router);
+        exclusiveOnlineGameGuard = TestBed.inject(ExclusiveOnlineGameGuard);
     }));
 
     it('should create', () => {

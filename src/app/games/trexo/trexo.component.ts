@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -8,7 +9,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
 import { TrexoFailure } from './TrexoFailure';
@@ -16,6 +16,7 @@ import { TrexoMove } from './TrexoMove';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
 import { TrexoRules } from './TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
+import { TrexoHalfPieceComponent } from './trexo-half-piece.component';
 
 interface PieceOnBoard {
 
@@ -32,10 +33,9 @@ type ModeType = '2D' | '3D';
     selector: 'app-trexo',
     templateUrl: './trexo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, TrexoHalfPieceComponent],
 })
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
-
-    public static STROKE_WIDTH: number;
 
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
@@ -77,15 +77,14 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Trexo');
         this.availableAIs = [
             new TrexoAlignmentMinimax(),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
-        TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
     }
 

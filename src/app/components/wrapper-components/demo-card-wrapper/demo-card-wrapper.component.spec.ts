@@ -26,7 +26,7 @@ describe('DemoCardComponent', () => {
     const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
     async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
-        testUtils.getComponent().demoNodeInfo = nodeInfo;
+        testUtils.setInput('demoNodeInfo', nodeInfo);
         await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
         testUtils.detectChanges();
         tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit

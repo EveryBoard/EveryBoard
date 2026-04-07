@@ -1,5 +1,3 @@
-import { ChangeDetectorRef } from '@angular/core';
-
 import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
@@ -10,7 +8,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
@@ -48,10 +45,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     private opponentMoveIsBeingAnimated: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef)
-    {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }

@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -11,7 +12,6 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TableUtils } from '../../jscaip/TableUtils';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
@@ -20,6 +20,7 @@ import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePiec
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
 import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
+import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
 export type LodestoneInfo = {
     direction: LodestoneDirection,
@@ -66,6 +67,7 @@ type PreCaptureInfo = {
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, LodestoneLodestoneComponent],
 })
 export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>
@@ -131,8 +133,8 @@ export class LodestoneComponent
     private lastMoves: Coord[] = [];
     private lastCaptures: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Lodestone');
         this.availableAIs = [
             new LodestoneScoreMinimax(),

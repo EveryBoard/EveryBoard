@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { DOCUMENT } from '@angular/common';
+import { DOCUMENT } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { WelcomeComponent } from '../../components/normal-component/welcome/welcome.component';

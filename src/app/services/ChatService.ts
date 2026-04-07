@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { Message } from '../domain/Message';
@@ -18,9 +18,7 @@ export abstract class AbstractChatService {
 @Debug.log
 export class ChatService extends AbstractChatService {
 
-    public constructor(private readonly backendService: BackendService) {
-        super();
-    }
+    private readonly backendService: BackendService = inject(BackendService);
 
     public override subscribeToMessages(callback: (message: Message) => void): Subscription {
         // Make a new subscription to receive new messages

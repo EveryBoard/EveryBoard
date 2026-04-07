@@ -14,11 +14,11 @@ export class SiamMove extends MoveCoord {
             MGPOptional.getEncoder(Orthogonal.encoder), // direction
             Orthogonal.encoder, // orientation
         ],
-        (m: SiamMove): SiamMoveFields => [m.x, m.y, m.direction, m.landingOrientation],
+        (m: SiamMove): SiamMoveFields => [m.coord.x, m.coord.y, m.direction, m.landingOrientation],
         (fields: SiamMoveFields): SiamMove => SiamMove.of(fields[0], fields[1], fields[2], fields[3]));
 
-    private constructor(readonly x: number,
-                        readonly y: number,
+    private constructor(x: number,
+                        y: number,
                         public readonly direction: MGPOptional<Orthogonal>,
                         public readonly landingOrientation: Orthogonal)
     {

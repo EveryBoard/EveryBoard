@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { MGPMap } from '@everyboard/lib';
@@ -23,9 +23,7 @@ export abstract class AbstractActiveConfigRoomsService {
  */
 export class ActiveConfigRoomsService extends AbstractActiveConfigRoomsService {
 
-    public constructor(private readonly backendService: BackendService) {
-        super();
-    }
+    private readonly backendService: BackendService = inject(BackendService);
 
     public override subscribe(callback: (rooms: MGPMap<string, ConfigRoom>) => void): Subscription {
         const activeRooms: MGPMap<string, ConfigRoom> = new MGPMap();

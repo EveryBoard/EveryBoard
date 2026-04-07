@@ -1,7 +1,13 @@
-<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+<nav class="navbar is-primary"
+     role="navigation"
+     aria-label="main navigation">
     <div class="navbar-brand">
-        <a class="navbar-item" [routerLink]="['/']">
-            <img id="logo" src="assets/images/logo.png" width="28" height="28">
+        <a class="navbar-item"
+           [routerLink]="['/']">
+            <img id="logo"
+                 src="assets/images/logo.png"
+                 width="28"
+                 height="28">
         </a>
         <a role="button"
            class="navbar-burger"
@@ -17,65 +23,101 @@
         </a>
     </div>
 
-    <div id="menu" class="navbar-menu" [ngClass]="showMenu ? 'is-active' : ''" (click)="showMenu = !showMenu">
+    <div id="menu"
+         class="navbar-menu"
+         [ngClass]="showMenu ? 'is-active' : ''"
+         (click)="showMenu = !showMenu">
 
         <div class="navbar-start">
-            <a id="home" class="navbar-item" [routerLink]="['/']" i18n>Home</a>
+            <a id="home"
+               class="navbar-item"
+               [routerLink]="['/']"
+               i18n>Home</a>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" i18n>Play online</a>
+                <a class="navbar-link"
+                   i18n>Play online</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" [routerLink]="['/play']" i18n>Create a game</a>
-                    <a class="navbar-item" [routerLink]="['/lobby']" i18n>Join a game</a>
+                    <a class="navbar-item"
+                       [routerLink]="['/play']"
+                       i18n>Create a game</a>
+                    <a class="navbar-item"
+                       [routerLink]="['/lobby']"
+                       i18n>Join a game</a>
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a id="playOffline" class="navbar-link" i18n>Play offline</a>
+                <a id="playOffline"
+                   class="navbar-link"
+                   i18n>Play offline</a>
                 <div class="navbar-dropdown">
-                    <a id="playLocally" class="navbar-item" [routerLink]="['/local']" i18n>Create a game</a>
-                    <a id="tutorial" class="navbar-item" [routerLink]="['/tutorial']" i18n>Learn the rules</a>
+                    <a id="playLocally"
+                       class="navbar-item"
+                       [routerLink]="['/local']"
+                       i18n>Create a game</a>
+                    <a id="tutorial"
+                       class="navbar-item"
+                       [routerLink]="['/tutorial']"
+                       i18n>Learn the rules</a>
                 </div>
             </div>
         </div>
 
         <div class="navbar-end">
-            <a *ngIf="currentGame.isPresent()"
-               id="currentGameLink"
-               class="navbar-item"
-               (click)="navigateToPart()">
-                <ng-container *ngIf="currentGame.get().role === 'Observer' || currentGame.get().role === 'Candidate' else activeUser" i18n>{{ getCurrentGameName() }} by {{ currentGame.get().opponent?.name }}</ng-container>
-                <ng-template #activeUser>
-                    <ng-container *ngIf="currentGame.get().opponent else waitingForOpponent" i18n>{{ getCurrentGameName() }} against {{ currentGame.get().opponent?.name }}</ng-container>
-                    <ng-template #waitingForOpponent>
-                        <ng-container i18n>{{ getCurrentGameName() }} (waiting for opponent)</ng-container>
-                    </ng-template>
-                </ng-template>
-            </a>
+            @if (currentGame.isPresent()) {
+                <a id="currentGameLink"
+                   class="navbar-item"
+                   (click)="navigateToPart()">
+                    @if (currentGame.get().role === 'Observer' || currentGame.get().role === 'Candidate') {
+                        <ng-container i18n>{{ getCurrentGameName() }} by {{ currentGame.get().opponent?.name }}</ng-container>
+                    } @else {
+                        @if (currentGame.get().opponent) {
+                            <ng-container i18n>{{ getCurrentGameName() }} against {{ currentGame.get().opponent?.name }}</ng-container>
+                        } @else {
+                            <ng-container i18n>{{ getCurrentGameName() }} (waiting for opponent)</ng-container>
+                        }
+                    }
+                </a>
+            }
 
-            <a class="navbar-item" [routerLink]="['/settings']" i18n-data-tooltip data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
+            <a class="navbar-item"
+               [routerLink]="['/settings']"
+               i18n-data-tooltip
+               data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
 
             <div class="navbar-item">
-                <ng-container *ngIf="loading else showUsernameOrLogin">
-                    <fa-icon [icon]="faSpinner" class="navbar-item"></fa-icon>
-                </ng-container>
-                <ng-template #showUsernameOrLogin>
-                    <ng-container *ngIf="username.isPresent() else connect">
+                @if (loading) {
+                    <fa-icon [icon]="faSpinner"
+                             class="navbar-item"></fa-icon>
+                } @else {
+                    @if (username.isPresent()) {
                         <div class="navbar-item has-dropdown is-hoverable">
-                            <a id="connectedUserName" class="navbar-link">{{ username.get() }}</a>
+                            <a id="connectedUserName"
+                               class="navbar-link">{{ username.get() }}</a>
                             <div class="navbar-dropdown">
-                                <a class="navbar-item" id="account" routerLink="/account" i18n>Account</a>
-                                <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
+                                <a class="navbar-item"
+                                   id="account"
+                                   routerLink="/account"
+                                   i18n>Account</a>
+                                <a class="navbar-item"
+                                   id="logout"
+                                   (click)="logout()"
+                                   i18n>Log out</a>
                             </div>
                         </div>
-                    </ng-container>
-                    <ng-template #connect>
+                    } @else {
                         <div class="buttons">
-                            <a id="register" class="button is-primary" [routerLink]="['/register']">
+                            <a id="register"
+                               class="button is-primary"
+                               [routerLink]="['/register']">
                                 <strong i18n>Register</strong>
                             </a>
-                            <a id="login" class="button is-light" [routerLink]="['/login']" i18n>Log in</a>
+                            <a id="login"
+                               class="button is-light"
+                               [routerLink]="['/login']"
+                               i18n>Log in</a>
                         </div>
-                    </ng-template>
-                </ng-template>
+                    }
+                }
             </div>
         </div>
     </div>
