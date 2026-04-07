@@ -49,13 +49,13 @@
                                                     </thead>
                                                     <tbody>
                                                         @for (candidate of viewInfo.candidates; track candidate) {
-                                                            <tr id="presenceOf_{{ candidate }}"
-                                                                [ngClass]="viewInfo.candidateClasses[candidate]"
-                                                                (click)="selectOpponent(candidate)">
-                                                                <td [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
-                                                                    class="td">{{ candidate.name }} ({{ candidate.elo | elo }}) </td>
+                                                            <tr id="presenceOf_{{ candidate.name }}"
+                                                                [ngClass]="viewInfo.candidateClasses[candidate.name]"
+                                                                (click)="selectOpponent(candidate.name)">
+                                                                <td [id]="viewInfo.chosenOpponent === candidate.name ? ('selected_' + candidate.name) : ('candidate_' + candidate.name)"
+                                                                    class="td">{{ candidate.name }} ({{ candidate.elo | elo }})</td>
                                                                 <td class="td">
-                                                                    @if (viewInfo.chosenOpponent !== candidate) {
+                                                                    @if (viewInfo.chosenOpponent !== candidate.name) {
                                                                         <button class="button is-primary"
                                                                                 i18n>Pick</button>
                                                                     }

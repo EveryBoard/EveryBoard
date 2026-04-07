@@ -12,6 +12,7 @@ import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+import { EloPipe } from '../../../pipes-and-directives/elo.pipe';
 import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
@@ -56,7 +57,8 @@ type GameCreationViewInfo = {
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
-    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, HumanDurationPipe],
+    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent,
+        HumanDurationPipe, EloPipe],
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {

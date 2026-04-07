@@ -7,6 +7,7 @@ import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ConfigRoom, Status } from '../../../domain/ConfigRoom';
 import { CurrentGame } from '../../../domain/User';
+import { EloPipe } from '../../../pipes-and-directives/elo.pipe';
 import { ActiveConfigRoomsService } from '../../../services/ActiveConfigRoomsService';
 import { BackendMessage, BackendService } from '../../../services/BackendService';
 import { CurrentGameService, GameActionFailure } from '../../../services/CurrentGameService';
@@ -25,7 +26,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
-    imports: [NgClass, OnlineGameSelectionComponent, ChatComponent],
+    imports: [NgClass, OnlineGameSelectionComponent, ChatComponent, EloPipe],
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
