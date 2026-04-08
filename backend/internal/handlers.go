@@ -486,7 +486,6 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 	if err != nil {
 		return err
 	}
-	toPrint, _ := json.Marshal(configRoom)
 
 	// Both players have their current game updated
 	err = h.updateCurrentGame(h.user, model.CurrentGame{
@@ -513,7 +512,6 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 
 	update := model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom}
 
-	toPrint, _ = json.Marshal(update)
 	err = h.broadcastToConfigRoom(configRoom.ID, update)
 	if err != nil {
 		return err
