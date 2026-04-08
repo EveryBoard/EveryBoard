@@ -3,7 +3,6 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"math/rand"
 	"time"
 
@@ -483,13 +482,11 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 		return h.error(model.ErrorNotAllowed)
 	}
 
-	log.Printf("selecting opponent: %v", opponent)
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		return err
 	}
 	toPrint, _ := json.Marshal(configRoom)
-	log.Printf("now config room is: %s", toPrint)
 
 	// Both players have their current game updated
 	err = h.updateCurrentGame(h.user, model.CurrentGame{
@@ -517,7 +514,6 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 	update := model.ConfigRoomUpdateMessage{GameID: configRoom.ID, ConfigRoom: *configRoom}
 
 	toPrint, _ = json.Marshal(update)
-	log.Printf("update is: %s", toPrint)
 	err = h.broadcastToConfigRoom(configRoom.ID, update)
 	if err != nil {
 		return err

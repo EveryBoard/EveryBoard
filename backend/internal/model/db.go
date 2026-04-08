@@ -140,7 +140,7 @@ func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
 	var candidateElo float64
 	result := db.Model(&Candidate{}).
 		Select("elo").
-		Where("game_id = ? and user_id = ?", configRoom.ID, opponent.ID).
+		Where("game_id = ? AND user_id = ?", configRoom.ID, opponent.ID).
 		Scan(&candidateElo)
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)

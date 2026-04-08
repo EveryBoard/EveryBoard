@@ -235,6 +235,13 @@ func ExpectConfigRoomInsertion(mock sqlmock.Sqlmock, configRoom model.ConfigRoom
 	mock.ExpectCommit()
 }
 
+func ExpectCandidateEloSelection(mock sqlmock.Sqlmock, gameId model.GameID, user model.MinimalUser, elo float64) {
+	query := `SELECT "elo" FROM "candidates" WHERE game_id = \$1 AND user_id = \$2`
+	mock.ExpectQuery(query).
+		WithArgs(gameId, user.ID).
+		WillReturnRows(sqlmock.NewRows([]string{"elo"}).AddRow(elo))
+}
+
 func ExpectConfigRoomUpdateSelectOpponent(mock sqlmock.Sqlmock, configRoom model.ConfigRoom) {
 	var opponentId driver.Value = nil
 	var opponentName driver.Value = nil
@@ -734,6 +741,20 @@ func (sb ScenarioBuilder) getCandidates(gameId model.GameID) []model.Candidate {
 	return candidates
 }
 
+func (sb ScenarioBuilder) getCandidateElo(gameId model.GameID, user model.MinimalUser) float64 {
+	candidates, ok := sb.candidates[gameId]
+	if !ok {
+		sb.t.Fatalf("no game candidates for game %d", gameId)
+	}
+	for _, candidate := range candidates {
+		if candidate.User.ID == user.ID {
+			return candidate.Elo
+		}
+	}
+	sb.t.Fatalf("no game candidates matching user %s for game %d", user.Name, gameId)
+	return 0
+}
+
 func (sb ScenarioBuilder) getNextCandidateId() uint64 {
 	total := 0
 	for _, cs := range sb.candidates {
@@ -992,7 +1013,8 @@ func (sb ScenarioBuilder) SelectOpponent(creator string, opponent string) {
 
 	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	configRoom.ChosenOpponent = &userOpponent
-	zeroElo := float64(0)
+	zeroElo := sb.getCandidateElo(gameId, userOpponent)
+	ExpectCandidateEloSelection(sb.mock, gameId, userOpponent, zeroElo)
 	configRoom.ChosenOpponentElo = &zeroElo
 	ExpectConfigRoomUpdateSelectOpponent(sb.mock, *configRoom)
 	currentGamePlayer.Opponent = &userOpponent
