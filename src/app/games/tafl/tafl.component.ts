@@ -1,5 +1,3 @@
-import { ChangeDetectorRef } from '@angular/core';
-
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
@@ -12,7 +10,6 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { TaflConfig } from './TaflConfig';
 import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
@@ -39,11 +36,8 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef,
-                       public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
-    {
-        super(messageDisplayer, cdr);
+    public constructor(public generateMove: (start: Coord, end: Coord) => MGPFallible<M>) {
+        super();
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {

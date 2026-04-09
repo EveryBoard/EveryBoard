@@ -3,7 +3,7 @@ import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, i
 
 class DummyComparableObject implements ComparableObject {
 
-    public constructor(readonly value: number) {}
+    public constructor(public readonly value: number) {}
 
     public equals(other: DummyComparableObject): boolean {
         return this.value === other.value;
@@ -14,7 +14,7 @@ class DummyComparableObject implements ComparableObject {
 }
 
 class DummyNonComparableObject {
-    public constructor(readonly value: number) {}
+    public constructor(public readonly value: number) {}
     public someMethod(): void {}
 }
 

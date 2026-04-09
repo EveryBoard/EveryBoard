@@ -1,31 +1,30 @@
 import { IterativeDeepeningMinimax, Minimax } from '../../jscaip/AI/Minimax';
 
-import { SaharaHeuristic } from './SaharaHeuristic';
+import { SaharaFreedomHeuristic } from './SaharaFreedomHeuristic';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
 import { SaharaState } from './SaharaState';
 
-export class SaharaMinimax extends Minimax<SaharaMove, SaharaState> {
+export class SaharaFreedomMinimax extends Minimax<SaharaMove, SaharaState> {
 
     public constructor() {
-        super($localize`Sahara`,
+        super($localize`Freedom`,
               SaharaRules.get(),
-              new SaharaHeuristic(),
+              new SaharaFreedomHeuristic(),
               new SaharaMoveGenerator());
         this.transpositionTables = false;
     }
 
 }
 
-export class IDSaharaMinimax extends IterativeDeepeningMinimax<SaharaMove, SaharaState> {
+export class IDSaharaFreedomMinimax extends IterativeDeepeningMinimax<SaharaMove, SaharaState> {
 
     public constructor() {
         super($localize`IDSahara`,
               SaharaRules.get(),
-              new SaharaHeuristic(),
+              new SaharaFreedomHeuristic(),
               new SaharaMoveGenerator());
-        this.transpositionTables = false;
     }
 
 }

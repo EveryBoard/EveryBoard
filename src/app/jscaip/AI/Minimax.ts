@@ -127,12 +127,13 @@ implements AI<M, S, O, C>
         }
     }
 
-
-    public alphaBeta(node: GameNode<M, S>,
-                     depth: number,
-                     alpha: BoardValue,
-                     beta: BoardValue,
-                     config: MGPOptional<C>)
+    // Performs an alpha-beta search to find the best move from the given node
+    // TODO: adapt
+    protected alphaBeta(node: GameNode<M, S>,
+                        depth: number,
+                        alpha: BoardValue,
+                        beta: BoardValue,
+                        config: MGPOptional<C>)
     : GameNode<M, S>
     {
         if (depth < 1) {
@@ -182,6 +183,8 @@ implements AI<M, S, O, C>
 
         const bestChildren: GameNode<M, S>[] = this.getBestChildren(node, possibleMoves, depth, alpha, beta, config);
         const bestChild: GameNode<M, S> = this.getBestChildAmong(bestChildren);
+        Utils.assert(possibleMoves.contains(bestChild.previousMove.get()),
+                     'best child is not a possible move?!' + bestChild.previousMove.get().toString())
         const bestChildScore: BoardValue = this.getScore(bestChild, config);
         this.setScore(node, bestChildScore);
 
@@ -380,7 +383,7 @@ extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
         }
     }
-    
+
     public doChooseNextMove(node: GameNode<M, S>, options: AITimeLimitOptions, config: MGPOptional<C>): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
@@ -395,7 +398,13 @@ extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
         let bestDescendant: GameNode<M, S> | null = null;
         while (Date.now() < endTime) {
             console.log('current depth: ' + currentDepth)
-            const candidate = this.alphaBeta(node, currentDepth, boardValue.toMinimum(), boardValue.toMaximum(), config);
+            // TODO: the call to alphaBeta is incorrect as it may return the same node in some cases. Better do getBestChildren etc., or fix alphaBeta
+            const candidate = this.alphaBeta(node,
+                                             currentDepth,
+                                             boardValue.toMinimum(),
+                                             boardValue.toMaximum(),
+                                             config);
+            Utils.assert(candidate === node, 'got the same...')
             if (Date.now() < this.endSearchBy.get()) {
                 bestDescendant = candidate;
                 achievedDepth = currentDepth;
@@ -413,13 +422,15 @@ extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
         }
         console.log('achieved depth: ' + achievedDepth + ' in ' + (Date.now() - start) + 'ms')
 
+        console.log('best descendant: ' + this.hash(bestDescendant.gameState))
+        console.log('with previous move: ' + bestDescendant.previousMove.get().toString())
         while (bestDescendant.gameState.turn > node.gameState.turn + 1) {
+            console.log('parent : ' + this.hash(bestDescendant.gameState))
             bestDescendant = bestDescendant.parent.get();
         }
         this.endSearchBy = MGPOptional.empty();
-        console.log('best descendant: ' + JSON.stringify(bestDescendant.gameState))
+        console.log('best child: ' + this.hash(bestDescendant.gameState))
         console.log('previous move selected: ' + bestDescendant.previousMove.get().toString())
         return bestDescendant.previousMove.get();
     }
-        
 }

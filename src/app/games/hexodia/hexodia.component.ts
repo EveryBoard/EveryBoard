@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -11,7 +12,6 @@ import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
 import { HexodiaMove } from './HexodiaMove';
@@ -23,6 +23,7 @@ import { HexodiaState } from './HexodiaState';
     selector: 'app-hexodia',
     templateUrl: './hexodia.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                                              HexodiaMove,
@@ -36,8 +37,8 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Hexodia');
         this.availableAIs = [
             new HexodiaAlignmentMinimax(),

@@ -9,7 +9,9 @@ import { GameState } from '../../../jscaip/state/GameState';
 
 import { GameComponent } from './GameComponent';
 
-@Component({ template: '' })
+@Component({
+    template: '',
+})
 export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               M extends Move,
                                               S extends GameState,

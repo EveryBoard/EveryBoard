@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -7,7 +8,6 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
@@ -20,6 +20,7 @@ import { LinesOfActionState } from './LinesOfActionState';
     selector: 'app-lines-of-action',
     templateUrl: './lines-of-action.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
                                                                      LinesOfActionMove,
@@ -33,8 +34,8 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('LinesOfAction');
         this.availableAIs = [
             new LinesOfActionMinimax(),

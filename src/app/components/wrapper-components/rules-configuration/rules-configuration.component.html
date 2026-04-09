@@ -1,96 +1,109 @@
-<div *ngIf="isCustomisable()">
-    <div class="field columns is-gapless mb-0">
-        <div class="field-label column">
-        <label class="label has-text-left" i18n>Configuration</label>
-        </div>
-        <div class="field-body column has-text-right">
-        <div class="control">
-            <div class="select is-primary is-fullwidth">
-                <select id="ruleSelect"
-                        [disabled]="editable === false"
-                        (change)="onChange($event)">
-                    <option id="config-dropdown-{{ rulesConfigDescription.getDefaultConfig().name() }}"
-                            [value]="rulesConfigDescription.getDefaultConfig().name()"
-                            [selected]="isSelectedConfig(rulesConfigDescription.getDefaultConfig().name())">
-                        {{ rulesConfigDescription.getDefaultConfig().name() }}
-                    </option>
-                    <option *ngFor="let standardConfig of rulesConfigDescription.getNonDefaultStandardConfigs()"
-                            id="config-dropdown-{{ standardConfig.name() }}"
-                            [value]="standardConfig.name()"
-                            [selected]="isSelectedConfig(standardConfig.name())">
-                        {{ standardConfig.name() }}
-                    </option>
-                    <option value="Custom"
-                            id="config-dropdown-custom"
-                            [selected]="isSelectedConfig('Custom')"
-                            i18n>Custom</option>
-                </select>
+@if (isCustomisable()) {
+    <div>
+        <div class="field columns is-gapless mb-0">
+            <div class="field-label column">
+                <label class="label has-text-left"
+                       i18n>Configuration</label>
             </div>
-        </div>
-        </div>
-    </div>
-
-    <form [formGroup]="rulesConfigForm"
-          class="mt-2"
-          id="{{ getChosenConfigName() }}_values">
-        <fieldset class="left-border" >
-            <div *ngIf="errorMessages.length > 0"
-                 id="form-error"
-                 class="help is-danger"
-                 role="alert">
-                 <div *ngFor="let errorMessage of errorMessages">{{ errorMessage }}</div>
-            </div>
-            <div *ngFor="let configParameter of getFields()"
-                 id="{{ configParameter }}_config"
-                 class="mb-2">
-                <div class="field is-horizontal columns is-gapless">
-                    <div class="field-label column is-three-quarters">
-                        <label class="label has-text-left">{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}</label>
-                    </div>
-                    <div class="field-body column has-text-right">
-                        <div class="field is-narrow">
-                            <div class="control"
-                                 [ngSwitch]="typeOfConfig(configParameter)">
-                                <label *ngSwitchCase="'boolean'"
-                                       class="checkbox">
-                                    <input id="{{ configParameter }}_boolean_config_input"
-                                           [formControlName]="configParameter"
-                                           type="checkbox"
-                                           class="checkbox"
-                                           required />
-                                </label>
-                                <input *ngSwitchCase="'number'"
-                                       id="{{ configParameter }}_number_config_input"
-                                       [formControlName]="configParameter"
-                                       type="number"
-                                       class="input is-small"
-                                       [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
-                                       required
-                                       placeholder="{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}" />
-                                <label *ngSwitchCase="'string'"
-                                       class="checkbox">
-                                    <div class="select is-primary is-fullwidth">
-                                        <select id="{{ configParameter }}_enum_config_input"
-                                                [disabled]="isEditable() === false"
-                                                (change)="onEnumChange(configParameter, $event)">
-                                            <option *ngFor="let value of getEnumValues(configParameter)"
-                                                    id="{{ configParameter }}_value_{{ value.enumValue }}"
-                                                    [selected]="isSelectedEnum(configParameter, value.enumValue)"
-                                                    [value]="value.enumValue">
-                                                {{ value.localized() }}
-                                            </option>
-                                        </select>
-                                    </div>
-                                </label>
-                            </div>
-                            <div *ngIf="isValid(configParameter) === false"
-                                 id="{{configParameter}}-error"
-                                 class="help is-danger"
-                                 role="alert">{{ getErrorMessage(configParameter) }}</div>
-                        </div>
+            <div class="field-body column has-text-right">
+                <div class="control">
+                    <div class="select is-primary is-fullwidth">
+                        <select id="ruleSelect"
+                                [disabled]="editable() === false"
+                                (change)="onChange($event)">
+                            <option id="config-dropdown-{{ rulesConfigDescription.getDefaultConfig().name() }}"
+                                    [value]="rulesConfigDescription.getDefaultConfig().name()"
+                                    [selected]="isSelectedConfig(rulesConfigDescription.getDefaultConfig().name())">
+                                {{ rulesConfigDescription.getDefaultConfig().name() }}
+                            </option>
+                            @for (standardConfig of rulesConfigDescription.getNonDefaultStandardConfigs(); track standardConfig.name()) {
+                                <option id="config-dropdown-{{ standardConfig.name() }}"
+                                        [value]="standardConfig.name()"
+                                        [selected]="isSelectedConfig(standardConfig.name())">
+                                    {{ standardConfig.name() }}
+                                </option>
+                            }
+                            <option value="Custom"
+                                    id="config-dropdown-custom"
+                                    [selected]="isSelectedConfig('Custom')"
+                                    i18n>Custom</option>
+                        </select>
                     </div>
                 </div>
             </div>
-        </fieldset>
-    </form>
-</div>
+        </div>
+        <form [formGroup]="rulesConfigForm"
+              class="mt-2"
+              id="{{ getChosenConfigName() }}_values">
+            <fieldset class="left-border">
+                @if (errorMessages.length > 0) {
+                    <div id="form-error"
+                         class="help is-danger"
+                         role="alert">
+                        @for (errorMessage of errorMessages; track errorMessage) {
+                            <div>{{ errorMessage }}</div>
+                        }
+                    </div>
+                }
+                @for (configParameter of getFields(); track configParameter) {
+                    <div id="{{ configParameter }}_config"
+                         class="mb-2">
+                        <div class="field is-horizontal columns is-gapless">
+                            <div class="field-label column is-three-quarters">
+                                <label class="label has-text-left">{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}</label>
+                            </div>
+                            <div class="field-body column has-text-right">
+                                <div class="field is-narrow">
+                                    <div class="control">
+                                        @switch (typeOfConfig(configParameter)) {
+                                            @case ('boolean') {
+                                                <label class="checkbox">
+                                                    <input id="{{ configParameter }}_boolean_config_input"
+                                                           [formControlName]="configParameter"
+                                                           type="checkbox"
+                                                           class="checkbox"
+                                                           required/>
+                                                </label>
+                                            }
+                                            @case ('number') {
+                                                <input id="{{ configParameter }}_number_config_input"
+                                                       [formControlName]="configParameter"
+                                                       type="number"
+                                                       class="input is-small"
+                                                       [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                                       required
+                                                       placeholder="{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}"/>
+                                            }
+                                            @case ('string') {
+                                                <label class="checkbox">
+                                                    <div class="select is-primary is-fullwidth">
+                                                        <select id="{{ configParameter }}_enum_config_input"
+                                                                [disabled]="editable() === false"
+                                                                (change)="onEnumChange(configParameter, $event)">
+                                                            @for (value of getEnumValues(configParameter); track value.enumValue) {
+                                                                <option id="{{ configParameter }}_value_{{ value.enumValue }}"
+                                                                        [selected]="isSelectedEnum(configParameter, value.enumValue)"
+                                                                        [value]="value.enumValue">
+                                                                    {{ value.localized() }}
+                                                                </option>
+                                                            }
+                                                        </select>
+                                                    </div>
+                                                </label>
+                                            }
+                                        }
+                                    </div>
+                                    @if (isValid(configParameter) === false) {
+                                        <div id="{{configParameter}}-error"
+                                             class="help is-danger"
+                                             role="alert">{{ getErrorMessage(configParameter) }}</div>
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </fieldset>
+        </form>
+    </div>
+}

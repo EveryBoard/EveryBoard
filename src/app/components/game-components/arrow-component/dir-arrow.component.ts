@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
@@ -12,6 +12,6 @@ import { Arrow } from './Arrow';
 })
 export class DirArrowComponent extends BaseGameComponent {
 
-    @Input() arrow: Arrow<Ordinal>;
+    public readonly arrow: InputSignal<Arrow<Ordinal>> = input.required<Arrow<Ordinal>>();
 
 }

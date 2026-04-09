@@ -9,7 +9,7 @@ import { CoerceoState } from './CoerceoState';
 
 export class CoerceoOrderedMoveGenerator extends CoerceoMoveGenerator {
 
-    override getListMoves(node: CoerceoNode, config: MGPOptional<CoerceoConfig>): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, config: MGPOptional<CoerceoConfig>): CoerceoMove[] {
         const moves: CoerceoMove[] = super.getListMoves(node, config);
         return this.putCaptureFirst(node, moves);
     }

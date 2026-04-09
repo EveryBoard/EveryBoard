@@ -1,94 +1,109 @@
 <section class="hero">
     <div class="hero-body">
-        <p class="title" i18n>EveryBoard</p>
-        <p class="subtitle" i18n
-        >EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<br/>
-         Such games are games that do not include any randomness, agility, or hidden information.
-         These games are played by two players, turn by turn.</p>
-    </div>
-    <div class="columns mb-0">
-        <div class="column">
-            <div class="card mb-0">
-                <header class="card-header">
-                    <p class="card-header-title" i18n>Play online</p>
-                </header>
-                <div class="card-content">
-                    <div class="content">
-                        <button id="createOnlineGame" (click)="createGame()" class="button is-medium is-fullwidth is-primary mb-1" i18n>Create an online game</button>
-                        <button id="seeGameList" class="button is-medium is-fullwidth is-primary" routerLink="/lobby" i18n>See all online games</button>
-                    </div>
-                </div>
-            </div>
+        <p class="title"
+           i18n>EveryBoard</p>
+        <p class="subtitle"
+           i18n>EveryBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<br/>
+            Such games are games that do not include any randomness, agility, or hidden information.
+            These games are played by two players, turn by turn.</p>
         </div>
-        <div class="column">
-            <div class="card mb-0">
-                <header class="card-header">
-                    <p class="card-header-title" i18n>Play offline</p>
-                </header>
-                <div class="card-content">
-                    <div class="content has-text-centered">
-                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local" i18n>Play</button>
-                        <button class="button is-medium is-fullwidth is-primary" routerLink="/tutorial" i18n>Learn</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="gameInfoModal"
-         *ngIf="gameInfoDetails.isPresent()"
-         class="modal is-active">
-        <div id="modalBackground"
-             class="modal-background"
-             (click)="closeInfo()"></div>
-        <div class="modal-card">
-            <header class="modal-card-head is-primary">
-                <p class="modal-card-title">{{ gameInfoDetails.get().name }}</p>
-                <button id="closeInfo"
-                        class="delete"
-                        aria-label="close"
-                        (click)="closeInfo()"></button>
-            </header>
-            <section class="modal-card-body">
-                <div class="columns">
-                    <div class="column is-one-third">
-                        <p class="image"><img src="assets/images/{{ theme }}/{{ gameInfoDetails.get().urlName }}.png"></p>
-                    </div>
-                    <div class="column">
+        <div class="columns mb-0">
+            <div class="column">
+                <div class="card mb-0">
+                    <header class="card-header">
+                        <p class="card-header-title"
+                           i18n>Play online</p>
+                    </header>
+                    <div class="card-content">
                         <div class="content">
-                            {{ gameInfoDetails.get().description }}
+                            <button id="createOnlineGame"
+                                    (click)="createGame()"
+                                    class="button is-medium is-fullwidth is-primary mb-1"
+                                    i18n>Create an online game</button>
+                            <button id="seeGameList"
+                                    class="button is-medium is-fullwidth is-primary"
+                                    routerLink="/lobby"
+                                    i18n>See all online games</button>
                         </div>
                     </div>
                 </div>
-                <div class="columns">
-                    <div class="column is-one-third">
-                        <a id="play-online"
-                           class="button is-fullwidth"
-                           (click)="createGame(gameInfoDetails.get().urlName)">
-                            <fa-icon [icon]="iconOnlineGame"></fa-icon>&nbsp;
-                            <span i18n>Play online</span>
-                        </a>
-                    </div>
-                    <div class="column is-one-third">
-                        <a id="play-offline"
-                           class="button is-fullwidth"
-                           (click)="createLocalGame(gameInfoDetails.get().urlName)">
-                            <fa-icon [icon]="iconLocalGame"></fa-icon>&nbsp;
-                            <span i18n>Play offline</span>
-                        </a>
-                    </div>
-                    <div class="column is-one-third">
-                        <a id="play-tutorial"
-                           class="button is-fullwidth"
-                           (click)="createTutorial(gameInfoDetails.get().urlName)">
-                            <fa-icon [icon]="iconTutorial"></fa-icon>&nbsp;
-                            <span i18n>Learn the rules</span>
-                        </a>
+            </div>
+            <div class="column">
+                <div class="card mb-0">
+                    <header class="card-header">
+                        <p class="card-header-title"
+                           i18n>Play offline</p>
+                    </header>
+                    <div class="card-content">
+                        <div class="content has-text-centered">
+                            <button class="button is-medium is-fullwidth is-primary mb-1"
+                                    routerLink="/local"
+                                    i18n>Play</button>
+                            <button class="button is-medium is-fullwidth is-primary"
+                                    routerLink="/tutorial"
+                                    i18n>Learn</button>
+                        </div>
                     </div>
                 </div>
-            </section>
+            </div>
         </div>
-    </div>
 
-    <app-pick-game id="foo" (pickGame)="pickGame($event)"></app-pick-game>
-</section>
+        @if (gameInfoDetails.isPresent()) {
+            <div id="gameInfoModal"
+                 class="modal is-active">
+                <div id="modalBackground"
+                     class="modal-background"
+                     (click)="closeInfo()"></div>
+                <div class="modal-card">
+                    <header class="modal-card-head is-primary">
+                        <p class="modal-card-title">{{ gameInfoDetails.get().name }}</p>
+                        <button id="closeInfo"
+                                class="delete"
+                                aria-label="close"
+                                (click)="closeInfo()"></button>
+                    </header>
+                    <section class="modal-card-body">
+                        <div class="columns">
+                            <div class="column is-one-third">
+                                <p class="image"><img src="assets/images/{{ theme }}/{{ gameInfoDetails.get().urlName }}.png"></p>
+                            </div>
+                            <div class="column">
+                                <div class="content">
+                                    {{ gameInfoDetails.get().description }}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="columns">
+                            <div class="column is-one-third">
+                                <a id="play-online"
+                                   class="button is-fullwidth"
+                                   (click)="createGame(gameInfoDetails.get().urlName)">
+                                    <fa-icon [icon]="iconOnlineGame"></fa-icon>&nbsp;
+                                    <span i18n>Play online</span>
+                                </a>
+                            </div>
+                            <div class="column is-one-third">
+                                <a id="play-offline"
+                                   class="button is-fullwidth"
+                                   (click)="createLocalGame(gameInfoDetails.get().urlName)">
+                                    <fa-icon [icon]="iconLocalGame"></fa-icon>&nbsp;
+                                    <span i18n>Play offline</span>
+                                </a>
+                            </div>
+                            <div class="column is-one-third">
+                                <a id="play-tutorial"
+                                   class="button is-fullwidth"
+                                   (click)="createTutorial(gameInfoDetails.get().urlName)">
+                                    <fa-icon [icon]="iconTutorial"></fa-icon>&nbsp;
+                                    <span i18n>Learn the rules</span>
+                                </a>
+                            </div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        }
+
+        <app-pick-game id="foo"
+                       (pickGame)="pickGame($event)"></app-pick-game>
+    </section>

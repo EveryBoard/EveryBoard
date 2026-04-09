@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 
 import { MGPMap, MGPOptional } from '@everyboard/lib';
@@ -7,7 +7,7 @@ import { MGPMap, MGPOptional } from '@everyboard/lib';
 import { ConfigRoom, FirstPlayer } from '../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
 import { ActiveConfigRoomsService } from '../ActiveConfigRoomsService';
-import { AbstractBackendService, BackendService } from '../BackendService';
+import { BackendService } from '../BackendService';
 
 import { BackendServiceMock } from './BackendServiceMock.spec';
 
@@ -32,8 +32,13 @@ describe('ActiveConfigRoomsService', () => {
 
     beforeEach(fakeAsync(async() => {
         backendService = new BackendServiceMock();
-        activeConfigRoomsService =
-            new ActiveConfigRoomsService(backendService as AbstractBackendService as BackendService);
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: BackendService, useValue: backendService },
+                ActiveConfigRoomsService,
+            ],
+        });
+        activeConfigRoomsService = TestBed.inject(ActiveConfigRoomsService);
     }));
 
     it('should create', () => {

@@ -1,5 +1,7 @@
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type } from '@angular/core';
-import { ActivatedRoute, ParamMap, Router } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, inject } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { ParamMap } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
@@ -11,9 +13,9 @@ import { Player } from '../../../jscaip/Player';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
@@ -21,9 +23,12 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ViewConfigComponent, NgClass, ReactiveFormsModule, FormsModule],
 })
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
 
     public static readonly AI_TIMEOUT: number = 1500;
 
@@ -35,12 +40,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public rulesConfig: MGPOptional<RulesConfig>; // Set in constructor and in ngAfterViewInit
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
+    public constructor()
     {
-        super(activatedRoute, router, messageDisplayer);
+        super();
         this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
         this.role = Player.ZERO; // The user is playing, not observing
     }
@@ -56,7 +58,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async ngAfterViewInit(): Promise<void> {
-        window.setTimeout(async() => {
+        setTimeout(async() => {
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             if (createdSuccessfully) {
                 await this.restartGame();
@@ -197,7 +199,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             // It is AI's turn, let it play after a small delay
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
-                window.setTimeout(async() => {
+                setTimeout(async() => {
                     const config: MGPOptional<RulesConfig> = this.getConfig();
                     const gameIsOngoing: boolean =
                         this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;

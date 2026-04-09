@@ -1,9 +1,11 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
@@ -17,7 +19,6 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneMove } from './AbaloneMove';
@@ -44,6 +45,7 @@ type AbaloneArrowInfo = {
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, HexArrowComponent],
 })
 export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
@@ -66,8 +68,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         .getCoordsAndContents()
         .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getOrdinalNeighbors())).toList();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Abalone');
         this.availableAIs = [
             new AbaloneScoreMinimax(),

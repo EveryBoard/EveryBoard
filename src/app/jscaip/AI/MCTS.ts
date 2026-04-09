@@ -93,7 +93,7 @@ implements AI<M, S, AITimeLimitOptions, C>
     private ucb(node: GameNode<M, S>, parentSimulations: number): number {
         const simulations: number = this.simulations(node);
         if (parentSimulations === 0 || simulations === 0) {
-            return Number.MAX_SAFE_INTEGER;
+            return Number.POSITIVE_INFINITY;
         }
         return (this.wins(node) / simulations) +
                this.explorationParameter * Math.sqrt(Math.log(parentSimulations) / simulations);

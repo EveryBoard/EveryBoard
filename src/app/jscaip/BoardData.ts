@@ -6,12 +6,12 @@ import { Table, TableUtils } from './TableUtils';
 
 export class BoardData {
 
-    private constructor(readonly groupIndices: Table<number>,
-                        readonly groups: ReadonlyArray<GroupInfos>)
+    private constructor(public readonly groupIndices: Table<number>,
+                        public readonly groups: ReadonlyArray<GroupInfos>)
     {
     }
 
-    public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDataFactory<T>): BoardData {
+    public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDataFactory<T, GroupData<T>>): BoardData {
         const groupIndices: number[][] = TableUtils.create(board[0].length, board.length, -1);
         const groupsDatas: GroupData<T>[] = [];
         for (let y: number = 0; y < board.length; y++) {
@@ -40,25 +40,30 @@ export class BoardData {
     }
 }
 
+/**
+ * The main caracteristic of a group is piece of the same type that are connected together.
+ */
 export class GroupInfos {
-    public constructor(readonly coords: ReadonlyArray<Coord>,
-                       readonly neighborsEntryPoints: ReadonlyArray<Coord>) {}
+    public constructor(public readonly coords: ReadonlyArray<Coord>,
+                       public readonly neighborsEntryPoints: ReadonlyArray<Coord>)
+    {
+    }
 }
 
 @Debug.log
-export abstract class GroupDataFactory<T> {
+export abstract class GroupDataFactory<T, G extends GroupData<T>> {
 
-    public abstract getNewInstance(color: T): GroupData<T>;
+    public abstract getNewInstance(color: T): G;
 
     public abstract getDirections(coord: Coord): ReadonlyArray<Ordinal>;
 
-    public getGroupData(coord: Coord, board: Table<T>): GroupData<T> {
+    public getGroupData(coord: Coord, board: Table<T>): G {
         const color: T = board[coord.y][coord.x];
-        const groupDatas: GroupData<T> = this.getNewInstance(color);
+        const groupDatas: G = this.getNewInstance(color);
         return this._getGroupDatas(coord, board, groupDatas);
     }
 
-    private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: GroupData<T>): GroupData<T> {
+    private _getGroupDatas(coord: Coord, board: Table<T>, groupDatas: G): G {
         const color: T = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {
@@ -72,6 +77,26 @@ export abstract class GroupDataFactory<T> {
             }
         }
         return groupDatas;
+    }
+
+    public getGroupsDataWhere(board: T[][], condition: (piece: T) => boolean): G[] {
+        const groups: G[] = [];
+        let coord: Coord;
+        let group: G;
+        let currentSpace: T;
+        for (let y: number = 0; y < board.length; y++) {
+            for (let x: number = 0; x < board[0].length; x++) {
+                coord = new Coord(x, y);
+                currentSpace = board[y][x];
+                if (condition(currentSpace)) {
+                    if (groups.some((currentGroup: G) => currentGroup.selfContains(coord)) === false) {
+                        group = this.getGroupData(coord, board);
+                        groups.push(group);
+                    }
+                }
+            }
+        }
+        return groups;
     }
 }
 
@@ -91,6 +116,8 @@ export abstract class GroupData<T> {
         const ownCoords: Coord[] = this.getCoords();
         return ownCoords.some((c: Coord) => c.equals(coord));
     }
+
+    public abstract isMonoWrapped(): boolean;
 
     public static insert(list: Coord[], coord: Coord): Coord[] {
         if (list.length === 0) {

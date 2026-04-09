@@ -264,8 +264,8 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                                          currentPlayer: Player)
     : number
     {
-        if (zeroShortestDistance === Number.MAX_SAFE_INTEGER) zeroShortestDistance = 6;
-        if (oneShortestDistance === Number.MAX_SAFE_INTEGER) oneShortestDistance = 6;
+        if (zeroShortestDistance === Number.POSITIVE_INFINITY) zeroShortestDistance = 6;
+        if (oneShortestDistance === Number.POSITIVE_INFINITY) oneShortestDistance = 6;
         const zeroScore: number = 6 - zeroShortestDistance;
         const oneScore: number = 6 - oneShortestDistance;
         if (zeroScore === oneScore) {

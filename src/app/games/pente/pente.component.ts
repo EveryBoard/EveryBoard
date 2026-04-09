@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
+import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
 import { PenteConfig } from './PenteConfig';
@@ -21,6 +22,7 @@ import { PenteState } from './PenteState';
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [BlankGobanComponent, NgClass],
 })
 export class PenteComponent extends GobanGameComponent<PenteRules,
                                                        PenteMove,
@@ -33,8 +35,8 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public victoryCoords: Coord[] = [];
     public captured: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Pente');
         this.availableAIs = [
             new PenteAlignmentMinimax(),

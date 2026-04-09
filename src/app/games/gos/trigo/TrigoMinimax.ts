@@ -6,7 +6,7 @@ import { TrigoConfig, TrigoRules } from './TrigoRules';
 
 export class TrigoMinimax extends AbstractGoMinimax<TrigoConfig> {
 
-    constructor() {
+    public constructor() {
         super(
             TrigoRules.get(),
             new TrigoMoveGenerator(),

@@ -10,9 +10,6 @@ import { ConnectedButNotVerifiedGuard } from '../connected-but-not-verified.guar
 
 describe('ConnectedButNotVerifiedGuard', () => {
     let guard: ConnectedButNotVerifiedGuard;
-
-    let connectedUserService: ConnectedUserService;
-
     let router: Router;
 
     beforeEach(fakeAsync(async() => {
@@ -23,12 +20,12 @@ describe('ConnectedButNotVerifiedGuard', () => {
                     { path: '**', component: BlankComponent },
                 ]),
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                ConnectedButNotVerifiedGuard,
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        connectedUserService = TestBed.inject(ConnectedUserService);
-        guard = new ConnectedButNotVerifiedGuard(connectedUserService, router);
+        guard = TestBed.inject(ConnectedButNotVerifiedGuard);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

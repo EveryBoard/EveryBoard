@@ -17,10 +17,7 @@ import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { TaflComponent } from '../tafl.component';
 
-export class TaflTestEntries<C extends TaflComponent<R, M>,
-                             R extends TaflRules<M>,
-                             M extends TaflMove>
-{
+export type TaflTestEntries<C extends TaflComponent<R, M>, R extends TaflRules<M>, M extends TaflMove> = {
     component: Type<C>; // TablutComponent | BrandhubComponent | HnefataflComponent
     gameName: string; // 'Tablut' | 'Brandhub' | 'Hnefatafl'
     secondPlayerPiece: Coord; // The coord of a piece belonging to Player.ONE

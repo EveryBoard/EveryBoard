@@ -1,6 +1,7 @@
 import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
+import { GroupDataFactory } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Debug } from '../../utils/Debug';
@@ -62,8 +63,9 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
 
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
+        const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory();
         const groupsData: GoGroupData[] =
-            this.rules.getGroupsDataWhere(
+            groupDataFactory.getGroupsDataWhere(
                 correctBoard,
                 (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE);
 

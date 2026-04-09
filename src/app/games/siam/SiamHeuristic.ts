@@ -28,8 +28,8 @@ export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, Si
 
         const pushers: { distance: number, coord: Coord}[] =
             SiamRules.get().getPushers(state, mountainsColumn, mountainsRow, config);
-        let zeroShortestDistance: number = Number.MAX_SAFE_INTEGER;
-        let oneShortestDistance: number = Number.MAX_SAFE_INTEGER;
+        let zeroShortestDistance: number = Number.POSITIVE_INFINITY;
+        let oneShortestDistance: number = Number.POSITIVE_INFINITY;
         const currentPlayer: Player = state.getCurrentPlayer();
         for (const pusher of pushers) {
             if (state.isOnBoard(pusher.coord)) {
