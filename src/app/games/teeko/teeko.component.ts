@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -7,7 +8,6 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { TeekoMinimax } from './TeekoMinimax';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
@@ -19,6 +19,7 @@ import { TeekoState } from './TeekoState';
     selector: 'app-teeko',
     templateUrl: './teeko.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 
 export class TeekoComponent extends RectangularGameComponent<TeekoRules,
@@ -32,8 +33,8 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public moved: Coord[] = [];
     public victory: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Teeko');
         this.availableAIs = [
             new TeekoMinimax(),

@@ -81,7 +81,7 @@
         <source>Hide chat</source>
       </trans-unit>
       <trans-unit id="3331424259701651496" datatype="html">
-        <source>Show chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessagesText }}"/>)</source>
+        <source>Show chat (<x id="INTERPOLATION" equiv-text="{{ unreadMessagesText }}"/>)</source>
       </trans-unit>
       <trans-unit id="8403075591877274055" datatype="html">
         <source>Type your message here</source>
@@ -120,13 +120,13 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
       </trans-unit>
       <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> (waiting for opponent)</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> (waiting for opponent)</source>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
@@ -609,7 +609,7 @@
         <source>You start</source>
       </trans-unit>
       <trans-unit id="7738132709044699358" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.chosenOpponent }}"/> starts</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.chosenOpponent }}"/> starts</source>
       </trans-unit>
       <trans-unit id="4492847529610715272" datatype="html">
         <source>The opponent starts</source>
@@ -621,7 +621,7 @@
         <source>Maximal turn duration: </source>
       </trans-unit>
       <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="ARD_GAME_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ GameDuration.STANDARD_GAME_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
       </trans-unit>
       <trans-unit id="4073116770334354573" datatype="html">
         <source>Blitz</source>
@@ -630,7 +630,7 @@
         <source>Custom time</source>
       </trans-unit>
       <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="tion || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.gameDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
       </trans-unit>
       <trans-unit id="1612262766071402559" datatype="html">
         <source>Propose configuration</source>
@@ -648,10 +648,10 @@
         <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
       </trans-unit>
       <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.gameTypeName }}"/> game</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.gameTypeName }}"/> game</source>
       </trans-unit>
       <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> plays first</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first</source>
       </trans-unit>
       <trans-unit id="8496859383343230204" datatype="html">
         <source>you play first</source>
@@ -660,10 +660,10 @@
         <source>the first player is selected randomly</source>
       </trans-unit>
       <trans-unit id="3649232689954543597" datatype="html">
-        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="tion || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.moveDuration || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
       </trans-unit>
       <trans-unit id="7852346564484185703" datatype="html">
-        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="tion || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.gameDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
       </trans-unit>
       <trans-unit id="1012784993066568401" datatype="html">
         <source>Accept and start</source>
@@ -672,10 +672,10 @@
         <source>One moment...</source>
       </trans-unit>
       <trans-unit id="5068486659312004369" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> is configuring the game.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
       </trans-unit>
       <trans-unit id="4218388977213486334" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
       </trans-unit>
       <trans-unit id="7593355192491237220" datatype="html">
         <source>The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.</source>
@@ -798,22 +798,22 @@
         <source>You lost.</source>
       </trans-unit>
       <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getWinner().name }}"/> won.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getWinner().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has reached their time limit.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getLoser().name }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has resigned.</source>
       </trans-unit>
       <trans-unit id="3492340771384313804" datatype="html">
         <source>Resign</source>
@@ -825,10 +825,10 @@
         <source>Reject</source>
       </trans-unit>
       <trans-unit id="2875203763744324408" datatype="html">
-        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
       <trans-unit id="1802530168433258138" datatype="html">
-        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
       <trans-unit id="4624707315308487849" datatype="html">
         <source>Go back to the game list</source>

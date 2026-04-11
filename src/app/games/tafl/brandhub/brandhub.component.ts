@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 
 import { BrandhubMove } from './BrandhubMove';
@@ -10,11 +10,12 @@ import { BrandhubRules } from './BrandhubRules';
     selector: 'app-brandhub',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr, BrandhubMove.from);
+    public constructor() {
+        super(BrandhubMove.from);
         this.setRulesAndNode('Brandhub');
         this.availableAIs = this.createAIs();
         this.encoder = BrandhubMove.encoder;

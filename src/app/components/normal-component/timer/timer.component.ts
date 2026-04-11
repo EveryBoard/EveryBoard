@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
+import { NgClass, DecimalPipe } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, InputSignal, OnDestroy, OutputEmitterRef, inject, input, output } from '@angular/core';
 
 import { Utils } from '@everyboard/lib';
 
@@ -9,29 +10,32 @@ import { Debug } from '../../../utils/Debug';
     selector: 'app-timer',
     templateUrl: './timer.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [NgClass, DecimalPipe],
 })
 @Debug.log
 export class TimerComponent implements OnDestroy {
 
-    @Input() player: Player;
-    @Input() debugName: string;
-    @Input() timeToAdd: string;
-    @Input() dangerTimeLimit: number;
-    @Input() active: boolean;
-    @Input() canAddTime: boolean;
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    public readonly player: InputSignal<Player> = input.required<Player>();
+    public readonly debugName: InputSignal<string> = input.required<string>();
+    public readonly timeToAdd: InputSignal<string> = input.required<string>();
+    public readonly dangerTimeLimit: InputSignal<number> = input.required<number>();
+    public readonly active: InputSignal<boolean> = input.required<boolean>();
+    public readonly canAddTime: InputSignal<boolean> = input.required<boolean>();
 
     public remainingSeconds: number;
     public displayedSec: number;
     public displayedMinute: number;
-    private timeoutHandle: number | null = null; // A number representing the timer handle. Not a time unit.
-    private updateHandle: number | null = null; // A number representing the timer handle. Not a time unit.
+    private timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+    private updateHandle: ReturnType<typeof setTimeout> | null = null;
     private isPaused: boolean = true;
     private isSet: boolean = false;
     private started: boolean = false;
     private startTime: number;
 
-    @Output() outOfTimeAction: EventEmitter<void> = new EventEmitter<void>();
-    @Output() addTimeToOpponent: EventEmitter<void> = new EventEmitter<void>();
+    public readonly outOfTimeAction: OutputEmitterRef<void> = output();
+    public readonly addTimeToOpponent: OutputEmitterRef<void> = output();
 
     public static readonly DANGER_TIME_EVEN: string = 'has-background-danger has-text-white';
     public static readonly DANGER_TIME_ODD: string = 'has-background-warning has-text-white';
@@ -40,11 +44,9 @@ export class TimerComponent implements OnDestroy {
 
     public cssClasses: string = TimerComponent.SAFE_TIME;
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {}
-
     // Set the duration (in seconds, floating number) for a non-started timer
     public setDuration(seconds: number): void {
-        Utils.assert(this.started === false, 'Should not set a timer that has already been started (' + this.debugName + ')!');
+        Utils.assert(this.started === false, 'Should not set a timer that has already been started (' + this.debugName() + ')!');
 
         this.isSet = true;
         this.changeDuration(seconds);
@@ -68,7 +70,7 @@ export class TimerComponent implements OnDestroy {
 
     public start(): void {
         Utils.assert(this.isSet, 'Should not start a timer that has not been set!');
-        Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName + ')');
+        Utils.assert(this.started === false, 'Should not start timer that has already been started (' + this.debugName() + ')');
 
         this.started = true;
         this.resume();
@@ -80,7 +82,7 @@ export class TimerComponent implements OnDestroy {
         this.startTime = Date.now() / 1000;
         const remainingTimeOnResume: number = this.remainingSeconds;
         this.isPaused = false;
-        this.timeoutHandle = window.setTimeout(() => {
+        this.timeoutHandle = setTimeout(() => {
             this.onEndReached();
         }, remainingTimeOnResume * 1000);
         this.countSeconds();
@@ -95,7 +97,7 @@ export class TimerComponent implements OnDestroy {
     }
 
     private countSeconds(): void {
-        this.updateHandle = window.setTimeout(() => {
+        this.updateHandle = setTimeout(() => {
             this.updateShownTime();
         }, 300); // update a bit more frequently than every second to account for drifts
     }
@@ -106,8 +108,9 @@ export class TimerComponent implements OnDestroy {
     }
 
     public pause(): void {
-        Utils.assert(this.started, 'Should not pause not started timer (' + this.debugName + ')');
-        Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + this.debugName + ')');
+        const debugName: string = this.debugName();
+        Utils.assert(this.started, 'Should not pause not started timer (' + debugName + ')');
+        Utils.assert(this.isPaused === false, 'Should not pause already paused timer (' + debugName + ')');
 
         this.clearTimeouts();
         this.isPaused = true;
@@ -129,10 +132,10 @@ export class TimerComponent implements OnDestroy {
     }
 
     public getTimeClass(): string {
-        if (this.active === false) {
+        if (this.active() === false) {
             return TimerComponent.PASSIVE_STYLE;
         }
-        if (this.remainingSeconds < this.dangerTimeLimit) {
+        if (this.remainingSeconds < this.dangerTimeLimit()) {
             if (this.remainingSeconds % 2 < 1) {
                 return TimerComponent.DANGER_TIME_ODD;
             } else {

@@ -9,6 +9,7 @@ import { FirstPlayer, Status, GameType, ConfigRoom, GameDuration } from '../../.
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
+import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
 import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomServiceMock.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
@@ -32,6 +33,8 @@ describe('GameCreationComponent', () => {
 
     const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
 
+    const defaultConfig: P4Config = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().config;
+
     async function receiveConfigRoomUpdate(configRoom: ConfigRoom): Promise<void> {
         configRoomService.mockConfigRoomUpdate(configRoom);
     }
@@ -46,7 +49,7 @@ describe('GameCreationComponent', () => {
 
     async function awaitComponentInitialization(): Promise<void> {
         testUtils.detectChanges();
-        await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.empty()));
+        await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
         tick(0);
     }
 
@@ -56,7 +59,7 @@ describe('GameCreationComponent', () => {
     async function chooseOpponent(): Promise<void> {
         await clickElement('#presenceOf_' + candidate.name);
         configRoomService.mockConfigRoomUpdate({
-            ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+            ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
             chosenOpponent: candidate,
         });
     }
@@ -90,14 +93,22 @@ describe('GameCreationComponent', () => {
         destroyed = false;
         configRoomService = TestBed.inject(ConfigRoomService) as AbstractConfigRoomService as ConfigRoomServiceMock;
         component = testUtils.getComponent();
-        component.gameId = 'configRoomId';
-        component.rulesConfigDescription = MGPOptional.empty();
+        testUtils.setInput('gameId', 'configRoomId');
+        testUtils.setInput('rulesConfigDescription', MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION));
         router = TestBed.inject(Router);
     }));
 
     it('should create', () => {
         expect(component).toBeTruthy();
     });
+
+    it('should initialize properly', fakeAsync(async() => {
+        // Given a component
+        expect(component).toBeTruthy();
+        // When it is loaded
+        // Then it should not trigger any error
+        await awaitComponentInitialization();
+    }));
 
     it('should display an error if it receives already-subscribed from the server', fakeAsync(async() => {
         // Given a component that is loaded
@@ -110,7 +121,7 @@ describe('GameCreationComponent', () => {
             'You already have another tab open.',
             async() => {
                 await receiveError('already-subscribed');
-                expectValidRouting(router, ['/'], WelcomeComponent);
+                await expectValidRouting(router, ['/'], WelcomeComponent);
             });
     }));
 
@@ -124,7 +135,7 @@ describe('GameCreationComponent', () => {
 
         // Then it should navigate to /notFound
         const expectedRoute: string[] = ['/notFound', GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN()];
-        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
     it('should display an error if it receives game-does-not-exist from the server', fakeAsync(async() => {
@@ -137,7 +148,7 @@ describe('GameCreationComponent', () => {
 
         // Then it should navigate to /
         const expectedRoute: string[] = ['/notFound', GameCreationComponentMessages.GAME_DOES_NOT_EXIST_OR_UNKNOWN()];
-        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
     it('should display an error if it receives one from the backend', fakeAsync(async() => {
@@ -151,7 +162,7 @@ describe('GameCreationComponent', () => {
             'Unexpected error from backend: unknown-message',
             async() => {
                 await receiveError('unknown-message');
-                expectValidRouting(router, ['/'], WelcomeComponent);
+                await expectValidRouting(router, ['/'], WelcomeComponent);
             });
 
     }));
@@ -185,7 +196,7 @@ describe('GameCreationComponent', () => {
                 });
 
                 // Then it should navigate to the lobby
-                expectValidRouting(router, ['/lobby'], LobbyComponent);
+                await expectValidRouting(router, ['/lobby'], LobbyComponent);
             }));
 
             it('should have button to play against AI and cancel game', fakeAsync(async() => {
@@ -199,7 +210,7 @@ describe('GameCreationComponent', () => {
                     await clickElement('#play-against-ai');
                 });
                 // Then it should navigate to local game
-                expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
+                await expectValidRouting(router, ['/local', 'P4', 'config'], LocalGameConfigurationComponent);
             }));
         });
 
@@ -213,7 +224,7 @@ describe('GameCreationComponent', () => {
                 configRoomService.mockCandidateJoined(candidate);
 
                 // Then it is possible to choose a candidate
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
                 expectElementToExist('#chooseOpponent');
             }));
         });
@@ -232,7 +243,7 @@ describe('GameCreationComponent', () => {
                 const infoMessage: string = candidate.name + ' left the game, please pick another opponent.';
                 await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
                     await receiveConfigRoomUpdate({
-                        ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                        ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
                         status: Status.CREATED,
                         chosenOpponent: null,
                     });
@@ -243,7 +254,7 @@ describe('GameCreationComponent', () => {
                 // Then it is not selected anymore
                 expectElementNotToExist('#selected_' + candidate.name);
                 // And configRoom when back to its initial state
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
             }));
 
             it('should not display non chosen candidate anymore when they leaves', fakeAsync(async() => {
@@ -257,7 +268,7 @@ describe('GameCreationComponent', () => {
 
                 // Then it is still not selected, configRoom is back to start
                 expectElementNotToExist('#presenceOf_' + candidate.name);
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.empty()));
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
             }));
         });
 
@@ -310,7 +321,7 @@ describe('GameCreationComponent', () => {
                     moveDuration: 100,
                     gameDuration: 1000,
                     firstPlayer: FirstPlayer.RANDOM,
-                    rulesConfig: {},
+                    rulesConfig: defaultConfig,
                 });
             }));
 
@@ -331,7 +342,7 @@ describe('GameCreationComponent', () => {
                     moveDuration: GameDuration.BLITZ_MOVE_DURATION,
                     gameDuration: GameDuration.BLITZ_GAME_DURATION,
                     firstPlayer: FirstPlayer.RANDOM,
-                    rulesConfig: {},
+                    rulesConfig: defaultConfig,
                 });
             }));
 
@@ -344,14 +355,14 @@ describe('GameCreationComponent', () => {
                 // When proposing config and getting the update from the server
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
-                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
+                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.of(defaultConfig)),
                     chosenOpponent: candidate,
                     status: Status.CONFIG_PROPOSED,
                 });
 
                 // Then currentConfigRoom should be updated with the proposed config
                 const proposedConfig: ConfigRoom = {
-                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.empty()),
+                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.of(defaultConfig)),
                     chosenOpponent: candidate,
                     status: Status.CONFIG_PROPOSED,
                 };
@@ -366,7 +377,7 @@ describe('GameCreationComponent', () => {
                 spyOn(configRoomService, 'proposeConfig');
 
                 // When changing a rules config but not saving config
-                component.onRulesConfigUpdate(MGPOptional.of({ chaussettes_de_crepes: 5 }));
+                component.onRulesConfigUpdate(MGPOptional.of({ width: 4, height: 2 }));
 
                 // Then the config should not have been sent yet
                 expect(configRoomService.proposeConfig).not.toHaveBeenCalled();
@@ -379,7 +390,8 @@ describe('GameCreationComponent', () => {
                 await chooseOpponent();
 
                 // When changing a rules config then proposing config
-                component.onRulesConfigUpdate(MGPOptional.of({ chaussettes_de_crepes: 5 }));
+                const specialConfig: P4Config = { width: 4, height: 2 };
+                component.onRulesConfigUpdate(MGPOptional.of(specialConfig));
                 spyOn(configRoomService, 'proposeConfig');
                 await proposeConfig();
 
@@ -389,9 +401,7 @@ describe('GameCreationComponent', () => {
                     moveDuration: GameDuration.STANDARD_MOVE_DURATION,
                     gameDuration: GameDuration.STANDARD_GAME_DURATION,
                     firstPlayer: FirstPlayer.RANDOM,
-                    rulesConfig: {
-                        chaussettes_de_crepes: 5,
-                    },
+                    rulesConfig: specialConfig,
                 });
             }));
 
@@ -470,7 +480,8 @@ describe('GameCreationComponent', () => {
             it('should send for review when clicking on review config button', fakeAsync(async() => {
                 // Given a game creation where the config has been proposed
                 await awaitComponentInitialization();
-                configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
+                configRoomService.mockConfigRoomUpdate(
+                    ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
 
                 // When the config is reviewed
                 spyOn(configRoomService, 'reviewConfig');
@@ -529,7 +540,7 @@ describe('GameCreationComponent', () => {
             // Then the candidate is added to the configRoom
             expect(configRoomService.join).toHaveBeenCalledTimes(1);
             // and the configRoom is updated once the service receives the update from the server
-            const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+            const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig));
             configRoomService.mockConfigRoomUpdate(configRoom);
             // testUtils.detectChanges();
             expect(component.currentConfigRoom).toEqual(configRoom);
@@ -546,7 +557,7 @@ describe('GameCreationComponent', () => {
                 'The game has been cancelled.',
                 async() => {
                     await receiveCancellation();
-                    expectValidRouting(router, ['/'], WelcomeComponent);
+                    await expectValidRouting(router, ['/'], WelcomeComponent);
                 });
         }));
 
@@ -556,7 +567,7 @@ describe('GameCreationComponent', () => {
 
             // When receiving a blitz update
             const update: ConfigRoom = {
-                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
                 gameType: GameType.BLITZ,
                 moveDuration: GameDuration.BLITZ_MOVE_DURATION,
                 gameDuration: GameDuration.BLITZ_GAME_DURATION,
@@ -575,7 +586,7 @@ describe('GameCreationComponent', () => {
 
             // When receiving a custom update
             const update: ConfigRoom = {
-                ...ConfigRoomMocks.getInitial(MGPOptional.empty()),
+                ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
                 gameType: GameType.CUSTOM,
                 moveDuration: 100,
                 gameDuration: 1000,
@@ -592,11 +603,11 @@ describe('GameCreationComponent', () => {
             it('should make config acceptation possible for configRoom when config is proposed', fakeAsync(async() => {
                 // Given a game in creation where the candidate is chosen
                 await awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.empty()));
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.of(defaultConfig)));
                 testUtils.expectElementNotToExist('#acceptConfig');
 
                 // When the config is proposed
-                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
 
                 // Then the candidate can accept the config
                 expectElementToExist('#acceptConfig');
@@ -607,7 +618,7 @@ describe('GameCreationComponent', () => {
                 // Given a game where the config has been proposed
                 spyOn(configRoomService, 'acceptConfig');
                 await awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
 
                 // When accepting the config
                 await clickElement('#acceptConfig');
@@ -622,10 +633,10 @@ describe('GameCreationComponent', () => {
             spyOn(component.gameStartNotification, 'emit').and.callThrough();
             // Given a game where the config has been proposed
             await awaitComponentInitialization();
-            await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.empty()));
+            await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
 
             // When the config is finished and the game will start
-            const acceptedConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty());
+            const acceptedConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(defaultConfig));
             await receiveConfigRoomUpdate(acceptedConfigRoom);
 
             // Then the game start notification is emitted

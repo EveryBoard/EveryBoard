@@ -111,12 +111,13 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(fakeAsync(async() => {
             // Given an editable component
-            component.editable = true;
+            testUtils.setInput('editable', true);
         }));
 
-        it('should display enabled rules select', fakeAsync(async() => {
+        it('should display enabled rules selection', fakeAsync(async() => {
             // Given an editable component with a config
-            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
+            await testUtils.chooseConfig('Custom');
 
             // When displaying it
 
@@ -127,7 +128,7 @@ describe('RulesConfigurationComponent', () => {
 
         it('should display default config', fakeAsync(async() => {
             // Given an editable component with a config
-            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
 
             // When displaying it
 
@@ -137,7 +138,8 @@ describe('RulesConfigurationComponent', () => {
 
         it('should allow to change to another standard config', fakeAsync(async() => {
             // Given an editable component with a config
-            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
+            await testUtils.chooseConfig('Custom');
 
             // Given a game with two standard config (the default and the other)
             testUtils.detectChanges();
@@ -151,7 +153,7 @@ describe('RulesConfigurationComponent', () => {
 
         it('should immediately emit on initialization when there is no config to fill', fakeAsync(async() => {
             // Given an editable rules config component provided with no configuration
-            component.rulesConfigDescriptionOptional = MGPOptional.empty();
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.empty());
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When initializing
@@ -164,7 +166,7 @@ describe('RulesConfigurationComponent', () => {
 
         it('should immediately emit on initialization when there is a config because default config is valid', fakeAsync(async() => {
             // Given a rules config component provided with an empty configuration
-            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When initializing
@@ -185,7 +187,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should propose a number input when given a config of type number', fakeAsync(async() => {
                     // Given a chosen customizable config
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                     await testUtils.chooseConfig('Custom');
 
                     // When rendering component
@@ -198,7 +200,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should emit new config when changing value', fakeAsync(async() => {
                     // Given a chosen customizable config
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
 
@@ -215,7 +217,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should emit default value of the non modified fields when modifying another field', fakeAsync(async() => {
                     // Given a chosen customizable config
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
 
@@ -232,7 +234,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should emit an empty optional when applying invalid change', fakeAsync(async() => {
                     // Given a chosen customizable config
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
 
@@ -249,7 +251,7 @@ describe('RulesConfigurationComponent', () => {
 
                     it('should display custom validation error when making the value too small', fakeAsync(async() => {
                         // Given a chosen customizable config
-                        component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                        testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                         await testUtils.chooseConfig('Custom');
                         testUtils.detectChanges();
 
@@ -266,7 +268,7 @@ describe('RulesConfigurationComponent', () => {
 
                     it('should display custom validation error when making the value too big', fakeAsync(async() => {
                         // Given a chosen customizable config
-                        component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                        testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                         await testUtils.chooseConfig('Custom');
                         testUtils.detectChanges();
 
@@ -283,7 +285,7 @@ describe('RulesConfigurationComponent', () => {
 
                     it('should display custom validation error when erasing value', fakeAsync(async() => {
                         // Given a chosen customizable config
-                        component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                        testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
                         await testUtils.chooseConfig('Custom');
                         testUtils.detectChanges();
 
@@ -306,7 +308,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should propose a boolean input when given a config of type boolean', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithBooleans));
                     await testUtils.chooseConfig('Custom');
 
                     // When rendering component
@@ -319,7 +321,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should emit new value when changing value', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithBooleans));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
 
@@ -335,7 +337,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should emit default value of the non modified fields when modifying another field', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithBooleans));
                     await testUtils.chooseConfig('Custom');
 
                     // When modifying another config
@@ -354,7 +356,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should propose a drop down input when given a config of type enum', fakeAsync(async() => {
                     // Given an editable component with a enum config option
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithEnums);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithEnums));
                     await testUtils.chooseConfig('Custom');
 
                     // When rendering component
@@ -367,7 +369,7 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should emit new value when changing value', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithEnums);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithEnums));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
 
@@ -384,7 +386,7 @@ describe('RulesConfigurationComponent', () => {
                 it('should have a select that you cannot change', fakeAsync(async() => {
                     // Given an editable component with a boolean config option
                     // but not in "custom" mode, so the fields should be disabled
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithEnums);
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithEnums));
                     testUtils.detectChanges();
 
                     // When rendering config
@@ -421,8 +423,8 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should not emit when a multiple field validator fails', fakeAsync(async() => {
                     // Given a rules config description with two number fields whose sum must be <= 100
-                    component.rulesConfigDescriptionOptional =
-                        MGPOptional.of(rulesConfigDescriptionWithMultiFieldValidation);
+                    testUtils.setInput('rulesConfigDescriptionOptional',
+                                       MGPOptional.of(rulesConfigDescriptionWithMultiFieldValidation));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
                     spyOn(component.updateCallback, 'emit').and.callThrough();
@@ -437,8 +439,8 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should display multi-field failure reason', fakeAsync(async() => {
                     // Given a rules config description with two number fields whose sum must be <= 100
-                    component.rulesConfigDescriptionOptional =
-                        MGPOptional.of(rulesConfigDescriptionWithMultiFieldValidation);
+                    testUtils.setInput('rulesConfigDescriptionOptional',
+                                       MGPOptional.of(rulesConfigDescriptionWithMultiFieldValidation));
                     await testUtils.chooseConfig('Custom');
                     testUtils.detectChanges();
                     spyOn(component.updateCallback, 'emit').and.callThrough();
@@ -460,14 +462,14 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(() => {
             // Given a component in non-editable mode
-            component.editable = false;
+            component.setEditable(false);
             // rulesConfigToDisplay is mandatory even if it's a configless game
-            component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.getDefaultConfig().config;
+            testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         });
 
         it('should display options in a disabled style', fakeAsync(async() => {
             // Given a component with some config
-            component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
 
             // When displaying it
             testUtils.detectChanges();
@@ -479,7 +481,7 @@ describe('RulesConfigurationComponent', () => {
 
         it('should immediately emit on initialization when no config to fill', fakeAsync(async() => {
             // Given a rules config component provided with an empty configuration
-            component.rulesConfigDescriptionOptional = MGPOptional.empty();
+            testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.empty());
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When initializing
@@ -494,8 +496,8 @@ describe('RulesConfigurationComponent', () => {
 
             it('should throw at initialization if rulesConfigToDisplay is missing', fakeAsync(async() => {
                 // Given a component intended for non-creator user with no config to display
-                component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
-                component.rulesConfigToDisplay = undefined;
+                testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
+                testUtils.setInput('rulesConfigToDisplay', undefined);
 
                 TestUtils.expectToThrowAndLog(() => {
                     // When rendering it
@@ -506,11 +508,11 @@ describe('RulesConfigurationComponent', () => {
 
             it('should recognize default config even when custom', () => {
                 // Given a displayed "custom" config that match a standard config named 'the_other_config_name'
-                component.rulesConfigToDisplay = {
+                testUtils.setInput('rulesConfigToDisplay', {
                     nombre: 42,
                     canailleDeBoule: 42,
-                };
-                component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                });
+                testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
 
                 // When rendering component
                 testUtils.detectChanges();
@@ -521,11 +523,11 @@ describe('RulesConfigurationComponent', () => {
 
             it('should recognize real custom config', () => {
                 // Given a displayed config that match no other config
-                component.rulesConfigToDisplay = {
+                testUtils.setInput('rulesConfigToDisplay', {
                     nombre: 1,
                     canailleDeBoule: 99,
-                };
-                component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                });
+                testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
 
                 // When rendering component
                 testUtils.detectChanges();
@@ -538,11 +540,11 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should propose a disabled number input', fakeAsync(async() => {
                     // Given a component loaded with a config description having a number
-                    component.rulesConfigToDisplay = {
+                    testUtils.setInput('rulesConfigToDisplay', {
                         nombre: 5,
                         canailleDeBoule: 12,
-                    };
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
+                    });
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
 
                     // When rendering component
                     testUtils.detectChanges();
@@ -559,14 +561,14 @@ describe('RulesConfigurationComponent', () => {
                     // Given a board board on which the config 'booleen' is by default checked
                     // but has been changed and is hence unchecked in the config to display
                     // Also testing the opposite for the config 'truth'
-                    component.rulesConfigToDisplay = {
+                    testUtils.setInput('rulesConfigToDisplay', {
                         booleen: true,
                         truth: true,
-                    };
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
+                    });
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithBooleans));
                     const defaultConfig: RulesConfig =
-                        component.rulesConfigDescriptionOptional.get().getDefaultConfig().config;
-                    const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay);
+                        component.rulesConfigDescriptionOptional().get().getDefaultConfig().config;
+                    const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay());
                     // eslint-disable-next-line dot-notation
                     expect(configToDisplay['booleen']).toBeTrue();
                     // eslint-disable-next-line dot-notation
@@ -588,11 +590,11 @@ describe('RulesConfigurationComponent', () => {
 
                 it('should propose a disabled boolean input', fakeAsync(async() => {
                     // Given a component loaded with a config description having a boolean
-                    component.rulesConfigToDisplay = {
+                    testUtils.setInput('rulesConfigToDisplay', {
                         booleen: true,
                         truth: true,
-                    };
-                    component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithBooleans);
+                    });
+                    testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithBooleans));
 
                     // When rendering component
                     testUtils.detectChanges();
@@ -609,9 +611,9 @@ describe('RulesConfigurationComponent', () => {
 
     it('should be able switch from editable to non-editable', fakeAsync(async() => {
         // Given an editable component with some custom config
-        component.editable = true;
-        component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
-        component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.getDefaultConfig().config;
+        component.setEditable(true);
+        testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
+        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         await testUtils.chooseConfig('Custom');
 
         // When switching to non-editable
@@ -623,9 +625,9 @@ describe('RulesConfigurationComponent', () => {
 
     it('should be able to switch from non-editable to editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
-        component.editable = false;
-        component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
-        component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.getDefaultConfig().config;
+        component.setEditable(false);
+        testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
+        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         await testUtils.chooseConfig('Custom');
 
         // When switching to editable
@@ -637,9 +639,9 @@ describe('RulesConfigurationComponent', () => {
 
     it('should do nothing when switching from non-editable to non-editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
-        component.editable = false;
-        component.rulesConfigDescriptionOptional = MGPOptional.of(rulesConfigDescriptionWithNumber);
-        component.rulesConfigToDisplay = rulesConfigDescriptionWithNumber.getDefaultConfig().config;
+        component.setEditable(false);
+        testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
+        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         await testUtils.chooseConfig('Custom');
 
         // When switching to non-editable

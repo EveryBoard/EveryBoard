@@ -38,7 +38,7 @@ describe('TutorialGameWrapperComponent for non-existing game', () => {
         tick(0);
 
         // Then it goes to /notFound with the expected error message
-        expectValidRouting(
+        await expectValidRouting(
             router,
             ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')],
             NotFoundComponent,
@@ -596,7 +596,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#playLocallyButton');
 
             // expect navigator to have been called
-            expectValidRouting(router, ['/local', 'Quarto', 'config'], LocalGameConfigurationComponent);
+            await expectValidRouting(router, ['/local', 'Quarto', 'config'], LocalGameConfigurationComponent);
         }));
 
         it('should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
@@ -617,7 +617,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#playOnlineButton');
 
             // expect navigator to have been called
-            expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
+            await expectValidRouting(router, ['/play', 'Quarto'], OnlineGameCreationComponent);
         }));
 
     });

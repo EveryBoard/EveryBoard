@@ -1,5 +1,5 @@
-import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ComponentRef, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -25,12 +25,16 @@ export class GameWrapperMessages {
 
 }
 
-@Component({ template: '' })
+@Component({
+    template: '',
+})
 export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
 
+    protected readonly router: Router = inject(Router);
+    protected readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+
     // This holds the #board html element
-    @ViewChild('board', { read: ViewContainerRef })
-    public boardRef: ViewContainerRef | null = null;
+    public readonly boardRef: Signal<ViewContainerRef | undefined> = viewChild('board', { read: ViewContainerRef });
 
     public gameComponent: AbstractGameComponent;
 
@@ -47,13 +51,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     private isMoveAttemptOngoing: boolean = false;
 
     public Player: typeof Player = Player;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       protected readonly router: Router,
-                       protected readonly messageDisplayer: MessageDisplayer)
-    {
-        super(activatedRoute);
-    }
 
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
@@ -104,7 +101,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(component);
+            Utils.getNonNullable(this.boardRef()).createComponent(component);
         this.gameComponent = componentRef.instance;
 
         // chooseMove is called by the game component when a move is done

@@ -1,12 +1,14 @@
 import { Type } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
 import { Route } from '@angular/router';
 import * as Auth from '@firebase/auth';
 import * as Firestore from '@firebase/firestore';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { routes } from './app.module';
+import { routes } from './app.routes';
 import { AccountComponent } from './components/normal-component/account/account.component';
+import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
 import { LocalGameCreationComponent } from './components/normal-component/local-game-creation/local-game-creation.component';
 import { LoginComponent } from './components/normal-component/login/login.component';
@@ -42,6 +44,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['tutorial', TutorialGameCreationComponent],
     ['tutorial/P4', TutorialGameWrapperComponent],
     ['', WelcomeComponent],
+    ['demo', DemoPageComponent],
     ['unknown-url', NotFoundComponent],
 ];
 
@@ -73,18 +76,18 @@ export function findMatchingRoute(url: string): MGPOptional<Route> {
     return MGPOptional.empty();
 }
 
-describe('App module', () => {
-    it('should provide all necessary firebase components', async() => {
+describe('App routes', () => {
+    it('should provide all necessary firebase components', async() => { // this needs to be without fakeAsync
         await setupEmulators();
         expect(Firestore.getFirestore()).toBeDefined();
         expect(Auth.getAuth()).toBeDefined();
     });
-    it('router should map all urls to their expected components', () => {
+    it('router should map all urls to their expected components', fakeAsync(async() => {
         for (const [url, expectedComponent] of routingSpecification) {
             const matchingRoute: MGPOptional<Route> = findMatchingRoute(url);
             expect(matchingRoute.isPresent()).withContext(`Expected route to be present for url: ${url}`).toBeTrue();
-            expect(matchingRoute.get().component).toEqual(expectedComponent);
+            expect(await matchingRoute.get().loadComponent!()).toEqual(expectedComponent);
         }
-    });
+    }));
 
 });

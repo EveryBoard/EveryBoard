@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UrlTree } from '@angular/router';
 import { Subscription } from 'rxjs';
 
@@ -12,10 +12,9 @@ import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService
  */
 export abstract class AccountGuard {
 
-    protected userSubscription!: Subscription; // always bound in canActivate
+    protected readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
-    public constructor(protected readonly connectedUserService: ConnectedUserService) {
-    }
+    protected userSubscription!: Subscription;
 
     public async canActivate(): Promise<boolean | UrlTree> {
         const result: boolean | UrlTree = await new Promise((resolve: (value: boolean | UrlTree) => void) => {
