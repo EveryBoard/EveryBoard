@@ -518,7 +518,7 @@ describe('MartianChessRules', () => {
         describe('empty territory end', () => {
 
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ONE)', () => {
-                // Given a board with no more piece in the previoys player's territory
+                // Given a board with no more piece in the previous player's territory
                 // and one player having a superior score
                 const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
                 captured.set(Player.ZERO, noCapture);
@@ -547,7 +547,7 @@ describe('MartianChessRules', () => {
             });
 
             it('should declare winner player with biggest score when one player put its last piece in the opponent territory (Player.ZERO)', () => {
-                // Given a board with no more piece in the previoys player's territory
+                // Given a board with no more piece in the previous player's territory
                 // and one player having a superior score
                 const captured: MGPMap<Player, MartianChessCapture> = new MGPMap<Player, MartianChessCapture>();
                 captured.set(Player.ZERO, capturedPawn);
