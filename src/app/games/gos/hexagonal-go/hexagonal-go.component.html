@@ -2,36 +2,38 @@
      class="board"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let coordAndContent of getState().getCoordsAndContents()"
-       id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-       [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)"
-       (click)="onClick(coordAndContent.coord)">
-        <polygon *ngIf="coordAndContent.content.isReachable()"
-                 id="polygon-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                 [attr.points]="getHexaPoints()"
-                 [ngClass]="getPlayerClassAt(coordAndContent.coord)"
-                 class="base mid-stroke"
-        />
-        <g *ngIf="coordAndContent.content.isDead()"
-           id="dead-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}">
-            <polygon [attr.points]="getHexaDiagonalPoints()"
-                     class="base no-fill captured-stroke"/>
-            />
+    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord) {
+        <g id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+           [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)"
+           (click)="onClick(coordAndContent.coord)">
+            @if (coordAndContent.content.isReachable()) {
+                <polygon id="polygon-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getHexaPoints()"
+                         [ngClass]="getPlayerClassAt(coordAndContent.coord)"
+                         class="base mid-stroke"/>
+            }
+            @if (coordAndContent.content.isDead()) {
+                <g id="dead-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}">
+                    <polygon [attr.points]="getHexaDiagonalPoints()"
+                             class="base no-fill captured-stroke"/>
+                    />
+                </g>
+            }
+            @if (coordAndContent.content.isTerritory()) {
+                <polygon id="territory-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                         [attr.points]="getHexaPoints()"
+                         [attr.transform]="getTerritoryHexagonalTransform()"
+                         [ngClass]="getPlayerClass(coordAndContent.content.player)"/>
+            }
         </g>
-        <polygon *ngIf="coordAndContent.content.isTerritory()"
-                 id="territory-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
-                 [attr.points]="getHexaPoints()"
-                 [attr.transform]="getTerritoryHexagonalTransform()"
-                 [ngClass]="getPlayerClass(coordAndContent.content.player)"
-        />
-    </g>
+    }
 
-    <polygon *ngIf="last.isPresent() && getState().isOnBoard(last.get())"
-             id="last-{{ last.get().x }}-{{ last.get().y }}"
-             [attr.transform]="getHexaCenterTranslationAt(last.get())"
-             [attr.points]="getHexaPoints()"
-             [ngClass]="getPlayerClassAt(last.get())"
-             class="last-move-stroke big-stroke no-fill"
-    />
+    @if (last.isPresent() && getState().isOnBoard(last.get())) {
+        <polygon id="last-{{ last.get().x }}-{{ last.get().y }}"
+                 [attr.transform]="getHexaCenterTranslationAt(last.get())"
+                 [attr.points]="getHexaPoints()"
+                 [ngClass]="getPlayerClassAt(last.get())"
+                 class="last-move-stroke big-stroke no-fill"/>
+    }
 
 </svg>
