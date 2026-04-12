@@ -4,7 +4,7 @@ import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 export class HexagonalGoHeuristic extends AbstractGoHeuristic<HexagonalGoConfig> {
 
-    constructor() {
+    public constructor() {
         super(HexagonalGoRules.get());
     }
 

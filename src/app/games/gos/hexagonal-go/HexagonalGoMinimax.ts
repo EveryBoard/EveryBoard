@@ -6,7 +6,7 @@ import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 export class HexagonalGoMinimax extends AbstractGoMinimax<HexagonalGoConfig> {
 
-    constructor() {
+    public constructor() {
         super(
             HexagonalGoRules.get(),
             new HexagonalGoMoveGenerator(),
