@@ -1,6 +1,7 @@
-import { ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
-import { AbstractControl, FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChild, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
@@ -11,13 +12,14 @@ import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 import { ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
-import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
@@ -52,9 +54,18 @@ type GameCreationViewInfo = {
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
+    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, HumanDurationPipe],
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
+
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly configRoomService: ConfigRoomService = inject(ConfigRoomService);
+    private readonly formBuilder: FormBuilder = inject(FormBuilder);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     /*
      * Lifecycle:
      * 1. Creator chooses config and opponent
@@ -70,15 +81,16 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     public GameDuration: typeof GameDuration = GameDuration;
     public FirstPlayer: typeof FirstPlayer = FirstPlayer;
 
-    @Input() gameId: string;
+    public readonly gameId: InputSignal<string> = input.required<string>();
 
-    @Input() rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>>;
+    public readonly rulesConfigDescription: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> =
+        input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
-    @Output() gameStartNotification: EventEmitter<ConfigRoom> = new EventEmitter<ConfigRoom>();
+    public readonly gameStartNotification: OutputEmitterRef<ConfigRoom> = output<ConfigRoom>();
 
-    @ViewChild(RulesConfigurationComponent)
-    public rulesConfigurationComponent: RulesConfigurationComponent | undefined;
+    public readonly rulesConfigurationComponent: Signal<RulesConfigurationComponent | undefined> =
+        viewChild(RulesConfigurationComponent);
 
     public gameStarted: boolean = false;
 
@@ -110,18 +122,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     // Provided by RulesConfigurationComponent
     protected rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
-    public configDemo: DemoNodeInfo;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       private readonly router: Router,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly configRoomService: ConfigRoomService,
-                       private readonly formBuilder: FormBuilder,
-                       private readonly messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
-    {
-        super(activatedRoute);
-    }
+    public configDemo: DemoNodeInfo | undefined = undefined;
 
     public async ngOnInit(): Promise<void> {
         this.checkInputs();
@@ -134,7 +135,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         const user: MGPOptional<AuthUser> = this.connectedUserService.user;
         Utils.assert(user.isPresent(), 'GameCreationComponent should not be called without connected user');
         Utils.assert(user.get() !== AuthUser.NOT_CONNECTED, 'GameCreationComponent should not be created with an empty userName');
-        Utils.assert(this.gameId !== '', 'GameCreationComponent should not be created with an empty gameId');
+        Utils.assert(this.gameId() !== '', 'GameCreationComponent should not be created with an empty gameId');
     }
 
     private createForms(): void {
@@ -149,7 +150,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     private async joinAndSubscribeToConfigRoom(): Promise<void> {
         this.configRoomSubscription = await this.configRoomService.join(
-            this.gameId,
+            this.gameId(),
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
             (): Promise<void> => this.onGameCancelled(),
             (candidate: MinimalUser): void => this.onCandidateJoined(candidate),
@@ -196,8 +197,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 const status: Status = Utils.getNonNullable(this.currentConfigRoom).status;
                 const configProposed: boolean = status === Status.CONFIG_PROPOSED;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
-                if (this.rulesConfigurationComponent != null) {
-                    this.rulesConfigurationComponent.setEditable(configProposed === false);
+                if (this.rulesConfigurationComponent() != null) {
+                    this.rulesConfigurationComponent()!.setEditable(configProposed === false);
                 }
             });
         this.getForm('gameType').valueChanges
@@ -405,7 +406,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     private setConfigDemo(config: RulesConfig): void {
         const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
         if (stateProvider.isPresent()) {
-            const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
+            const state: GameState = stateProvider.get()(MGPOptional.of(config));
+            const node: AbstractNode = new GameNode(state);
             this.configDemo = {
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
@@ -416,7 +418,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         }
     }
 
-    public getConfigDemo(): DemoNodeInfo {
+    public getConfigDemo(): DemoNodeInfo | undefined {
         return this.configDemo;
     }
 

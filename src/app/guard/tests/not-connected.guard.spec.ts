@@ -10,9 +10,6 @@ import { NotConnectedGuard } from '../not-connected.guard';
 
 describe('NotConnectedGuard', () => {
     let guard: NotConnectedGuard;
-
-    let connectedUserService: ConnectedUserService;
-
     let router: Router;
 
     beforeEach(fakeAsync(async() => {
@@ -23,12 +20,12 @@ describe('NotConnectedGuard', () => {
                     { path: '**', component: BlankComponent },
                 ]),
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                NotConnectedGuard,
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        connectedUserService = TestBed.inject(ConnectedUserService);
-        guard = new NotConnectedGuard(connectedUserService, router);
+        guard = TestBed.inject(NotConnectedGuard);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

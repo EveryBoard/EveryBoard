@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { CheckersComponent } from '../common/checkers.component';
 
 import { LascaRules } from './LascaRules';
@@ -9,11 +9,12 @@ import { LascaRules } from './LascaRules';
     selector: 'app-lasca',
     templateUrl: '../common/checkers.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class LascaComponent extends CheckersComponent<LascaRules> {
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Lasca');
     }
 

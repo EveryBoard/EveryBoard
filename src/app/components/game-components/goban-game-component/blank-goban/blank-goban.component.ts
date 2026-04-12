@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
+import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { GobanUtils } from '../../../../jscaip/GobanUtils';
@@ -8,12 +8,13 @@ import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
     selector: '[app-blank-goban]',
     templateUrl: './blank-goban.component.svg',
     styleUrls: ['../../game-component/game-component.scss'],
+    imports: [],
 })
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {
 
-    @Input() width: number;
-    @Input() height: number;
-    @Output() clickCallBack: EventEmitter<Coord> = new EventEmitter<Coord>();
+    public readonly width: InputSignal<number> = input.required<number>();
+    public readonly height: InputSignal<number> = input.required<number>();
+    public readonly clickCallBack: OutputEmitterRef<Coord> = output<Coord>();
     public hoshis: Coord[] = [];
 
     public ngOnChanges(): void {
@@ -29,7 +30,7 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
      * Must be called after `this.board` has been set, usually in `updateBoard`.
      */
     public createHoshis(): void {
-        this.hoshis = GobanUtils.getHoshis(this.width, this.height);
+        this.hoshis = GobanUtils.getHoshis(this.width(), this.height());
     }
 
 }

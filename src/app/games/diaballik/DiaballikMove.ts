@@ -71,11 +71,11 @@ type PassesAndTranslations = {
 
 export class DiaballikMove extends Move {
 
-    private static subMoveEncoder: Encoder<DiaballikSubMove> = Encoder.disjunction(
+    private static readonly subMoveEncoder: Encoder<DiaballikSubMove> = Encoder.disjunction(
         [isTranslation, isBallPass],
         [DiaballikTranslation.encoder, DiaballikBallPass.encoder]);
 
-    private static subMoveOptionalEncoder: Encoder<MGPOptional<DiaballikSubMove>> =
+    private static readonly subMoveOptionalEncoder: Encoder<MGPOptional<DiaballikSubMove>> =
         MGPOptional.getEncoder(DiaballikMove.subMoveEncoder);
 
     public static encoder: Encoder<DiaballikMove> = Encoder.tuple(

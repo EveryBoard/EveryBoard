@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
@@ -8,7 +9,6 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 import { EncapsuleFailure } from './EncapsuleFailure';
@@ -33,6 +33,7 @@ type PieceData = {
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
@@ -51,8 +52,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     protected boardPieces: SquareData[][] = [];
     protected pieceSizeToRadius: MGPMap<EncapsulePiece, number> = new MGPMap();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Encapsule');
         this.availableAIs = [
             new EncapsuleDummyMinimax(),

@@ -4,7 +4,7 @@ import { GoConfig, GoRules } from './GoRules';
 
 export class GoHeuristic extends AbstractGoHeuristic<GoConfig> {
 
-    constructor() {
+    public constructor() {
         super(GoRules.get());
     }
 

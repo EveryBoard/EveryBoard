@@ -179,7 +179,7 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         return result;
     }
 
-    [Symbol.iterator](): IterableIterator<P> {
+    public [Symbol.iterator](): IterableIterator<P> {
         const linedUpElements: P[] = [];
         for (const lines of this.board) {
             linedUpElements.push(...lines);

@@ -48,7 +48,7 @@ describe('LocalGameWrapperComponent for non-existing game', () => {
 
         // Then it goes to /notFound with the expected error message and displays a toast
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
-        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
     }));
 
 });

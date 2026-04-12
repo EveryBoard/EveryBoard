@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -9,7 +10,6 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { PentagoDummyMinimax } from './PentagoDummyMinimax';
 import { PentagoMove } from './PentagoMove';
@@ -28,6 +28,7 @@ interface ArrowInfo {
     selector: 'app-pentago',
     templateUrl: './pentago.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class PentagoComponent extends RectangularGameComponent<PentagoRules,
                                                                PentagoMove,
@@ -51,8 +52,8 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
 
     public ARROWS: ArrowInfo[];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Pentago');
         this.availableAIs = [
             new PentagoDummyMinimax(),

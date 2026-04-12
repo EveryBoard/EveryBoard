@@ -219,9 +219,7 @@ export type MancalaActionAndResult = {
     result: MancalaHouseContents[];
 };
 
-export class MancalaTestEntries<C extends MancalaComponent<R>,
-                                R extends MancalaRules>
-{
+export type MancalaTestEntries<C extends MancalaComponent<R>, R extends MancalaRules> = {
     component: Type<C>; // KalahComponent, AwaleComponent, etc
     gameName: string; // 'Kalah', 'Awale', etc
     moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>;

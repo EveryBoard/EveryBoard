@@ -61,7 +61,7 @@ export class MancalaMove extends Move {
         return this.distributions[0];
     }
 
-    [Symbol.iterator](): IterableIterator<MancalaDistribution> {
+    public [Symbol.iterator](): IterableIterator<MancalaDistribution> {
         return this.distributions.values();
     }
 }

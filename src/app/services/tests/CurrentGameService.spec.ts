@@ -39,6 +39,7 @@ describe('CurrentGameService', () => {
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: BackendService, useClass: BackendServiceMock },
+                CurrentGameService,
             ],
         }).compileComponents();
 
@@ -382,8 +383,7 @@ describe('CurrentGameService', () => {
             currentGameService.ngOnDestroy();
             const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(backendService, 'setCallback');
             // Since the subscription is done in the constructor, we need to spy it before
-            currentGameService = new CurrentGameService(backendService as AbstractBackendService as BackendService,
-                                                        connectedUserService);
+            currentGameService = TestBed.runInInjectionContext(() => new CurrentGameService());
 
             // When the service is destroyed
             currentGameService.ngOnDestroy();
@@ -397,8 +397,7 @@ describe('CurrentGameService', () => {
             // Given a service
             const expectUnsubscribeToHaveBeenCalled: () => void = prepareUnsubscribeCheck(connectedUserService, 'subscribeToUser');
             // Since the subscription is done in the constructor, we need to spy it before
-            currentGameService = new CurrentGameService(backendService as AbstractBackendService as BackendService,
-                                                        connectedUserService);
+            currentGameService = TestBed.runInInjectionContext(() => new CurrentGameService());
 
             // When the service is destroyed
             currentGameService.ngOnDestroy();

@@ -12,7 +12,7 @@ import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaNode, MancalaRules } from '../MancalaRules';
 import { MancalaState } from '../MancalaState';
 
-export class MancalaRulesTestEntries {
+export type MancalaRulesTestEntries = {
     gameName: string; // 'Awale', 'Kalah', etc
     rules: MancalaRules;
     simpleMove: MancalaMove;

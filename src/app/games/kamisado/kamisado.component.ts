@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -8,7 +9,6 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoFailure } from './KamisadoFailure';
@@ -23,6 +23,7 @@ import { KamisadoState } from './KamisadoState';
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoMove,
@@ -35,8 +36,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Kamisado');
         this.availableAIs = [
             new KamisadoMinimax(),

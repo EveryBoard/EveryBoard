@@ -1,8 +1,10 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
@@ -11,7 +13,6 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
 import { EpaminondasFailure } from './EpaminondasFailure';
@@ -35,6 +36,7 @@ export type PossibleMove = {
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, DirArrowComponent],
 })
 export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
                                                                    EpaminondasMove,
@@ -55,8 +57,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private moveds: Coord[] = [];
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),
