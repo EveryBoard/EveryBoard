@@ -9,7 +9,7 @@ import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
 import { MinimalUser } from '../../domain/MinimalUser';
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { BackendService } from '../BackendService';
-import { ConfigRoomService } from '../ConfigRoomService';
+import { Candidate, ConfigRoomService } from '../ConfigRoomService';
 
 import { BackendServiceMock } from './BackendServiceMock.spec';
 
@@ -110,8 +110,8 @@ describe('ConfigRoomService', () => {
                 await configRoomService.join('gameId',
                                              ignore,
                                              ignore,
-                                             (candidate: MinimalUser, elo: number): void => {
-                                                 candidates.push(candidate);
+                                             (candidate: Candidate): void => {
+                                                 candidates.push(candidate.user);
                                              },
                                              ignore,
                                              ignore);
@@ -132,8 +132,8 @@ describe('ConfigRoomService', () => {
                 await configRoomService.join('gameId',
                                              ignore,
                                              ignore,
-                                             (candidate: MinimalUser, elo: number): void => {
-                                                 candidates.push(candidate);
+                                             (candidate: Candidate): void => {
+                                                 candidates.push(candidate.user);
                                              },
                                              (candidate: MinimalUser): void => {
                                                  candidates = candidates.filter((c: MinimalUser): boolean =>
