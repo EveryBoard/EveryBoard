@@ -16,12 +16,12 @@ import { Move } from '../../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { EloPipe } from '../../../pipes-and-directives/elo.pipe';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { GameService } from '../../../services/GameService';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
@@ -44,7 +44,7 @@ export class OnlineGameWrapperMessages {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
     imports: [GameCreationComponent, ViewConfigComponent, TimerComponent,
-        FaIconComponent, RouterLink, NgClass, ChatComponent, EloPipe],
+        FaIconComponent, RouterLink, NgClass, ChatComponent, EloComponent],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {

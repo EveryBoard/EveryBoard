@@ -216,11 +216,11 @@ if __name__ == "__main__":
     import sys
 
     path = "./src/"
-    if len(sys.argv) == 1:
+    if len(sys.argv) == 2:
         path = sys.argv[1]
-    else:
+    elif len(sys.argv) > 2:
         print(f"Usage: {sys.argv[0]} [<path>]")
         print("  <path> is the path where to recursively adapt imports (in all .ts files), ./src by default")
         sys.exit(1)
 
-    run(path, True)
+    run(path, False)

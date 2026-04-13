@@ -12,19 +12,17 @@ import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { EloPipe } from '../../../pipes-and-directives/elo.pipe';
 import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
-import { ConfigRoomService } from '../../../services/ConfigRoomService';
+import { Candidate, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-
-type Candidate = { user: MinimalUser, elo: number }
 
 export class GameCreationComponentMessages {
 
@@ -57,8 +55,8 @@ type GameCreationViewInfo = {
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
-    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent,
-        HumanDurationPipe, EloPipe],
+    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, EloComponent,
+        HumanDurationPipe],
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
@@ -157,8 +155,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             this.gameId(),
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
             (): Promise<void> => this.onGameCancelled(),
-            (candidate: MinimalUser, elo: number): void => this.onCandidateJoined(candidate, elo),
-            (candidate: MinimalUser): void => this.onCandidateLeft(candidate),
+            (candidate: Candidate): void => this.onCandidateJoined(candidate),
+            (user: MinimalUser): void => this.onCandidateLeft(user),
             (error: string): void => void this.onError(error),
         );
     }
@@ -357,8 +355,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         }
     }
 
-    private onCandidateJoined(user: MinimalUser, elo: number): void {
-        this.candidates.push({ user, elo });
+    private onCandidateJoined(candidate: Candidate): void {
+        this.candidates.push(candidate);
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
 
