@@ -41,7 +41,7 @@ func InitDatabase(dialector gorm.Dialector) error {
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate ConfigRoom): %v", err)
 	}
 
 	// Create first config room, which is actually the lobby
@@ -61,38 +61,38 @@ func InitDatabase(dialector gorm.Dialector) error {
 		}
 		result := db.Create(&lobby)
 		if result.Error != nil {
-			return fmt.Errorf("Cannot initialize DB: %v", err)
+			return fmt.Errorf("Cannot initialize DB (Create lobby): %v", err)
 		}
 	}
 
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Message): %v", err)
 	}
 
 	err = db.AutoMigrate(&Elo{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Elo): %v", err)
 	}
 
 	err = db.AutoMigrate(&Candidate{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Candidate): %v", err)
 	}
 
 	err = db.AutoMigrate(&Game{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Game): %v", err)
 	}
 
 	err = db.AutoMigrate(&GameEvent{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate GameEvent): %v", err)
 	}
 
 	err = db.AutoMigrate(&CurrentGame{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v (AutoMigrate CurrentGame)", err)
 	}
 	return nil
 }
