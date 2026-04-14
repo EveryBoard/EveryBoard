@@ -9,7 +9,7 @@ import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 
-import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
+import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax, IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
 import { SaharaFailure } from './SaharaFailure';
 import { SaharaFreedomMinimax, IDSaharaFreedomMinimax } from './SaharaMinimax';
 import { SaharaMobilityMinimax } from './SaharaMobilityMinimax';
@@ -41,9 +41,10 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         super();
         this.setRulesAndNode('Sahara');
         this.availableAIs = [
-            new IDSaharaFreedomMinimax(),
             new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
+            new IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
             new SaharaFreedomMinimax(),
+            new IDSaharaFreedomMinimax(),
             new SaharaMobilityMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];

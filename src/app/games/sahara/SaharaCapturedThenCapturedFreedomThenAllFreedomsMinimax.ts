@@ -1,4 +1,4 @@
-import { Minimax } from '../../jscaip/AI/Minimax';
+import { Minimax, IterativeDeepeningMinimax } from '../../jscaip/AI/Minimax';
 
 import { SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic';
 import { SaharaMove } from './SaharaMove';
@@ -14,6 +14,22 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends Min
               new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
               new SaharaMoveGenerator());
         this.random = true;
+        this.transpositionTables = false;
+    }
+
+}
+
+export class IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends IterativeDeepeningMinimax<SaharaMove, SaharaState> {
+
+    public constructor() {
+        super($localize`ID Capture > Captured Freedom > All Freedoms`,
+              SaharaRules.get(),
+              new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
+              new SaharaMoveGenerator());
+        this.random = true;
+    }
+    public override hash(state: SaharaState): string {
+        return JSON.stringify(state.board);
     }
 
 }
