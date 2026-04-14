@@ -276,7 +276,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             opponent = configRoom.chosenOpponent?.name ?? '';
         } else {
             const chosenOpponentIsCandidate: boolean = this.candidates.some(
-                (candidate: { user: MinimalUser, elo: number }) => {
+                (candidate: Candidate) => {
                     return candidate.user.name === opponent;
                 });
             if (chosenOpponentIsCandidate === false) {
