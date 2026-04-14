@@ -9,7 +9,7 @@
                 <div class="control">
                     <div class="select is-primary is-fullwidth">
                         <select id="ruleSelect"
-                                [disabled]="isEditable() === false"
+                                [disabled]="editable() === false"
                                 (change)="onChange($event)">
                             <option id="config-dropdown-{{ rulesConfigDescription.getDefaultConfig().name() }}"
                                     [value]="rulesConfigDescription.getDefaultConfig().name()"
@@ -78,7 +78,7 @@
                                                 <label class="checkbox">
                                                     <div class="select is-primary is-fullwidth">
                                                         <select id="{{ configParameter }}_enum_config_input"
-                                                                [disabled]="isEditable() === false"
+                                                                [disabled]="editable() === false"
                                                                 (change)="onEnumChange(configParameter, $event)">
                                                             @for (value of getEnumValues(configParameter); track value.enumValue) {
                                                                 <option id="{{ configParameter }}_value_{{ value.enumValue }}"
