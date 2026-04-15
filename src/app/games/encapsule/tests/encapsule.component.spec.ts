@@ -46,7 +46,7 @@ describe('EncapsuleComponent', () => {
     describe('Ring Sub Circle Display', () => {
 
         function getRingOutsidesRadius(size: number): number {
-            const circleElement: DebugElement = testUtils.findElement('#remaining-piece-size-' + size + '-PLAYER_ZERO > [app-ring] > circle:nth-child(1)');
+            const circleElement: DebugElement = testUtils.findElement('#remaining-piece-size-' + size + '-PLAYER_ZERO > app-ring > circle:nth-child(1)');
             const ringsOutsideStrokeCircleRadius: number = Number.parseFloat(circleElement.attributes.r ?? '0');
             const ringsOutsideStrokeCircleStrokeWidth: number = Number.parseFloat(circleElement.attributes['stroke-width'] ?? '0');
             const actualRingsOutsideStrokeCircleOuterRadius: number =
@@ -55,7 +55,7 @@ describe('EncapsuleComponent', () => {
         }
 
         function getStrokeWidth(size: number = 1): number {
-            const circleElement: DebugElement = testUtils.findElement('#remaining-piece-size-' + size + '-PLAYER_ZERO > [app-ring] > circle:nth-child(1)');
+            const circleElement: DebugElement = testUtils.findElement('#remaining-piece-size-' + size + '-PLAYER_ZERO > app-ring > circle:nth-child(1)');
             return Number.parseFloat(circleElement.attributes['stroke-width'] ?? '0');
         }
 
@@ -121,7 +121,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
             // Then that piece should be selected
-            testUtils.expectElementToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > [app-ring] > circle:nth-child(2)', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > app-ring > circle:nth-child(2)', 'selected-stroke');
         }));
 
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {

@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-    selector: '[app-ring]',
+    selector: 'app-ring',
     templateUrl: './ring.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
 })

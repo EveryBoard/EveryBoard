@@ -12,6 +12,7 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RingComponent } from '../common/ring/ring.component';
 
 import { YinshFailure } from './YinshFailure';
 import { YinshCapture, YinshMove } from './YinshMove';
@@ -36,7 +37,7 @@ interface ViewInfo {
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass],
+    imports: [NgClass, RingComponent],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,
