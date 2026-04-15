@@ -36,7 +36,7 @@ export type CheckersConfig = RulesConfig & {
 
     frisianCaptureAllowed: boolean;
 
-}
+};
 
 export class CheckersOptionLocalizable {
 

@@ -20,7 +20,7 @@ export type ApagosConfig = RulesConfig & {
 
     increment: number;
 
-}
+};
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 

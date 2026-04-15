@@ -20,4 +20,5 @@ export type TaflConfig = RulesConfig & {
     readonly kingFarFromHomeCanBeSandwiched: boolean;
 
     readonly invaderStarts: boolean;
-}
+
+};

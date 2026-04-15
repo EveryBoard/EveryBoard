@@ -24,7 +24,7 @@ export type AbaloneConfig = RulesConfig & {
 
     maximumPushingGroupSize: number;
 
-}
+};
 
 export type AbaloneLegalityInformation = Table<FourStatePiece>;
 

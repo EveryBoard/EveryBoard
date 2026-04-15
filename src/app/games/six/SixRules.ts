@@ -28,7 +28,7 @@ export type SixConfig = RulesConfig & {
 
     piecesPerPlayer: number;
 
-}
+};
 
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',

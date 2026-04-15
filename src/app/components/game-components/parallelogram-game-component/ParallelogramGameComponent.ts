@@ -17,7 +17,7 @@ export type ModeConfig = RulesConfig & {
 
     parallelogramHeight: number;
 
-}
+};
 
 @Component({
     template: '',

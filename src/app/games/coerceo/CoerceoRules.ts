@@ -22,7 +22,7 @@ export type CoerceoConfig = RulesConfig & {
 
     smallBoard: boolean;
 
-}
+};
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 

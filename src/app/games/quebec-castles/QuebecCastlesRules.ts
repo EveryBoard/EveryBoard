@@ -77,7 +77,7 @@ export type QuebecCastlesConfig = RulesConfig & {
 
     dropMode: DropMode;
 
-}
+};
 
 export class QuebecCastlesNode extends GameNode<QuebecCastlesMove, QuebecCastlesState> { }
 

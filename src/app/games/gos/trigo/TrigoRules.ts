@@ -18,7 +18,7 @@ export type TrigoConfig = RulesConfig & {
 
     hexagonal: boolean;
 
-}
+};
 
 export class TrigoRules extends AbstractGoRules<TrigoConfig> {
 

@@ -61,7 +61,7 @@ describe('RulesConfigurationComponent', () => {
 
         canailleDeBoule: number;
 
-    }
+    };
 
     const secondConfig: TestRulesConfig = { nombre: 42, canailleDeBoule: 42 };
 

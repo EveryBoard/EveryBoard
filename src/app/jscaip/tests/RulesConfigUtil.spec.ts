@@ -51,8 +51,10 @@ describe('RulesConfigUtil', () => {
         it('should throw when standard configs are of different type', () => {
             // Given any RulesConfigDescription
             type MaConfigInterface = RulesConfig & {
+
                 helaRosee: number;
-            }
+
+            };
             const defaultConfig: DefaultConfigDescription<MaConfigInterface> = {
                 name: () => 'My Default Config',
                 config: {

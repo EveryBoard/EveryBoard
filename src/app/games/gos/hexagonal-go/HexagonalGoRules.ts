@@ -16,7 +16,7 @@ export type HexagonalGoConfig = RulesConfig & {
 
     size: number;
 
-}
+};
 
 export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
 

@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord) {
+    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.toString()) {
         <g id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
            [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)"
            (click)="onClick(coordAndContent.coord)">

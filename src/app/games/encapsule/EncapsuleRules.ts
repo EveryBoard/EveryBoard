@@ -31,7 +31,7 @@ export type EncapsuleConfig = RulesConfig & {
 
     nbOfEachPiece: number;
 
-}
+};
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
