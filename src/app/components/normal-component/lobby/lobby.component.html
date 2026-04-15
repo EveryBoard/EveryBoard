@@ -46,7 +46,7 @@
                         (click)="joinGame(configRoom)">
                         <td class="td data-game-name">{{ getGameName(configRoom) }}</td>
                         <td class="td"
-                            id="part-of-{{ configRoom.creator.name}}">{{ configRoom.creator.name }} (<g app-elo [elo]="configRoom.creatorElo"/>)</td>
+                            id="part-of-{{ configRoom.creator.name}}">{{ configRoom.creator.name }} (<app-elo [elo]="configRoom.creatorElo"/>)</td>
                         <td class="td">
                             @if (configRoom.chosenOpponent) {
                                 {{ configRoom.chosenOpponent.name }}

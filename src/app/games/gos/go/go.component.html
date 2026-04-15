@@ -3,11 +3,10 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
 
-    <g app-blank-goban
+    <app-blank-goban
        [width]="getState().getWidth()"
        [height]="getState().getHeight()"
-       (clickCallBack)="onClick($event)">
-    </g>
+       (clickCallBack)="onClick($event)"/>
     <g id="piece-ko-territory-markers-and-dead-stones">
         @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
             <g>

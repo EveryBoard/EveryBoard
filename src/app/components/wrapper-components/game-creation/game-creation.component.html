@@ -53,7 +53,7 @@
                                                                 [ngClass]="viewInfo.candidateClasses[candidate.name]"
                                                                 (click)="selectOpponent(candidate.name)">
                                                                 <td [id]="viewInfo.chosenOpponent === candidate.name ? ('selected_' + candidate.name) : ('candidate_' + candidate.name)"
-                                                                    class="td">{{ candidate.name }} (<g app-elo [elo]="candidate.elo"/>)</td>
+                                                                    class="td">{{ candidate.name }} (<app-elo [elo]="candidate.elo"/>)</td>
                                                                 <td class="td">
                                                                     @if (viewInfo.chosenOpponent !== candidate.name) {
                                                                         <button class="button is-primary"

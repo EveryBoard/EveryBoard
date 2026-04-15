@@ -3,7 +3,7 @@ import { Component, input, InputSignal } from '@angular/core';
 import { EloPipe } from '../../../pipes-and-directives/elo.pipe';
 
 @Component({
-    selector: '[app-elo]',
+    selector: 'app-elo',
     template: `{{ elo() | elo }}`,
     imports: [EloPipe],
 })

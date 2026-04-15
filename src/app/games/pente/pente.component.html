@@ -2,12 +2,11 @@
      class="board"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    <g id="blank-goban"
-       app-blank-goban
+    <app-blank-goban
+       id="blank-goban"
        [width]="getState().getWidth()"
        [height]="getState().getHeight()"
-       (clickCallBack)="onClick($event)">
-    </g>
+       (clickCallBack)="onClick($event)"/>
     @for (coordAndContent of getState().getPlayerCoordsAndContent(); track coordAndContent.coord.toString()) {
         <circle (click)="onClick(coordAndContent.coord)"
                 id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"

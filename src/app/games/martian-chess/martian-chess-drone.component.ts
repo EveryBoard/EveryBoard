@@ -5,7 +5,7 @@ import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessFace } from './martian-chess.component';
 
 @Component({
-    selector: '[app-martian-chess-drone]',
+    selector: 'app-martian-chess-drone',
     templateUrl: './martian-chess-drone.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
