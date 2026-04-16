@@ -6,7 +6,7 @@ export class EloPipe implements PipeTransform {
         return new Intl.NumberFormat('en-US', {
             minimumFractionDigits: 0,
             maximumFractionDigits: 0,
-            useGrouping: false,
+            useGrouping: true,
         }).format(value);
     }
 }

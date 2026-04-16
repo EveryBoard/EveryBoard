@@ -278,7 +278,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             const chosenOpponentIsCandidate: boolean = this.candidates.some(
                 (candidate: Candidate) => {
                     return candidate.user.name === opponent;
-                });
+                },
+            );
             if (chosenOpponentIsCandidate === false) {
                 opponent = ''; // chosenOpponent left
             }

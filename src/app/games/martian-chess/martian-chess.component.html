@@ -106,11 +106,11 @@
                 @for (proposedStyle of listOfStyles; track proposedStyle.name; let y = $index) {
                     <ng-container>
                         <app-martian-chess-queen
-                           [id]="proposedStyle.name"
-                           (click)="chooseStyle(y)"
-                           [attr.transform]="getTranslationAtXY(0, - y - 1)"
-                           [pieceClasses]="['player' + getCurrentPlayer().getValue() + '-fill']"
-                           [style]="proposedStyle.style"/>
+                            [id]="proposedStyle.name"
+                            (click)="chooseStyle(y)"
+                            [attr.transform]="getTranslationAtXY(0, - y - 1)"
+                            [pieceClasses]="['player' + getCurrentPlayer().getValue() + '-fill']"
+                            [style]="proposedStyle.style"/>
                     </ng-container>
                 }
             </g>
@@ -135,18 +135,18 @@
                                        [attr.transform]="getTranslationAtXY(1, 0)">
                                         @if (piece === 0) {
                                             <app-martian-chess-pawn
-                                               [pieceClasses]="[getPlayerClass(player)]"
-                                               [style]="style"/>
+                                                [pieceClasses]="[getPlayerClass(player)]"
+                                                [style]="style"/>
                                         }
                                         @if (piece === 1) {
                                             <app-martian-chess-drone
-                                               [pieceClasses]="[getPlayerClass(player)]"
-                                               [style]="style"/>
+                                                [pieceClasses]="[getPlayerClass(player)]"
+                                                [style]="style"/>
                                         }
                                         @if (piece === 2) {
                                             <app-martian-chess-queen
-                                               [pieceClasses]="[getPlayerClass(player)]"
-                                               [style]="style"/>
+                                                [pieceClasses]="[getPlayerClass(player)]"
+                                                [style]="style"/>
                                         }
                                     </g>
                                 </g>
