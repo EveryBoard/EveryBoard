@@ -28,7 +28,9 @@ export class IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends I
               new SaharaMoveGenerator());
         this.random = true;
     }
+
     public override hash(state: SaharaState): string {
+        // TODO: this yields invalid move?!
         return JSON.stringify(state.board);
     }
 

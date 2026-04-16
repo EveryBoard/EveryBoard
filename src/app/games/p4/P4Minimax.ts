@@ -1,3 +1,4 @@
+import { Player } from 'src/app/jscaip/Player';
 import { DummyHeuristic, IterativeDeepeningMinimax, Minimax } from '../../jscaip/AI/Minimax';
 
 import { P4Heuristic } from './P4Heuristic';
@@ -26,5 +27,24 @@ export class P4IDMinimax extends IterativeDeepeningMinimax<P4Move, P4State, P4Co
               new DummyHeuristic(),
               new P4OrderedMoveGenerator(),
         );
+    }
+
+    public override hash(state: P4State): string {
+        let result: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                switch (cell) {
+                    case Player.ZERO:
+                        result += '0';
+                        break;
+                    case Player.ONE:
+                        result += '1';
+                        break;
+                    default:
+                        result += '_';
+                }
+            }
+        }
+        return result;
     }
 }
