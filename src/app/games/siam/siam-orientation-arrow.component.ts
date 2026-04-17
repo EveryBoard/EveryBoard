@@ -11,7 +11,7 @@ import { SiamMove } from './SiamMove';
 import { SiamConfig } from './SiamRules';
 
 @Component({
-    selector: 'app-siam-orientation-arrow',
+    selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],

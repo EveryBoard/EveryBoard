@@ -12,7 +12,7 @@ import { Vector } from '../../jscaip/Vector';
 import { TrexoMove } from './TrexoMove';
 
 @Component({
-    selector: 'app-trexo-half-piece',
+    selector: '[app-trexo-half-piece]',
     templateUrl: './trexo-half-piece.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],

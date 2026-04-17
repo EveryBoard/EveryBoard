@@ -5,7 +5,7 @@ import { GobanUtils } from '../../../../jscaip/GobanUtils';
 import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 
 @Component({
-    selector: 'app-blank-goban',
+    selector: '[app-blank-goban]',
     templateUrl: './blank-goban.component.svg',
     styleUrls: ['../../game-component/game-component.scss'],
     imports: [],

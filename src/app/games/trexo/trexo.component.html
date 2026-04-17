@@ -23,7 +23,7 @@
                     @for (piece of moveYZ; track $index; let x = $index) {
                         <g>
                             @if (piece.move.isPresent()) {
-                                <app-trexo-half-piece
+                                <g app-trexo-half-piece
                                    id="half_tile_{{ x }}_{{ y }}_{{ z }}"
                                    (click)="onClick(x, y)"
                                    [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
@@ -34,7 +34,7 @@
                                    [pieceClasses]="getPieceClasses(x, y, z)"/>
                             }
                             @if (piece.isDroppedPiece) {
-                                <app-trexo-half-piece
+                                <g app-trexo-half-piece
                                    [mode]="mode"
                                    id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
                                    (click)="onClick(x, y)"
@@ -50,7 +50,7 @@
     }
     <g #switchModeIndicator>
         @if (chosenMode === '2D') {
-            <app-trexo-half-piece
+            <g app-trexo-half-piece
                id="switchTo3D"
                (click)="switchToMode('3D')"
                [mode]="TrexoComponent.modeMap['3D']"
@@ -58,7 +58,7 @@
                [coord]="Coord3D.of(10.5, 8.5, 0)"
                [pieceClasses]="['player0-fill']"/>
         } @else {
-            <app-trexo-half-piece
+            <g app-trexo-half-piece
                id="switchTo2D"
                (click)="switchToMode('2D')"
                [mode]="TrexoComponent.modeMap['2D']"

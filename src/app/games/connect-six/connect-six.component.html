@@ -3,7 +3,7 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
 
-    <app-blank-goban
+    <g app-blank-goban
        [width]="getState().getWidth()"
        [height]="getState().getHeight()"
        (clickCallBack)="onClick($event)"/>
