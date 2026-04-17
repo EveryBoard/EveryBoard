@@ -11,9 +11,9 @@ describe('EloPipe', () => {
         expect(pipe).toBeTruthy();
     });
 
-    it('should format number without decimals and without commas', () => {
-        expect(pipe.transform(1000)).toBe('1000');
-        expect(pipe.transform(1234.56)).toBe('1235');
+    it('should format number without decimals but with commas', () => {
+        expect(pipe.transform(1000)).toBe('1,000');
+        expect(pipe.transform(1234.56)).toBe('1,235');
     });
 
     it('should round correctly', () => {
