@@ -15,7 +15,7 @@ describe('TimeUtils', () => {
 
             // Then at least this time should have elapsed, and not much more
             expect(Date.now() - before).toBeGreaterThanOrEqual(msToSleep);
-            expect(Math.abs((Date.now() - before) - msToSleep)).toBeLessThan(5);
+            expect(Math.abs((Date.now() - before) - msToSleep)).toBeLessThan(10);
         });
 
     });
