@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -9,7 +10,6 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { SquarzMinimax } from './SquarzMinimax';
 import { SquarzMove as SquarzMove } from './SquarzMove';
@@ -21,6 +21,7 @@ import { SquarzState } from './SquarzState';
     selector: 'app-squarz',
     templateUrl: './squarz.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SquarzComponent extends RectangularGameComponent<SquarzRules,
                                                                  SquarzMove,
@@ -38,8 +39,8 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
 
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Squarz');
         this.availableAIs = [
             new SquarzMinimax(),

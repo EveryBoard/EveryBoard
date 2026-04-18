@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -135,6 +135,7 @@ import { YinshComponent } from '../../../games/yinsh/yinsh.component';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
 import { Localized } from '../../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
@@ -348,20 +349,17 @@ export class GameInfo {
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
+    imports: [AutofocusDirective],
 })
 export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.getAllGames();
 
-    public readonly theme: 'dark' | 'light';
+    public readonly theme: 'dark' | 'light' = inject(ThemeService).getTheme();
 
     public matchingGames: GameInfo[] = this.games;
 
-    @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
-
-    public constructor(themeService: ThemeService) {
-        this.theme = themeService.getTheme();
-    }
+    public readonly pickGame: OutputEmitterRef<string> = output<string>();
 
     public selectGame(gameName: string): void {
         this.pickGame.emit(gameName);

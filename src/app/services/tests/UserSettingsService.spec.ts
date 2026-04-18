@@ -10,45 +10,53 @@ describe('UserSettingsService', () => {
     beforeEach(() => {
         userSettingsService = new UserSettingsService();
     });
+    afterEach(() => {
+        localStorage.clear();
+    });
 
     describe('theme', () => {
         it('should update local storage on theme change', () => {
-            spyOn(localStorage, 'setItem').and.callThrough();
+            // Given no theme preference (empty local storage)
+            localStorage.clear();
 
             // When changing the theme
             userSettingsService.changeTheme('light');
 
-            // Then localStorage is updated
-            expect(localStorage.setItem).toHaveBeenCalledWith('theme', 'light');
-
-            localStorage.clear();
+            // Then localStorage is updated to reflect preference
+            expect(localStorage.getItem('theme')).toEqual('light');
         });
+
         it('should rely on local storage to know the theme', () => {
             // Given that the stored theme is 'light'
-            spyOn(localStorage, 'getItem').and.returnValue('light');
+            localStorage.setItem('theme', 'light');
+
             // When getting the theme
             const theme: MGPOptional<string> = userSettingsService.getTheme();
+
             // Then the theme is 'light'
             expect(theme.isPresent()).toBeTrue();
             expect(theme.get()).toBe('light');
         });
     });
+
     describe('language', () => {
         it('should update local storage on language change', () => {
-            spyOn(localStorage, 'setItem').and.callThrough();
+            // Given no language preference
+            localStorage.clear();
+
             // When changing the language
             userSettingsService.changeLanguage('fr');
-            // Then localStorage is updated
-            expect(localStorage.setItem).toHaveBeenCalledWith('locale', 'fr');
 
-            localStorage.clear();
+            // Then localStorage is updated to reflect preference
+            expect(localStorage.getItem('locale')).toEqual('fr');
         });
+
         it('should rely on local storage to know the language', () => {
-            // Given that the stored theme is 'light'
-            spyOn(localStorage, 'getItem').and.returnValue('fr');
+            // Given that the stored language is 'fr'
+            localStorage.setItem('locale', 'fr');
             // When getting the language
             const language: string = userSettingsService.getLanguage();
-            // Then the theme is 'light'
+            // Then the language is 'fr'
             expect(language).toBe('fr');
         });
     });

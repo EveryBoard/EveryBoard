@@ -57,7 +57,7 @@ describe('RegisterComponent', () => {
         await testUtils.clickElement('#registerButton');
 
         // Then the services are called and the user is registered
-        expectValidRouting(router, ['/verify-account'], VerifyAccountComponent);
+        await expectValidRouting(router, ['/verify-account'], VerifyAccountComponent);
         expect(connectedUserService.sendEmailVerification).toHaveBeenCalledWith();
         expect(connectedUserService.doRegister).toHaveBeenCalledWith(username, email, password);
     }));

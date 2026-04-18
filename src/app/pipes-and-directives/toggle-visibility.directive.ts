@@ -1,15 +1,14 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, inject } from '@angular/core';
 
-@Directive({
-    selector: '[toggleVisibility]',
-})
-
+@Directive({ selector: '[toggleVisibility]' })
 export class ToggleVisibilityDirective {
 
     private shown: boolean = false;
     private readonly input: HTMLElement;
 
-    public constructor(element: ElementRef) {
+    public constructor() {
+        const element: ElementRef = inject(ElementRef);
+
         this.input = element.nativeElement.parentNode.previousSibling;
         element.nativeElement.addEventListener('click', (_: Event) => {
             this.toggle();

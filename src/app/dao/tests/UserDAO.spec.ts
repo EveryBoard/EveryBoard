@@ -57,7 +57,7 @@ describe('UserDAO', () => {
                 await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
             // When setting the user in DB
-            const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false, currentGame: null });
+            const result: Promise<void> = userDAO.set(credential.user.uid, { verified: false });
             // Then it should succeed
             await expectAsync(result).toBeResolvedTo();
         });
@@ -66,7 +66,7 @@ describe('UserDAO', () => {
             // Given an existing, logged in user
             await createConnectedGoogleUser('foo@bar.com', 'user');
             // When trying to set another user in the DB
-            const result: Promise<void> = userDAO.set('some-other-uid', { verified: false, currentGame: null });
+            const result: Promise<void> = userDAO.set('some-other-uid', { verified: false });
             // Then it should fail
             await expectPermissionToBeDenied(result);
         });
@@ -95,7 +95,7 @@ describe('UserDAO', () => {
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
-            await userDAO.set(credential.user.uid, { verified: false, username: 'user', currentGame: null });
+            await userDAO.set(credential.user.uid, { verified: false, username: 'user' });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
@@ -109,7 +109,7 @@ describe('UserDAO', () => {
             const credential: FireAuth.UserCredential =
                 await FireAuth.signInWithCredential(FireAuth.getAuth(),
                                                     FireAuth.GoogleAuthProvider.credential(token));
-            await userDAO.set(credential.user.uid, { verified: false, currentGame: null });
+            await userDAO.set(credential.user.uid, { verified: false });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);
@@ -123,7 +123,7 @@ describe('UserDAO', () => {
                 await FireAuth.createUserWithEmailAndPassword(FireAuth.getAuth(),
                                                               'foo@bar.com',
                                                               'jeanjaja123');
-            await userDAO.set(credential.user.uid, { verified: false, username: 'foo', currentGame: null });
+            await userDAO.set(credential.user.uid, { verified: false, username: 'foo' });
 
             // When marking the user as verified
             const result: Promise<void> = userService.markAsVerified(credential.user.uid);

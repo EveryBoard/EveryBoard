@@ -1,5 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { comparableEquals, MGPOptional, Utils } from '@everyboard/lib';
 
@@ -7,7 +7,8 @@ import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { ConfigDescriptionType, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
-import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
+import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
 
 /**
  * This component appears when we start a local game.
@@ -18,19 +19,16 @@ import { DemoNodeInfo } from '../demo-card-wrapper/demo-card-wrapper.component';
 @Component({
     selector: 'app-local-game-configuration',
     templateUrl: './local-game-configuration.component.html',
+    imports: [RulesConfigurationComponent, DemoCardWrapperComponent],
 })
 export class LocalGameConfigurationComponent extends BaseWrapperComponent {
+
+    private readonly router: Router = inject(Router);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public configDemo: DemoNodeInfo;
 
     public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       private readonly router: Router,
-                       private readonly cdr: ChangeDetectorRef)
-    {
-        super(activatedRoute);
-    }
 
     private setConfigDemo(config: RulesConfig): void {
         const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();

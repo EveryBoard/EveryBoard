@@ -9,7 +9,7 @@ import { TrexoMove } from '../TrexoMove';
 import { TrexoHalfPieceComponent } from '../trexo-half-piece.component';
 import { TrexoComponent } from '../trexo.component';
 
-describe('TrexoHalfSquareComponent', () => {
+describe('TrexoHalfPieceComponent', () => {
 
     function expectAllLinesToBeDisplayed(): void {
         /**
@@ -49,8 +49,9 @@ describe('TrexoHalfSquareComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(TrexoHalfPieceComponent);
         component = testUtils.getComponent();
-        component.coord = new Coord3D(1, 1, 0);
-        component.mode = TrexoComponent.modeMap['3D'];
+        testUtils.setInput('coord', new Coord3D(1, 1, 0));
+        testUtils.setInput('mode', TrexoComponent.modeMap['3D']);
+        testUtils.setInput('pieceClasses', []);
     }));
 
     it('should create', fakeAsync(async() => {
@@ -60,7 +61,6 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should display parallelogram as closed when missing move`, () => {
         // Given a component on which no move is given
-        component.pieceClasses = [];
 
         // When displaying it
         testUtils.detectChanges();
@@ -71,8 +71,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should display parallelogram as open to the right when it is the left part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the left part of the tile
-        component.move = TrexoMove.from(new Coord(1, 1), new Coord(2, 1)).get();
-        component.pieceClasses = [];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 1), new Coord(2, 1)).get());
 
         // When displaying it
         testUtils.detectChanges();
@@ -99,8 +98,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should display parallelogram as open to the left when it is the rightmost part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the right part of the tile
-        component.move = TrexoMove.from(new Coord(1, 1), new Coord(0, 1)).get();
-        component.pieceClasses = [];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 1), new Coord(0, 1)).get());
 
         // When displaying it
         testUtils.detectChanges();
@@ -127,8 +125,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should display parallelogram as open to the bottom when it is the upper part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the top part of the tile
-        component.move = TrexoMove.from(new Coord(1, 1), new Coord(1, 2)).get();
-        component.pieceClasses = [];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 1), new Coord(1, 2)).get());
 
         // When displaying it
         testUtils.detectChanges();
@@ -155,8 +152,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should display parallelogram as open to the top when it is the lower part of the tile`, () => {
         // Given a component on which the move and coord indicate that the coord is on the bottom part of the tile
-        component.move = TrexoMove.from(new Coord(1, 1), new Coord(1, 0)).get();
-        component.pieceClasses = [];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 1), new Coord(1, 0)).get());
 
         // When displaying it
         testUtils.detectChanges();
@@ -183,8 +179,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should work the same when the coord is the "end" of the move not its start`, () => {
         // Given a component on which the move and coord indicate that the coord is on the bottom part of the tile
-        component.move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
-        component.pieceClasses = [];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get());
 
         // When displaying it
         testUtils.detectChanges();
@@ -211,8 +206,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should display 'Z' on the piece when mustDisplayHeight is true`, () => {
         // Given a component with mustDisplayHeight as true
-        component.mustDisplayHeight = true;
-        component.pieceClasses = [];
+        testUtils.setInput('mustDisplayHeight', true);
 
         // When displaying it
         testUtils.detectChanges();
@@ -224,8 +218,7 @@ describe('TrexoHalfSquareComponent', () => {
 
     it(`should not display 'Z' on the piece when mustDisplayHeight is false`, () => {
         // Given a component with mustDisplayHeight as false
-        component.mustDisplayHeight = false;
-        component.pieceClasses = [];
+        testUtils.setInput('mustDisplayHeight', false);
 
         // When displaying it
         testUtils.detectChanges();
@@ -236,8 +229,8 @@ describe('TrexoHalfSquareComponent', () => {
 
     it('should display the full parallelogram when there is a victory highlight', () => {
         // Given a component with a victory highlight
-        component.move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
-        component.pieceClasses = ['victory-stroke'];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get());
+        testUtils.setInput('pieceClasses', ['victory-stroke']);
 
         // When displaying it
         testUtils.detectChanges();
@@ -248,8 +241,8 @@ describe('TrexoHalfSquareComponent', () => {
 
     it('should display the full parallelogram when there is a last move highlight', () => {
         // Given a component with a victory highlight
-        component.move = TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get();
-        component.pieceClasses = ['last-move-stroke'];
+        testUtils.setInput('move', TrexoMove.from(new Coord(1, 0), new Coord(1, 1)).get());
+        testUtils.setInput('pieceClasses', ['last-move-stroke']);
 
         // When displaying it
         testUtils.detectChanges();

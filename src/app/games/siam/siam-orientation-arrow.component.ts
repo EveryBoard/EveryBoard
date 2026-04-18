@@ -1,4 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 import { Coord } from '../../jscaip/Coord';
@@ -13,20 +14,21 @@ import { SiamConfig } from './SiamRules';
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 
-    @Input() orientations: SiamMove[];
-    @Input() currentPlayer: Player;
-    @Input() config: SiamConfig;
-    @Output() moveEmitter: EventEmitter<SiamMove> = new EventEmitter<SiamMove>();
+    public readonly orientations: InputSignal<SiamMove[]> = input.required<SiamMove[]>();
+    public readonly currentPlayer: InputSignal<Player> = input.required<Player>();
+    public readonly config: InputSignal<SiamConfig> = input.required<SiamConfig>();
+    public readonly moveEmitter: OutputEmitterRef<SiamMove> = output<SiamMove>();
 
     public getCurrentPlayerClass(): string {
-        return this.getPlayerClass(this.currentPlayer);
+        return this.getPlayerClass(this.currentPlayer());
     }
 
     public getOrientationTransform(orientation: Orthogonal): string {
-        const config: SiamConfig = this.config;
+        const config: SiamConfig = this.config();
 
         // Those are the calculation for a min size of 5
         const sizeRatio: number = Math.min(config.width, config.height) / 5;

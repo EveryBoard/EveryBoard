@@ -23,6 +23,6 @@ describe('TutorialGameCreationComponent', () => {
         await testUtils.getComponent().pickGame('whateverGame');
 
         // Then the user is redirected to its tutorial
-        expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['/tutorial/', 'whateverGame']);
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/tutorial/', 'whateverGame']);
     }));
 });

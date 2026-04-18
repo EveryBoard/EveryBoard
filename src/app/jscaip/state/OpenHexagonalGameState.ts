@@ -30,10 +30,10 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
         return this.pieces.getKeyList();
     }
     public computeScale(): Scale {
-        let minWidth: number = Number.MAX_SAFE_INTEGER;
-        let maxWidth: number = Number.MIN_SAFE_INTEGER;
-        let minHeight: number = Number.MAX_SAFE_INTEGER;
-        let maxHeight: number = Number.MIN_SAFE_INTEGER;
+        let minWidth: number = Number.POSITIVE_INFINITY;
+        let maxWidth: number = Number.NEGATIVE_INFINITY;
+        let minHeight: number = Number.POSITIVE_INFINITY;
+        let maxHeight: number = Number.NEGATIVE_INFINITY;
         for (const coord of this.pieces.getKeyList()) {
             minWidth = Math.min(coord.x, minWidth);
             maxWidth = Math.max(coord.x, maxWidth);
@@ -57,22 +57,24 @@ export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> ext
     public getGroups(): Set<CoordSet> {
         let visited: CoordSet = new CoordSet();
         let groups: Set<CoordSet> = new Set();
-        this.pieces.forEach((itemToVisit: {key: Coord, value: T}) => {
-            if (visited.contains(itemToVisit.key) === false) {
+        for (const coord of this.pieces.getKeyList()) {
+            if (visited.contains(coord) === false) {
                 // We will visit all reachable occupied neighbors of this coord
                 let group: CoordSet = new CoordSet();
-                let toVisit: CoordSet = new CoordSet([itemToVisit.key]);
+                let toVisit: CoordSet = new CoordSet([coord]);
                 while (toVisit.hasElements()) {
-                    const coord: Coord = toVisit.getAnyElement().get();
-                    toVisit = toVisit.removeElement(coord);
-                    visited = visited.addElement(coord);
-                    group = group.addElement(coord);
-                    toVisit = toVisit.union(this.getOccupiedNeighbors(coord).filter((neighbor: Coord) =>
-                        visited.contains(neighbor) === false));
+                    const nextCoord: Coord = toVisit.getAnyElement().get();
+                    toVisit = toVisit.removeElement(nextCoord);
+                    visited = visited.addElement(nextCoord);
+                    group = group.addElement(nextCoord);
+                    const occupiedNeighboors: CoordSet = this.getOccupiedNeighbors(nextCoord);
+                    const unvisitedOccupiedNeighboors: CoordSet = occupiedNeighboors
+                        .filter((neighbor: Coord) => visited.contains(neighbor) === false);
+                    toVisit = toVisit.union(unvisitedOccupiedNeighboors);
                 }
                 groups = groups.addElement(group);
             }
-        });
+        }
         return groups;
     }
 }

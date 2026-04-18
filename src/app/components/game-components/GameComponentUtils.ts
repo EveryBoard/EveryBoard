@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
+import { Coord } from '../../jscaip/Coord';
+import { HexaLayout } from '../../jscaip/HexaLayout';
 
 interface Limits {
     minX: number;
@@ -27,10 +27,10 @@ export class ViewBox {
     }
 
     private static getLimits(coords: Coord[]): Limits {
-        let maxX: number = Number.MIN_SAFE_INTEGER;
-        let maxY: number = Number.MIN_SAFE_INTEGER;
-        let minX: number = Number.MAX_SAFE_INTEGER;
-        let minY: number = Number.MAX_SAFE_INTEGER;
+        let maxX: number = Number.NEGATIVE_INFINITY;
+        let maxY: number = Number.NEGATIVE_INFINITY;
+        let minX: number = Number.POSITIVE_INFINITY;
+        let minY: number = Number.POSITIVE_INFINITY;
         for (const coord of coords) {
             minX = Math.min(minX, coord.x);
             minY = Math.min(minY, coord.y);

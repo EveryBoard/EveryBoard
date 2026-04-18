@@ -1,137 +1,97 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
-import { FirestoreJSONObject, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-
-import { ConfigRoomDAO } from '../dao/ConfigRoomDAO';
-import { FirestoreCollectionObserver } from '../dao/FirestoreCollectionObserver';
-import { FirestoreDocument, IFirestoreDAO } from '../dao/FirestoreDAO';
-import { FirstPlayer, ConfigRoom, PartStatus, PartType } from '../domain/ConfigRoom';
+import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
 import { MinimalUser } from '../domain/MinimalUser';
-import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { Debug } from '../utils/Debug';
-import { Localized } from '../utils/LocaleUtils';
 
-import { BackendService } from './BackendService';
-import { ConnectedUserService } from './ConnectedUserService';
+import { BackendService, BackendMessage } from './BackendService';
 
-export class ConfigRoomServiceFailure {
-    public static readonly GAME_DOES_NOT_EXIST: Localized = () => $localize`This game does not exist!`;
+export type Candidate = { user: MinimalUser, elo: number };
+
+export abstract class AbstractConfigRoomService {
+    public abstract join(gameId: string,
+                         configRoomUpdate: (configRoom: ConfigRoom) => void,
+                         configRoomDeleted: () => void,
+                         candidateJoined: (candidate: Candidate) => void,
+                         candidateLeft: (user: MinimalUser) => void,
+                         error: (reason: string) => void)
+    : Promise<Subscription>;
+
+    public abstract proposeConfig(proposal: ConfigProposal): Promise<void>;
+
+    public abstract selectOpponent(opponent: MinimalUser): Promise<void>;
+
+    public abstract reviewConfig(): Promise<void>;
+
+    public abstract acceptConfig(): Promise<void>;
 }
-
 
 @Injectable({
     providedIn: 'root',
 })
 @Debug.log
-export class ConfigRoomService extends BackendService {
+export class ConfigRoomService extends AbstractConfigRoomService {
 
-    public constructor(protected readonly configRoomDAO: ConfigRoomDAO,
-                       connectedUserService: ConnectedUserService)
+    private readonly backendService: BackendService = inject(BackendService);
+
+    public override async join(gameId: string,
+                               configRoomUpdate: (configRoom: ConfigRoom) => void,
+                               configRoomDeleted: () => void,
+                               candidateJoined: (candidate: Candidate) => void,
+                               candidateLeft: (user: MinimalUser) => void,
+                               error: (reason: string) => void)
+    : Promise<Subscription>
     {
-        super(connectedUserService);
-    }
-
-    public subscribeToChanges(gameId: string, callback: (doc: MGPOptional<ConfigRoom>) => void): Subscription {
-        return this.configRoomDAO.subscribeToChanges(gameId, callback);
-    }
-
-    public subscribeToCandidates(gameId: string, callback: (candidates: MinimalUser[]) => void): Subscription {
-        let candidates: MinimalUser[] = [];
-        const observer: FirestoreCollectionObserver<MinimalUser> = new FirestoreCollectionObserver(
-            (created: FirestoreDocument<MinimalUser>[]) => {
-                for (const candidate of created) {
-                    candidates.push(candidate.data);
-                }
-                callback(candidates);
-            },
-            (modified: FirestoreDocument<MinimalUser>[]) => {
-                // This should never happen, but we can still update the candidates list just in case
-                for (const modifiedCandidate of modified) {
-                    candidates = candidates.map((candidate: MinimalUser) => {
-                        if (candidate.id === modifiedCandidate.data.id) {
-                            return modifiedCandidate.data;
-                        } else {
-                            return candidate;
-                        }
-                    });
-                }
-                callback(candidates);
-            },
-            (deleted: FirestoreDocument<MinimalUser>[]) => {
-                for (const deletedCandidate of deleted) {
-                    candidates = candidates.filter((candidate: MinimalUser) =>
-                        candidate.id !== deletedCandidate.data.id);
-                }
-                callback(candidates);
+        const gameSubscription: Subscription = await this.backendService.subscribeToConfigRoom(gameId);
+        const configRoomSubscription: Subscription =
+            this.backendService.setCallback('ConfigRoomUpdate', (message: BackendMessage): void => {
+                configRoomUpdate(message.getArgument('configRoom'));
             });
-        const subCollection: IFirestoreDAO<FirestoreJSONObject> =
-            this.configRoomDAO.subCollectionDAO(gameId, 'candidates');
-        return subCollection.observingWhere([], observer);
-    }
-
-    /** Join a game */
-    public async joinGame(gameId: string): Promise<MGPValidation> {
-        const endpoint: string = `config-room/${gameId}/candidates`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        if (result.isSuccess()) {
-            return MGPValidation.SUCCESS;
-        } else {
-            Utils.assert(result.getReason() === 'not_found', `Unexpected failure from backend: ${result.getReason()}`);
-            return MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST());
-        }
-    }
-
-    /** Remove a candidate from a config room (it can be ourselves or someone else) */
-    public async removeCandidate(gameId: string, candidateId: string): Promise<void> {
-        const endpoint: string = `config-room/${gameId}/candidates/${candidateId}`;
-        const result: MGPFallible<Response> = await this.performRequest('DELETE', endpoint);
-        this.assertSuccess(result);
+        const configRoomDeletionSubscription: Subscription =
+            this.backendService.setCallback('ConfigRoomDeleted', (_message: BackendMessage): void => {
+                configRoomDeleted();
+            });
+        const candidateJoinedSubscription: Subscription =
+            this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
+                candidateJoined({ user: message.getArgument('candidate'), elo: message.getArgument('elo') });
+            });
+        const candidateLeftSubscription: Subscription =
+            this.backendService.setCallback('CandidateLeft', (message: BackendMessage): void => {
+                candidateLeft(message.getArgument('candidate'));
+            });
+        const errorSubscription: Subscription =
+            this.backendService.setCallback('Error', (message: BackendMessage): void => {
+                error(message.getArgument('reason'));
+            });
+        return new Subscription(() => {
+            configRoomSubscription.unsubscribe();
+            configRoomDeletionSubscription.unsubscribe();
+            candidateJoinedSubscription.unsubscribe();
+            candidateLeftSubscription.unsubscribe();
+            errorSubscription.unsubscribe();
+            gameSubscription.unsubscribe();
+        });
     }
 
     /** Propose a config to the opponent */
-    public async proposeConfig(gameId: string,
-                               partType: PartType,
-                               maximalMoveDuration: number,
-                               firstPlayer: FirstPlayer,
-                               totalPartDuration: number,
-                               rulesConfig: MGPOptional<RulesConfig>)
-    : Promise<void>
-    {
-        const config: Partial<ConfigRoom> = {
-            partStatus: PartStatus.CONFIG_PROPOSED.value,
-            partType: partType.value,
-            maximalMoveDuration,
-            totalPartDuration,
-            firstPlayer: firstPlayer.value,
-            rulesConfig: rulesConfig.getOrElse({}),
-        };
-        const configEncoded: string = encodeURIComponent(JSON.stringify(config));
-        const endpoint: string = `config-room/${gameId}?action=propose&config=${configEncoded}`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+    public override async proposeConfig(proposal: ConfigProposal): Promise<void> {
+        await this.backendService.send(['ProposeConfig', { config: proposal }]);
     }
 
     /** Select an opponent */
-    public async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
-        const opponentEncoded: string = encodeURIComponent(JSON.stringify(opponent));
-        const endpoint: string = `config-room/${gameId}?action=selectOpponent&opponent=${opponentEncoded}`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+    public override async selectOpponent(opponent: MinimalUser): Promise<void> {
+        await this.backendService.send(['SelectOpponent', { opponent }]);
     }
 
     /** Review a config proposed to the opponent */
-    public async reviewConfig(gameId: string): Promise<void> {
-        const endpoint: string = `config-room/${gameId}?action=review`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+    public override async reviewConfig(): Promise<void> {
+        await this.backendService.send(['ReviewConfig']);
     }
 
-    /** Review a config proposed to the opponent, who just left */
-    public async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
-        const endpoint: string = `config-room/${gameId}?action=reviewConfigAndRemoveOpponent`;
-        const result: MGPFallible<Response> = await this.performRequest('POST', endpoint);
-        this.assertSuccess(result);
+    /** Accept a game config */
+    public override async acceptConfig(): Promise<void> {
+        await this.backendService.send(['AcceptConfig']);
     }
 
 }

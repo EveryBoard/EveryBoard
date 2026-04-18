@@ -1,17 +1,45 @@
-import { enableProdMode } from '@angular/core';
+import { registerLocaleData } from '@angular/common';
+import localeFr from '@angular/common/locales/fr';
+import { enableProdMode, LOCALE_ID, importProvidersFrom } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { loadTranslations } from '@angular/localize';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-import { AppModule } from './app/app.module';
+import { AppComponent } from './app/app.component';
+import { initializeFirebase, routes } from './app/app.routes';
+import { ChatService } from './app/services/ChatService';
+import { ConfigRoomService } from './app/services/ConfigRoomService';
+import { ConnectedUserService } from './app/services/ConnectedUserService';
+import { GameService } from './app/services/GameService';
+import { ThemeService } from './app/services/ThemeService';
+import { UserService } from './app/services/UserService';
 import { LocaleUtils } from './app/utils/LocaleUtils';
 import { environment } from './environments/environment';
+
+registerLocaleData(localeFr);
 
 function bootstrapApp(): void {
     if (environment.production) {
         enableProdMode();
     }
-    platformBrowserDynamic()
-        .bootstrapModule(AppModule)
+    initializeFirebase();
+    bootstrapApplication(AppComponent, {
+        providers: [
+            importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+            ConnectedUserService,
+            GameService,
+            ConfigRoomService,
+            UserService,
+            ChatService,
+            ThemeService,
+            { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
+            provideRouter(routes),
+            provideAnimations(),
+        ],
+    })
         .catch((err: unknown) => console.error(err));
 }
 

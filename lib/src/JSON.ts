@@ -1,5 +1,3 @@
-import { FieldValue } from 'firebase/firestore';
-
 import { MGPOptional } from './MGPOptional';
 
 // These are the datatypes supported by firestore. Arrays of arrays are not
@@ -63,11 +61,3 @@ export class JSONParser {
     }
 }
 
-export type FirestoreJSONPrimitive = JSONPrimitive | FieldValue;
-export type FirestoreJSONValue =
-    FirestoreJSONPrimitive |
-    FirestoreJSONObject |
-    Array<FirestoreJSONValueWithoutArray> |
-    ReadonlyArray<FirestoreJSONValueWithoutArray>;
-export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJSONObject;
-export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };

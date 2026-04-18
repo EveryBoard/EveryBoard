@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -13,26 +12,22 @@ import { VerifiedAccountGuard } from '../verified-account.guard';
 
 describe('VerifiedAccountGuard', () => {
     let guard: VerifiedAccountGuard;
-
-    let connectedUserService: ConnectedUserService;
-
     let router: Router;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
+            imports: [],
+            providers: [
+                provideRouter([
                     { path: '**', component: BlankComponent },
                 ]),
-            ],
-            providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                VerifiedAccountGuard,
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        connectedUserService = TestBed.inject(ConnectedUserService);
-        guard = new VerifiedAccountGuard(connectedUserService, router);
+        guard = TestBed.inject(VerifiedAccountGuard);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

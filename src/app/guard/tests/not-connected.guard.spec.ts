@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter, Router } from '@angular/router';
 
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
@@ -11,26 +10,22 @@ import { NotConnectedGuard } from '../not-connected.guard';
 
 describe('NotConnectedGuard', () => {
     let guard: NotConnectedGuard;
-
-    let connectedUserService: ConnectedUserService;
-
     let router: Router;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
+            imports: [],
+            providers: [
+                provideRouter([
                     { path: '**', component: BlankComponent },
                 ]),
-            ],
-            providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                NotConnectedGuard,
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        connectedUserService = TestBed.inject(ConnectedUserService);
-        guard = new NotConnectedGuard(connectedUserService, router);
+        guard = TestBed.inject(NotConnectedGuard);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

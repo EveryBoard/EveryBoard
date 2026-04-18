@@ -1,10 +1,10 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { faBackwardStep, faFlag, faRepeat, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 
 import { MGPOptional, Utils, Set } from '@everyboard/lib';
 
+import { GameEventReply, GameEventRequest, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { GameEventReply, GameEventRequest, RequestType } from '../../../domain/Part';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { Localized } from '../../../utils/LocaleUtils';
 
@@ -20,10 +20,10 @@ export interface RequestInfo {
  * The request manager manages the requests and replies.
  * It keeps state about whether a current request has been sent or is waiting for a reply.
  */
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class OGWCRequestManagerService {
+
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     public static requestInfos: Record<RequestType, RequestInfo> = {
         'TakeBack': {
@@ -53,9 +53,6 @@ export class OGWCRequestManagerService {
     private lastDeniedRequest: MGPOptional<RequestType> = MGPOptional.empty();
     private forbiddenRequests: Set<RequestType> = new Set();
 
-    public constructor(private readonly connectedUserService: ConnectedUserService) {
-    }
-
     public onGameStart(): void {
         // Upon game start, clear out requests
         this.requestAwaitingReply = MGPOptional.empty();
@@ -70,6 +67,8 @@ export class OGWCRequestManagerService {
     public onReceivedRequest(request: GameEventRequest): void {
         Utils.assert(this.requestAwaitingReply.isAbsent(), 'Should not receive two requests in a row!');
         this.requestAwaitingReply = MGPOptional.of(request);
+        this.forbiddenRequests = new Set();
+        this.lastDeniedRequest = MGPOptional.empty();
     }
     /**
      * Called when a reply is received.
@@ -77,19 +76,18 @@ export class OGWCRequestManagerService {
      */
     public async onReceivedReply(reply: GameEventReply): Promise<boolean> {
         this.requestAwaitingReply = MGPOptional.empty();
-        switch (reply.reply) {
-            case 'Accept':
-                // The request has been accepted by the opponent, we give it back to OGWC
-                return true;
-            case 'Reject':
-                // When one of our requests is rejected, we cannot make this request until the next turn
-                const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-                if (reply.user.id !== user.id) {
-                    // Opponent denied our request
-                    this.lastDeniedRequest = MGPOptional.of(reply.requestType);
-                    this.forbiddenRequests = this.forbiddenRequests.addElement(reply.requestType);
-                }
-                return false;
+        if (reply.accept) {
+            // The request has been accepted by the opponent, we give it back to OGWC
+            return true;
+        } else {
+            // When one of our requests is rejected, we cannot make this request until the next turn
+            const user: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
+            if (reply.user.id !== user.id) {
+                // Opponent denied our request
+                this.lastDeniedRequest = MGPOptional.of(reply.requestType);
+                this.forbiddenRequests = this.forbiddenRequests.addElement(reply.requestType);
+            }
+            return false;
         }
     }
     public canMakeRequest(request: RequestType): boolean {

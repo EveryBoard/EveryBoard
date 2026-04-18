@@ -3,151 +3,152 @@
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     <defs>
-        <marker id="arrowhead" markerWidth="10" markerHeight="7"
-                refX="5" refY="3.5" orient="auto">
+        <marker id="arrowhead"
+                markerWidth="10"
+                markerHeight="7"
+                refX="5"
+                refY="3.5"
+                orient="auto">
             <polygon points="0 0, 10 3.5, 0 7"/>
         </marker>
     </defs>
     <g [attr.transform]="getBoardRotation()">
-        <g *ngFor="let line of stateInConstruction.board; index as y">
-            <g *ngFor="let square of line; index as x"
-               id="click_{{ x }}_{{ y }}"
-               (click)="onClick(x, y)"
-               [attr.transform]="getTranslationAtXY(x, y)">
-                <rect id="space_{{ x }}_{{ y }}"
-                      class="base"
-                      [ngClass]="getSpaceClasses(x, y)"
+        @for (line of stateInConstruction.board; track $index; let y = $index) {
+            <g>
+                @for (square of line; track $index; let x = $index) {
+                    <g id="click_{{ x }}_{{ y }}"
+                       (click)="onClick(x, y)"
+                       [attr.transform]="getTranslationAtXY(x, y)">
+                        <rect id="space_{{ x }}_{{ y }}"
+                              class="base"
+                              [ngClass]="getSpaceClasses(x, y)"
+                              [attr.x]="0"
+                              [attr.y]="0"
+                              [attr.width]="SPACE_SIZE"
+                              [attr.height]="SPACE_SIZE"/>
+                        @if (square.owner.isPlayer()) {
+                            <circle id="piece_{{ x }}_{{ y }}"
+                                    class="base"
+                                    [ngClass]="getPieceClasses(x, y, square)"
+                                    [attr.r]="42"
+                                    [attr.cx]="SPACE_SIZE / 2"
+                                    [attr.cy]="SPACE_SIZE / 2"/>
+                        }
+                        @if (square.holdsBall) {
+                            <circle id="ball_{{ x }}_{{ y }}"
+                                    class="base"
+                                    [ngClass]="getBallClasses(x, y, square)"
+                                    [attr.r]="22"
+                                    [attr.cx]="SPACE_SIZE / 2"
+                                    [attr.cy]="SPACE_SIZE / 2"/>
+                        }
+                    </g>
+                }
+            </g>
+        }
+        @for (line of blockedLines; track $index) {
+            <line [attr.x1]="line.x1"
+                  [attr.y1]="line.y1"
+                  [attr.x2]="line.x2"
+                  [attr.y2]="line.y2"
+                  class="defeat-stroke normal-stroke"/>
+        }
+        @for (coord of indicators; track coord.toString()) {
+            <rect [attr.transform]="getTranslationAt(coord)"
+                  id="indicator_{{ coord.x }}_{{ coord.y }}"
+                  [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
+                  [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
+                  [attr.width]="INDICATOR_SIZE"
+                  [attr.height]="INDICATOR_SIZE"
+                  (click)="onClick(coord.x, coord.y)"
+                  class="indicator"/>
+        }
+    </g>
+    @if (isInteractive()) {
+        <g>
+            <g id="translationCountIndicator"
+               [attr.transform]="getTranslationAtXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
+                <rect class="base"
                       [attr.x]="0"
                       [attr.y]="0"
                       [attr.width]="SPACE_SIZE"
-                      [attr.height]="SPACE_SIZE"
-                />
-                <circle *ngIf="square.owner.isPlayer()"
-                        id="piece_{{ x }}_{{ y }}"
-                        class="base"
-                        [ngClass]="getPieceClasses(x, y, square)"
+                      [attr.height]="SPACE_SIZE"/>
+                <circle class="base"
+                        [ngClass]="getPlayerClass(getCurrentPlayer())"
                         [attr.r]="42"
                         [attr.cx]="SPACE_SIZE / 2"
-                        [attr.cy]="SPACE_SIZE / 2"
-                />
-                <circle *ngIf="square.holdsBall"
-                        id="ball_{{ x }}_{{ y }}"
-                        class="base"
-                        [ngClass]="getBallClasses(x, y, square)"
+                        [attr.cy]="SPACE_SIZE / 2"/>
+                <rect class="base"
+                      [attr.x]="SPACE_SIZE"
+                      [attr.y]="0"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"/>
+                <line [attr.x1]="SPACE_SIZE/2"
+                      [attr.y1]="SPACE_SIZE/2"
+                      [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
+                      [attr.y2]="SPACE_SIZE/2"
+                      class="arrow"
+                      marker-end="url(#arrowhead)"/>
+                <text id="translationCount"
+                      class="base-no-stroke text-giant"
+                      [attr.x]="2.3 * SPACE_SIZE"
+                      [attr.y]="SPACE_SIZE/2"
+                      [attr.font-size]="SPACE_SIZE / 2">{{ translationsMade }}</text>
+            </g>
+            <g id="passCountIndicator"
+               [attr.transform]="getTranslationAtXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
+                <rect class="base"
+                      [attr.x]="0"
+                      [attr.y]="0"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"/>
+                <circle class="base"
+                        [ngClass]="getPlayerClass(getCurrentPlayer())"
+                        [attr.r]="42"
+                        [attr.cx]="SPACE_SIZE / 2"
+                        [attr.cy]="SPACE_SIZE / 2"/>
+                <circle class="base"
+                        [ngClass]="getPlayerClass(getCurrentPlayer())"
                         [attr.r]="22"
                         [attr.cx]="SPACE_SIZE / 2"
-                        [attr.cy]="SPACE_SIZE / 2"
-                />
+                        [attr.cy]="SPACE_SIZE / 2"/>
+                <rect class="base"
+                      [attr.x]="SPACE_SIZE"
+                      [attr.y]="0"
+                      [attr.width]="SPACE_SIZE"
+                      [attr.height]="SPACE_SIZE"/>
+                <circle class="base"
+                        [ngClass]="getPlayerClass(getCurrentPlayer())"
+                        [attr.r]="42"
+                        [attr.cx]="SPACE_SIZE + SPACE_SIZE / 2"
+                        [attr.cy]="SPACE_SIZE / 2"/>
+                <line [attr.x1]="SPACE_SIZE/2"
+                      [attr.y1]="SPACE_SIZE/2"
+                      [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
+                      [attr.y2]="SPACE_SIZE/2"
+                      class="arrow"
+                      marker-end="url(#arrowhead)"/>
+                <text id="passCount"
+                      class="base-no-stroke text-giant"
+                      [attr.x]="- 0.6 * SPACE_SIZE"
+                      [attr.y]="SPACE_SIZE/2"
+                      [attr.font-size]="SPACE_SIZE / 2">{{ hasMadePass ? 1 : 0 }}</text>
             </g>
         </g>
-        <line *ngFor="let line of blockedLines"
-              [attr.x1]="line.x1"
-              [attr.y1]="line.y1"
-              [attr.x2]="line.x2"
-              [attr.y2]="line.y2"
-              class="defeat-stroke normal-stroke" />
-        <rect *ngFor="let coord of indicators"
-              [attr.transform]="getTranslationAt(coord)"
-              id="indicator_{{ coord.x }}_{{ coord.y }}"
-              [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
-              [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
-              [attr.width]="INDICATOR_SIZE"
-              [attr.height]="INDICATOR_SIZE"
-              (click)="onClick(coord.x, coord.y)"
-              class="indicator"/>
-    </g>
-    <g *ngIf="isInteractive()">
-        <g id="translationCountIndicator"
-           [attr.transform]="getTranslationAtXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
-            <rect class="base"
-                  [attr.x]="0"
-                  [attr.y]="0"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-            />
-            <circle class="base"
-                    [ngClass]="getPlayerClass(getCurrentPlayer())"
-                    [attr.r]="42"
-                    [attr.cx]="SPACE_SIZE / 2"
-                    [attr.cy]="SPACE_SIZE / 2"
-            />
-            <rect class="base"
-                  [attr.x]="SPACE_SIZE"
-                  [attr.y]="0"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-            />
-            <line [attr.x1]="SPACE_SIZE/2"
-                  [attr.y1]="SPACE_SIZE/2"
-                  [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
-                  [attr.y2]="SPACE_SIZE/2"
-                  class="arrow"
-                  marker-end="url(#arrowhead)" />
-            <text id="translationCount"
-                  class="base-no-stroke text-giant"
-                  [attr.x]="2.3 * SPACE_SIZE"
-                  [attr.y]="SPACE_SIZE/2"
-                  [attr.font-size]="SPACE_SIZE / 2"
-            >{{ translationsMade }}</text>
-        </g>
-        <g id="passCountIndicator"
-           [attr.transform]="getTranslationAtXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
-            <rect class="base"
-                  [attr.x]="0"
-                  [attr.y]="0"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-            />
-            <circle class="base"
-                    [ngClass]="getPlayerClass(getCurrentPlayer())"
-                    [attr.r]="42"
-                    [attr.cx]="SPACE_SIZE / 2"
-                    [attr.cy]="SPACE_SIZE / 2"
-            />
-            <circle class="base"
-                    [ngClass]="getPlayerClass(getCurrentPlayer())"
-                    [attr.r]="22"
-                    [attr.cx]="SPACE_SIZE / 2"
-                    [attr.cy]="SPACE_SIZE / 2"
-            />
-            <rect class="base"
-                  [attr.x]="SPACE_SIZE"
-                  [attr.y]="0"
-                  [attr.width]="SPACE_SIZE"
-                  [attr.height]="SPACE_SIZE"
-            />
-            <circle class="base"
-                    [ngClass]="getPlayerClass(getCurrentPlayer())"
-                    [attr.r]="42"
-                    [attr.cx]="SPACE_SIZE + SPACE_SIZE / 2"
-                    [attr.cy]="SPACE_SIZE / 2"
-            />
-            <line [attr.x1]="SPACE_SIZE/2"
-                  [attr.y1]="SPACE_SIZE/2"
-                  [attr.x2]="SPACE_SIZE + SPACE_SIZE/2"
-                  [attr.y2]="SPACE_SIZE/2"
-                  class="arrow"
-                  marker-end="url(#arrowhead)" />
-            <text id="passCount"
-                  class="base-no-stroke text-giant"
-                  [attr.x]="- 0.6 * SPACE_SIZE"
-                  [attr.y]="SPACE_SIZE/2"
-                  [attr.font-size]="SPACE_SIZE / 2"
-            >{{ hasMadePass ? 1 : 0 }}</text>
-        </g>
-    </g>
+    }
 
-    <g *ngIf="showDoneButton()"
-       id="done"
-       (click)="done()"
-       [attr.transform]="getTranslationAtXY(WIDTH / 2, HEIGHT + 0.5)">
-        <circle [attr.cx]="STROKE_WIDTH / 2"
-                [attr.cy]="STROKE_WIDTH / 2"
-                [attr.r]="SPACE_SIZE / 2.5"
-                fill="green"
-                class="base-no-fill small-stroke"/>
-        <polygon points="-32.5,-2.5 -32.5,12.5 -10,35 -2.5,35 35,-21.25 25,-21.275 -5,25 -32.5,-2.5"
-                  fill="black"
-                  class="base-no-fill small-stroke"/>
-    </g>
+    @if (showDoneButton()) {
+        <g id="done"
+           (click)="done()"
+           [attr.transform]="getTranslationAtXY(WIDTH / 2, HEIGHT + 0.5)">
+            <circle [attr.cx]="STROKE_WIDTH / 2"
+                    [attr.cy]="STROKE_WIDTH / 2"
+                    [attr.r]="SPACE_SIZE / 2.5"
+                    fill="green"
+                    class="base-no-fill small-stroke"/>
+            <polygon points="-32.5,-2.5 -32.5,12.5 -10,35 -2.5,35 35,-21.25 25,-21.275 -5,25 -32.5,-2.5"
+                     fill="black"
+                     class="base-no-fill small-stroke"/>
+        </g>
+    }
 </svg>

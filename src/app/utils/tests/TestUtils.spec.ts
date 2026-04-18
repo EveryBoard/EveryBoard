@@ -1,33 +1,26 @@
 /* eslint-disable max-lines-per-function */
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, NavigationExtras, Route, Router } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { BrowserModule, By } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
-import { Subscription } from 'rxjs';
+import { firstValueFrom, Subscription } from 'rxjs';
 
 import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
-import { AppModule } from '../../app.module';
-import { findMatchingRoute } from '../../app.module.spec';
+import { initializeFirebase, routes } from '../../app.routes';
+import { findMatchingRoute } from '../../app.routes.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { OnlineGameWrapperComponent } from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { RulesConfigurationComponent } from '../../components/wrapper-components/rules-configuration/rules-configuration.component';
-import { ChatDAO } from '../../dao/ChatDAO';
-import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
-import { PartDAO } from '../../dao/PartDAO';
+import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
+import { OGWCTimeManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
 import { UserDAO } from '../../dao/UserDAO';
-import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
-import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
-import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { AIDepthLimitOptions } from '../../jscaip/AI/AI';
@@ -38,22 +31,23 @@ import { Player } from '../../jscaip/Player';
 import { SuperRules } from '../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { GameState } from '../../jscaip/state/GameState';
-import { FirestoreTimePipe } from '../../pipes-and-directives/firestore-time.pipe';
-import { HumanDurationPipe } from '../../pipes-and-directives/human-duration.pipe';
-import { ToggleVisibilityDirective } from '../../pipes-and-directives/toggle-visibility.directive';
+import { ActiveConfigRoomsService } from '../../services/ActiveConfigRoomsService';
+import { BackendService } from '../../services/BackendService';
+import { ChatService } from '../../services/ChatService';
 import { ConfigRoomService } from '../../services/ConfigRoomService';
 import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
 import { CurrentGameService } from '../../services/CurrentGameService';
 import { ErrorLoggerService } from '../../services/ErrorLoggerService';
 import { GameService } from '../../services/GameService';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { ServerTimeService } from '../../services/ServerTimeService';
+import { ActiveConfigRoomsServiceMock } from '../../services/tests/ActiveConfigRoomServiceMock.spec';
+import { BackendServiceMock } from '../../services/tests/BackendServiceMock.spec';
+import { ChatServiceMock } from '../../services/tests/ChatServiceMock.spec';
 import { ConfigRoomServiceMock } from '../../services/tests/ConfigRoomServiceMock.spec';
 import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
-import { CurrentGameServiceMock } from '../../services/tests/CurrentGameService.spec';
+import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
-import { ServerTimeServiceMock } from '../../services/tests/ServerTimeServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -349,6 +343,9 @@ export class SimpleComponentTestUtils<T> {
         this.detectChanges();
     }
 
+    public setInput(input: string, value: unknown): void {
+        this.fixture.componentRef.setInput(input, value);
+    }
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
@@ -657,27 +654,24 @@ export class ConfigureTestingModuleUtils {
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-                RouterTestingModule.withRoutes([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
-            ],
+            imports: [],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
+                { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
+                OGWCTimeManagerService,
+                OGWCRequestManagerService,
             ],
         }).compileComponents();
     }
@@ -687,56 +681,40 @@ export class ConfigureTestingModuleUtils {
     : Promise<void>
     {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule,
-            ],
-            declarations: [
-                componentType,
-                FirestoreTimePipe,
-                HumanDurationPipe,
-                ToggleVisibilityDirective,
-                RulesConfigurationComponent,
-            ],
-            schemas: [
-                CUSTOM_ELEMENTS_SCHEMA,
-            ],
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
+                { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
             ],
         }).compileComponents();
     }
 }
 
 export async function setupEmulators(): Promise<unknown> {
-    new AppModule(); // This will initialize firebase with the emulators
+    initializeFirebase();
     await TestBed.configureTestingModule({
-        imports: [
-            HttpClientModule,
-        ],
         providers: [
+            provideHttpClient(),
             ConnectedUserService,
         ],
     }).compileComponents();
     const http: HttpClient = TestBed.inject(HttpClient);
     // Clear the content of the firestore database in the emulator
-    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
+    await firstValueFrom(http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents'));
     // Clear the auth data in the emulator before each test
-    await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
+    await firstValueFrom(http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts'));
     return;
 }
 
@@ -755,32 +733,37 @@ function getComponentClassName(component: Type<any>): string {
  * routed to matches `component`. In case multiple router.navigate calls happen,
  * set otherRoutes to true.
  */
-export function expectValidRouting(router: Router,
-                                   path: string[],
-                                   component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                   options?: { otherRoutes?: boolean,
-                                               skipLocationChange?: boolean,
-                                               queryParams?: Record<string, string> })
-: void
+export async function expectValidRouting(router: Router,
+                                         path: string[],
+                                         component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+                                         options?: { otherRoutes?: boolean,
+                                                     skipLocationChange?: boolean,
+                                                     queryParams?: Record<string, string> })
+: Promise<void>
 {
-    expect(path[0][0]).withContext('Routings should start with /').toEqual('/');
-    for (const pathPart of path) {
-        expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+    expect(path[0][0]).withContext('Routings should start with /').toBe('/');
+    if (!(path.length === 1 && path[0] === '/')) {
+        // Unless the path is / (in which case, it must finish by /), we need to ensure the presence of /
+        for (const pathPart of path) {
+            expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+        }
     }
     const fullPath: string = path.join('/');
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${path}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
     const otherRoutes: boolean = options != null && options.otherRoutes != null && options.otherRoutes;
     const args: [string[], ...NavigationExtras[]] = [path];
     const extraArgs: NavigationExtras = {};
     if (options != null && options.queryParams != null) {
-        extraArgs['queryParams'] = options.queryParams;
+        extraArgs.queryParams = options.queryParams;
     }
     if (options != null && options.skipLocationChange != null) {
-        extraArgs['skipLocationChange'] = options.skipLocationChange;
+        extraArgs.skipLocationChange = options.skipLocationChange;
     }
     if (Object.keys(extraArgs).length > 0) {
         args.push(extraArgs);
@@ -795,14 +778,18 @@ export function expectValidRouting(router: Router,
 /**
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
-export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>): void {
+export async function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>)
+  : Promise<void>
+{
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();
     expect(element.attributes.routerLink).toEqual(fullPath);
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${fullPath}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }
@@ -831,17 +818,30 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
     let subscribed: boolean = false;
     let unsubscribed: boolean = false;
     const spy: jasmine.Spy = spyOn(service, subscribeMethod);
-    spy.and.callFake((...args: unknown[]): Subscription => {
+    spy.and.callFake((...args: unknown[]): Subscription | Promise<Subscription> => {
         subscribed = true;
         // We need to call the original function.
         // This is a bit hacky, but seems to be the only way:
         // we change the spy to call through, and apply the original method.
         // This is fine for subscribe methods as they are expected to be called only once.
         spy.and.callThrough();
-        service[subscribeMethod](...args);
-        return new Subscription(() => {
-            unsubscribed = true;
-        });
+        // The subscription method could be a promise, we need to deal with both cases
+        const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
+        if (subscription['unsubscribe'] !== undefined) {
+            // This is not a promise, we can wrap it directly
+            return new Subscription(() => {
+                unsubscribed = true;
+                (subscription as Subscription).unsubscribe();
+            });
+        } else {
+            // This is a promise, let's await it then wrap it
+            return (subscription as Promise<Subscription>).then((sub: Subscription): Subscription => {
+                return new Subscription(() => {
+                    unsubscribed = true;
+                    sub.unsubscribe();
+                });
+            });
+        }
     });
     return () => {
         expect(subscribed)

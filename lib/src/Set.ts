@@ -93,7 +93,7 @@ export class Set<T extends Comparable> implements ComparableObject {
         return MGPOptional.empty();
     }
 
-    [Symbol.iterator](): IterableIterator<T> {
+    public [Symbol.iterator](): IterableIterator<T> {
         return this.values.values();
     }
 

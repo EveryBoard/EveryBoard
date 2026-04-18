@@ -27,6 +27,6 @@ describe('AccountComponent', () => {
         // When displaying the page
         // Then it should show a reset link pointing to the reset password component
         const button: DebugElement = testUtils.findElement('#reset');
-        expectValidRoutingLink(button, '/reset-password', ResetPasswordComponent);
+        await expectValidRoutingLink(button, '/reset-password', ResetPasswordComponent);
     }));
 });

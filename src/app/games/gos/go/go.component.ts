@@ -1,14 +1,15 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
+import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
@@ -24,6 +25,7 @@ import { GoConfig, GoRules } from './GoRules';
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [BlankGobanComponent, NgClass],
 })
 @Debug.log
 export class GoComponent extends GobanGameComponent<GoRules,
@@ -44,8 +46,8 @@ export class GoComponent extends GobanGameComponent<GoRules,
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Go');
         this.availableAIs = [
             new GoMinimax(),

@@ -6,7 +6,7 @@ import { GoConfig, GoRules } from './GoRules';
 
 export class GoMinimax extends AbstractGoMinimax<GoConfig> {
 
-    constructor() {
+    public constructor() {
         super(
             GoRules.get(),
             new GoMoveGenerator(),

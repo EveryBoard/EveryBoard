@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -8,7 +9,6 @@ import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
@@ -52,6 +52,7 @@ interface LastMoved {
     selector: 'app-diam',
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
 
@@ -100,8 +101,8 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         ]),
     };
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Diam');
         this.availableAIs = [
             new DiamDummyMinimax(),

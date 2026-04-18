@@ -1,6 +1,6 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { CheckersComponent } from '../common/checkers.component';
 
 import { InternationalCheckersRules } from './InternationalCheckersRules';
@@ -9,11 +9,12 @@ import { InternationalCheckersRules } from './InternationalCheckersRules';
     selector: 'app-international-checkers',
     templateUrl: '../common/checkers.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class InternationalCheckersComponent extends CheckersComponent<InternationalCheckersRules> {
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('InternationalCheckers');
     }
 

@@ -2,55 +2,64 @@
     <button id="switchChatVisibilityButton"
             class="button is-primary is-fullwidth"
             (click)="switchChatVisibility()">
-        <ng-container *ngIf="visible else showChat" i18n>Hide chat</ng-container>
-        <ng-template #showChat i18n>Show chat ({{ this.unreadMessagesText }})</ng-template>
+        @if (visible) {
+            <ng-container i18n>Hide chat</ng-container>
+        } @else {
+            <ng-container i18n>Show chat ({{ unreadMessagesText }})</ng-container>
+        }
     </button>
 
-    <div *ngIf="visible">
-        <button *ngIf="this.showUnreadMessagesButton"
-                id="scrollToBottomIndicator"
-                class="notification button is-info is-fullwidth"
-                (click)="scrollToBottom()"
-        >{{ this.unreadMessagesText }} &darr;</button>
-
-        <div #chatDiv
-             id="chatDiv"
-             class="is-fullwidth block"
-             style="overflow-y:scroll; max-height: 50vh;"
-             (scroll)="updateCurrentScrollPosition()"
-        >
-            <p *ngFor="let msg of chat">
-                [{{ msg.postedTime | firestoreTime }}] <b class="chat-sender">{{ msg.sender.name }} : </b> <span class="chat-message">{{ msg.content }}</span>
-            </p>
-        </div>
-    </div>
-
-    <form id="chatForm" *ngIf="visible"
-          (onSubmit)="sendMessage()">
-        <div class="field has-addons is-fullwidth">
-            <div class="control is-expanded">
-                <input class="input"
-                       #message
-                       id="message"
-                       type="text"
-                       placeholder="Type your message here" i18n-placeholder
-                       maxlength="128"
-                       value=""
-                       [(ngModel)]="userMessage"
-                       [ngModelOptions]="{standalone: true}"/>
-                <p class="help">{{ message.value.length }}/128</p>
-            </div>
-            <div class="control">
-                <button class="button is-primary"
-                        type="submit"
-                        id="send"
-                        (click)="sendMessage()">
-                    <fa-icon [icon]="faReply" class="clickable-icon"></fa-icon>
-                </button>
+    @if (visible) {
+        <div>
+            @if (showUnreadMessagesButton) {
+                <button id="scrollToBottomIndicator"
+                        class="notification button is-info is-fullwidth"
+                        (click)="scrollToBottom()">{{ unreadMessagesText }} &darr;</button>
+            }
+            <div #chatDiv
+                 id="chatDiv"
+                 class="is-fullwidth block"
+                 style="overflow-y:scroll; max-height: 50vh;"
+                 (scroll)="updateCurrentScrollPosition()">
+                @for (msg of chat; track $index) {
+                    <p>
+                        [{{ formatTimestamp(msg.timestamp) }}] <b class="chat-sender">{{ msg.sender.name }}</b>:<span class="chat-message">{{ msg.content }}</span>
+                    </p>
+                }
             </div>
         </div>
-        <div class="content is-small">
-            <p><strong i18n>Be polite</strong></p>
-        </div>
-    </form>
+    }
+
+    @if (visible) {
+        <form id="chatForm"
+              (onSubmit)="sendMessage()">
+            <div class="field has-addons is-fullwidth">
+                <div class="control is-expanded">
+                    <input class="input"
+                           #message
+                           id="message"
+                           type="text"
+                           placeholder="Type your message here"
+                           i18n-placeholder
+                           maxlength="128"
+                           value=""
+                           [(ngModel)]="userMessage"
+                           [ngModelOptions]="{standalone: true}"/>
+                    <p class="help">{{ message.value.length }}/128</p>
+                </div>
+                <div class="control">
+                    <button class="button is-primary"
+                            type="submit"
+                            id="send"
+                            (click)="sendMessage()">
+                        <fa-icon [icon]="faReply"
+                                 class="clickable-icon"></fa-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="content is-small">
+                <p><strong i18n>Be polite</strong></p>
+            </div>
+        </form>
+    }
 </div>

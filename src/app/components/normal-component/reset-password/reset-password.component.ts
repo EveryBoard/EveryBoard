@@ -1,16 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 
 @Component({
     selector: 'app-reset-password',
     templateUrl: './reset-password.component.html',
+    imports: [ReactiveFormsModule, AutofocusDirective, FormsModule],
 })
 export class ResetPasswordComponent {
 
-    public constructor(public connectedUserService: ConnectedUserService) {}
+    public readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     public success: boolean = false;
     public errorMessage: MGPOptional<string> = MGPOptional.empty();

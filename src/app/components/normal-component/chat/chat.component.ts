@@ -1,25 +1,24 @@
-import { Component, Input, OnDestroy, ElementRef, ViewChild, OnInit, AfterViewChecked } from '@angular/core';
+import { formatDate } from '@angular/common';
+import { Component, ElementRef, OnInit, AfterViewChecked, OnDestroy, inject, viewChild, Signal } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faReply, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
-import { Utils } from '@everyboard/lib';
-
-import { FirestoreCollectionObserver } from '../../../dao/FirestoreCollectionObserver';
-import { Message, MessageDocument } from '../../../domain/Message';
-import { MinimalUser } from '../../../domain/MinimalUser';
+import { Message } from '../../../domain/Message';
 import { ChatService } from '../../../services/ChatService';
-import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { Debug } from '../../../utils/Debug';
 
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
+    imports: [ReactiveFormsModule, FormsModule, FaIconComponent],
 })
 @Debug.log
 export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
 
-    @Input() public chatId!: string;
-    @Input() public turn?: number;
+    private readonly chatService: ChatService = inject(ChatService);
+
     public userMessage: string = '';
 
     public connected: boolean = false;
@@ -34,42 +33,30 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
     private isNearBottom: boolean = true;
     private notYetScrolled: boolean = true;
 
-    private chatSubscription!: Subscription; // initialized in ngOnInit
+    private readonly chatDiv: Signal<ElementRef<HTMLElement> | undefined> = viewChild<ElementRef<HTMLElement>>('chatDiv');
 
-    @ViewChild('chatDiv')
-    private readonly chatDiv: ElementRef<HTMLElement>;
+    private chatSubscription!: Subscription;
 
-    public constructor(private readonly chatService: ChatService,
-                       private readonly connectedUserService: ConnectedUserService)
-    {
-    }
     public ngOnInit(): void {
-        Utils.assert(this.chatId != null && this.chatId !== '', 'No chat to join mentioned');
         this.loadChatContent();
     }
+
+    private loadChatContent(): void {
+        this.chatSubscription = this.chatService.subscribeToMessages((message: Message) => {
+            this.onMessageReceived(message);
+        });
+    }
+
+    public ngOnDestroy(): void {
+        this.chatSubscription.unsubscribe();
+    }
+
     public ngAfterViewChecked(): void {
         this.scrollToBottomIfNeeded();
     }
-    public loadChatContent(): void {
-        const updateMessages: (messages: MessageDocument[]) => void = (messages: MessageDocument[]) => {
-            this.updateMessages(messages.flatMap((doc: MessageDocument) => {
-                if (doc.data.postedTime == null) {
-                    // This is a local update that does not contain the time yet, ignore it
-                    return [];
-                }
-                return [doc.data];
-            }));
-        };
-        const callback: FirestoreCollectionObserver<Message> = new FirestoreCollectionObserver(
-            updateMessages,
-            updateMessages,
-            () => {
-                // We don't care about deleted messages
-            });
-        this.chatSubscription = this.chatService.subscribeToMessages(this.chatId, callback);
-    }
-    public updateMessages(newMessages: Message[]): void {
-        this.chat = this.chat.concat(newMessages);
+
+    private onMessageReceived(message: Message): void {
+        this.chat.push(message);
         const nbMessages: number = this.chat.length;
         if (this.visible && this.isNearBottom) {
             this.readMessages = nbMessages;
@@ -79,6 +66,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.updateUnreadMessagesText(nbMessages - this.readMessages);
         }
     }
+
     private updateUnreadMessagesText(unreadMessages: number): void {
         if (this.visible && this.isNearBottom === false) {
             this.showUnreadMessagesButton = true;
@@ -95,6 +83,7 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.unreadMessagesText = $localize`${unreadMessages} new messages`;
         }
     }
+
     private scrollToBottomIfNeeded(): void {
         if (this.visible) {
             if (this.isNearBottom || this.notYetScrolled) {
@@ -102,36 +91,39 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             }
         }
     }
+
     public updateCurrentScrollPosition(): void {
         const threshold: number = 10;
-        const position: number = this.chatDiv.nativeElement.scrollTop + this.chatDiv.nativeElement.offsetHeight;
-        const height: number = this.chatDiv.nativeElement.scrollHeight;
+        const position: number = this.chatDiv()!.nativeElement.scrollTop + this.chatDiv()!.nativeElement.offsetHeight;
+        const height: number = this.chatDiv()!.nativeElement.scrollHeight;
         this.isNearBottom = position > height - threshold;
     }
+
     public scrollToBottom(): void {
-        if (this.chatDiv == null) {
+        const chatDiv: ElementRef<HTMLElement> | undefined = this.chatDiv();
+        if (chatDiv == null) {
             return;
         }
         this.updateUnreadMessagesText(0);
-        this.scrollTo(this.chatDiv.nativeElement.scrollHeight);
+        this.scrollTo(chatDiv.nativeElement.scrollHeight);
         this.notYetScrolled = false;
     }
+
+    // public for testing purpose only
     public scrollTo(position: number): void {
-        this.chatDiv.nativeElement.scroll({
+        this.chatDiv()!.nativeElement.scroll({
             top: position,
             left: 0,
             behavior: 'smooth',
         });
     }
+
     public async sendMessage(): Promise<void> {
         const content: string = this.userMessage;
         this.userMessage = ''; // clears it first to seem more responsive
-        const sender: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-        await this.chatService.sendMessage(this.chatId, sender, content, this.turn);
+        await this.chatService.sendMessage(content);
     }
-    public ngOnDestroy(): void {
-        this.chatSubscription.unsubscribe();
-    }
+
     public switchChatVisibility(): void {
         if (this.visible) {
             this.visible = false;
@@ -141,5 +133,9 @@ export class ChatComponent implements OnInit, AfterViewChecked, OnDestroy {
             this.scrollToBottom();
             this.readMessages = this.chat.length;
         }
+    }
+
+    public formatTimestamp(timestamp: number): string {
+        return formatDate(timestamp, 'HH:mm:ss', 'en-US');
     }
 }
