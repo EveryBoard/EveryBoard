@@ -14,6 +14,7 @@ export class ConfigRoomMocks {
             creatorElo: 0,
 
             chosenOpponent: null,
+            chosenOpponentElo: null,
             status: Status.CREATED,
 
             // We don't want the first player to be random here, to minimize non-deterministic tests

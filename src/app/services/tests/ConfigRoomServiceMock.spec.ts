@@ -4,14 +4,14 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { ConfigProposal, ConfigRoom } from '../../domain/ConfigRoom';
 import { MinimalUser } from '../../domain/MinimalUser';
-import { AbstractConfigRoomService } from '../ConfigRoomService';
+import { AbstractConfigRoomService, Candidate } from '../ConfigRoomService';
 
 export class ConfigRoomServiceMock extends AbstractConfigRoomService {
 
     private subscribedCallback: MGPOptional<{
         configRoomUpdate: (configRoom: ConfigRoom) => void,
         configRoomDeleted: () => void,
-        candidateJoined: (candidate: MinimalUser) => void,
+        candidateJoined: (candidate: Candidate) => void,
         candidateLeft: (candidate: MinimalUser) => void,
         error: (reason: string) => void,
     }> = MGPOptional.empty();
@@ -19,7 +19,7 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
     public override async join(gameId: string,
                                configRoomUpdate: (configRoom: ConfigRoom) => void,
                                configRoomDeleted: () => void,
-                               candidateJoined: (candidate: MinimalUser) => void,
+                               candidateJoined: (candidate: Candidate) => void,
                                candidateLeft: (candidate: MinimalUser) => void,
                                error: (reason: string) => void)
     : Promise<Subscription> {
@@ -52,9 +52,9 @@ export class ConfigRoomServiceMock extends AbstractConfigRoomService {
         this.subscribedCallback.get().configRoomUpdate(configRoom);
     }
 
-    public mockCandidateJoined(candidate: MinimalUser): void {
+    public mockCandidateJoined(user: MinimalUser, elo: number): void {
         Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
-        this.subscribedCallback.get().candidateJoined(candidate);
+        this.subscribedCallback.get().candidateJoined({ user, elo });
     }
 
     public mockCandidateLeft(candidate: MinimalUser): void {

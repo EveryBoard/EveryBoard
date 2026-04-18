@@ -214,11 +214,12 @@ def run(root_dir: str, is_dry_run: bool):
 if __name__ == "__main__":
     import sys
 
-    if len(sys.argv) != 3:
-        print(f"Usage: {sys.argv[0]} <path> <is-dry-run>")
-        print("  <path> is the path where to recursively adapt imports (in all .ts files)")
-        print("  <is-dry-run> is true to do a dry run, anything else otherwise")
-        print(f"  the usual way to run it is: {sys.argv[0]} src/ false -1")
+    path = "./src/"
+    if len(sys.argv) == 2:
+        path = sys.argv[1]
+    elif len(sys.argv) > 2:
+        print(f"Usage: {sys.argv[0]} [<path>]")
+        print("  <path> is the path where to recursively adapt imports (in all .ts files), ./src by default")
         sys.exit(1)
 
-    run(sys.argv[1], sys.argv[2].lower() == "true")
+    run(path, False)

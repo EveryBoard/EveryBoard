@@ -1,10 +1,8 @@
 package model
 
 import (
-	"encoding/json"
 	"errors"
 	"fmt"
-	"log"
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
@@ -43,7 +41,7 @@ func InitDatabase(dialector gorm.Dialector) error {
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate ConfigRoom): %v", err)
 	}
 
 	// Create first config room, which is actually the lobby
@@ -63,38 +61,38 @@ func InitDatabase(dialector gorm.Dialector) error {
 		}
 		result := db.Create(&lobby)
 		if result.Error != nil {
-			return fmt.Errorf("Cannot initialize DB: %v", err)
+			return fmt.Errorf("Cannot initialize DB (Create lobby): %v", err)
 		}
 	}
 
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Message): %v", err)
 	}
 
 	err = db.AutoMigrate(&Elo{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Elo): %v", err)
 	}
 
 	err = db.AutoMigrate(&Candidate{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Candidate): %v", err)
 	}
 
 	err = db.AutoMigrate(&Game{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate Game): %v", err)
 	}
 
 	err = db.AutoMigrate(&GameEvent{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB (AutoMigrate GameEvent): %v", err)
 	}
 
 	err = db.AutoMigrate(&CurrentGame{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v", err)
+		return fmt.Errorf("Cannot initialize DB: %v (AutoMigrate CurrentGame)", err)
 	}
 	return nil
 }
@@ -116,16 +114,17 @@ func CreateConfigRoom(creator MinimalUser, gameName string) (*ConfigRoom, error)
 	}
 
 	configRoom := ConfigRoom{
-		Creator:        creator,
-		CreatorElo:     creatorElo.CurrentElo,
-		FirstPlayer:    FirstPlayerRandom,
-		ChosenOpponent: nil,
-		Status:         StatusCreated,
-		GameType:       GameTypeStandard,
-		MoveDuration:   StandardMoveDuration,
-		GameDuration:   StandardGameDuration,
-		RulesConfig:    nil,
-		GameName:       gameName,
+		Creator:           creator,
+		CreatorElo:        creatorElo.CurrentElo,
+		FirstPlayer:       FirstPlayerRandom,
+		ChosenOpponent:    nil,
+		ChosenOpponentElo: nil,
+		Status:            StatusCreated,
+		GameType:          GameTypeStandard,
+		MoveDuration:      StandardMoveDuration,
+		GameDuration:      StandardGameDuration,
+		RulesConfig:       nil,
+		GameName:          gameName,
 	}
 
 	result := db.Create(&configRoom)
@@ -138,13 +137,21 @@ func (configRoom ConfigRoom) Delete() error {
 }
 
 func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
-	result := db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent})
-	toPrint, _ := json.Marshal(configRoom)
-	log.Printf("config room: %s", toPrint)
+	var candidateElo float64
+	result := db.Model(&Candidate{}).
+		Select("elo").
+		Where("game_id = ? AND user_id = ?", configRoom.ID, opponent.ID).
+		Scan(&candidateElo)
+	if result.Error != nil {
+		return wrapError("SelectOpponent", result.Error)
+	}
+	result = db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidateElo})
+	if result.Error != nil {
+		return wrapError("SelectOpponent", result.Error)
+	}
 	configRoom.ChosenOpponent = &opponent
-	toPrint, _ = json.Marshal(configRoom)
-	log.Printf("config room: %s", toPrint)
-	return wrapError("SelectOpponent", result.Error)
+	configRoom.ChosenOpponentElo = &candidateElo
+	return result.Error
 }
 
 func (configRoom *ConfigRoom) RemoveOpponent() error {
@@ -152,6 +159,7 @@ func (configRoom *ConfigRoom) RemoveOpponent() error {
 	result := db.Model(configRoom).Updates(map[string]interface{}{
 		"chosen_opponent_id":   nil,
 		"chosen_opponent_name": nil,
+		"chosen_opponent_elo":  nil,
 	})
 	configRoom.ChosenOpponent = nil
 	return wrapError("RemoveOpponent", result.Error)
@@ -195,11 +203,13 @@ func (configRoom *ConfigRoom) Finish() error {
 }
 
 func (configRoom ConfigRoom) CreateRematch(creator MinimalUser, game Game) (*ConfigRoom, error) {
+	// Get the new elo of the creator of the rematch
 	creatorElo, err := GetElo(configRoom.GameName, creator)
 	if err != nil {
 		return nil, wrapError("CreateRematchConfigRoom", err)
 	}
 
+	// Compute who is the new opponent and who plays first
 	var firstPlayer FirstPlayer
 	var chosenOpponent MinimalUser
 	if game.PlayerZero.ID == creator.ID {
@@ -210,19 +220,26 @@ func (configRoom ConfigRoom) CreateRematch(creator MinimalUser, game Game) (*Con
 		chosenOpponent = game.PlayerZero
 	}
 
-	rematchConfigRoom := ConfigRoom{
-		Creator:        creator,
-		CreatorElo:     creatorElo.CurrentElo,
-		FirstPlayer:    firstPlayer,
-		ChosenOpponent: &chosenOpponent,
-		Status:         StatusStarted,
-		GameType:       configRoom.GameType,
-		MoveDuration:   configRoom.MoveDuration,
-		GameDuration:   configRoom.GameDuration,
-		RulesConfig:    configRoom.RulesConfig,
-		GameName:       configRoom.GameName,
+	// Get the new elo of the opponent
+	chosenOpponentElo, err := GetElo(configRoom.GameName, chosenOpponent)
+	if err != nil {
+		return nil, wrapError("CreateRematchConfigRoom", err)
 	}
 
+	// Create the config room for the rematch, as every game needs an associated config room
+	rematchConfigRoom := ConfigRoom{
+		Creator:           creator,
+		CreatorElo:        creatorElo.CurrentElo,
+		FirstPlayer:       firstPlayer,
+		ChosenOpponent:    &chosenOpponent,
+		ChosenOpponentElo: &chosenOpponentElo.CurrentElo,
+		Status:            StatusStarted,
+		GameType:          configRoom.GameType,
+		MoveDuration:      configRoom.MoveDuration,
+		GameDuration:      configRoom.GameDuration,
+		RulesConfig:       configRoom.RulesConfig,
+		GameName:          configRoom.GameName,
+	}
 	result := db.Create(&rematchConfigRoom)
 	return &rematchConfigRoom, wrapError("CreateRematchConfigRoom", result.Error)
 }
@@ -276,22 +293,30 @@ func (configRoom *ConfigRoom) CreateGame(now int64, rand_bool bool) (*Game, erro
 	}
 
 	var playerZero MinimalUser
+	var playerZeroElo float64
 	var playerOne MinimalUser
+	var playerOneElo float64
 	if starter == FirstPlayerCreator {
 		playerZero = configRoom.Creator
+		playerZeroElo = configRoom.CreatorElo
 		playerOne = *configRoom.ChosenOpponent
+		playerOneElo = *configRoom.ChosenOpponentElo
 	} else {
 		playerZero = *configRoom.ChosenOpponent
+		playerZeroElo = *configRoom.ChosenOpponentElo
 		playerOne = configRoom.Creator
+		playerOneElo = configRoom.CreatorElo
 	}
 
 	game := Game{
-		GameID:     configRoom.ID,
-		GameName:   configRoom.GameName,
-		PlayerZero: playerZero,
-		PlayerOne:  playerOne,
-		Result:     ResultInProgress,
-		Beginning:  now,
+		GameID:        configRoom.ID,
+		GameName:      configRoom.GameName,
+		PlayerZero:    playerZero,
+		PlayerZeroElo: playerZeroElo,
+		PlayerOne:     playerOne,
+		PlayerOneElo:  playerOneElo,
+		Result:        ResultInProgress,
+		Beginning:     now,
 	}
 	result := db.Create(&game)
 	return &game, wrapError("CreateGame", result.Error)
