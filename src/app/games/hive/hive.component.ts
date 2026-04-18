@@ -279,9 +279,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    public override hideLastMove(): void {
-        return;
-    }
+    public override hideLastMove(): void {}
 
     private getLastMoveCoords(move: HiveMove): Coord[] {
         let lastMove: Coord[] = [];

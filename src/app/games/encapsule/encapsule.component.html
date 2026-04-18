@@ -4,7 +4,7 @@
      preserveAspectRatio="xMidYMid meet">
     @for (player of Player.PLAYERS; track player) {
         <g #remainingPieces>
-            @for (piece of getRemainingPiecesTypeOfPlayer(player); track piece; let pieceIdX = $index) {
+            @for (piece of getRemainingPiecesTypeOfPlayer(player); track $index; let pieceIdX = $index) {
                 <g id="remaining-piece-{{ piece.toString() }}"
                    (click)="onPieceClick(piece)"
                    [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
@@ -25,9 +25,9 @@
         </g>
     }
     <g #boardDiv>
-        @for (line of board; track line; let y = $index) {
+        @for (line of board; track $index; let y = $index) {
             <g>
-                @for (spaceContent of line; track spaceContent; let x = $index) {
+                @for (spaceContent of line; track $index; let x = $index) {
                     <g>
                         <rect id="click-{{ x }}-{{ y }}"
                               (click)="onBoardClick(x, y)"
@@ -37,7 +37,7 @@
                               [attr.height]="SPACE_SIZE"
                               [ngClass]="boardPieces[y][x].coordClasses"
                               class="base"/>
-                        @for (pieceData of boardPieces[y][x].piecesData; track pieceData) {
+                        @for (pieceData of boardPieces[y][x].piecesData; track $index) {
                             <g app-ring
                                id="piece-{{ x }}-{{ y }}"
                                (click)="onBoardClick(x, y)"
