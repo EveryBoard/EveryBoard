@@ -184,11 +184,10 @@ describe('QuartoRules', () => {
                 [____, ____, ____, AABA],
             ];
             const state: QuartoState = new QuartoState(board, 10, AABA);
-
-            // When evaluating it's board status
-            // Then it should be a victory for Player.ONE
             const node: QuartoNode = new QuartoNode(state);
 
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -227,8 +226,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 4, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then that player should win
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
         });
 
@@ -247,8 +246,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 4, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ZERO should win
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
 
@@ -267,8 +266,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ZERO should win
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
 
@@ -287,8 +286,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 7, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ONE should win
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
         });
 
@@ -307,8 +306,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ZERO should win
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
 

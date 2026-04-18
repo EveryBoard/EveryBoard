@@ -55,10 +55,13 @@ describe('RulesConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    interface TestRulesConfig extends RulesConfig {
+    type TestRulesConfig = RulesConfig & {
+
         nombre: number;
+
         canailleDeBoule: number;
-    }
+
+    };
 
     const secondConfig: TestRulesConfig = { nombre: 42, canailleDeBoule: 42 };
 

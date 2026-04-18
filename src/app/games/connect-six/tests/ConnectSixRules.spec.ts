@@ -330,6 +330,9 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: ConnectSixNode = new ConnectSixNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

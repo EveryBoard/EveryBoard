@@ -52,6 +52,10 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         return GoRules.singleton.get();
     }
 
+    public constructor() {
+        super(true);
+    }
+
     public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
         const config: GoConfig = optionalConfig.get();
         const board: GoPiece[][] = GoState.getStartingBoard(config.width, config.height);

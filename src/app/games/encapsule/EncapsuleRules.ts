@@ -8,6 +8,7 @@ import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -18,18 +19,19 @@ import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap, EncapsuleRemainingPieces } from './EncapsuleState';
 
-export type EncapsuleConfig = {
+export type EncapsuleConfig = RulesConfig & {
 
-    nInARow: number,
+    nInARow: number;
 
-    width: number,
+    width: number;
 
-    height: number,
+    height: number;
 
-    nbOfSizes: number,
+    nbOfSizes: number;
 
-    nbOfEachPiece: number,
-}
+    nbOfEachPiece: number;
+
+};
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 
