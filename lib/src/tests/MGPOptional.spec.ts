@@ -119,6 +119,10 @@ describe('MGPOptional', () => {
         it('should include value for non-empty values', () => {
             expect(MGPOptional.of('foo').toString()).toBe('MGPOptional.of(foo)');
         });
+
+        it('should rely on the toString of the contained value', () => {
+            expect(MGPOptional.of(MGPOptional.of('foo')).toString()).toBe('MGPOptional.of(MGPOptional.of(foo))');
+        });
     });
 
     describe('map', () => {
