@@ -8,11 +8,12 @@
                 <g id="remaining-piece-{{ piece.toString() }}"
                    (click)="onPieceClick(piece)"
                    [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
-                    <app-ring [outsideRadius]="pieceSizeToRadius.get(piece).get()"
-                              [width]="ringStrokeWidth / 2"
-                              [strokeWidth]="ringStrokeWidth / 4"
-                              [midRingClasses]="getSidePieceClasses(piece)"
-                              pointer-events="fill" />
+                    <g app-ring
+                       [outsideRadius]="pieceSizeToRadius.get(piece).get()"
+                       [width]="ringStrokeWidth / 2"
+                       [strokeWidth]="ringStrokeWidth / 4"
+                       [midRingClasses]="getSidePieceClasses(piece)"
+                       pointer-events="fill" />
                     <text id="player-{{ player.toString() }}-pieces-{{ piece.toString() }}-count"
                           class="backgrounded-text text-big"
                           dominant-baseline="middle"
@@ -37,13 +38,14 @@
                               [ngClass]="boardPieces[y][x].coordClasses"
                               class="base"/>
                         @for (pieceData of boardPieces[y][x].piecesData; track pieceData) {
-                            <app-ring id="piece-{{ x }}-{{ y }}"
-                                      (click)="onBoardClick(x, y)"
-                                      [attr.transform]="pieceData.translate"
-                                      [outsideRadius]="pieceData.radius"
-                                      [width]="ringStrokeWidth / 2"
-                                      [strokeWidth]="ringStrokeWidth / 4"
-                                      [midRingClasses]="pieceData.classes" />
+                            <g app-ring
+                               id="piece-{{ x }}-{{ y }}"
+                               (click)="onBoardClick(x, y)"
+                               [attr.transform]="pieceData.translate"
+                               [outsideRadius]="pieceData.radius"
+                               [width]="ringStrokeWidth / 2"
+                               [strokeWidth]="ringStrokeWidth / 4"
+                               [midRingClasses]="pieceData.classes" />
                         }
                     </g>
                 }

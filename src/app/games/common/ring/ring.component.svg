@@ -4,9 +4,9 @@
             class="no-fill"
 />
 <svg:circle [attr.r]="midRingRadius"
-            class="no-fill"
             [attr.stroke-width]="width"
             [ngClass]="midRingClasses"
+            class="no-fill"
 />
 <svg:circle [attr.r]="insideStrokeRadius"
             [attr.stroke-width]="strokeWidth"

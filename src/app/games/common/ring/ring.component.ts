@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
-    selector: 'app-ring',
+    selector: '[app-ring]',
     templateUrl: './ring.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
@@ -12,7 +12,7 @@ export class RingComponent implements OnChanges {
     // outside radius meaning circle.r + (circle.strokeWidth / 2)
     @Input() public outsideRadius: number = 100;
 
-    @Input() public strokeColor: string = 'black';
+    @Input() public strokeColor: string = 'var(--base-stroke)';
 
     @Input() public strokeWidth: number;
 
