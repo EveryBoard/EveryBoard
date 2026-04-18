@@ -63,6 +63,7 @@ describe('Encoder', () => {
             EncoderTestUtils.expectToBeBijective(pairEncoder, new Pair(0, 2));
             EncoderTestUtils.expectToBeBijective(tripletEncoder, new Triplet([0, 3, 4]));
         });
+
     });
 
     describe('disjunction', () => {
@@ -93,13 +94,29 @@ describe('Encoder', () => {
                                                                                  [numberEncoder, booleanEncoder]);
             expect(() => wrongEncoder.encode(value)).toThrowError('cannot encode value: 4');
         });
+
+        it('should throw a clear error when the type index in encoded data is out of bounds', () => {
+            // Given a disjunction encoder over 2 variants
+            // When decoding invalid data with an out-of-range type index
+            const invalid: JSONValueWithoutArray = { type: 99, encoded: 42 };
+            // Then it should throw a descriptive error
+            expect(() => encoder.decode(invalid)).toThrowError('Assertion failure: Encoders.disjunction got invalid data: 99 is not an existing type');
+        });
     });
 
     describe('list', () => {
+        const baseEncoder: Encoder<number> = Encoder.identity();
+        const encoder: Encoder<Array<number>> = Encoder.list(baseEncoder);
+
         it('should provide a bijective encoder', () => {
-            const baseEncoder: Encoder<number> = Encoder.identity();
-            const encoder: Encoder<Array<number>> = Encoder.list(baseEncoder);
             EncoderTestUtils.expectToBeBijective(encoder, [1, 2, 3]);
+        });
+
+        it('should throw a clear error when decoding a non-array', () => {
+            // When decoding a non-array value (e.g. corrupted/wrong JSON)
+            // Then it should throw a descriptive error
+            expect(() => encoder.decode(42)).toThrowError('Assertion failure: Encoders.list got invalid data 42 is not an array');
+            expect(() => encoder.decode(null)).toThrowError('Assertion failure: Encoders.list got invalid data null is not an array');
         });
     });
 

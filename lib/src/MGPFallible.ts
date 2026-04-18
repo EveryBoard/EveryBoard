@@ -128,7 +128,7 @@ export class MGPFallibleTestUtils {
 
     public static expectToBeSuccess<T>(fallible: MGPFallible<T>, value?: T): void {
         expect(fallible.isSuccess()).toBeTrue();
-        if (value != null) {
+        if (arguments.length > 1 && value != null) {
             expect(fallible.get()).toBe(value);
         }
     }

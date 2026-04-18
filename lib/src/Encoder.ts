@@ -52,11 +52,13 @@ export abstract class Encoder<T> {
             }
             public decode(encoded: NonNullable<JSONValueWithoutArray>): T {
                 const fields: Record<string, unknown> = {};
-                Object.keys(encoders).reverse().forEach((key: string): void => {
+                Object.keys(encoders).forEach((key: string): void => {
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
                     fields[key] = encoders[key].decode(field);
                 });
-                return decode(Object.values(fields) as Fields);
+                // We rely on the ordering of the encoders, hence Object.keys(encoders)
+                const actualFields: Fields = Object.keys(encoders).map((k: string) => fields[k]) as Fields
+                return decode(actualFields);
             }
         };
     }
@@ -88,6 +90,7 @@ export abstract class Encoder<T> {
                 const type_: number = Utils.getNonNullable(encoded)['type'];
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
+                Utils.assert(type_ <= encoders.length, `Encoders.disjunction got invalid data: ${type_} is not an existing type`);
                 return encoders[type_].decode(content) as U;
             }
         };
@@ -104,6 +107,7 @@ export abstract class Encoder<T> {
                 });
             }
             public decode(encoded: JSONValue): T[] {
+                Utils.assert(Array.isArray(encoded), `Encoders.list got invalid data ${encoded} is not an array`);
                 const casted: Array<JSONValue> = encoded as Array<JSONValue>;
                 return casted.map(encoder.decode);
             }
