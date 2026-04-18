@@ -2,7 +2,6 @@ export * from './ArrayUtils';
 export * from './Combinatorics';
 export * from './Comparable';
 export * from './Encoder';
-export * from './index';
 export * from './JSON';
 export * from './MathUtils';
 export * from './MGPFallible';
