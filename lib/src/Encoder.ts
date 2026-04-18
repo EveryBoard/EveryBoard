@@ -57,7 +57,7 @@ export abstract class Encoder<T> {
                     fields[key] = encoders[key].decode(field);
                 });
                 // We rely on the ordering of the encoders, hence Object.keys(encoders)
-                const actualFields: Fields = Object.keys(encoders).map((k: string) => fields[k]) as Fields
+                const actualFields: Fields = Object.keys(encoders).map((k: string) => fields[k]) as Fields;
                 return decode(actualFields);
             }
         };

@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '../MGPOptional';
 import { OptimizedSet } from '../OptimizedSet';
 
 import { Pair } from './Pair.spec';
@@ -8,7 +7,6 @@ class PairSet extends OptimizedSet<Pair> {
     protected override toFields(value: Pair): [number[], number] {
         return [[value.first], value.second];
     }
-
 }
 
 describe('OptimizedSet', () => {
@@ -66,7 +64,7 @@ describe('OptimizedSet', () => {
             }
             expect(elementsSeen.length).toBe(2);
             expect(elementsSeen).toContain(new Pair(1, 1));
-                expect(elementsSeen).toContain(new Pair(1, 2));
+            expect(elementsSeen).toContain(new Pair(1, 2));
         });
     });
 });
