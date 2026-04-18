@@ -7,8 +7,14 @@
   "module": "./dist/index.js",
   "exports": {
     ".": {
-      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts",
+      "import": "./dist/esm/index.js",
       "require": "./dist/index.js"
+    },
+    "./testing": {
+      "types": "./dist/testing.d.ts",
+      "import": "./dist/esm/testing.js",
+      "require": "./dist/testing.js"
     }
   },
   "types": "./dist/index.d.ts",
@@ -16,7 +22,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "build": "tsc --build && tsc --project tsconfig.esm.json",
     "watch": "tsc --watch",
     "test": "nyc -x '**/*.spec.ts' --reporter=lcov --reporter=text --reporter=text-summary npx jasmine --config=jasmine.json",
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"

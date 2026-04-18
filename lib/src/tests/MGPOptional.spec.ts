@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Encoder, EncoderTestUtils } from '../Encoder';
+import { Encoder } from '../Encoder';
+import { EncoderTestUtils } from './EncoderTestUtils';
 import { MGPOptional } from '../MGPOptional';
 
 describe('MGPOptional', () => {

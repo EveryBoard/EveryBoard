@@ -12,10 +12,10 @@ export abstract class Encoder<T> {
     : Encoder<U> {
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
-                return toJSON(value);
+                return toJSON(value)
             }
             public decode(encoded: NonNullable<JSONValueWithoutArray>): U {
-                return fromJSON(encoded);
+                return fromJSON(encoded)
             }
         };
     }
@@ -75,7 +75,7 @@ export abstract class Encoder<T> {
             public encode(value: U): JSONValueWithoutArray {
                 let indexClass: number = 0;
                 for (const identifier of typePredicates) {
-                    if (identifier(value) === true) {
+                    if (identifier(value)) {
                         return {
                             type: indexClass,
                             encoded: encoders[indexClass].encode(value),
@@ -119,13 +119,3 @@ export abstract class Encoder<T> {
     public abstract decode(encodedMove: JSONValue): T;
 }
 
-/**
- * This is a helper class to test encoders
- */
-export class EncoderTestUtils {
-    public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
-        const encoded: JSONValue = encoder.encode(value);
-        const decoded: T = encoder.decode(encoded);
-        expect(decoded).withContext(`Expected decoded value (${decoded}) to be ${value}`).toEqual(value);
-    }
-}

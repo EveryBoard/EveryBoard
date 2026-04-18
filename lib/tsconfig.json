@@ -1,13 +1,20 @@
 {
-    "extends": "../tsconfig.json",
     "compilerOptions": {
         "module": "commonjs",
-        "moduleResolution": "node",
+        "moduleResolution": "bundler",
         "rootDir": "./src",
         "outDir": "./dist",
-        "declaration": true
+        "declaration": true,
+        "target": "es2022",
+        "lib": ["es2020", "dom"],
+        "esModuleInterop": true,
+        "strict": true,
+        "noImplicitAny": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false,
+        "experimentalDecorators": true,
+        "types": ["jasmine"]
     },
-    "files": [],
     "include": ["src/**/*.ts"],
     "exclude": ["src/**/*.spec.ts"]
 }

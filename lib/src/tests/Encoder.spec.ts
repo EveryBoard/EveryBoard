@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { ArrayUtils } from '../ArrayUtils';
 import { ComparableObject } from '../Comparable';
-import { Encoder, EncoderTestUtils } from '../Encoder';
+import { Encoder } from '../Encoder';
+import { EncoderTestUtils } from './EncoderTestUtils';
 import { JSONValueWithoutArray } from '../JSON';
 
 import { Pair } from './Pair.spec';

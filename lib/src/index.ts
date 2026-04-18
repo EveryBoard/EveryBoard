@@ -13,6 +13,5 @@ export * from './MGPValidation';
 export * from './NumberMap';
 export * from './OptimizedSet';
 export * from './Sets';
-export * from './TestUtils';
 export * from './TimeUtils';
 export * from './Utils';

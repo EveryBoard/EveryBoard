@@ -2,7 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { TestUtils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Player } from '../../../jscaip/Player';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
