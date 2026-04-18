@@ -13,7 +13,7 @@
                  stroke-linecap="round"/>
     }
 
-    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.toString()) {
+    @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <g>
             @if (isReachable(coordAndContent.content)) {
                 <g [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)">
