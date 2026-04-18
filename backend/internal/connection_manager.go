@@ -92,6 +92,9 @@ func (connectionManager *ConnectionManager[Connection]) AddConnection(user model
 					}
 
 					toSend, err := json.Marshal([]any{message.Tag(), message})
+					if err != nil {
+						log.Printf("error when marshalling message: %v", err)
+					}
 					log.Printf("\033[32m>>> [%s] %v\033[0m", user.Name, string(toSend))
 					err = client.WriteMessage(websocket.TextMessage, toSend)
 					if err != nil && !(websocket.IsCloseError(err) || err == websocket.ErrCloseSent) {

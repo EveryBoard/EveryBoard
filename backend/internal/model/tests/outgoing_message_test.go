@@ -31,11 +31,13 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		GameName:     "Go",
 	}
 	game := model.Game{
-		GameName:   "Go",
-		PlayerZero: minimalUser,
-		PlayerOne:  model.MinimalUser{ID: "bar", Name: "bar"},
-		Result:     model.ResultInProgress,
-		Beginning:  42,
+		GameName:      "Go",
+		PlayerZero:    minimalUser,
+		PlayerZeroElo: 42.0,
+		PlayerOne:     model.MinimalUser{ID: "bar", Name: "bar"},
+		PlayerOneElo:  100.0,
+		Result:        model.ResultInProgress,
+		Beginning:     42,
 	}
 	gameEvent := model.GameEvent{
 		Timestamp: 42,
@@ -60,7 +62,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 			GameID:     42,
 			ConfigRoom: configRoom,
 		},
-		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
+		`{"gameId":"JgaEB","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1200,"rulesConfig":null,"gameName":"Go"}}`, "ConfigRoomUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.ConfigRoomDeletedMessage{
@@ -71,8 +73,9 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.CandidateJoinedMessage{
 			Candidate: minimalUser,
+			Elo:       42.0,
 		},
-		`{"candidate":{"id":"foo","name":"foo"}}`, "CandidateJoined")
+		`{"candidate":{"id":"foo","name":"foo"},"elo":42}`, "CandidateJoined")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.CandidateLeftMessage{
@@ -84,7 +87,7 @@ func TestMarshalOutgoingMessages(t *testing.T) {
 		model.GameUpdateMessage{
 			Game: game,
 		},
-		`{"game":{"gameName":"Go","playerZero":{"id":"foo","name":"foo"},"playerOne":{"id":"bar","name":"bar"},"result":"InProgress","beginning":42}}`, "GameUpdate")
+		`{"game":{"gameName":"Go","playerZero":{"id":"foo","name":"foo"},"playerZeroElo":42,"playerOne":{"id":"bar","name":"bar"},"playerOneElo":100,"result":"InProgress","beginning":42}}`, "GameUpdate")
 
 	ExpectMarshallingToWorkAndTagToBe(t,
 		model.GameEventMessage{
