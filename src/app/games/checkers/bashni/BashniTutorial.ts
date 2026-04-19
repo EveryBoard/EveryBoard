@@ -122,6 +122,25 @@ export class BashniTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You did not choose the correct piece, and got no promotion.`,
         ),
+        TutorialStep.fromMove(
+            $localize`Promotion mid-capture`,
+            $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two Light pieces — your piece will promote mid-sequence and continue as a king!`,
+            CheckersState.of([
+                [__, __, __, __, __, __, __, __],
+                [__, _v, __, _v, __, __, __, __],
+                [__, __, __, __, _u, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+            ], 0),
+            [
+                CheckersMove.fromCapture([new Coord(4, 2), new Coord(2, 0), new Coord(0, 2)]).get(),
+            ],
+            TutorialStepMessage.CONGRATULATIONS(),
+            $localize`That is not the right move. Your piece can reach the last line and continue capturing as a king!`,
+        ),
         TutorialStep.anyMove(
             $localize`King move`,
             $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king!`,

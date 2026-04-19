@@ -31,6 +31,8 @@ export class BashniRules extends AbstractCheckersRules {
                     new BooleanConfig(false, CheckersOptionLocalizable.OCCUPY_EVEN_SQUARE),
                 frisianCaptureAllowed:
                     new BooleanConfig(false, CheckersOptionLocalizable.FRISIAN_CAPTURE_ALLOWED),
+                canPromoteMidCapture:
+                    new BooleanConfig(true, CheckersOptionLocalizable.CAN_PROMOTE_MID_CAPTURE),
             },
         });
 

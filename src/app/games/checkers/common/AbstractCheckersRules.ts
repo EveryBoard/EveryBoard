@@ -25,6 +25,7 @@ export type CheckersConfig = {
     promotedPiecesCanFly: boolean;
     occupyEvenSquare: boolean;
     frisianCaptureAllowed: boolean;
+    canPromoteMidCapture: boolean;
 }
 
 export class CheckersOptionLocalizable {
@@ -40,6 +41,9 @@ export class CheckersOptionLocalizable {
     public static readonly OCCUPY_EVEN_SQUARE: Localized = () => $localize`Occupy upper-left corner`;
 
     public static readonly FRISIAN_CAPTURE_ALLOWED: Localized = () => $localize`Can do frisian captures`;
+
+    public static readonly CAN_PROMOTE_MID_CAPTURE: Localized =
+        () => $localize`Piece that reaches the last line during a capture continues as king`;
 
 }
 
@@ -104,10 +108,14 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                 const landings: Coord[] =
                     this.getLandableCoords(state, coord, captured.get(), direction, flyiedOvers, config);
                 for (const landing of landings) {
+                    let landingPiece: CheckersStack = moved;
+                    if (config.canPromoteMidCapture && landing.y === state.getFinishLineOf(pieceOwner)) {
+                        landingPiece = moved.promoteCommander();
+                    }
                     const fakePostCaptureState: CheckersState = state
                         .remove(coord)
                         .remove(captured.get())
-                        .set(landing, moved);
+                        .set(landing, landingPiece);
                     // Not needed to do the real capture
                     const startOfMove: CheckersMove = CheckersMove.fromCapture([coord, landing]).get();
                     const newFlyiedOvers: Coord[] = flyiedOvers.concat(...coord.getCoordsToward(landing, false, true));
@@ -325,9 +333,12 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             }
         }
         resultingState = resultingState.set(moveEnd, movingStack);
-        if (moveEnd.y === state.getFinishLineOf(state.getCurrentPlayer())) {
-            const promotedCommander: CheckersStack = movingStack.promoteCommander();
-            resultingState = resultingState.set(moveEnd, promotedCommander);
+        const finishLine: number = state.getFinishLineOf(state.getCurrentPlayer());
+        const promotedMidCapture: boolean =
+            config.get().canPromoteMidCapture &&
+            move.coords.toList().some((c: Coord) => c.y === finishLine);
+        if (moveEnd.y === finishLine || promotedMidCapture) {
+            resultingState = resultingState.set(moveEnd, movingStack.promoteCommander());
         }
         return resultingState.incrementTurn();
     }

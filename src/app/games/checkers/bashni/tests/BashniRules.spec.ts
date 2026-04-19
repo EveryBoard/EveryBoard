@@ -356,6 +356,92 @@ describe('BashniRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('should allow capture to continue as king after reaching promotion line mid-capture', () => {
+            // Given a board: U at (4,2), V at (3,1) and V at (1,1)
+            // U captures V at (3,1), lands at (2,0) [promotion line y=0],
+            // then continues as king to capture V at (1,1) and land at (0,2)
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, __V, ___, ___, ___, ___],
+                [___, ___, ___, ___, __U, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When performing the two-jump capture crossing the promotion line
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(4, 2),
+                new Coord(2, 0),
+                new Coord(0, 2),
+            ]).get();
+
+            // Then the move is legal and the piece ends up promoted with both captured pieces stacked
+            const OVV: CheckersStack = new CheckersStack([zeroKing, one, one]);
+            const expectedState: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [OVV, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
+        it('should generate the extended capture continuing as king after mid-capture promotion', () => {
+            // Given a board: U at (4,2), V at (3,1) and V at (1,1)
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, __V, ___, ___, ___, ___],
+                [___, ___, ___, ___, __U, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When listing all captures
+            const captures: CheckersMove[] = rules.getCompleteCaptures(state, defaultConfig.get());
+
+            // Then the extended three-coord capture is present (not just the one stopping at (2,0))
+            const extendedCapture: CheckersMove = CheckersMove.fromCapture([
+                new Coord(4, 2),
+                new Coord(2, 0),
+                new Coord(0, 2),
+            ]).get();
+            expect(captures.some((c: CheckersMove) => c.equals(extendedCapture))).toBeTrue();
+        });
+
+        it('should forbid stopping at the promotion line when king capture is available', () => {
+            // Given a board where the piece must continue capturing after reaching the promotion line
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, __V, ___, ___, ___, ___],
+                [___, ___, ___, ___, __U, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When trying to stop at the promotion line without taking the available king capture
+            const shortCapture: CheckersMove = CheckersMove.fromCapture([
+                new Coord(4, 2),
+                new Coord(2, 0),
+            ]).get();
+
+            // Then it should be forbidden
+            const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
+            RulesUtils.expectMoveFailure(rules, state, shortCapture, reason, defaultConfig);
+        });
+
     });
 
     describe('End Game', () => {
