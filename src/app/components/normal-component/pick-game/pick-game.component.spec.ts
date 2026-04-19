@@ -68,6 +68,7 @@ describe('PickGameComponent', () => {
         // Then it should not filter based on spaces
         testUtils.expectElementToExist('#image-Awale');
     }));
+
     it('should be insensitive to diacritics', fakeAsync(async() => {
         // Given a pick-game page with games including Awale
         testUtils.expectElementToExist('#image-Awale');
@@ -79,6 +80,19 @@ describe('PickGameComponent', () => {
 
         // Then it should not filter based on spaces
         testUtils.expectElementToExist('#image-Awale');
+    }));
+
+    it('should also search in urlName', fakeAsync(async() => {
+        // Given a pick-game page with games including P4
+        testUtils.expectElementToExist('#image-P4');
+        testUtils.detectChanges();
+
+        // When entering a search for P4 (its urlName, different from the display name)
+        testUtils.fillInput('#search-term', 'P4');
+        testUtils.detectChanges();
+
+        // Then it should find P4
+        testUtils.expectElementToExist('#image-P4');
     }));
 
 });

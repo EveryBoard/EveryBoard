@@ -367,9 +367,10 @@ export class PickGameComponent {
     }
 
     public search(input: EventTarget | null): void {
-        const searchTerm: string = (input as HTMLInputElement).value;
+        const searchTerm: string = this.normalize((input as HTMLInputElement).value);
         this.matchingGames = this.games.filter((info: GameInfo) =>
-            this.normalize(info.name).includes(this.normalize(searchTerm)));
+            this.normalize(info.name).includes(searchTerm) ||
+            this.normalize(info.urlName).includes(searchTerm));
     }
 
     private normalize(term: string): string {
