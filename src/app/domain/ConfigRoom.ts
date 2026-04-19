@@ -8,6 +8,7 @@ export type ConfigRoom = {
     readonly creatorElo: number;
 
     readonly chosenOpponent: MinimalUser | null;
+    readonly chosenOpponentElo: number | null;
     readonly status: Status;
 
     readonly firstPlayer: FirstPlayer;

@@ -453,10 +453,10 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, X],
             ], 10, defaultCastles);
-
-            // When evaluating its value
-            // Then it should be a victory
             const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -473,10 +473,10 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 10, defaultCastles);
-
-            // When evaluating its value
-            // Then it should be a victory
             const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -493,10 +493,10 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 10, defaultCastles);
-
-            // When evaluating its value
-            // Then it should be a victory
             const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -513,10 +513,10 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
             ], 10, defaultCastles);
-
-            // When evaluating its value
-            // Then it should be a victory
             const node: QuebecCastlesNode = new QuebecCastlesNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -524,7 +524,7 @@ describe('QuebecCastlesRules', () => {
             // Given any state
             const state: QuebecCastlesState = rules.getInitialState(defaultConfig);
 
-            // When evaluating its value
+            // When checking the game status
             // Then it should be a victory
             const node: QuebecCastlesNode = new QuebecCastlesNode(state);
             RulesUtils.expectToBeOngoing(rules, node, defaultConfig);
@@ -549,7 +549,7 @@ describe('QuebecCastlesRules', () => {
                 [_, _, _, _, _, _, _, O, _],
             ], 1, defaultCastles);
 
-            // When evaluating its value
+            // When checking the game status
             // Then it should be a victory
             const node: QuebecCastlesNode = new QuebecCastlesNode(state);
             RulesUtils.expectToBeOngoing(rules, node, customConfig);

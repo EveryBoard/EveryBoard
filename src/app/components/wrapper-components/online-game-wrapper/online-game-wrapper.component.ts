@@ -21,6 +21,7 @@ import { GameService } from '../../../services/GameService';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
@@ -43,7 +44,7 @@ export class OnlineGameWrapperMessages {
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
     imports: [GameCreationComponent, ViewConfigComponent, TimerComponent,
-        FaIconComponent, RouterLink, NgClass, ChatComponent],
+        FaIconComponent, RouterLink, NgClass, ChatComponent, EloComponent],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {

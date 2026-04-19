@@ -56,10 +56,13 @@ describe('RulesConfigurationComponent', () => {
         expect(component).toBeTruthy();
     });
 
-    interface TestRulesConfig extends RulesConfig {
+    type TestRulesConfig = RulesConfig & {
+
         nombre: number;
+
         canailleDeBoule: number;
-    }
+
+    };
 
     const secondConfig: TestRulesConfig = { nombre: 42, canailleDeBoule: 42 };
 
@@ -115,7 +118,6 @@ describe('RulesConfigurationComponent', () => {
         it('should display enabled rules selection', fakeAsync(async() => {
             // Given an editable component with a config
             testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
-            await testUtils.chooseConfig('Custom');
 
             // When displaying it
 
@@ -137,7 +139,6 @@ describe('RulesConfigurationComponent', () => {
         it('should allow to change to another standard config', fakeAsync(async() => {
             // Given an editable component with a config
             testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithNumber));
-            await testUtils.chooseConfig('Custom');
 
             // Given a game with two standard config (the default and the other)
             testUtils.detectChanges();

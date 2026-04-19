@@ -8,6 +8,7 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -18,9 +19,12 @@ import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
 import { QuartoState } from './QuartoState';
 
-export type QuartoConfig = {
+export type QuartoConfig = RulesConfig & {
+
     playerZeroLevel: number;
+
     playerOneLevel: number;
+
 };
 
 /**

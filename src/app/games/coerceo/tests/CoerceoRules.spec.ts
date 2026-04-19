@@ -540,7 +540,7 @@ describe('CoerceoRules', () => {
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(18, 17));
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its game status
+            // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -563,7 +563,7 @@ describe('CoerceoRules', () => {
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(17, 18));
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its game status
+            // When checking the game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
@@ -593,7 +593,7 @@ describe('CoerceoRules', () => {
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(6, 5));
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its game status
+            // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, smallConfig);
         });

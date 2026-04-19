@@ -9,6 +9,7 @@ import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -23,11 +24,11 @@ export type SixLegalityInformation = CoordSet;
 export class SixNode extends GameNode<SixMove, SixState> {
 }
 
-export type SixConfig = {
+export type SixConfig = RulesConfig & {
 
     piecesPerPlayer: number;
 
-}
+};
 
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',

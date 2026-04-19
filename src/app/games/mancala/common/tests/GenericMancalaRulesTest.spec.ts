@@ -144,7 +144,8 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
                         const node: MancalaNode = new GameNode(state);
-                        // Then it should be a victory for player 0
+                        // When checking the game status
+                        // Then it should be a victory for Player.ZERO
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, MGPOptional.of(config));
                     });
 
@@ -154,7 +155,9 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
                         const node: MancalaNode = new GameNode(state);
-                        // Then it should be a victory for player 1
+
+                        // When checking the game status
+                        // Then it should be a victory for Player.ONE
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, MGPOptional.of(config));
                     });
 
@@ -164,6 +167,8 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds, halfOfTotalSeeds));
                         const node: MancalaNode = new GameNode(state);
+
+                        // When checking the game status
                         // Then it should be a draw
                         RulesUtils.expectToBeDraw(rules, node, MGPOptional.of(config));
                     });

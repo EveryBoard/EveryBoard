@@ -126,14 +126,16 @@ func TestMarshalResult(t *testing.T) {
 
 func TestMarshalGame(t *testing.T) {
 	original := model.Game{
-		GameID:     0, // not part of the JSON
-		GameName:   "Go",
-		PlayerZero: model.MinimalUser{ID: "zero", Name: "alice"},
-		PlayerOne:  model.MinimalUser{ID: "one", Name: "bob"},
-		Result:     model.ResultInProgress,
-		Beginning:  1000,
+		GameID:        0, // not part of the JSON
+		GameName:      "Go",
+		PlayerZero:    model.MinimalUser{ID: "zero", Name: "alice"},
+		PlayerZeroElo: 42.0,
+		PlayerOne:     model.MinimalUser{ID: "one", Name: "bob"},
+		PlayerOneElo:  100.0,
+		Result:        model.ResultInProgress,
+		Beginning:     1000,
 	}
-	json := `{"gameName":"Go","playerZero":{"id":"zero","name":"alice"},"playerOne":{"id":"one","name":"bob"},"result":"InProgress","beginning":1000}`
+	json := `{"gameName":"Go","playerZero":{"id":"zero","name":"alice"},"playerZeroElo":42,"playerOne":{"id":"one","name":"bob"},"playerOneElo":100,"result":"InProgress","beginning":1000}`
 	ExpectMarshallingToWork(t, original, json)
 
 	// It should not allow to unmarshal, even a valid game

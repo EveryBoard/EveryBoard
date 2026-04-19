@@ -13,11 +13,12 @@ import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
-import { ConfigRoomService } from '../../../services/ConfigRoomService';
+import { Candidate, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
@@ -47,14 +48,15 @@ type GameCreationViewInfo = {
     gameTypeName?: string,
     moveDuration?: number;
     gameDuration?: number;
-    candidates: string[];
+    candidates: { name: string, elo: number }[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] },
 }
 @Component({
     selector: 'app-game-creation',
     templateUrl: './game-creation.component.html',
-    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, HumanDurationPipe],
+    imports: [ReactiveFormsModule, NgClass, RulesConfigurationComponent, DemoCardWrapperComponent, EloComponent,
+        HumanDurationPipe],
 })
 @Debug.log
 export class GameCreationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
@@ -106,7 +108,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         candidates: [],
     };
     public currentConfigRoom: ConfigRoom | null = null;
-    public candidates: MinimalUser[] = [];
+    public candidates: Candidate[] = [];
 
     // Subscription
     private readonly ngUnsubscribe: Subject<void> = new Subject<void>();
@@ -153,8 +155,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
             this.gameId(),
             (configRoom: ConfigRoom): Promise<void> => this.onConfigRoomUpdate(configRoom),
             (): Promise<void> => this.onGameCancelled(),
-            (candidate: MinimalUser): void => this.onCandidateJoined(candidate),
-            (candidate: MinimalUser): void => this.onCandidateLeft(candidate),
+            (candidate: Candidate): void => this.onCandidateJoined(candidate),
+            (user: MinimalUser): void => this.onCandidateLeft(user),
             (error: string): void => void this.onError(error),
         );
     }
@@ -237,7 +239,12 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.showCustomTime = this.getForm('gameType').value === GameType.CUSTOM;
 
         this.viewInfo.creator = configRoom.creator.name;
-        this.viewInfo.candidates = this.candidates.map((candidate: MinimalUser) => candidate.name);
+        this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
+            return {
+                name: c.user.name,
+                elo: c.elo,
+            };
+        });
         if (this.userIsCreator(configRoom)) {
             this.setDataForCreator(configRoom);
         } else {
@@ -268,9 +275,11 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         if (opponent == null || opponent === '') {
             opponent = configRoom.chosenOpponent?.name ?? '';
         } else {
-            const chosenOpponentIsCandidate: boolean = this.candidates.some((minimalUser: MinimalUser) => {
-                return minimalUser.name === opponent;
-            });
+            const chosenOpponentIsCandidate: boolean = this.candidates.some(
+                (candidate: Candidate) => {
+                    return candidate.user.name === opponent;
+                },
+            );
             if (chosenOpponentIsCandidate === false) {
                 opponent = ''; // chosenOpponent left
             }
@@ -299,8 +308,9 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private getUserFromName(username: string): MinimalUser {
-        const user: MinimalUser | undefined = this.candidates.find((c: MinimalUser) => c.name === username);
-        return Utils.getNonNullable(user);
+        const candidate: Candidate | undefined = this.candidates.find(
+            (c: Candidate) => c.user.name === username);
+        return Utils.getNonNullable(candidate).user;
     }
 
     public async changeConfig(): Promise<void> {
@@ -346,13 +356,13 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         }
     }
 
-    private onCandidateJoined(candidate: MinimalUser): void {
+    private onCandidateJoined(candidate: Candidate): void {
         this.candidates.push(candidate);
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
 
-    private onCandidateLeft(candidate: MinimalUser): void {
-        this.candidates = this.candidates.filter((c: MinimalUser) => c.id !== candidate.id);
+    private onCandidateLeft(user: MinimalUser): void {
+        this.candidates = this.candidates.filter((c: Candidate) => c.user.id !== user.id);
         this.updateViewInfo(Utils.getNonNullable(this.currentConfigRoom));
     }
 

@@ -101,7 +101,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         return formControl;
     }
 
-    public isEditable(): boolean {
+    public isEditableAndCustom(): boolean {
         return this.editable() && this.chosenConfigName === 'Custom';
     }
 

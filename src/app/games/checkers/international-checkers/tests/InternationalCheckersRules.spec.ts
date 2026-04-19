@@ -813,8 +813,6 @@ describe('InternationalCheckersRules', () => {
 
         it(`should declare current player winner when opponent has no more pieces`, () => {
             // Given a board where Player.ONE have no more piece
-            // When evaluating its value
-            // Then the current Player.ZERO should win
             const expectedState: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -825,12 +823,15 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
             ], 1);
             const node: CheckersNode = new CheckersNode(expectedState);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it(`should declare current player winner when blocking all opponent's pieces`, () => {
             // Given a board where the last commander(s) of Player.ZERO are stucked
-            // When evaluating its value
+            // when checking the game status
             // Then the board should be considered as a victory of Player.ONE
             const expectedState: CheckersState = CheckersState.of([
                 [O, _, X, _, _, _, _],
@@ -842,6 +843,9 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
             ], 2);
             const node: CheckersNode = new CheckersNode(expectedState);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
