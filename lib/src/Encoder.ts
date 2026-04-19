@@ -12,10 +12,10 @@ export abstract class Encoder<T> {
     : Encoder<U> {
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
-                return toJSON(value)
+                return toJSON(value);
             }
             public decode(encoded: NonNullable<JSONValueWithoutArray>): U {
-                return fromJSON(encoded)
+                return fromJSON(encoded);
             }
         };
     }

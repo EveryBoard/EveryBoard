@@ -2,9 +2,9 @@
 import { ArrayUtils } from '../ArrayUtils';
 import { ComparableObject } from '../Comparable';
 import { Encoder } from '../Encoder';
-import { EncoderTestUtils } from './EncoderTestUtils';
 import { JSONValueWithoutArray } from '../JSON';
 
+import { EncoderTestUtils } from './EncoderTestUtils';
 import { Pair } from './Pair.spec';
 
 class Triplet implements ComparableObject {

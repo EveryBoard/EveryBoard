@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from '../MGPFallible';
-import { MGPFallibleTestUtils } from './MGPFallibleTestUtils';
 import { MGPOptional } from '../MGPOptional';
+
+import { MGPFallibleTestUtils } from './MGPFallibleTestUtils';
 
 describe('MGPFallible', () => {
 

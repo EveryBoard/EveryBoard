@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { ArrayUtils } from '../ArrayUtils';
-import { TestUtils } from './TestUtils';
 import { Utils } from '../Utils';
+
+import { TestUtils } from './TestUtils';
 
 describe('ArrayUtils', () => {
 
