@@ -458,14 +458,14 @@
       <trans-unit id="5226075040149407867" datatype="html">
         <source>International Checkers</source>
       </trans-unit>
-      <trans-unit id="5468337301522272954" datatype="html">
-        <source>Bashni</source>
-      </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
       </trans-unit>
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
+      </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1091,6 +1091,15 @@
       <trans-unit id="2350466795039227682" datatype="html">
         <source>You did not choose the correct piece, and got no promotion.</source>
       </trans-unit>
+      <trans-unit id="8405108678014314848" datatype="html">
+        <source>Promotion mid-capture</source>
+      </trans-unit>
+      <trans-unit id="7156457678978289670" datatype="html">
+        <source>In Bashni, if a piece reaches the last line &lt;strong&gt;during a capture sequence&lt;/strong&gt;, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture two Light pieces; Your piece will promote mid-sequence and continue as a king!</source>
+      </trans-unit>
+      <trans-unit id="6535298553415135706" datatype="html">
+        <source>That is not the right move. Your piece can reach the last line and continue capturing as a king!</source>
+      </trans-unit>
       <trans-unit id="3494718669384677623" datatype="html">
         <source>King move</source>
       </trans-unit>
@@ -1114,6 +1123,9 @@
       </trans-unit>
       <trans-unit id="3072414657519570345" datatype="html">
         <source>Can do frisian captures</source>
+      </trans-unit>
+      <trans-unit id="7059500887205356855" datatype="html">
+        <source>Piece that reaches the last line during a capture continues as king</source>
       </trans-unit>
       <trans-unit id="318262165361158083" datatype="html">
         <source>Control</source>

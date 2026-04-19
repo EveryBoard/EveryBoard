@@ -124,7 +124,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Promotion mid-capture`,
-            $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two Light pieces — your piece will promote mid-sequence and continue as a king!`,
+            $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two Light pieces; Your piece will promote mid-sequence and continue as a king!`,
             CheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [_v, __, _v, __, __, __, __, __],
