@@ -48,6 +48,9 @@ import { GipfComponent } from '../../../games/gipf/gipf.component';
 import { GoRules } from '../../../games/gos/go/GoRules';
 import { GoTutorial } from '../../../games/gos/go/GoTutorial';
 import { GoComponent } from '../../../games/gos/go/go.component';
+import { HexagonalGoRules } from '../../../games/gos/hexagonal-go/HexagonalGoRules';
+import { HexagonalGoTutorial } from '../../../games/gos/hexagonal-go/HexagonalGoTutorial';
+import { HexagonalGoComponent } from '../../../games/gos/hexagonal-go/hexagonal-go.component';
 import { TrigoRules } from '../../../games/gos/trigo/TrigoRules';
 import { TrigoTutorial } from '../../../games/gos/trigo/TrigoTutorial';
 import { TrigoComponent } from '../../../games/gos/trigo/trigo.component';
@@ -176,6 +179,8 @@ class GameDescription {
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
+    public static readonly HEXAGONAL_GO: Localized = () => $localize`A version of Go on a hexagonal board!`;
+
     public static readonly HEXODIA: Localized = () => $localize`A hexagonal alignment game with weird "diagonals"!`;
 
     public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
@@ -297,6 +302,8 @@ export class GameInfo {
             new GameInfo($localize`International Checkers`, 'InternationalCheckers', InternationalCheckersComponent, new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2025-02-03'), GameDescription.INTERNATIONAL_CHECKERS()), // 40:                             * Martin
             new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),             BashniRules.get(),                 new Date('2025-03-01'), GameDescription.BASHNI()                ), // 42:                             * Quentin
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
+
+            new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

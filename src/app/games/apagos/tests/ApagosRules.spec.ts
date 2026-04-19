@@ -142,6 +142,7 @@ describe('ApagosRules', () => {
                 [7, 5, 3, 1],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -181,8 +182,9 @@ describe('ApagosRules', () => {
                 [8, 6, 4, 2],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
-            // Then it should be detected as a draw
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

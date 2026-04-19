@@ -216,6 +216,8 @@ describe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
         ], PlayerNumberMap.of(8, 8), 1337);
         const node: PenteNode = new PenteNode(state);
+
+        // When checking the game status
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
@@ -244,7 +246,9 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(10, 0), 3);
         const node: PenteNode = new PenteNode(state);
-        // Then it should be a victory for this player
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -272,7 +276,9 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(0, 0), 3);
         const node: PenteNode = new PenteNode(state);
-        // Then it should be a victory for zero
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 

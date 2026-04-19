@@ -290,6 +290,10 @@
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
         <target>Le plus vieux jeu de stratégie encore joué. Un jeu de contrôle de territoire</target>
       </trans-unit>
+      <trans-unit id="7977813156502087485" datatype="html">
+        <source>A version of Go on a hexagonal board!</source>
+        <target>Une version du jeu de Go sur un plateau hexagonal !</target>
+      </trans-unit>
       <trans-unit id="7267838821174516266" datatype="html">
         <source>A hexagonal alignment game with weird &quot;diagonals&quot;!</source>
         <target>Un jeu d'alignement hexagonal avec de drôles de &quot;diagonales&quot; !</target>
@@ -656,6 +660,10 @@
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
         <target>Châteaux Québecois</target>
+      </trans-unit>
+      <trans-unit id="8244967285264131156" datatype="html">
+        <source>Hexagonal Go</source>
+        <target>Go Hexagonal</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -2461,6 +2469,10 @@
         <source>This intersection is already occupied.</source>
         <target>Cette intersection est déjà occupée.</target>
       </trans-unit>
+      <trans-unit id="7089556689288687433" datatype="html">
+        <source>This space is already occupied.</source>
+        <target>Cette case est déjà occupée.</target>
+      </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
         <target>Vous ne pouvez pas vous suicider.</target>
@@ -2624,17 +2636,37 @@
         <source>Standard</source>
         <target>Standard</target>
       </trans-unit>
+      <trans-unit id="3924059417187590333" datatype="html">
+        <source>The game of HexagonalGo is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+        <target>HexagonalGo est une adaptation hexagonale du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
+      </trans-unit>
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
         <target>Hexagonal</target>
       </trans-unit>
-      <trans-unit id="5525890868343399241" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
-        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. Ce tutorial ne va que montrer les petites différences que cette expérimentation introduit.</target>
+      <trans-unit id="8684748448570517529" datatype="html">
+        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>
         <target>Libertés</target>
+      </trans-unit>
+      <trans-unit id="4774531702496891777" datatype="html">
+        <source>Since the board is hexagonal, pieces have three freedom in the corners.</source>
+        <target>Étant donné que le plateau est hexagonal, les pièces n'ont que trois libertés dans les coins.</target>
+      </trans-unit>
+      <trans-unit id="7911591321429642830" datatype="html">
+        <source>Since the board is hexagonal, pieces have four freedoms on the edges.</source>
+        <target>Étant donné que le plateau est hexagonal, les pièces n'ont que quatre libertés sur les bords.</target>
+      </trans-unit>
+      <trans-unit id="4071554112464432613" datatype="html">
+        <source>Since the board is hexagonal, pieces have six freedoms when they don&apos;t touch the edge.</source>
+        <target>Étant donné que le plateau est hexagonal, les pièces n'ont que six libertés quand elles ne touchent pas les bords.</target>
+      </trans-unit>
+      <trans-unit id="1525911055936719410" datatype="html">
+        <source>Since the board is hexagonal, groups of two pieces have three more freedoms (making ko impossible).</source>
+        <target>Étant donné que le plateau est hexagonal, les groupes de deux pièces ont trois libertés en plus (rendant le ko impossible).</target>
       </trans-unit>
       <trans-unit id="8074559405875826310" datatype="html">
         <source>Since the board is triangular, pieces have only one freedom in the corners.</source>

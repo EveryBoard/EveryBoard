@@ -6,6 +6,7 @@ import { GameStatus } from '../../../jscaip/GameStatus';
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player } from '../../../jscaip/Player';
 import { ConfigurableRules } from '../../../jscaip/Rules';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
 import { Vector } from '../../../jscaip/Vector';
@@ -15,18 +16,28 @@ import { CheckersFailure } from './CheckersFailure';
 import { CheckersMove } from './CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
 
-export type CheckersConfig = {
+export type CheckersConfig = RulesConfig & {
+
     playerRows: number;
+
     emptyRows: number;
+
     width: number;
+
     canStackPieces: boolean;
+
     mustMakeMaximalCapture: boolean;
+
     simplePieceCanCaptureBackwards: boolean;
+
     promotedPiecesCanFly: boolean;
+
     occupyEvenSquare: boolean;
+
     frisianCaptureAllowed: boolean;
+
     canPromoteMidCapture: boolean;
-}
+};
 
 export class CheckersOptionLocalizable {
 

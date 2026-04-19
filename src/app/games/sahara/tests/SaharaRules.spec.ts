@@ -97,6 +97,9 @@ describe('SaharaRules', () => {
         ];
         const state: SaharaState = new SaharaState(board, 4);
         const node: SaharaNode = new SaharaNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 

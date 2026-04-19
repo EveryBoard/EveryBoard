@@ -28,6 +28,10 @@ export abstract class AbstractGoRules<C extends RulesConfig>
     extends ConfigurableRules<GoMove, GoState, C, GoLegalityInformation>
 {
 
+    protected constructor(public readonly playOnIntersection: boolean) {
+        super();
+    }
+
     public abstract getGoGroupDataFactory(): GoGroupDataFactory;
 
     private getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
@@ -351,7 +355,11 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             if (legal) {
                 return MGPFallible.success([]);
             } else {
-                return MGPFallible.failure(GoFailure.OCCUPIED_INTERSECTION());
+                if (this.playOnIntersection) {
+                    return MGPFallible.failure(GoFailure.OCCUPIED_INTERSECTION());
+                } else {
+                    return MGPFallible.failure(GoFailure.OCCUPIED_SPACE());
+                }
             }
         } else {
             Debug.display('GoRules', 'isLegal', 'move is normal stuff: ' + move.toString());

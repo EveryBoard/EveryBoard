@@ -8,6 +8,7 @@ import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { AbstractNInARowHelper } from '../../jscaip/NInARowHelper';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
@@ -15,7 +16,7 @@ import { MGPValidators } from '../../utils/MGPValidator';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaState } from './HexodiaState';
 
-export type HexodiaConfig = {
+export type HexodiaConfig = RulesConfig & {
 
     size: number;
 

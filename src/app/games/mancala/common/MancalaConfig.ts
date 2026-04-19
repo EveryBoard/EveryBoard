@@ -15,4 +15,5 @@ export type MancalaConfig = RulesConfig & {
     readonly feedOriginalHouse: boolean; // If, when you have 12 seeds, the 12th must be dropped in the original house
 
     readonly continueLapUntilCaptureOrEmptyHouse: boolean;
-}
+
+};
