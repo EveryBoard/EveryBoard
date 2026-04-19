@@ -83,24 +83,25 @@ func (gt *GameType) UnmarshalJSON(data []byte) error {
 }
 
 type ConfigRoom struct {
-	ID             GameID          `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
-	Creator        MinimalUser     `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
-	CreatorElo     float64         `gorm:"not null" json:"creatorElo"`
-	ChosenOpponent *MinimalUser    `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
-	Status         Status          `gorm:"not null" json:"status"`
-	FirstPlayer    FirstPlayer     `gorm:"not null" json:"firstPlayer"`
-	GameType       GameType        `gorm:"not null" json:"gameType"`
-	MoveDuration   uint32          `gorm:"not null" json:"moveDuration"`
-	GameDuration   uint32          `gorm:"not null" json:"gameDuration"`
-	RulesConfig    json.RawMessage `json:"rulesConfig"`
-	GameName       string          `gorm:"not null" json:"gameName"`
+	ID                GameID          `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
+	Creator           MinimalUser     `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
+	CreatorElo        float64         `gorm:"not null" json:"creatorElo"`
+	ChosenOpponent    *MinimalUser    `gorm:"embedded;embeddedPrefix:chosen_opponent_" json:"chosenOpponent"`
+	ChosenOpponentElo *float64        `json:"chosenOpponentElo"`
+	Status            Status          `gorm:"not null" json:"status"`
+	FirstPlayer       FirstPlayer     `gorm:"not null" json:"firstPlayer"`
+	GameType          GameType        `gorm:"not null" json:"gameType"`
+	MoveDuration      uint32          `gorm:"not null" json:"moveDuration"`
+	GameDuration      uint32          `gorm:"not null" json:"gameDuration"`
+	RulesConfig       json.RawMessage `json:"rulesConfig"`
+	GameName          string          `gorm:"not null" json:"gameName"`
 }
 
 // Needed for tests, but better placed here
 var ConfigRoomRows = []string{
 	"id",
 	"creator_id", "creator_name", "creator_elo",
-	"chosen_opponent_id", "chosen_opponent_name",
+	"chosen_opponent_id", "chosen_opponent_name", "chosen_opponent_elo",
 	"status", "first_player", "game_type", "move_duration", "game_duration",
 	"rules_config", "game_name",
 }

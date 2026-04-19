@@ -5,7 +5,9 @@ import { MinimalUser } from './MinimalUser';
 export type Game = {
     readonly gameName: string; // the type of game
     readonly playerZero: MinimalUser; // the first player
+    readonly playerZeroElo: number;
     readonly playerOne: MinimalUser; // the second player
+    readonly playerOneElo: number;
     readonly beginning: number; // beginning of the game as a timestamp
     readonly result: GameResult;
 };

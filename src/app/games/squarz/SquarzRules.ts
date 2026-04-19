@@ -7,6 +7,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
@@ -17,10 +18,14 @@ import { SquarzState } from './SquarzState';
 
 export class SquarzNode extends GameNode<SquarzMove, SquarzState> {}
 
-export type SquarzConfig = {
-    width: number,
-    height: number,
+export type SquarzConfig = RulesConfig & {
+
+    width: number;
+
+    height: number;
+
     jumpSize: number;
+
 };
 
 export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, SquarzConfig> {

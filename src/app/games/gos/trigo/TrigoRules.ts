@@ -3,6 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
@@ -11,7 +12,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type TrigoConfig = {
+export type TrigoConfig = RulesConfig & {
 
     size: number;
 
@@ -27,13 +28,8 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         new RulesConfigDescription<TrigoConfig>({
             name: (): string => $localize`Standard`,
             config: {
-                size: new NumberConfig(
-                    7,
-                    RulesConfigDescriptionLocalizable.SIZE,
-                    MGPValidators.range(1, 99)),
-                hexagonal: new BooleanConfig(
-                    false,
-                    () => $localize`Hexagonal`),
+                size: new NumberConfig(7, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 99)),
+                hexagonal: new BooleanConfig(false, () => $localize`Hexagonal`),
             },
         });
 
@@ -42,6 +38,10 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
             TrigoRules.singleton = MGPOptional.of(new TrigoRules());
         }
         return TrigoRules.singleton.get();
+    }
+
+    public constructor() {
+        super(false);
     }
 
     public override getInitialState(optionalConfig: MGPOptional<TrigoConfig>): GoState {

@@ -7,12 +7,14 @@ import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { GoRules } from '../go/GoRules';
+import { HexagonalGoRules } from '../hexagonal-go/HexagonalGoRules';
 import { TrigoRules } from '../trigo/TrigoRules';
 
 describe('GoMove', () => {
 
     const rules: AbstractGoRules<RulesConfig>[] = [
         GoRules.get(),
+        HexagonalGoRules.get(),
         TrigoRules.get(),
     ];
     for (const rule of rules) {
