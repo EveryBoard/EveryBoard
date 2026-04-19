@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "module": "commonjs",
+        "module": "preserve",
         "moduleResolution": "bundler",
         "rootDir": "./src",
         "outDir": "./dist",
