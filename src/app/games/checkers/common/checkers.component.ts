@@ -56,12 +56,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public override getViewBox(): ViewBox {
         const abstractWidth: number = this.getState().getWidth();
         const abstractHeight: number = this.getState().getHeight();
-        this.LEFT = 0;
+        this.LEFT = 0 - this.STROKE_WIDTH/2;
         this.UP = - this.SPACE_SIZE;
         this.basicWidth = abstractWidth * this.mode.parallelogramHeight;
         this.basicHeight = abstractHeight * this.mode.parallelogramHeight;
         const boardOffset: number = abstractHeight * this.mode.offsetRatio * this.mode.parallelogramHeight;
-        this.WIDTH = (this.basicWidth * this.mode.horizontalWidthRatio) + boardOffset;
+        this.WIDTH = (this.basicWidth * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
         this.HEIGHT = this.basicHeight + this.THICKNESS + this.STROKE_WIDTH - this.UP;
         this.CX = this.WIDTH / 2;
         this.CY = (this.HEIGHT + this.UP) / 2;
