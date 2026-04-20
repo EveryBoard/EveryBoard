@@ -3,10 +3,10 @@ import { MGPValidation } from '../MGPValidation';
 export class MGPValidationTestUtils {
 
     public static expectToBeSuccess(fallible: MGPValidation, context?: string): void {
-        if (context != null) {
-            expect(fallible.isSuccess()).withContext(context).toBeTrue();
-        } else {
+        if (context == null) {
             expect(fallible.isSuccess()).toBeTrue();
+        } else {
+            expect(fallible.isSuccess()).withContext(context).toBeTrue();
         }
     }
 

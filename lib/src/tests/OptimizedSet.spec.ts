@@ -10,21 +10,39 @@ class PairSet extends OptimizedSet<Pair> {
 }
 
 describe('OptimizedSet', () => {
-    it('should create', () => {
-        // When creating sets
-        const emptySet: PairSet = new PairSet();
-        const unitarySet: PairSet = new PairSet([new Pair(1, 1)]);
-        const otherUnitarySet: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 1)]);
-        const multipleSet: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 2)]);
-        // Then they should all be created with the right elements
-        expect(emptySet).toBeDefined();
-        expect(emptySet.size()).toBe(0);
-        expect(unitarySet).toBeDefined();
-        expect(unitarySet.size()).toBe(1);
-        expect(otherUnitarySet).toBeDefined();
-        expect(otherUnitarySet.size()).toBe(1);
-        expect(multipleSet).toBeDefined();
-        expect(multipleSet.size()).toBe(2);
+    describe('creation', () => {
+
+        it('should create empty set', () => {
+            // When creating an empty set
+            const set: PairSet = new PairSet();
+            // Then it should be created with the right number of elements
+            expect(set).toBeDefined();
+            expect(set.size()).toBe(0);
+        });
+
+        it('should create unitary set', () => {
+            // When creating a unitary set
+            const set: PairSet = new PairSet([new Pair(1, 1)]);
+            // Then it should be created with the right number of elements
+            expect(set).toBeDefined();
+            expect(set.size()).toBe(1);
+        });
+
+        it('should create unitary set with duplicate elements', () => {
+            // When creating set with h duplicate elements
+            const set: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 1)]);
+            // Then it should be created with the right number of elements
+            expect(set).toBeDefined();
+            expect(set.size()).toBe(1);
+        });
+
+        it('should create set with multiple elements', () => {
+            // When creating a set with multiple elements
+            const set: PairSet = new PairSet([new Pair(1, 1), new Pair(1, 2)]);
+            // Then it should be created with the right number of elements
+            expect(set).toBeDefined();
+            expect(set.size()).toBe(2);
+        });
     });
 
     describe('add', () => {

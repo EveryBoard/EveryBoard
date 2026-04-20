@@ -4,10 +4,11 @@ import { Utils } from './Utils';
 export class ArrayUtils {
 
     /**
-     * Create an array of size width containing initValue. Watch out: initValue
-     * is repeated without copy, so if it is an object that will be mutated, it
-     * will also change the values of all fields. General rule: don't mutate
-     * objects stored in such arrays.
+     * Create an array of size width containing initValue.
+     * Watch out: initValue is repeated without copy,
+     * so if it is an object that will be mutated,
+     * it will also change the values of all fields.
+     * General rule: don't mutate objects stored in such arrays.
      */
     public static create<T>(width: number, initValue: T): T[] {
         const array: Array<T> = [];
