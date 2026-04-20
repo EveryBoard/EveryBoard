@@ -21,8 +21,13 @@ function comparableEqualsStrict<T extends Comparable>(a: T, b: T): boolean {
             return comparableValue.equals(otherComparable);
         } else {
             const aJSON: ComparableJSON = a as ComparableJSON;
+            const aKeys: string[] = Object.keys(a);
             const bJSON: ComparableJSON = b as ComparableJSON;
-            for (const key of Object.keys(aJSON)) {
+            const bKeys: string[] = Object.keys(b);
+            if (aKeys.length !== bKeys.length) {
+                return false;
+            }
+            for (const key of aKeys) {
                 if (key in bJSON) {
                     if (comparableEqualsStrict(aJSON[key], bJSON[key]) === false) {
                         return false;
@@ -46,13 +51,16 @@ export function isComparableObject(value: unknown): value is ComparableObject {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/explicit-module-boundary-types
 export function isComparableJSON(value: any): value is ComparableJSON {
     if (typeof value === 'object') {
-        for (const key in value) {
+        if (value === null) {
+            return false;
+        }
+        for (const key of Object.keys(value)) {
             if (value[key] != null && isComparableValue(value[key]) === false) {
                 return false;
             }
         }
-        // A JSON value should directly inherit from Object
-        return value != null && value.constructor.prototype === Object.prototype;
+        // A JSON value should directly inherit from Object or be an array
+        return value.constructor.prototype === Object.prototype || Array.isArray(value);
     } else {
         return false;
     }

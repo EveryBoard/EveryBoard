@@ -1,4 +1,5 @@
-import { Encoder, EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+import { Encoder, MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../Coord';
 import { MoveCoord } from '../MoveCoord';

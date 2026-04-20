@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { TestUtils } from '../TestUtils';
 import { Utils } from '../Utils';
+
+import { TestUtils } from './TestUtils';
 
 describe('TestUtils', () => {
     describe('expectToThrowAndLog', () => {
