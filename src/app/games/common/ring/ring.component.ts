@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, input, InputSignal, model, ModelSignal, OnChanges, SimpleChanges } from '@angular/core';
 
 @Component({
     selector: '[app-ring]',
@@ -10,32 +10,38 @@ import { Component, Input, OnChanges, SimpleChanges } from '@angular/core';
 export class RingComponent implements OnChanges {
 
     // outside radius meaning circle.r + (circle.strokeWidth / 2)
-    @Input() public outsideRadius: number = 100;
+    public outsideRadius: ModelSignal<number> = model(100);
 
-    @Input() public strokeColor: string = 'var(--base-stroke)';
+    public readonly strokeColor: ModelSignal<string> = model('var(--base-stroke)');
 
-    @Input() public strokeWidth: number;
+    public readonly strokeWidth: InputSignal<number> = input.required();
 
-    @Input() public width: number;
+    public readonly width: InputSignal<number> = input.required();
 
-    @Input() public midRingClasses: string | string[];
+    public readonly midRingClasses: InputSignal<string | string[]> = input.required();
 
-    public outsideStrokeRadius: number;
+    public outsideStrokeRadius: ModelSignal<number> = model(0);
 
-    public midRingRadius: number;
+    public midRingRadius: ModelSignal<number> = model(0);
 
-    public insideStrokeRadius: number;
+    public insideStrokeRadius: ModelSignal<number> = model(0);
 
     public ngOnChanges(_: SimpleChanges): void {
         this.computeRadii();
     }
 
     private computeRadii(): void {
-        const outsideStrokeInsideRadius: number = this.outsideRadius - this.strokeWidth;
-        this.outsideStrokeRadius = outsideStrokeInsideRadius + (this.strokeWidth / 2);
-        const midRindInsideRadius: number = outsideStrokeInsideRadius - this.width;
-        this.midRingRadius = midRindInsideRadius + (this.width / 2);
-        const insideStrokeInsideRadius: number = midRindInsideRadius - this.strokeWidth;
-        this.insideStrokeRadius = insideStrokeInsideRadius + (this.strokeWidth / 2);
+        const outsideStrokeInsideRadius: number = this.outsideRadius() - this.strokeWidth();
+        this.outsideStrokeRadius.set(
+            outsideStrokeInsideRadius + (this.strokeWidth() / 2),
+        );
+        const midRindInsideRadius: number = outsideStrokeInsideRadius - this.width();
+        this.midRingRadius.set(
+            midRindInsideRadius + (this.width() / 2),
+        );
+        const insideStrokeInsideRadius: number = midRindInsideRadius - this.strokeWidth();
+        this.insideStrokeRadius.set(
+            insideStrokeInsideRadius + (this.strokeWidth() / 2),
+        );
     }
 }
