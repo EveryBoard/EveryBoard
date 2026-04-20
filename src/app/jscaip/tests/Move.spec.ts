@@ -1,4 +1,5 @@
-import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { Encoder, MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { MoveGenerator } from '../AI/AI';
 import { GameNode } from '../AI/GameNode';

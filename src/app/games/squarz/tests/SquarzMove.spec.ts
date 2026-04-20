@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible, MGPFallibleTestUtils } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
+import { MGPFallibleTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

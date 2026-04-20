@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPValidation, MGPValidationTestUtils, TestUtils } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
+import { MGPValidationTestUtils, TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
