@@ -19,23 +19,23 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { TrigoMinimax } from './TrigoMinimax';
-import { TrigoMoveGenerator } from './TrigoMoveGenerator';
-import { TrigoConfig, TrigoRules } from './TrigoRules';
+import { TriangularGoMinimax } from './TriangularGoMinimax';
+import { TriangularGoMoveGenerator } from './TriangularGoMoveGenerator';
+import { TriangularGoConfig, TriangularGoRules } from './TriangularGoRules';
 
 @Component({
-    selector: 'app-trigo',
-    templateUrl: './trigo.component.html',
+    selector: 'app-triangular-go',
+    templateUrl: './triangular-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
 @Debug.log
-export class TrigoComponent extends TriangularGameComponent<TrigoRules,
-                                                            GoMove,
-                                                            GoState,
-                                                            GoPiece,
-                                                            TrigoConfig,
-                                                            GoLegalityInformation>
+export class TriangularGoComponent extends TriangularGameComponent<TriangularGoRules,
+                                                                   GoMove,
+                                                                   GoState,
+                                                                   GoPiece,
+                                                                   TriangularGoConfig,
+                                                                   GoLegalityInformation>
 {
 
     public boardInfo: GroupData<GoPiece>;
@@ -50,10 +50,10 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
 
     public constructor() {
         super();
-        this.setRulesAndNode('Trigo');
+        this.setRulesAndNode('TriangularGo');
         this.availableAIs = [
-            new TrigoMinimax(),
-            new MCTS($localize`MCTS`, new TrigoMoveGenerator(), this.rules),
+            new TriangularGoMinimax(),
+            new MCTS($localize`MCTS`, new TriangularGoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
@@ -136,7 +136,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
             return this.onClick(GoMove.PASS.coord);
         }
         Utils.assert(phase.isCounting() || phase.isAccept(),
-                     'TrigoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+                     'TriangularGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }
 

@@ -449,8 +449,8 @@
       <trans-unit id="2686476818050661110" datatype="html">
         <source>Hexodia</source>
       </trans-unit>
-      <trans-unit id="6233664534580457703" datatype="html">
-        <source>Trigo</source>
+      <trans-unit id="7666378010332934902" datatype="html">
+        <source>Triangular Go</source>
       </trans-unit>
       <trans-unit id="5226075040149407867" datatype="html">
         <source>International Checkers</source>
@@ -1947,8 +1947,8 @@
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
       </trans-unit>
-      <trans-unit id="8684748448570517529" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      <trans-unit id="7439050861957875508" datatype="html">
+        <source>The game of TriangularGo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="8074559405875826310" datatype="html">
         <source>Since the board is triangular, pieces have only one freedom in the corners.</source>

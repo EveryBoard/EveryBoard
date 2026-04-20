@@ -645,7 +645,7 @@
         <source>Hexodia</source>
         <target>Hexodia</target>
       </trans-unit>
-      <trans-unit id="6233664534580457703" datatype="html">
+      <trans-unit id="7666378010332934902" datatype="html">
         <source>Trigo</source>
         <target>Trigo</target>
       </trans-unit>
@@ -2640,9 +2640,9 @@
         <source>Hexagonal</source>
         <target>Hexagonal</target>
       </trans-unit>
-      <trans-unit id="8684748448570517529" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
-        <target>Trigo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
+      <trans-unit id="7439050861957875508" datatype="html">
+        <source>The game of TriangularGo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+        <target>TriangularGo est une adaptation triangulaire du jeu de Go. Le Go est présent sur Everyboard, dont vous pouvez aller en apprendre les règles &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Ce tutorial ne va montrer que les petites différences que cette expérimentation introduit.</target>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>

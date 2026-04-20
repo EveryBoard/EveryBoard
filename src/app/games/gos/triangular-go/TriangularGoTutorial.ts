@@ -6,22 +6,22 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { TrigoConfig, TrigoRules } from './TrigoRules';
+import { TriangularGoConfig, TriangularGoRules } from './TriangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+const defaultConfig: MGPOptional<TriangularGoConfig> = TriangularGoRules.get().getDefaultRulesConfig();
 
-export class TrigoTutorial extends Tutorial {
+export class TriangularGoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Preliminary information`,
-            $localize`The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. This tutorial will only review the small differences that this experimental adaptation induced.`,
-            TrigoRules.get().getInitialState(defaultConfig),
+            $localize`The game of TriangularGo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. This tutorial will only review the small differences that this experimental adaptation induced.`,
+            TriangularGoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
             $localize`Freedom` + ' (1/4)',
