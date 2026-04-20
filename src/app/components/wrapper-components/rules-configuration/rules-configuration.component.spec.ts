@@ -2,7 +2,8 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { MGPOptional, Utils, TestUtils, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, Utils, MGPValidation } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';

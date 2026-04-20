@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, EncoderTestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
