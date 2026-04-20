@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
@@ -7,7 +8,6 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { PylosCoord } from './PylosCoord';
 import { PylosFailure } from './PylosFailure';
@@ -21,6 +21,7 @@ import { PylosState } from './PylosState';
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
@@ -48,8 +49,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: PlayerNumberMap = PlayerNumberMap.of(15, 15);
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Pylos');
         this.availableAIs = [
             new PylosMinimax(),

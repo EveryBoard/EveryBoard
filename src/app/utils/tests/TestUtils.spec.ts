@@ -1,27 +1,25 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { By } from '@angular/platform-browser';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router, RouterModule } from '@angular/router';
+import { BrowserModule, By } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
 import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
-import { AppModule } from '../../app.module';
-import { findMatchingRoute } from '../../app.module.spec';
+import { initializeFirebase, routes } from '../../app.routes';
+import { findMatchingRoute } from '../../app.routes.spec';
 import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
 import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
 import { OGWCTimeManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
-import { OnlineGameWrapperComponent } from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { RulesConfigurationComponent } from '../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
@@ -33,8 +31,6 @@ import { Player } from '../../jscaip/Player';
 import { SuperRules } from '../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { GameState } from '../../jscaip/state/GameState';
-import { HumanDurationPipe } from '../../pipes-and-directives/human-duration.pipe';
-import { ToggleVisibilityDirective } from '../../pipes-and-directives/toggle-visibility.directive';
 import { ActiveConfigRoomsService } from '../../services/ActiveConfigRoomsService';
 import { BackendService } from '../../services/BackendService';
 import { ChatService } from '../../services/ChatService';
@@ -347,6 +343,9 @@ export class SimpleComponentTestUtils<T> {
         this.detectChanges();
     }
 
+    public setInput(input: string, value: unknown): void {
+        this.fixture.componentRef.setInput(input, value);
+    }
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
@@ -655,15 +654,11 @@ export class ConfigureTestingModuleUtils {
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-            ],
+            imports: [],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                provideRouter([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
@@ -686,26 +681,13 @@ export class ConfigureTestingModuleUtils {
     : Promise<void>
     {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterModule,
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule,
-            ],
-            declarations: [
-                componentType,
-                HumanDurationPipe,
-                ToggleVisibilityDirective,
-                RulesConfigurationComponent,
-            ],
-            schemas: [
-                CUSTOM_ELEMENTS_SCHEMA,
-            ],
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                provideRouter([
-                    { path: '**', component: BlankComponent },
-                ]),
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
@@ -721,7 +703,7 @@ export class ConfigureTestingModuleUtils {
 }
 
 export async function setupEmulators(): Promise<unknown> {
-    new AppModule(); // This will initialize firebase with the emulators
+    initializeFirebase();
     await TestBed.configureTestingModule({
         providers: [
             provideHttpClient(),
@@ -751,13 +733,13 @@ function getComponentClassName(component: Type<any>): string {
  * routed to matches `component`. In case multiple router.navigate calls happen,
  * set otherRoutes to true.
  */
-export function expectValidRouting(router: Router,
-                                   path: string[],
-                                   component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                   options?: { otherRoutes?: boolean,
-                                               skipLocationChange?: boolean,
-                                               queryParams?: Record<string, string> })
-: void
+export async function expectValidRouting(router: Router,
+                                         path: string[],
+                                         component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+                                         options?: { otherRoutes?: boolean,
+                                                     skipLocationChange?: boolean,
+                                                     queryParams?: Record<string, string> })
+: Promise<void>
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
     if (!(path.length === 1 && path[0] === '/')) {
@@ -769,17 +751,19 @@ export function expectValidRouting(router: Router,
     const fullPath: string = path.join('/');
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${path}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
     const otherRoutes: boolean = options != null && options.otherRoutes != null && options.otherRoutes;
     const args: [string[], ...NavigationExtras[]] = [path];
     const extraArgs: NavigationExtras = {};
     if (options != null && options.queryParams != null) {
-        extraArgs['queryParams'] = options.queryParams;
+        extraArgs.queryParams = options.queryParams;
     }
     if (options != null && options.skipLocationChange != null) {
-        extraArgs['skipLocationChange'] = options.skipLocationChange;
+        extraArgs.skipLocationChange = options.skipLocationChange;
     }
     if (Object.keys(extraArgs).length > 0) {
         args.push(extraArgs);
@@ -794,14 +778,18 @@ export function expectValidRouting(router: Router,
 /**
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
-export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>): void {
+export async function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>)
+  : Promise<void>
+{
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();
     expect(element.attributes.routerLink).toEqual(fullPath);
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${fullPath}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }

@@ -7,6 +7,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -29,27 +30,40 @@ export class SiamNode extends GameNode<SiamMove, SiamState> {}
 
 type ClosestPusher = {
 
-    distance: number,
+    distance: number;
 
-    coord: Coord
+    coord: Coord;
 
 };
 
 type InitialLineInfo = {
-    resistance: Orthogonal,
-    previousPiece: SiamPiece,
-    closestPusher: ClosestPusher,
-    almostPusher: MGPOptional<Coord>,
-    pusherFound: boolean,
-    mountainEncountered: boolean,
-    missingForce: number,
+
+    resistance: Orthogonal;
+
+    previousPiece: SiamPiece;
+
+    closestPusher: ClosestPusher;
+
+    almostPusher: MGPOptional<Coord>;
+
+    pusherFound: boolean;
+
+    mountainEncountered: boolean;
+
+    missingForce: number;
+
 };
 
-export type SiamConfig = {
-    width: number,
-    height: number,
-    numberOfPiece: number,
-    numberOfBonusMountain: number,
+export type SiamConfig = RulesConfig & {
+
+    width: number;
+
+    height: number;
+
+    numberOfPiece: number;
+
+    numberOfBonusMountain: number;
+
 };
 
 @Debug.log

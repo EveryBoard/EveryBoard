@@ -7,8 +7,9 @@ import { Table, TableUtils } from './TableUtils';
 export class BoardData {
 
     private constructor(public readonly groupIndices: Table<number>,
-                        public readonly groups: ReadonlyArray<GroupInfos>,
-    ) {}
+                        public readonly groups: ReadonlyArray<GroupInfos>)
+    {
+    }
 
     public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDataFactory<T, GroupData<T>>): BoardData {
         const groupIndices: number[][] = TableUtils.create(board[0].length, board.length, -1);
@@ -43,10 +44,10 @@ export class BoardData {
  * The main caracteristic of a group is piece of the same type that are connected together.
  */
 export class GroupInfos {
-    public constructor(
-        public readonly coords: ReadonlyArray<Coord>,
-        public readonly neighborsEntryPoints: ReadonlyArray<Coord>,
-    ) {}
+    public constructor(public readonly coords: ReadonlyArray<Coord>,
+                       public readonly neighborsEntryPoints: ReadonlyArray<Coord>)
+    {
+    }
 }
 
 @Debug.log

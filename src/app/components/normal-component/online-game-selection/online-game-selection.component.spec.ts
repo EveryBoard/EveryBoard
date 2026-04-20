@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 
 import { MGPValidation } from '@everyboard/lib';
 
+import { CurrentGameService } from '../../../services/CurrentGameService';
 import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { OnlineGameCreationComponent } from '../online-game-creation/online-game-creation.component';
 
@@ -27,19 +28,18 @@ describe('OnlineGameSelectionComponent', () => {
         await testUtils.getComponent().pickGame('whateverGame');
 
         // Then the user is redirected to the game
-        expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
+        await expectValidRouting(router, ['/play', 'whateverGame'], OnlineGameCreationComponent);
     }));
 
     it('should display refusal reason when user cannot join game', fakeAsync(async() => {
         // Given a selection component and a game that the user is not allowed to join
-        const component: OnlineGameSelectionComponent = testUtils.getComponent();
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
 
         // When picking a game
         // Then refusal should be toasted and router not called
         const reason: string = 'some refusal reason from the service';
-        spyOn(component.currentGameService, 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
+        spyOn(TestBed.inject(CurrentGameService), 'canUserCreate').and.returnValue(MGPValidation.failure(reason));
         await testUtils.expectToDisplayCriticalMessage(reason, async() => {
             await testUtils.getComponent().pickGame('whateverGame');
         });

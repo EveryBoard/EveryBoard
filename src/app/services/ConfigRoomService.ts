@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { ConfigRoom, ConfigProposal } from '../domain/ConfigRoom';
@@ -7,12 +7,14 @@ import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';
 
+export type Candidate = { user: MinimalUser, elo: number };
+
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
                          configRoomUpdate: (configRoom: ConfigRoom) => void,
                          configRoomDeleted: () => void,
-                         candidateJoined: (candidate: MinimalUser) => void,
-                         candidateLeft: (candidate: MinimalUser) => void,
+                         candidateJoined: (candidate: Candidate) => void,
+                         candidateLeft: (user: MinimalUser) => void,
                          error: (reason: string) => void)
     : Promise<Subscription>;
 
@@ -31,15 +33,13 @@ export abstract class AbstractConfigRoomService {
 @Debug.log
 export class ConfigRoomService extends AbstractConfigRoomService {
 
-    public constructor(private readonly backendService: BackendService) {
-        super();
-    }
+    private readonly backendService: BackendService = inject(BackendService);
 
     public override async join(gameId: string,
                                configRoomUpdate: (configRoom: ConfigRoom) => void,
                                configRoomDeleted: () => void,
-                               candidateJoined: (candidate: MinimalUser) => void,
-                               candidateLeft: (candidate: MinimalUser) => void,
+                               candidateJoined: (candidate: Candidate) => void,
+                               candidateLeft: (user: MinimalUser) => void,
                                error: (reason: string) => void)
     : Promise<Subscription>
     {
@@ -54,7 +54,7 @@ export class ConfigRoomService extends AbstractConfigRoomService {
             });
         const candidateJoinedSubscription: Subscription =
             this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
-                candidateJoined(message.getArgument('candidate'));
+                candidateJoined({ user: message.getArgument('candidate'), elo: message.getArgument('elo') });
             });
         const candidateLeftSubscription: Subscription =
             this.backendService.setCallback('CandidateLeft', (message: BackendMessage): void => {

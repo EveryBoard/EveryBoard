@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
-import { FormControl } from '@angular/forms';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
@@ -9,7 +9,7 @@ import { Move } from '../../../jscaip/Move';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { DemoNodeInfo, DemoNodeWithConfig } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { DemoNodeInfo, DemoNodeWithConfig, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
 
@@ -17,14 +17,17 @@ import { GameInfo } from '../pick-game/pick-game.component';
     selector: 'app-demo-page',
     templateUrl: './demo-page.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ReactiveFormsModule, FormsModule, DemoCardWrapperComponent],
 })
 export class DemoPageComponent {
+
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public numberOfColumns: FormControl = new FormControl(5);
 
     public columns: DemoNodeInfo[][] = [];
 
-    public constructor(private readonly cdr: ChangeDetectorRef) {
+    public constructor() {
         this.fillColumns(this.numberOfColumns.value);
         this.numberOfColumns.valueChanges.subscribe((columns: number) => {
             this.fillColumns(columns);

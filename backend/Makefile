@@ -26,7 +26,7 @@ format:
 	go fmt ./...
 
 test:
-	go test ./...
+	go test ./... -failfast
 
 coverage:
 	go test ./... -coverpkg=./... -cover -coverprofile=coverage.out

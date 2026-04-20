@@ -1,4 +1,5 @@
-import { Component, Input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component, input, InputSignal } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -6,13 +7,14 @@ import { MGPOptional } from '@everyboard/lib';
     selector: '[app-numbered-circle]',
     templateUrl: './numbered-circle.component.svg',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class NumberedCircleComponent {
 
-    @Input() x: number;
-    @Input() y: number;
-    @Input() spaceClasses: string[];
-    @Input() content: number;
-    @Input() secondaryContent: MGPOptional<string>;
-    @Input() rotation: string;
+    public readonly x: InputSignal<number> = input.required<number>();
+    public readonly y: InputSignal<number> = input.required<number>();
+    public readonly spaceClasses: InputSignal<string[]> = input.required<string[]>();
+    public readonly content: InputSignal<number> = input.required<number>();
+    public readonly secondaryContent: InputSignal<MGPOptional<string>> = input.required<MGPOptional<string>>();
+    public readonly rotation: InputSignal<string> = input.required<string>();
 }

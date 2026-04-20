@@ -1,4 +1,4 @@
-import { ComparableObject, MGPOptional, Utils } from '@everyboard/lib';
+import { ComparableObject, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -20,17 +20,6 @@ export class DiaballikPiece implements ComparableObject {
 
     public equals(other: DiaballikPiece): boolean {
         return this === other;
-    }
-    public toString(): string {
-        switch (this) {
-            case DiaballikPiece.NONE: return '__';
-            case DiaballikPiece.ZERO: return 'O_';
-            case DiaballikPiece.ZERO_WITH_BALL: return 'Oo';
-            case DiaballikPiece.ONE: return 'X_';
-            default:
-                Utils.expectToBe(this, DiaballikPiece.ONE_WITH_BALL);
-                return 'Xx';
-        }
     }
 }
 

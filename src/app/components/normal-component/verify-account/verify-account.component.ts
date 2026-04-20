@@ -1,6 +1,6 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { Router } from '@angular/router';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
 import { Subscription } from 'rxjs';
 
 import { MGPValidation } from '@everyboard/lib';
@@ -16,8 +16,12 @@ import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserS
 @Component({
     selector: 'app-verify-account',
     templateUrl: './verify-account.component.html',
+    imports: [ReactiveFormsModule, RouterLink],
 })
 export class VerifyAccountComponent implements OnInit, OnDestroy {
+
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly router: Router = inject(Router);
 
     public verificationType: 'send-email' | 'enter-username' | null = null;
 
@@ -34,11 +38,6 @@ export class VerifyAccountComponent implements OnInit, OnDestroy {
     public usernameForm: FormGroup = new FormGroup({
         username: new FormControl(),
     });
-
-    public constructor(private readonly connectedUserService: ConnectedUserService,
-                       public router: Router)
-    {
-    }
     public async ngOnInit(): Promise<void> {
         this.userSubscription = this.connectedUserService.subscribeToUser(
             async(user: AuthUser) => {

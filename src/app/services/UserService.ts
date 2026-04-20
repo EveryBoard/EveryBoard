@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 
 import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { UserDAO } from '../dao/UserDAO';
@@ -17,9 +17,7 @@ import { User } from '../domain/User';
 })
 export class UserService {
 
-    public constructor(private readonly userDAO: UserDAO)
-    {
-    }
+    private readonly userDAO: UserDAO = inject(UserDAO);
 
     public async usernameIsAvailable(username: string): Promise<boolean> {
         const usersWithSameUsername: FirestoreDocument<User>[] = await this.userDAO.findWhere([['username', '==', username]]);

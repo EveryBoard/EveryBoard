@@ -1,6 +1,6 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FormControl, FormGroup } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnInit, input, model, output, OutputEmitterRef } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -18,17 +18,19 @@ type ConfigFormJSON = {
     selector: 'app-rules-configuration',
     templateUrl: './rules-configuration.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ReactiveFormsModule, NgClass],
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 
-    @Input() rulesConfigDescriptionOptional: MGPOptional<RulesConfigDescription<RulesConfig>>;
+    public readonly rulesConfigDescriptionOptional: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> =
+        input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
     public rulesConfigDescription: RulesConfigDescription<RulesConfig>;
 
     // Only needed for the non-creator
-    @Input() rulesConfigToDisplay?: RulesConfig;
+    public readonly rulesConfigToDisplay: InputSignal<RulesConfig | undefined> = input<RulesConfig>();
 
     // Whether this config can be edited or not
-    @Input() editable: boolean;
+    public readonly editable: ModelSignal<boolean> = model<boolean>(false);
 
     /**
      * notify that the config has been updated
@@ -36,7 +38,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
      * we do want to emit something when the current config is invalid,
      * so that the parent component knows that the situation is not ok
      */
-    @Output() updateCallback: EventEmitter<MGPOptional<RulesConfig>> = new EventEmitter<MGPOptional<RulesConfig>>();
+    public readonly updateCallback: OutputEmitterRef<MGPOptional<RulesConfig>> = output<MGPOptional<RulesConfig>>();
 
     public rulesConfigForm: FormGroup = new FormGroup({});
 
@@ -46,13 +48,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public errorMessages: string[] = [];
 
-    public constructor(activatedRoute: ActivatedRoute) {
-        super(activatedRoute);
-    }
-
     private checkInputs(): void {
-        if (this.editable === false) {
-            Utils.assert(this.rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
+        if (this.editable() === false) {
+            Utils.assert(this.rulesConfigToDisplay() !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
         }
     }
 
@@ -84,10 +82,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        if (this.editable) {
+        if (this.editable()) {
             return defaultValue;
         } else {
-            const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay);
+            const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
             return configuration[name];
         }
     }
@@ -103,8 +101,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         return formControl;
     }
 
-    public isEditable(): boolean {
-        return this.editable && this.chosenConfigName === 'Custom';
+    public isEditableAndCustom(): boolean {
+        return this.editable() && this.chosenConfigName === 'Custom';
     }
 
     private onUpdate(): void {
@@ -189,7 +187,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         this.chosenConfigName = configName;
         if (this.chosenConfigName === 'Custom') {
             const defaultConfig: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
-            this.generateForm(defaultConfig, this.editable);
+            this.generateForm(defaultConfig, this.editable());
         } else {
             const chosenConfig: RulesConfig = this.rulesConfigDescription.getConfig(this.chosenConfigName);
             this.generateForm(chosenConfig, false);
@@ -199,20 +197,20 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isCustomisable(): boolean {
-        if (this.rulesConfigDescriptionOptional.isAbsent()) {
+        if (this.rulesConfigDescriptionOptional().isAbsent()) {
             // This game has no configurability, so no need to show this component
             return false;
         } else {
-            Utils.assert(this.rulesConfigDescriptionOptional.get().getFields().length > 0,
+            Utils.assert(this.rulesConfigDescriptionOptional().get().getFields().length > 0,
                          'If rulesConfigDescriptionOptional is present it should have fields !');
-            this.rulesConfigDescription = this.rulesConfigDescriptionOptional.get();
+            this.rulesConfigDescription = this.rulesConfigDescriptionOptional().get();
             return true;
         }
     }
 
     public setEditable(editable: boolean): void {
-        this.editable = editable;
-        if (this.editable && this.chosenConfigName === 'Custom') {
+        this.editable.set(editable);
+        if (this.editable() && this.chosenConfigName === 'Custom') {
             this.rulesConfigForm.enable();
         } else {
             this.rulesConfigForm.disable();
@@ -220,7 +218,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isSelectedConfig(configName: string): boolean {
-        if (this.rulesConfigToDisplay == null) { // For creator, who knows the config name
+        if (this.rulesConfigToDisplay() == null) { // For creator, who knows the config name
             return this.chosenConfigName === configName;
         } else {
             const defactoConfigName: string = this.getDefactoConfigName();
@@ -234,7 +232,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
      * Otherwise, returns the custom config name ("Custom")
      */
     private getDefactoConfigName(): string {
-        const currentConfig: RulesConfig = this.rulesConfigToDisplay as RulesConfig;
+        const currentConfig: RulesConfig = this.rulesConfigToDisplay() as RulesConfig;
         const defaultConfigs: NamedRulesConfig<RulesConfig>[] = this.rulesConfigDescription.getStandardConfigs();
         const matchingConfigs: NamedRulesConfig<RulesConfig>[] = defaultConfigs.filter(
             (nameConfig: NamedRulesConfig<RulesConfig>) => {

@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Game, GameEvent } from '../../domain/Game';
-import { GameMocks } from '../../domain/PartMocks.spec';
+import { GameMocks } from '../../domain/GameMocks.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { Player } from '../../jscaip/Player';
-import { AbstractBackendService, BackendMessage, BackendService } from '../BackendService';
+import { BackendMessage, BackendService } from '../BackendService';
 import { GameService } from '../GameService';
 
 import { BackendServiceMock } from './BackendServiceMock.spec';
@@ -37,7 +37,13 @@ describe('GameService', () => {
 
     beforeEach(fakeAsync(async() => {
         backendService = new BackendServiceMock();
-        gameService = new GameService(backendService as AbstractBackendService as BackendService);
+        TestBed.configureTestingModule({
+            providers: [
+                { provide: BackendService, useValue: backendService },
+                GameService,
+            ],
+        });
+        gameService = TestBed.inject(GameService);
     }));
 
 

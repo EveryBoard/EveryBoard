@@ -1002,7 +1002,8 @@ describe('LodestoneRules', () => {
         const state: LodestoneState = new LodestoneState(board, 0, noLodestones, allPressurePlates);
         const node: LodestoneNode = new LodestoneNode(state);
 
-        // Then it should be a a draw
+        // When checking the game status
+        // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
 

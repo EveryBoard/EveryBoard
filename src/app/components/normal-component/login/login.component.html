@@ -1,9 +1,12 @@
 <div class="box">
-    <p class="title" i18n>Log in</p>
+    <p class="title"
+       i18n>Log in</p>
     <form [formGroup]="loginForm">
         <div class="field is-horizontal">
             <div class="field-label is-normal">
-                <label class="label" for="email" i18n>Email</label>
+                <label class="label"
+                       for="email"
+                       i18n>Email</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -11,19 +14,22 @@
                         <input id="email"
                                class="input"
                                type="text"
-                               i18n-placeholder placeholder="Email"
+                               i18n-placeholder
+                               placeholder="Email"
                                formControlName="email"
                                name="email"
                                type="email"
                                autofocus
-                               required />
+                               required/>
                     </div>
                 </div>
             </div>
         </div>
         <div class="field is-horizontal">
             <div class="field-label is-normal">
-                <label class="label" for="password" i18n>Password</label>
+                <label class="label"
+                       for="password"
+                       i18n>Password</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -31,12 +37,15 @@
                         <input id="password"
                                class="input"
                                type="password"
-                               i18n-placeholder placeholder="Password"
+                               i18n-placeholder
+                               placeholder="Password"
                                formControlName="password"
                                name="password"
-                               required />
+                               required/>
                         <span class="icon is-small is-right">
-                            <fa-icon [icon]="faEye" class="clickable-icon" toggleVisibility></fa-icon>
+                            <fa-icon [icon]="faEye"
+                                     class="clickable-icon"
+                                     toggleVisibility></fa-icon>
                         </span>
                     </div>
                 </div>
@@ -70,17 +79,24 @@
                 </div>
             </div>
         </div>
-        <div *ngIf="errorMessage" class="message is-danger" role="alert">
-            <div class="message-header" i18n>Connection error</div>
-            <div class="message-body" id="errorMessage">{{ errorMessage }}</div>
-        </div>
+        @if (errorMessage) {
+            <div class="message is-danger"
+                 role="alert">
+                <div class="message-header"
+                     i18n>Connection error</div>
+                <div class="message-body"
+                     id="errorMessage">{{ errorMessage }}</div>
+            </div>
+        }
         <p class="help level-right">
             <ng-container i18n>No account?</ng-container>&nbsp;
-            <a [routerLink]="['/register']" i18n>Register</a>
+            <a [routerLink]="['/register']"
+               i18n>Register</a>
         </p>
         <p class="help level-right">
             <ng-container i18n>Forgot your password?</ng-container>&nbsp;
-            <a [routerLink]="['/reset-password']" i18n>Reset your password</a>
+            <a [routerLink]="['/reset-password']"
+               i18n>Reset your password</a>
         </p>
     </form>
 </div>

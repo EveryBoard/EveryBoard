@@ -7,8 +7,8 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { GameMocks } from '../../../domain/PartMocks.spec';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { P4Component } from '../../../games/p4/p4.component';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
@@ -43,7 +43,7 @@ describe('OnlineGameWrapper for non-existing game', () => {
 
         // Then it goes to /notFound with the expected error message
         const expectedRoute: string[] = ['/notFound', GameWrapperMessages.NO_MATCHING_GAME('invalid-game')];
-        expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
+        await expectValidRouting(router, expectedRoute, NotFoundComponent, { skipLocationChange: true });
 
         discardPeriodicTasks();
     }));

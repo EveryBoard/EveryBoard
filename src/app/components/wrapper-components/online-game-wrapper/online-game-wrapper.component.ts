@@ -1,5 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChild } from '@angular/core';
+import { RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
 
@@ -16,12 +18,15 @@ import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { GameService } from '../../../services/GameService';
-import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
+import { ChatComponent } from '../../normal-component/chat/chat.component';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
+import { GameCreationComponent } from '../game-creation/game-creation.component';
 
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
@@ -38,14 +43,23 @@ export class OnlineGameWrapperMessages {
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [OGWCTimeManagerService, OGWCRequestManagerService],
+    imports: [GameCreationComponent, ViewConfigComponent, TimerComponent,
+        FaIconComponent, RouterLink, NgClass, ChatComponent, EloComponent],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
 
-    @ViewChild('timerZeroGame') public timerZeroGame: TimerComponent;
-    @ViewChild('timerOneGame') public timerOneGame: TimerComponent;
-    @ViewChild('timerZeroMove') public timerZeroMove: TimerComponent;
-    @ViewChild('timerOneMove') public timerOneMove: TimerComponent;
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly gameService: GameService = inject(GameService);
+    private readonly timeManager: OGWCTimeManagerService = inject(OGWCTimeManagerService);
+    private readonly requestManager: OGWCRequestManagerService = inject(OGWCRequestManagerService);
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+
+    public readonly timerZeroGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroGame');
+    public readonly timerOneGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneGame');
+    public readonly timerZeroMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroMove');
+    public readonly timerOneMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneMove');
 
     public game: Game | null = null;
     public gameId!: string; // Initialized in ngOnInit
@@ -70,18 +84,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private moveSentButNotReceivedYet: boolean = false;
 
     public viewConfig: boolean = false;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       private readonly connectedUserService: ConnectedUserService,
-                       private readonly gameService: GameService,
-                       private readonly timeManager: OGWCTimeManagerService,
-                       private readonly requestManager: OGWCRequestManagerService,
-                       private readonly cdr: ChangeDetectorRef)
-    {
-        super(activatedRoute, router, messageDisplayer);
-    }
 
     private extractGameIdFromURL(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -118,11 +120,11 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.configRoom = configRoom;
         this.gameStarted = true;
 
-        window.setTimeout(async() => {
+        setTimeout(async() => {
             // the small waiting is there to make sure that the timers are loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
-            this.timeManager.setTimers([this.timerZeroMove, this.timerOneMove],
-                                       [this.timerZeroGame, this.timerOneGame]);
+            this.timeManager.setTimers([this.timerZeroMove()!, this.timerOneMove()!],
+                                       [this.timerZeroGame()!, this.timerOneGame()!]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise game-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);

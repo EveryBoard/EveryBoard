@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -10,7 +11,6 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Debug } from '../../utils/Debug';
 
 import { SiamFailure } from './SiamFailure';
@@ -20,6 +20,7 @@ import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamPiece } from './SiamPiece';
 import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
 import { SiamState } from './SiamState';
+import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -32,6 +33,7 @@ export type SiamIndicatorArrow = {
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, SiamOrientationArrowComponent],
 })
 @Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,
@@ -52,8 +54,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     private insertingPiece: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Siam');
         this.availableAIs = [
             new SiamMinimax(),

@@ -30,7 +30,7 @@ describe('WelcomeComponent', () => {
 
     it('should redirect to lobby when clicking on the corresponding button', fakeAsync(async() => {
         const button: DebugElement = testUtils.findElement('#seeGameList');
-        expectValidRoutingLink(button, '/lobby', LobbyComponent);
+        await expectValidRoutingLink(button, '/lobby', LobbyComponent);
     }));
 
     it('should redirect to part selection when clicking on the corresponding button', fakeAsync(async() => {
@@ -39,7 +39,7 @@ describe('WelcomeComponent', () => {
 
         await testUtils.clickElement('#createOnlineGame');
 
-        expectValidRouting(router, ['/play'], OnlineGameSelectionComponent);
+        await expectValidRouting(router, ['/play'], OnlineGameSelectionComponent);
     }));
     describe('game list', () => {
 
@@ -88,7 +88,7 @@ describe('WelcomeComponent', () => {
             testUtils.detectChanges();
 
             // Then there should have been a redirection to online-game-creation
-            expectValidRouting(router, ['/play', 'Awale'], OnlineGameCreationComponent);
+            await expectValidRouting(router, ['/play', 'Awale'], OnlineGameCreationComponent);
         }));
 
         it('should not redirect to online game creation when clicking on the corresponding button while in a game', fakeAsync(async() => {
@@ -120,7 +120,7 @@ describe('WelcomeComponent', () => {
             testUtils.detectChanges();
 
             // Then we should be redirected to the game
-            expectValidRouting(router, ['/local', 'Awale', 'config'], LocalGameConfigurationComponent);
+            await expectValidRouting(router, ['/local', 'Awale', 'config'], LocalGameConfigurationComponent);
         }));
 
         it('should redirect to tutorial when clicking on the corresponding button', fakeAsync(async() => {
@@ -132,7 +132,7 @@ describe('WelcomeComponent', () => {
             testUtils.getComponent().pickGame('Awale');
             await testUtils.clickElement('#play-tutorial');
 
-            expectValidRouting(router, ['/tutorial', 'Awale'], TutorialGameWrapperComponent);
+            await expectValidRouting(router, ['/tutorial', 'Awale'], TutorialGameWrapperComponent);
         }));
 
         it('should not redirect to part selection when clicking on the corresponding button while already playing', fakeAsync(async() => {

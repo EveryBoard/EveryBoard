@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -45,6 +45,9 @@ import { GipfComponent } from '../../../games/gipf/gipf.component';
 import { GoRules } from '../../../games/gos/go/GoRules';
 import { GoTutorial } from '../../../games/gos/go/GoTutorial';
 import { GoComponent } from '../../../games/gos/go/go.component';
+import { HexagonalGoRules } from '../../../games/gos/hexagonal-go/HexagonalGoRules';
+import { HexagonalGoTutorial } from '../../../games/gos/hexagonal-go/HexagonalGoTutorial';
+import { HexagonalGoComponent } from '../../../games/gos/hexagonal-go/hexagonal-go.component';
 import { TrigoRules } from '../../../games/gos/trigo/TrigoRules';
 import { TrigoTutorial } from '../../../games/gos/trigo/TrigoTutorial';
 import { TrigoComponent } from '../../../games/gos/trigo/trigo.component';
@@ -132,6 +135,7 @@ import { YinshComponent } from '../../../games/yinsh/yinsh.component';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
 import { Localized } from '../../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
@@ -169,6 +173,8 @@ class GameDescription {
     public static readonly GIPF: Localized = () => $localize`A hexagonal game of alignment. Insert your pieces on the board to capture your opponent's pieces!`;
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
+
+    public static readonly HEXAGONAL_GO: Localized = () => $localize`A version of Go on a hexagonal board!`;
 
     public static readonly HEXODIA: Localized = () => $localize`A hexagonal alignment game with weird "diagonals"!`;
 
@@ -290,6 +296,8 @@ export class GameInfo {
 
             new GameInfo($localize`International Checkers`, 'InternationalCheckers', InternationalCheckersComponent, new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2025-02-03'), GameDescription.INTERNATIONAL_CHECKERS()), // 40:                             * Martin
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
+
+            new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
@@ -342,20 +350,17 @@ export class GameInfo {
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
+    imports: [AutofocusDirective],
 })
 export class PickGameComponent {
 
     public readonly games: GameInfo[] = GameInfo.getAllGames();
 
-    public readonly theme: 'dark' | 'light';
+    public readonly theme: 'dark' | 'light' = inject(ThemeService).getTheme();
 
     public matchingGames: GameInfo[] = this.games;
 
-    @Output() pickGame: EventEmitter<string> = new EventEmitter<string>();
-
-    public constructor(themeService: ThemeService) {
-        this.theme = themeService.getTheme();
-    }
+    public readonly pickGame: OutputEmitterRef<string> = output<string>();
 
     public selectGame(gameName: string): void {
         this.pickGame.emit(gameName);

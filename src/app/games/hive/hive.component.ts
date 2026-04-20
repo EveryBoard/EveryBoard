@@ -1,4 +1,5 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -13,7 +14,6 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
-import { MessageDisplayer } from '../../services/MessageDisplayer';
 
 import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';
@@ -23,6 +23,7 @@ import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
+import { HivePieceComponent } from './hive-piece.component';
 
 interface GroundInfo {
 
@@ -103,6 +104,7 @@ class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
     selector: 'app-hive',
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, HivePieceComponent],
 })
 export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 
@@ -124,8 +126,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Hive');
         this.availableAIs = [
             new HiveMinimax(),

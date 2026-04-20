@@ -701,6 +701,9 @@ describe('YinshRules', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(3, 0), 20);
             const node: YinshNode = new YinshNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -708,6 +711,9 @@ describe('YinshRules', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 3), 20);
             const node: YinshNode = new YinshNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

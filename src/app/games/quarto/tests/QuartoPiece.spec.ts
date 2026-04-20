@@ -52,4 +52,8 @@ describe('QuartoPiece', () => {
 
     });
 
+    it('should be convertible to a string', () => {
+        expect(QuartoPiece.AAAA.toString()).toEqual('QuartoPiece(0)');
+    });
+
 });
