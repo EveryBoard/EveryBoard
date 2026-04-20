@@ -95,4 +95,17 @@ describe('PickGameComponent', () => {
         testUtils.expectElementToExist('#image-P4');
     }));
 
+    it('should also show terms that are close', fakeAsync(async() => {
+        // Given a pick-game page with games including "Lodestone"
+        testUtils.expectElementToExist('#image-Lodestone');
+        testUtils.detectChanges();
+
+        // When entering a search for "Lolestone" (close but not exactly matching)
+        testUtils.fillInput('#search-term', 'Lolestone');
+        testUtils.detectChanges();
+
+        // Then it should find P4
+        testUtils.expectElementToExist('#image-Lodestone');
+    });
+
 });

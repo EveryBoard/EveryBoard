@@ -141,6 +141,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 
 class GameDescription {
 
@@ -347,6 +348,11 @@ export class GameInfo {
 
 }
 
+type GameInfoWithDistance = {
+    info: GameInfo,
+    distance: number,
+};
+
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
@@ -362,15 +368,28 @@ export class PickGameComponent {
 
     public readonly pickGame: OutputEmitterRef<string> = output<string>();
 
+    private readonly maximalDistance: number = 2; // maximal Levenshtein distance for searching game names
+
     public selectGame(gameName: string): void {
         this.pickGame.emit(gameName);
     }
 
     public search(input: EventTarget | null): void {
         const searchTerm: string = this.normalize((input as HTMLInputElement).value);
-        this.matchingGames = this.games.filter((info: GameInfo) =>
-            this.normalize(info.name).includes(searchTerm) ||
-            this.normalize(info.urlName).includes(searchTerm));
+        if (searchTerm.length === 0) {
+            this.matchingGames = this.games;
+        } else {
+            this.matchingGames = this.games
+                // get the distances
+                .map((info: GameInfo): GameInfoWithDistance => this.calculateDistance(info, searchTerm))
+                // only the distances that are short enough
+                .filter((info: GameInfoWithDistance): boolean => info.distance <= this.maximalDistance)
+                // shortest distance first
+                .sort((a: GameInfoWithDistance, b: GameInfoWithDistance): number => {
+                    return a.distance - b.distance;
+                })
+                .map((infoWithDistance: GameInfoWithDistance): GameInfo => infoWithDistance.info);
+        }
     }
 
     private normalize(term: string): string {
@@ -385,4 +404,40 @@ export class PickGameComponent {
         // not characters, thereby removing all diacritics. This is not the work
         // of Morgoth as one may think, but regular Unicode manipulation.
     }
+
+    // modified Levenshteinn distance between search and "reference shortened to the length of search"
+    private levenshtein(search: string, reference: string): number {
+        const x: string = search;
+        // idea: we want to match e.g., "four" with "four in a row"
+        // but the edit distance is high ("in a row" = 6 adds)
+        // so we restrict the reference to the length of what is searched
+        const y: string = reference.slice(0, x.length);
+        // the rest is just classical Levenshtein distance by dynamic programming
+        const distances: number[][] = TableUtils.create(y.length+1, x.length+1, 0);
+        for (let i: number = 0; i <= x.length; i++) distances[i][0] = i;
+        for (let j: number = 0; j <= y.length; j++) distances[0][j] = j;
+
+        for (let i: number = 1; i <= x.length; i++) {
+            for (let j: number = 1; j <= y.length; j++) {
+                const same: boolean = x[i - 1] === y[j - 1];
+                distances[i][j] = Math.min(
+                    distances[i - 1][j] + 1, // deletion: distance increases by 1
+                    distances[i][j - 1] + 1, // insertion: distance increases by 1
+                    distances[i - 1][j - 1] + (same ? 0 : 1), // substituton: distance increases if needed
+                );
+            }
+        }
+
+        return distances[x.length][y.length];
+    }
+
+    private calculateDistance(info: GameInfo, searchTerm: string): GameInfoWithDistance {
+        // we want to search both in the game name ("Four in a row") and in its urlName ("P4")
+        return {
+            info,
+            distance: Math.min(this.levenshtein(searchTerm, this.normalize(info.name)),
+                               this.levenshtein(searchTerm, this.normalize(info.urlName))),
+        };
+    }
+
 }
