@@ -134,6 +134,7 @@ import { YinshTutorial } from '../../../games/yinsh/YinshTutorial';
 import { YinshComponent } from '../../../games/yinsh/yinsh.component';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { TableUtils } from '../../../jscaip/TableUtils';
 import { GameState } from '../../../jscaip/state/GameState';
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
@@ -141,7 +142,6 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 
 class GameDescription {
 

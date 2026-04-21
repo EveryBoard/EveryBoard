@@ -106,6 +106,6 @@ describe('PickGameComponent', () => {
 
         // Then it should find P4
         testUtils.expectElementToExist('#image-Lodestone');
-    });
+    }));
 
 });
