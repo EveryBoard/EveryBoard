@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, input, InputSignal, model, ModelSignal, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, computed, input, InputSignal, Signal } from '@angular/core';
 
 @Component({
     selector: '[app-ring]',
@@ -7,12 +7,12 @@ import { Component, input, InputSignal, model, ModelSignal, OnChanges, SimpleCha
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-export class RingComponent implements OnChanges {
+export class RingComponent {
 
     // outside radius meaning circle.r + (circle.strokeWidth / 2)
-    public outsideRadius: ModelSignal<number> = model(100);
+    public readonly outsideRadius: InputSignal<number> = input(100);
 
-    public readonly strokeColor: ModelSignal<string> = model('var(--base-stroke)');
+    public readonly strokeColor: InputSignal<string> = input('var(--base-stroke)');
 
     public readonly strokeWidth: InputSignal<number> = input.required();
 
@@ -20,28 +20,22 @@ export class RingComponent implements OnChanges {
 
     public readonly midRingClasses: InputSignal<string | string[]> = input.required();
 
-    public outsideStrokeRadius: ModelSignal<number> = model(0);
-
-    public midRingRadius: ModelSignal<number> = model(0);
-
-    public insideStrokeRadius: ModelSignal<number> = model(0);
-
-    public ngOnChanges(_: SimpleChanges): void {
-        this.computeRadii();
-    }
-
-    private computeRadii(): void {
+    protected outsideStrokeRadius: Signal<number> = computed(() => {
         const outsideStrokeInsideRadius: number = this.outsideRadius() - this.strokeWidth();
-        this.outsideStrokeRadius.set(
-            outsideStrokeInsideRadius + (this.strokeWidth() / 2),
-        );
+        return outsideStrokeInsideRadius + (this.strokeWidth() / 2);
+    });
+
+    protected midRingRadius: Signal<number> = computed(() => {
+        const outsideStrokeInsideRadius: number = this.outsideRadius() - this.strokeWidth();
         const midRindInsideRadius: number = outsideStrokeInsideRadius - this.width();
-        this.midRingRadius.set(
-            midRindInsideRadius + (this.width() / 2),
-        );
+        return midRindInsideRadius + (this.width() / 2);
+    });
+
+    protected insideStrokeRadius: Signal<number> = computed(() => {
+        const outsideStrokeInsideRadius: number = this.outsideRadius() - this.strokeWidth();
+        const midRindInsideRadius: number = outsideStrokeInsideRadius - this.width();
         const insideStrokeInsideRadius: number = midRindInsideRadius - this.strokeWidth();
-        this.insideStrokeRadius.set(
-            insideStrokeInsideRadius + (this.strokeWidth() / 2),
-        );
-    }
+        return insideStrokeInsideRadius + (this.strokeWidth() / 2);
+    });
+
 }
