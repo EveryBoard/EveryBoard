@@ -20,7 +20,7 @@ export class TriangularGoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Preliminary information`,
-            $localize`The game of TriangularGo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. This tutorial will only review the small differences that this experimental adaptation induced.`,
+            $localize`The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. This tutorial will only review the small differences that this experimental adaptation induced.`,
             TriangularGoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
