@@ -12,7 +12,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type TrigoConfig = RulesConfig & {
+export type TriangularGoConfig = RulesConfig & {
 
     size: number;
 
@@ -20,12 +20,12 @@ export type TrigoConfig = RulesConfig & {
 
 };
 
-export class TrigoRules extends AbstractGoRules<TrigoConfig> {
+export class TriangularGoRules extends AbstractGoRules<TriangularGoConfig> {
 
-    private static singleton: MGPOptional<TrigoRules> = MGPOptional.empty();
+    private static singleton: MGPOptional<TriangularGoRules> = MGPOptional.empty();
 
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TrigoConfig> =
-        new RulesConfigDescription<TrigoConfig>({
+    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<TriangularGoConfig> =
+        new RulesConfigDescription<TriangularGoConfig>({
             name: (): string => $localize`Standard`,
             config: {
                 size: new NumberConfig(7, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 99)),
@@ -33,19 +33,19 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
             },
         });
 
-    public static get(): TrigoRules {
-        if (TrigoRules.singleton.isAbsent()) {
-            TrigoRules.singleton = MGPOptional.of(new TrigoRules());
+    public static get(): TriangularGoRules {
+        if (TriangularGoRules.singleton.isAbsent()) {
+            TriangularGoRules.singleton = MGPOptional.of(new TriangularGoRules());
         }
-        return TrigoRules.singleton.get();
+        return TriangularGoRules.singleton.get();
     }
 
     public constructor() {
         super(false);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<TrigoConfig>): GoState {
-        const config: TrigoConfig = optionalConfig.get();
+    public override getInitialState(optionalConfig: MGPOptional<TriangularGoConfig>): GoState {
+        const config: TriangularGoConfig = optionalConfig.get();
         const size: number = config.size;
         let board: GoPiece[][];
         if (config.hexagonal) {
@@ -56,8 +56,8 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TrigoConfig>> {
-        return MGPOptional.of(TrigoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TriangularGoConfig>> {
+        return MGPOptional.of(TriangularGoRules.RULES_CONFIG_DESCRIPTION);
     }
 
     public override getGoGroupDataFactory(): GoGroupDataFactory {
