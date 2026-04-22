@@ -283,7 +283,7 @@ describe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_3_2');
             // Then it should show a marker there now
             testUtils.expectElementToHaveClass('#marker_3_2', 'player0-fill');
-            testUtils.expectElementToHaveClass('#ring_3_2', 'player0-stroke');
+            testUtils.expectElementToHaveClass('#ring_3_2 > circle:nth-child(2)', 'player0-stroke');
         }));
 
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
@@ -956,7 +956,7 @@ describe('YinshComponent', () => {
             testUtils.expectElementNotToExist('#marker_3_3');
             // But it should be selected
             testUtils.expectElementToExist('#selected_3_3');
-            testUtils.expectElementToHaveClass('#ring_3_3', 'semi-transparent');
+            testUtils.expectElementToHaveClass('#ring_3_3 > circle:nth-child(2)', 'semi-transparent');
         }));
 
         it('should show multiple capture of previous turn', fakeAsync(async() => {
