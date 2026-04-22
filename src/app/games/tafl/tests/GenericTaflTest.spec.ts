@@ -2,7 +2,8 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Encoder, EncoderTestUtils, MGPFallible, MGPOptional } from '@everyboard/lib';
+import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';

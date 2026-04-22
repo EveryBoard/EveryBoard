@@ -12,11 +12,11 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
-describe('TrigoRules', () => {
+describe('TriangularGoRules', () => {
 
-    let rules: TrigoRules;
+    let rules: TriangularGoRules;
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -26,12 +26,12 @@ describe('TrigoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
     const N: GoPiece = GoPiece.UNREACHABLE;
-    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<TriangularGoConfig> = TriangularGoRules.get().getDefaultRulesConfig();
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     beforeEach(() => {
-        rules = TrigoRules.get();
+        rules = TriangularGoRules.get();
     });
 
     it('should be created', () => {
@@ -42,7 +42,7 @@ describe('TrigoRules', () => {
 
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = TrigoRules.get().getInitialState(defaultConfig);
+            const state: GoState = TriangularGoRules.get().getInitialState(defaultConfig);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -279,7 +279,7 @@ describe('TrigoRules', () => {
 
         it('GoPhase.PLAYING + GoMove.PASS = GoPhase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = TrigoRules.get().getInitialState(defaultConfig);
+            const state: GoState = TriangularGoRules.get().getInitialState(defaultConfig);
             expect(state.phase).toBe(GoPhase.PLAYING);
 
             // When passing
@@ -765,7 +765,7 @@ describe('TrigoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 1)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
+            const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 1,
             });
@@ -783,7 +783,7 @@ describe('TrigoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 2)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
+            const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 2,
             });

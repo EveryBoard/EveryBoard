@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';

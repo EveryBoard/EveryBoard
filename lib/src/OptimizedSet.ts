@@ -16,7 +16,7 @@ export abstract class OptimizedSet<T extends Comparable> extends Set<T> {
      * There should be at least one field, which is the second element returned.
      * The first element returned is the list of other fields.
      */
-    protected abstract toFields(value: T): [[number], number];
+    protected abstract toFields(value: T): [number[], number];
 
     public constructor(values?: readonly T[]) {
         super();
@@ -30,7 +30,7 @@ export abstract class OptimizedSet<T extends Comparable> extends Set<T> {
     }
 
     private add(element: T): boolean {
-        const fields: [[number], number] = this.toFields(element);
+        const fields: [number[], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let indirection: any = this.valueMap;
         for (const field of fields[0]) {
@@ -50,7 +50,7 @@ export abstract class OptimizedSet<T extends Comparable> extends Set<T> {
     }
 
     public override contains(element: T): boolean {
-        const fields: [[number], number] = this.toFields(element);
+        const fields: [number[], number] = this.toFields(element);
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         let indirection: any = this.valueMap;
         for (const field of fields[0]) {
