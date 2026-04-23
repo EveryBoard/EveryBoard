@@ -227,13 +227,16 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async onReceivedMove(moveEvent: GameEventMove): Promise<void> {
         if (this.moveSentButNotReceivedYet) {
+            console.log('you received your own move')
             // This is our move, we have already shown it
             // So we do nothing to show it again.
             this.moveSentButNotReceivedYet = false;
         } else {
+            console.log('you received opponent move')
             // This is not our move, it is either the move of the opponent, one older move, or we are observing.
             // In any case, we have to show it. We also animate it if we are synced.
             const move: Move = this.gameComponent.encoder.decode(moveEvent.move);
+            // this.gameComponent.hideLastMove();
             await this.applyMove(move, this.isSynced);
         }
         // Need to handle the rest irrespective of which move we received
@@ -388,6 +391,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async applyMove(move: Move, triggerAnimation: boolean): Promise<void> {
+        console.log('applyMove')
         const oldNode: AbstractNode = this.gameComponent.node;
         const state: GameState = oldNode.gameState;
         const config: MGPOptional<RulesConfig> = this.getConfig();
@@ -482,7 +486,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const rulesConfig: RulesConfig = this.configRoom.rulesConfig;
         return MGPOptional.of(rulesConfig);
     }
-
 
     public isAgreedDraw(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;
