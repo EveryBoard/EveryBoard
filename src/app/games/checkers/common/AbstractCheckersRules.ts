@@ -325,13 +325,17 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     public override applyLegalMove(move: CheckersMove, state: CheckersState, config: MGPOptional<CheckersConfig>)
     : CheckersState
     {
+        return this.applyMove(move, state, config.get()).incrementTurn();
+    }
+
+    public applyMove(move: CheckersMove, state: CheckersState, config: CheckersConfig): CheckersState {
         const moveStart: Coord = move.getStartingCoord();
         const moveEnd: Coord = move.getEndingCoord();
         let movingStack: CheckersStack = state.getPieceAt(moveStart);
         let resultingState: CheckersState = state.remove(moveStart);
         if (this.isMoveStep(move) === false) {
             for (const capturedCoord of this.getCapturedCoords(move, state)) {
-                if (config.get().canStackPieces) {
+                if (config.canStackPieces) {
                     const capturedSpace: CheckersStack = state.getPieceAt(capturedCoord);
                     const capturedCommander: CheckersPiece = capturedSpace.getCommander();
                     movingStack = movingStack.capturePiece(capturedCommander);
@@ -346,12 +350,12 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         resultingState = resultingState.set(moveEnd, movingStack);
         const finishLine: number = state.getFinishLineOf(state.getCurrentPlayer());
         const promotedMidCapture: boolean =
-            config.get().canPromoteMidCapture &&
+            config.canPromoteMidCapture &&
             move.coords.toList().some((c: Coord) => c.y === finishLine);
         if (moveEnd.y === finishLine || promotedMidCapture) {
             resultingState = resultingState.set(moveEnd, movingStack.promoteCommander());
         }
-        return resultingState.incrementTurn();
+        return resultingState;
     }
 
     private getCapturedCoords(move: CheckersMove, state: CheckersState): MGPUniqueList<Coord> {
@@ -408,14 +412,17 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     }
 
     private isLegalSubMoveList(move: CheckersMove, state: CheckersState, config: CheckersConfig): MGPValidation {
+        let currentState: CheckersState = state;
         for (let i: number = 1; i < move.coords.size(); i++) {
             const previousCoord: Coord = move.coords.get(i - 1);
             const landingCoord: Coord = move.coords.get(i);
             const subMoveValidity: MGPValidation =
-                this.getSubMoveValidity(move, previousCoord, landingCoord, state, config);
+                this.getSubMoveValidity(move, previousCoord, landingCoord, currentState, config);
             if (subMoveValidity.isFailure()) {
                 return subMoveValidity;
             }
+            const partialMove: CheckersMove = CheckersMove.fromCapture(move.coords.toList().slice(0, i + 1)).get();
+            currentState = this.applyMove(partialMove, state, config);
         }
         return MGPValidation.SUCCESS;
     }
@@ -451,10 +458,10 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             }
             isCapture = true;
         }
-        if (this.isNormalPieceGoingBackwardIllegaly(move, start, end, state, config)) {
+        if (this.isNormalPieceGoingBackwardIllegaly(start, end, state, config)) {
             return MGPValidation.failure(CheckersFailure.CANNOT_GO_BACKWARD());
         }
-        const flyLegality: MGPValidation = this.getFlyLegality(move, start, end, state, isCapture, config);
+        const flyLegality: MGPValidation = this.getFlyLegality(start, end, state, isCapture, config);
         if (flyLegality.isFailure()) {
             return flyLegality;
         }
@@ -509,16 +516,18 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     }
 
     /**
-     * @param move a simple move, (start/end, nothing more)
+     * @param stepStart the start of the step
+     * @param stepEnd the end of the step
+     * @param state the state before the step
+     * @param config the config
      */
-    private isNormalPieceGoingBackwardIllegaly(move: CheckersMove,
-                                               stepStart: Coord,
+    private isNormalPieceGoingBackwardIllegaly(stepStart: Coord,
                                                stepEnd: Coord,
                                                state: CheckersState,
                                                config: CheckersConfig)
     : boolean
     {
-        const movingPiece: CheckersPiece = state.getPieceAt(move.getStartingCoord()).getCommander();
+        const movingPiece: CheckersPiece = state.getPieceAt(stepStart).getCommander();
         if (movingPiece.isPromoted) {
             return false;
         } // Here: we check a normal piece
@@ -539,8 +548,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         }
     }
 
-    private getFlyLegality(move: CheckersMove,
-                           stepStart: Coord,
+    private getFlyLegality(stepStart: Coord,
                            stepEnd: Coord,
                            state: CheckersState,
                            isCapture: boolean,
@@ -561,7 +569,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             }
         }
         if (config.promotedPiecesCanFly) {
-            if (state.getPieceAt(move.getStartingCoord()).getCommander().isPromoted) {
+            if (state.getPieceAt(stepStart).getCommander().isPromoted) {
                 return MGPValidation.SUCCESS; // Legal promoted fly
             } else { // Normal piece cannot fly
                 if (isCapture) {

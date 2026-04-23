@@ -131,4 +131,31 @@ describe('BashniComponent', () => {
         testUtils.expectToBeCreated();
     });
 
+    it('should allow mid-capture promotion', fakeAsync(async() => {
+        // Given a state where we can do a mid-capture promotion
+        const state: CheckersState = CheckersState.of([
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, _V, __, _V, __, __],
+            [__, __, __, __, __, __, _U, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+        ], 0);
+        await testUtils.setupState(state);
+
+        // When doing it and using the king's ability to jump
+        const move: CheckersMove = CheckersMove.fromCapture([
+            new Coord(6, 2),
+            new Coord(4, 0),
+            new Coord(1, 3),
+        ]).get();
+        await testUtils.expectClickSuccess('#coord-6-2');
+        await testUtils.expectClickSuccess('#coord-4-0');
+
+        // Then it should be a success
+        await testUtils.expectMoveSuccess('#coord-1-3', move);
+    }));
+
 });

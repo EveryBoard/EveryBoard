@@ -250,24 +250,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private getCaptureValidity(start: Coord, end: Coord): MGPValidation {
         const ongoingMove: MGPFallible<CheckersMove> = CheckersMove.fromCapture(this.currentMoveClicks);
         const config: CheckersConfig = this.getConfig().get();
-        return this.rules.getSubMoveValidity(ongoingMove.get(), start, end, this.getState(), config);
+        return this.rules.getSubMoveValidity(ongoingMove.get(), start, end, this.constructedState, config);
     }
 
     private applyPartialCapture(): MGPValidation {
-        const lastCaptureIndex: number = this.capturedCoords.length - 1;
-        const lastCapturedCoord: Coord = this.capturedCoords[lastCaptureIndex];
-        const lastMoveIndex: number = this.currentMoveClicks.length - 2;
-        const lastMovedCoord: Coord = this.currentMoveClicks[lastMoveIndex];
-        const landingIndex: number = this.currentMoveClicks.length - 1;
-        const landingCoord: Coord = this.currentMoveClicks[landingIndex];
-        const movingStack: CheckersStack = this.constructedState.getPieceAt(lastMovedCoord);
-        const capturedStack: CheckersStack = this.constructedState.getPieceAt(lastCapturedCoord);
-        const capturedCommander: CheckersPiece = capturedStack.getCommander();
-        const pieceUnderCommander: CheckersStack = capturedStack.getPiecesUnderCommander();
-        const landingStack: CheckersStack = movingStack.capturePiece(capturedCommander);
-        this.constructedState = this.constructedState.remove(lastMovedCoord);
-        this.constructedState = this.constructedState.set(lastCapturedCoord, pieceUnderCommander);
-        this.constructedState = this.constructedState.set(landingCoord, landingStack);
+        const currentMove: MGPFallible<CheckersMove> = CheckersMove.fromCapture(this.currentMoveClicks);
+        this.constructedState = this.rules.applyMove(currentMove.get(), this.getState(), this.getConfig().get());
         return MGPValidation.SUCCESS;
     }
 
