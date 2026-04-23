@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
@@ -321,6 +321,71 @@ describe('BashniRules', () => {
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
+
+        it('should allow crossing the same square twice during multi-capture', () => {
+            // Given a board where a king (O) at (0,0) can jump over (1,1) to (2,2),
+            // then jump over (3,1) to (4,0).
+            // (2,2) is a landing square and then a starting square for the next jump.
+            // This is allowed even if it crosses row 1 again.
+            const state: CheckersState = CheckersState.of([
+                [__O, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, __V, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When listing all complete captures
+            const captures: CheckersMove[] = rules.getCompleteCaptures(state, defaultConfig.get());
+
+            // Then it should include the double-jump
+            // Path: (0,0)x(1,1)-(2,2)x(3,1)-(4,0).
+            const doubleCapture: CheckersMove = CheckersMove.fromCapture([
+                new Coord(0, 0),
+                new Coord(2, 2),
+                new Coord(4, 0),
+            ], true).get();
+
+            expect(captures.some((c: CheckersMove) => c.equals(doubleCapture))).toBeTrue();
+        });
+
+        it('should forbid jumping over the same coordinate twice during multi-capture', () => {
+            // Given a board where a king (O) at (0,0) can jump over (1,1) to (2,2),
+            // then try to jump back over (1,1) to (0,0).
+            // Even if (1,1) is a tower, jumping over it twice is forbidden in a single move.
+            const V2: CheckersStack = new CheckersStack([one, one]);
+            const state: CheckersState = CheckersState.of([
+                [__O, ___, ___, ___, ___, ___, ___, ___],
+                [___, V2,  ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When listing all complete captures
+            const captures: CheckersMove[] = rules.getCompleteCaptures(state, defaultConfig.get());
+
+            // Then it should NOT include the double-jump over (1,1)
+            const doubleJumpResult: MGPFallible<CheckersMove> = CheckersMove.fromCapture([
+                new Coord(0, 0),
+                new Coord(2, 2),
+                new Coord(0, 0),
+            ], true);
+            expect(doubleJumpResult.isSuccess()).toBeTrue();
+            const doubleJump: CheckersMove = doubleJumpResult.get();
+
+            expect(captures.some((c: CheckersMove) => c.equals(doubleJump))).toBeFalse();
+
+            // And applying it should be illegal
+            const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
+            RulesUtils.expectMoveFailure(rules, state, doubleJump, reason, defaultConfig);
+            });
 
     });
 

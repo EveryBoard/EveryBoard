@@ -152,9 +152,9 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (this.interactive) {
             for (const validMove of this.legalMoves) {
                 const numberOfClicks: number = this.currentMoveClicks.length;
-                if (numberOfClicks < validMove.coords.size()) {
-                    const possibleCoord: Coord = validMove.coords.get(numberOfClicks);
-                    if (CheckersMove.getRelation(this.currentMoveClicks, validMove.coords.toList()) === 'PREFIX') {
+                if (numberOfClicks < validMove.coords.length) {
+                    const possibleCoord: Coord = validMove.coords[numberOfClicks];
+                    if (CheckersMove.getRelation(this.currentMoveClicks, validMove.coords as Coord[]) === 'PREFIX') {
                         this.possibleClicks = this.possibleClicks.addElement(possibleCoord);
                     }
                 }

@@ -21,13 +21,28 @@ describe('CheckersMove', () => {
 
     describe('Capture', () => {
 
-        it('should forbid to pass over the same coord several times', () => {
-            // When trying to create a capture that passes twice over the same Coord
+        it('should allow to pass over the same landing square several times', () => {
+            // Path: (0,0) jump over (1,1) land (2,2).
+            // Then: (2,2) jump over (3,3) land (4,4).
+            // Then: (4,4) jump over (3,5) land (2,2).
+            // (2,2) is visited twice as a landing/start square, but NO coordinate is jumped over twice.
+            const coords: Coord[] = [new Coord(0, 0), new Coord(2, 2), new Coord(4, 4), new Coord(2, 6)];
+            // wait, (4,4) to (2,6) jumps over (3,5).
+            const move: MGPFallible<CheckersMove> = CheckersMove.fromCapture(coords);
+
+            // Then it should succeed
+            expect(move.isSuccess()).toBeTrue();
+        });
+
+        it('should allow to jump twice over the same square (CheckersMove is board-agnostic)', () => {
+            // CheckersMove should allow this, it's up to the Rules to forbid it based on the board state.
+            // (0,0) over (1,1) land (2,2).
+            // (2,2) over (1,1) land (0,0).
             const coords: Coord[] = [new Coord(0, 0), new Coord(2, 2), new Coord(0, 0)];
             const move: MGPFallible<CheckersMove> = CheckersMove.fromCapture(coords);
 
-            // Then it should fail
-            expect(move).toEqual(MGPFallible.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD()));
+            // Then it should succeed
+            expect(move.isSuccess()).toBeTrue();
         });
 
         it('should allow simple capture', () => {
@@ -146,7 +161,7 @@ describe('CheckersMove', () => {
             const startingCoord: Coord = move.getStartingCoord();
 
             // Then it should return first coord
-            expect(startingCoord.equals(move.coords.get(0))).toBeTrue();
+            expect(startingCoord.equals(move.coords[0])).toBeTrue();
         });
 
     });
@@ -161,7 +176,7 @@ describe('CheckersMove', () => {
             const endingCoord: Coord = move.getEndingCoord();
 
             // Then it should return last coord
-            expect(endingCoord.equals(move.coords.get(1))).toBeTrue();
+            expect(endingCoord.equals(move.coords[1])).toBeTrue();
         });
 
     });

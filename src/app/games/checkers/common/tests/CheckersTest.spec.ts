@@ -384,11 +384,11 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 const state: CheckersState = entries.stateWithComplexeCapture;
                 await testUtils.setupState(state);
                 const move: CheckersMove = entries.complexeCapture;
-                const first: Coord = move.coords.get(0);
+                const first: Coord = move.coords[0];
                 await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
 
                 // When doing the first capture
-                const second: Coord = move.coords.get(1);
+                const second: Coord = move.coords[1];
                 await testUtils.expectClickSuccess(`#coord-${ second.x }-${ second.y }`);
 
                 // Then it should already be shown as captured
@@ -396,7 +396,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 const firstCapture: Coord = first.getNext(firstCaptureDirection, 1);
                 testUtils.expectElementToHaveClass(`#square-${ firstCapture.x }-${ firstCapture.y }`, 'captured-fill');
                 // And the next possibles ones displayed
-                const third: Coord = move.coords.get(2);
+                const third: Coord = move.coords[2];
                 testUtils.expectElementToHaveClass(`#clickable-highlight-${ third.x }-${ third.y }`, 'clickable-stroke');
             }));
 
