@@ -7,10 +7,13 @@ import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiState } from '../ReversiState';
 import { ReversiComponent } from '../reversi.component';
+import { ReversiConfig, ReversiRules } from '../ReversiRules';
+import { MGPOptional } from 'lib/dist/MGPOptional';
 
 describe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
+    const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -53,6 +56,37 @@ describe('ReversiComponent', () => {
         expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured-fill']);
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
+    }));
+
+    it('should show last move and captures and hide previous', fakeAsync(async() => {
+        console.log('====================')
+        // Given a board with a last move
+        const previousState: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
+        const previousMove: ReversiMove = new ReversiMove(5, 3);
+        const board: Table<PlayerOrNone> = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, O, O, O, _, _],
+            [_, _, _, X, O, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ];
+        const state: ReversiState = new ReversiState(board, 1);
+        await testUtils.setupState(state, { previousState, previousMove });
+
+        const move: ReversiMove = new ReversiMove(5, 4);
+        console.log('==================== expectMoveSuccess')
+        await testUtils.expectMoveSuccess('#click_5_4', move);
+        console.log('==================== move done')
+
+        // const reversiGameComponent: ReversiComponent = testUtils.getGameComponent();
+        // expect(reversiGameComponent.getRectClasses(4, 3)).not.toContain('captured-fill');
+        testUtils.expectElementNotToHaveClass('#click_4_3', 'captured-fill');
+        // TODO: _ should be - in reverse ids !!
+        // expect(reversiGameComponent.getRectClasses(4, 4)).toContain('captured-fill');
+        testUtils.expectElementToHaveClass('#click_4_4', 'captured-fill');
     }));
 
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
