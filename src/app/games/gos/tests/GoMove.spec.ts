@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
@@ -8,14 +8,14 @@ import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { GoRules } from '../go/GoRules';
 import { HexagonalGoRules } from '../hexagonal-go/HexagonalGoRules';
-import { TrigoRules } from '../trigo/TrigoRules';
+import { TriangularGoRules } from '../triangular-go/TriangularGoRules';
 
 describe('GoMove', () => {
 
     const rules: AbstractGoRules<RulesConfig>[] = [
         GoRules.get(),
         HexagonalGoRules.get(),
-        TrigoRules.get(),
+        TriangularGoRules.get(),
     ];
     for (const rule of rules) {
         it('should have a bijective encoder', () => {

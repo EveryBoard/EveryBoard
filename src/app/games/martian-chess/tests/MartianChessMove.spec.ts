@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { DirectionFailure } from '../../../jscaip/Direction';
