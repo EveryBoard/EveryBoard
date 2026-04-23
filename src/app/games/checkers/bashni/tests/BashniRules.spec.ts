@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
@@ -357,13 +357,13 @@ describe('BashniRules', () => {
         });
 
         it('should allow capture to continue as king after reaching promotion line mid-capture', () => {
-            // Given a board: U at (4,2), V at (3,1) and V at (1,1)
-            // U captures V at (3,1), lands at (2,0) [promotion line y=0],
-            // then continues as king to capture V at (1,1) and land at (0,2)
+            // Given a board: U at (6,2), V at (5,1) and V at (3,1)
+            // U captures V at (5,1), lands at (4,0) [promotion line], becomes king
+            // then as king captures V at (3,1) and lands at (1,3) [flying capture, distance 3]
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, __V, ___, __V, ___, ___, ___, ___],
-                [___, ___, ___, ___, __U, ___, ___, ___],
+                [___, ___, ___, __V, ___, __V, ___, ___],
+                [___, ___, ___, ___, ___, ___, __U, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
@@ -371,20 +371,20 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
-            // When performing the two-jump capture crossing the promotion line
+            // When performing capture: normal piece promotes at row 0, then flies as king
             const move: CheckersMove = CheckersMove.fromCapture([
-                new Coord(4, 2),
-                new Coord(2, 0),
-                new Coord(0, 2),
+                new Coord(6, 2),
+                new Coord(4, 0),
+                new Coord(1, 3),
             ]).get();
 
-            // Then the move is legal and the piece ends up promoted with both captured pieces stacked
+            // Then the move is legal: piece ends up promoted with both captured pieces stacked
             const OVV: CheckersStack = new CheckersStack([zeroKing, one, one]);
             const expectedState: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [OVV, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, OVV, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],

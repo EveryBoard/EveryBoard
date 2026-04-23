@@ -67,7 +67,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, _u, __, __, __, __],
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(6, 4), new Coord(4, 6)]).get(),
+            CheckersMove.fromCapture([new Coord(5, 4), new Coord(7, 6)]).get(),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -135,7 +135,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 0), new Coord(1, 2)]).get(),
+            CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 0), new Coord(0, 3)]).get(),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
