@@ -11,11 +11,11 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { TrigoComponent } from '../trigo.component';
+import { TriangularGoComponent } from '../../triangular-go/triangular-go.component';
 
-describe('TrigoComponent', () => {
+describe('TriangularGoComponent', () => {
 
-    let testUtils: ComponentTestUtils<TrigoComponent>;
+    let testUtils: ComponentTestUtils<TriangularGoComponent>;
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -26,7 +26,7 @@ describe('TrigoComponent', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
 
     beforeEach(fakeAsync(async() => {
-        testUtils = await ComponentTestUtils.forGame<TrigoComponent>('Trigo');
+        testUtils = await ComponentTestUtils.forGame<TriangularGoComponent>('TriangularGo');
     }));
 
     it('should create', () => {

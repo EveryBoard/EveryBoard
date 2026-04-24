@@ -41,6 +41,47 @@ describe('EncapsuleComponent', () => {
         testUtils.expectToBeCreated();
     });
 
+    describe('Ring Sub Circle Display', () => {
+
+        function getRingOutsidesRadius(size: number): number {
+            const circleElement: DebugElement = testUtils.findElement('#remaining-piece-size-' + size + '-PLAYER_ZERO > [app-ring] > circle:nth-child(1)');
+            const ringsOutsideStrokeCircleRadius: number = Number.parseFloat(circleElement.attributes.r ?? '0');
+            const ringsOutsideStrokeCircleStrokeWidth: number = Number.parseFloat(circleElement.attributes['stroke-width'] ?? '0');
+            const actualRingsOutsideStrokeCircleOuterRadius: number =
+                ringsOutsideStrokeCircleRadius + (ringsOutsideStrokeCircleStrokeWidth / 2);
+            return actualRingsOutsideStrokeCircleOuterRadius;
+        }
+
+        function getStrokeWidth(size: number = 1): number {
+            const circleElement: DebugElement = testUtils.findElement('#remaining-piece-size-' + size + '-PLAYER_ZERO > [app-ring] > circle:nth-child(1)');
+            return Number.parseFloat(circleElement.attributes['stroke-width'] ?? '0');
+        }
+
+        it('should have the biggest circle of the biggest ring using the maximum available space', fakeAsync(async() => {
+            // Given a board with standard config
+            // When displaying it
+            // Then it should use the maximum space avaible:
+            //    - so we have rectangle that, standardly, are 100 width
+            //    - those rectangle have a stroke width of 8
+            //    - given the total available space inside the square 100 - 8 = 92
+            //    - given the outisde radius of inner circle = 92 / 2 = 46
+            //    - so, whatever the stroke width and radius are, the som of radius + (strokeWidth / 2) should be 46
+            const actualRingsOutsideStrokeCircleOuterRadius: number = getRingOutsidesRadius(3);
+            expect(actualRingsOutsideStrokeCircleOuterRadius).toBeCloseTo(46, 0.00000001);
+        }));
+
+        it('should have the biggest circle of the second biggest ring leave half its stroke between it and the biggest ring', fakeAsync(async() => {
+            // Given a board with standard config
+            // When displaying it
+            // Then it should leave half its stroke between it and the biggest ring (hence, be 6 stroke smaller)
+            const biggestRingOutsideRadius: number = getRingOutsidesRadius(3);
+            const smallerRingOutsideRadius: number = getRingOutsidesRadius(2);
+            const strokeWidth: number = getStrokeWidth();
+            expect(biggestRingOutsideRadius - smallerRingOutsideRadius).toBe(6 * strokeWidth);
+        }));
+
+    });
+
     describe('First click', () => {
 
         it('should forbid clicking directly on the board without selecting a piece', fakeAsync(async() => {
@@ -78,7 +119,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ZERO');
 
             // Then that piece should be selected
-            testUtils.expectElementToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > circle', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > [app-ring] > circle:nth-child(2)', 'selected-stroke');
         }));
 
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {
@@ -172,8 +213,27 @@ describe('EncapsuleComponent', () => {
             // When moving the big piece atop the small one
             const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(0, 1));
 
-            // Then it shoud work and the starting and landing coord should be "moved-fill"
+            // Then it shoud work and the starting
             await testUtils.expectMoveSuccess('#click-0-1', move);
+        }));
+
+        it('should display moved piece', fakeAsync(async() => {
+            // Given a board with a selected piece movable on top of another one
+            const x: EncapsuleSpace = _.put(mediumDark);
+            const X: EncapsuleSpace = _.put(bigDark);
+            const board: EncapsuleSpace[][] = [
+                [_, _, _],
+                [x, X, _],
+                [_, _, _],
+            ];
+            await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
+            await testUtils.expectClickSuccess('#click-1-1');
+
+            // When moving the big piece atop the small one
+            const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(1, 1), new Coord(0, 1));
+            await testUtils.expectMoveSuccess('#click-0-1', move);
+
+            // Then landing coord should be "moved-fill"
             testUtils.expectElementToHaveClasses('#click-0-1', ['base', 'moved-fill']);
             testUtils.expectElementToHaveClasses('#click-1-1', ['base', 'moved-fill']);
         }));
@@ -217,7 +277,7 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickFailure('#remaining-piece-size-1-PLAYER_ZERO');
 
             // Then that piece should be selected no more
-            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > g > circle:nth-child(2)', 'selected-stroke');
         }));
 
         it('should change select piece when clicking another', fakeAsync(async() => {
@@ -228,8 +288,8 @@ describe('EncapsuleComponent', () => {
             await testUtils.expectClickSuccess('#remaining-piece-size-2-PLAYER_ZERO');
 
             // Then that other piece should be selected
-            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > circle', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#remaining-piece-size-2-PLAYER_ZERO > circle', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#remaining-piece-size-1-PLAYER_ZERO > g > circle:nth-child(2)', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#remaining-piece-size-2-PLAYER_ZERO > g > circle:nth-child(2)', 'selected-stroke');
         }));
 
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {
@@ -298,6 +358,33 @@ describe('EncapsuleComponent', () => {
             const concreteCenter: Coord = new Coord(0, 0).getNext(abstractCenter, 100);
             const concreteCenterString: string = testUtils.getGameComponent().getSVGTranslationAt(concreteCenter);
             expect(transform).toEqual(concreteCenterString);
+        }));
+
+    });
+
+    describe('hideLastMove', () => {
+
+        it('should hide last move when selecting a piece to drop', fakeAsync(async() => {
+            // Given a state with a last move
+            const x: EncapsuleSpace = _.put(mediumLight);
+            const board: EncapsuleSpace[][] = [
+                [_, _, _],
+                [x, _, _],
+                [_, _, _],
+            ];
+            const previousMove: EncapsuleMove = EncapsuleMove.ofDrop(mediumLight, new Coord(0, 1));
+            const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([], [1, 1]);
+            await testUtils.setupState(
+                new EncapsuleState(board, 1, remainingPieces, 3),
+                { previousMove, previousState: rules.getInitialState(defaultConfig) },
+            );
+            testUtils.expectElementToHaveClass('#click-0-1', 'moved-fill');
+
+            // When selecting any piece
+            await testUtils.expectClickSuccess('#remaining-piece-size-1-PLAYER_ONE');
+
+            // Then last move should be hidden
+            testUtils.expectElementNotToHaveClass('#click-0-1', 'moved-fill');
         }));
 
     });

@@ -8,20 +8,20 @@ import { Table } from '../../../../jscaip/TableUtils';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { TrigoHeuristic } from '../TrigoHeuristic';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { TriangularGoHeuristic } from '../../triangular-go/TriangularGoHeuristic';
+import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('TrigoHeuristic', () => {
+describe('TriangularGoHeuristic', () => {
 
-    let heuristic: TrigoHeuristic;
-    const defaultConfig: TrigoConfig = TrigoRules.get().getDefaultRulesConfig();
+    let heuristic: TriangularGoHeuristic;
+    const defaultConfig: TriangularGoConfig = TriangularGoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
-        heuristic = new TrigoHeuristic();
+        heuristic = new TriangularGoHeuristic();
     });
 
     it('should prefer a larger territory', () => {

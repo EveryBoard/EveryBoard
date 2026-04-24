@@ -12,6 +12,7 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RingComponent } from '../common/ring/ring.component';
 
 import { YinshFailure } from './YinshFailure';
 import { YinshCapture, YinshMove } from './YinshMove';
@@ -36,7 +37,7 @@ interface ViewInfo {
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass],
+    imports: [NgClass, RingComponent],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,
@@ -499,6 +500,14 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         }
+    }
+
+    protected translateRing(player: Player, ring: number): string {
+        const playerBase: number = player === Player.ZERO ? 15 : 1050;
+        const playerSign: number = player === Player.ZERO ? 1 : -1;
+        const translateX: number = playerBase + playerSign * 1.2 * this.viewInfo.ringOuterSize * (ring + 1);
+        const translateY: number = player === Player.ZERO ? 300 : 1260;
+        return 'translate(' + translateX + ', ' + translateY + ')';
     }
 
 }
