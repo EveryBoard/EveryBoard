@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Table } from '../../../jscaip/TableUtils';
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';

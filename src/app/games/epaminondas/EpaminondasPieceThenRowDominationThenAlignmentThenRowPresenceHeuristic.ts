@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';

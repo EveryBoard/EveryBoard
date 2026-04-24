@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';

@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Coord } from '../../../jscaip/Coord';
 import { Table } from '../../../jscaip/TableUtils';

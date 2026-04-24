@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';

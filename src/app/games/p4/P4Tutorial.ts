@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerOrNone } from '../../jscaip/Player';

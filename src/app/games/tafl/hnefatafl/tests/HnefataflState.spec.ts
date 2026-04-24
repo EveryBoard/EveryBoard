@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../../jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';

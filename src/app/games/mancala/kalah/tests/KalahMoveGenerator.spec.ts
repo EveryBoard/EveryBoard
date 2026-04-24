@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaMove } from '../../common/MancalaMove';

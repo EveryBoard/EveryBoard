@@ -144,7 +144,12 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
     }
 
-    public override applyLegalMove(move: PylosMove, state: PylosState, _config: EmptyRulesConfig, _info: void): PylosState {
+    public override applyLegalMove(
+        move: PylosMove,
+        state: PylosState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): PylosState {
         return state.applyLegalMove(move);
     }
 

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { comparableEquals, isComparableObject, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
+import { comparableEquals, isComparableObject, MGPFallible } from '@everyboard/lib';
 
 import { GameNode } from '../AI/GameNode';
 import { GameStatus } from '../GameStatus';

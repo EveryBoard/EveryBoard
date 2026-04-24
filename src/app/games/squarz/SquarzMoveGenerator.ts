@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';

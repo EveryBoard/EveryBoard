@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Debug } from '../../utils/Debug';
 

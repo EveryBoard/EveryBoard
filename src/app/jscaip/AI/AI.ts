@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Move } from '../Move';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';

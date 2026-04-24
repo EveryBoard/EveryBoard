@@ -2,8 +2,6 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';

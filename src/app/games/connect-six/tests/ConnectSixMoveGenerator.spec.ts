@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { PlayerOrNone } from '../../../jscaip/Player';

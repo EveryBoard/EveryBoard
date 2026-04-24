@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

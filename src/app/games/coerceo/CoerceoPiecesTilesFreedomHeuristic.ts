@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { CoordSet } from '../../jscaip/CoordSet';
 import { Player } from '../../jscaip/Player';

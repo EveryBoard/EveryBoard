@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional, NumberMap } from '@everyboard/lib';
+import { MGPMap, NumberMap } from '@everyboard/lib';
 
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { Player } from '../../jscaip/Player';

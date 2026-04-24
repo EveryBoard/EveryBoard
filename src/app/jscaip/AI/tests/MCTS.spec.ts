@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AwaleMoveGenerator } from '../../../games/mancala/awale/AwaleMoveGenerator';
 import { AwaleRules } from '../../../games/mancala/awale/AwaleRules';
 import { MancalaConfig } from '../../../games/mancala/common/MancalaConfig';

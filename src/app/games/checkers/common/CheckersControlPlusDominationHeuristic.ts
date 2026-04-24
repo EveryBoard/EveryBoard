@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
 

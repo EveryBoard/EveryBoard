@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 

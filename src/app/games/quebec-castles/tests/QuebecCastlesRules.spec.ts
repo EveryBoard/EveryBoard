@@ -86,7 +86,7 @@ describe('QuebecCastlesRules', () => {
                 const customConfig: QuebecCastlesConfig = {
                     ...defaultConfig,
                     playersPlaceCastle: true,
-                }
+                };
                 const firstCastle: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
                     MGPOptional.of(new Coord(7, 7)),
                     MGPOptional.empty(),

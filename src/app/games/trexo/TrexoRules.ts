@@ -72,7 +72,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         move: TrexoMove,
         state: TrexoState,
         _config: EmptyRulesConfig,
-        _info: void
+        _info: void,
     ): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)

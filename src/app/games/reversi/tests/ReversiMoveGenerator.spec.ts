@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ReversiMove } from '../ReversiMove';

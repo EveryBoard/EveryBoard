@@ -98,7 +98,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         move: LodestoneMove,
         state: LodestoneState,
         _config: EmptyRulesConfig,
-        infos: LodestoneInfos
+        infos: LodestoneInfos,
     ): LodestoneState
     {
         const currentPlayer: Player = state.getCurrentPlayer();

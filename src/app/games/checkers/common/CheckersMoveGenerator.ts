@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 

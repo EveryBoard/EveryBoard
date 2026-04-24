@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
+import { MGPMap, Set, Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';

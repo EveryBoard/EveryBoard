@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';

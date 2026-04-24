@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';

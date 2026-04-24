@@ -40,7 +40,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         move: ConspirateursMove,
         state: ConspirateursState,
         _config: EmptyRulesConfig,
-        _info: void
+        _info: void,
     ): ConspirateursState
     {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();

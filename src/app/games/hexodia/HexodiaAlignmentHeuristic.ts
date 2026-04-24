@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
 

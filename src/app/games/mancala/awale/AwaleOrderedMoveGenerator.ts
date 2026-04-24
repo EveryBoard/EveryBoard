@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';

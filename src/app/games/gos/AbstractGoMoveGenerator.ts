@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { GroupDataFactory } from '../../jscaip/BoardData';

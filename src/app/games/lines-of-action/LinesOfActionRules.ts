@@ -88,7 +88,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         move: LinesOfActionMove,
         state: LinesOfActionState,
         _config: EmptyRulesConfig,
-        _info: void
+        _info: void,
     ): LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
