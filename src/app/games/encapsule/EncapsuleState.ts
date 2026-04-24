@@ -14,22 +14,16 @@ export class EncapsuleSizeToNumberMap extends NumberMap<number> {
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 
-    public readonly remainingPieces: EncapsuleRemainingPieces;
-
-    public readonly nbOfPieceSize: number;
-
     public constructor(
         board: Table<EncapsuleSpace>,
         turn: number,
-        remainingPieces: EncapsuleRemainingPieces,
-        nbOfPieceSize: number)
+        public readonly remainingPieces: EncapsuleRemainingPieces,
+        public readonly nbOfPieceSize: number)
     {
         super(board, turn);
-        this.remainingPieces = remainingPieces;
         this.remainingPieces.get(Player.ZERO).makeImmutable();
         this.remainingPieces.get(Player.ONE).makeImmutable();
         this.remainingPieces.makeImmutable();
-        this.nbOfPieceSize = nbOfPieceSize;
     }
 
     public getRemainingPiecesCopy(): EncapsuleRemainingPieces {
