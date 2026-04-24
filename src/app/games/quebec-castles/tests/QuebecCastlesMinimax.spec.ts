@@ -11,7 +11,7 @@ import { QuebecCastlesState } from '../QuebecCastlesState';
 describe('QuebecCastlesMinimax', () => {
 
     let minimax: Minimax<QuebecCastlesMove, QuebecCastlesState, QuebecCastlesConfig>;
-    const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuebecCastlesConfig = QuebecCastlesRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new QuebecCastlesMinimax();

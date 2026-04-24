@@ -349,14 +349,14 @@ describe('HexodiaComponent', () => {
 
     describe('alternative configs', () => {
 
-        const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+        const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 
         it('should accept more drops', fakeAsync(async() => {
             // Given a board with a config with 3 drops
-            const alternativeConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternativeConfig: HexodiaConfig = {
+                ...defaultConfig,
                 numberOfDrops: 3,
-            });
+            };
             const board: Table<FourStatePiece> =
                 HexodiaRules.get().getInitialState(alternativeConfig).board;
             const state: HexodiaState = new HexodiaState(board, 1);

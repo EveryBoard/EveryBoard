@@ -10,7 +10,7 @@ import { QuixoConfig, QuixoState } from './QuixoState';
 
 export class QuixoMoveGenerator extends MoveGenerator<QuixoMove, QuixoState, QuixoConfig> {
 
-    public override getListMoves(node: QuixoNode, _config: MGPOptional<QuixoConfig>): QuixoMove[] {
+    public override getListMoves(node: QuixoNode, _config: QuixoConfig): QuixoMove[] {
         const state: QuixoState = node.gameState;
         const moves: QuixoMove[] = [];
         const verticalCoords: Coord[] = QuixoRules.getVerticalCoords(node);

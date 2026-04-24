@@ -16,7 +16,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 describe('SixFilteredMoveGenerator', () => {
 
     let moveGenerator: SixFilteredMoveGenerator;
-    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SixFilteredMoveGenerator(SixRules.get());
@@ -133,10 +133,10 @@ describe('SixFilteredMoveGenerator', () => {
                 [O, O, O, X, X, X],
             ], 22);
             const node: SixNode = new SixNode(state);
-            const customCOnfig: MGPOptional<SixConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customCOnfig: SixConfig = {
+                ...defaultConfig,
                 piecesPerPlayer: 10,
-            });
+            };
 
             // When listing the moves
             const listMoves: SixMove[] = moveGenerator.getListMoves(node, customCOnfig);

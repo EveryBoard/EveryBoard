@@ -20,7 +20,7 @@ describe('MancalaScoreHeuristic', () => {
 
     for (const mancala of [AwaleRules, KalahRules]) {
 
-        const defaultConfig: MGPOptional<MancalaConfig> = mancala.get().getDefaultRulesConfig();
+        const defaultConfig: MancalaConfig = mancala.get().getDefaultRulesConfig();
 
         it('should prefer board with better score', () => {
             // Given a board with a big score

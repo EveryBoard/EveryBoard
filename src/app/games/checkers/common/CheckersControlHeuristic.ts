@@ -16,8 +16,8 @@ export class CheckersControlHeuristic extends PlayerMetricHeuristic<CheckersMove
         super();
     }
 
-    public override getMetrics(node: CheckersNode, config: MGPOptional<CheckersConfig>): PlayerNumberTable {
-        return this.getControlScore(node, config.get());
+    public override getMetrics(node: CheckersNode, config: CheckersConfig): PlayerNumberTable {
+        return this.getControlScore(node, config);
     }
 
     protected getControlScore(node: CheckersNode, config: CheckersConfig): PlayerNumberTable {

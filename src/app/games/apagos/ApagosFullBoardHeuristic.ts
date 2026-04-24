@@ -11,7 +11,7 @@ import { ApagosState } from './ApagosState';
 
 export class ApagosFullBoardHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState, ApagosConfig> {
 
-    public override getMetrics(node: ApagosNode, _config: MGPOptional<ApagosConfig>): PlayerNumberTable {
+    public override getMetrics(node: ApagosNode, _config: ApagosConfig): PlayerNumberTable {
         const result: PlayerNumberTable = PlayerNumberTable.of(
             [0, 0, 0, 0],
             [0, 0, 0, 0],

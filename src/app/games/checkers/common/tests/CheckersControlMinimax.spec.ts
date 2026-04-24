@@ -19,7 +19,7 @@ for (const rule of rules) {
 
         const minimax: CheckersControlMinimax = new CheckersControlMinimax(rule);
         const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-        const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();
+        const defaultConfig: CheckersConfig = rule.getDefaultRulesConfig();
 
         SlowTest.it('should be able play against itself', () => {
             minimaxTest({

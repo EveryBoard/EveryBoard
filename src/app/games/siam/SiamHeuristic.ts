@@ -12,9 +12,9 @@ import { SiamState } from './SiamState';
 
 export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, SiamConfig> {
 
-    public getBoardValue(node: SiamNode, config: MGPOptional<SiamConfig>): BoardValue {
+    public getBoardValue(node: SiamNode, config: SiamConfig): BoardValue {
         const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
-            this.getBoardValueInfo(node.gameState, config.get());
+            this.getBoardValueInfo(node.gameState, config);
         return BoardValue.of(boardValueInfo.boardValue);
     }
 

@@ -2,7 +2,7 @@ import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
@@ -10,7 +10,7 @@ import { LinesOfActionState } from './LinesOfActionState';
 
 export class LinesOfActionHeuristic extends PlayerMetricHeuristic<LinesOfActionMove, LinesOfActionState> {
 
-    public override getMetrics(node: LinesOfActionNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: LinesOfActionNode, _config: EmptyRulesConfig): PlayerNumberTable {
         const state: LinesOfActionState = node.gameState;
         const scores: PlayerNumberMap = LinesOfActionRules.getNumberOfGroups(state);
         // More groups = less score

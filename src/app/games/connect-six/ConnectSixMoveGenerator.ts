@@ -14,7 +14,7 @@ import { ConnectSixState } from './ConnectSixState';
 
 export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState, GobanConfig> {
 
-    public override getListMoves(node: ConnectSixNode, _config: MGPOptional<GobanConfig>): ConnectSixMove[] {
+    public override getListMoves(node: ConnectSixNode, _config: GobanConfig): ConnectSixMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {

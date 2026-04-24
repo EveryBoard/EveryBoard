@@ -51,7 +51,7 @@ describe('TrigoComponent', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         const move: GoMove = new GoMove(4, 1);
         await testUtils.expectMoveSuccess('#click-4-1', move);
@@ -78,7 +78,7 @@ describe('TrigoComponent', () => {
             new GoState(board, PlayerNumberMap.of(2, 4), 3, MGPOptional.empty(), GoPhase.COUNTING);
 
         // When rendering it
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // Then it should render the dead
         testUtils.expectElementToExist('#dead-0-4');
@@ -99,7 +99,7 @@ describe('TrigoComponent', () => {
             new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(1, 4)), GoPhase.PLAYING);
 
         // When rendering it
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // Then it should render the ko
         testUtils.expectElementToExist('#ko-1-4');
@@ -118,7 +118,7 @@ describe('TrigoComponent', () => {
             new GoState(board, PlayerNumberMap.of(2, 1), 11, MGPOptional.of(new Coord(4, 4)), GoPhase.PLAYING);
 
         // When rendering it
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // Then it should render the ko
         testUtils.expectElementToExist('#ko-4-4');

@@ -4,7 +4,7 @@ import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessPiece } from './MartianChessPiece';
@@ -13,7 +13,7 @@ import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, MartianChessState> {
 
-    public override getListMoves(node: MartianChessNode, _config: NoConfig): MartianChessMove[] {
+    public override getListMoves(node: MartianChessNode, _config: EmptyRulesConfig): MartianChessMove[] {
         const state: MartianChessState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerTerritory: Set<number> = state.getPlayerTerritory(currentPlayer);

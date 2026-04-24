@@ -26,7 +26,7 @@ describe('TrigoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
     const N: GoPiece = GoPiece.UNREACHABLE;
-    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TrigoConfig = TrigoRules.get().getDefaultRulesConfig();
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
@@ -765,10 +765,10 @@ describe('TrigoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 1)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
+            const alternateConfig: TrigoConfig = {
                 hexagonal: true,
                 size: 1,
-            });
+            };
 
             // When getting initial board
             const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
@@ -783,10 +783,10 @@ describe('TrigoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 2)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
+            const alternateConfig: TrigoConfig = {
                 hexagonal: true,
                 size: 2,
-            });
+            };
 
             // When getting initial board
             const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;

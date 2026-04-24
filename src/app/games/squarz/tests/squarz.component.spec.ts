@@ -18,7 +18,7 @@ describe('SquarzComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<SquarzComponent>;
 

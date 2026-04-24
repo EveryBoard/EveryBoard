@@ -566,7 +566,7 @@ describe('RulesConfigurationComponent', () => {
                     });
                     testUtils.setInput('rulesConfigDescriptionOptional', MGPOptional.of(rulesConfigDescriptionWithBooleans));
                     const defaultConfig: RulesConfig =
-                        component.rulesConfigDescriptionOptional().get().getDefaultConfig().config;
+                        component.rulesConfigDescription().getDefaultConfig().config;
                     const configToDisplay: RulesConfig = Utils.getNonNullable(component.rulesConfigToDisplay());
                     // eslint-disable-next-line dot-notation
                     expect(configToDisplay['booleen']).toBeTrue();

@@ -10,7 +10,7 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 
 import { AwaleRules } from './AwaleRules';
 
-const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
 export class AwaleTutorial extends Tutorial {
 

@@ -19,7 +19,7 @@ describe('EncapsuleComponent', () => {
 
     let testUtils: ComponentTestUtils<EncapsuleComponent>;
     const rules: EncapsuleRules = EncapsuleRules.get();
-    const defaultConfig: MGPOptional<EncapsuleConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: EncapsuleConfig = rules.getDefaultRulesConfig();
 
     const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
     const emptyBoard: EncapsuleSpace[][] = [
@@ -283,10 +283,10 @@ describe('EncapsuleComponent', () => {
 
         it('should put remaining pieces around the board', fakeAsync(async() => {
             // Given a board with more size of pieces
-            const customConfig: MGPOptional<EncapsuleConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: EncapsuleConfig = {
+                ...defaultConfig,
                 nbOfSizes: 5,
-            });
+            };
             const state: EncapsuleState = rules.getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
 

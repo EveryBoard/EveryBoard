@@ -24,7 +24,7 @@ export type PointValue = {
 
 export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPieceHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>, config: TaflConfig): BoardValue {
         const gameStatus: GameStatus = this.rules.getGameStatus(node, config);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();

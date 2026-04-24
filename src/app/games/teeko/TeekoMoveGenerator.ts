@@ -11,11 +11,11 @@ import { TeekoState } from './TeekoState';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {
 
-    public override getListMoves(node: TeekoNode, config: MGPOptional<TeekoConfig>): TeekoMove[] {
+    public override getListMoves(node: TeekoNode, config: TeekoConfig): TeekoMove[] {
         if (node.gameState.isInDropPhase()) {
             return this.getListDrops(node.gameState);
         } else {
-            return this.getListTranslations(node.gameState, config.get());
+            return this.getListTranslations(node.gameState, config);
         }
     }
 

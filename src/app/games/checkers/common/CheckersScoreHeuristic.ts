@@ -9,7 +9,7 @@ import { CheckersState } from './CheckersState';
 
 export class CheckersScoreHeuristic extends PlayerMetricHeuristic<CheckersMove, CheckersState, CheckersConfig> {
 
-    public override getMetrics(node: CheckersNode, _config: MGPOptional<CheckersConfig>): PlayerNumberTable {
+    public override getMetrics(node: CheckersNode, _config: CheckersConfig): PlayerNumberTable {
         return node.gameState.getScores().get().toTable();
     }
 

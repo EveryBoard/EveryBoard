@@ -14,7 +14,7 @@ export class TeekoHeuristic extends Heuristic<TeekoMove,
                                               TeekoConfig>
 {
 
-    public getBoardValue(node: TeekoNode, _config: MGPOptional<TeekoConfig>): BoardValue {
+    public getBoardValue(node: TeekoNode, _config: TeekoConfig): BoardValue {
         const alignmentPossibilities: number = TeekoRules.TEEKO_HELPER.getBoardValue(node.gameState).metrics[0];
         const squarePossibilities: { score: number; victoriousCoords: Coord[] } =
             TeekoRules.get().getSquareInfo(node.gameState);

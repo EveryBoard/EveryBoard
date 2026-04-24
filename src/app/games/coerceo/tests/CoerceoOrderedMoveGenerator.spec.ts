@@ -15,7 +15,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoOrderedMoveGenerator', () => {
 
     let moveGenerator: CoerceoOrderedMoveGenerator;
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CoerceoOrderedMoveGenerator();

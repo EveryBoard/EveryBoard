@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
@@ -15,7 +15,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('ConspirateursHeuristic', () => {
 
     let heuristic: ConspirateursHeuristic;
-    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ConspirateursHeuristic();

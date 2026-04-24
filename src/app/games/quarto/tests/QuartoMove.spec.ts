@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { QuartoMove } from '../QuartoMove';
@@ -9,7 +8,7 @@ import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 
 describe('QuartoMove', () => {
 
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const rules: QuartoRules = QuartoRules.get();

@@ -34,10 +34,10 @@ describe('MancalaScoreMinimax', () => {
                 rules,
                 minimax,
                 options: minimaxOptions,
-                config: MGPOptional.of({
-                    ...rules.getDefaultRulesConfig().get(),
+                config: {
+                    ...rules.getDefaultRulesConfig(),
                     width: 4,
-                }),
+                },
                 shouldFinish: true,
             });
         });

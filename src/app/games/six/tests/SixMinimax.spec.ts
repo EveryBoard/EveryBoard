@@ -20,7 +20,7 @@ describe('SixMinimax', () => {
 
     let minimax: Minimax<SixMove, SixState, SixConfig, SixLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SixMinimax();

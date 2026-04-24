@@ -19,7 +19,7 @@ describe('AwaleScoreMinimax', () => {
     let minimax: Minimax<MancalaMove, MancalaState, MancalaConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AwaleRules.get();

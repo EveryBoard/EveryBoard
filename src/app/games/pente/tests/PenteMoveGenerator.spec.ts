@@ -9,7 +9,7 @@ import { PenteNode, PenteRules } from '../PenteRules';
 describe('PenteMoveGenerator', () => {
 
     let moveGenerator: PenteMoveGenerator;
-    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: PenteConfig = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new PenteMoveGenerator();

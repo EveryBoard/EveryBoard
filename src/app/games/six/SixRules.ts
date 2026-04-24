@@ -57,8 +57,8 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         return SixRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SixConfig>> {
-        return MGPOptional.of(SixRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<SixConfig> {
+        return SixRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getInitialState(): SixState {
@@ -66,14 +66,14 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         return SixState.ofRepresentation(board, 0);
     }
 
-    public isInDropPhase(state: SixState, config: MGPOptional<SixConfig>): boolean {
-        const totalDroppablePieces: number = 2 * config.get().piecesPerPlayer;
+    public isInDropPhase(state: SixState, config: SixConfig): boolean {
+        const totalDroppablePieces: number = 2 * config.piecesPerPlayer;
         return state.turn < totalDroppablePieces;
     }
 
     public override applyLegalMove(move: SixMove,
                                    state: SixState,
-                                   config: MGPOptional<SixConfig>,
+                                   config: SixConfig,
                                    kept: SixLegalityInformation)
     : SixState
     {
@@ -84,7 +84,7 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         }
     }
 
-    public override isLegal(move: SixMove, state: SixState, config: MGPOptional<SixConfig>)
+    public override isLegal(move: SixMove, state: SixState, config: SixConfig)
     : MGPFallible<SixLegalityInformation>
     {
         const landingLegality: MGPValidation = state.isIllegalLandingZone(move.landing, move.start);
@@ -185,7 +185,7 @@ export class SixRules extends ConfigurableRules<SixMove, SixState, SixConfig, Si
         return MGPFallible.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS());
     }
 
-    public override getGameStatus(node: SixNode, config: MGPOptional<SixConfig>): GameStatus {
+    public override getGameStatus(node: SixNode, config: SixConfig): GameStatus {
         const state: SixState = node.gameState;
         const previousPlayer: Player = state.getPreviousPlayer();
         if (node.previousMove.isPresent()) {

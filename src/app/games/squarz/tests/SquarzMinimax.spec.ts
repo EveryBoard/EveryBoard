@@ -11,7 +11,7 @@ describe('SquarzMinimax', () => {
     const rules: SquarzRules = SquarzRules.get();
     const minimax: SquarzMinimax = new SquarzMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

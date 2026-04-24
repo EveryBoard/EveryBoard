@@ -8,7 +8,7 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosState } from './ApagosState';
 
-const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
 export class ApagosTutorial extends Tutorial {
 

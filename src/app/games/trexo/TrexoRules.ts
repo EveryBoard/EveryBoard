@@ -7,7 +7,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TableUtils } from '../../jscaip/TableUtils';
 
 import { TrexoFailure } from './TrexoFailure';
@@ -68,7 +68,12 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return new TrexoState(board, 0);
     }
 
-    public override applyLegalMove(move: TrexoMove, state: TrexoState, _config: NoConfig, _info: void): TrexoState {
+    public override applyLegalMove(
+        move: TrexoMove,
+        state: TrexoState,
+        _config: EmptyRulesConfig,
+        _info: void
+    ): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)

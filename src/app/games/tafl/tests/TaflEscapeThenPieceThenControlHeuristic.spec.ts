@@ -16,7 +16,7 @@ import { TablutRules } from '../tablut/TablutRules';
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
     let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove>;
-    let defaultConfig: MGPOptional<TaflConfig>;
+    let defaultConfig: TaflConfig;
 
     let rules: BrandhubRules;
     const _: TaflPawn = TaflPawn.UNOCCUPIED;

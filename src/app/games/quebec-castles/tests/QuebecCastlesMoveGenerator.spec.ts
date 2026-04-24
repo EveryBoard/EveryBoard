@@ -20,7 +20,7 @@ const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
 describe('QuebecCastlesMoveGenerator', () => {
 
     let moveGenerator: QuebecCastlesMoveGenerator;
-    const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuebecCastlesConfig = QuebecCastlesRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new QuebecCastlesMoveGenerator();
@@ -59,12 +59,12 @@ describe('QuebecCastlesMoveGenerator', () => {
 
                 it('should allow putting soldier in first turn', () => {
                     // Given a node in drop phase (hence a custom config)
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                        ...defaultConfig.get(),
+                    const customConfig: QuebecCastlesConfig = {
+                        ...defaultConfig,
                         dropMode: 'PIECE_BY_PIECE',
                         defenders: 3,
                         invaders: 5,
-                    });
+                    };
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, _, _, _, _, _, _, _, _],
                         [_, _, _, _, _, _, _, _, _],
@@ -87,12 +87,12 @@ describe('QuebecCastlesMoveGenerator', () => {
 
                 it('should drop last pieces by batch (first player has less piece)', () => {
                     // Given a board in  piece-by-piece mode
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                        ...defaultConfig.get(),
+                    const customConfig: QuebecCastlesConfig = {
+                        ...defaultConfig,
                         dropMode: 'PIECE_BY_PIECE',
                         defenders: 3,
                         invaders: 5,
-                    });
+                    };
 
                     // where current player is the last player with pieces to drop
                     const state: QuebecCastlesState = new QuebecCastlesState([
@@ -119,12 +119,12 @@ describe('QuebecCastlesMoveGenerator', () => {
 
                 it('should drop last pieces by batch (first player has more pieces)', () => {
                     // Given a board in  piece-by-piece mode where first player has more pieces
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                        ...defaultConfig.get(),
+                    const customConfig: QuebecCastlesConfig = {
+                        ...defaultConfig,
                         dropMode: 'PIECE_BY_PIECE',
                         defenders: 5,
                         invaders: 3,
-                    });
+                    };
                     // where current player is the last player with pieces to drop
                     const state: QuebecCastlesState = new QuebecCastlesState([
                         [_, _, X, _, _, _, _, _, _],
@@ -152,13 +152,13 @@ describe('QuebecCastlesMoveGenerator', () => {
 
             describe('drop piece by piece & place castle', () => {
 
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     playersPlaceCastle: true,
                     defenders: 3,
                     invaders: 5,
-                });
+                };
 
                 it('should drop last pieces by batch (invader has more piece)', () => {
                     // Given a board in  piece-by-piece mode where invader has more piece
@@ -190,12 +190,12 @@ describe('QuebecCastlesMoveGenerator', () => {
 
                 it('should drop like default config does', () => {
                     // Given a first turn in drop-by-batch config
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                        ...defaultConfig.get(),
+                    const customConfig: QuebecCastlesConfig = {
+                        ...defaultConfig,
                         dropMode: 'BY_BATCH',
                         defenders: 3,
                         invaders: 5,
-                    });
+                    };
                     const node: QuebecCastlesNode = QuebecCastlesRules.get().getInitialNode(customConfig);
 
                     // When listing the moves
@@ -210,13 +210,13 @@ describe('QuebecCastlesMoveGenerator', () => {
 
                 it('should drop king first when required', () => {
                     // Given a first turn when you need to place the castle
-                    const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                        ...defaultConfig.get(),
+                    const customConfig: QuebecCastlesConfig = {
+                        ...defaultConfig,
                         dropMode: 'BY_BATCH',
                         playersPlaceCastle: true,
                         defenders: 3,
                         invaders: 5,
-                    });
+                    };
                     const node: QuebecCastlesNode = QuebecCastlesRules.get().getInitialNode(customConfig);
 
                     // When listing the moves

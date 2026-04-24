@@ -17,7 +17,7 @@ describe('MancalaScoreHeuristic', () => {
 
         it('should prefer board with better score', () => {
             const heuristic: MancalaScoreHeuristic = new MancalaScoreHeuristic();
-            const defaultConfig: MGPOptional<MancalaConfig> = mancalaRules.get().getDefaultRulesConfig();
+            const defaultConfig: MancalaConfig = mancalaRules.get().getDefaultRulesConfig();
             // Given a board with a big score
             const board: number[][] = [
                 [0, 0, 0, 3, 2, 1],

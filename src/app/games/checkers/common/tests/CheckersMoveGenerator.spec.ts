@@ -25,7 +25,7 @@ for (const rule of rules) {
     describe('CheckersMoveGenerator for ' + rule.constructor.name, () => {
 
         let moveGenerator: CheckersMoveGenerator;
-        const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();
+        const defaultConfig: CheckersConfig = rule.getDefaultRulesConfig();
 
         beforeEach(() => {
             moveGenerator = new CheckersMoveGenerator(rule);
@@ -45,12 +45,12 @@ for (const rule of rules) {
 
         it('should not suggest invalid move (not jumping twice the same coord)', () => {
             // Given a state where current player could be tempted to do illegal capture
-            const customConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...rule.getDefaultRulesConfig().get(),
+            const customConfig: CheckersConfig = {
+                ...rule.getDefaultRulesConfig(),
                 frisianCaptureAllowed: true,
                 promotedPiecesCanFly: true,
                 mustMakeMaximalCapture: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [U, _, U, _, X, _, U],
                 [_, _, _, U, _, _, _],
@@ -82,7 +82,7 @@ for (const rule of rules) {
 describe('CheckersMoveGenerator for International Checkers', () => {
 
     let moveGenerator: CheckersMoveGenerator;
-    const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CheckersMoveGenerator(InternationalCheckersRules.get());
@@ -126,7 +126,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
             ], 20);
 
             // When checking the legal list of captures
-            const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig.get());
+            const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig);
 
             // Then it should be this one, the bigger not to fly over same coord twice
             const coords: Coord[] = [
@@ -146,7 +146,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 describe('CheckersMoveGenerator for Lasca', () => {
 
     let moveGenerator: CheckersMoveGenerator;
-    const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CheckersMoveGenerator(LascaRules.get());
@@ -187,7 +187,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
             ], 20);
 
             // When checking the legal list of captures
-            const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig.get());
+            const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig);
 
             // Then it should be this one, the bigger not to fly over same coord twice
             const coordsClockwise: Coord[] = [

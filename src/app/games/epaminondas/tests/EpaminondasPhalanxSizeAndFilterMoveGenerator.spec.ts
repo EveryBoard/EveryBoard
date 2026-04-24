@@ -16,7 +16,7 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
 
     let rules: EpaminondasRules;
     let moveGenerator: EpaminondasPhalanxSizeAndFilterMoveGenerator;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = EpaminondasRules.get();

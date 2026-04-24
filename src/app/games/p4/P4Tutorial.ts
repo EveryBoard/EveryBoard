@@ -12,7 +12,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
 export class P4Tutorial extends Tutorial {
 

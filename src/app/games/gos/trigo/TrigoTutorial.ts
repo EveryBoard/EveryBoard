@@ -13,7 +13,7 @@ const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+const defaultConfig: TrigoConfig = TrigoRules.get().getDefaultRulesConfig();
 
 export class TrigoTutorial extends Tutorial {
 

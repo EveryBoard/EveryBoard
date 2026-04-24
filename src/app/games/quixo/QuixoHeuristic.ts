@@ -11,7 +11,7 @@ import { QuixoConfig, QuixoState } from './QuixoState';
 
 export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState, QuixoConfig> {
 
-    public override getMetrics(node: QuixoNode, _config: MGPOptional<QuixoConfig>): PlayerNumberTable {
+    public override getMetrics(node: QuixoNode, _config: QuixoConfig): PlayerNumberTable {
         const state: QuixoState = node.gameState;
         const linesSums: PlayerMap<MGPMap<string, NumberMap<number>>> = QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums.get(Player.ZERO));

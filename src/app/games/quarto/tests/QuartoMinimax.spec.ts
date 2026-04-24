@@ -22,7 +22,7 @@ describe('QuartoMinimax', () => {
     const rules: QuartoRules = QuartoRules.get();
     const minimax: QuartoMinimax = new QuartoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -38,10 +38,10 @@ describe('QuartoMinimax', () => {
 
         describe('Level 2 vs Level 2', () => {
 
-            const level2v2Config: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const level2v2Config: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 2,
-            });
+            };
 
             it(`should choose victory of level two when possible`, () => {
                 // Given a board where a 2x2 is possible
@@ -73,10 +73,10 @@ describe('QuartoMinimax', () => {
             ];
             const state: QuartoState = new QuartoState(board, 4, QuartoPiece.ABBB);
             const node: QuartoNode = new QuartoNode(state);
-            const asymetricConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const asymetricConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
-            });
+            };
 
             // When computing the best move
             const chosenMove: QuartoMove = minimax.chooseNextMove(node, minimaxOptions, asymetricConfig);
@@ -95,10 +95,10 @@ describe('QuartoMinimax', () => {
             ];
             const state: QuartoState = new QuartoState(board, 4, QuartoPiece.ABBB);
             const node: QuartoNode = new QuartoNode(state);
-            const asymetricConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const asymetricConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
-            });
+            };
 
             // When computing the best move
             const chosenMove: QuartoMove = minimax.chooseNextMove(node, minimaxOptions, asymetricConfig);

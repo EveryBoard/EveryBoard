@@ -7,7 +7,7 @@ import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasPhalanxSizeAndFilterMoveGenerator extends EpaminondasMoveGenerator {
 
-    public override getListMoves(node: EpaminondasNode, config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
+    public override getListMoves(node: EpaminondasNode, config: EpaminondasConfig): EpaminondasMove[] {
         const moves: EpaminondasMove[] = super.getListMoves(node, config);
         return this.orderMovesByPhalanxSizeAndFilter(moves, node.gameState);
     }

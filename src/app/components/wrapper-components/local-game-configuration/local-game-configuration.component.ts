@@ -28,12 +28,13 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
 
     public configDemo: DemoNodeInfo;
 
-    public rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
+    // The configuration to display. Empty if there is no configuration (yet or because it's invalid)
+    private rulesConfig: MGPOptional<RulesConfig> = MGPOptional.empty();
 
     private setConfigDemo(config: RulesConfig): void {
-        const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
+        const stateProvider: MGPOptional<(config: RulesConfig) => GameState> = this.getStateProvider();
         if (stateProvider.isPresent()) {
-            const node: AbstractNode = new GameNode(stateProvider.get()(MGPOptional.of(config)));
+            const node: AbstractNode = new GameNode(stateProvider.get()(config));
             this.configDemo = {
                 title: this.getGameName().get(),
                 click: MGPOptional.empty(),
@@ -50,10 +51,11 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
 
     public async updateConfig(rulesConfig: MGPOptional<RulesConfig>): Promise<void> {
         this.rulesConfig = rulesConfig;
-        // If there is no config for this game, then rulesConfig value will be {}
+        // rulesConfig config is absent if the config update was incorrect
         if (rulesConfig.isPresent()) {
-            this.setConfigDemo(rulesConfig.get());
-            if (Object.keys(rulesConfig.get()).length === 0) {
+            // If there is no config for this game, then rulesConfig value will be {}
+            this.setConfigDemo(this.rulesConfig.get());
+            if (Object.keys(this.rulesConfig.get()).length === 0) {
                 // There is nothing to configure for this game, start it!
                 await this.startGame();
             }
@@ -62,18 +64,17 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
 
     public async startGame(): Promise<boolean> {
         Utils.assert(this.rulesConfig.isPresent(), 'Cannot start the game without having chosen a config');
-        const rulesConfig: RulesConfig = this.rulesConfig.get();
-        if (Object.keys(rulesConfig).length === 0) {
+        if (Object.keys(this.rulesConfig.get()).length === 0) {
             // game without config, start it
             return this.router.navigate(['/local', this.getGameUrlName()]);
         }
-        const defaultConfig: RulesConfig = this.getRulesConfigDescription().get().getDefaultConfig().config;
-        if (comparableEquals(rulesConfig, defaultConfig)) {
+        const defaultConfig: RulesConfig = this.getRulesConfigDescription().getDefaultConfig().config;
+        if (comparableEquals(this.rulesConfig.get(), defaultConfig)) {
             // This is the default config, no need to specify it in the parameters
             return this.router.navigate(['/local', this.getGameUrlName()]);
         } else {
             const queryParams: { [key: string]: string } =
-                Object.fromEntries(Object.entries(rulesConfig)
+                Object.fromEntries(Object.entries(this.rulesConfig)
                     .map((configElement: [string, ConfigDescriptionType]) => {
                         return [configElement[0], JSON.stringify(configElement[1])];
                     }));

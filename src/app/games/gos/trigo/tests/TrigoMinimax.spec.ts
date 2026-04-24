@@ -11,7 +11,7 @@ describe('TrigoMinimax', () => {
     const rules: TrigoRules = TrigoRules.get();
     const minimax: TrigoMinimax = new TrigoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TrigoConfig = TrigoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -28,10 +28,10 @@ describe('TrigoMinimax', () => {
             rules,
             minimax,
             options: minimaxOptions,
-            config: MGPOptional.of({
-                ...defaultConfig.get(),
+            config: {
+                ...defaultConfig,
                 size: 3,
-            }),
+            },
             shouldFinish: true,
         });
     });

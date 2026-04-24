@@ -65,8 +65,8 @@ export class AbaloneRules extends ConfigurableRules<AbaloneMove,
         return AbaloneRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<AbaloneConfig>> {
-        return MGPOptional.of(AbaloneRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<AbaloneConfig> {
+        return AbaloneRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getInitialState(): AbaloneState {
@@ -116,14 +116,14 @@ export class AbaloneRules extends ConfigurableRules<AbaloneMove,
 
     public override applyLegalMove(_move: AbaloneMove,
                                    state: AbaloneState,
-                                   _config: MGPOptional<AbaloneConfig>,
+                                   _config: AbaloneConfig,
                                    newBoard: AbaloneLegalityInformation)
     : AbaloneState
     {
         return new AbaloneState(newBoard, state.turn + 1);
     }
 
-    public override isLegal(move: AbaloneMove, state: AbaloneState, config: MGPOptional<AbaloneConfig>)
+    public override isLegal(move: AbaloneMove, state: AbaloneState, config: AbaloneConfig)
     : MGPFallible<AbaloneLegalityInformation>
     {
         const firstPieceValidity: MGPValidation = this.getFirstPieceValidity(move, state);
@@ -131,7 +131,7 @@ export class AbaloneRules extends ConfigurableRules<AbaloneMove,
             return firstPieceValidity.toOtherFallible();
         }
         if (move.isSingleCoord()) {
-            return this.isLegalPush(move, state, config.get());
+            return this.isLegalPush(move, state, config);
         } else {
             return this.isLegalSideStep(move, state);
         }
@@ -201,9 +201,9 @@ export class AbaloneRules extends ConfigurableRules<AbaloneMove,
         return MGPFallible.success(newBoard);
     }
 
-    public override getGameStatus(node: AbaloneNode, config: MGPOptional<AbaloneConfig>): GameStatus {
+    public override getGameStatus(node: AbaloneNode, config: AbaloneConfig): GameStatus {
         const scores: PlayerNumberMap = node.gameState.getScores();
-        const nbToCapture: number = config.get().nbToCapture;
+        const nbToCapture: number = config.nbToCapture;
         if (nbToCapture <= scores.get(Player.ZERO)) {
             return GameStatus.ZERO_WON;
         } else if (nbToCapture <= scores.get(Player.ONE)) {

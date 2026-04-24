@@ -20,7 +20,7 @@ describe('EpaminondasAttackMinimax', () => {
 
     let minimax: Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new EpaminondasAttackMinimax();

@@ -14,7 +14,7 @@ export class SquarzMoveGenerator extends MoveGenerator<SquarzMove, SquarzState, 
         super();
     }
 
-    public override getListMoves(node: SquarzNode, config: MGPOptional<SquarzConfig>): SquarzMove[] {
+    public override getListMoves(node: SquarzNode, config: SquarzConfig): SquarzMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const jumps: SquarzMove[] = [];
         const duplicationMap: MGPMap<Coord, SquarzMove> = new MGPMap();

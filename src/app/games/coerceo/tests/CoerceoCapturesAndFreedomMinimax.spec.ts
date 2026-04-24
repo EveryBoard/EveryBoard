@@ -11,7 +11,7 @@ describe('CoerceoCapturesAndFreedomMinimax', () => {
     const rules: CoerceoRules = CoerceoRules.get();
     const minimax: CoerceoCapturesAndFreedomMinimax = new CoerceoCapturesAndFreedomMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

@@ -13,7 +13,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
 
 export class QuixoTutorial extends Tutorial {
 

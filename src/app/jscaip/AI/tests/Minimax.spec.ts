@@ -12,7 +12,7 @@ import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
 
-const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
 describe('Minimax', () => {
 

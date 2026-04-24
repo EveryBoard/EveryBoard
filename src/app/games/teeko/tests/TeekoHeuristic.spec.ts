@@ -13,7 +13,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('TeekoHeuristic', () => {
 
     let heuristic: TeekoHeuristic;
-    const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TeekoConfig = TeekoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TeekoHeuristic();

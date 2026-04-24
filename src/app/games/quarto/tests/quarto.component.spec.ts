@@ -20,7 +20,7 @@ describe('QuartoComponent', () => {
     const AAAB: QuartoPiece = QuartoPiece.AAAB;
     const AABA: QuartoPiece = QuartoPiece.AABA;
     const AABB: QuartoPiece = QuartoPiece.AABB;
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<QuartoComponent>('Quarto');

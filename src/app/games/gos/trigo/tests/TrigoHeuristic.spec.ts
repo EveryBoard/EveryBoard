@@ -18,7 +18,7 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('TrigoHeuristic', () => {
 
     let heuristic: TrigoHeuristic;
-    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TrigoConfig = TrigoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TrigoHeuristic();

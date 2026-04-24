@@ -6,7 +6,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';
@@ -60,7 +60,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
 
-    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: NoConfig, _info: void)
+    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: EmptyRulesConfig, _info: void)
     : PentagoState
     {
         return state.applyLegalMove(move);

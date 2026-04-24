@@ -10,7 +10,7 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 
 import { KalahRules } from './KalahRules';
 
-const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
 export class KalahTutorial extends Tutorial {
 

@@ -10,7 +10,7 @@ import { CoerceoState } from './CoerceoState';
 
 export class CoerceoPiecesTilesFreedomHeuristic extends CoerceoHeuristic {
 
-    public override getMetrics(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): PlayerNumberTable {
+    public override getMetrics(node: CoerceoNode, _config: CoerceoConfig): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const metrics: PlayerNumberTable = PlayerNumberTable.of([0, 0, 0], [0, 0, 0]);
         const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);

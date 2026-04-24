@@ -44,8 +44,7 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         super(false);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<TrigoConfig>): GoState {
-        const config: TrigoConfig = optionalConfig.get();
+    public override getInitialState(config: TrigoConfig): GoState {
         const size: number = config.size;
         let board: GoPiece[][];
         if (config.hexagonal) {
@@ -56,8 +55,8 @@ export class TrigoRules extends AbstractGoRules<TrigoConfig> {
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TrigoConfig>> {
-        return MGPOptional.of(TrigoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TrigoConfig> {
+        return TrigoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getGoGroupDataFactory(): GoGroupDataFactory {

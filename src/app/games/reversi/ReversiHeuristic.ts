@@ -11,7 +11,7 @@ import { ReversiState } from './ReversiState';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 
-    public override getMetrics(node: ReversiNode, _config: MGPOptional<ReversiConfig>): PlayerNumberTable {
+    public override getMetrics(node: ReversiNode, _config: ReversiConfig): PlayerNumberTable {
         const state: ReversiState = node.gameState;
         const metrics: PlayerNumberTable = PlayerNumberTable.of([0], [0]);
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {

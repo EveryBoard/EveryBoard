@@ -1,4 +1,4 @@
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
@@ -12,7 +12,7 @@ import { NewGameState } from '../NewGameState';
 describe('NewGameMoveGenerator', () => {
 
     let moveGenerator: NewGameMoveGenerator;
-    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new NewGameMoveGenerator();

@@ -11,7 +11,7 @@ describe('TeekoMinimax', () => {
     const rules: TeekoRules = TeekoRules.get();
     const minimax: TeekoMinimax = new TeekoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TeekoConfig = TeekoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

@@ -8,7 +8,7 @@ describe('EpaminondasMoveGenerator', () => {
 
     let rules: EpaminondasRules = EpaminondasRules.get();
     let moveGenerator: EpaminondasMoveGenerator;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = rules.getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = EpaminondasRules.get();

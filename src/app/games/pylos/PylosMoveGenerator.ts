@@ -1,7 +1,7 @@
 import { Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
@@ -10,7 +10,7 @@ import { PylosState } from './PylosState';
 
 export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
 
-    public override getListMoves(node: PylosNode, _config: NoConfig): PylosMove[] {
+    public override getListMoves(node: PylosNode, _config: EmptyRulesConfig): PylosMove[] {
         const state: PylosState = node.gameState;
         const result: PylosMove[] = [];
         const stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getStateInfo(state);

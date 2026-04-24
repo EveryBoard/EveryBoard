@@ -14,7 +14,7 @@ import { PenteState } from './PenteState';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
+const defaultConfig: PenteConfig = PenteRules.get().getDefaultRulesConfig();
 
 export class PenteTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

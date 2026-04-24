@@ -15,7 +15,7 @@ const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = HnefataflRules.get().getDefaultRulesConfig();
 
 export class HnefataflTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

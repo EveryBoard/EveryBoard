@@ -4,7 +4,7 @@ import { MGPOptional, Set } from '@everyboard/lib';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -16,7 +16,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 describe('LinesOfActionRules', () => {
 
     let rules: LinesOfActionRules;
-    const defaultConfig: NoConfig = LinesOfActionRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = LinesOfActionRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;

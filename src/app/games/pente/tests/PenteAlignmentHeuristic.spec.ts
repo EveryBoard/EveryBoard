@@ -15,7 +15,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('PenteAlignmentHeuristic', () => {
 
     let heuristic: PenteAlignmentHeuristic;
-    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: PenteConfig = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new PenteAlignmentHeuristic();

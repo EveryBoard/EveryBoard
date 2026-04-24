@@ -3,7 +3,7 @@ import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
@@ -17,7 +17,7 @@ describe('ConspirateursRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConspirateursRules;
-    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConspirateursRules.get();

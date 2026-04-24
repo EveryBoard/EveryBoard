@@ -12,7 +12,7 @@ export class HexodiaAlignmentHeuristic extends Heuristic<HexodiaMove,
                                                          BoardValue,
                                                          HexodiaConfig>
 {
-    public getBoardValue(node: HexodiaNode, config: MGPOptional<HexodiaConfig>): BoardValue {
+    public getBoardValue(node: HexodiaNode, config: HexodiaConfig): BoardValue {
         const state: HexodiaState = node.gameState;
         let score: number = 0;
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {

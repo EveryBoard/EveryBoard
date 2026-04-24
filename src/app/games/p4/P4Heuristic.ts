@@ -10,7 +10,7 @@ import { P4State } from './P4State';
 
 export class P4Heuristic extends Heuristic<P4Move, P4State, BoardValue, P4Config> {
 
-    public getBoardValue(node: P4Node, _config: MGPOptional<P4Config>): BoardValue {
+    public getBoardValue(node: P4Node, _config: P4Config): BoardValue {
         const state: P4State = node.gameState;
         let score: number = 0;
         for (let x: number = 0; x < state.getWidth(); x++) {

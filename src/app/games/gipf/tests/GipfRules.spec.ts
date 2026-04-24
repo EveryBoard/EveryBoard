@@ -7,7 +7,7 @@ import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { GipfFailure } from '../GipfFailure';
@@ -26,7 +26,7 @@ describe('GipfRules', () => {
     const P1Turn: number = P0Turn + 1;
 
     let rules: GipfRules;
-    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = GipfRules.get();

@@ -17,7 +17,7 @@ describe('SquarzRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: SquarzRules;
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         // This is the rules instance that we will test
@@ -258,10 +258,10 @@ describe('SquarzRules', () => {
 
         it('should allow longer jumps when config allows it', () => {
             // Given any state and a different config
-            const customConfig: MGPOptional<SquarzConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SquarzConfig = {
+                ...defaultConfig,
                 jumpSize: 3,
-            });
+            };
             const state: SquarzState = rules.getInitialState(customConfig);
 
             // When trying to create a jump of 3

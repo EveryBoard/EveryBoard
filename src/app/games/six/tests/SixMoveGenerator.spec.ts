@@ -14,7 +14,7 @@ const X: PlayerOrNone = Player.ONE;
 describe('SixMoveGenerator', () => {
 
     let moveGenerator: SixMoveGenerator;
-    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SixMoveGenerator(SixRules.get());

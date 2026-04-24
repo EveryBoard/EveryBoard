@@ -11,7 +11,7 @@ describe('ApagosFullBoardMinimax', () => {
     const rules: ApagosRules = ApagosRules.get();
     const minimax: ApagosFullBoardMinimax = new ApagosFullBoardMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

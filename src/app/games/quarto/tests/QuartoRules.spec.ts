@@ -32,7 +32,7 @@ const ____: QuartoPiece = QuartoPiece.EMPTY;
 describe('QuartoRules', () => {
 
     let rules: QuartoRules;
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = QuartoRules.get();
@@ -213,10 +213,10 @@ describe('QuartoRules', () => {
 
         it('should allow player to make victory by strong level victory (square)', () => {
             // Given a config where both player are level 2 and Player.ONE made a square
-            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const alternateConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 2,
-            });
+            };
             const board: Table<QuartoPiece> = [
                 [AAAA, AAAB, ____, ____],
                 [AABA, AABB, ____, ____],
@@ -233,10 +233,10 @@ describe('QuartoRules', () => {
 
         it('should give victory to player with stronger level when weaker level make a strong level victory (square)', () => {
             // Given a config where Player.ZERO is level 2 and Player.ONE is not but made a square anyway
-            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const alternateConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 1,
-            });
+            };
             const board: Table<QuartoPiece> = [
                 [AAAA, AAAB, ____, ____],
                 [AABA, AABB, ____, ____],
@@ -253,10 +253,10 @@ describe('QuartoRules', () => {
 
         it('should give victory to player with stronger level when they do a strong level victory (square)', () => {
             // Given a config where Player.ONE is level 1 and Player.ZERO is level 2 and made a square
-            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const alternateConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 1,
-            });
+            };
             const board: Table<QuartoPiece> = [
                 [AAAA, AAAB, ____, ____],
                 [AABA, AABB, ____, ____],
@@ -273,10 +273,10 @@ describe('QuartoRules', () => {
 
         it('shoud give victory to stronger level when weaker level make both a strong and weak victory at the same turn', () => {
             // Given a config where Player.ONE is level 2 and Player.ZERO is level 1 and just made a square and a line
-            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const alternateConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
-            });
+            };
             const board: Table<QuartoPiece> = [
                 [AAAA, AAAB, ____, ____],
                 [AABA, AABB, ____, BBAA],
@@ -293,10 +293,10 @@ describe('QuartoRules', () => {
 
         it('shoud give victory to weaker level when weaker level make a weak victory', () => {
             // Given a config where Player.ONE is level 2 and Player.ZERO is level 1 and made a line
-            const alternateConfig: MGPOptional<QuartoConfig> = MGPOptional.of({
+            const alternateConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
-            });
+            };
             const board: Table<QuartoPiece> = [
                 [AAAA, ____, ____, ____],
                 [AABA, ____, ____, ____],

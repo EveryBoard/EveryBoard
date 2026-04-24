@@ -9,10 +9,10 @@ import { ApagosState } from './ApagosState';
 
 export class ApagosMoveGenerator extends MoveGenerator<ApagosMove, ApagosState, ApagosConfig> {
 
-    public override getListMoves(node: ApagosNode, config: MGPOptional<ApagosConfig>): ApagosMove[] {
+    public override getListMoves(node: ApagosNode, config: ApagosConfig): ApagosMove[] {
         const state: ApagosState = node.gameState;
         const moves: ApagosMove[] = [];
-        for (let x: number = 0; x < config.get().width; x++) {
+        for (let x: number = 0; x < config.width; x++) {
             moves.push(ApagosMove.drop(x, Player.ZERO));
             moves.push(ApagosMove.drop(x, Player.ONE));
             for (let smallerX: number = 0; smallerX < x; smallerX++) {

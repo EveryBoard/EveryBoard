@@ -48,8 +48,8 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         return BaAwaRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<BaAwaConfig>> {
-        return MGPOptional.of(BaAwaRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<BaAwaConfig> {
+        return BaAwaRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override applyCapture(distributionResult: MancalaDistributionResult)

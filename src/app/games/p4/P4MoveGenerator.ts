@@ -10,7 +10,7 @@ import { P4State } from './P4State';
 @Debug.log
 export class P4MoveGenerator extends MoveGenerator<P4Move, P4State, P4Config> {
 
-    public override getListMoves(node: P4Node, config: MGPOptional<P4Config>): P4Move[] {
+    public override getListMoves(node: P4Node, config: P4Config): P4Move[] {
         const state: P4State = node.gameState;
         const width: number = state.getWidth();
         const virtualCX: number = Math.floor((width - 1) / 2);
@@ -22,7 +22,7 @@ export class P4MoveGenerator extends MoveGenerator<P4Move, P4State, P4Config> {
             });
     }
 
-    private getUnorderedListMoves(node: P4Node, _config: MGPOptional<P4Config>): P4Move[] {
+    private getUnorderedListMoves(node: P4Node, _config: P4Config): P4Move[] {
         // should be called only if the game is not over
         const state: P4State = node.gameState;
         const moves: P4Move[] = [];

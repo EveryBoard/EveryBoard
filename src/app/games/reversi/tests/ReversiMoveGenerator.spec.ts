@@ -16,7 +16,7 @@ describe('ReversiMoveGenerator', () => {
 
     let rules: ReversiRules;
     let moveGenerator: ReversiMoveGenerator;
-    let defaultConfig: MGPOptional<ReversiConfig>;
+    let defaultConfig: ReversiConfig;
 
     beforeEach(() => {
         rules = ReversiRules.get();

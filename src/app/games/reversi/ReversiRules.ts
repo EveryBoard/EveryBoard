@@ -62,12 +62,11 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             },
         });
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<ReversiConfig>> {
-        return MGPOptional.of(ReversiRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<ReversiConfig> {
+        return ReversiRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<ReversiConfig>): ReversiState {
-        const config: ReversiConfig = optionalConfig.get();
+    public override getInitialState(config: ReversiConfig): ReversiState {
         const board: PlayerOrNone[][] = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
         const downRightCenter: Coord = new Coord(Math.floor(config.width / 2), Math.floor(config.height / 2));
         board[downRightCenter.y - 1][downRightCenter.x - 1] = Player.ZERO;
@@ -79,7 +78,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
 
     public override applyLegalMove(move: ReversiMove,
                                    state: ReversiState,
-                                   _config: MGPOptional<ReversiConfig>,
+                                   _config: ReversiConfig,
                                    info: ReversiLegalityInformation)
     : ReversiState
     {
@@ -146,12 +145,12 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }
 
-    public isGameEnded(state: ReversiState, config: MGPOptional<ReversiConfig>): boolean {
+    public isGameEnded(state: ReversiState, config: ReversiConfig): boolean {
         return this.playerCanOnlyPass(state, config) &&
                this.nextPlayerCantOnlyPass(state, config);
     }
 
-    public override getGameStatus(node: ReversiNode, config: MGPOptional<ReversiConfig>): GameStatus {
+    public override getGameStatus(node: ReversiNode, config: ReversiConfig): GameStatus {
         const state: ReversiState = node.gameState;
         const gameIsEnded: boolean = this.isGameEnded(state, config);
         if (gameIsEnded === false) {
@@ -168,21 +167,21 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return GameStatus.DRAW;
     }
 
-    public playerCanOnlyPass(state: ReversiState, config: MGPOptional<ReversiConfig>): boolean {
+    public playerCanOnlyPass(state: ReversiState, config: ReversiConfig): boolean {
         const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(state, config);
         // if the current player cannot start, then the part is ended
         return (currentPlayerChoices.length === 1) &&
                 currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
 
-    public nextPlayerCantOnlyPass(reversiState: ReversiState, config: MGPOptional<ReversiConfig>): boolean {
+    public nextPlayerCantOnlyPass(reversiState: ReversiState, config: ReversiConfig): boolean {
         const nextBoard: PlayerOrNone[][] = reversiState.getCopiedBoard();
         const nextTurn: number = reversiState.turn + 1;
         const nextState: ReversiState = new ReversiState(nextBoard, nextTurn);
         return this.playerCanOnlyPass(nextState, config);
     }
 
-    public getListMoves(state: ReversiState, _config: MGPOptional<ReversiConfig>): ReversiMoveWithSwitched[] {
+    public getListMoves(state: ReversiState, _config: ReversiConfig): ReversiMoveWithSwitched[] {
         const moves: ReversiMoveWithSwitched[] = [];
 
         let nextBoard: PlayerOrNone[][];
@@ -220,7 +219,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return moves;
     }
 
-    public override isLegal(move: ReversiMove, state: ReversiState, config: MGPOptional<ReversiConfig>)
+    public override isLegal(move: ReversiMove, state: ReversiState, config: ReversiConfig)
     : MGPFallible<ReversiLegalityInformation>
     {
         if (move.equals(ReversiMove.PASS)) { // if the player passes

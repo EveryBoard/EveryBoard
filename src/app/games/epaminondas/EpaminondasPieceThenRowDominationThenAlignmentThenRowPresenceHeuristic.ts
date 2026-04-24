@@ -11,7 +11,7 @@ import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
 
 export class EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic extends EpaminondasHeuristic {
 
-    public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
+    public getBoardValue(node: EpaminondasNode, _config: EpaminondasConfig): BoardValue {
         const width: number = node.gameState.getWidth();
         const height: number = node.gameState.getHeight();
         let pieces: number = 0;

@@ -2,7 +2,7 @@ import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
 
 import { SaharaMove } from './SaharaMove';
@@ -11,7 +11,7 @@ import { SaharaState } from './SaharaState';
 
 export class SaharaMoveGenerator extends MoveGenerator<SaharaMove, SaharaState> {
 
-    public override getListMoves(node: SaharaNode, _config: NoConfig): SaharaMove[] {
+    public override getListMoves(node: SaharaNode, _config: EmptyRulesConfig): SaharaMove[] {
         const moves: SaharaMove[] = [];
         const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
         const player: Player = node.gameState.getCurrentPlayer();

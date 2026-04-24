@@ -21,7 +21,7 @@ describe('MCTS', () => {
 
     let mcts: MCTS<QuartoMove, QuartoState, QuartoConfig>;
     const mctsOptions: AITimeLimitOptions = { name: '200ms', maxSeconds: 0.2 };
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         mcts = new MCTS('MCTS', new QuartoMoveGenerator(), QuartoRules.get());
@@ -74,7 +74,7 @@ describe('MCTS', () => {
         otherMcts.maxGameLength = 10; // Limit it heavily to ensure we will exhaust the limit (for coverage)
         // When searching for the best move
         const beforeSearch: number = Date.now();
-        const config: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+        const config: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
         const node: MancalaNode = AwaleRules.get().getInitialNode(config);
         const move: MancalaMove = otherMcts.chooseNextMove(node, mctsOptions, config);
         // Then it should find one and not get stuck infinitely

@@ -29,7 +29,7 @@ describe('LobbyComponent', () => {
     let router: Router;
     let currentGameService: CurrentGameService;
 
-    const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.empty());
+    const configRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig({});
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LobbyComponent);

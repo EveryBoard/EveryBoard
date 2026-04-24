@@ -11,7 +11,7 @@ import { ApagosState } from './ApagosState';
 
 export class ApagosRightmostHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState, ApagosConfig> {
 
-    public override getMetrics(node: ApagosNode, _config: MGPOptional<ApagosConfig>): PlayerNumberTable {
+    public override getMetrics(node: ApagosNode, _config: ApagosConfig): PlayerNumberTable {
         const board: readonly ApagosSquare[] = node.gameState.board;
         const size: number = board.length;
         const levelThreeDominant: PlayerOrNone = board[size - 1].getDominatingPlayer();

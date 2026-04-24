@@ -20,7 +20,7 @@ const N: GoPiece = GoPiece.UNREACHABLE;
 describe('HexagonalGoHeuristic', () => {
 
     let heuristic: HexagonalGoHeuristic;
-    const defaultConfig: MGPOptional<HexagonalGoConfig> = HexagonalGoRules.get().getDefaultRulesConfig();
+    const defaultConfig: HexagonalGoConfig = HexagonalGoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new HexagonalGoHeuristic();

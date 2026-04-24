@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DiaballikDistanceMinimax } from '../DiaballikDistanceMinimax';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
@@ -13,7 +13,7 @@ describe('DiaballikDistanceMinimax', () => {
     const moveGenerator: DiaballikMoveGenerator = new DiaballikFilteredMoveGenerator(3, false);
     const minimax: DiaballikDistanceMinimax = new DiaballikDistanceMinimax('distance', moveGenerator);
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

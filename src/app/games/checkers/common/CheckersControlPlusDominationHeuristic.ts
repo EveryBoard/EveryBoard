@@ -9,8 +9,8 @@ import { CheckersStack, CheckersState } from './CheckersState';
 
 export class CheckersControlPlusDominationHeuristic extends CheckersControlHeuristic {
 
-    public override getMetrics(node: CheckersNode, config: MGPOptional<CheckersConfig>): PlayerNumberTable {
-        const controlValue: PlayerNumberTable = this.getControlScore(node, config.get());
+    public override getMetrics(node: CheckersNode, config: CheckersConfig): PlayerNumberTable {
+        const controlValue: PlayerNumberTable = this.getControlScore(node, config);
         const dominatingPiecesCount: PlayerNumberTable = this.getDominatedPieceScore(node);
         return controlValue.concat(dominatingPiecesCount);
     }

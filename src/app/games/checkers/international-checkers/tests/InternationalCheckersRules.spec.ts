@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord, CoordFailure } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
@@ -26,7 +24,7 @@ describe('InternationalCheckersRules', () => {
     const _: CheckersStack = CheckersStack.EMPTY;
 
     let rules: InternationalCheckersRules;
-    const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = InternationalCheckersRules.get();
@@ -856,10 +854,10 @@ describe('InternationalCheckersRules', () => {
         it('Should capture instead of stacking when config demands it', () => {
             // Given a board where a kill is possible
             // And a config requesting to do capture instead of kill
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 canStackPieces: false,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -888,10 +886,10 @@ describe('InternationalCheckersRules', () => {
 
         it('should put piece on even squares if config requires it', () => {
             // Given a customConfig where piece are to be put on even squares
-            const customConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 occupyEvenSquare: true,
-            });
+            };
 
             // When generating it
             const initialState: CheckersState = rules.getInitialState(customConfig);
@@ -914,10 +912,10 @@ describe('InternationalCheckersRules', () => {
 
         it('Should allow forward frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -946,10 +944,10 @@ describe('InternationalCheckersRules', () => {
 
         it('Should allow lateral frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -978,11 +976,11 @@ describe('InternationalCheckersRules', () => {
 
         it('Should allow backward frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
                 simplePieceCanCaptureBackwards: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, U, _, _, _],
@@ -1011,10 +1009,10 @@ describe('InternationalCheckersRules', () => {
 
         it('Should refuse frisian-step even if config allows frisian capture', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, V, _, _, _],
@@ -1035,10 +1033,10 @@ describe('InternationalCheckersRules', () => {
 
         it('Should refuse a uneven frisian capture even if config allows frisian capture', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, V, _, _, _],
@@ -1059,11 +1057,11 @@ describe('InternationalCheckersRules', () => {
 
         it('Should allow flying-frisian when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
                 promotedPiecesCanFly: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [O, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],

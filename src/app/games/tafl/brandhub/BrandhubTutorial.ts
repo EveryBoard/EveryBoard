@@ -15,7 +15,7 @@ const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
 export class BrandhubTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

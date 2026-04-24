@@ -20,7 +20,7 @@ describe('BrandhubRules', () => {
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     let rules: BrandhubRules;
-    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = BrandhubRules.get();

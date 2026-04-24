@@ -154,7 +154,7 @@ DoCheckersTests(internationalCheckersEntries);
 
 describe('InternationalCheckersComponent', () => {
 
-    const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<InternationalCheckersComponent>;
 
@@ -420,10 +420,10 @@ describe('InternationalCheckersComponent', () => {
 
         it('Should allow forward frisian-capture when config allows it', fakeAsync(async() => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternateConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],

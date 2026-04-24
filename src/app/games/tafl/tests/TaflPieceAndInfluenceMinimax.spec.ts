@@ -16,7 +16,7 @@ import { TablutNode, TablutRules } from '../tablut/TablutRules';
 describe('TaflPieceAndInfluenceMinimax', () => {
 
     const minimax: Minimax<TablutMove, TaflState, TaflConfig> = new TaflPieceAndInfluenceMinimax(TablutRules.get());
-    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

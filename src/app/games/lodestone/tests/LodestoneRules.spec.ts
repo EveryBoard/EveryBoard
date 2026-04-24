@@ -3,7 +3,7 @@ import { MGPMap } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -25,7 +25,7 @@ describe('LodestoneRules', () => {
     const noLodestones: LodestonePositions = new MGPMap();
 
     let rules: LodestoneRules;
-    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = LodestoneRules.get();
@@ -983,7 +983,7 @@ describe('LodestoneRules', () => {
             const node: LodestoneNode = new LodestoneNode(state);
 
             // Then it should be a victory for that player
-            RulesUtils.expectToBeVictoryFor(rules, node, player);
+            RulesUtils.expectToBeVictoryFor(rules, node, player, defaultConfig);
         }
     });
 

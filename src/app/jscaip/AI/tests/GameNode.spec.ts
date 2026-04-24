@@ -4,7 +4,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from '../../GameStatus';
 import { Move } from '../../Move';
 import { Rules } from '../../Rules';
-import { NoConfig } from '../../RulesConfigUtil';
+import { EmptyRulesConfig } from '../../RulesConfigUtil';
 import { GameState } from '../../state/GameState';
 import { GameNode } from '../GameNode';
 
@@ -42,7 +42,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
 
     public override applyLegalMove(_move: MoveMock,
                                    _state: GameStateMock,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    _info: void)
     : GameStateMock
     {
@@ -112,7 +112,7 @@ describe('GameNode', () => {
         it('should output a DOT representation of the node tree on standard output', () => {
             // Given a tree of game nodes
             // When printing it
-            treeRoot.printDot(rules);
+            treeRoot.printDot(rules, {});
             // Then it should have printed the expected DOT graph
             const expectedOutput: string[] = [
                 'digraph G {',
@@ -133,7 +133,7 @@ describe('GameNode', () => {
         it('should print with extra label if needed', () => {
             // Given a tree of game nodes
             // When printing it with a specific label
-            terminalNode.printDot(rules, (node: MockNode) => 'foo');
+            terminalNode.printDot(rules, {}, (node: MockNode) => 'foo');
             // Then it should have printed the tree with the extra label
             const expectedOutput: string[] = [
                 'digraph G {',
@@ -146,7 +146,7 @@ describe('GameNode', () => {
         it('should limit print depth to the provided max level', () => {
             // Given a tree of game nodes
             // When printing it up to depth 1
-            treeRoot.printDot(rules, undefined, 1);
+            treeRoot.printDot(rules, {}, undefined, 1);
             // Then it should have only printed the relevant nodes
             const expectedOutput: string[] = [
                 'digraph G {',
@@ -166,7 +166,7 @@ describe('GameNode', () => {
                 return GameStatus.ZERO_WON;
             });
             // When printing it
-            terminalNode.printDot(rules);
+            terminalNode.printDot(rules, {});
             // Then it should have printed the node with the player color
             const expectedOutput: string[] = [
                 'digraph G {',
@@ -182,7 +182,7 @@ describe('GameNode', () => {
                 return GameStatus.ONE_WON;
             });
             // When printing it
-            terminalNode.printDot(rules);
+            terminalNode.printDot(rules, {});
             // Then it should have printed the node with the player color
             const expectedOutput: string[] = [
                 'digraph G {',
@@ -198,7 +198,7 @@ describe('GameNode', () => {
                 return GameStatus.DRAW;
             });
             // When printing it
-            terminalNode.printDot(rules);
+            terminalNode.printDot(rules, {});
             // Then it should have printed the node in grey
             const expectedOutput: string[] = [
                 'digraph G {',

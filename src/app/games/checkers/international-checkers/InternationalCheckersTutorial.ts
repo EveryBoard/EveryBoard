@@ -14,7 +14,7 @@ const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
 const _: CheckersStack = CheckersStack.EMPTY;
-const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
+const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 
 export class InternationalCheckersTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

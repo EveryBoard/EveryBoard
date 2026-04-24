@@ -12,7 +12,7 @@ import { KalahRules } from '../KalahRules';
 describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new KalahMoveGenerator();

@@ -38,12 +38,12 @@ export class BrandhubRules extends TaflRules<BrandhubMove> {
         super(BrandhubMove.from);
     }
 
-    public override getInitialState(config: MGPOptional<TaflConfig>): TaflState {
+    public override getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-        if (config.get().invaderStarts === false) {
+        if (config.invaderStarts === false) {
             I = TaflPawn.PLAYER_ONE_PAWN;
             D = TaflPawn.PLAYER_ZERO_PAWN;
             K = TaflPawn.PLAYER_ZERO_KING;
@@ -60,8 +60,8 @@ export class BrandhubRules extends TaflRules<BrandhubMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
-        return MGPOptional.of(BrandhubRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
+        return BrandhubRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

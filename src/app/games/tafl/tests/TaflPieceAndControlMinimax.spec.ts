@@ -12,7 +12,7 @@ describe('TaflPieceAndControlMinimax', () => {
 
     const minimax: TaflPieceAndControlMinimax<TablutMove> = new TaflPieceAndControlMinimax(TablutRules.get());
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

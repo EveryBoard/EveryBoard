@@ -10,10 +10,10 @@ import { PenteState } from './PenteState';
 
 export class PenteAlignmentHeuristic extends Heuristic<PenteMove, PenteState, BoardValue, PenteConfig> {
 
-    public getBoardValue(node: PenteNode, config: MGPOptional<PenteConfig>): BoardValue {
+    public getBoardValue(node: PenteNode, config: PenteConfig): BoardValue {
         return PenteRules
             .get()
-            .getHelper(config.get())
+            .getHelper(config)
             .getBoardValue(node.gameState);
     }
 

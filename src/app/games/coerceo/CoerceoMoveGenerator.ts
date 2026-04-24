@@ -11,7 +11,7 @@ import { CoerceoState } from './CoerceoState';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState, CoerceoConfig> {
 
-    public override getListMoves(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, _config: CoerceoConfig): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
         moves = moves.concat(this.getListMovement(node));
         return moves;

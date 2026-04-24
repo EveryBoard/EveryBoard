@@ -11,9 +11,9 @@ import { AwaleRules } from './AwaleRules';
 
 export class AwaleOrderedMoveGenerator extends AwaleMoveGenerator {
 
-    public override getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
+    public override getListMoves(node: MancalaNode, config: MancalaConfig): MancalaMove[] {
         const moves: MancalaMove[] = super.getListMoves(node, config);
-        return this.orderMoves(node, moves, config.get());
+        return this.orderMoves(node, moves, config);
     }
 
     private orderMoves(node: MancalaNode, moves: MancalaMove[], config: MancalaConfig): MancalaMove[] {

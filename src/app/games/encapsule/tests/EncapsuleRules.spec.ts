@@ -15,7 +15,7 @@ import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../Enc
 describe('EncapsuleRules', () => {
 
     let rules: EncapsuleRules;
-    const defaultConfig: MGPOptional<EncapsuleConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();
 
     const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
     const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
@@ -264,11 +264,11 @@ describe('EncapsuleRules', () => {
 
         it('should detect victory', () => {
             // Given a large board with three pieces owned by player zero in a row
-            const customConfig: MGPOptional<EncapsuleConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: EncapsuleConfig = {
+                ...defaultConfig,
                 width: 5,
                 height: 5,
-            });
+            };
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___],

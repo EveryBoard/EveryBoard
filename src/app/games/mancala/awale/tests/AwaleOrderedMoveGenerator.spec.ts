@@ -13,7 +13,7 @@ import { AwaleRules } from '../AwaleRules';
 describe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
-    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new AwaleOrderedMoveGenerator();

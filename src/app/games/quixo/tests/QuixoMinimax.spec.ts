@@ -12,7 +12,7 @@ describe('QuixoMinimax', () => {
     const rules: QuixoRules = QuixoRules.get();
     const minimax: QuixoMinimax = new QuixoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

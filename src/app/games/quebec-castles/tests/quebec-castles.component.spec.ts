@@ -23,7 +23,7 @@ describe('QuebecCastlesComponent', () => {
 
     let testUtils: ComponentTestUtils<QuebecCastlesComponent>;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
-    const defaultConfig: MGPOptional<QuebecCastlesConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: QuebecCastlesConfig = rules.getDefaultRulesConfig();
     const defaultCastles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
         MGPOptional.of(new Coord(8, 8)),
         MGPOptional.of(new Coord(0, 0)),
@@ -153,10 +153,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should not rotate', fakeAsync(async() => {
                 // Given a board in non rhombic config
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     isRhombic: false,
-                });
+                };
                 const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(customConfig);
 
                 // When displaying it
@@ -174,10 +174,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should allow dropping a second piece', fakeAsync(async() => {
                 // Given any board with a dropped piece
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-7');
 
@@ -197,10 +197,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should forbid dropping outside territory', fakeAsync(async() => {
                 // Given any board in drop phase
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
                 // When dropping outside territory
@@ -212,10 +212,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should not display drop-validator when it is not your turn', fakeAsync(async() => {
                 // Given a board when it is not your turn to play
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.getComponent().setInteractive(false);
 
@@ -226,10 +226,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should not display drop-validator when it is your turn but not all piece are dropped', fakeAsync(async() => {
                 // Given a board where it is your turn to play
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
                 // When displaying board
@@ -240,11 +240,11 @@ describe('QuebecCastlesComponent', () => {
 
             it('should display drop-validator when it is your turn and all piece have been dropped', fakeAsync(async() => {
                 // Given a board where it is your turn to play
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 2,
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-8');
                 await testUtils.expectClickSuccess('#click-8-7');
@@ -257,12 +257,12 @@ describe('QuebecCastlesComponent', () => {
 
             it('should display drop-validator when it is your turn and all piece have been dropped (rectangular)', fakeAsync(async() => {
                 // Given a board where it is your turn to play
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 2,
                     isRhombic: false,
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-8');
                 await testUtils.expectClickSuccess('#click-8-7');
@@ -275,13 +275,13 @@ describe('QuebecCastlesComponent', () => {
 
             it('should display drop-validator when it is your turn and all piece have been dropped (rectangular as Player.ONE)', fakeAsync(async() => {
                 // Given a board where it is your turn to play
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     invaders: 5,
                     defenders: 3,
                     isRhombic: false,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],
@@ -307,10 +307,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should deselect piece when clicking a second time', fakeAsync(async() => {
                 // Given any board on which a piece is already dropped
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-7');
 
@@ -321,11 +321,11 @@ describe('QuebecCastlesComponent', () => {
 
             it('should show validation button when last piece is dropped', fakeAsync(async() => {
                 // Given any board in drop phase with only one piece left to drop
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 3,
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-7');
                 await testUtils.expectClickSuccess('#click-6-6');
@@ -339,11 +339,11 @@ describe('QuebecCastlesComponent', () => {
 
             it('should allow validating drop when there is enough', fakeAsync(async() => {
                 // Given a board in drop phase, with all drop done but one
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 3,
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-8');
                 await testUtils.expectClickSuccess('#click-6-8');
@@ -357,11 +357,11 @@ describe('QuebecCastlesComponent', () => {
 
             it('should show last dropped after all dropped', fakeAsync(async() => {
                 // Given a board on which all piece has been dropped
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 3,
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-5-8');
                 await testUtils.expectClickSuccess('#click-6-8');
@@ -383,12 +383,12 @@ describe('QuebecCastlesComponent', () => {
 
             it('should display last drop for player one', fakeAsync(async() => {
                 // Given a board on which all piece has been dropped for Player.ONE
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 3,
                     invaders: 3,
-                });
+                };
                 const initialState: QuebecCastlesState = rules.getInitialState(customConfig).incrementTurn();
                 await testUtils.setupState(initialState, { config: customConfig });
                 await testUtils.expectClickSuccess('#click-1-1');
@@ -411,10 +411,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should allow second player to drop after a first drop has been done', fakeAsync(async() => {
                 // Given any board with a dropped piece
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'BY_BATCH',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
                 await testUtils.expectClickSuccess('#click-7-7');
                 // When dropping another one
@@ -430,10 +430,10 @@ describe('QuebecCastlesComponent', () => {
 
             it('should drop single piece', fakeAsync(async() => {
                 // Given any drop in a "drop yourself & piece by piece"
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
-                });
+                };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
 
                 // When doing single click
@@ -445,12 +445,12 @@ describe('QuebecCastlesComponent', () => {
             it('should allow player to drop all its remaining soldier once opponent is out of soldier to drop', fakeAsync(async() => {
                 // Given a board on which current player is the only one that has piece to drop
                 // and a drop piece by piece config
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],
@@ -479,12 +479,12 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board on which current player is the only one that has piece to drop
                 // and a drop piece by piece config
                 // and all pieces have been dropped but not validated
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],
@@ -512,12 +512,12 @@ describe('QuebecCastlesComponent', () => {
             it('should not mix translation and drop', fakeAsync(async() => {
                 // Given a board on which current player is the only one that has piece to drop
                 // and a drop piece by piece config
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],
@@ -544,12 +544,12 @@ describe('QuebecCastlesComponent', () => {
             it('should forbid player to drop on the castle', fakeAsync(async() => {
                 // Given a board on which current player is the only one that has piece to drop
                 // and a drop piece by piece config
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],
@@ -573,12 +573,12 @@ describe('QuebecCastlesComponent', () => {
             it('should allow player to play normally after last batch-drop', fakeAsync(async() => {
                 // Given a board on which current player is to do the first move (after drop phase)
                 // and a drop piece by piece config
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, X, _, _, _, _, _, _],
                     [X, X, _, _, _, _, _, _, _],
@@ -602,12 +602,12 @@ describe('QuebecCastlesComponent', () => {
 
             it('should forbid player to change aleady-dropped piece', fakeAsync(async() => {
                 // Given a final drop where user drop all its remaining pieces
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, _, _, _, _, _, _, _, _],
@@ -631,12 +631,12 @@ describe('QuebecCastlesComponent', () => {
             it('should allow capture', fakeAsync(async() => {
                 // Given any state where a capture is possible
                 // And more turn have passed that piece are present on the board (yes, this bug happend)
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     dropMode: 'PIECE_BY_PIECE',
                     defenders: 3,
                     invaders: 5,
-                });
+                };
                 const state: QuebecCastlesState = new QuebecCastlesState([
                     [_, X, _, _, _, _, _, _, _],
                     [X, X, _, _, _, _, _, _, _],
@@ -663,12 +663,12 @@ describe('QuebecCastlesComponent', () => {
 
             it('should have first click being king drop', fakeAsync(async() => {
                 // Given the initial board in "drop king yourself" config
-                const customConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...defaultConfig.get(),
+                const customConfig: QuebecCastlesConfig = {
+                    ...defaultConfig,
                     width: 7,
                     height: 7,
                     playersPlaceCastle: true,
-                });
+                };
                 const state: QuebecCastlesState = rules.getInitialState(customConfig);
                 await testUtils.setupState(state, { config: customConfig });
 
@@ -694,7 +694,7 @@ describe('QuebecCastles Custom Configs', () => {
     let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
     let component: RulesConfigurationComponent;
     const rules: QuebecCastlesRules = QuebecCastlesRules.get();
-    const defaultConfig: MGPOptional<QuebecCastlesConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: QuebecCastlesConfig = rules.getDefaultRulesConfig();
 
     async function setCustomConfigTags(tags: { [key : string]: number | boolean | string }): Promise<void> {
         await testUtils.chooseConfig('Custom');
@@ -723,7 +723,7 @@ describe('QuebecCastles Custom Configs', () => {
     it('should forbid config with too little room for pieces (invader)', fakeAsync(async() => {
         // Given a config with too little room for defender piece
         const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig.get(),
+            ...defaultConfig,
             invaders: 15, // There won't be enough room for that many pieces
         };
 
@@ -738,7 +738,7 @@ describe('QuebecCastles Custom Configs', () => {
     it('should forbid config with too little room for pieces (defender)', fakeAsync(async() => {
         // Given a config with too little room for defender piece
         const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig.get(),
+            ...defaultConfig,
             defenders: 15, // There won't be enough room for that many pieces
         };
 
@@ -753,7 +753,7 @@ describe('QuebecCastles Custom Configs', () => {
     it('should forbid config where player line cross the middle of the board (rhombic)', fakeAsync(async() => {
         // Given a config with too much lines for territory
         const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig.get(),
+            ...defaultConfig,
             linesForTerritory: 8,
         };
 
@@ -768,7 +768,7 @@ describe('QuebecCastles Custom Configs', () => {
     it('should forbid config where player line cross the middle of the board (rectangular)', fakeAsync(async() => {
         // Given a config with too much lines for territory (rectangular board)
         const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig.get(),
+            ...defaultConfig,
             linesForTerritory: 5,
             isRhombic: false,
         };
@@ -784,7 +784,7 @@ describe('QuebecCastles Custom Configs', () => {
     it('should display territory-zone', fakeAsync(async() => {
         // Given a config with too much lines for territory (rectangular board)
         const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig.get(),
+            ...defaultConfig,
             linesForTerritory: 5,
             isRhombic: false,
         };
