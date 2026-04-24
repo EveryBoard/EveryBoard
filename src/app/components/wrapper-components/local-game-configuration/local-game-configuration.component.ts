@@ -74,7 +74,7 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
             return this.router.navigate(['/local', this.getGameUrlName()]);
         } else {
             const queryParams: { [key: string]: string } =
-                Object.fromEntries(Object.entries(this.rulesConfig)
+                Object.fromEntries(Object.entries(this.rulesConfig.get())
                     .map((configElement: [string, ConfigDescriptionType]) => {
                         return [configElement[0], JSON.stringify(configElement[1])];
                     }));

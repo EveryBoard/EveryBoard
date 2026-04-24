@@ -10,7 +10,7 @@ import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, Conspi
 import { ConspirateursState } from '../ConspirateursState';
 import { ConspirateursComponent } from '../conspirateurs.component';
 
-fdescribe('ConspirateursComponent', () => {
+describe('ConspirateursComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;

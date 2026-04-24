@@ -716,7 +716,7 @@ describe('QuebecCastles Custom Configs', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
         component = testUtils.getComponent();
-        testUtils.setInput('rulesConfigDescriptionOptional', rules.getRulesConfigDescription());
+        testUtils.setInput('rulesConfigDescription', rules.getRulesConfigDescription());
         testUtils.setInput('editable', true);
     });
 

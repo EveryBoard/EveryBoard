@@ -49,7 +49,9 @@ import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceM
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
 
-@Component({})
+@Component({
+    template: '',
+})
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
@@ -105,7 +107,7 @@ export class SimpleComponentTestUtils<T> {
     : Promise<SimpleComponentTestUtils<U>>
     {
         if (configureTestModule) {
-            await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
+            await ConfigureTestingModuleUtils.configureTestingModule(activatedRouteStub);
         }
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<U> = new SimpleComponentTestUtils<U>();
@@ -443,14 +445,17 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     : Promise<void>
     {
         const config: RulesConfig = this.getConfigFrom(params.config);
-        const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
-        Object.entries(config)
-            .map((configElement: [string, ConfigDescriptionType]) => {
-                TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
-            });
-        await wrapper.setConfigFromParams();
-        this.gameComponent.config = config;
-        tick(0);
+        if (Object.keys(config).length > 0) {
+            // If the game is configurable, set its config
+            const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
+            Object.entries(config)
+                .map((configElement: [string, ConfigDescriptionType]) => {
+                    TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
+                });
+            await wrapper.setConfigFromParams();
+            this.gameComponent.config = config;
+            tick(0);
+        }
         this.gameComponent.node = new GameNode(
             state,
             MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
@@ -674,8 +679,7 @@ export class ConfigureTestingModuleUtils {
         }).compileComponents();
     }
 
-    public static async configureTestingModule(componentType: object,
-                                               activatedRouteStub?: ActivatedRouteStub)
+    public static async configureTestingModule(activatedRouteStub?: ActivatedRouteStub)
     : Promise<void>
     {
         await TestBed.configureTestingModule({
