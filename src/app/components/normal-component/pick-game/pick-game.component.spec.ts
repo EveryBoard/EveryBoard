@@ -31,8 +31,8 @@ describe('PickGameComponent', () => {
         testUtils.detectChanges();
         const gamesBeforeFiltering: number = testUtils.findElements('.card').length;
 
-        // When entering a letter, e.g., an A
-        testUtils.fillInput('#search-term', 'A');
+        // When entering a search term, e.g., "Awale"
+        testUtils.fillInput('#search-term', 'Awale');
         testUtils.detectChanges();
 
         // Then it should have filtered the games, and still contain e.g., Awale
