@@ -8,7 +8,7 @@ import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
 import { MancalaConfig } from '../MancalaConfig';
-import { MancalaScoreHeuristic } from '../MancalaScoreHeurisic';
+import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
 import { MancalaState } from '../MancalaState';
 
 describe('MancalaScoreHeuristic', () => {
