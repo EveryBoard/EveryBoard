@@ -43,6 +43,23 @@ describe('PickGameComponent', () => {
         testUtils.expectElementNotToExist('#image-Coerceo');
     }));
 
+    it('should not filter if search is empty', fakeAsync(async() => {
+        // Given a pick-game page with games
+        testUtils.detectChanges();
+        const gamesBeforeFiltering: number = testUtils.findElements('.card').length;
+        expect(gamesBeforeFiltering).toBeGreaterThan(0);
+
+        // When filtering and then entering an empty search term
+        testUtils.fillInput('#search-term', 'Awale');
+        testUtils.detectChanges();
+        testUtils.fillInput('#search-term', '');
+        testUtils.detectChanges();
+
+        // Then it should be back to show all games
+        const gamesAfterFiltering: number = testUtils.findElements('.card').length;
+        expect(gamesAfterFiltering).toEqual(gamesBeforeFiltering);
+    }));
+
     it('should be insensitive to case', fakeAsync(async() => {
         // Given a pick-game page with games including Awale
         testUtils.expectElementToExist('#image-Awale');
