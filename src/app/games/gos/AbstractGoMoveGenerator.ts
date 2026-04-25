@@ -43,13 +43,8 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
             if (content === GoPiece.EMPTY) {
                 const legality: MGPFallible<GoLegalityInformation> = this.rules.isLegal(newMove, state, config);
                 if (legality.isSuccess()) {
-                    console.log(coordAndContent.content.toString(), coordAndContent.coord.toString(), 'is empty and legal')
                     choices.push(newMove);
-                } else {
-                    console.log(coordAndContent.content.toString(), coordAndContent.coord.toString(), 'is empty but illegal')
                 }
-            } else {
-                console.log(coordAndContent.content.toString(), coordAndContent.coord.toString(), 'is not empty')
             }
         }
         return choices;
@@ -106,7 +101,8 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
                                                   currentState.getCapturedCopy(),
                                                   currentState.turn,
                                                   currentState.koCoord,
-                                                  currentState.phase);
+                                                  currentState.phase,
+        );
         const territoryLikeGroups: GoGroupData[] = this.rules.getTerritoryLikeGroup(allDeadState, config);
 
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups, config);

@@ -50,7 +50,6 @@ describe('GoMoveGenerator', () => {
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
-            console.log('moves', moves)
             expect(moves.length).toBe(23);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });

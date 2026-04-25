@@ -186,7 +186,6 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
             return MGPFallible.success(captureState.capturedCoords);
         } else {
             const maxStepSize: number = config.get().stepSize; // TODO test if it was 1
-            if (move.coord.equals(new Coord(0, 0))) console.log('flaf max', maxStepSize)
             const originalSquare: GoPiece = boardCopy[move.coord.y][move.coord.x];
             for (let stepSize: number = 1; stepSize <= maxStepSize; stepSize++) {
                 boardCopy[move.coord.y][move.coord.x] = state.turn % 2 === 0 ? GoPiece.DARK : GoPiece.LIGHT;
@@ -221,8 +220,10 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         let capturedInDirection: Coord[];
         const maxStepSize: number = config.get().stepSize; // TODO: test if it was 1
         for (let stepSize: number = 1; stepSize <= maxStepSize; stepSize++) {
+            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(stepSize);
             for (const direction of this.getGoGroupDataFactory(stepSize).getDirections(move.coord)) {
-                capturedInDirection = this.getCapturedInDirection(move.coord, direction, state, config);
+                capturedInDirection = this.getCapturedInDirection(move.coord, direction, state, goGroupDataFactory);
+                console.log('at stepSize', stepSize, 'direction', direction.toString(), 'we got', capturedInDirection)
                 if (capturedInDirection.length > 0 &&
                     captureState.capturedCoords.every((coord: Coord) => capturedInDirection[0].equals(coord) === false))
                 {
@@ -233,15 +234,19 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         return captureState;
     }
 
-    private getCapturedInDirection(coord: Coord, vector: Vector, state: GoState, config: MGPOptional<C>): Coord[] {
+    private getCapturedInDirection(
+        coord: Coord,
+        vector: Vector,
+        state: GoState,
+        goGroupDataFactory: GoGroupDataFactory,
+    ): Coord[] {
         const copiedBoard: GoPiece[][] = state.getCopiedBoard();
         const neightbooringCoord: Coord = coord.getNext(vector);
-        const stepSize: number = config.get().stepSize; // TODO: test if it was 1
+        // const stepSize: number = config.get().stepSize; // TODO: test if it was 1
         if (this.isReachable(neightbooringCoord, state)) {
             const opponent: GoPiece = state.turn%2 === 0 ? GoPiece.LIGHT : GoPiece.DARK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === opponent) {
                 Debug.display('GoRules', 'getCapturedInDirection', 'a group could be captured');
-                const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(stepSize);
                 const neightbooringGroup: GoGroupData =
                     goGroupDataFactory.getGroupData(neightbooringCoord, copiedBoard);
                 const koCoord: MGPOptional<Coord> = state.koCoord;

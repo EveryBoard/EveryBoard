@@ -745,11 +745,17 @@ fdescribe('GoRules', () => {
                                                        2,
                                                        MGPOptional.empty(),
                                                        GoPhase.PLAYING);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('should capture piece surrounded normally too', () => {
-            // Given board with an atari on zoom=1 (capture threat)
+            // Given:
+            // - a board with zoom = 2
+            // - a board with an atari on zoom=1 (capture threat)
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                ...goConfig,
+                stepSize: 2,
+            });
             const board: Table<GoPiece> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -776,7 +782,7 @@ fdescribe('GoRules', () => {
                                                        2,
                                                        MGPOptional.empty(),
                                                        GoPhase.PLAYING);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         // it('should capture piece surrounded by 3 distance=2 neighbors and one distance=2 edge');
