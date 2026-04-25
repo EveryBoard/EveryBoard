@@ -19,7 +19,8 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends Min
 
 }
 
-export class IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends IterativeDeepeningMinimax<SaharaMove, SaharaState> {
+export class IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax
+    extends IterativeDeepeningMinimax<SaharaMove, SaharaState> {
 
     public constructor() {
         super($localize`ID Capture > Captured Freedom > All Freedoms`,
@@ -27,11 +28,6 @@ export class IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends I
               new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
               new SaharaMoveGenerator());
         this.random = true;
-    }
-
-    public override hash(state: SaharaState): string {
-        // TODO: this yields invalid move?!
-        return JSON.stringify(state.board);
     }
 
 }

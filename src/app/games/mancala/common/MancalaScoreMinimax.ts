@@ -32,17 +32,6 @@ export class IDMancalaScoreMinimax extends IterativeDeepeningMinimax<MancalaMove
     }
 
     public override hash(state: MancalaState): string {
-        const board: number[] = [];
-        // Board has a symmetry: moves are relative to the player's first house,
-        // so we can store the board in the same order
-        if (state.turn % 2 === 0) {
-            board.push(...state.board[0]);
-            board.push(...state.board[1]);
-        } else {
-            board.push(...state.board[1]);
-            board.push(...state.board[0]);
-        }
-        // Also, we don't care about other elements of the state: turn and scores
-        return JSON.stringify(board);
+        return `${state.turn % 2}-${JSON.stringify(state.board)}`;
     }
 }
