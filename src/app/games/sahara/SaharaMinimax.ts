@@ -1,4 +1,4 @@
-import { IterativeDeepeningMinimax, Minimax } from '../../jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
 
 import { SaharaFreedomHeuristic } from './SaharaFreedomHeuristic';
 import { SaharaMove } from './SaharaMove';

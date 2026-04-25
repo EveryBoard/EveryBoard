@@ -23,7 +23,7 @@ import { OGWCTimeManagerService } from '../../components/wrapper-components/onli
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
+import { AIOptions } from '../../jscaip/AI/AI';
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';

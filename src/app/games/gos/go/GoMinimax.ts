@@ -1,12 +1,13 @@
-import { IterativeDeepeningMinimax } from 'src/app/jscaip/AI/Minimax';
+import { IterativeDeepeningMinimax } from '../../../jscaip/AI/Minimax';
 import { AbstractGoMinimax } from '../AbstractGoMinimax';
+import { GoLegalityInformation } from '../AbstractGoRules';
+import { GoMove } from '../GoMove';
+import { GoState } from '../GoState';
 
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoState } from '../GoState';
-import { GoMove } from '../GoMove';
+
 
 export class GoMinimax extends AbstractGoMinimax<GoConfig> {
 

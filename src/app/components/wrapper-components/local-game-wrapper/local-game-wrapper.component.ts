@@ -53,7 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public getMinimaxTime(): string {
         return Array.from(AIStats.aiTime.entries())
-            .map(([key, value]) => `${key}: ${value.toFixed(2)} ms`)
+            .map(([key, value]: [string, number]) => `${key}: ${value.toFixed(2)} ms`)
             .join(',');
     }
 
