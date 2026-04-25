@@ -9,6 +9,7 @@ import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServi
 import { GoGroupData } from '../GoGroupsData';
 import { GoPiece } from '../GoPiece';
 
+
 describe('GoGroupData', () => {
 
     const coord: Coord = new Coord(0, 0);

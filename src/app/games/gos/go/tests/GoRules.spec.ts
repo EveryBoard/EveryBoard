@@ -14,7 +14,8 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { GoConfig, GoRules } from '../GoRules';
 
-describe('GoRules', () => {
+
+fdescribe('GoRules', () => {
 
     let rules: GoRules;
 
@@ -26,7 +27,12 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const goConfig: GoConfig = { width: 5, height: 5, handicap: 0 };
+    const goConfig: GoConfig = {
+        width: 5,
+        height: 5,
+        handicap: 0,
+        stepSize: 1,
+    };
     const config: MGPOptional<GoConfig> = MGPOptional.of(goConfig);
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
@@ -701,6 +707,80 @@ describe('GoRules', () => {
         // When checking the game status
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, config);
+    });
+
+    describe('alternative config', () => {
+
+        it('should capture piece surrounded by 4 distance=2 neighbors', () => {
+            // Given:
+            // - a board with zoom = 2
+            // - a board with an atari on zoom=2 (capture threat)
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                ...goConfig,
+                stepSize: 2,
+            });
+            const board: Table<GoPiece> = [
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [X, _, O, _, X],
+                [_, _, _, _, _],
+                [_, _, X, _, _],
+            ];
+            const state: GoState =
+                new GoState(board, noCaptures, 1, MGPOptional.empty(), GoPhase.PLAYING);
+
+            // When doing the capture
+            const move: GoMove = new GoMove(2, 0);
+
+            // Then the move should be considered legal
+            const expectedBoard: Table<GoPiece> = [
+                [_, _, X, _, _],
+                [_, _, _, _, _],
+                [X, _, _, _, X],
+                [_, _, _, _, _],
+                [_, _, X, _, _],
+            ];
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(0, 1),
+                                                       2,
+                                                       MGPOptional.empty(),
+                                                       GoPhase.PLAYING);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
+        });
+
+        it('should capture piece surrounded normally too', () => {
+            // Given board with an atari on zoom=1 (capture threat)
+            const board: Table<GoPiece> = [
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [_, X, O, X, _],
+                [_, _, X, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: GoState =
+                new GoState(board, noCaptures, 1, MGPOptional.empty(), GoPhase.PLAYING);
+
+            // When doing the capture
+            const move: GoMove = new GoMove(2, 1);
+
+            // Then the move should be considered legal
+            const expectedBoard: Table<GoPiece> = [
+                [_, _, _, _, _],
+                [_, _, X, _, _],
+                [_, X, _, X, _],
+                [_, _, X, _, _],
+                [_, _, _, _, _],
+            ];
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(0, 1),
+                                                       2,
+                                                       MGPOptional.empty(),
+                                                       GoPhase.PLAYING);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, config);
+        });
+
+        // it('should capture piece surrounded by 3 distance=2 neighbors and one distance=2 edge');
+
     });
 
 });

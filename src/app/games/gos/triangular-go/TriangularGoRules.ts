@@ -3,16 +3,15 @@ import { MGPOptional } from '@everyboard/lib';
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type TriangularGoConfig = RulesConfig & {
+export type TriangularGoConfig = AbstractGoConfig & {
 
     size: number;
 
@@ -30,6 +29,8 @@ export class TriangularGoRules extends AbstractGoRules<TriangularGoConfig> {
             config: {
                 size: new NumberConfig(7, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 99)),
                 hexagonal: new BooleanConfig(false, () => $localize`Hexagonal`),
+                // TODO: stepSize
+                stepSize: new NumberConfig(1, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 5)),
             },
         });
 

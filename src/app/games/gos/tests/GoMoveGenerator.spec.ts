@@ -2,10 +2,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { GoNode } from '../AbstractGoRules';
+import { AbstractGoConfig, GoNode } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
@@ -21,14 +20,16 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
+
 describe('GoMoveGenerator', () => {
 
-    let moveGenerator: AbstractGoMoveGenerator<RulesConfig>;
+    let moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig>;
 
     const config: MGPOptional<GoConfig> = MGPOptional.of({
         width: 5,
         height: 5,
         handicap: 0,
+        stepSize: 1,
     });
 
     beforeEach(() => {
@@ -49,6 +50,7 @@ describe('GoMoveGenerator', () => {
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
             const initialNode: GoNode = new GoNode(state);
             const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
+            console.log('moves', moves)
             expect(moves.length).toBe(23);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });

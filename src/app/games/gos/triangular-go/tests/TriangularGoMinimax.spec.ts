@@ -6,6 +6,7 @@ import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { TriangularGoMinimax } from '../../triangular-go/TriangularGoMinimax';
 import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
+
 describe('TriangularGoMinimax', () => {
 
     const rules: TriangularGoRules = TriangularGoRules.get();

@@ -20,6 +20,7 @@ const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
+
 describe('HexagonalGoMoveGenerator', () => {
 
     let moveGenerator: HexagonalGoMoveGenerator;
@@ -27,6 +28,7 @@ describe('HexagonalGoMoveGenerator', () => {
     const config: MGPOptional<HexagonalGoConfig> = MGPOptional.of({
         size: 2,
         hexagonal: false,
+        stepSize: 1,
     });
 
     beforeEach(() => {

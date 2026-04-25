@@ -3,6 +3,7 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Vector } from '../../jscaip/Vector';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 
 import { GoGroupData } from './GoGroupsData';
@@ -18,8 +19,12 @@ export abstract class GoGroupDataFactory extends GroupDataFactory<GoPiece, GoGro
 
 export class OrthogonalGoGroupDataFactory extends GoGroupDataFactory {
 
-    public getDirections(_: Coord): ReadonlyArray<Direction> {
-        return Orthogonal.ORTHOGONALS;
+    public constructor(public readonly stepSize: number) {
+        super();
+    }
+
+    public getDirections(_: Coord): ReadonlyArray<Vector> {
+        return Orthogonal.ORTHOGONALS.map((value: Orthogonal) => new Vector(0, 0).combine(value, this.stepSize));
     }
 
 }

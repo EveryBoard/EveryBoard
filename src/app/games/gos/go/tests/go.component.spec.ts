@@ -14,6 +14,7 @@ import { GoState } from '../../GoState';
 import { GoConfig, GoRules } from '../GoRules';
 import { GoComponent } from '../go.component';
 
+
 describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;

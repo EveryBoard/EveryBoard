@@ -11,6 +11,7 @@ import { GoConfig, GoRules } from '../go/GoRules';
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
+
 describe('GoPiece', () => {
 
     describe('toString', () => {
@@ -38,6 +39,7 @@ describe('GoPiece', () => {
 
 });
 
+
 describe('GoState for Go', () => {
 
     describe('getInitialState', () => {
@@ -48,6 +50,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 2,
+                stepSize: 1,
             });
 
             // When creating an initialState with it
@@ -89,6 +92,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 4,
+                stepSize: 1,
             });
 
             // When creating an initialState with it
@@ -130,6 +134,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 5,
+                stepSize: 1,
             });
 
             // When creating an initialState with it
@@ -171,6 +176,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 9,
+                stepSize: 1,
             });
 
             // When creating an initialState with it

@@ -20,11 +20,12 @@ const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
+
 describe('TriangularGoMoveGenerator', () => {
 
     let moveGenerator: TriangularGoMoveGenerator;
 
-    const config: MGPOptional<TriangularGoConfig> = MGPOptional.of({ size: 2, hexagonal: false });
+    const config: MGPOptional<TriangularGoConfig> = MGPOptional.of({ size: 2, hexagonal: false, stepSize: 1 });
 
     beforeEach(() => {
         moveGenerator = new TriangularGoMoveGenerator();
