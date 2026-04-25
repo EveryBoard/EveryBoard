@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicBounds } from '../../../jscaip/AI/Minimax';
 import { Player } from '../../../jscaip/Player';
 import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';

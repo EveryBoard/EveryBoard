@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { BoardValue } from '../../../../jscaip/AI/BoardValue';
+import { HeuristicBounds } from '../../../../jscaip/AI/Minimax';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
