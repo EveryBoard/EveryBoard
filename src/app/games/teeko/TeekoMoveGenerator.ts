@@ -1,11 +1,13 @@
-import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
-import { TeekoState } from './TeekoState';
-import { TeekoConfig, TeekoNode } from './TeekoRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { MGPOptional } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
+import { TeekoConfig, TeekoNode } from './TeekoRules';
+import { TeekoState } from './TeekoState';
 
 export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, TeekoConfig> {
 
@@ -22,7 +24,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, Tee
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
             if (coordAndContent.content.isNone()) {
-                const newMove: TeekoDropMove = TeekoDropMove.from(coord).get();
+                const newMove: TeekoDropMove = TeekoDropMove.from(coord);
                 moves.push(newMove);
             }
         }
@@ -49,7 +51,7 @@ export class TeekoMoveGenerator extends MoveGenerator<TeekoMove, TeekoState, Tee
             const possibleTargets: Coord[] = [];
             for (const direction of Ordinal.factory.all) {
                 const target: Coord = start.getNext(direction);
-                if (TeekoState.isOnBoard(target) && state.getPieceAt(target).isNone()) {
+                if (state.isEmptyAt(target)) {
                     possibleTargets.push(target);
                 }
             }

@@ -1,19 +1,22 @@
 /* eslint-disable max-lines-per-function */
-import { GipfComponent } from '../gipf.component';
-import { MGPOptional } from '@everyboard/lib';
-import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfState } from 'src/app/games/gipf/GipfState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { Arrow } from '../../../components/game-components/arrow-component/Arrow';
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { GipfFailure } from '../GipfFailure';
+import { GipfMove, GipfPlacement } from '../GipfMove';
+import { GipfRules } from '../GipfRules';
+import { GipfState } from '../GipfState';
+import { GipfComponent } from '../gipf.component';
 
 describe('GipfComponent', () => {
 
@@ -122,6 +125,32 @@ describe('GipfComponent', () => {
             testUtils.expectElementToHaveClasses('#dead-piece-3-5', ['base', 'semi-transparent', 'player0-fill']);
         }));
 
+        it('should hide last move', fakeAsync(async() => {
+            // Given a board on which last move has been done
+            const board: Table<FourStatePiece> = [
+                [N, N, N, B, _, _, _],
+                [N, N, _, B, _, _, _],
+                [N, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, N],
+                [_, _, _, _, _, N, N],
+                [_, _, _, A, N, N, N],
+            ];
+            const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(5, 5), PlayerNumberMap.of(0, 0));
+            const previousState: GipfState = GipfRules.get().getInitialState();
+            const previousPlacement: GipfPlacement =
+                new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN));
+            const previousMove: GipfMove = new GipfMove(previousPlacement, [], []);
+            await testUtils.setupState(state, { previousMove, previousState });
+
+            // When clicking a piece
+            await testUtils.expectClickSuccess('#click-3-6');
+
+            // Then the previous move should be hidden
+            testUtils.expectElementNotToHaveClass('#space-3-0', 'moved-fill');
+            testUtils.expectElementNotToHaveClass('#space-3-1', 'moved-fill');
+        }));
+
         it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
             // Given a board where a capture must be done immediately
             const board: Table<FourStatePiece> = [
@@ -140,10 +169,10 @@ describe('GipfComponent', () => {
             await testUtils.expectClickSuccess('#click-3-3');
 
             // Then the piece should be disappeared
-            expect(testUtils.getGameComponent().isPiece(new Coord(3, 2))).toBeFalse();
-            expect(testUtils.getGameComponent().isPiece(new Coord(3, 3))).toBeFalse();
-            expect(testUtils.getGameComponent().isPiece(new Coord(3, 4))).toBeFalse();
-            expect(testUtils.getGameComponent().isPiece(new Coord(3, 5))).toBeFalse();
+            expect(testUtils.getGameComponent().isPlayerAt(new Coord(3, 2))).toBeFalse();
+            expect(testUtils.getGameComponent().isPlayerAt(new Coord(3, 3))).toBeFalse();
+            expect(testUtils.getGameComponent().isPlayerAt(new Coord(3, 4))).toBeFalse();
+            expect(testUtils.getGameComponent().isPlayerAt(new Coord(3, 5))).toBeFalse();
         }));
 
         it('should not allow capturing from a coord that is part of intersecting captures', fakeAsync(async() => {

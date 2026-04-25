@@ -1,4 +1,4 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../utils/LocaleUtils';
 
 export class GoFailure {
 
@@ -9,6 +9,8 @@ export class GoFailure {
     public static readonly CANNOT_ACCEPT_BEFORE_COUNTING_PHASE: Localized = () => $localize`You cannot accept before the counting phase.`;
 
     public static readonly OCCUPIED_INTERSECTION: Localized = () => $localize`This intersection is already occupied.`;
+
+    public static readonly OCCUPIED_SPACE: Localized = () => $localize`This space is already occupied.`;
 
     public static readonly CANNOT_COMMIT_SUICIDE: Localized = () => $localize`You cannot commit suicide.`;
 }

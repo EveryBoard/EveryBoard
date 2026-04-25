@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { FirestoreDocument } from 'src/app/dao/FirestoreDAO';
-import { JSONValue, MGPOptional } from '@everyboard/lib';
-import { ErrorLoggerService } from '../ErrorLoggerService';
-import { RouterTestingModule } from '@angular/router/testing';
+import { provideRouter } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
-import { ErrorDAO, MGPError } from 'src/app/dao/ErrorDAO';
-import { ErrorDAOMock } from 'src/app/dao/tests/ErrorDAOMock.spec';
+
+import { JSONValue, MGPOptional } from '@everyboard/lib';
+
+import { ErrorDAO, MGPError } from '../../dao/ErrorDAO';
+import { FirestoreDocument } from '../../dao/FirestoreDAO';
+import { ErrorDAOMock } from '../../dao/tests/ErrorDAOMock.spec';
+import { BlankComponent } from '../../utils/tests/TestUtils.spec';
+import { ErrorLoggerService } from '../ErrorLoggerService';
 import { MessageDisplayer } from '../MessageDisplayer';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('ErrorLoggerService', () => {
 
@@ -19,13 +21,12 @@ describe('ErrorLoggerService', () => {
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-            ],
+            imports: [],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                provideRouter([
+                    { path: '**', component: BlankComponent },
+                ]),
                 { provide: ErrorDAO, useClass: ErrorDAOMock },
             ],
         }).compileComponents();
@@ -169,4 +170,5 @@ describe('ErrorLoggerService', () => {
             expect(errors[0].id).toEqual(errorId);
         });
     });
+
 });

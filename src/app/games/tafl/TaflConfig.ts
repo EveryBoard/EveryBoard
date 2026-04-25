@@ -1,4 +1,4 @@
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 
 /**
  * Terminology:
@@ -8,13 +8,17 @@ import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 export type TaflConfig = RulesConfig & {
 
     // once the king leave the castle he cannot re-station there
-    readonly castleIsLeftForGood: boolean;
+    readonly canReturnToCastle: boolean;
+
     // an Edge can be counted as participating to a 4-opponent capture
     readonly edgesAreKingsEnnemy: boolean;
+
     // the king can be captured by only three invaders if he's against a throne
     readonly centralThroneCanSurroundKing: boolean;
+
     // the king can be captured by two invaders when he doesn't touch a throne
     readonly kingFarFromHomeCanBeSandwiched: boolean;
 
     readonly invaderStarts: boolean;
-}
+
+};

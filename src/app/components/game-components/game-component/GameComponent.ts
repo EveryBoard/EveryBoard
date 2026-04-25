@@ -1,40 +1,80 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { AI, AIOptions } from '../../../jscaip/AI/AI';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Coord } from '../../../jscaip/Coord';
+import { Coord3D } from '../../../jscaip/Coord3D';
 import { Move } from '../../../jscaip/Move';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Debug } from 'src/app/utils/Debug';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
+import { Localized } from '../../../utils/LocaleUtils';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { BaseComponent } from '../../BaseComponent';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
-/**
- * Define some methods that are useful to have in game components.
- * We can't define these in GameComponent itself, as they are required
- * by sub components which themselves are not GameComponent subclasses
- */
-export abstract class BaseGameComponent extends BaseComponent {
+export class ScoreName {
 
-    public SPACE_SIZE: number = 100;
+    public static readonly POINTS: ScoreName =
+        new ScoreName(() => $localize`0 points`,
+                      () => $localize`1 point`,
+                      (n: number) => $localize`${n} points`);
 
-    public readonly STROKE_WIDTH: number = 8;
+    public static readonly CAPTURES: ScoreName =
+        new ScoreName(() => $localize`0 captures`,
+                      () => $localize`1 capture`,
+                      (n: number) => $localize`${n} captures`);
 
-    public readonly SMALL_STROKE_WIDTH: number = 2;
+    public static readonly REMAINING_PIECES: ScoreName =
+        new ScoreName(() => $localize`0 remaining pieces`,
+                      () => $localize`1 remaining piece`,
+                      (n: number) => $localize`${n} remaining pieces`);
 
-    public getSVGTranslation(x: number, y: number): string {
-        return 'translate(' + x + ', ' + y + ')';
+    public static readonly PIECES_TO_DROP: ScoreName =
+        new ScoreName(() => $localize`0 pieces to drop`,
+                      () => $localize`1 piece to drop`,
+                      (n: number) => $localize`${n} pieces to drop`);
+
+    public static readonly PROTECTED_PIECES: ScoreName =
+        new ScoreName(() => $localize`0 protected pieces`,
+                      () => $localize`1 protected piece`,
+                      (n: number) => $localize`${n} protected pieces`);
+
+    public static readonly PIECES_UNDER_CONTROL: ScoreName =
+        new ScoreName(() => $localize`0 pieces under control`,
+                      () => $localize`1 piece under control`,
+                      (n: number) => $localize`${n} pieces under control`);
+
+    public static readonly STACKS_UNDER_CONTROL: ScoreName =
+        new ScoreName(() => $localize`0 stacks under control`,
+                      () => $localize`1 stack under control`,
+                      (n: number) => $localize`${n} stacks under control`);
+
+    /**
+     * A score name might be differently written for zero, one, or more than one "points".
+     * Zero might be plural like in english, but different in another language, like french where it is singular.
+     */
+    private constructor(public readonly zero: Localized,
+                        public readonly singular: Localized,
+                        public readonly plural: (n: number) => string) {
     }
 
-    public getSVGTranslationAt(coord: Coord): string {
-        return this.getSVGTranslation(coord.x, coord.y);
+    public getString(count: number): string {
+        switch (count) {
+            case 0:
+                return this.zero();
+            case 1:
+                return this.singular();
+            default:
+                return this.plural(count);
+        }
     }
 }
 
@@ -56,9 +96,17 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     L = void>
     extends BaseGameComponent
 {
+
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    protected readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
+
+    public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
+
+    public Coord3D: typeof Coord3D = Coord3D;
 
     public rules: R;
 
@@ -83,6 +131,9 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public isPlayerTurn: () => boolean;
 
+    /**
+     * Called by the game component when the user creates a move
+     */
     public chooseMove: (move: M) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => Promise<MGPValidation>;
@@ -99,8 +150,21 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public state: S;
 
-    public constructor(private readonly messageDisplayer: MessageDisplayer, protected readonly cdr: ChangeDetectorRef) {
-        super();
+    public hasScores(): boolean {
+        return this.scores.isPresent();
+    }
+
+    public getScore(player: Player): number {
+        return this.scores.get().get(player);
+    }
+
+    protected getScoreName(): ScoreName {
+        // This can be redefined in games where we don't talk about points
+        return ScoreName.POINTS;
+    }
+
+    public getScoreString(player: Player): string {
+        return this.getScoreName().getString(this.getScore(player));
     }
 
     public getPointOfView(): Player {
@@ -210,13 +274,13 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     /**
      * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
      */
-    public getTranslationAt(coord: Coord): string {
-        return this.getTranslationAtXY(coord.x, coord.y);
+    public getTranslationAt(logicalCoord: Coord): string {
+        return this.getTranslationAtXY(logicalCoord.x, logicalCoord.y);
     }
 
-    public getTranslationAtXY(x: number, y: number): string {
-        const svgX: number = x * this.SPACE_SIZE;
-        const svgY: number = y * this.SPACE_SIZE;
+    public getTranslationAtXY(logicalX: number, logicalY: number): string {
+        const svgX: number = logicalX * this.SPACE_SIZE;
+        const svgY: number = logicalY * this.SPACE_SIZE;
         return this.getSVGTranslation(svgX, svgY);
     }
 

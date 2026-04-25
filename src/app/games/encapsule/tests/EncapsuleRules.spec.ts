@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
-import { EncapsuleMove } from '../EncapsuleMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
-import { Player } from 'src/app/jscaip/Player';
-import { EncapsulePiece } from '../EncapsulePiece';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { EncapsuleMove } from '../EncapsuleMove';
+import { EncapsulePiece } from '../EncapsulePiece';
+import { EncapsuleConfig, EncapsuleNode, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleRemainingPieces, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 
 describe('EncapsuleRules', () => {
 
@@ -49,8 +50,9 @@ describe('EncapsuleRules', () => {
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 2, 2], [0, 1, 2]);
         const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
         const node: EncapsuleNode = new EncapsuleNode(state);
-        // When evaluating it
-        // Then it should be a victory
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -71,28 +73,18 @@ describe('EncapsuleRules', () => {
     });
 
     it('should know winner even when he was not playing', () => {
-        // Given a board on which active player could lose by acting
-        const board: EncapsuleSpace[][] = [
-            [XO_, ___, ___],
-            [___, _X_, ___],
-            [___, ___, __X],
-        ];
+        // Given a board on which previous player just gave victory to active player
         const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([2, 1, 2], [1, 1, 1]);
-        const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
-
-        // When doing that "actively losing move"
-        const move: EncapsuleMove = EncapsuleMove.ofMove(new Coord(0, 0), new Coord(1, 0));
-
-        // Then the active player should have lost
         const expectedBoard: EncapsuleSpace[][] = [
             [X__, _O_, ___],
             [___, _X_, ___],
             [___, ___, __X],
         ];
         const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces, 3);
+        const node: EncapsuleNode = new EncapsuleNode(expectedState);
 
-        RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        const node: EncapsuleNode = new EncapsuleNode(expectedState, MGPOptional.empty(), MGPOptional.of(move));
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -287,8 +279,9 @@ describe('EncapsuleRules', () => {
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 2, 2]);
             const state: EncapsuleState = new EncapsuleState(board, 2, remainingPieces, 3);
             const node: EncapsuleNode = new EncapsuleNode(state);
-            // When evaluating it
-            // Then it should be a victory
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, customConfig);
         });
 

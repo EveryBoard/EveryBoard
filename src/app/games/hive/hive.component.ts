@@ -1,25 +1,29 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TableWithPossibleNegativeIndices } from 'src/app/jscaip/TableUtils';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
+
 import { HiveFailure } from './HiveFailure';
+import { HiveMinimax } from './HiveMinimax';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
 import { HiveSpiderRules } from './HivePieceRules';
 import { HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { HiveMinimax } from './HiveMinimax';
+import { HivePieceComponent } from './hive-piece.component';
 
 interface GroundInfo {
 
@@ -100,6 +104,7 @@ class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
     selector: 'app-hive',
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, HivePieceComponent],
 })
 export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, HiveState, HivePieceStack> {
 
@@ -121,8 +126,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public viewBox: string;
     public inspectedStackTransform: string;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Hive');
         this.availableAIs = [
             new HiveMinimax(),
@@ -136,7 +141,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                                          FlatHexaOrientation.INSTANCE);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.layers = [];
         for (const coord of this.getState().occupiedSpaces()) {
             const stack: HivePieceStack = this.getState().getAt(coord);
@@ -274,9 +279,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    public override hideLastMove(): void {
-        // Not really usefull here, until viewInfo is replace by a more simple system
-    }
+    public override hideLastMove(): void {}
 
     private getLastMoveCoords(move: HiveMove): Coord[] {
         let lastMove: Coord[] = [];

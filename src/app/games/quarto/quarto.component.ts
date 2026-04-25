@@ -1,21 +1,25 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { QuartoMove } from './QuartoMove';
-import { QuartoState } from './QuartoState';
-import { QuartoConfig, QuartoRules } from './QuartoRules';
-import { QuartoPiece } from './QuartoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { QuartoMoveGenerator } from './QuartoMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { QuartoMinimax } from './QuartoMinimax';
+import { QuartoMove } from './QuartoMove';
+import { QuartoMoveGenerator } from './QuartoMoveGenerator';
+import { QuartoPiece } from './QuartoPiece';
+import { QuartoConfig, QuartoRules } from './QuartoRules';
+import { QuartoState } from './QuartoState';
 
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                                                               QuartoMove,
@@ -34,8 +38,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Set<Coord> = new Set();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Quarto');
         this.availableAIs = [
             new QuartoMinimax(),
@@ -45,7 +49,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.pieceInHand = this.getState().pieceInHand;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: QuartoState = this.getState();
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
@@ -71,7 +75,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
                 const chosenMove: QuartoMove = new QuartoMove(clicked.x, clicked.y, QuartoPiece.EMPTY);
                 return this.chooseMove(chosenMove);
             } else if (this.pieceToGive.isAbsent()) {
-                return MGPValidation.SUCCESS; // the user has just chosen his coord
+                return MGPValidation.SUCCESS; // the user has just chosen their coord
             } else {
                 // the user has already chosen his piece before his coord
                 const chosenMove: QuartoMove = new QuartoMove(clicked.x, clicked.y, this.pieceToGive.get());
@@ -93,7 +97,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
         this.pieceToGive = MGPOptional.of(QuartoPiece.ofInt(givenPiece));
         if (this.chosen.isAbsent()) {
-            return MGPValidation.SUCCESS; // the user has just chosen his piece
+            return MGPValidation.SUCCESS; // the user has just chosen their piece
         } else {
             // the user has chosen the coord before the piece
             const chosen: Coord = this.chosen.get();

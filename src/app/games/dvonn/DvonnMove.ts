@@ -1,10 +1,11 @@
 import { Encoder, MGPFallible } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { DvonnState } from './DvonnState';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+
 import { DvonnFailure } from './DvonnFailure';
+import { DvonnState } from './DvonnState';
 
 export class DvonnMove extends MoveCoordToCoord {
 
@@ -21,10 +22,10 @@ export class DvonnMove extends MoveCoordToCoord {
             return MGPFallible.success(DvonnMove.PASS);
         }
         // Move should be on board
-        if (DvonnState.isOnBoard(start) === false) {
+        if (DvonnState.isNotOnBoard(start)) {
             return MGPFallible.failure('Starting coord of DvonnMove must be on the board, not at ' + start.toString());
         }
-        if (DvonnState.isOnBoard(end) === false) {
+        if (DvonnState.isNotOnBoard(end)) {
             return MGPFallible.failure('End coord of DvonnMove must be on the board, not at ' + start.toString());
         }
         // Move should be a straight line
@@ -47,7 +48,7 @@ export class DvonnMove extends MoveCoordToCoord {
         }
         return 'DvonnMove(' + this.getStart() + '->' + this.getEnd() + ')';
     }
-    public override length(): number {
+    public override getDistance(): number {
         if (this.getStart().y === this.getEnd().y) {
             return Math.abs(this.getStart().x - this.getEnd().x);
         } else if (this.getStart().x === this.getEnd().x) {

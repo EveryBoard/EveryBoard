@@ -1,17 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MancalaState } from '../MancalaState';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaFailure } from '../MancalaFailure';
-import { Player } from 'src/app/jscaip/Player';
-import { MancalaConfig } from '../MancalaConfig';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { MancalaNode, MancalaRules } from '../MancalaRules';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
-export class MancalaRulesTestEntries {
+import { GameNode } from '../../../../jscaip/AI/GameNode';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { MancalaConfig } from '../MancalaConfig';
+import { MancalaFailure } from '../MancalaFailure';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaNode, MancalaRules } from '../MancalaRules';
+import { MancalaState } from '../MancalaState';
+
+export type MancalaRulesTestEntries = {
     gameName: string; // 'Awale', 'Kalah', etc
     rules: MancalaRules;
     simpleMove: MancalaMove;
@@ -82,7 +84,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         });
 
         it('should know when to monsoon', () => {
-            // Given a state where player is about to cede his last seed, and won't be feedable
+            // Given a state where player is about to cede their last seed, and won't be feedable
             const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 passByPlayerStore: true,
@@ -142,7 +144,8 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
                         const node: MancalaNode = new GameNode(state);
-                        // Then it should be a victory for player 0
+                        // When checking the game status
+                        // Then it should be a victory for Player.ZERO
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, MGPOptional.of(config));
                     });
 
@@ -152,7 +155,9 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
                         const node: MancalaNode = new GameNode(state);
-                        // Then it should be a victory for player 1
+
+                        // When checking the game status
+                        // Then it should be a victory for Player.ONE
                         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, MGPOptional.of(config));
                     });
 
@@ -162,6 +167,8 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds, halfOfTotalSeeds));
                         const node: MancalaNode = new GameNode(state);
+
+                        // When checking the game status
                         // Then it should be a draw
                         RulesUtils.expectToBeDraw(rules, node, MGPOptional.of(config));
                     });

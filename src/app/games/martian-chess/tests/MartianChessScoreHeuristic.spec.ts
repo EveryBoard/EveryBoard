@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessPiece } from '../MartianChessPiece';
+import { MartianChessRules } from '../MartianChessRules';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessCapture, MartianChessState } from '../MartianChessState';
-import { MartianChessRules } from '../MartianChessRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 
 describe('MartianChessScoreHeuristic', () => {
 

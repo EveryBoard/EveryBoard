@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, Utils } from '@everyboard/lib';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
+import { Utils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { YinshPiece } from '../YinshPiece';
 
 describe('YinshPiece', () => {

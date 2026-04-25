@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { SquarzFailure } from '../SquarzFailure';
+import { SquarzMove } from '../SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';
 import { SquarzState } from '../SquarzState';
-import { SquarzMove } from '../SquarzMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { SquarzFailure } from '../SquarzFailure';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('SquarzRules', () => {
 
@@ -30,7 +31,7 @@ describe('SquarzRules', () => {
         // When applying duplication move
         const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(1, 1)).get();
 
-        // Then it should be legal
+        // Then the move should succeed
         const expectedState: SquarzState = new SquarzState([
             [O, _, _, _, _, _, _, X],
             [_, O, _, _, _, _, _, _],
@@ -51,7 +52,7 @@ describe('SquarzRules', () => {
         // When doing a jump
         const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(2, 2)).get();
 
-        // Then it should be legal
+        // Then the move should succeed
         const expectedState: SquarzState = new SquarzState([
             [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
@@ -102,7 +103,7 @@ describe('SquarzRules', () => {
         // When doing a knight jump
         const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(1, 2)).get();
 
-        // Then it should be legal
+        // Then the move should succeed
         const expectedState: SquarzState = new SquarzState([
             [_, _, _, _, _, _, _, X],
             [_, _, _, _, _, _, _, _],
@@ -187,8 +188,10 @@ describe('SquarzRules', () => {
                 [O, O, O, O, O, O, X, X],
                 [O, O, O, O, O, O, X, X],
             ], 64);
-            // Then victory should be granted to Player.ZERO
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -204,8 +207,10 @@ describe('SquarzRules', () => {
                 [_, _, _, X, X, X, O, O],
                 [_, _, _, X, X, X, O, O],
             ], 64);
-            // Then victory should be granted to Player.ONE
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -221,8 +226,10 @@ describe('SquarzRules', () => {
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],
             ], 64);
-            // Then it should be a draw
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -260,7 +267,7 @@ describe('SquarzRules', () => {
             // When trying to create a jump of 3
             const move: SquarzMove = SquarzMove.from(new Coord(0, 0), new Coord(3, 3)).get();
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: SquarzState = new SquarzState([
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, _, _],

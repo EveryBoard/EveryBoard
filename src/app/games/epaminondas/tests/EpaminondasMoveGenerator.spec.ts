@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 

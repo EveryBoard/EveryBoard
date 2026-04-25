@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
-import { Player } from 'src/app/jscaip/Player';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 import { HexodiaState } from '../HexodiaState';
-import { HexodiaMove } from '../HexodiaMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { DodecaHexaDirection } from 'src/app/jscaip/DodecaHexaDirection';
 
 describe('HexodiaRules', () => {
     /**
@@ -275,7 +276,7 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
 
-            // Then it should succeed
+            // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -335,6 +336,9 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -361,14 +365,14 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
             ], 91);
-
-            // When evaluating the node
-            // Then the board should be a draw
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
-        it('should include the diagonals', () => {
+        it('should include the "rectangular" diagonals', () => {
             // Given a board where the square alignment
             // (the line that looks like an alignment on that square board but that is not on a hexagonal board)
             const state: HexodiaState = new HexodiaState([
@@ -393,6 +397,44 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
+
+        it('should include the "hexagonal" diagonals', () => {
+            // Given a board with the following alignment:
+            // the line that passes trough the hexagonal edges,
+            // two such diagonals don't have their pieces corner touching each other like in a rectangle board
+            //     but they share the mathematical aspect:
+            //         if you add two vector representing the direction UP-LEFT(0,-1) and UP-RIGHT(1,-1),
+            //         then you would end up in (1, -2)
+            const state: HexodiaState = new HexodiaState([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -419,7 +461,8 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X],
             ], 25);
             const node: HexodiaNode = new HexodiaNode(state);
-            // When checking it game status
+
+            // When checking the game status
             // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -438,8 +481,8 @@ describe('HexodiaRules', () => {
                 state = state.incrementTurn();
                 const node: HexodiaNode = new HexodiaNode(state);
 
-                // When evaluating its board status
-                // Then it should be a victory
+                // When checking the game status
+                // Then it should be a victory for Player.ONE
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
         }

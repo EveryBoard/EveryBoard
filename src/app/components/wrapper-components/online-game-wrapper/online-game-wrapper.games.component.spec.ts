@@ -2,15 +2,17 @@
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { MGPValidation } from '@everyboard/lib';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { MinimalUser } from '../../../domain/MinimalUser';
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
-import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.quarto.component.spec';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
 
 describe('OnlineGameWrapperComponent (games)', () => {
 
@@ -18,6 +20,7 @@ describe('OnlineGameWrapperComponent (games)', () => {
     let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;
 
     for (const gameInfo of GameInfo.getAllGames()) {
+
         it(`click methods should refuse when observer clicks (${gameInfo.urlName})`, fakeAsync(async() => {
             // Given a online game
             const game: { [methodName: string]: unknown[] } | undefined = clickableMethods[gameInfo.urlName];
@@ -44,8 +47,9 @@ describe('OnlineGameWrapperComponent (games)', () => {
                 // Then it should be refused, with the reason being that we are an observer
                 expect(clickResult).withContext(methodName).toEqual(refusal);
             }
-            tick(wrapper.configRoom.totalPartDuration * 1000);
+            tick(wrapper.configRoom.gameDuration * 1000);
         }));
+
     }
 
 });

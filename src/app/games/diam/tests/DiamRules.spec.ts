@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { DiamFailure } from '../DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';
 import { DiamPiece } from '../DiamPiece';
 import { DiamNode, DiamRules } from '../DiamRules';
 import { DiamState } from '../DiamState';
-import { Player } from 'src/app/jscaip/Player';
-import { DiamFailure } from '../DiamFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiamRules', () => {
 
@@ -249,7 +249,9 @@ describe('DiamRules', () => {
                 [B1, __, __, __, B2, __, __, __],
             ], 4);
             const node: DiamNode = new DiamNode(state);
-            // Then it is detected as a v ictory for player zero
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -262,7 +264,9 @@ describe('DiamRules', () => {
                 [B1, __, __, __, B2, __, __, __],
             ], 4);
             const node: DiamNode = new DiamNode(state);
-            // Then the winner is the one with the highest alignment
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE (who has the highest alignement)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

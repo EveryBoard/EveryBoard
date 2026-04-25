@@ -1,22 +1,26 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { SiamMove } from 'src/app/games/siam/SiamMove';
-import { SiamState } from 'src/app/games/siam/SiamState';
-import { SiamConfig, SiamLegalityInformation, SiamRules } from 'src/app/games/siam/SiamRules';
-import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Debug } from '../../utils/Debug';
+
 import { SiamFailure } from './SiamFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamMinimax } from './SiamMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { SiamMove } from './SiamMove';
+import { SiamMoveGenerator } from './SiamMoveGenerator';
+import { SiamPiece } from './SiamPiece';
+import { SiamConfig, SiamLegalityInformation, SiamRules } from './SiamRules';
+import { SiamState } from './SiamState';
+import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {
     source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
@@ -29,6 +33,7 @@ export type SiamIndicatorArrow = {
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, SiamOrientationArrowComponent],
 })
 @Debug.log
 export class SiamComponent extends RectangularGameComponent<SiamRules,
@@ -49,8 +54,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     private insertingPiece: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Siam');
         this.availableAIs = [
             new SiamMinimax(),
@@ -64,7 +69,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             .expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SiamState = this.getState();
         this.board = state.board;
     }
@@ -227,7 +232,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
             if (move.direction.isPresent()) {
                 const target: Coord = move.coord.getNext(move.direction.get());
                 this.clickableCoords = this.clickableCoords.addElement(target);
-                if (state.isOnBoard(target) && state.getPieceAt(target) !== SiamPiece.EMPTY) {
+                if (state.hasInequalPieceAt(target, SiamPiece.EMPTY)) {
                     const arrow: SiamIndicatorArrow = {
                         source: MGPOptional.of({
                             coord: clickedCoord,

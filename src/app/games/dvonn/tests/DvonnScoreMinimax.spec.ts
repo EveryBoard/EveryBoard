@@ -1,18 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DvonnRules } from '../DvonnRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { DvonnScoreMinimax } from '../DvonnScoreMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DvonnScoreMinimax', () => {
 
     const rules: DvonnRules = DvonnRules.get();
     const minimax: DvonnScoreMinimax = new DvonnScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -23,4 +21,5 @@ describe('DvonnScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

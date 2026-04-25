@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Encoder, EncoderTestUtils } from '../Encoder';
+import { Encoder } from '../Encoder';
 import { MGPOptional } from '../MGPOptional';
+
+import { EncoderTestUtils } from './EncoderTestUtils';
 
 describe('MGPOptional', () => {
 
@@ -55,6 +57,29 @@ describe('MGPOptional', () => {
         });
     });
 
+    describe('orElse', () => {
+        it('should return itself if value is present', () => {
+            const optional: MGPOptional<number> = MGPOptional.of(42);
+            expect(optional.orElse(MGPOptional.empty())).toEqual(optional);
+            expect(optional.orElse(MGPOptional.of(3.14))).toEqual(optional);
+        });
+
+        it('should return the optional if value is absent', () => {
+            const optional: MGPOptional<number> = MGPOptional.empty();
+            const present: MGPOptional<number> = MGPOptional.of(3.14);
+            expect(optional.orElse(MGPOptional.empty())).toEqual(optional);
+            expect(optional.orElse(present)).toEqual(present);
+        });
+
+        it('should preserve the value if there is one', () => {
+            expect(MGPOptional.of(42).orElse(MGPOptional.of(0)).get()).toBe(42);
+        });
+
+        it('should return the other value if there is no value inside', () => {
+            expect(MGPOptional.empty().orElse(MGPOptional.of(0)).get()).toBe(0);
+        });
+    });
+
     describe('equals', () => {
         it('should consider the same optional equal', () => {
             const optional: MGPOptional<number> = MGPOptional.of(42);
@@ -81,6 +106,11 @@ describe('MGPOptional', () => {
             const optional: MGPOptional<number> = MGPOptional.of(42);
             expect(optional.equalsValue(42)).toBeTrue();
         });
+
+        it('should consider empty different', () => {
+            const optional: MGPOptional<number> = MGPOptional.empty();
+            expect(optional.equalsValue(42)).toBeFalse();
+        });
     });
 
     describe('toString', () => {
@@ -90,6 +120,10 @@ describe('MGPOptional', () => {
 
         it('should include value for non-empty values', () => {
             expect(MGPOptional.of('foo').toString()).toBe('MGPOptional.of(foo)');
+        });
+
+        it('should rely on the toString of the contained value', () => {
+            expect(MGPOptional.of(MGPOptional.of('foo')).toString()).toBe('MGPOptional.of(MGPOptional.of(foo))');
         });
     });
 
@@ -108,4 +142,16 @@ describe('MGPOptional', () => {
             expect(optional.map(addOne)).toEqual(MGPOptional.of(42));
         });
     });
+
+    it('should be able to get on an else branch of isAbsent', () => {
+        function f(v: MGPOptional<number>): number {
+            if (v.isAbsent()) {
+                return 0;
+            } else {
+                return v.get();
+            }
+        }
+        expect(f(MGPOptional.of(5))).toBe(5);
+    });
+
 });

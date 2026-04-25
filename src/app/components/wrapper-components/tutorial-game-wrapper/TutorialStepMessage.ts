@@ -1,4 +1,4 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../../utils/LocaleUtils';
 
 export class TutorialStepMessage {
 
@@ -19,5 +19,7 @@ export class TutorialStepMessage {
     public static readonly TRANSLATIONS: Localized = () => $localize`Translations`;
 
     public static readonly RULES_CONFIGURATION: Localized = () => $localize`Rules configuration`;
+
+    public static readonly CONGRATULATIONS_YOU_KNOW_EVERYTHING: Localized = () => $localize`Congratulations! You know everything you need to start a game!`;
 
 }

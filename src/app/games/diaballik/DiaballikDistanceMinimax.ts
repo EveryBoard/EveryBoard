@@ -1,10 +1,11 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { DiaballikMove } from './DiaballikMove';
-import { DiaballikState } from './DiaballikState';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
+import { DiaballikMove } from './DiaballikMove';
 import { DiaballikRules } from './DiaballikRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DiaballikState } from './DiaballikState';
 
 export class DiaballikDistanceMinimax extends Minimax<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
 

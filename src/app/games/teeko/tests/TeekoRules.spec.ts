@@ -1,13 +1,15 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
 
 describe('TeekoRules', () => {
 
@@ -23,7 +25,7 @@ describe('TeekoRules', () => {
     }
 
     function drop(coord: Coord): TeekoMove {
-        return TeekoDropMove.from(coord).get();
+        return TeekoDropMove.from(coord);
     }
 
     beforeEach(() => {
@@ -32,6 +34,19 @@ describe('TeekoRules', () => {
     });
 
     describe('dropping phase', () => {
+
+        it('should fail when not in range', () => {
+            // Given any state
+            const state: TeekoState = rules.getInitialState();
+
+            // When attempting a drop out of board
+            const coord: Coord = new Coord(6, 6);
+            const move: TeekoMove = drop(coord);
+
+            // Then the move should be illegal
+            const reason: string = CoordFailure.OUT_OF_RANGE(coord);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
 
         it('should fail if receiving translation in the 8 first turns', () => {
             // Given a board on the first phase
@@ -73,7 +88,7 @@ describe('TeekoRules', () => {
             // When dropping a piece
             const move: TeekoMove = drop(new Coord(2, 2));
 
-            // Then it should be a success
+            // Then the move should succeed
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -99,7 +114,7 @@ describe('TeekoRules', () => {
             // When dropping the fourth O in alignment with the 3 others
             const move: TeekoMove = drop(new Coord(1, 2));
 
-            // Then it should be legal and marked as victory
+            // Then the move should succeed and marked as victory
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -127,7 +142,7 @@ describe('TeekoRules', () => {
             // When dropping the fourth O in alignment with the 3 others
             const move: TeekoMove = drop(new Coord(3, 3));
 
-            // Then it should be legal and marked as victory
+            // Then the move should succeed and marked as victory
             const expectedBoard: Table<PlayerOrNone> = [
                 [O, _, _, _, _],
                 [X, O, _, _, _],
@@ -155,7 +170,7 @@ describe('TeekoRules', () => {
             // When dropping the fourth O in alignment with the 3 others
             const move: TeekoMove = drop(new Coord(2, 3));
 
-            // Then it should be legal and marked as victory
+            // Then the move should succeed and marked as victory
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, _, O, X, _],
                 [_, _, O, X, _],
@@ -183,7 +198,7 @@ describe('TeekoRules', () => {
             // When dropping the fourth O forming a square with the 3 others
             const move: TeekoMove = drop(new Coord(1, 0));
 
-            // Then it should be legal and marked as victory
+            // Then the move should succeed and marked as victory
             const expectedBoard: Table<PlayerOrNone> = [
                 [O, O, _, _, _],
                 [O, O, _, _, _],
@@ -220,6 +235,46 @@ describe('TeekoRules', () => {
             TestUtils.expectToThrowAndLog(() => {
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             }, reason);
+        });
+
+        it('should refuse moving from outside the board', () => {
+            // Given a board in second phase
+            const board: Table<PlayerOrNone> = [
+                [O, X, _, _, _],
+                [O, O, _, _, _],
+                [X, X, _, _, _],
+                [X, O, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: TeekoState = new TeekoState(board, 8);
+
+            // When doing translation starting out of the board
+            const outOfBoard: Coord = new Coord(10, 10);
+            const move: TeekoMove = translate(outOfBoard, new Coord(3, 3));
+
+            // Then the move should be illegal
+            const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoard);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
+
+        it('should refuse moving outside the board', () => {
+            // Given a board in second phase
+            const board: Table<PlayerOrNone> = [
+                [O, X, _, _, _],
+                [O, O, _, _, _],
+                [X, X, _, _, _],
+                [X, O, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: TeekoState = new TeekoState(board, 8);
+
+            // When doing translation ending out of the board
+            const outOfBoard: Coord = new Coord(-1, -1);
+            const move: TeekoMove = translate(new Coord(0, 0), outOfBoard);
+
+            // Then the move should be illegal
+            const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoard);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should refuse moving from an empty space', () => {
@@ -293,7 +348,7 @@ describe('TeekoRules', () => {
             // When doing legal translation
             const move: TeekoMove = translate(new Coord(1, 1), new Coord(2, 1));
 
-            // Then it should be a success
+            // Then the move should succeed
             const expectedBoard: Table<PlayerOrNone> = [
                 [O, X, _, _, _],
                 [O, _, O, _, _],
@@ -341,7 +396,7 @@ describe('TeekoRules', () => {
             // When doing a teleportation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(2, 1));
 
-            // Then it should be a success
+            // Then the move should succeed
             const expectedBoard: Table<PlayerOrNone> = [
                 [_, X, _, _, _],
                 [O, O, O, _, _],
@@ -365,8 +420,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 9);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -382,8 +437,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 9);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -399,8 +454,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 9);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -416,8 +471,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 10);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

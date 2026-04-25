@@ -1,67 +1,74 @@
-import { ConfigRoomDAO } from 'src/app/dao/ConfigRoomDAO';
-import { MinimalUser } from 'src/app/domain/MinimalUser';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Injectable } from '@angular/core';
-import { ConnectedUserService } from '../ConnectedUserService';
-import { ConfigRoom, FirstPlayer, PartStatus, PartType } from 'src/app/domain/ConfigRoom';
-import { ConfigRoomService, ConfigRoomServiceFailure } from '../ConfigRoomService';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Subscription } from 'rxjs';
 
-@Injectable({ providedIn: 'root' })
-export class ConfigRoomServiceMock extends ConfigRoomService {
+import { MGPOptional, Utils } from '@everyboard/lib';
 
-    public constructor(configRoomDAO: ConfigRoomDAO,
-                       connectedUserService: ConnectedUserService) {
-        super(configRoomDAO, connectedUserService);
+import { ConfigProposal, ConfigRoom } from '../../domain/ConfigRoom';
+import { MinimalUser } from '../../domain/MinimalUser';
+import { AbstractConfigRoomService, Candidate } from '../ConfigRoomService';
+
+export class ConfigRoomServiceMock extends AbstractConfigRoomService {
+
+    private subscribedCallback: MGPOptional<{
+        configRoomUpdate: (configRoom: ConfigRoom) => void,
+        configRoomDeleted: () => void,
+        candidateJoined: (candidate: Candidate) => void,
+        candidateLeft: (candidate: MinimalUser) => void,
+        error: (reason: string) => void,
+    }> = MGPOptional.empty();
+
+    public override async join(gameId: string,
+                               configRoomUpdate: (configRoom: ConfigRoom) => void,
+                               configRoomDeleted: () => void,
+                               candidateJoined: (candidate: Candidate) => void,
+                               candidateLeft: (candidate: MinimalUser) => void,
+                               error: (reason: string) => void)
+    : Promise<Subscription> {
+        this.subscribedCallback = MGPOptional.of({
+            configRoomUpdate,
+            configRoomDeleted,
+            candidateJoined,
+            candidateLeft,
+            error,
+        });
+        return new Subscription(() => {
+            this.subscribedCallback = MGPOptional.empty();
+        });
     }
 
-    public override async joinGame(gameId: string): Promise<MGPValidation> {
-        const configRoom: MGPOptional<ConfigRoom> = await this.configRoomDAO.read(gameId);
-        if (configRoom.isAbsent()) {
-            return MGPValidation.failure(ConfigRoomServiceFailure.GAME_DOES_NOT_EXIST());
-        } else {
-            const candidate: MinimalUser = this.connectedUserService.user.get().toMinimalUser();
-            // Creator is not a candidate
-            if (configRoom.get().creator.id !== candidate.id) {
-                await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').set(candidate.id, candidate);
-            }
-            return MGPValidation.SUCCESS;
-        }
+    public override async proposeConfig(proposal: ConfigProposal): Promise<void> {
     }
 
-    public override async removeCandidate(gameId: string, candidateId: string): Promise<void> {
-        await this.configRoomDAO.subCollectionDAO(gameId, 'candidates').delete(candidateId);
+    public override async selectOpponent(opponent: MinimalUser): Promise<void> {
     }
 
-    public override async proposeConfig(gameId: string,
-                                        partType: PartType,
-                                        maximalMoveDuration: number,
-                                        firstPlayer: FirstPlayer,
-                                        totalPartDuration: number,
-                                        rulesConfig: MGPOptional<RulesConfig>)
-    : Promise<void>
-    {
-        const config: Partial<ConfigRoom> = {
-            partStatus: PartStatus.CONFIG_PROPOSED.value,
-            partType: partType.value,
-            maximalMoveDuration,
-            totalPartDuration,
-            firstPlayer: firstPlayer.value,
-            rulesConfig: rulesConfig.getOrElse({}),
-        };
-        await this.configRoomDAO.update(gameId, config);
+    public override async reviewConfig(): Promise<void> {
     }
 
-    public override async selectOpponent(gameId: string, opponent: MinimalUser): Promise<void> {
-        await this.configRoomDAO.update(gameId, { chosenOpponent: opponent });
+    public override async acceptConfig(): Promise<void> {
     }
 
-    public override async reviewConfig(gameId: string): Promise<void> {
-        await this.configRoomDAO.update(gameId, { partStatus: PartStatus.PART_CREATED.value });
+    public mockConfigRoomUpdate(configRoom: ConfigRoom): void {
+        Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
+        this.subscribedCallback.get().configRoomUpdate(configRoom);
     }
 
-    public override async reviewConfigAndRemoveChosenOpponent(gameId: string): Promise<void> {
-        await this.configRoomDAO.update(gameId, { chosenOpponent: null, partStatus: PartStatus.PART_CREATED.value });
+    public mockCandidateJoined(user: MinimalUser, elo: number): void {
+        Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
+        this.subscribedCallback.get().candidateJoined({ user, elo });
     }
 
+    public mockCandidateLeft(candidate: MinimalUser): void {
+        Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
+        this.subscribedCallback.get().candidateLeft(candidate);
+    }
+
+    public mockError(reason: string): void {
+        Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
+        this.subscribedCallback.get().error(reason);
+    }
+
+    public mockDeletion(): void {
+        Utils.assert(this.subscribedCallback.isPresent(), 'ConfigRoomServiceMock should be subscribed');
+        this.subscribedCallback.get().configRoomDeleted();
+    }
 }

@@ -1,11 +1,11 @@
-import { ConspirateursMove } from '../ConspirateursMove';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { ConspirateursRules } from '../ConspirateursRules';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { ConspirateursState } from '../ConspirateursState';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ConspirateursJumpMinimax } from '../ConspirateursJumpMinimax';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { ConspirateursMove } from '../ConspirateursMove';
+import { ConspirateursRules } from '../ConspirateursRules';
+import { ConspirateursState } from '../ConspirateursState';
 
 describe('ConspirateursJumpMinimax', () => {
 
@@ -23,4 +23,5 @@ describe('ConspirateursJumpMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { TestBed } from '@angular/core/testing';
 import { Injectable } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
-import { FirestoreJSONObject, MGPOptional } from '@everyboard/lib';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { Subscription } from 'rxjs';
-import { setupEmulators } from 'src/app/utils/tests/TestUtils.spec';
 
 type Foo = {
     value: string,
@@ -73,123 +73,6 @@ describe('FirestoreDAO', () => {
             await expectAsync(allChangesSeenPromise).toBeResolvedTo(true);
         });
     });
-    describe('observingWhere', () => {
-
-        let promise: Promise<Foo[]>; // This promise will be resolved when the callback function is called
-
-        let callbackFunction: (created: {data: Foo, id: string}[]) => void;
-        let callbackFunctionLog: (created: {data: Foo, id: string}[]) => void;
-
-        beforeEach(() => {
-            let createdResolve: (value: Foo[]) => void;
-            promise = new Promise((resolve: (value: Foo[]) => void) => {
-                createdResolve = resolve;
-            });
-            callbackFunction = (created: {data: Foo, id: string}[]): void => {
-                createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
-            };
-            callbackFunctionLog = (created: {data: Foo, id: string}[]): void => {
-                for (const doc of created) {
-                    console.log(doc);
-                }
-                createdResolve(created.map((c: {data: Foo, id: string}): Foo => c.data));
-            };
-        });
-        it('should observe document creation with the given condition', async() => {
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                callbackFunction,
-                () => void { },
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
-            await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
-            subscription.unsubscribe();
-        });
-        it('should observe document creation according to multiple conditions', async() => {
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                callbackFunction,
-                () => void { },
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo'], ['otherValue', '==', 1]], callback);
-            await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
-            subscription.unsubscribe();
-        });
-        it('should not observe document creation when the condition does not hold (simple)', async() => {
-            // This test is flaky: it fails from time to time. Check the output log when it fails.
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                callbackFunctionLog,
-                () => void { },
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
-            await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await expectAsync(promise).toBePending();
-            subscription.unsubscribe();
-        });
-        it('should not observe document creation when the condition does not hold (complexe)', async() => {
-            // This test is flaky: it fails from time to time. Check the output log when it fails.
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                callbackFunctionLog,
-                () => void { },
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz'], ['otherValue', '==', 2]], callback);
-            await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await expectAsync(promise).toBePending();
-            subscription.unsubscribe();
-        });
-        it('should observe document update with the given condition', async() => {
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
-                callbackFunction,
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
-            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await fooDAO.update(id, { otherValue: 42 });
-            await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 42 }]);
-            subscription.unsubscribe();
-        });
-        it('should not observe document update when the condition does not hold', async() => {
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
-                callbackFunction,
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'baz']], callback);
-            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await fooDAO.update(id, { otherValue: 42 });
-            await expectAsync(promise).toBePending();
-            subscription.unsubscribe();
-        });
-        it('should observe document deletions with the given condition', async() => {
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
-                () => void { },
-                callbackFunction,
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
-            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await fooDAO.delete(id);
-            await expectAsync(promise).toBeResolvedTo([{ value: 'foo', otherValue: 1 }]);
-            subscription.unsubscribe();
-        });
-        it('should not observe document deletions when the condition does not hold', async() => {
-            const callback: FirestoreCollectionObserver<Foo> = new FirestoreCollectionObserver(
-                () => void { },
-                callbackFunction,
-                () => void { },
-            );
-            const subscription: Subscription = fooDAO.observingWhere([['value', '==', 'foo']], callback);
-            const id: string = await fooDAO.create({ value: 'foo', otherValue: 1 });
-            await fooDAO.delete(id);
-            await expectAsync(promise).toBePending();
-            subscription.unsubscribe();
-        });
-    });
     describe('findWhere', () => {
         it('should return the matching documents', async() => {
             // Given a DB with some documents
@@ -204,16 +87,5 @@ describe('FirestoreDAO', () => {
             expect(docs[0].data).toEqual({ value: 'foo', otherValue: 1 });
         });
     });
-    describe('subCollectionDAO', () => {
-        it('should provide the subcollection with the fully correct path', async() => {
-            // Given a fooDAO with a certain path
-            const path: string = fooDAO.collection.path;
-            // When calling subCollectionDAO
-            const subDAO: FirestoreDAO<FirestoreJSONObject> =
-                fooDAO.subCollectionDAO('foo', 'sub') as FirestoreDAO<FirestoreJSONObject>;
-            // Then it should have the right path
-            const subDAOPath: string = subDAO.collection.path;
-            expect(subDAOPath).toEqual(path + '/foo/sub');
-        });
-    });
+
 });

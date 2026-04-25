@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { AbaloneScoreMinimax } from '../AbaloneScoreMinimax';
 
 describe('AbaloneScoreMinimax', () => {
@@ -22,4 +22,5 @@ describe('AbaloneScoreMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

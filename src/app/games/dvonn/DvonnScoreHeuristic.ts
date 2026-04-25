@@ -1,10 +1,11 @@
-import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnState } from './DvonnState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
 
 export class DvonnScoreHeuristic extends PlayerMetricHeuristicWithBounds<DvonnMove, DvonnState> {
 

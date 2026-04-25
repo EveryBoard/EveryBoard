@@ -1,5 +1,10 @@
 name: CI/CD On Action
 
+env:
+  GO_VERSION: 1.26
+  NODE_VERSION: 20
+  PYTHON_VERSION: 3.13
+
 on:
   push:
     branches: [master, develop]
@@ -8,67 +13,52 @@ on:
 
 jobs:
   build-front:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Build
         run: npm run build
 
   tests-front:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Setup Java (for firebase emulator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Run test suites
         run: npm run libtest:ci && npm run test:ci
       - name: Setup python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install python dependencies
         run: |
           python -m venv venv
@@ -77,7 +67,7 @@ jobs:
           pip install lxml pandas
       - name: Archive code coverage results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: code-coverage-report
           path: coverage/
@@ -87,62 +77,66 @@ jobs:
           python ./scripts/coverage.py check
 
   tests-back:
-    runs-on: ubuntu-22.04
-    steps:
-    - name: Checkout the repository
-      uses: actions/checkout@v4
-    - name: Install OS dependencies
-      run: sudo apt-get install -y libev-dev
-    - name: Setup OCaml
-      uses: ocaml/setup-ocaml@v2
-      with:
-        ocaml-compiler: 5.1
-    - name: Install OCaml dependencies
-      run: cd backend && opam install . --deps-only --with-test
-    - name: Build
-      run: cd backend && make
-    - name: Test
-      run: cd backend && make test
-    - name: Archive code coverage results
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: backend-code-coverage-report
-        path: backend/_coverage/
-    - name: Check coverage
-      run: cd backend && make check-coverage
-
-  e2e:
-    runs-on: ubuntu-22.04
-    needs: [ build-front, tests-front, tests-back ]
+    runs-on: ubuntu-24.04
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
+          go-version: ${{ env.GO_VERSION }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Setup Java (for firebase emulator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+      - name: Setup dependencies (install dependencies)
+        run: npm ci  # Needed for auth tests
+      - name: Build
+        run: cd backend && make
+      - name: Test
+        run: cd backend && make test
+      - name: Archive code coverage results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-code-coverage-report.html
+          path: backend/coverage.html
+      - name: Check coverage
+        run: cd backend && make check-coverage
+      - name: Check gofmt
+        run: cd backend && make check-fmt
+
+  e2e:
+    runs-on: ubuntu-24.04
+    needs: [build-front]
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v4
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+      - name: Setup Java (for firebase emulator)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '21'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Setup python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.10'
+          python-version: ${{ env.PYTHON_VERSION }}
       - name: Install python dependencies
         run: |
           python -m venv venv
@@ -151,13 +145,11 @@ jobs:
           pip install selenium requests killport
       - name: Install OS dependencies
         run: sudo apt-get install -y libev-dev
-      - name: Setup OCaml
-        uses: ocaml/setup-ocaml@v2
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          ocaml-compiler: 5.1
-      - name: Install OCaml dependencies
-        run: cd backend && opam install . --deps-only --with-test
-      - name: Build
+          go-version: ${{ env.GO_VERSION }}
+      - name: Build backend
         run: cd backend && make
       - name: Run e2e tests
         run: |
@@ -165,37 +157,27 @@ jobs:
           npm run e2e
 
   linter:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Run linter with config
         run: npm run lint
 
   images:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build-front
     steps:
       - name: Checkout the repository
@@ -204,31 +186,21 @@ jobs:
         run: ./scripts/check-images.sh
 
   translations:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs: build-front
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup dummy Firebase secret)
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Install python dependencies
         run: |
@@ -246,8 +218,8 @@ jobs:
           ./scripts/check-translations.sh
 
   deployment:
-    runs-on: ubuntu-22.04
-    needs: [ build-front, tests-front, tests-back, linter, images, translations ]
+    runs-on: ubuntu-24.04
+    needs: [build-front, tests-front, tests-back, linter, images, translations]
     environment: netlify
     if: github.event_name == 'push' &&
           contains('
@@ -257,46 +229,33 @@ jobs:
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup dependencies (install JS dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup Firebase secret, master)
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup Firebase config, master)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_MASTER }}" > src/app/firebaseConfig.ts
-      - name: Setup dependencies (setup Firebase secret, dev)
+      - name: Setup dependencies (setup Firebase config, dev)
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
           echo "${{ secrets.FIREBASE_CONFIG_DEV }}" > src/app/firebaseConfig.ts
-      - name: Install OS dependencies
-        run: sudo apt-get install -y libev-dev
-      - name: Setup dependencies (install OCaml)
-        uses: ocaml/setup-ocaml@v2
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          ocaml-compiler: 5.1
-      - name: Setup dependencies (install OCaml dependencies)
-        run: cd backend && opam install . --deps-only --with-test
-      - name: Build backend
-        run: cd backend && make
+          go-version: ${{ env.GO_VERSION }}
+      - name: Install OS dependencies
+        run: |
+          sudo apt-get install -y musl-tools
       - name: Check if push by an org member
         id: is_organization_member
-        uses: jamessingleton/is-organization-member@1.0.1
+        uses: jamessingleton/is-organization-member@1.1.0
         with:
           organization: EveryBoard
           username: ${{ github.actor }}
@@ -304,19 +263,22 @@ jobs:
       - name: Deploy master on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
         run: |
-          result=${{ steps.is_organization_member.outputs.result }}
-          if [ $result == true ]; then
+          result="${{ steps.is_organization_member.outputs.result }}"
+          if [ "$result" == true ]; then
             # deploy frontend
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/master --cname=everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=production --dir dist/everyboard
             # deploy backend
-            if ./scripts/backend_needs_deployment.sh server.everyboard.org; then
+            if ./scripts/backend_needs_deployment.sh https://server.everyboard.org; then
                 mkdir -p ~/.ssh/
                 cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
                 chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-                cd backend && make deploy target=master user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8003 args="-no-emulator -project firestore-c9d47 -origin 'https://everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+                cd backend && \
+                    USE_EMULATOR=no PROJECT_ID=firestore-c9d47 ALLOW_ORIGIN='https://everyboard.org' \
+                    DATABASE_HOST=db DATABASE_USERNAME=everyboard_master DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8003
               fi
           fi
         env:
@@ -327,22 +289,26 @@ jobs:
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_MASTER }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_MASTER }}
       - name: Deploy develop on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
-          result=${{ steps.is_organization_member.outputs.result }}
+          result="${{ steps.is_organization_member.outputs.result }}"
           if [ $result == true ]; then
             # deploy frontend
             npm install @angular-devkit/architect
             npx ng deploy --base-href=/ --repo=https://github.com/EveryBoard/develop --cname=dev.everyboard.org --message="Deployment from action (commit $GITHUB_SHA)" --name acieroid --email 'everyboard@everyboard.org' --configuration=dev --dir dist/everyboard
             # deploy backend
-            if ./scripts/backend_needs_deployment.sh server-dev.everyboard.org; then
+            if ./scripts/backend_needs_deployment.sh https://server-dev.everyboard.org; then
                 mkdir -p ~/.ssh/
                 cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
                 chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-                cd backend && make deploy target=dev user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8002 args="-no-emulator -project everyboard-dev -origin 'https://dev.everyboard.org' -endpoint 'https://firestore.googleapis.com'"
+                cd backend && \
+                    USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='https://dev.everyboard.org' \
+                    DATABASE_HOST=db DATABASE_USERNAME=everyboard_dev DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8002
             fi
           fi
         env:
@@ -353,68 +319,61 @@ jobs:
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_DEV }}
 
   deployment-netlify:
-    runs-on: ubuntu-22.04
-    needs: [ build-front ]
+    runs-on: ubuntu-24.04
+    needs: [build-front]
     environment: netlify
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
-      - name: Setup dependencies (cache node modules)
-        uses: actions/cache@v4
-        env:
-          cache-name: cache-node-modules
-        with:
-          path: ~/.npm
-          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/package-lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-build-${{ env.cache-name }}-
-            ${{ runner.os }}-build-
-            ${{ runner.os }}-
       - name: Setup dependencies (setup node)
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: rm -rf node_modules/@types/glob && cd lib && npm run build
-      - name: Setup dependencies (setup Firebase secret, others)
-        if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
+        run: cd lib && npm run build
+      - name: Setup dependencies (setup Firebase config, others)
+        if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' }}
         run: |
-          echo "${{ secrets.FIREBASE_CONFIG_TEST }}" > src/app/firebaseConfig.ts
-      - name: Install OS dependencies
-        run: sudo apt-get install -y libev-dev
-      - name: Setup dependencies (install OCaml)
-        uses: ocaml/setup-ocaml@v2
+          cp src/app/firebaseConfig.test.ts src/app/firebaseConfig.ts
+      - name: Setup Go
+        uses: actions/setup-go@v5
         with:
-          ocaml-compiler: 5.1
-      - name: Setup dependencies (install OCaml dependencies)
-        run: cd backend && opam install . --deps-only --with-test
+          go-version: ${{ env.GO_VERSION }}
+      - name: Install OS dependencies
+        run: |
+          sudo apt-get install -y musl-tools
       - name: Check if push by an org member
         id: is_organization_member
-        uses: jamessingleton/is-organization-member@1.0.1
+        uses: jamessingleton/is-organization-member@1.1.0
         with:
           organization: EveryBoard
           username: ${{ github.actor }}
           token: ${{ secrets.GITHUB_TOKEN }}
       - name: Deploy feature branch if org member
-        if: ${{ github.ref != 'refs/heads/master'  && github.ref != 'refs/heads/develop' }}
+        if: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/develop' }}
         run: |
-          result=${{ steps.is_organization_member.outputs.result }}
-          if [ $result == true ]; then
+          result="${{ steps.is_organization_member.outputs.result }}"
+          if [ "$result" == true ]; then
             npm run build:netlify
             npm install netlify-cli
-            netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
+            npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
             # deploy backend
-            if ./scripts/backend_needs_deployment.sh server-test.everyboard.org; then
+            if ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then
                 mkdir -p ~/.ssh/
                 cat > ~/.ssh/known_hosts <<< "$SSH_KNOWN_HOSTS"
                 cat > ~/.ssh/id_rsa <<< "$SSH_KEY"
                 chmod u+rw,go-rw,a-x ~/.ssh/id_rsa
                 cat > backend/service-account.json <<< "$SERVICE_ACCOUNT"
-                cd backend && make deploy target=test user=$SSH_USER server=$SSH_SERVER port=$SSH_PORT listen-port=8001 args="-no-emulator -project everyboard-test -origin '*' -endpoint 'https://firestore.googleapis.com' -show-errors"
+                cd backend && \
+                  USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='*' \
+                    DATABASE_HOST=db DATABASE_USERNAME=everyboard_test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8001
             fi
           fi
         env:
@@ -426,3 +385,4 @@ jobs:
           SSH_PORT: ${{ secrets.EVERYBOARD_DEPLOY_SSH_PORT }}
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_TEST }}
+          DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}

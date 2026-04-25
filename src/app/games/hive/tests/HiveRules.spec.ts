@@ -1,18 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, Set, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { CoordSet } from '../../../jscaip/CoordSet';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { HiveFailure } from '../HiveFailure';
 import { HiveMove, HiveCoordToCoordMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('HiveRules', () => {
 
@@ -990,7 +991,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player zero wins
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -1004,7 +1006,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player one wins
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -1018,7 +1021,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player it is a draw
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

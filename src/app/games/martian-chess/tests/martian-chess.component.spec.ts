@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/jscaip/TableUtils';
+
 import { MGPOptional } from '@everyboard/lib';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { DirectionFailure } from '../../../jscaip/Direction';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MartianChessMove } from '../MartianChessMove';
-import { MartianChessState } from '../MartianChessState';
 import { MartianChessPiece } from '../MartianChessPiece';
-import { DirectionFailure } from 'src/app/jscaip/Direction';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MartianChessRules } from '../MartianChessRules';
+import { MartianChessState } from '../MartianChessState';
+import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 
 describe('MartianChessComponent', () => {
 
@@ -278,6 +280,7 @@ describe('MartianChessComponent', () => {
             // Then the clock should not have been selected
             testUtils.expectElementNotToHaveClass('#clock-or-count-down-circle', 'selected-stroke');
         }));
+
     });
 
     describe('Visual Modes', () => {
@@ -315,6 +318,7 @@ describe('MartianChessComponent', () => {
                 expect(currentStyle).toBe(styleAndName.style);
             }
         }));
+
     });
 
 });

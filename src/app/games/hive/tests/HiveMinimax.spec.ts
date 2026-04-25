@@ -1,17 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { HiveRules } from '../HiveRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { HiveMinimax } from '../HiveMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { HiveRules } from '../HiveRules';
 
 describe('HiveMinimax', () => {
 
     const rules: HiveRules = HiveRules.get();
     const minimax: HiveMinimax = new HiveMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +21,5 @@ describe('HiveMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

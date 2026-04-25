@@ -1,18 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { SixState } from 'src/app/games/six/SixState';
-import { SixMove } from 'src/app/games/six/SixMove';
-import { SixFailure } from 'src/app/games/six/SixFailure';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { SixFailure } from '../SixFailure';
+import { SixMove } from '../SixMove';
+import { SixConfig, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 import { SixComponent } from '../six.component';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
+    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = Player.ZERO;
@@ -59,7 +64,7 @@ describe('SixComponent', () => {
         }));
 
         it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
-            await testUtils.expectClickFailure('#piece-0-0', SixFailure.NO_MOVEMENT_BEFORE_TURN_40());
+            await testUtils.expectClickFailure('#piece-0-0', SixFailure.CANNOT_MOVE_YET());
         }));
 
         it('should select piece when clicking on it (in moving phase)', fakeAsync(async() => {
@@ -81,6 +86,7 @@ describe('SixComponent', () => {
             // Then the piece should be selected
             testUtils.expectElementToExist('#selected-piece-0-0');
         }));
+
     });
 
     describe('Second click (landing)', () => {
@@ -100,7 +106,7 @@ describe('SixComponent', () => {
             const gameComponent: SixComponent = testUtils.getGameComponent();
             await testUtils.expectClickSuccess('#piece-0-0');
             testUtils.expectElementToExist('#selected-piece-0-0');
-            const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(0, 6));
+            const move: SixMove = SixMove.ofTranslation(new Coord(0, 0), new Coord(0, 6));
             await testUtils.expectMoveSuccess('#neighbor-0-6', move);
             testUtils.expectElementToExist('#left-coord-0-0');
             testUtils.expectElementToExist('#last-drop-0-6');
@@ -248,10 +254,104 @@ describe('SixComponent', () => {
             await testUtils.setupState(state);
 
             await testUtils.expectClickSuccess('#piece-0-0');
-            const move: SixMove = SixMove.ofMovement(new Coord(0, 0), new Coord(-1, 1));
+            const move: SixMove = SixMove.ofTranslation(new Coord(0, 0), new Coord(-1, 1));
             await testUtils.expectMoveSuccess('#neighbor--1-1', move);
             testUtils.expectElementToHaveClass('#victory-coord--1-1', 'victory-stroke');
             testUtils.expectElementToHaveClass('#victory-coord-4-1', 'victory-stroke');
+        }));
+
+    });
+
+    describe('score', () => {
+
+        it('should show the number of pieces to drop initially', fakeAsync(async() => {
+            // Given the initial state
+            // When displaying it
+            // Then the score should be the number of pieces to drop
+            testUtils.expectTextToBe('#score-0', '20 pieces to drop');
+            testUtils.expectTextToBe('#score-1', '20 pieces to drop');
+        }));
+
+        it('should show 1, 0 pieces to drop before last drop', fakeAsync(async() => {
+            // Given a state before the last drop
+            const board: Table<PlayerOrNone> = [
+                [O, _, _, _, _, _, _, _, _, _],
+                [O, O, O, O, O, X, X, X, X, X],
+                [_, _, _, _, _, _, _, _, _, _],
+            ];
+            const state: SixState = SixState.ofRepresentation(board, 9);
+            const config: MGPOptional<SixConfig> = MGPOptional.of({ piecesPerPlayer: 5 });
+            await testUtils.setupState(state, { config });
+            // When displaying it
+            // Then the score should be 0 and 1 pieces to drop
+            testUtils.expectTextToBe('#score-0', '0 pieces to drop');
+            testUtils.expectTextToBe('#score-1', '1 piece to drop');
+        }));
+
+        it('should show remaining pieces in second phase', fakeAsync(async() => {
+            // Given a state in the second phase
+            const board: Table<PlayerOrNone> = [
+                [O, _, _, _, _, _, _, _, _, _],
+                [O, O, O, O, O, X, X, X, X, X],
+                [_, _, _, _, _, _, _, _, _, X],
+            ];
+            const state: SixState = SixState.ofRepresentation(board, 40);
+            await testUtils.setupState(state);
+            // When displaying it
+            // Then the score should be the number of remaining pieces
+            testUtils.expectTextToBe('#score-0', '6 remaining pieces');
+            testUtils.expectTextToBe('#score-1', '6 remaining pieces');
+        }));
+    });
+
+    describe('Custom Config', () => {
+
+        it('should cancel move when clicking on empty space as first click after 10th turn on shorter configs', fakeAsync(async() => {
+            // Given a game with shorter config, on second phase
+            const customConfig: MGPOptional<SixConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                piecesPerPlayer: 5,
+            });
+            const board: Table<PlayerOrNone> = [
+                [O],
+                [X],
+                [O],
+                [X],
+                [O],
+                [X],
+            ];
+            const state: SixState = SixState.ofRepresentation(board, 10);
+            // When clicking on empty space after first click of 10th turn
+            await testUtils.setupState(state, { config: customConfig });
+
+            // Then it should fail
+            await testUtils.expectClickFailure('#neighbor-1-1', SixFailure.CAN_NO_LONGER_DROP());
+        }));
+
+        it('should do movement after the 9th turn on shorter configs', fakeAsync(async() => {
+            // Given a game with shorter config, on second phase
+            const customConfig: MGPOptional<SixConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                piecesPerPlayer: 5,
+            });
+            const board: Table<PlayerOrNone> = [
+                [O],
+                [X],
+                [O],
+                [X],
+                [O],
+                [X],
+            ];
+            const state: SixState = SixState.ofRepresentation(board, 10);
+            await testUtils.setupState(state, { config: customConfig });
+
+            // When moving a piece after 10th turn
+            await testUtils.expectClickSuccess('#piece-0-0');
+            testUtils.expectElementToExist('#selected-piece-0-0');
+            const move: SixMove = SixMove.ofTranslation(new Coord(0, 0), new Coord(0, 6));
+
+            // Then it should succeed
+            await testUtils.expectMoveSuccess('#neighbor-0-6', move);
         }));
 
     });

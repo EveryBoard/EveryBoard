@@ -1,5 +1,6 @@
-import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils, Encoder, Utils } from '@everyboard/lib';
+
+import { Move } from '../../../jscaip/Move';
 
 export class MancalaDistribution {
 
@@ -60,7 +61,7 @@ export class MancalaMove extends Move {
         return this.distributions[0];
     }
 
-    [Symbol.iterator](): IterableIterator<MancalaDistribution> {
+    public [Symbol.iterator](): IterableIterator<MancalaDistribution> {
         return this.distributions.values();
     }
 }

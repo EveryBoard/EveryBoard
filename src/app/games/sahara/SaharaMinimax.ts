@@ -1,16 +1,17 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
+import { SaharaFreedomHeuristic } from './SaharaFreedomHeuristic';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
-import { SaharaHeuristic } from './SaharaHeuristic';
 import { SaharaState } from './SaharaState';
 
-export class SaharaMinimax extends Minimax<SaharaMove, SaharaState> {
+export class SaharaFreedomMinimax extends Minimax<SaharaMove, SaharaState> {
 
     public constructor() {
-        super($localize`Sahara`,
+        super($localize`Freedom`,
               SaharaRules.get(),
-              new SaharaHeuristic(),
+              new SaharaFreedomHeuristic(),
               new SaharaMoveGenerator());
     }
 

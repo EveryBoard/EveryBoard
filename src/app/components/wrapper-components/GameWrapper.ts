@@ -1,16 +1,16 @@
-import { Component, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Component, ComponentRef, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
+import { Router } from '@angular/router';
 
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+
 import { Move } from '../../jscaip/Move';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { Localized } from '../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
+import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+
 import { BaseWrapperComponent } from './BaseWrapperComponent';
 
 export class GameWrapperMessages {
@@ -25,12 +25,16 @@ export class GameWrapperMessages {
 
 }
 
-@Component({ template: '' })
+@Component({
+    template: '',
+})
 export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
 
+    protected readonly router: Router = inject(Router);
+    protected readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+
     // This holds the #board html element
-    @ViewChild('board', { read: ViewContainerRef })
-    public boardRef: ViewContainerRef | null = null;
+    public readonly boardRef: Signal<ViewContainerRef | undefined> = viewChild('board', { read: ViewContainerRef });
 
     public gameComponent: AbstractGameComponent;
 
@@ -47,14 +51,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     private isMoveAttemptOngoing: boolean = false;
 
     public Player: typeof Player = Player;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       protected readonly connectedUserService: ConnectedUserService,
-                       protected readonly router: Router,
-                       protected readonly messageDisplayer: MessageDisplayer)
-    {
-        super(activatedRoute);
-    }
 
     public abstract onLegalUserMove(move: Move, scores?: [number, number]): Promise<void>;
 
@@ -74,17 +70,20 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         const componentType: MGPOptional<Type<AbstractGameComponent>> =
             await this.getMatchingComponentAndNavigateOutIfAbsent();
         if (componentType.isPresent()) {
-            // This waits for the config to be chosen
-            const config: MGPOptional<RulesConfig> = await this.getConfig();
-            await this.createGameComponent(componentType.get());
-            this.gameComponent.config = config;
-            this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
-            await this.setRole(this.role);
-            await this.gameComponent.updateBoardAndRedraw(false);
+            await this.createGameComponentAndSetConfig(componentType.get());
             return true;
         } else {
             return false;
         }
+    }
+
+    protected async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>): Promise<void> {
+        await this.createGameComponent(componentType);
+        const config: MGPOptional<RulesConfig> = this.getConfig();
+        this.gameComponent.config = config;
+        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
+        await this.setRole(this.role);
+        await this.gameComponent.updateBoardAndRedraw(false);
     }
 
     private async getMatchingComponentAndNavigateOutIfAbsent(): Promise<MGPOptional<Type<AbstractGameComponent>>> {
@@ -102,7 +101,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         Utils.assert(this.boardRef != null, 'Board element should be present');
 
         const componentRef: ComponentRef<AbstractGameComponent> =
-            Utils.getNonNullable(this.boardRef).createComponent(component);
+            Utils.getNonNullable(this.boardRef()).createComponent(component);
         this.gameComponent = componentRef.instance;
 
         // chooseMove is called by the game component when a move is done
@@ -144,7 +143,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: MGPOptional<RulesConfig> = this.getConfig();
         const legality: MGPFallible<unknown> =
             this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState, config);
         if (legality.isFailure()) {
@@ -161,7 +160,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.isMoveAttemptOngoing = false;
     }
 
-    public async getConfig(): Promise<MGPOptional<RulesConfig>> {
+    public getConfig(): MGPOptional<RulesConfig> {
         const urlName: string = this.getGameUrlName();
         return RulesConfigUtils.getGameDefaultConfig(urlName);
     }
@@ -241,17 +240,4 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         await this.gameComponent.showLastMoveAndRedraw();
     }
 
-    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
-        const urlName: string = this.getGameUrlName();
-        return this.getRulesConfigDescriptionByName(urlName);
-    }
-
-    private getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription<RulesConfig>> {
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
-        if (gameInfos.isAbsent()) {
-            return MGPOptional.empty();
-        } else {
-            return gameInfos.get().getRulesConfigDescription();
-        }
-    }
 }

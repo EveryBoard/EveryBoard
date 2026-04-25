@@ -1,11 +1,13 @@
-import { ReversiState } from './ReversiState';
-import { ReversiMove } from './ReversiMove';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { ReversiConfig, ReversiNode } from './ReversiRules';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
+import { ReversiMove } from './ReversiMove';
+import { ReversiConfig, ReversiNode } from './ReversiRules';
+import { ReversiState } from './ReversiState';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {
 
@@ -14,11 +16,11 @@ export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, Reversi
         const metrics: PlayerNumberTable = PlayerNumberTable.of([0], [0]);
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const coord: Coord = coordAndContent.coord;
-            const content: Player = coordAndContent.content;
+            const player: Player = coordAndContent.content;
             const verticalBorder: boolean = state.isVerticalEdge(coord);
             const horizontalBorder: boolean = state.isHorizontalEdge(coord);
             const locationValue: number = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
-            metrics.add(content, 0, locationValue);
+            metrics.add(player, 0, locationValue);
         }
         return metrics;
     }

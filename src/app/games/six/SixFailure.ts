@@ -1,8 +1,8 @@
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { Localized } from '../../utils/LocaleUtils';
 
 export class SixFailure {
 
-    public static readonly NO_MOVEMENT_BEFORE_TURN_40: Localized = () => $localize`You cannot move yet. Pick a space where you will put a new piece.`;
+    public static readonly CANNOT_MOVE_YET: Localized = () => $localize`You cannot move yet. Pick a space where you will put a new piece.`;
 
     public static readonly MUST_CUT: Localized = () => $localize`Several groups are of the same size, you must pick the one to keep.`;
 

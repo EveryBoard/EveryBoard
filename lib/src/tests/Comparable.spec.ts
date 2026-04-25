@@ -3,7 +3,7 @@ import { comparableEquals, ComparableJSON, ComparableObject, isComparableJSON, i
 
 class DummyComparableObject implements ComparableObject {
 
-    public constructor(readonly value: number) {}
+    public constructor(public readonly value: number) {}
 
     public equals(other: DummyComparableObject): boolean {
         return this.value === other.value;
@@ -14,7 +14,7 @@ class DummyComparableObject implements ComparableObject {
 }
 
 class DummyNonComparableObject {
-    public constructor(readonly value: number) {}
+    public constructor(public readonly value: number) {}
     public someMethod(): void {}
 }
 
@@ -29,6 +29,13 @@ describe('Comparable', () => {
             expect(comparableEquals(true, true)).toBeTrue();
             expect(comparableEquals(true, false)).toBeFalse();
             expect(comparableEquals(true, null)).toBeFalse();
+        });
+        it('should support JSON', () => {
+            expect(comparableEquals({ a: 1 }, { a: 1 })).toBeTrue();
+            expect(comparableEquals({ a: 1 }, { a: 2 })).toBeFalse();
+            expect(comparableEquals({ a: 1 }, { a: 1, b: 2 })).toBeFalse();
+            expect(comparableEquals({ a: 1, b: 2 }, { a: 1 })).toBeFalse();
+            expect(comparableEquals({ a: 1, b: 2 }, { a: 1, c: 2 })).toBeFalse();
         });
         it('should support objects that have an equal method', () => {
             expect(comparableEquals(new DummyComparableObject(5), new DummyComparableObject(5))).toBeTrue();
@@ -64,6 +71,8 @@ describe('Comparable', () => {
         it('should return true for comparable JSON only', () => {
             expect(isComparableJSON(undefined)).toBeFalse();
             expect(isComparableJSON(null)).toBeFalse();
+            expect(isComparableJSON([])).toBeTrue();
+            expect(isComparableJSON([42])).toBeTrue();
             expect(isComparableJSON({ 'foo': 5 })).toBeTrue();
             expect(isComparableJSON(new DummyNonComparableObject(5))).toBeFalse();
             expect(isComparableJSON({ 'foo': new DummyNonComparableObject(5) })).toBeFalse();
@@ -80,4 +89,5 @@ describe('Comparable', () => {
             expect(isComparableValue({ 'foo': { 'bar': { 'baz': new DummyNonComparableObject(5) } } })).toBeFalse();
         });
     });
+
 });

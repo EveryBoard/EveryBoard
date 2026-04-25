@@ -1,27 +1,29 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnState } from 'src/app/games/dvonn/DvonnState';
-import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { HexagonalGameComponent }
-    from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
+import { Coord } from '../../jscaip/Coord';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
-import { DvonnScoreMinimax } from './DvonnScoreMinimax';
+import { DvonnMove } from './DvonnMove';
+import { DvonnMoveGenerator } from './DvonnMoveGenerator';
+import { DvonnPieceStack } from './DvonnPieceStack';
+import { DvonnRules } from './DvonnRules';
 import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
-import { MCTSWithHeuristic } from 'src/app/jscaip/AI/MCTSWithHeuristic';
+import { DvonnScoreMinimax } from './DvonnScoreMinimax';
+import { DvonnState } from './DvonnState';
 
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
@@ -30,8 +32,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Dvonn');
         this.availableAIs = [
             new DvonnMaxStacksMinimax(),
@@ -55,7 +57,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.disconnectedSpaces = [];
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.canPass = this.rules.canOnlyPass(this.state);
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));

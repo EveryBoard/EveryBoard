@@ -1,13 +1,15 @@
-import { TaflNode, TaflRules } from './TaflRules';
-import { TaflMove } from './TaflMove';
-import { TaflState } from './TaflState';
-import { Player } from 'src/app/jscaip/Player';
-import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { TaflConfig } from './TaflConfig';
 import { MGPOptional } from '@everyboard/lib';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
+import { TaflConfig } from './TaflConfig';
+import { TaflMove } from './TaflMove';
+import { TaflNode, TaflRules } from './TaflRules';
+import { TaflState } from './TaflState';
 
 export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristicWithBounds<M, TaflState, TaflConfig> {
 

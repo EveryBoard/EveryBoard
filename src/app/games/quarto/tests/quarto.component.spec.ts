@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { QuartoComponent } from '../quarto.component';
-import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { QuartoState } from 'src/app/games/quarto/QuartoState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { QuartoConfig, QuartoRules } from '../QuartoRules';
+
 import { MGPOptional } from '@everyboard/lib';
 
-describe('QuartoComponent', () => {
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { QuartoMove } from '../QuartoMove';
+import { QuartoPiece } from '../QuartoPiece';
+import { QuartoConfig, QuartoRules } from '../QuartoRules';
+import { QuartoState } from '../QuartoState';
+import { QuartoComponent } from '../quarto.component';
 
+describe('QuartoComponent', () => {
     let testUtils: ComponentTestUtils<QuartoComponent>;
 
     const NULL: QuartoPiece = QuartoPiece.EMPTY;
@@ -66,6 +67,7 @@ describe('QuartoComponent', () => {
             testUtils.expectElementToExist('#dropped-piece-0-0');
             testUtils.expectElementToHaveClasses('#dropped-piece-highlight', ['base', 'no-fill', 'selected-stroke', 'mid-stroke']);
         }));
+
     });
 
     describe('Second click', () => {
@@ -129,6 +131,7 @@ describe('QuartoComponent', () => {
             // Then the space should contain the piece to put on the board
             testUtils.expectElementNotToExist('#dropped-piece-0-0');
         }));
+
     });
 
     describe('View', () => {

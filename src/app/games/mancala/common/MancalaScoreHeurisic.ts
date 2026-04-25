@@ -1,11 +1,13 @@
-import { MancalaState } from '../common/MancalaState';
-import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { MancalaMove } from './MancalaMove';
-import { MancalaConfig } from './MancalaConfig';
 import { MGPOptional } from '@everyboard/lib';
+
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from '../../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+
+import { MancalaConfig } from './MancalaConfig';
+import { MancalaMove } from './MancalaMove';
 import { MancalaNode } from './MancalaRules';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { MancalaState } from './MancalaState';
 
 export class MancalaScoreHeuristic extends PlayerMetricHeuristicWithBounds<MancalaMove, MancalaState, MancalaConfig>
 {

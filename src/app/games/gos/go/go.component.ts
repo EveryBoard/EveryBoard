@@ -1,25 +1,31 @@
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoConfig, GoRules } from 'src/app/games/gos/go/GoRules';
+
+import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
+import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { MCTS } from '../../../jscaip/AI/MCTS';
+import { GroupData } from '../../../jscaip/BoardData';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoState } from 'src/app/games/gos/GoState';
-import { GoPiece } from '../GoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GroupData } from 'src/app/jscaip/BoardData';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { GobanGameComponent } from 'src/app/components/game-components/goban-game-component/GobanGameComponent';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { GoMoveGenerator } from './GoMoveGenerator';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+
 import { GoMinimax } from './GoMinimax';
+import { GoMoveGenerator } from './GoMoveGenerator';
+import { GoConfig, GoRules } from './GoRules';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [BlankGobanComponent, NgClass],
 })
 @Debug.log
 export class GoComponent extends GobanGameComponent<GoRules,
@@ -40,8 +46,8 @@ export class GoComponent extends GobanGameComponent<GoRules,
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Go');
         this.availableAIs = [
             new GoMinimax(),
@@ -73,16 +79,24 @@ export class GoComponent extends GobanGameComponent<GoRules,
         return this.chooseMove(resultlessMove);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: GoState = this.getState();
         const phase: GoPhase = state.phase;
 
         this.board = state.getCopiedBoard();
-        this.scores = MGPOptional.of(state.getCapturedCopy());
+        this.updateScores();
 
         this.ko = state.koCoord;
-        this.canPass = phase !== 'FINISHED';
+        this.canPass = phase.allowsPass();
         this.createHoshis();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.getState().captured);
+    }
+
+    protected override getScoreName(): ScoreName {
+        return this.getState().phase.getScoreName();
     }
 
     private showCaptures(): void {
@@ -103,10 +117,10 @@ export class GoComponent extends GobanGameComponent<GoRules,
 
     public override async pass(): Promise<MGPValidation> {
         const phase: GoPhase = this.getState().phase;
-        if (phase === 'PLAYING' || phase === 'PASSED') {
+        if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
-        Utils.assert(phase === 'COUNTING' || phase === 'ACCEPT',
+        Utils.assert(phase.isCounting() || phase.isAccept(),
                      'GoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }

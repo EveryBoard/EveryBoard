@@ -1,17 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { YinshRules } from '../YinshRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
 import { YinshScoreMinimax } from '../YinshScoreMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('YinshScoreMinimax', () => {
 
     const rules: YinshRules = YinshRules.get();
     const minimax: YinshScoreMinimax = new YinshScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +21,5 @@ describe('YinshScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

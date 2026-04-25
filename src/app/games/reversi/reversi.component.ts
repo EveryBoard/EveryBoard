@@ -1,22 +1,26 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+
+import { ReversiMinimax } from './ReversiMinimax';
+import { ReversiMove } from './ReversiMove';
+import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
-import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { ReversiMoveGenerator } from './ReversiMoveGenerator';
-import { ReversiMinimax } from './ReversiMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiMove,
@@ -25,13 +29,12 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
                                                                ReversiConfig,
                                                                ReversiLegalityInformation>
 {
-    public EMPTY: PlayerOrNone = PlayerOrNone.NONE;
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Reversi');
         this.availableAIs = [
             new ReversiMinimax(),
@@ -50,7 +53,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         return await this.chooseMove(chosenMove);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ReversiState = this.getState();
 
         this.board = state.getCopiedBoard();
@@ -65,8 +68,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const dir of Ordinal.ORDINALS) {
             let captured: Coord = move.coord.getNext(dir, 1);
-            while (this.getState().isOnBoard(captured) &&
-                   this.getState().getPieceAt(captured) === opponent &&
+            while (this.getState().hasPieceAt(captured, opponent) &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {
                 this.capturedCoords.push(captured);

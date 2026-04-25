@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
+
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { CoerceoPiecesTilesFreedomMinimax } from '../CoerceoPiecesTilesFreedomMinimax';
+import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 
 describe('CoerceoPiecesTilesFreedomMinimax', () => {
 
@@ -21,4 +22,5 @@ describe('CoerceoPiecesTilesFreedomMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { SaharaRules } from '../SaharaRules';
-import { SaharaMove } from '../SaharaMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { MGPFallible } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { SaharaFailure } from '../SaharaFailure';
-import { MGPFallible, TestUtils } from '@everyboard/lib';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
+import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
+import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaMoves', () => {
 
@@ -14,26 +15,6 @@ describe('SaharaMoves', () => {
         const rules: SaharaRules = SaharaRules.get();
         const moveGenerator: SaharaMoveGenerator = new SaharaMoveGenerator();
         MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, SaharaMove.encoder);
-    });
-
-    it('should throw error when starting coord is outside the board', () => {
-        const start: Coord = new Coord(-1, 0);
-        function createMoveWithOutOfRangeStart(): void {
-            const end: Coord = new Coord(0, 0);
-            SaharaMove.from(start, end);
-        }
-        const error: string = 'Move must start inside the board not at '+ start.toString() + '.';
-        TestUtils.expectToThrowAndLog(createMoveWithOutOfRangeStart, error);
-    });
-
-    it('should throw error when move end outside the board', () => {
-        const end: Coord = new Coord(-1, 0);
-        function createMoveWithOutOfRangeEnd(): void {
-            const start: Coord = new Coord(0, 0);
-            SaharaMove.from(start, end);
-        }
-        const error: string = 'Move must end inside the board not at '+ end.toString() + '.';
-        TestUtils.expectToThrowAndLog(createMoveWithOutOfRangeEnd, error);
     });
 
     it('should throw error when start and end are too far away', () => {

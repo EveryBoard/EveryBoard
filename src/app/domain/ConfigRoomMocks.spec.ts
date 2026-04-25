@@ -1,7 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { RulesConfig } from '../jscaip/RulesConfigUtil';
 import { MGPOptional } from '@everyboard/lib';
-import { FirstPlayer, ConfigRoom, PartStatus, PartType } from './ConfigRoom';
+
+import { RulesConfig } from '../jscaip/RulesConfigUtil';
+
+import { FirstPlayer, ConfigRoom, Status, GameType, GameDuration } from './ConfigRoom';
 import { UserMocks } from './UserMocks.spec';
 
 export class ConfigRoomMocks {
@@ -9,21 +11,26 @@ export class ConfigRoomMocks {
     public static getInitial(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
         return {
             creator: UserMocks.CREATOR_MINIMAL_USER,
+            creatorElo: 0,
+
             chosenOpponent: null,
+            chosenOpponentElo: null,
+            status: Status.CREATED,
+
             // We don't want the first player to be random here, to minimize non-deterministic tests
-            firstPlayer: FirstPlayer.CREATOR.value,
-            partType: PartType.STANDARD.value,
-            partStatus: PartStatus.PART_CREATED.value,
-            maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
-            totalPartDuration: PartType.NORMAL_PART_DURATION,
+            firstPlayer: FirstPlayer.CREATOR,
+            gameType: GameType.STANDARD,
+            moveDuration: GameDuration.STANDARD_MOVE_DURATION,
+            gameDuration: GameDuration.STANDARD_GAME_DURATION,
             rulesConfig: rulesConfig.getOrElse({}),
+            gameName: 'P4',
         };
     }
 
     public static getInitialRandom(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
-            firstPlayer: FirstPlayer.RANDOM.value,
+            firstPlayer: FirstPlayer.RANDOM,
         };
     }
 
@@ -45,7 +52,7 @@ export class ConfigRoomMocks {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-            partStatus: PartStatus.CONFIG_PROPOSED.value,
+            status: Status.CONFIG_PROPOSED,
         };
     }
 
@@ -53,7 +60,7 @@ export class ConfigRoomMocks {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
-            partStatus: PartStatus.PART_STARTED.value,
+            status: Status.STARTED,
         };
     }
 

@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
-import { SiamMove } from '../SiamMove';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Table } from '../../../jscaip/TableUtils';
+import { SiamMove } from '../SiamMove';
+import { SiamMoveGenerator } from '../SiamMoveGenerator';
+import { SiamPiece } from '../SiamPiece';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

@@ -1,15 +1,16 @@
 import { MGPOptional } from '@everyboard/lib';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
+
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Coord } from '../../../jscaip/Coord';
+import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { GobanUtils } from '../../../jscaip/GobanUtils';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
-import { GoState } from '../GoState';
+import { GoGroupDataFactory, OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
+import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
-import { GobanUtils } from 'src/app/jscaip/GobanUtils';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
-import { GroupDataFactory } from 'src/app/jscaip/BoardData';
+import { GoState } from '../GoState';
 
 export type GoConfig = GobanConfig & {
 
@@ -51,6 +52,10 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         return GoRules.singleton.get();
     }
 
+    public constructor() {
+        super(true);
+    }
+
     public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
         const config: GoConfig = optionalConfig.get();
         const board: GoPiece[][] = GoState.getStartingBoard(config.width, config.height);
@@ -79,14 +84,14 @@ export class GoRules extends AbstractGoRules<GoConfig> {
             const handicapToPut: Coord = orderedHandicaps[i];
             board[handicapToPut.y][handicapToPut.x] = GoPiece.DARK;
         }
-        return new GoState(board, PlayerNumberMap.of(0, 0), turn, MGPOptional.empty(), 'PLAYING');
+        return new GoState(board, PlayerNumberMap.of(0, 0), turn, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
     public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
         return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getGoGroupDataFactory(): GroupDataFactory<GoPiece> {
+    public override getGoGroupDataFactory(): GoGroupDataFactory {
         return new OrthogonalGoGroupDataFactory();
     }
 

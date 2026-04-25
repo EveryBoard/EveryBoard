@@ -1,13 +1,14 @@
 import { MGPValidation } from '@everyboard/lib';
 
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { AbaloneState } from './AbaloneState';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneRules } from './AbaloneRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { AbaloneState } from './AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -31,7 +32,7 @@ export class AbaloneTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Pushing`,
-            $localize`To push one opponent piece, you must move at least two of your pieces. To push two opponent pieces, you must move three of your pieces. If one of your pieces is in the way, it will be impossible to push. You cannot move more than three pieces.<br/><br/> Only one push towards the right is possible here, find it. (You're playing Dark).`,
+            $localize`To push one opponent piece, you must move at least two of your pieces. To push two opponent pieces, you must move three of your pieces. If one of your pieces is in the way, it will be impossible to push. You cannot move more than three pieces.<br/><br/> Only one push toward the right is possible here, find it. (You're playing Dark).`,
             new AbaloneState([
                 [N, N, N, N, _, O, O, X, X],
                 [N, N, N, _, _, _, _, _, _],
@@ -59,7 +60,7 @@ export class AbaloneTutorial extends Tutorial {
                     return MGPValidation.failure($localize`This is not a translation, this is a "pushing move", try a translation.`);
                 }
             },
-            $localize`Congratulations! You know everything you need to start a game!`,
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
         ),
         TutorialStep.informational(
             TutorialStepMessage.RULES_CONFIGURATION(),

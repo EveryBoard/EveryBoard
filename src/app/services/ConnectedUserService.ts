@@ -1,28 +1,16 @@
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { FirebaseError } from '@firebase/app';
 import * as FireAuth from '@firebase/auth';
-import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
 import { UserDAO } from '../dao/UserDAO';
-import { User } from '../domain/User';
 import { MinimalUser } from '../domain/MinimalUser';
-import { UserService } from './UserService';
+import { User } from '../domain/User';
 import { Debug } from '../utils/Debug';
-import { Localized } from '../utils/LocaleUtils';
 
-export class GameActionFailure {
-
-    public static YOU_ARE_ALREADY_PLAYING: Localized = () => $localize`You are already playing in another game.`;
-
-    public static YOU_ARE_ALREADY_CREATING: Localized = () => $localize`You are already the creator of another game.`;
-
-    public static YOU_ARE_ALREADY_CHOSEN_OPPONENT: Localized = () => $localize`You are already the chosen opponent in another game.`;
-
-    public static YOU_ARE_ALREADY_CANDIDATE: Localized = () => $localize`You are already candidate in another game.`;
-
-    public static YOU_ARE_ALREADY_OBSERVING: Localized = () => $localize`You are already observing another game.`;
-}
+import { UserService } from './UserService';
 
 // This class is an indirection to Firestore's auth methods, to support spyOn on them in the test code.
 export class Auth {
@@ -98,6 +86,9 @@ export class AuthUser {
 @Debug.log
 export class ConnectedUserService implements OnDestroy {
 
+    private readonly userDAO: UserDAO = inject(UserDAO);
+    private readonly userService: UserService = inject(UserService);
+
     private readonly authSubscription: Subscription;
 
     /**
@@ -111,8 +102,7 @@ export class ConnectedUserService implements OnDestroy {
     private userSubscription: Subscription = new Subscription();
     public readonly auth: FireAuth.Auth;
 
-    public constructor(private readonly userDAO: UserDAO,
-                       private readonly userService: UserService)
+    public constructor()
     {
         this.auth = FireAuth.getAuth();
         this.userRS = new ReplaySubject<AuthUser>(1);
@@ -260,9 +250,9 @@ export class ConnectedUserService implements OnDestroy {
      */
     public async createUser(uid: string, username?: string): Promise<void> {
         if (username == null) {
-            await this.userDAO.set(uid, { verified: false, currentGame: null });
+            await this.userDAO.set(uid, { verified: false });
         } else {
-            await this.userDAO.set(uid, { username, verified: false, currentGame: null });
+            await this.userDAO.set(uid, { username, verified: false });
         }
     }
     public async doGoogleLogin(): Promise<MGPValidation> {
@@ -330,10 +320,6 @@ export class ConnectedUserService implements OnDestroy {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);
         await currentUser.getIdToken(true);
         await currentUser.reload();
-    }
-    public sendPresenceToken(): Promise<void> {
-        Utils.assert(this.user.isPresent(), 'Should not call sendPresenceToken when not connected');
-        return this.userService.updatePresenceToken(this.user.get().id);
     }
     public getIdToken(): Promise<string> {
         const currentUser: FireAuth.User = Utils.getNonNullable(this.auth.currentUser);

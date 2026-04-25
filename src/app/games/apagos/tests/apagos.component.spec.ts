@@ -1,13 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Player } from 'src/app/jscaip/Player';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { ApagosComponent } from '../apagos.component';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { Player } from '../../../jscaip/Player';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
-import { ApagosState } from '../ApagosState';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
-import { MGPOptional } from '@everyboard/lib';
+import { ApagosState } from '../ApagosState';
+import { ApagosComponent } from '../apagos.component';
 
 describe('ApagosComponent', () => {
 
@@ -331,6 +333,7 @@ describe('ApagosComponent', () => {
             testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'player1-fill');
             testUtils.expectElementToHaveClass('#square_1_piece_4_out_of_5', 'last-move-stroke');
         }));
+
     });
 
     describe('visuals', () => {

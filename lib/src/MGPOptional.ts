@@ -2,10 +2,10 @@ import { comparableEquals } from './Comparable';
 import { Encoder } from './Encoder';
 import { JSONValue } from './JSON';
 
-export class MGPOptional<T> {
+export abstract class MGPOptional<T> {
 
     public static of<U>(value: U): MGPOptional<U> {
-        return new MGPOptional(value);
+        return new MGPOptionalPresent(value);
     }
 
     public static ofNullable<T>(value: T | null | undefined): MGPOptional<T> {
@@ -17,7 +17,7 @@ export class MGPOptional<T> {
     }
 
     public static empty<T>(): MGPOptional<T> {
-        return new MGPOptional(null as T | null);
+        return new MGPOptionalAbsent();
     }
 
     /**
@@ -43,59 +43,103 @@ export class MGPOptional<T> {
         };
     }
 
-    private constructor(private readonly value: T | null) {}
+    public abstract isPresent(): boolean;
 
-    public isPresent(): boolean {
-        return this.value != null;
+    public abstract isAbsent(): boolean;
+
+    public abstract get(): T;
+
+    public abstract getOrElse(defaultValue: T): T;
+
+    public abstract orElse(other: MGPOptional<T>): MGPOptional<T>;
+
+    public abstract equals(other: MGPOptional<T>): boolean;
+
+    public abstract equalsValue(other: T): boolean;
+
+    public abstract toString(): string;
+
+    public abstract map<U>(f: (value: T) => U): MGPOptional<U>;
+}
+
+class MGPOptionalAbsent<T> extends MGPOptional<T> {
+
+    public override isPresent(): boolean {
+        return false;
     }
 
-    public isAbsent(): boolean {
-        return this.value == null;
+    public override isAbsent(): boolean {
+        return true;
     }
 
-    public get(): T {
-        if (this.isPresent()) {
-            return this.value as T;
-        } else {
-            throw new Error('Value is absent');
-        }
+    public override get(): T {
+        throw new Error('Value is absent');
     }
 
-    public getOrElse(defaultValue: T): T {
-        if (this.isPresent()) {
-            return this.value as T;
-        } else {
-            return defaultValue;
-        }
+    public override getOrElse(defaultValue: T): T {
+        return defaultValue;
     }
 
-    public equals(other: MGPOptional<T>): boolean {
-        if (this.isAbsent()) {
-            return other.isAbsent();
-        }
-        if (other.isAbsent()) {
-            return false;
-        }
-        return comparableEquals(this.value, other.value);
+    public override orElse(other: MGPOptional<T>): MGPOptional<T> {
+        return other;
     }
 
-    public equalsValue(other: T): boolean {
-        return this.equals(MGPOptional.of(other));
+    public override equals(other: MGPOptional<T>): boolean {
+        return other.isAbsent();
     }
 
-    public toString(): string {
-        if (this.isAbsent()) {
-            return 'MGPOptional.empty()';
-        } else {
-            return `MGPOptional.of(${this.value as T})`;
-        }
+    public override equalsValue(_other: T): boolean {
+        return false;
     }
 
-    public map<U>(f: (value: T) => U): MGPOptional<U> {
-        if (this.isPresent()) {
-            return MGPOptional.of(f(this.get()));
-        } else {
-            return MGPOptional.empty();
-        }
+    public override toString(): string {
+        return 'MGPOptional.empty()';
+    }
+
+    public override map<U>(f: (value: T) => U): MGPOptional<U> {
+        return MGPOptional.empty();
+    }
+
+}
+
+class MGPOptionalPresent<T> extends MGPOptional<T> {
+
+    public constructor(private readonly value: T) {
+        super();
+    }
+
+    public override isPresent(): boolean {
+        return true;
+    }
+
+    public override isAbsent(): boolean {
+        return false;
+    }
+    public override get(): T {
+        return this.value;
+    }
+
+    public override getOrElse(_defaultValue: T): T {
+        return this.value;
+    }
+
+    public override orElse(_other: MGPOptional<T>): MGPOptional<T> {
+        return this;
+    }
+
+    public override equals(other: MGPOptional<T>): boolean {
+        return other.isPresent() && this.equalsValue(other.get());
+    }
+
+    public override equalsValue(other: T): boolean {
+        return comparableEquals(other, this.value);
+    }
+
+    public override toString(): string {
+        return `MGPOptional.of(${this.value})`;
+    }
+
+    public override map<U>(f: (value: T) => U): MGPOptional<U> {
+        return MGPOptional.of(f(this.value));
     }
 }

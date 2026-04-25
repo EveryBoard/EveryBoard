@@ -1,26 +1,29 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
-import { HexodiaMove } from './HexodiaMove';
-import { HexodiaState } from './HexodiaState';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
+import { HexodiaMove } from './HexodiaMove';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
+import { HexodiaState } from './HexodiaState';
 
 @Component({
     selector: 'app-hexodia',
     templateUrl: './hexodia.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                                              HexodiaMove,
@@ -34,8 +37,8 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
 
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Hexodia');
         this.availableAIs = [
             new HexodiaAlignmentMinimax(),
@@ -72,7 +75,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         return new ViewBox(left, 0, width, height);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: HexodiaState = this.getState();
         this.hexaBoard = state.getCopiedBoard();
         const config: MGPOptional<HexodiaConfig> = this.getConfig();

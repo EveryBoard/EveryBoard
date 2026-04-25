@@ -1,23 +1,27 @@
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { SquarzConfig, SquarzRules } from './SquarzRules';
-import { SquarzMove as SquarzMove } from './SquarzMove';
-import { SquarzState } from './SquarzState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { SquarzMoveGenerator } from './SquarzMoveGenerator';
+
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { SquarzMinimax } from './SquarzMinimax';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { SquarzMove as SquarzMove } from './SquarzMove';
+import { SquarzMoveGenerator } from './SquarzMoveGenerator';
+import { SquarzConfig, SquarzRules } from './SquarzRules';
+import { SquarzState } from './SquarzState';
 
 @Component({
     selector: 'app-squarz',
     templateUrl: './squarz.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SquarzComponent extends RectangularGameComponent<SquarzRules,
                                                                  SquarzMove,
@@ -35,19 +39,19 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
 
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Squarz');
         this.availableAIs = [
             new SquarzMinimax(),
-            new MCTS($localize`MCTS`, new SquarzMoveGenerator(), this.rules),
+            new MCTS($localize`MCTS`, new SquarzMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = SquarzMove.encoder;
 
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SquarzState = this.getState();
         this.board = state.getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
@@ -66,7 +70,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         this.movedSpaces.push(moveEnd);
         for (const direction of Ordinal.ORDINALS) {
             const neighbor: Coord = moveEnd.getNext(direction);
-            if (previousState.isOnBoard(neighbor) && previousState.getPieceAt(neighbor) === previousOpponent) {
+            if (previousState.hasPieceAt(neighbor, previousOpponent)) {
                 this.captured.push(neighbor);
             }
         }

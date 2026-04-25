@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('LinesOfActionMoveGenerator', () => {
 

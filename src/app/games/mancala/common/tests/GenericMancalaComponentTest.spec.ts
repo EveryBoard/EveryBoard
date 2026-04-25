@@ -1,21 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MancalaConfig } from '../MancalaConfig';
-import { RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { Cell, Table } from 'src/app/jscaip/TableUtils';
+
+import { MoveGenerator } from '../../../../jscaip/AI/AI';
+import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
+import { Cell, Table } from '../../../../jscaip/TableUtils';
+import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
-import { MancalaDropResult, MancalaRules } from '../MancalaRules';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaState } from '../MancalaState';
-import { Coord } from 'src/app/jscaip/Coord';
+import { MancalaConfig } from '../MancalaConfig';
 import { MancalaFailure } from '../MancalaFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaDropResult, MancalaRules } from '../MancalaRules';
+import { MancalaState } from '../MancalaState';
 
 type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
 
@@ -217,9 +219,7 @@ export type MancalaActionAndResult = {
     result: MancalaHouseContents[];
 };
 
-export class MancalaTestEntries<C extends MancalaComponent<R>,
-                                R extends MancalaRules>
-{
+export type MancalaTestEntries<C extends MancalaComponent<R>, R extends MancalaRules> = {
     component: Type<C>; // KalahComponent, AwaleComponent, etc
     gameName: string; // 'Kalah', 'Awale', etc
     moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>;

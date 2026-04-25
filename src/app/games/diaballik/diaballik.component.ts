@@ -1,26 +1,30 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Line } from '../../jscaip/Line';
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
-import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Line } from 'src/app/jscaip/Line';
-import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
     selector: 'app-diaballik',
     templateUrl: './diaballik.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 
 export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
@@ -55,8 +59,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Diaballik');
         this.hasAsymmetricBoard = true;
         this.WIDTH = this.getState().getWidth();
@@ -74,7 +78,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: DiaballikState = this.node.gameState;
         this.board = state.board; // Needed by RectangularGameComponent
         this.stateInConstruction = state;

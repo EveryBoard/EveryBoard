@@ -1,32 +1,35 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player } from 'src/app/jscaip/Player';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GipfCapture } from '../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
-import { GipfLegalityInformation, GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
-import { GipfState } from 'src/app/games/gipf/GipfState';
+import { GipfFailure } from './GipfFailure';
+import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
+import { GipfLegalityInformation, GipfRules } from './GipfRules';
 import { GipfScoreMinimax } from './GipfScoreMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { GipfState } from './GipfState';
 
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class GipfComponent extends HexagonalGameComponent<GipfRules,
                                                           GipfMove,
@@ -62,8 +65,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Gipf');
         this.availableAIs = [
             new GipfScoreMinimax(),
@@ -88,6 +91,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.moveToInitialCaptureOrPlacementPhase();
     }
 
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
     public override async showLastMove(move: GipfMove): Promise<void> {
         const previousState: GipfState = this.getPreviousState();
         move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c, previousState));
@@ -98,7 +105,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.inserted = MGPOptional.empty();
         if (move.placement.direction.isPresent()) {
             const lastPlacement: GipfPlacement = move.placement;
-            this.inserted = MGPOptional.of(this.arrowTowards(lastPlacement.coord, lastPlacement.direction.get()));
+            this.inserted = MGPOptional.of(this.arrowToward(lastPlacement.coord, lastPlacement.direction.get()));
         }
     }
 
@@ -111,7 +118,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         );
     }
 
-    private arrowTowards(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
+    private arrowToward(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
         const previous: Coord = placement.getNext(direction.getOpposite());
         return new Arrow<HexaDirection>(previous,
                                         placement,
@@ -139,14 +146,13 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return pieces;
     }
 
-    public isPiece(coord: Coord): boolean {
-        const piece: FourStatePiece = this.getPiece(coord);
-        return piece !== FourStatePiece.EMPTY;
+    public isPlayerAt(coord: Coord): boolean {
+        const piece: FourStatePiece = this.getPieceAt(coord);
+        return piece.isPlayer();
     }
 
-    private getPiece(coord: Coord): FourStatePiece {
-        const piece: FourStatePiece = this.constructedState.getPieceAt(coord);
-        return piece;
+    private getPieceAt(coord: Coord): FourStatePiece {
+        return this.constructedState.getPieceAt(coord);
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -308,6 +314,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public override hideLastMove(): void {
         this.arrows = [];
+        this.moved = [];
         this.inserted = MGPOptional.empty();
     }
 
@@ -322,7 +329,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     }
 
     public getPieceClass(coord: Coord): string {
-        const piece: FourStatePiece = this.getPiece(coord);
+        const piece: FourStatePiece = this.getPieceAt(coord);
         return this.getPlayerClass(piece.getPlayer());
     }
 

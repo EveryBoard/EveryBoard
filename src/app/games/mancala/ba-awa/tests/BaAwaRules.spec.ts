@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
-import { MancalaState } from '../../common/MancalaState';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaState } from '../../common/MancalaState';
+import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { BaAwaConfig } from '../BaAwaConfig';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 
 describe('BaAwaRules', () => {
 
@@ -326,7 +326,7 @@ describe('BaAwaRules', () => {
             // When applying that move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(4)]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 2, 2, 10, 2, 0],
                 [3, 1, 0, 1, 0, 0],

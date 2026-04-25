@@ -1,4 +1,5 @@
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
 import { NewGameMove } from '../NewGameMove';
 
 describe('NewGameMove', () => {

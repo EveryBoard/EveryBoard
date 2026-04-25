@@ -1,23 +1,27 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
-import { PylosState } from 'src/app/games/pylos/PylosState';
-import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Set, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+
+import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
+import { PylosCoord } from './PylosCoord';
 import { PylosFailure } from './PylosFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { PylosMoveGenerator } from './PylosMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 import { PylosMinimax } from './PylosMinimax';
+import { PylosMove, PylosMoveFailure } from './PylosMove';
+import { PylosMoveGenerator } from './PylosMoveGenerator';
+import { PylosRules } from './PylosRules';
+import { PylosState } from './PylosState';
 
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
@@ -45,8 +49,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: PlayerNumberMap = PlayerNumberMap.of(15, 15);
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Pylos');
         this.availableAIs = [
             new PylosMinimax(),
@@ -214,7 +218,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             this.chosenLandingCoord = MGPOptional.of(clickedCoord);
             this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
             this.updateCapturableList();
-            return MGPValidation.SUCCESS; // now player can click on his captures
+            return MGPValidation.SUCCESS; // now player can click on their captures
         } else {
             this.chosenLandingCoord = MGPOptional.of(clickedCoord);
             return this.concludeMoveWithCapture([]);
@@ -309,7 +313,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return pieces;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.constructedState = this.state;
         const repartition: PlayerNumberMap = this.state.getPiecesRepartition();
@@ -317,6 +321,15 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
             15 - repartition.get(Player.ZERO),
             15 - repartition.get(Player.ONE),
         );
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.remainingPieces);
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
     }
 
     public override async showLastMove(move: PylosMove): Promise<void> {

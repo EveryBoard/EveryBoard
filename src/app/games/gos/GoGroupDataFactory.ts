@@ -1,11 +1,14 @@
-import { GroupDataFactory } from 'src/app/jscaip/BoardData';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { GroupDataFactory } from '../../jscaip/BoardData';
+import { Coord } from '../../jscaip/Coord';
+import { Direction } from '../../jscaip/Direction';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+
 import { GoGroupData } from './GoGroupsData';
 import { GoPiece } from './GoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
 
-export abstract class GoGroupDatasFactory extends GroupDataFactory<GoPiece> {
+export abstract class GoGroupDataFactory extends GroupDataFactory<GoPiece, GoGroupData> {
 
     public getNewInstance(color: GoPiece): GoGroupData {
         return new GoGroupData(color, [], [], [], [], [], []);
@@ -13,18 +16,26 @@ export abstract class GoGroupDatasFactory extends GroupDataFactory<GoPiece> {
 
 }
 
-export class OrthogonalGoGroupDataFactory extends GoGroupDatasFactory {
+export class OrthogonalGoGroupDataFactory extends GoGroupDataFactory {
 
-    public getDirections(_: Coord): ReadonlyArray<Orthogonal> {
+    public getDirections(_: Coord): ReadonlyArray<Direction> {
         return Orthogonal.ORTHOGONALS;
     }
 
 }
 
-export class TriangularGoGroupDataFactory extends GoGroupDatasFactory {
+export class TriangularGoGroupDataFactory extends GoGroupDataFactory {
 
-    public getDirections(coord: Coord): ReadonlyArray<Orthogonal> {
+    public getDirections(coord: Coord): ReadonlyArray<Direction> {
         return TriangularCheckerBoard.getDirections(coord);
+    }
+
+}
+
+export class HexagonalGoGroupDataFactory extends GoGroupDataFactory {
+
+    public getDirections(_: Coord): ReadonlyArray<Direction> {
+        return HexaDirection.factory.all;
     }
 
 }

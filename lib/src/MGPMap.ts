@@ -1,5 +1,5 @@
-import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
+import { MGPOptional } from './MGPOptional';
 import { Set } from './Set';
 import { Utils } from './Utils';
 
@@ -42,10 +42,30 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
     }
 
-    public forEach(callback: (item: {key: K, value: V}) => void): void {
-        for (const element of this.map) {
-            callback(element);
-        }
+    public [Symbol.iterator](): IterableIterator<[K, V]> {
+        const entries: {key: K, value: V}[] = this.map; // cache the current entries
+        let index: number = 0;
+
+        return {
+            /* istanbul ignore next */
+            [Symbol.iterator](): IterableIterator<[K, V]> {
+                // No idea how this can be covered?
+                return this;
+            },
+            next(): IteratorResult<[K, V]> {
+                if (index < entries.length) {
+                    const entry: {key: K, value: V} = entries[index];
+                    index += 1;
+                    return { value: [entry.key, entry.value], done: false };
+                }
+                return { value: undefined as unknown as [K, V], done: true };
+            },
+        };
+    }
+
+    public clear(): void {
+        this.assertImmutability('clear');
+        this.map = [];
     }
 
     public putAll(m: MGPMap<K, V>): void {

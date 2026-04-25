@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
-import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { Move } from 'src/app/jscaip/Move';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Coord } from 'src/app/jscaip/Coord';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export interface ModeConfig {
+import { Coord } from '../../../jscaip/Coord';
+import { Move } from '../../../jscaip/Move';
+import { SuperRules } from '../../../jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
+
+export type ModeConfig = RulesConfig & {
 
     offsetRatio: number;
 
@@ -14,10 +15,9 @@ export interface ModeConfig {
 
     pieceHeightRatio: number;
 
-    parallelogramHeight: number,
+    parallelogramHeight: number;
 
-    abstractBoardSize: number,
-}
+};
 
 @Component({
     template: '',
@@ -58,7 +58,7 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
         const spaceHeight: number = mode.parallelogramHeight;
         const spaceWidth: number = spaceHeight * mode.horizontalWidthRatio;
         const spaceOffset: number = mode.offsetRatio * spaceHeight;
-        const numberOfOffset: number = mode.abstractBoardSize - y;
+        const numberOfOffset: number = this.getState().getHeight()-y;
         const xBase: number = (x * spaceWidth) + (numberOfOffset * spaceOffset);
         const yBase: number = (y * spaceHeight) - (mode.pieceHeightRatio * spaceHeight * z);
         return new Coord(xBase, yBase);

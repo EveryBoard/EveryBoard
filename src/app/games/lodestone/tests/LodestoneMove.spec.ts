@@ -1,5 +1,6 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
 import { LodestoneMove } from '../LodestoneMove';
 
 describe('LodestoneMove', () => {

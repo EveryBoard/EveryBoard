@@ -1,23 +1,28 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
 
-import { TriangularGameComponent } from 'src/app/components/game-components/game-component/TriangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
-import { SaharaState } from 'src/app/games/sahara/SaharaState';
-import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+
+import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+
+import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
 import { SaharaFailure } from './SaharaFailure';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { SaharaFreedomMinimax } from './SaharaMinimax';
+import { SaharaMobilityMinimax } from './SaharaMobilityMinimax';
+import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
-import { SaharaMinimax } from './SaharaMinimax';
+import { SaharaRules } from './SaharaRules';
+import { SaharaState } from './SaharaState';
 
 @Component({
     selector: 'app-sahara',
     templateUrl: './sahara.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaMove,
@@ -32,11 +37,13 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Sahara');
         this.availableAIs = [
-            new SaharaMinimax(),
+            new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
+            new SaharaFreedomMinimax(),
+            new SaharaMobilityMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];
         this.encoder = SaharaMove.encoder;
@@ -89,7 +96,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     private selectPiece(coord: Coord): void {
         this.chosenCoord = MGPOptional.of(coord);
-        this.possibleLandings = this.rules.getLandingCoords(this.board, coord);
+        this.possibleLandings = this.rules.getLegalLandingCoords(this.getState(), coord);
     }
 
     private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {
@@ -101,12 +108,12 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         return await this.chooseMove(newMove.get());
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().board;
     }
 
     public getPlayerClassAtXY(x: number, y: number): string {
-        const piece: FourStatePiece = this.board[y][x];
+        const piece: FourStatePiece = this.getState().getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getPlayer());
     }
 

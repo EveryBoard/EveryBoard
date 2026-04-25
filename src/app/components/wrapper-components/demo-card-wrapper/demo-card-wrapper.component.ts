@@ -1,18 +1,23 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Input, OnChanges, SimpleChanges, ViewChild, ViewContainerRef } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, SimpleChanges, inject, input, InputSignal } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { GameWrapper } from '../../wrapper-components/GameWrapper';
-import { ActivatedRoute, Router } from '@angular/router';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { Move } from 'src/app/jscaip/Move';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+
+import { AbstractNode } from '../../../jscaip/AI/GameNode';
+import { Move } from '../../../jscaip/Move';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameWrapper } from '../GameWrapper';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
-import { AbstractNode } from 'src/app/jscaip/AI/GameNode';
 
 export type DemoNodeInfo = {
-    name: string, // The name of the game
+    name: string; // The url name of the game
+    title: string, // The title of the step
     node: AbstractNode, // The demo node
     click: MGPOptional<string>, // An element to click
+}
+
+export type DemoNodeWithConfig = DemoNodeInfo & {
+    config: MGPOptional<RulesConfig>,
 }
 
 @Component({
@@ -21,26 +26,17 @@ export type DemoNodeInfo = {
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
-    @Input() public demoNodeInfo: DemoNodeInfo;
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+    private readonly elementRef: ElementRef = inject(ElementRef);
 
-    @ViewChild('board', { read: ViewContainerRef })
-    public override boardRef: ViewContainerRef | null = null;
+    public readonly demoNodeInfo: InputSignal<DemoNodeInfo> = input.required<DemoNodeInfo>();
 
     private gameComponentIsSetup: boolean = false;
 
-    public constructor(activatedRoute: ActivatedRoute,
-                       connectedUserService: ConnectedUserService,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       private readonly cdr: ChangeDetectorRef)
-    {
-        super(activatedRoute, connectedUserService, router, messageDisplayer);
-    }
-
     public async ngAfterViewInit(): Promise<void> {
-        window.setTimeout(async() => {
+        setTimeout(async() => {
             await this.createMatchingGameComponent();
-            this.gameComponent.node = this.demoNodeInfo.node;
+            this.gameComponent.node = this.demoNodeInfo().node;
             // The component needs to be interactive in order to show all possible stylistic elements
             await this.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
@@ -49,8 +45,11 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
             // and otherwise we'll get an angular exception in our tests
             this.cdr.detectChanges();
             // We perform a click if necessary
-            if (this.demoNodeInfo.click.isPresent()) {
-                const element: Element = Utils.getNonNullable(document.querySelector(this.demoNodeInfo.click.get()));
+            const demoNodeInfo: DemoNodeInfo = this.demoNodeInfo();
+            if (demoNodeInfo.click.isPresent()) {
+                const clickSelector: string = demoNodeInfo.click.get();
+                const element: Element =
+                    Utils.getNonNullable(this.elementRef.nativeElement.querySelector(clickSelector));
                 element.dispatchEvent(new Event('click'));
                 // Update the view after the click
                 this.cdr.detectChanges();
@@ -65,7 +64,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // And also it is called on creation, then, this.gameComponent is not set yet
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
-            this.gameComponent.node = this.demoNodeInfo.node;
+            this.gameComponent.node = this.demoNodeInfo().node;
             await this.gameComponent.updateBoardAndRedraw(false);
         }
     }
@@ -73,7 +72,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     protected override getGameUrlName(): string {
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
-        return this.demoNodeInfo.name;
+        return this.demoNodeInfo().name;
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {

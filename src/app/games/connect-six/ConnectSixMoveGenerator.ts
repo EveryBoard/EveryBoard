@@ -1,14 +1,16 @@
-import { ConnectSixState } from './ConnectSixState';
-import { ConnectSixNode } from './ConnectSixRules';
+import { MGPOptional, Set } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { GobanConfig } from '../../jscaip/GobanConfig';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { ConnectSixMove } from './ConnectSixMove';
-import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove } from './ConnectSixMove';
 import { ConnectSixDrops } from './ConnectSixMove';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional, Set } from '@everyboard/lib';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { ConnectSixNode } from './ConnectSixRules';
+import { ConnectSixState } from './ConnectSixState';
 
 export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState, GobanConfig> {
 

@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
+import { Coord } from '../../../jscaip/Coord';
 import { DvonnMove } from '../DvonnMove';
-import { Coord } from 'src/app/jscaip/Coord';
 
 describe('DvonnMove', () => {
 
@@ -38,12 +38,12 @@ describe('DvonnMove', () => {
     });
 
     it('should correctly compute move lengths', () => {
-        expect(DvonnMove.from(new Coord(2, 0), new Coord(4, 0)).get().length()).toEqual(2);
-        expect(DvonnMove.from(new Coord(2, 0), new Coord(2, 3)).get().length()).toEqual(3);
-        expect(DvonnMove.from(new Coord(2, 0), new Coord(1, 1)).get().length()).toEqual(1);
-        expect(DvonnMove.from(new Coord(5, 2), new Coord(3, 2)).get().length()).toEqual(2);
-        expect(DvonnMove.from(new Coord(5, 2), new Coord(5, 0)).get().length()).toEqual(2);
-        expect(DvonnMove.from(new Coord(5, 2), new Coord(6, 1)).get().length()).toEqual(1);
+        expect(DvonnMove.from(new Coord(2, 0), new Coord(4, 0)).get().getDistance()).toEqual(2);
+        expect(DvonnMove.from(new Coord(2, 0), new Coord(2, 3)).get().getDistance()).toEqual(3);
+        expect(DvonnMove.from(new Coord(2, 0), new Coord(1, 1)).get().getDistance()).toEqual(1);
+        expect(DvonnMove.from(new Coord(5, 2), new Coord(3, 2)).get().getDistance()).toEqual(2);
+        expect(DvonnMove.from(new Coord(5, 2), new Coord(5, 0)).get().getDistance()).toEqual(2);
+        expect(DvonnMove.from(new Coord(5, 2), new Coord(6, 1)).get().getDistance()).toEqual(1);
     });
 
     it('should override equals correctly', () => {

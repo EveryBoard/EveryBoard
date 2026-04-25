@@ -1,13 +1,15 @@
-import { SixState } from 'src/app/games/six/SixState';
-import { SixMove } from 'src/app/games/six/SixMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Localized } from 'src/app/utils/LocaleUtils';
 import { MGPValidation } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Localized } from '../../utils/LocaleUtils';
+
+import { SixMove } from './SixMove';
 import { SixRules } from './SixRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { SixState } from './SixState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = Player.ZERO;
@@ -89,9 +91,9 @@ export class SixTutorial extends Tutorial {
                 [X, X, X, X, _, _, _, _, _],
                 [_, O, _, X, _, _, _, _, _],
             ], 40),
-            SixMove.ofMovement(new Coord(6, 1), new Coord(5, 1)),
+            SixMove.ofTranslation(new Coord(6, 1), new Coord(5, 1)),
             (_move: SixMove, _previousState: SixState, resultingState: SixState) => {
-                const pieces: PlayerNumberMap = resultingState.countPieces();
+                const pieces: PlayerNumberMap = resultingState.countPiecesOnBoard();
                 if (pieces.get(Player.ZERO) === 19) {
                     if (pieces.get(Player.ONE) === 18) {
                         return MGPValidation.SUCCESS;
@@ -119,7 +121,7 @@ export class SixTutorial extends Tutorial {
                 [O, X, _, _, _, _],
                 [O, _, _, _, _, _],
             ], 40),
-            SixMove.ofMovement(new Coord(2, 3), new Coord(3, 3)),
+            SixMove.ofTranslation(new Coord(2, 3), new Coord(3, 3)),
             (move: SixMove, _previousState: SixState, _resultingState: SixState) => {
                 if (move.start.equalsValue(new Coord(2, 3))) {
                     return MGPValidation.SUCCESS;

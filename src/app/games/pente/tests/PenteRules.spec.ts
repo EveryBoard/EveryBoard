@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { PenteConfig } from '../PenteConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteNode, PenteRules } from '../PenteRules';
 import { PenteState } from '../PenteState';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
-import { PenteConfig } from '../PenteConfig';
 
 describe('PenteRules', () => {
 
@@ -30,7 +31,7 @@ describe('PenteRules', () => {
         // When doing a drop on an empty space
         const move: PenteMove = PenteMove.of(new Coord(9, 8));
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: PenteState = new PenteState([
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -215,6 +216,8 @@ describe('PenteRules', () => {
             [X, X, X, X, O, O, O, O, X, X, X, X, O, O, O, O, X, X, X],
         ], PlayerNumberMap.of(8, 8), 1337);
         const node: PenteNode = new PenteNode(state);
+
+        // When checking the game status
         // Then it should be a draw
         RulesUtils.expectToBeDraw(rules, node, defaultConfig);
     });
@@ -243,7 +246,9 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(10, 0), 3);
         const node: PenteNode = new PenteNode(state);
-        // Then it should be a victory for this player
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -271,7 +276,9 @@ describe('PenteRules', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], PlayerNumberMap.of(0, 0), 3);
         const node: PenteNode = new PenteNode(state);
-        // Then it should be a victory for zero
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 

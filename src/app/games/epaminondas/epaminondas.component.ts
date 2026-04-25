@@ -1,22 +1,27 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { EpaminondasFailure } from './EpaminondasFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
-import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
+import { EpaminondasFailure } from './EpaminondasFailure';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
+import { EpaminondasMove } from './EpaminondasMove';
+import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
+import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasState } from './EpaminondasState';
 
 export type PossibleMove = {
 
@@ -31,6 +36,7 @@ export type PossibleMove = {
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, DirArrowComponent],
 })
 export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRules,
                                                                    EpaminondasMove,
@@ -42,18 +48,17 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public NONE: PlayerOrNone = PlayerOrNone.NONE;
 
+    // Data linked to the move attempt
     public firstPiece: MGPOptional<Coord> = MGPOptional.empty();
-
+    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
     public possibleMoves: PossibleMove[] = [];
 
-    public lastPiece: MGPOptional<Coord> = MGPOptional.empty();
-
+    // Data linked to the last move
     private moveds: Coord[] = [];
-
     private capturedCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Epaminondas');
         this.availableAIs = [
             new EpaminondasMinimax(),
@@ -65,7 +70,11 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         this.hasAsymmetricBoard = true;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.scores = this.getScores();
     }
@@ -73,13 +82,14 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private getScores(): MGPOptional<PlayerNumberMap> {
         const state: EpaminondasState = this.getState();
         const playerMap: PlayerNumberMap = PlayerNumberMap.of(
-            state.count(Player.ZERO),
-            state.count(Player.ONE),
+            state.countPieceOnBoard(Player.ZERO),
+            state.countPieceOnBoard(Player.ONE),
         );
         return MGPOptional.of(playerMap);
     }
 
     public override async showLastMove(move: EpaminondasMove): Promise<void> {
+        this.capturedCoords = [];
         let moved: Coord = move.coord;
         this.moveds = [moved];
         for (let i: number = 1; i < (move.stepSize + move.phalanxSize); i++) {
@@ -88,9 +98,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
         const previousNode: EpaminondasNode = this.node.parent.get();
         const previousOpponent: Player = this.getState().getPreviousOpponent();
-        while (previousNode.gameState.isOnBoard(moved) &&
-               previousNode.gameState.getPieceAt(moved) === previousOpponent)
-        {
+        while (previousNode.gameState.hasPieceAt(moved, previousOpponent)) {
             this.capturedCoords.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
@@ -213,7 +221,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         let phalanxSize: number = 1;
         let coord: Coord = this.firstPiece.get().getNext(direction, 1);
         const currentPlayer: Player = this.getState().getCurrentPlayer();
-        while (this.getState().getOptionalPieceAt(coord).equalsValue(currentPlayer)) {
+        while (this.getState().hasPieceAt(coord, currentPlayer)) {
             phalanxSize++;
             coord = coord.getNext(direction, 1);
         }

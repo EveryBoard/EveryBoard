@@ -1,10 +1,12 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
+
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
+
 import { MoveGenerator } from './AI';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
@@ -44,7 +46,7 @@ export class MCTSWithHeuristic<M extends Move,
             const bounds: HeuristicBounds<B> = this.heuristic.getBounds(config);
             Utils.assert(boardValue.metrics.length === bounds.player0Best.metrics.length &&
                          boardValue.metrics.length === bounds.player1Best.metrics.length,
-                         'Metrics and bound values should have the same shape');
+                         `MCTSWithHeuristic ${this.name}: metrics and bound values should have the same shape`);
             let value: number = 0;
             for (let i: number = 0; i < boardValue.metrics.length; i++) {
                 const player0Best: number = bounds.player0Best.metrics[i];
@@ -56,12 +58,12 @@ export class MCTSWithHeuristic<M extends Move,
                 if (cappedValue !== metric && Math.abs(cappedValue - metric) < 1000) {
                     // Our metric is somewhat close to the bounds, it is likely an error in the metric.
                     // We can warn the user about it.
-                    console.warn(`MCTSWithHeuristic capped a value close to the bounds: ${metric} has been capped to ${cappedValue}, bounds are [${player0Best}, ${player1Best}]`);
+                    console.warn(`MCTSWithHeuristic ${this.name} capped a value close to the bounds: ${metric} has been capped to ${cappedValue}, bounds are [${player0Best}, ${player1Best}]`);
                 }
                 value += (Math.min(metric, player1Best) - player0Best) / (player1Best - player0Best);
             }
             value = value / boardValue.metrics.length;
-            Utils.assert(0 <= value && value <= 1, 'MCTSWithHeuristic got a value outside of [0,1]');
+            Utils.assert(0 <= value && value <= 1, `MCTSWithHeuristic ${this.name} got a value outside of [0,1]`);
             return value;
         } else {
             return super.winScore(node, config, gameStatus, player);

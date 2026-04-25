@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { TeekoConfig, TeekoRules } from '../TeekoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
+
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TeekoMinimax } from '../TeekoMinimax';
+import { TeekoConfig, TeekoRules } from '../TeekoRules';
 
 describe('TeekoMinimax', () => {
 
@@ -21,4 +22,5 @@ describe('TeekoMinimax', () => {
             shouldFinish: false, // not always a finisher
         });
     });
+
 });

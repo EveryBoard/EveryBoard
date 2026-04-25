@@ -1,13 +1,16 @@
-import { MGPFallible } from '@everyboard/lib';
-import { GoState } from './GoState';
-import { GoPiece } from './GoPiece';
-import { GoMove } from './GoMove';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { GroupDataFactory } from '../../jscaip/BoardData';
+import { Coord } from '../../jscaip/Coord';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { Debug } from '../../utils/Debug';
+
 import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoGroupData } from './GoGroupsData';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { Debug } from 'src/app/utils/Debug';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GoMove } from './GoMove';
+import { GoPiece } from './GoPiece';
+import { GoState } from './GoState';
 
 @Debug.log
 export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerator<GoMove, GoState, C> {
@@ -16,12 +19,10 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
         super();
     }
 
-    public override getListMoves(node: GoNode): GoMove[] {
+    public override getListMoves(node: GoNode, config: MGPOptional<C>): GoMove[] {
         const currentState: GoState = node.gameState;
-        const playingMoves: GoMove[] = this.getPlayingMovesList(currentState);
-        if (currentState.phase === 'PLAYING' ||
-            currentState.phase === 'PASSED')
-        {
+        const playingMoves: GoMove[] = this.getPlayingMovesList(currentState, config);
+        if (currentState.phase.isPlaying() || currentState.phase.isPassed()) {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
@@ -34,7 +35,7 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
         }
     }
 
-    public getPlayingMovesList(state: GoState): GoMove[] {
+    public getPlayingMovesList(state: GoState, config: MGPOptional<C>): GoMove[] {
         const choices: GoMove[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
@@ -62,8 +63,9 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
 
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
+        const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory();
         const groupsData: GoGroupData[] =
-            this.rules.getGroupsDataWhere(
+            groupDataFactory.getGroupsDataWhere(
                 correctBoard,
                 (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE);
 

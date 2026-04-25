@@ -1,11 +1,13 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { EpaminondasHeuristic } from './EpaminondasHeuristic';
 import { MGPOptional } from '@everyboard/lib';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
+import { EpaminondasHeuristic } from './EpaminondasHeuristic';
+import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
+import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
 
@@ -57,13 +59,10 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
             for (let dx: number = -1; dx <= 1; dx++) {
                 for (let dy: number = -1; dy <= 1; dy++) {
                     const coord: Coord = coordAndContent.coord.getNext(new Coord(dx, dy), 1);
-                    if (state.isOnBoard(coord)) {
-                        const neighbor: PlayerOrNone = state.getPieceAt(coord);
-                        if (neighbor === owner) {
-                            score += 1 * owner.getScoreModifier();
-                        } else if (neighbor.isNone()) {
-                            score += 1 * owner.getScoreModifier();
-                        }
+                    if (state.hasPieceAt(coord, owner)) {
+                        score += 1 * owner.getScoreModifier();
+                    } else if (state.hasPieceAt(coord, PlayerOrNone.NONE)) {
+                        score += 1 * owner.getScoreModifier();
                     }
                 }
             }
@@ -108,16 +107,13 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
             for (const direction of Ordinal.ORDINALS) {
                 let phalanxSize: number = 1;
                 let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                while (state.isOnBoard(nextCoord) &&
-                       state.getPieceAt(nextCoord) === owner)
-                {
+                while (state.hasPieceAt(nextCoord, owner)) {
                     phalanxSize += 1;
                     nextCoord = nextCoord.getNext(direction, 1);
                 }
                 let stepSize: number = 1;
-                while (state.isOnBoard(nextCoord) &&
-                       stepSize <= phalanxSize &&
-                       state.getPieceAt(nextCoord).isNone())
+                while (stepSize <= phalanxSize &&
+                       state.hasPieceAt(nextCoord, PlayerOrNone.NONE))
                 {
                     stepSize++;
                     nextCoord = nextCoord.getNext(direction, 1);

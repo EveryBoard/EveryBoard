@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasState } from '../EpaminondasState';
-import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { EpaminondasFailure } from '../EpaminondasFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
+
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { EpaminondasFailure } from '../EpaminondasFailure';
+import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasState } from '../EpaminondasState';
 
 describe('EpaminondasRules', () => {
 
@@ -288,7 +289,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         // When performing a legal move
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Ordinal.UP);
-        // Then it should succeed
+        // Then the move should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -326,7 +327,7 @@ describe('EpaminondasRules', () => {
         const state: EpaminondasState = new EpaminondasState(board, 0);
         // When performing the capture
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Ordinal.UP);
-        // Then it should succeed
+        // Then the move should succeed
         const expectedBoard: Table<PlayerOrNone> = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -366,7 +367,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a victory for 0
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -389,7 +392,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Ordinal.UP);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a victory for player 1
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -435,7 +440,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a win for player zero
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -458,7 +465,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a win for player one
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

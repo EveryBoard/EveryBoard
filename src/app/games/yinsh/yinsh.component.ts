@@ -1,22 +1,26 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
+import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RingComponent } from '../common/ring/ring.component';
+
 import { YinshFailure } from './YinshFailure';
-import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
+import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { PlayerMap, PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { YinshScoreMinimax } from './YinshScoreMinimax';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { YinshState } from './YinshState';
 
 interface ViewInfo {
     targets: Coord[],
@@ -33,6 +37,7 @@ interface ViewInfo {
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, RingComponent],
 })
 export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            YinshMove,
@@ -88,8 +93,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         sideRingClass: PlayerMap.ofValues('player0-stroke', 'player1-stroke'),
     };
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Yinsh');
         this.availableAIs = [
             new YinshScoreMinimax(),
@@ -104,7 +109,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.constructedState = this.getState();
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: YinshState = this.getState();
         this.constructedState = state;
         this.hexaBoard = this.constructedState.board;
@@ -495,6 +500,14 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
             this.updateViewInfo();
             return MGPValidation.SUCCESS;
         }
+    }
+
+    protected translateRing(player: Player, ring: number): string {
+        const playerBase: number = player === Player.ZERO ? 15 : 1050;
+        const playerSign: number = player === Player.ZERO ? 1 : -1;
+        const translateX: number = playerBase + playerSign * 1.2 * this.viewInfo.ringOuterSize * (ring + 1);
+        const translateY: number = player === Player.ZERO ? 300 : 1260;
+        return 'translate(' + translateX + ', ' + translateY + ')';
     }
 
 }

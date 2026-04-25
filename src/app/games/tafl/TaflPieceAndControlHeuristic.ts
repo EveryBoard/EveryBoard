@@ -1,16 +1,18 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
-import { TaflPawn } from './TaflPawn';
-import { TaflState } from './TaflState';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { Player } from '../../jscaip/Player';
+
+import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';
+import { TaflPawn } from './TaflPawn';
 import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
 import { TaflNode } from './TaflRules';
-import { TaflConfig } from './TaflConfig';
+import { TaflState } from './TaflState';
 
 export type TaflPieceAndControlHeuristicMetrics = {
     controlScore: number,
@@ -46,9 +48,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
                     metrics.safeScore += owner.getScoreModifier();
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (state.isOnBoard(testedCoord) &&
-                               state.getPieceAt(testedCoord) === TaflPawn.UNOCCUPIED)
-                        {
+                        while (state.hasPieceAt(testedCoord, TaflPawn.UNOCCUPIED)) {
                             controlledSquares = controlledSquares.addElement(testedCoord);
                             testedCoord = testedCoord.getNext(dir, 1);
                         }

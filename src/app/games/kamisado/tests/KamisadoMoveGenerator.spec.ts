@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMove } from '../KamisadoMove';
-import { KamisadoState } from '../KamisadoState';
+import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { KamisadoState } from '../KamisadoState';
 
 const _: KamisadoPiece = KamisadoPiece.EMPTY;
 const R: KamisadoPiece = KamisadoPiece.ZERO.RED;

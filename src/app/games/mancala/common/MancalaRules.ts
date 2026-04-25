@@ -1,16 +1,18 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MancalaConfig } from './MancalaConfig';
-import { MancalaState } from './MancalaState';
-import { Player } from 'src/app/jscaip/Player';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
 import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { MancalaDistribution, MancalaMove } from './MancalaMove';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Coord } from '../../../jscaip/Coord';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../../jscaip/Rules';
+import { Table, TableUtils } from '../../../jscaip/TableUtils';
+import { Localized } from '../../../utils/LocaleUtils';
+
+import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
+import { MancalaDistribution, MancalaMove } from './MancalaMove';
+import { MancalaState } from './MancalaState';
 
 export interface MancalaCaptureResult {
 
@@ -50,9 +52,9 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
 {
 
     public static readonly FEED_ORIGINAL_HOUSE: Localized = () => $localize`Feed original house`;
-    public static readonly MUST_FEED: Localized = () => $localize`Must feed`;
+    public static readonly MUST_FEED: Localized = () => $localize`You must feed`;
     public static readonly PASS_BY_PLAYER_STORE: Localized = () => $localize`Pass by player store`;
-    public static readonly MULTIPLE_SOW: Localized = () => $localize`Must continue distribution after last seed ends in store`;
+    public static readonly MULTIPLE_SOW: Localized = () => $localize`Continue distribution after last seed ends in store`;
     public static readonly CYCLICAL_LAP: Localized = () => $localize`Continue distribution until capture or empty house`;
     public static readonly SEEDS_BY_HOUSE: Localized = () => $localize`Seeds by house`;
 

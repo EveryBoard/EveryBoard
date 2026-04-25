@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
 import { DvonnOrderedMoveGenerator } from '../DvonnOrderedMoveGenerator';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DvonnOrderedMoveGenerator', () => {
 

@@ -1,15 +1,17 @@
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
-import { MartianChessCapture, MartianChessState } from './MartianChessState';
-import { MartianChessPiece } from './MartianChessPiece';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table } from '../../jscaip/TableUtils';
+
 import { MartianChessFailure } from './MartianChessFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';
+import { MartianChessPiece } from './MartianChessPiece';
+import { MartianChessCapture, MartianChessState } from './MartianChessState';
 
 export interface MartianChessMoveResult {
 
@@ -156,7 +158,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
                 return MGPValidation.failure(MartianChessMoveFailure.DRONE_MUST_DO_TWO_ORTHOGONAL_STEPS());
             }
         }
-        for (const coord of move.getStart().getCoordsToward(move.getEnd())) {
+        for (const coord of move.getJumpedOverCoords()) {
             if (state.getPieceAt(coord) !== MartianChessPiece.EMPTY) {
                 return MGPValidation.failure(RulesFailure.SOMETHING_IN_THE_WAY());
             }

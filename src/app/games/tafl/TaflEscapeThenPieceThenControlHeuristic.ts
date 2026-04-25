@@ -1,14 +1,16 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
-import { TaflPawn } from './TaflPawn';
-import { TaflState } from './TaflState';
 import { MGPOptional } from '@everyboard/lib';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+
+import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';
+import { TaflPawn } from './TaflPawn';
 import { TaflPieceAndControlHeuristic, TaflPieceAndControlHeuristicMetrics } from './TaflPieceAndControlHeuristic';
 import { TaflNode } from './TaflRules';
-import { TaflConfig } from './TaflConfig';
+import { TaflState } from './TaflState';
 
 export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends TaflPieceAndControlHeuristic<M> {
 
@@ -50,7 +52,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
             // not found:
             return MGPOptional.empty();
         }
-        if (nextGen.some((coord: Coord) => this.rules.isExternalThrone(state, coord))) {
+        if (nextGen.some((coord: Coord) => state.isExternalThrone(coord))) {
             return MGPOptional.of(step);
         } else {
             step++;
@@ -64,7 +66,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
         for (const piece of previousGen) {
             for (const dir of Orthogonal.ORTHOGONALS) {
                 let landing: Coord = piece.getNext(dir, 1);
-                while (state.isOnBoard(landing) && state.getPieceAt(landing) === TaflPawn.UNOCCUPIED) {
+                while (state.hasPieceAt(landing, TaflPawn.UNOCCUPIED)) {
                     if (handledCoords.every((coord: Coord) => coord.equals(landing) === false)) {
                         // coord is new
                         newGen.push(landing);

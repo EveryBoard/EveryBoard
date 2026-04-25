@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { QuartoPiece } from '../QuartoPiece';
-import { QuartoState } from '../QuartoState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { QuartoMove } from '../QuartoMove';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
+
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { QuartoHeuristic } from '../QuartoHeuristic';
+import { QuartoMove } from '../QuartoMove';
+import { QuartoPiece } from '../QuartoPiece';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
+import { QuartoState } from '../QuartoState';
 
 describe('QuartoHeuristic', () => {
 

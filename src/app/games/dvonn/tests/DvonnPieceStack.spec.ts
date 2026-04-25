@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 
 describe('DvonnPieceStack', () => {
@@ -104,4 +104,5 @@ describe('DvonnPieceStack', () => {
             expect(DvonnPieceStack.PLAYER_ZERO.equals(stack4)).toBeFalse();
         });
     });
+
 });

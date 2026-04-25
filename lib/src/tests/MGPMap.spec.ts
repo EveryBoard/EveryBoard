@@ -27,17 +27,45 @@ describe('MGPMap', () => {
         });
     });
 
-    describe('forEach', () => {
+    describe('iterator', () => {
         it('should iterate over all elements of the map', () => {
             // Given a map with elements
             const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
 
-            // When calling forEach
+            // When iterating over it
             let sum: number = 0;
-            map.forEach((item: {key: string, value: number}) => sum += item.value);
+            const keysSeen: string[] = [];
+            for (const [key, value] of map) {
+                keysSeen.push(key);
+                sum += value;
+            }
 
             // Then all elements should have been iterated over
             expect(sum).toBe(3);
+            expect(keysSeen).toEqual(['first', 'second']);
+        });
+    });
+
+    describe('clear', () => {
+        it('should clear the map', () => {
+            // Given a map with elements
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
+
+            // When clearing it
+            map.clear();
+
+            // Then it should have no elements
+            expect(map).toEqual(new MGPMap());
+        });
+
+        it('should fail on an immutable map', () => {
+            // Given an immutable map with elements
+            const map: MGPMap<string, number> = MGPMap.from({ first: 1, second: 2 });
+            map.makeImmutable();
+
+            // When clearing it
+            // Then it should fail
+            expect(() => map.clear()).toThrowError('Assertion failure: Cannot call clear on immutable map!');
         });
     });
 
@@ -208,6 +236,7 @@ describe('MGPMap', () => {
             expect(map.equals(map)).toBeTrue();
         });
     });
+
 });
 
 describe('ReversibleMap', () => {
@@ -225,4 +254,5 @@ describe('ReversibleMap', () => {
             expect(reversed).toEqual(expectedReversed);
         });
     });
+
 });

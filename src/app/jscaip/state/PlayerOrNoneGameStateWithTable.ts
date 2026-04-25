@@ -1,6 +1,7 @@
-import { GameStateWithTable } from './GameStateWithTable';
-import { Player, PlayerOrNone } from '../Player';
 import { Coord } from '../Coord';
+import { Player, PlayerOrNone } from '../Player';
+
+import { GameStateWithTable } from './GameStateWithTable';
 
 export class PlayerOrNoneGameStateWithTable extends GameStateWithTable<PlayerOrNone> {
 
@@ -17,4 +18,9 @@ export class PlayerOrNoneGameStateWithTable extends GameStateWithTable<PlayerOrN
                 };
             });
     }
+
+    public isEmptyAt(coord: Coord): boolean {
+        return this.hasPieceAt(coord, PlayerOrNone.NONE);
+    }
+
 }

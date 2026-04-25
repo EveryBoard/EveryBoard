@@ -1,7 +1,8 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneConfig, AbaloneNode } from './AbaloneRules';
 import { AbaloneState } from './AbaloneState';

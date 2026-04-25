@@ -1,14 +1,18 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { MGPMap, MGPOptional } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+
 import { SquarzMove } from './SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from './SquarzRules';
 import { SquarzState } from './SquarzState';
-import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
 
 export class SquarzMoveGenerator extends MoveGenerator<SquarzMove, SquarzState, SquarzConfig> {
 
-    public rules: SquarzRules = SquarzRules.get();
+    public constructor(private readonly rules: SquarzRules) {
+        super();
+    }
 
     public override getListMoves(node: SquarzNode, config: MGPOptional<SquarzConfig>): SquarzMove[] {
         const player: Player = node.gameState.getCurrentPlayer();

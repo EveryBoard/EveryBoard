@@ -1,13 +1,14 @@
 import { MGPValidation, Utils } from '@everyboard/lib';
 
-import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnState } from 'src/app/games/dvonn/DvonnState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { Player } from 'src/app/jscaip/Player';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+
+import { DvonnMove } from './DvonnMove';
+import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnRules } from './DvonnRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { DvonnState } from './DvonnState';
 
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
 const NN: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;

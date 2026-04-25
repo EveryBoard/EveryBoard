@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Set, ReversibleMap, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+
+import { Coord } from '../../../jscaip/Coord';
+import { CoordSet } from '../../../jscaip/CoordSet';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { SixState } from '../SixState';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 describe('SixState', () => {
 

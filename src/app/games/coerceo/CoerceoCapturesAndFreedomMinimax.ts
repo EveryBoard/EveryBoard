@@ -1,9 +1,10 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { CoerceoMove } from './CoerceoMove';
-import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
 import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
-import { CoerceoState } from './CoerceoState';
+import { CoerceoMove } from './CoerceoMove';
 import { CoerceoOrderedMoveGenerator } from './CoerceoOrderedMoveGenerator';
+import { CoerceoConfig, CoerceoRules } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 export class CoerceoCapturesAndFreedomMinimax extends Minimax<CoerceoMove, CoerceoState, CoerceoConfig> {
 

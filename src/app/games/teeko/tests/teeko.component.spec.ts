@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { TeekoComponent } from '../teeko.component';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { TeekoState } from '../TeekoState';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { TeekoState } from '../TeekoState';
+import { TeekoComponent } from '../teeko.component';
 
 describe('TeekoComponent', () => {
 
@@ -40,7 +41,7 @@ describe('TeekoComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on the occupied space
-            const move: TeekoDropMove = TeekoDropMove.from(new Coord(2, 2)).get();
+            const move: TeekoDropMove = TeekoDropMove.from(new Coord(2, 2));
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
@@ -50,7 +51,7 @@ describe('TeekoComponent', () => {
         it('should drop when clicking on empty space', fakeAsync(async() => {
             // Given any board of drop phase
             // When clicking on empty space
-            const move: TeekoMove = TeekoDropMove.from(new Coord(2, 2)).get();
+            const move: TeekoMove = TeekoDropMove.from(new Coord(2, 2));
 
             // Then it should succeed
             await testUtils.expectMoveSuccess('#click_2_2', move);
@@ -58,12 +59,13 @@ describe('TeekoComponent', () => {
 
         it('should highlight the last piece dropped', fakeAsync(async() => {
             // Given a board with a last move that is a drop
-            const move: TeekoMove = TeekoDropMove.from(new Coord(2, 2)).get();
+            const move: TeekoMove = TeekoDropMove.from(new Coord(2, 2));
             await testUtils.expectMoveSuccess('#click_2_2', move);
             // When rendering the board
             // Then the last move should be highlighted
             testUtils.expectElementToHaveClasses('#piece_2_2', ['base', 'player0-fill', 'last-move-stroke']);
         }));
+
     });
 
     describe('translation phase', () => {
@@ -124,6 +126,7 @@ describe('TeekoComponent', () => {
                 // Then it should be shown as selected
                 testUtils.expectElementToHaveClasses('#piece_0_0', ['base', 'player0-fill', 'selected-stroke']);
             }));
+
         });
 
         describe('second click', () => {
@@ -140,9 +143,10 @@ describe('TeekoComponent', () => {
                 const state: TeekoState = new TeekoState(board, 8);
                 await testUtils.setupState(state);
                 await testUtils.expectClickSuccess('#click_0_0');
+                testUtils.expectElementToHaveClass('#piece_0_0', 'selected-stroke');
 
                 // When clicking on it again
-                await testUtils.expectClickSuccess('#click_0_0');
+                await testUtils.expectClickFailure('#click_0_0');
 
                 // Then it should no longer be selected
                 testUtils.expectElementNotToHaveClass('#piece_0_0', 'selected-stroke');
@@ -259,6 +263,7 @@ describe('TeekoComponent', () => {
                 testUtils.expectElementToHaveClasses('#piece_1_0', ['base', 'player0-fill', 'victory-stroke']);
                 testUtils.expectElementToHaveClasses('#piece_1_1', ['base', 'player0-fill', 'victory-stroke']);
             }));
+
         });
 
     });

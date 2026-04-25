@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
-import { AbaloneState } from '../AbaloneState';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
+import { AbaloneState } from '../AbaloneState';
 
 describe('AbaloneRules', () => {
 
@@ -242,6 +242,9 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
@@ -259,6 +262,9 @@ describe('AbaloneRules', () => {
         ];
         const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
         const node: AbaloneNode = new AbaloneNode(winningState);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -444,7 +450,7 @@ describe('AbaloneRules', () => {
             const winningState: AbaloneState = new AbaloneState(winningBoard, 1);
             const node: AbaloneNode = new AbaloneNode(winningState);
 
-            // When evaluating the state status
+            // When checking the game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
         });
@@ -471,7 +477,7 @@ describe('AbaloneRules', () => {
             // When moving five pieces
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(new Coord(1, 4), HexaDirection.RIGHT);
 
-            // Then the move should be legal
+            // Then the move should succeed
             const expectedBoard: FourStatePiece[][] = [
                 [N, N, N, N, X, X, X, X, X],
                 [N, N, N, X, X, X, X, X, X],

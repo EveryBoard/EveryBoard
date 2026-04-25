@@ -1,24 +1,30 @@
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+
+import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { AlignmentStatus } from '../../jscaip/AI/AlignmentHeuristic';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { QuartoState } from './QuartoState';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { QuartoFailure } from './QuartoFailure';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { QuartoFailure } from './QuartoFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { Debug } from 'src/app/utils/Debug';
-import { AlignmentStatus } from 'src/app/jscaip/AI/AlignmentHeuristic';
-import { NumberConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { Player } from 'src/app/jscaip/Player';
+import { QuartoState } from './QuartoState';
 
-export type QuartoConfig = {
+export type QuartoConfig = RulesConfig & {
+
     playerZeroLevel: number;
+
     playerOneLevel: number;
+
 };
 
 /**

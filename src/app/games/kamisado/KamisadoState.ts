@@ -1,9 +1,11 @@
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
-import { MGPOptional } from '@everyboard/lib';
 import { KamisadoPiece } from './KamisadoPiece';
 
 export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
@@ -23,4 +25,19 @@ export class KamisadoState extends GameStateWithTable<KamisadoPiece> {
     {
         super(TableUtils.copy(board), turn);
     }
+
+    public isEmptyAt(coord: Coord): boolean {
+        return this.hasPieceAt(coord, KamisadoPiece.EMPTY);
+    }
+
+    public allPieceCoords(): Coord[] {
+        const l: Coord[] = [];
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (coordAndContent.content !== KamisadoPiece.EMPTY) {
+                l.push(coordAndContent.coord);
+            }
+        }
+        return l;
+    }
+
 }

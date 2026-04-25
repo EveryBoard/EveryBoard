@@ -1,21 +1,23 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
+
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';
-import { TaflConfig } from '../TaflConfig';
 
 export const myTaflConfig: TaflConfig = {
 
-    castleIsLeftForGood: true,
+    canReturnToCastle: false,
 
     invaderStarts: true,
 
@@ -201,6 +203,33 @@ describe('TaflRules', () => {
 
             // Then the response should be Player.ONE
             expect(invader).toEqual(Player.ONE);
+        });
+
+    });
+
+    describe('getPossibleDestinations', () => {
+
+        it('should have the right number of move for soldier', () => {
+            // Given a board where a soldier has 16 destinations but 3 are thrones
+            const board: Table<TaflPawn> = [
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, O],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+            ];
+            const state: TaflState = new TaflState(board, 24);
+
+            // When calling getPossibleDestinations
+            const possibleDestinations: Coord[] =
+                rules.getPossibleDestinations(new Coord(8, 4), state, defaultConfig.get());
+
+            // Then the result should have 13 coords
+            expect(possibleDestinations.length).toBe(13);
         });
 
     });

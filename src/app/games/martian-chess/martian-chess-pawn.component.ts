@@ -1,33 +1,37 @@
-import { Component, Input } from '@angular/core';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MartianChessComponent, MartianChessFace } from './martian-chess.component';
+import { NgClass } from '@angular/common';
+import { Component, input, InputSignal } from '@angular/core';
+
+import { Coord } from '../../jscaip/Coord';
+
+import { MartianChessComponentUtils } from './MartianChessComponentUtils';
+import { MartianChessFace } from './martian-chess.component';
 
 @Component({
     selector: '[app-martian-chess-pawn]',
     templateUrl: './martian-chess-pawn.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class MartianChessPawnComponent {
 
-    @Input() mainShapeId: string;
-    @Input() pieceClasses: string[];
-    @Input() style: MartianChessFace;
+    public readonly mainShapeId: InputSignal<string | undefined> = input<string>();
+    public readonly pieceClasses: InputSignal<string[]> = input.required<string[]>();
+    public readonly style: InputSignal<MartianChessFace> = input.required<MartianChessFace>();
 
-    public static FOUR_POINTED_STAR_DIAGONAL: string = MartianChessComponent.getNPointedStar(4, 45);
-    private static readonly TRIANGLE_Y_OFFSET: number = MartianChessPawnComponent.yOffsetForVerticalCentering();
-    public static TRIANGLE: string = MartianChessPawnComponent.getTriangle();
+    public readonly FOUR_POINTED_STAR_DIAGONAL: string = MartianChessComponentUtils.getNPointedStar(4, 45);
+    private readonly TRIANGLE_Y_OFFSET: number = this.yOffsetForVerticalCentering();
+    public readonly TRIANGLE: string = this.getTriangle();
 
-    public MartianChessComponent: typeof MartianChessComponent = MartianChessComponent;
-    public MartianChessPawnComponent: typeof MartianChessPawnComponent = MartianChessPawnComponent;
+    public MartianChessComponentUtils: typeof MartianChessComponentUtils = MartianChessComponentUtils;
 
-    public readonly horizontalDotsRadius: number = MartianChessComponent.SPACE_SIZE / 15;
+    public readonly horizontalDotsRadius: number = MartianChessComponentUtils.SPACE_SIZE / 15;
 
-    public static getTriangle(): string {
+    public getTriangle(): string {
         // The aim of the following computation is to make the shape vertically centered inside the square
-        return MartianChessComponent.getRegularPolygon(3, MartianChessPawnComponent.TRIANGLE_Y_OFFSET);
+        return MartianChessComponentUtils.getRegularPolygon(3, this.TRIANGLE_Y_OFFSET);
     }
-    private static yOffsetForVerticalCentering(): number {
-        const triangleCoords: Coord[] = MartianChessComponent.getRegularPolygonCoords(3);
+    private yOffsetForVerticalCentering(): number {
+        const triangleCoords: Coord[] = MartianChessComponentUtils.getRegularPolygonCoords(3);
         const yCoord: number[] = triangleCoords.map((c: Coord) => c.y);
         const upperTriangleY: number = yCoord.reduce((p: number, c: number) => Math.min(p, c));
         const lowerTriangleY: number = yCoord.reduce((p: number, c: number) => Math.max(p, c));
@@ -37,8 +41,8 @@ export class MartianChessPawnComponent {
         return halfFreeRoom;
     }
     public getConcreteTriangleYOffset(): number {
-        if (this.style.shape === 'Polygon') {
-            return MartianChessPawnComponent.TRIANGLE_Y_OFFSET;
+        if (this.style().shape === 'Polygon') {
+            return this.TRIANGLE_Y_OFFSET;
         } else {
             return 0;
         }

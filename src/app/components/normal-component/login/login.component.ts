@@ -1,16 +1,25 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { FormGroup, FormControl } from '@angular/forms';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { MGPValidation } from '@everyboard/lib';
+import { Component, OnDestroy, OnInit, inject } from '@angular/core';
+import { FormGroup, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faEye, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
+
+import { MGPValidation } from '@everyboard/lib';
+
+import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
+import { ToggleVisibilityDirective } from '../../../pipes-and-directives/toggle-visibility.directive';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
+    imports: [ReactiveFormsModule, AutofocusDirective, FaIconComponent, ToggleVisibilityDirective, RouterLink],
 })
 export class LoginComponent implements OnInit, OnDestroy {
+
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
 
     public faEye: IconDefinition = faEye;
 
@@ -21,12 +30,7 @@ export class LoginComponent implements OnInit, OnDestroy {
         password: new FormControl(),
     });
 
-    private userSubscription!: Subscription; // Initialized in ngOnInit
-
-    public constructor(public router: Router,
-                       public connectedUserService: ConnectedUserService)
-    {
-    }
+    private userSubscription!: Subscription;
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
             if (user !== AuthUser.NOT_CONNECTED) {

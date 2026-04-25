@@ -1,9 +1,10 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasState } from './EpaminondasState';
-import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
 import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';
+import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
+import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasAttackMinimax
     extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>

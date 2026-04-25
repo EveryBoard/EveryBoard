@@ -1,19 +1,28 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
-import { Router } from '@angular/router';
+import { NgClass } from '@angular/common';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { UserService } from 'src/app/services/UserService';
+
 import { MGPOptional } from '@everyboard/lib';
-import { CurrentGame } from 'src/app/domain/User';
+
+import { CurrentGame } from '../../../domain/User';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { CurrentGameService } from '../../../services/CurrentGameService';
 import { GameInfo } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html',
+    imports: [RouterLink, NgClass, FaIconComponent],
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+
+    private readonly router: Router = inject(Router);
+    private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
+    private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+
 
     public loading: boolean = true;
     public username: MGPOptional<string> = MGPOptional.empty();
@@ -21,19 +30,13 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public faCog: IconDefinition = faCog;
     public faSpinner: IconDefinition = faSpinner;
 
-    private userSubscription: Subscription;
-    private currentGameSubscription: Subscription;
+    private userSubscription: Subscription = new Subscription();
+    private currentGameSubscription: Subscription = new Subscription();
 
     public showMenu: boolean = false;
 
     public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
 
-    public constructor(public router: Router,
-                       public connectedUserService: ConnectedUserService,
-                       public currentGameService: CurrentGameService,
-                       public userService: UserService)
-    {
-    }
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
@@ -54,7 +57,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public async navigateToPart(): Promise<boolean> {
-        return this.router.navigate(['/play', this.currentGame.get().typeGame, this.currentGame.get().id]);
+        return this.router.navigate(['/play', this.currentGame.get().gameName, this.currentGame.get().id]);
     }
 
     public ngOnDestroy(): void {
@@ -63,6 +66,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public getCurrentGameName(): string {
-        return GameInfo.getByUrlName(this.currentGame.get().typeGame).get().name;
+        return GameInfo.getByUrlName(this.currentGame.get().gameName).get().name;
     }
 }

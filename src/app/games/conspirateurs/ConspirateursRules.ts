@@ -1,16 +1,18 @@
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
@@ -98,7 +100,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
 
     public jumpLegality(move: ConspirateursMoveJump, state: ConspirateursState): MGPValidation {
         for (const coord of move.coords) {
-            if (state.isOnBoard(coord) === false) {
+            if (state.isNotOnBoard(coord)) {
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
         }
@@ -165,18 +167,24 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
     }
 
     public override getGameStatus(node: ConspirateursNode): GameStatus {
-        const state: ConspirateursState = node.gameState;
-        const protectedPawns: PlayerNumberMap = PlayerNumberMap.of(0, 0);
-        for (const shelter of ConspirateursState.ALL_SHELTERS) {
-            const content: PlayerOrNone = state.getPieceAt(shelter);
-            if (content.isPlayer()) {
-                protectedPawns.add(content, 1);
-                if (protectedPawns.get(content) === 20) {
-                    return GameStatus.getVictory(content);
-                }
+        const protectedPieces: PlayerNumberMap = this.getProtectedPieces(node.gameState);
+        for (const player of Player.PLAYERS) {
+            if (protectedPieces.get(player) === 20) {
+                return GameStatus.getVictory(player);
             }
         }
         return GameStatus.ONGOING;
+    }
+
+    public getProtectedPieces(state: ConspirateursState): PlayerNumberMap {
+        const protectedPieces: PlayerNumberMap = PlayerNumberMap.of(0, 0);
+        for (const shelter of ConspirateursState.ALL_SHELTERS) {
+            const content: PlayerOrNone = state.getPieceAt(shelter);
+            if (content.isPlayer()) {
+                protectedPieces.add(content, 1);
+            }
+        }
+        return protectedPieces;
     }
 
 }

@@ -1,19 +1,22 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
-import { TrexoRules } from './TrexoRules';
-import { ModeConfig, ParallelogramGameComponent } from 'src/app/components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { TrexoMove } from 'src/app/games/trexo/TrexoMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table3DUtils, TableUtils } from 'src/app/jscaip/TableUtils';
-import { Coord3D } from 'src/app/jscaip/Coord3D';
-import { TrexoFailure } from './TrexoFailure';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+
+import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
+
 import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
+import { TrexoFailure } from './TrexoFailure';
+import { TrexoMove } from './TrexoMove';
+import { TrexoMoveGenerator } from './TrexoMoveGenerator';
+import { TrexoRules } from './TrexoRules';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
+import { TrexoHalfPieceComponent } from './trexo-half-piece.component';
 
 interface PieceOnBoard {
 
@@ -30,10 +33,9 @@ type ModeType = '2D' | '3D';
     selector: 'app-trexo',
     templateUrl: './trexo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, TrexoHalfPieceComponent],
 })
 export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, TrexoMove, TrexoState, TrexoPieceStack> {
-
-    public static STROKE_WIDTH: number;
 
     private static readonly INITIAL_PIECE_ON_BOARD: PieceOnBoard = {
         isDroppedPiece: false,
@@ -41,26 +43,23 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         move: MGPOptional.empty(),
     };
 
-    public static modeMap: Record<ModeType, ModeConfig> = {
+    public static readonly modeMap: Record<ModeType, ModeConfig> = {
         '2D': {
             offsetRatio: 0,
             horizontalWidthRatio: 1,
             pieceHeightRatio: 0,
             parallelogramHeight: 100,
-            abstractBoardSize: 10,
         },
         '3D': {
             offsetRatio: 0.4,
             horizontalWidthRatio: 1.2,
             pieceHeightRatio: 0.2,
             parallelogramHeight: 100,
-            abstractBoardSize: 10,
         },
     };
 
     public TrexoComponent: typeof TrexoComponent = TrexoComponent;
     public readonly left: number = - this.STROKE_WIDTH / 2;
-    public Coord3D: typeof Coord3D = Coord3D;
     public up: number = 0;
     public width: number;
     public height: number;
@@ -78,15 +77,14 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentOpponentClass: string = 'player1';
     public currentPlayerClass: string = 'player0';
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Trexo');
         this.availableAIs = [
             new TrexoAlignmentMinimax(),
             new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
         ];
         this.encoder = TrexoMove.encoder;
-        TrexoComponent.STROKE_WIDTH = this.STROKE_WIDTH;
         this.switchToMode('3D');
     }
 
@@ -138,7 +136,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         return pieceBonus;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TrexoState = this.getState();
         this.board = state.getCopiedBoard();
         this.currentOpponentClass = this.getPlayerClass(state.getCurrentOpponent());

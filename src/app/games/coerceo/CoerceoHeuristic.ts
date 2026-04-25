@@ -1,13 +1,15 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from '@everyboard/lib';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
 import { CoerceoMove } from './CoerceoMove';
-import { CoerceoState } from './CoerceoState';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { CoerceoConfig } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove, CoerceoState, CoerceoConfig> {
 
@@ -30,7 +32,7 @@ export abstract class CoerceoHeuristic extends PlayerMetricHeuristic<CoerceoMove
     }
 
     protected getPiecesFreedomScore(state: CoerceoState): [number, number] {
-        const piecesByFreedom: PlayerNumberTable = state.getPiecesByFreedom(state);
+        const piecesByFreedom: PlayerNumberTable = state.getPiecesByFreedom();
         return [
             this.getPlayerPiecesScore(piecesByFreedom.get(Player.ZERO).get()),
             this.getPlayerPiecesScore(piecesByFreedom.get(Player.ONE).get()),

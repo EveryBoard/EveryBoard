@@ -1,17 +1,19 @@
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { PylosCoord } from './PylosCoord';
+import { PylosFailure } from './PylosFailure';
 import { PylosMove } from './PylosMove';
 import { PylosState } from './PylosState';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { PylosFailure } from './PylosFailure';
-import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class PylosNode extends GameNode<PylosMove, PylosState> {}
 
@@ -102,20 +104,20 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
     }
 
     public static getPossibleCaptures(state: PylosState): Set<Set<PylosCoord>> {
-        let possiblesCapturesSet: Set<Set<PylosCoord>> = new Set();
+        let possibleCapturesSets: Set<Set<PylosCoord>> = new Set();
 
         const freeToMoveFirsts: Set<PylosCoord> = state.getFreeToMoves();
         for (const freeToMoveFirst of freeToMoveFirsts) {
-            possiblesCapturesSet = possiblesCapturesSet.addElement(new Set([freeToMoveFirst]));
+            possibleCapturesSets = possibleCapturesSets.addElement(new Set([freeToMoveFirst]));
 
             const secondState: PylosState = state.removePieceAt(freeToMoveFirst);
             const freeToMoveThens: Set<PylosCoord> = secondState.getFreeToMoves();
             for (const freeToMoveThen of freeToMoveThens) {
                 const captures: Set<PylosCoord> = new Set([freeToMoveFirst, freeToMoveThen]);
-                possiblesCapturesSet = possiblesCapturesSet.addElement(captures);
+                possibleCapturesSets = possibleCapturesSets.addElement(captures);
             }
         }
-        return possiblesCapturesSet;
+        return possibleCapturesSets;
     }
 
     public static isValidCapture(state: PylosState, move: PylosMove, capture: PylosCoord): boolean {

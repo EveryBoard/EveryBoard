@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
-import { CoerceoState } from '../CoerceoState';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { CoerceoFailure } from '../CoerceoFailure';
+import { CoerceoMove, CoerceoRegularMove, CoerceoStep, CoerceoTileExchangeMove } from '../CoerceoMove';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { CoerceoState } from '../CoerceoState';
 
 describe('CoerceoRules', () => {
 
@@ -538,7 +540,7 @@ describe('CoerceoRules', () => {
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(18, 17));
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its game status
+            // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
@@ -561,7 +563,7 @@ describe('CoerceoRules', () => {
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(17, 18));
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its game status
+            // When checking the game status
             // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
@@ -591,7 +593,7 @@ describe('CoerceoRules', () => {
                 new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(6, 5));
             const node: CoerceoNode = new CoerceoNode(state);
 
-            // When evaluating its game status
+            // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, smallConfig);
         });

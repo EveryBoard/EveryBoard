@@ -1,26 +1,28 @@
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { AI, AIOptions } from '../../jscaip/AI/AI';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
+import { Coord } from '../../jscaip/Coord';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RelativePlayer } from '../../jscaip/RelativePlayer';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
+import { TaflConfig } from './TaflConfig';
+import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
 import { TaflMove } from './TaflMove';
+import { TaflMoveGenerator } from './TaflMoveGenerator';
 import { TaflPawn } from './TaflPawn';
+import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
+import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
+import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
-import { TaflConfig } from './TaflConfig';
-import { TaflMoveGenerator } from './TaflMoveGenerator';
-import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
-import { TaflPieceMinimax } from './TaflPieceMinimax';
-import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
-import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
-import { ChangeDetectorRef } from '@angular/core';
-import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { MCTSWithHeuristic } from 'src/app/jscaip/AI/MCTSWithHeuristic';
 
 export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     extends RectangularGameComponent<R, M, TaflState, TaflPawn, TaflConfig>
@@ -36,16 +38,25 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef,
-                       public generateMove: (start: Coord, end: Coord) => MGPFallible<M>)
-    {
-        super(messageDisplayer, cdr);
+    public constructor(public generateMove: (start: Coord, end: Coord) => MGPFallible<M>) {
+        super();
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.getState().getCopiedBoard();
         this.updateViewInfo();
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        const state: TaflState = this.getState();
+        const scoreZero: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
+        const scoreOne: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
     }
 
     public override async showLastMove(move: M): Promise<void> {
@@ -179,21 +190,30 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     public getClickables(): Coord[] {
+        if (this.chosen.isPresent()) {
+            const coord: Coord = this.chosen.get();
+            const state: TaflState = this.getState();
+            const config: TaflConfig = this.config.get();
+            return this.rules.getPossibleDestinations(coord, state, config);
+        } else {
+            return this.getInteractivePlayerPieces();
+        }
+    }
+
+    private getInteractivePlayerPieces(): Coord[] {
+        if (this.interactive === false) {
+            return [];
+        }
         const coords: Coord[] = [];
         for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isClickable(coord)) {
+                if (this.pieceBelongsToCurrentPlayer(coord)) {
                     coords.push(coord);
                 }
             }
         }
         return coords;
-    }
-
-    private isClickable(coord: Coord): boolean {
-        // Show if the piece can be clicked
-        return this.interactive && this.pieceBelongsToCurrentPlayer(coord);
     }
 
     public isInvader(x: number, y: number): boolean {

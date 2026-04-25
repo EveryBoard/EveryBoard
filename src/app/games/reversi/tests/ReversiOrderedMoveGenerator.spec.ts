@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ReversiMove } from '../ReversiMove';
-import { ReversiState } from '../ReversiState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
-import { ReversiOrderedMoveGenerator } from '../ReversiOrderedMoveGenerator';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { ReversiMove } from '../ReversiMove';
+import { ReversiOrderedMoveGenerator } from '../ReversiOrderedMoveGenerator';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
+import { ReversiState } from '../ReversiState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

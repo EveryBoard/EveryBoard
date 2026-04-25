@@ -1,20 +1,22 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/HexaLine';
-import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { GipfCapture } from '../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaLine } from '../../jscaip/HexaLine';
+import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { Table } from '../../jscaip/TableUtils';
+
+import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfState } from './GipfState';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GipfFailure } from './GipfFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export type GipfLegalityInformation = GipfState
 
@@ -128,14 +130,12 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             }
             newState = newState.setAt(coord, previousPiece);
         } else {
-            for (
-                let cur: Coord = placement.coord;
-                newState.isOnBoard(cur) && previousPiece !== FourStatePiece.EMPTY;
-                cur = cur.getNext(placement.direction.get()))
-            {
+            let cur: Coord = placement.coord;
+            while (newState.isOnBoard(cur) && previousPiece !== FourStatePiece.EMPTY) {
                 const curPiece: FourStatePiece = state.getPieceAt(cur);
                 newState = newState.setAt(cur, previousPiece);
                 previousPiece = curPiece;
+                cur = cur.getNext(placement.direction.get());
             }
         }
         const sidePieces: PlayerNumberMap = state.sidePieces.getCopy();
@@ -154,13 +154,11 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             const moved: Coord[] = [];
             moved.push(placement.coord);
             let cur: Coord = placement.coord.getNext(dir);
-            while (stateAfterCapture.isOnBoard(cur) &&
-                stateAfterCapture.getPieceAt(cur) !== FourStatePiece.EMPTY) {
+            while (stateAfterCapture.hasInequalPieceAt(cur, FourStatePiece.EMPTY)) {
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
-            Utils.assert(stateAfterCapture.isOnBoard(cur) &&
-                         stateAfterCapture.getPieceAt(cur) === FourStatePiece.EMPTY,
+            Utils.assert(stateAfterCapture.hasPieceAt(cur, FourStatePiece.EMPTY),
                          'getPiecesMoved called with an invalid placement performed on a full line');
             // This is the space filled by the last pushed piece
             moved.push(cur);
@@ -355,7 +353,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const dir: HexaDirection = linePortion[2];
         const oppositeDir: HexaDirection = dir.getOpposite();
         let cur: Coord = start.getNext(oppositeDir);
-        while (state.isOnBoard(cur) && state.getPieceAt(cur) !== FourStatePiece.EMPTY) {
+        while (state.hasInequalPieceAt(cur, FourStatePiece.EMPTY)) {
             // Go backwards to identify capturable pieces before the 4 aligned pieces
             capturable.push(cur);
             cur = cur.getNext(oppositeDir);
@@ -365,7 +363,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
             capturable.push(coord);
         }
         for (let coord: Coord = end;
-            state.isOnBoard(coord) && state.getPieceAt(coord) !== FourStatePiece.EMPTY;
+            state.hasInequalPieceAt(coord, FourStatePiece.EMPTY);
             coord = coord.getNext(dir))
         {
             // Go forward to identify capturable pieces after the 4 aligned pieces

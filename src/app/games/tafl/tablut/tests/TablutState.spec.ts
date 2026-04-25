@@ -1,8 +1,9 @@
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { TaflConfig } from '../../TaflConfig';
-import { TablutRules } from '../TablutRules';
-import { TaflState } from '../../TaflState';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerOrNone } from '../../../../jscaip/Player';
+import { TaflConfig } from '../../TaflConfig';
+import { TaflState } from '../../TaflState';
+import { TablutRules } from '../TablutRules';
 
 describe('TaflState', () => {
 

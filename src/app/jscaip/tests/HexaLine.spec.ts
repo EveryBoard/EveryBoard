@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
 import { HexaDirection } from '../HexaDirection';
 import { HexaLine } from '../HexaLine';
@@ -78,5 +79,5 @@ describe('HexaLine', () => {
             expect(HexaLine.constantQ(3).equals(HexaLine.constantR(3))).toBeFalse();
         });
     });
-});
 
+});

@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { AbaloneState } from '../AbaloneState';
-import { Player } from 'src/app/jscaip/Player';
-import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
+import { AbaloneState } from '../AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;

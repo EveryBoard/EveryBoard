@@ -1,12 +1,14 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
-import { OpenHexagonalGameState } from 'src/app/jscaip/state/OpenHexagonalGameState';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { ComparableObject, MGPMap, MGPOptional, ReversibleMap, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Player } from '../../jscaip/Player';
+import { Table } from '../../jscaip/TableUtils';
+import { Vector } from '../../jscaip/Vector';
+import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
+
 import { HivePiece, HivePieceStack } from './HivePiece';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class HiveRemainingPieces implements ComparableObject {
 
@@ -50,20 +52,22 @@ export class HiveRemainingPieces implements ComparableObject {
     }
     public toListOfStacks(): HivePieceStack[] {
         const remaining: HivePieceStack[] = [];
-        this.pieces.forEach((piece: {key: HivePiece, value: number}) => {
+        for (const [piece, value] of this.pieces) {
             const pieces: HivePiece[] = [];
-            for (let i: number = 0; i < piece.value; i++) {
-                pieces.push(piece.key);
+            for (let i: number = 0; i < value; i++) {
+                pieces.push(piece);
             }
             remaining.push(new HivePieceStack(pieces));
-        });
+        }
         return remaining;
     }
     public getPlayerPieces(player: Player): HivePiece[] {
         const remaining: HivePiece[] = [];
-        this.pieces.forEach((item: {key: HivePiece, value: number}) => {
-            if (item.key.owner === player && item.value > 0) remaining.push(item.key);
-        });
+        for (const [piece, value] of this.pieces) {
+            if (piece.owner === player && value > 0) {
+                remaining.push(piece);
+            }
+        }
         return remaining;
     }
 }

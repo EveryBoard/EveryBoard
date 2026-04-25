@@ -1,6 +1,7 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { MoveWithTwoCoords } from '../../../jscaip/MoveWithTwoCoords';
 import { TaflMove } from '../TaflMove';
 
 export class TablutMove extends TaflMove {

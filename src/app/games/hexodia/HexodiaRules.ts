@@ -1,20 +1,22 @@
 import { MGPValidation, MGPOptional, Utils, MGPMap } from '@everyboard/lib';
 
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { HexodiaState } from './HexodiaState';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { HexodiaMove } from './HexodiaMove';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { AbstractNInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { DodecaHexaDirection } from 'src/app/jscaip/DodecaHexaDirection';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { DodecaHexaDirection } from '../../jscaip/DodecaHexaDirection';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { AbstractNInARowHelper } from '../../jscaip/NInARowHelper';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
 
-export type HexodiaConfig = {
+import { HexodiaMove } from './HexodiaMove';
+import { HexodiaState } from './HexodiaState';
+
+export type HexodiaConfig = RulesConfig & {
 
     size: number;
 
@@ -124,7 +126,7 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
 
     public isLegalDrop(move: HexodiaMove, state: HexodiaState): MGPValidation {
         for (const coord of move.coords) {
-            if (state.isOnBoard(coord) === false) {
+            if (state.isNotOnBoard(coord)) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
             if (state.getPieceAt(coord).isPlayer()) {

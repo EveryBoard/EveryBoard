@@ -1,13 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { LoginComponent } from './login.component';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { Router } from '@angular/router';
-import { MGPValidation } from '@everyboard/lib';
 import { Observable, ReplaySubject } from 'rxjs';
+
+import { MGPValidation } from '@everyboard/lib';
+
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LobbyComponent } from '../lobby/lobby.component';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+
+import { LoginComponent } from './login.component';
 
 describe('LoginComponent', () => {
     let testUtils: SimpleComponentTestUtils<LoginComponent>;
@@ -51,7 +54,7 @@ describe('LoginComponent', () => {
             testUtils.detectChanges();
 
             // Then a redirection happens
-            expectValidRouting(router, ['/lobby'], LobbyComponent);
+            await expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
         it('should not redirect if it sees a non logged-in user', fakeAsync(async() => {
             spyOn(router, 'navigate').and.resolveTo();
@@ -66,6 +69,7 @@ describe('LoginComponent', () => {
             // Then there is no redirection
             expect(router.navigate).not.toHaveBeenCalled();
         }));
+
     });
     describe('doEmailLogin', () => {
         const email: string = 'jean@jaja.europe';
@@ -99,6 +103,7 @@ describe('LoginComponent', () => {
             // Then the error message is shown
             expect(getShownError()).toEqual('Error message');
         }));
+
     });
     describe('doGoogleLogin', () => {
         async function login(): Promise<void> {
@@ -124,6 +129,7 @@ describe('LoginComponent', () => {
             // Then the error message is shown
             expect(getShownError()).toEqual('Error message');
         }));
+
     });
     it('should unsubscribe from user upon destruction', fakeAsync(async() => {
         // Given the login component

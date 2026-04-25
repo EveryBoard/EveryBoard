@@ -1,4 +1,5 @@
 import { ArrayUtils, Utils } from '@everyboard/lib';
+
 import { Player } from '../Player';
 import { PlayerNumberMap } from '../PlayerMap';
 
@@ -14,14 +15,14 @@ export class BoardValue {
         return BoardValue.multiMetric(min);
     }
 
-    public static VICTORIES: number[] = [Number.MIN_SAFE_INTEGER, Number.MAX_SAFE_INTEGER];
+    public static VICTORIES: number[] = [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY];
 
     public static isVictory(score: number): boolean {
-        return score === Number.MAX_SAFE_INTEGER || score === Number.MIN_SAFE_INTEGER;
+        return score === Number.POSITIVE_INFINITY || score === Number.NEGATIVE_INFINITY;
     }
 
     public static isPreVictory(score: number): boolean {
-        return score === Number.MAX_SAFE_INTEGER - 1 || score === Number.MIN_SAFE_INTEGER + 1;
+        return score === Number.POSITIVE_INFINITY - 1 || score === Number.NEGATIVE_INFINITY + 1;
     }
 
     /**
@@ -79,13 +80,13 @@ export class BoardValue {
 
     public toMaximum(): BoardValue {
         const size: number = this.metrics.length;
-        const maximums: number[] = ArrayUtils.create(size, Number.MAX_SAFE_INTEGER);
+        const maximums: number[] = ArrayUtils.create(size, Number.POSITIVE_INFINITY);
         return BoardValue.multiMetric(maximums);
     }
 
     public toMinimum(): BoardValue {
         const size: number = this.metrics.length;
-        const minimums: number[] = ArrayUtils.create(size, Number.MIN_SAFE_INTEGER);
+        const minimums: number[] = ArrayUtils.create(size, Number.NEGATIVE_INFINITY);
         return BoardValue.multiMetric(minimums);
     }
 

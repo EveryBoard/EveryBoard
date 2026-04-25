@@ -11,12 +11,16 @@
       "schematics": {},
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser",
+          "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/everyboard",
+            "outputPath": {
+              "base": "dist/everyboard",
+              "browser": ""
+            },
             "index": "src/index.html",
-            "main": "src/main.ts",
-            "polyfills": "src/polyfills.ts",
+            "polyfills": [
+              "src/polyfills.ts"
+            ],
             "tsConfig": "src/tsconfig.app.json",
             "assets": [
               "src/favicon.ico",
@@ -35,18 +39,18 @@
               }
             ],
             "stylePreprocessorOptions": {
+              "sass": { "silenceDeprecations": ["import"] },
               "includePaths": [
                 "src/sass"
               ]
             },
             "scripts": [
             ],
-            "vendorChunk": true,
             "extractLicenses": false,
-            "buildOptimizer": false,
             "sourceMap": true,
             "optimization": false,
-            "namedChunks": true
+            "namedChunks": true,
+            "browser": "src/main.ts"
           },
           "configurations": {
             "production": {
@@ -67,17 +71,13 @@
               "outputHashing": "all",
               "sourceMap": false,
               "namedChunks": false,
-              "extractLicenses": true,
-              "vendorChunk": false,
-              "buildOptimizer": true
+              "extractLicenses": true
             },
             "debug": {
               "optimization": false,
               "sourceMap": true,
               "namedChunks": true,
               "extractLicenses": true,
-              "vendorChunk": true,
-              "buildOptimizer": false,
               "baseHref": "/",
               "budgets": [
                 {
@@ -175,7 +175,7 @@
                   "replace": "src/environments/environment.ts",
                   "with": "src/environments/environment.local.ts"
                 }
-              ],
+              ]
             },
             "ci": {
               "fileReplacements": [
@@ -209,27 +209,6 @@
           "fr": "translations/messages.fr.xlf"
         }
       }
-    },
-    "everyboard-e2e": {
-      "root": "e2e/",
-      "projectType": "application",
-      "architect": {
-        "e2e": {
-          "builder": "@angular-devkit/build-angular:protractor",
-          "options": {
-            "protractorConfig": "e2e/protractor.conf.js"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "everyboard:serve:production"
-            },
-            "development": {
-              "devServerTarget": "everyboard:serve:development"
-            }
-          },
-          "defaultConfiguration": "development"
-        }
-      }
     }
   },
   "cli": {
@@ -241,6 +220,30 @@
     },
     "@angular-eslint/schematics:library": {
       "setParserOptionsProject": true
+    },
+    "@schematics/angular:component": {
+      "type": "component"
+    },
+    "@schematics/angular:directive": {
+      "type": "directive"
+    },
+    "@schematics/angular:service": {
+      "type": "service"
+    },
+    "@schematics/angular:guard": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:interceptor": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:module": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:pipe": {
+      "typeSeparator": "."
+    },
+    "@schematics/angular:resolver": {
+      "typeSeparator": "."
     }
   }
 }

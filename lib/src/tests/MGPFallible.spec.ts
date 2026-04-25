@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible, MGPFallibleTestUtils } from '../MGPFallible';
+import { MGPFallible } from '../MGPFallible';
 import { MGPOptional } from '../MGPOptional';
+
+import { MGPFallibleTestUtils } from './MGPFallibleTestUtils';
 
 describe('MGPFallible', () => {
 
@@ -35,6 +37,10 @@ describe('MGPFallible', () => {
             expect(value.equals(MGPFallible.failure('foo'))).toBeFalse();
         });
 
+        it('should support mapping a function over', () => {
+            expect(value.map((x: number): string => x.toString())).toEqual(MGPFallible.success('42'));
+        });
+
         it('should be convertible to string', () => {
             expect(value.toString()).toBe('MGPFallible.success(42)');
         });
@@ -63,6 +69,10 @@ describe('MGPFallible', () => {
             expect(value.getReasonOr('foo')).toBe('reason');
         });
 
+        it('should support mapping a function over', () => {
+            expect(value.map((x: number): string => x.toString())).toEqual(value);
+        });
+
         it('should have a well-defined equality', () => {
             expect(value.equals(value)).toBeTrue();
             expect(value.equals(MGPFallible.success(41))).toBeFalse();
@@ -79,6 +89,7 @@ describe('MGPFallible', () => {
             }
         });
     });
+
 });
 
 
@@ -94,4 +105,5 @@ describe('MGPFallibleTestUtils', () => {
     it('should detect failure', () => {
         MGPFallibleTestUtils.expectToBeFailure(MGPFallible.failure('error'), 'error');
     });
+
 });

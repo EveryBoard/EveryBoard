@@ -1,19 +1,22 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { ReversiState } from './ReversiState';
+
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { ReversiMove } from './ReversiMove';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+import { MGPValidators } from '../../utils/MGPValidator';
+
 import { ReversiFailure } from './ReversiFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
+import { ReversiMove } from './ReversiMove';
+import { ReversiState } from './ReversiState';
 
 export type ReversiLegalityInformation = Coord[];
 
@@ -26,9 +29,12 @@ export class ReversiMoveWithSwitched {
 
 export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
-export type ReversiConfig = {
-    width: number,
-    height: number,
+export type ReversiConfig = RulesConfig & {
+
+    width: number;
+
+    height: number;
+
 };
 
 @Debug.log
@@ -100,13 +106,11 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
 
         for (const direction of Ordinal.ORDINALS) {
             const firstSpace: Coord = move.coord.getNext(direction);
-            if (state.isOnBoard(firstSpace)) {
-                if (state.getPieceAt(firstSpace) === opponent) {
-                    // let's test this direction
-                    const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
-                    for (const switched of switchedInDir) {
-                        switcheds.push(switched);
-                    }
+            if (state.hasPieceAt(firstSpace, opponent)) {
+                // let's test this direction
+                const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
+                for (const switched of switchedInDir) {
+                    switcheds.push(switched);
                 }
             }
         }
@@ -209,8 +213,8 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             }
         }
         if (moves.length === 0) {
-            // When the user cannot start, his only move is to pass, which he cannot do otherwise
-            // board unchanged, only the turn changed "pass"
+            // When the user cannot move, their only move is to pass, which they cannot do otherwise
+            // The board remains unchanged, only the turn changed, and the move is a "pass"
             moves.push(new ReversiMoveWithSwitched(ReversiMove.PASS, 0));
         }
         return moves;

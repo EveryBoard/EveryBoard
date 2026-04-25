@@ -1,8 +1,9 @@
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { TaflConfig } from '../../TaflConfig';
-import { HnefataflRules } from '../HnefataflRules';
-import { TaflState } from '../../TaflState';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerOrNone } from '../../../../jscaip/Player';
+import { TaflConfig } from '../../TaflConfig';
+import { TaflState } from '../../TaflState';
+import { HnefataflRules } from '../HnefataflRules';
 
 const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
 

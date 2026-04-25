@@ -1,8 +1,10 @@
-import { GameStateWithTable } from './GameStateWithTable';
-import { Player } from '../Player';
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
 import { FourStatePiece } from '../FourStatePiece';
+import { Player } from '../Player';
 
+import { GameStateWithTable } from './GameStateWithTable';
 
 export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourStatePiece> {
 
@@ -19,4 +21,36 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
                 };
             });
     }
+
+    public isPlayerAt(coord: Coord): boolean {
+        const piece: FourStatePiece = this.getPieceAt(coord);
+        return piece.isPlayer();
+    }
+
+    public hasPieceBelongingTo(coord: Coord, player: Player): boolean {
+        const optional: MGPOptional<FourStatePiece> = this.getOptionalPieceAt(coord);
+        if (optional.isPresent()) {
+            return optional.get().is(player);
+        } else {
+            return false;
+        }
+    }
+
+    public coordIsOccupiedSquare(coord: Coord): boolean {
+        const optional: MGPOptional<FourStatePiece> = this.getOptionalPieceAt(coord);
+        if (optional.isPresent()) {
+            return optional.get().isPlayer();
+        } else {
+            return false;
+        }
+    }
+
+    public override isOnBoard(coord: Coord): boolean {
+        if (super.isOnBoard(coord)) {
+            return this.getUnsafe(coord) !== FourStatePiece.UNREACHABLE;
+        } else {
+            return false;
+        }
+    }
+
 }

@@ -1,18 +1,20 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class LinesOfActionNode extends GameNode<LinesOfActionMove, LinesOfActionState> {}
 
@@ -100,10 +102,10 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         if (piece === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (move.length() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
+        if (move.getDistance() !== this.numberOfPiecesOnLine(state, move.getStart(), move.direction)) {
             return MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH());
         }
-        if (move.getStart().getCoordsToward(move.getEnd()).some((c: Coord) =>
+        if (move.getJumpedOverCoords().some((c: Coord) =>
             state.getPieceAt(c) === state.getCurrentOpponent()))
         {
             return MGPValidation.failure(LinesOfActionFailure.CANNOT_JUMP_OVER_OPPONENT());

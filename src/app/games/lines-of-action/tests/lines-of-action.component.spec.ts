@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { LinesOfActionComponent } from '../lines-of-action.component';
-import { LinesOfActionMove } from '../LinesOfActionMove';
+
+import { Coord } from '../../../jscaip/Coord';
+import { DirectionFailure } from '../../../jscaip/Direction';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
-import { LinesOfActionState } from '../LinesOfActionState';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { DirectionFailure } from 'src/app/jscaip/Direction';
+import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionState } from '../LinesOfActionState';
+import { LinesOfActionComponent } from '../lines-of-action.component';
 
 describe('LinesOfActionComponent', () => {
 
@@ -62,6 +63,7 @@ describe('LinesOfActionComponent', () => {
             // Then the piece should be shown as selected
             testUtils.expectElementToHaveClass('#piece_2_0', 'selected-stroke');
         }));
+
     });
 
     describe('Second click', () => {
@@ -132,6 +134,7 @@ describe('LinesOfActionComponent', () => {
             // Then it should no longer be selected
             testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
         }));
+
     });
 
     it('should hide first move when taking back', fakeAsync(async() => {

@@ -1,19 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
 import { MGPOptional } from '@everyboard/lib';
-import { GoComponent } from '../go.component';
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoState } from 'src/app/games/gos/GoState';
+
+import { Coord } from '../../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { TableUtils, Table } from '../../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { GoMove } from '../../GoMove';
+import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
-import { TableUtils, Table } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GoState } from '../../GoState';
 import { GoConfig, GoRules } from '../GoRules';
+import { GoComponent } from '../go.component';
 
 describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
+    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -43,7 +47,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'PLAYING');
+        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
@@ -69,10 +73,15 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
         ];
         const state: GoState =
-            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), 'COUNTING');
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
+        const config: MGPOptional<GoConfig> = MGPOptional.of({
+            ...defaultConfig.get(),
+            width: 5,
+            height: 5,
+        });
 
         // When rendering it
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config });
 
         // Then it should render the dead
         testUtils.expectElementToExist('#ko-0-0');
@@ -85,7 +94,7 @@ describe('GoComponent', () => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
 
             // When displaying it
             await testUtils.setupState(state);
@@ -103,11 +112,15 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 13, width: 13 });
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const config: MGPOptional<GoConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                height: 13,
+                width: 13,
+            });
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, { config });
 
             // Then it should have hoshi in (3, 3) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi-3-3'); // Left Up
@@ -123,11 +136,15 @@ describe('GoComponent', () => {
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 9, width: 9 });
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const config: MGPOptional<GoConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                height: 9,
+                width: 9,
+            });
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state, { config: customConfig });
+            await testUtils.setupState(state, { config });
 
             // Then it should have hoshi in (2, 2) and (cx, 2) and the 4 central symmetric ones
             testUtils.expectElementToExist('#hoshi-2-2'); // Left Up
@@ -143,8 +160,12 @@ describe('GoComponent', () => {
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
             // Given a (odd x odd) board
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 9, width: 9 });
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const config: MGPOptional<GoConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                height: 9,
+                width: 9,
+            });
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
             await testUtils.setupState(state);
@@ -155,17 +176,21 @@ describe('GoComponent', () => {
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
             // Given a (even x even) board
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ handicap: 0, height: 10, width: 10 });
-            const state: GoState = GoRules.get().getInitialState(customConfig);
+            const config: MGPOptional<GoConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                height: 10,
+                width: 10,
+            });
+            const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
-            await testUtils.setupState(state);
+            await testUtils.setupState(state, { config });
 
             // Then it should not have a tengen
             testUtils.expectElementNotToExist('#hoshi-4-4'); // upper left potential tengen
             testUtils.expectElementNotToExist('#hoshi-4-5'); // down left potential tengen
             testUtils.expectElementNotToExist('#hoshi-5-5'); // down right potential tengen
-            testUtils.expectElementNotToExist('#hoshi-5-4'); // upper right potentiel tengen
+            testUtils.expectElementNotToExist('#hoshi-5-4'); // upper right potential tengen
         }));
 
     });

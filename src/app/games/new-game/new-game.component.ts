@@ -1,15 +1,17 @@
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
-import { NewGameMove } from './NewGameMove';
-import { NewGameState } from './NewGameState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { NewGameMoveGenerator } from './NewGameMoveGenerator';
-import { NewGameMinimax } from './NewGameMinimax';
+import { Component } from '@angular/core';
+
 import { MGPOptional } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+
+import { NewGameMinimax } from './NewGameMinimax';
+import { NewGameMove } from './NewGameMove';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
+import { NewGameState } from './NewGameState';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
@@ -36,8 +38,8 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * It must set up the `rules`, `encoder`, `node`, and `availableMinimaxes` fields.
      * The minimax list can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('NewGame');
         this.availableAIs = [
             new NewGameMinimax(),

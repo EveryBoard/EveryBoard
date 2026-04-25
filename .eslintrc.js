@@ -14,6 +14,7 @@ module.exports = {
         plugins: [
             '@typescript-eslint',
             'jasmine',
+            'import',
         ],
         extends: [
             'eslint:recommended',
@@ -23,6 +24,30 @@ module.exports = {
             'plugin:jasmine/recommended',
         ],
         rules: {
+            "import/order": [
+                "error", {
+                    "groups": [
+                        "builtin",
+                        "external",
+                        "internal",
+                        "parent",
+                        ["sibling", "index"]
+                    ],
+                    "pathGroups": [
+                        {
+                            "pattern": "@everyboard/**",
+                            "group": "internal",
+                            "position": "after"
+                        }
+                    ],
+                    "pathGroupsExcludedImportTypes": ["builtin"],
+                    "newlines-between": "always",
+                    "alphabetize": {
+                        "order": "asc",
+                        "caseInsensitive": false
+                    }
+                }
+            ],
             '@typescript-eslint/no-floating-promises': ['error'],
             'jasmine/no-unsafe-spy': ['off'],
             'jasmine/no-expect-in-setup-teardown': ['off'],
@@ -44,8 +69,11 @@ module.exports = {
             '@typescript-eslint/no-unnecessary-type-constraint': ['warn'],
             '@typescript-eslint/prefer-for-of': ['warn'],
             '@typescript-eslint/prefer-nullish-coalescing': ['warn'],
-            '@typescript-eslint/prefer-readonly': ['warn'],
-            '@typescript-eslint/switch-exhaustiveness-check': ['warn'],
+            '@typescript-eslint/prefer-readonly': ['error'],
+            '@typescript-eslint/switch-exhaustiveness-check': [
+                'warn',
+                { 'allowDefaultCaseForExhaustiveSwitch': true, 'considerDefaultExhaustiveForUnions': true }
+            ],
             '@typescript-eslint/no-unused-expressions': ['warn'],
             '@typescript-eslint/no-unused-vars': ['warn'],
             '@typescript-eslint/no-useless-constructor': ['warn'],
@@ -71,6 +99,12 @@ module.exports = {
             '@typescript-eslint/no-redeclare': [
                 'error',
                 { 'ignoreDeclarationMerge': true },
+            ],
+            '@typescript-eslint/explicit-member-accessibility': [
+                'error',
+                {
+                    accessibility: 'explicit', // require public/private/protected everywhere
+                },
             ],
             'dot-notation': ['warn'],
             'max-len': ['error', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],

@@ -1,25 +1,29 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
-import { KamisadoMove, KamisadoPieceMove } from 'src/app/games/kamisado/KamisadoMove';
-import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
-import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
-import { Player } from 'src/app/jscaip/Player';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
+
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
+import { KamisadoBoard } from './KamisadoBoard';
+import { KamisadoFailure } from './KamisadoFailure';
 import { KamisadoMinimax } from './KamisadoMinimax';
+import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
+import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
+import { KamisadoPiece } from './KamisadoPiece';
+import { KamisadoRules } from './KamisadoRules';
+import { KamisadoState } from './KamisadoState';
 
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
                                                                 KamisadoMove,
@@ -32,8 +36,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
     public chosenAutomatically: boolean = false;
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Kamisado');
         this.availableAIs = [
             new KamisadoMinimax(),
@@ -59,7 +63,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         return this.getPlayerClass(piece.player);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: KamisadoState = this.getState();
         this.board = state.getCopiedBoard();
 

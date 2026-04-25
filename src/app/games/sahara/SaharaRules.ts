@@ -1,21 +1,22 @@
-import { Rules } from 'src/app/jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
+import { ArrayUtils, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Player } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { Debug } from '../../utils/Debug';
+
+import { SaharaFailure } from './SaharaFailure';
 import { SaharaMove } from './SaharaMove';
 import { SaharaState } from './SaharaState';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { TriangularGameState } from 'src/app/jscaip/state/TriangularGameState';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { SaharaFailure } from './SaharaFailure';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Debug } from 'src/app/utils/Debug';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class SaharaNode extends GameNode<SaharaMove, SaharaState> {}
 
@@ -64,30 +65,37 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         return new SaharaState(board, 0);
     }
 
-    public static getStartingCoords(board: Table<FourStatePiece>, player: Player): Coord[] {
+    public getStartingCoords(state: SaharaState, player: Player): Coord[] {
         const startingCoords: Coord[] = [];
-        for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
-            for (let x: number = 0; x < SaharaState.WIDTH; x++) {
-                if (board[y][x].is(player)) {
-                    startingCoords.push(new Coord(x, y));
-                }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            if (coordAndContent.content.is(player)) {
+                startingCoords.push(coordAndContent.coord);
             }
         }
         return startingCoords;
     }
 
-    public static getBoardValuesFor(board: Table<FourStatePiece>, player: Player): number[] {
-        const playersPiece: Coord[] = SaharaRules.getStartingCoords(board, player);
-        const playerFreedoms: number[] = [];
+    public getBoardValueByPiece(state: SaharaState, player: Player): MGPMap<Coord, number> {
+        const playersPiece: Coord[] = this.getStartingCoords(state, player);
+        const playerFreedoms: MGPMap<Coord, number> = new MGPMap();
         for (const piece of playersPiece) {
             const freedoms: number =
-                TriangularGameState.getEmptyNeighbors(board, piece, FourStatePiece.EMPTY).length;
-            if (freedoms === 0) {
-                return [0, 0, 0, 0, 0, 0]; // Because there are 6 pieces
-            }
-            playerFreedoms.push(freedoms);
+                TriangularGameState.getEmptyNeighbors(state.board, piece, FourStatePiece.EMPTY).length;
+            playerFreedoms.set(piece, freedoms);
         }
-        return playerFreedoms.sort((a: number, b: number) => a - b);
+        return playerFreedoms;
+    }
+
+    /**
+     * @param state the evaluated state
+     * @param player the player for which returned values apply
+     * @returns a sorted table of the freedom of player's pieces
+     */
+    public getBoardValuesFor(state: SaharaState, player: Player): number[] {
+        const playerFreedomsMap: MGPMap<Coord, number> = this.getBoardValueByPiece(state, player);
+        const playerFreedomsValue: number[] = playerFreedomsMap.getValueList();
+        ArrayUtils.sortByDescending(playerFreedomsValue, (value: number) => -value);
+        return playerFreedomsValue;
     }
 
     public override applyLegalMove(move: SaharaMove,
@@ -104,6 +112,10 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
     }
 
     public override isLegal(move: SaharaMove, state: SaharaState): MGPValidation {
+        const coordsValidity: MGPValidation = this.getCoordsValidity(move, state);
+        if (coordsValidity.isFailure()) {
+            return coordsValidity;
+        }
         const movedPawn: FourStatePiece = state.getPieceAt(move.getStart());
         if (movedPawn.is(state.getCurrentPlayer()) === false) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
@@ -125,27 +137,36 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
     }
 
-    public override getGameStatus(node: SaharaNode): GameStatus {
-        const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
-        const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
-        const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
-        return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+    private getCoordsValidity(move: SaharaMove, state: SaharaState): MGPValidation {
+        if (state.isNotOnBoard(move.getStart())) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getStart()));
+        } else if (state.isNotOnBoard(move.getEnd())) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getEnd()));
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
 
-    public getLandingCoords(board: Table<FourStatePiece>, coord: Coord): Coord[] {
-        const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
-            return SaharaState.isOnBoard(c) &&
-                   board[c.y][c.x] === FourStatePiece.EMPTY;
-        };
+    public override getGameStatus(node: SaharaNode): GameStatus {
+        const board: SaharaState = node.gameState;
+        const zeroFreedoms: number[] = this.getBoardValuesFor(board, Player.ZERO);
+        const oneFreedoms: number[] = this.getBoardValuesFor(board, Player.ONE);
+        return this.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+    }
+
+    private getLandingCoordsMatching(coord: Coord, state: SaharaState, premise: (c: Coord) => boolean): Coord[] {
         const landings: CoordSet =
-            new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(isOnBoardAndEmpty));
+            new CoordSet(TriangularCheckerBoard.getNeighbors(coord).filter(premise));
         if (TriangularCheckerBoard.isSpaceDark(coord)) {
             return landings.toList();
         } else {
             let farLandings: CoordSet = new CoordSet(landings.toList()); // Deep copy
-            for (const neighbor of landings) {
+            const emptyNeighbors: CoordSet = landings.filter(
+                (c: Coord) => state.getPieceAt(c).equals(FourStatePiece.EMPTY),
+            );
+            for (const neighbor of emptyNeighbors) {
                 const secondStepNeighbors: Coord[] =
-                    TriangularCheckerBoard.getNeighbors(neighbor).filter(isOnBoardAndEmpty);
+                    TriangularCheckerBoard.getNeighbors(neighbor).filter(premise);
                 for (const secondStepNeighbor of secondStepNeighbors) {
                     farLandings = farLandings.addElement(secondStepNeighbor);
                 }
@@ -154,7 +175,22 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
         }
     }
 
-    public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
+    public getLegalLandingCoords(state: SaharaState, coord: Coord): Coord[] {
+        const isOnBoardAndEmpty: (c: Coord) => boolean = (c: Coord) => {
+            return state.hasPieceAt(c, FourStatePiece.EMPTY);
+        };
+        return this.getLandingCoordsMatching(coord, state, isOnBoardAndEmpty);
+    }
+
+    public getValidLandingCoords(state: SaharaState, coord: Coord): Coord[] {
+        const isOnBoardAndReachable: (c: Coord) => boolean = (c: Coord) => {
+            return state.isOnBoard(c) &&
+                   state.getPieceAt(c).equals(FourStatePiece.UNREACHABLE) === false;
+        };
+        return this.getLandingCoordsMatching(coord, state, isOnBoardAndReachable);
+    }
+
+    public getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
         if (zeroFreedoms[0] === 0) {
             return GameStatus.ONE_WON;
         } else if (oneFreedoms[0] === 0) {

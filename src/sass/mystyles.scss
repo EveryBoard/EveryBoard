@@ -30,6 +30,10 @@ html {
     min-height: 100%;
 }
 
+.primary-fg {
+    color: var(--primary);
+}
+
 .player0-bg {
     background-color: var(--player0);
 }
@@ -67,16 +71,6 @@ html {
 }
 .game-card:hover .is-overlay {
     opacity: 1;
-}
-.game-card .game-image-buttons {
-    top: auto;
-}
-.game-card .game-image-text {
-    top: 38%;
-    color: black;
-    -webkit-text-fill-color: white; /* Will override color (regardless of order) */
-    -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: black;
 }
 
 .tabs .disabled-tab {

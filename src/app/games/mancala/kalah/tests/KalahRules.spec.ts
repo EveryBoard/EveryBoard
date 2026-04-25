@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { KalahRules } from '../KalahRules';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaState } from '../../common/MancalaState';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
-import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaState } from '../../common/MancalaState';
+import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
+import { KalahRules } from '../KalahRules';
 
 describe('KalahRules', () => {
 
@@ -161,7 +163,7 @@ describe('KalahRules', () => {
                                MancalaDistribution.of(5),
                            ]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [0, 1, 6, 3, 1, 0],
@@ -334,7 +336,7 @@ describe('KalahRules', () => {
                                MancalaDistribution.of(1),
                            ]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
@@ -383,7 +385,7 @@ describe('KalahRules', () => {
             // When applying that move
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(4)]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 2, 2, 0, 2, 0],
                 [3, 1, 0, 1, 0, 0],

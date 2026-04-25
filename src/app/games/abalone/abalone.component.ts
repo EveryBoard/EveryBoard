@@ -1,27 +1,31 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { Arrow } from '../../components/game-components/arrow-component/Arrow';
+import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
+import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Direction } from '../../jscaip/Direction';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaLayout } from '../../jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { AbaloneFailure } from './AbaloneFailure';
-import { AbaloneState } from './AbaloneState';
 import { AbaloneMove } from './AbaloneMove';
-import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Arrow } from 'src/app/components/game-components/arrow-component/Arrow';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
 import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
+import { AbaloneState } from './AbaloneState';
 
 type CapturedInfo = {
     coord: Coord,
@@ -41,6 +45,7 @@ type AbaloneArrowInfo = {
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, HexArrowComponent],
 })
 export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                                              AbaloneMove,
@@ -63,8 +68,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         .getCoordsAndContents()
         .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getOrdinalNeighbors())).toList();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Abalone');
         this.availableAIs = [
             new AbaloneScoreMinimax(),
@@ -88,6 +93,10 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                                          PointyHexaOrientation.INSTANCE);
     }
 
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
     public getViewBox(): ViewBox {
         const abstractSize: number = this.getState().getWidth() + 2;
         const pieceSize: number = this.SPACE_SIZE * 1.5;
@@ -101,7 +110,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return new ViewBox(left, up, width, height);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.hexaBoard = this.getState().getCopiedBoard();
         this.scores = MGPOptional.of(this.getState().getScores());
     }
@@ -129,11 +138,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         let moved: Coord = move.coord;
         this.moveds = [moved];
         moved = moved.getNext(move.dir);
-        while (AbaloneState.isOnBoard(moved) && previousState.isPiece(moved)) {
+        while (previousState.coordIsOccupiedSquare(moved)) {
             this.moveds.push(moved);
             moved = moved.getNext(move.dir);
         }
-        if (AbaloneState.isOnBoard(moved)) {
+        if (previousState.isOnBoard(moved)) {
             this.moveds.push(moved);
         } else {
             const fallenPieceCoord: Coord = moved.getPrevious(move.dir);
@@ -153,7 +162,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         while (processed.equals(last) === false) {
             this.moveds.push(processed);
             const landing: Coord = processed.getNext(move.dir);
-            if (AbaloneState.isOnBoard(landing)) {
+            if (this.getState().isOnBoard(landing)) {
                 this.moveds.push(landing);
             } else {
                 // Since only current player could have translated out their pieces
@@ -253,7 +262,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
             const state: AbaloneState = this.getState();
             const currentPlayer: Player = state.getCurrentPlayer();
             let pointed: Coord = end;
-            while (state.isOnBoard(pointed) && state.getPieceAt(pointed).is(currentPlayer)) {
+            while (state.hasPieceBelongingTo(pointed, currentPlayer)) {
                 pointed = pointed.getNext(direction, 1);
             }
             return pointed;
@@ -264,10 +273,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     public isReachable(c: FourStatePiece): boolean {
         return c !== FourStatePiece.UNREACHABLE;
-    }
-
-    public isPiece(c: FourStatePiece): boolean {
-        return c !== FourStatePiece.EMPTY;
     }
 
     private async secondClick(coord: Coord): Promise<MGPValidation> {

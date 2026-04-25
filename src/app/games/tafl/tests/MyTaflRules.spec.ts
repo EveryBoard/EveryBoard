@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { TaflNode, TaflRules } from '../TaflRules';
-import { MyTaflMove } from './MyTaflMove.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+
+import { BooleanConfig, RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
+import { TaflNode, TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
+
+import { MyTaflMove } from './MyTaflMove.spec';
 
 export class MyTaflNode extends TaflNode<MyTaflMove> {}
 
@@ -16,7 +18,7 @@ export class MyTaflRules extends TaflRules<MyTaflMove> {
         new RulesConfigDescription<TaflConfig>({
             name: (): string => `MyTafl`,
             config: {
-                castleIsLeftForGood: new BooleanConfig(true, () => $localize`Central throne is left for good`),
+                canReturnToCastle: new BooleanConfig(false, () => $localize`Central throne is left for good`),
                 edgesAreKingsEnnemy: new BooleanConfig(true, () => $localize`Edges are king's ennemy`),
                 centralThroneCanSurroundKing: new BooleanConfig(true, () => $localize`Central throne can surround king`),
                 kingFarFromHomeCanBeSandwiched: new BooleanConfig(true, () => $localize`King far from home can be sandwiched`),

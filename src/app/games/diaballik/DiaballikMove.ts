@@ -1,11 +1,13 @@
-import { Move } from 'src/app/jscaip/Move';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Vector } from 'src/app/jscaip/Vector';
+
+import { Coord } from '../../jscaip/Coord';
+import { Move } from '../../jscaip/Move';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Vector } from '../../jscaip/Vector';
+
 import { DiaballikFailure } from './DiaballikFailure';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 
 export class DiaballikBallPass extends MoveCoordToCoord {
 
@@ -69,11 +71,11 @@ type PassesAndTranslations = {
 
 export class DiaballikMove extends Move {
 
-    private static subMoveEncoder: Encoder<DiaballikSubMove> = Encoder.disjunction(
+    private static readonly subMoveEncoder: Encoder<DiaballikSubMove> = Encoder.disjunction(
         [isTranslation, isBallPass],
         [DiaballikTranslation.encoder, DiaballikBallPass.encoder]);
 
-    private static subMoveOptionalEncoder: Encoder<MGPOptional<DiaballikSubMove>> =
+    private static readonly subMoveOptionalEncoder: Encoder<MGPOptional<DiaballikSubMove>> =
         MGPOptional.getEncoder(DiaballikMove.subMoveEncoder);
 
     public static encoder: Encoder<DiaballikMove> = Encoder.tuple(

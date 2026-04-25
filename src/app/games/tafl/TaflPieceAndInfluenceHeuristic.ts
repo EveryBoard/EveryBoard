@@ -1,17 +1,19 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPMap, MGPOptional, Set, Utils } from '@everyboard/lib';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Orthogonal } from '../../jscaip/Orthogonal';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
+import { TaflConfig } from './TaflConfig';
+import { TaflMove } from './TaflMove';
 import { TaflPawn } from './TaflPawn';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 import { TaflNode } from './TaflRules';
 import { TaflState } from './TaflState';
-import { TaflMove } from './TaflMove';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TaflPieceHeuristic } from './TaflPieceHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { TaflConfig } from './TaflConfig';
 
 export type PointValue = {
     width: number;
@@ -45,7 +47,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                     let influence: number = 0;
                     for (const dir of Orthogonal.ORTHOGONALS) {
                         let testedCoord: Coord = coord.getNext(dir, 1);
-                        while (state.isOnBoard(testedCoord) && state.getPieceAt(testedCoord) === empty) {
+                        while (state.hasPieceAt(testedCoord, empty)) {
                             influence++;
                             testedCoord = testedCoord.getNext(dir, 1);
                         }
@@ -115,13 +117,10 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
                         continue;
                     }
                     let futureCapturer: Coord = coord.getNext(dir, 1);
-                    while (state.isOnBoard(futureCapturer) &&
-                           state.getPieceAt(futureCapturer) === TaflPawn.UNOCCUPIED)
-                    {
+                    while (state.hasPieceAt(futureCapturer, TaflPawn.UNOCCUPIED)) {
                         futureCapturer = futureCapturer.getNext(captureDirection);
                     }
-                    if (state.isOnBoard(futureCapturer) &&
-                        state.getAbsoluteOwner(futureCapturer) === threatenerPlayer &&
+                    if (state.hasOwnerAt(futureCapturer, threatenerPlayer) &&
                         coord.getNext(dir, 1).equals(futureCapturer) === false)
                     {
                         movingThreats.push(futureCapturer);
@@ -134,7 +133,7 @@ export class TaflPieceAndInfluenceHeuristic<M extends TaflMove> extends TaflPiec
     }
 
     protected isAThreat(coord: Coord, state: TaflState, opponent: Player): boolean {
-        if (state.isOnBoard(coord) === false) {
+        if (state.isNotOnBoard(coord)) {
             return false;
         }
         if (state.getAbsoluteOwner(coord) === opponent) {

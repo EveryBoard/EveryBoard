@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { CoordFailure } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { DiaballikFailure } from '../DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player } from 'src/app/jscaip/Player';
-import { DiaballikFailure } from '../DiaballikFailure';
-import { CoordFailure } from '../../../jscaip/Coord';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikRules', () => {
 
@@ -100,7 +102,7 @@ describe('DiaballikRules', () => {
                               MGPOptional.of(DiaballikTranslation.from(new Coord(1, 5), new Coord(1, 4)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(1, 4)).get()));
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -123,7 +125,7 @@ describe('DiaballikRules', () => {
                               MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()));
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -146,7 +148,7 @@ describe('DiaballikRules', () => {
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 6)).get()),
                               empty);
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -169,7 +171,7 @@ describe('DiaballikRules', () => {
                               empty,
                               empty);
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -192,7 +194,7 @@ describe('DiaballikRules', () => {
                               MGPOptional.of(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get()),
                               empty);
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -212,7 +214,7 @@ describe('DiaballikRules', () => {
         // When doing a move containing one translation and no pass
         const move: DiaballikMove = getTranslationMove(new Coord(1, 6), new Coord(1, 5));
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -235,7 +237,7 @@ describe('DiaballikRules', () => {
                               MGPOptional.of(DiaballikBallPass.from(new Coord(3, 6), new Coord(2, 5)).get()),
                               MGPOptional.of(DiaballikTranslation.from(new Coord(3, 6), new Coord(3, 5)).get()));
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: DiaballikState = new DiaballikState([
             [X, X, X, Ẋ, X, X, X],
             [_, _, _, _, _, _, _],
@@ -378,8 +380,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect a victory for the blocked player
+            // When checking the game status
+            // Then it should be a victory for Player.ONE (who is blocked)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -395,9 +397,9 @@ describe('DiaballikRules', () => {
                 [_, _, O, Ȯ, O, _, O],
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
-            // When checking for victory
 
-            // Then it should detect a victory for the blocked player
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO (who is blocked)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -414,8 +416,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect a defeat for the current player (here, zero loses so one wins)
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -432,8 +434,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect the victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -450,8 +452,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect the victory
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

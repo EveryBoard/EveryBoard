@@ -1,12 +1,14 @@
-import { KamisadoMove } from './KamisadoMove';
-import { KamisadoState } from './KamisadoState';
-import { KamisadoNode, KamisadoRules } from './KamisadoRules';
 import { ArrayUtils, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { KamisadoBoard } from './KamisadoBoard';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { KamisadoMove } from './KamisadoMove';
+import { KamisadoNode, KamisadoRules } from './KamisadoRules';
+import { KamisadoState } from './KamisadoState';
 
 export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoState> {
 
@@ -20,7 +22,7 @@ export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoS
             return [KamisadoMove.PASS];
         } else {
             const moves: KamisadoMove[] = this.getListMovesFromNonBlockedState(state, movablePieces);
-            ArrayUtils.sortByDescending(moves, (move: KamisadoMove): number => move.length());
+            ArrayUtils.sortByDescending(moves, (move: KamisadoMove): number => move.getDistance());
             return moves;
         }
     }
@@ -36,7 +38,7 @@ export class KamisadoMoveGenerator extends MoveGenerator<KamisadoMove, KamisadoS
                 // For each direction, create a move of i in that direction
                 for (let stepSize: number = 1; stepSize < KamisadoBoard.SIZE; stepSize++) {
                     const endCoord: Coord = startCoord.getNext(dir, stepSize);
-                    if (state.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(state.board, endCoord)) {
+                    if (state.isEmptyAt(endCoord)) {
                         // Check if the move can be done, and if so,
                         // add the resulting state to the map to be returned
                         const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);

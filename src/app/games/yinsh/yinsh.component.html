@@ -2,85 +2,88 @@
      class="board"
      viewBox="0 250 1065 1060"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of hexaBoard; index as y">
-        <g *ngFor="let space of line; index as x">
-            <g id="click_{{ x }}_{{ y }}"
-               *ngIf="space.isReachable()"
-               (click)="onClick(x, y)"
-            >
-                <polygon id="space_{{ x }}_{{ y }}"
-                         [attr.points]="getHexaPoints()"
-                         [attr.transform]="getHexaCenterTranslationAtXY(x, y)"
-                         [ngClass]="getSpaceClasses(x, y)"
-                         class="base"
-                         stroke-linecap="round"/>
-                <g id="pieceGroup_{{ x }}_{{ y }}"
-                   [ngClass]="getPieceGroupClasses(x, y)"
-                   [attr.transform]="getTranslationAt(getCenterAtXY(x, y))"
-                >
-                    <g *ngIf="isRing(x, y)">
-                        <circle [attr.r]="viewInfo.ringOuterSize"
-                                class="base no-fill mid-stroke"/>
-                        <circle id="ring_{{ x }}_{{ y }}"
-                                [attr.r]="viewInfo.ringMidSize"
-                                [ngClass]="getRingClasses(x, y)"
-                                class="base no-fill"/>
-                        <circle [attr.r]="viewInfo.ringInnerSize"
-                                class="base no-fill mid-stroke"/>
-                    </g>
-                    <circle id="marker_{{ x }}_{{ y }}"
-                            *ngIf="isMarker(x, y)"
-                            [attr.r]="viewInfo.markerSize"
-                            [ngClass]="getMarkerClasses(x, y)"
-                            class="base mid-stroke"/>
+    @for (line of hexaBoard; track $index; let y = $index) {
+        <g>
+            @for (space of line; track $index; let x = $index) {
+                <g>
+                    @if (space.isReachable()) {
+                        <g id="click_{{ x }}_{{ y }}"
+                           (click)="onClick(x, y)">
+                            <polygon id="space_{{ x }}_{{ y }}"
+                                     [attr.points]="getHexaPoints()"
+                                     [attr.transform]="getHexaCenterTranslationAtXY(x, y)"
+                                     [ngClass]="getSpaceClasses(x, y)"
+                                     class="base"
+                                     stroke-linecap="round"/>
+                            <g id="pieceGroup_{{ x }}_{{ y }}"
+                               [ngClass]="getPieceGroupClasses(x, y)"
+                               [attr.transform]="getSVGTranslationAt(getCenterAtXY(x, y))">
+                                @if (isRing(x, y)) {
+                                    <g app-ring
+                                       id="ring_{{ x }}_{{ y }}"
+                                       transform="scale(0.43)"
+                                       [strokeWidth]="10"
+                                       [width]="20"
+                                       [midRingClasses]="getRingClasses(x, y)">
+                                    </g>
+                                }
+                                @if (isMarker(x, y)) {
+                                    <circle id="marker_{{ x }}_{{ y }}"
+                                            [attr.r]="viewInfo.markerSize"
+                                            [ngClass]="getMarkerClasses(x, y)"
+                                            class="base mid-stroke"/>
+                                }
+                            </g>
+                        </g>
+                    }
                 </g>
-            </g>
+            }
         </g>
-    </g>
-    <polygon *ngFor="let coord of selectedCoords.union(selectedRings)"
-             id="selected_{{ coord.x }}_{{ coord.y }}"
-             (click)="onClick(coord.x, coord.y)"
-             class="base no-fill selected-stroke"
-             [attr.points]="getHexaPoints()"
-             [attr.transform]="getHexaCenterTranslationAt(coord)"
-             pointer-events="fill"
-             stroke-linecap="round"/>
-    <g *ngIf="isPlayerTurn()">
-        <polygon *ngFor="let coord of selectableCoords"
-                 id="selectable_{{ coord.x }}_{{ coord.y }}"
+    }
+    @for (coord of selectedCoords.union(selectedRings); track coord.toString()) {
+        <polygon id="selected_{{ coord.x }}_{{ coord.y }}"
                  (click)="onClick(coord.x, coord.y)"
-                 class="base no-fill capturable-stroke"
+                 class="base no-fill selected-stroke"
                  [attr.points]="getHexaPoints()"
                  [attr.transform]="getHexaCenterTranslationAt(coord)"
                  pointer-events="fill"
                  stroke-linecap="round"/>
-    </g>
-    <rect *ngFor="let coord of viewInfo.targets"
-          id="indicator_{{ coord.x }}_{{ coord.y }}"
-          [attr.transform]="getTranslationAt(getCenterAt(coord))"
-          [attr.x]=" - viewInfo.indicatorSize/2"
-          [attr.y]=" - viewInfo.indicatorSize/2"
-          [attr.width]="viewInfo.indicatorSize"
-          [attr.height]="viewInfo.indicatorSize"
-          (click)="onClick(coord.x, coord.y)"
-          class="indicator"/>
-    <g *ngFor="let player of Player.PLAYERS"
-       [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
-        <g *ngFor="let _ of [].constructor(viewInfo.sideRings.get(player)); index as ring">
-            <circle id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
-                    [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="player === Player.ZERO ? 300 : 1260"
-                    [attr.r]="viewInfo.ringOuterSize"
-                    class="base no-fill mid-stroke"/>
-            <circle [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="(player === Player.ZERO ? 300 : 1260)"
-                    [attr.r]="viewInfo.ringInnerSize"
-                    class="base no-fill mid-stroke"/>
-            <circle [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                    [attr.cy]="player === Player.ZERO ? 300 : 1260"
-                    [attr.r]="viewInfo.ringMidSize"
-                    [ngClass]="viewInfo.sideRingClass.get(player)"
-                    class="base no-fill"/>
+    }
+    @if (isPlayerTurn()) {
+        <g>
+            @for (coord of selectableCoords; track coord.toString()) {
+                <polygon id="selectable_{{ coord.x }}_{{ coord.y }}"
+                         (click)="onClick(coord.x, coord.y)"
+                         class="base no-fill capturable-stroke"
+                         [attr.points]="getHexaPoints()"
+                         [attr.transform]="getHexaCenterTranslationAt(coord)"
+                         pointer-events="fill"
+                         stroke-linecap="round"/>
+            }
         </g>
-    </g>
+    }
+    @for (coord of viewInfo.targets; track coord.toString()) {
+        <rect id="indicator_{{ coord.x }}_{{ coord.y }}"
+              [attr.transform]="getSVGTranslationAt(getCenterAt(coord))"
+              [attr.x]=" - viewInfo.indicatorSize/2"
+              [attr.y]=" - viewInfo.indicatorSize/2"
+              [attr.width]="viewInfo.indicatorSize"
+              [attr.height]="viewInfo.indicatorSize"
+              (click)="onClick(coord.x, coord.y)"
+              class="indicator"/>
+    }
+    @for (player of Player.PLAYERS; track player) {
+        <g [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
+            @for (_ of [].constructor(viewInfo.sideRings.get(player)); track $index; let ring = $index) {
+                <g app-ring
+                   id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
+                   [attr.transform]="translateRing(player, ring) + 'scale(0.43)'"
+                   [strokeWidth]="10"
+                   [width]="20"
+                   [midRingClasses]="viewInfo.sideRingClass.get(player)">
+                </g>
+            }
+        </g>
+    }
+
 </svg>

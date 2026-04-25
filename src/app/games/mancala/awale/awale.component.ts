@@ -1,22 +1,22 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { Component } from '@angular/core';
 
-import { AwaleRules } from './AwaleRules';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { AwaleMoveGenerator } from './AwaleMoveGenerator';
-import { MancalaMove } from '../common/MancalaMove';
 import { MancalaComponent } from '../common/MancalaComponent';
+import { MancalaMove } from '../common/MancalaMove';
+import { NumberedCircleComponent } from '../common/numbered-circle.component';
+
+import { AwaleMoveGenerator } from './AwaleMoveGenerator';
+import { AwaleRules } from './AwaleRules';
 
 @Component({
     selector: 'app-awale-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NumberedCircleComponent],
 })
 export class AwaleComponent extends MancalaComponent<AwaleRules> {
 
-    public constructor(messageDisplayer: MessageDisplayer,
-                       cdr: ChangeDetectorRef)
-    {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Awale');
         this.availableAIs = this.createAIs(new AwaleMoveGenerator());
         this.encoder = MancalaMove.encoder;

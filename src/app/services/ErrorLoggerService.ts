@@ -1,9 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { serverTimestamp } from 'firebase/firestore';
+
+import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { ErrorDAO, ErrorDocument, MGPError } from '../dao/ErrorDAO';
 import { FirestoreDocument } from '../dao/FirestoreDAO';
-import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
+
 import { MessageDisplayer } from './MessageDisplayer';
 
 @Injectable({
@@ -12,6 +15,10 @@ import { MessageDisplayer } from './MessageDisplayer';
 export class ErrorLoggerService {
 
     private static singleton: MGPOptional<ErrorLoggerService> = MGPOptional.empty();
+
+    private readonly errorDAO: ErrorDAO = inject(ErrorDAO);
+    private readonly router: Router = inject(Router);
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
 
     public static logError(component: string, message: string, data?: JSONValue): MGPValidation {
         if (this.singleton.isAbsent()) {
@@ -26,9 +33,7 @@ export class ErrorLoggerService {
         return MGPValidation.failure(component + ': ' + message);
     }
 
-    private constructor(private readonly errorDAO: ErrorDAO,
-                        private readonly router: Router,
-                        private readonly messageDisplayer: MessageDisplayer)
+    private constructor()
     {
         ErrorLoggerService.singleton = MGPOptional.of(this);
     }

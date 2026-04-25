@@ -1,7 +1,8 @@
 import { Encoder, Utils } from '@everyboard/lib';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
-import { Coord } from 'src/app/jscaip/Coord';
+
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoord } from '../../jscaip/MoveCoord';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 
 export class ConnectSixFirstMove extends MoveCoord {
 

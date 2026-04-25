@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TestUtils } from '@everyboard/lib';
 
 describe('ConspirateursRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -198,9 +199,11 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When moving the piece
             const move: ConspirateursMove = simpleMove(new Coord(7, 7), new Coord(7, 6));
-            // Then the move succeeds
+
+            // Then the move should succeed
             const expectedState: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -384,8 +387,10 @@ describe('ConspirateursRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 42);
+
             // When performing a jump
             const move: ConspirateursMove = jump([new Coord(7, 7), new Coord(7, 5)]);
+
             // Then the move should succeed and the piece should be moved
             const expectedState: ConspirateursState = new ConspirateursState([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -641,7 +646,9 @@ describe('ConspirateursRules', () => {
                 [X, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then the victory should be detected for player 0
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -667,7 +674,9 @@ describe('ConspirateursRules', () => {
                 [O, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 60);
             const node: ConspirateursNode = new ConspirateursNode(state);
-            // Then the victory should be detected for player 1
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

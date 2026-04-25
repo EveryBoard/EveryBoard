@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
+
+import { Player } from '../../../jscaip/Player';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';
+import { ApagosSquare } from '../ApagosSquare';
 import { ApagosState } from '../ApagosState';
 
 describe('ApagosRules', () => {
@@ -14,14 +16,12 @@ describe('ApagosRules', () => {
 
     let stateWithOneFullSquare: ApagosState;
 
-    beforeAll(() => {
+    beforeEach(() => {
         stateWithOneFullSquare = ApagosState.fromRepresentation(3, [
             [0, 0, 2, 0],
             [0, 0, 1, 0],
             [7, 5, 3, 1],
         ], 8, 9);
-    });
-    beforeEach(() => {
         rules = ApagosRules.get();
     });
 
@@ -142,6 +142,7 @@ describe('ApagosRules', () => {
                 [7, 5, 3, 1],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
             // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
@@ -181,10 +182,46 @@ describe('ApagosRules', () => {
                 [8, 6, 4, 2],
             ], 0, 0);
             const node: ApagosNode = new ApagosNode(state);
+
             // When checking the game status
-            // Then it should be detected as a draw
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
+
+    });
+
+    describe('Custom Config', () => {
+
+        it('should give a [4, 3, 2, 1] board when increment is 1 and size is 4', () => {
+            // Given the initial state with a custom config with increment = 1
+            const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                increment: 1,
+            });
+
+            // When creating initial state with it
+            const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
+            const actualTotalSpace: number[] = state.board.map((value: ApagosSquare) => value.getCapacity());
+            // Then the actual total space per square should look like this: [4, 3, 2, 1]
+            expect([4, 3, 2, 1]).toEqual(actualTotalSpace);
+        });
+
+        it('should give by default just enough piece to dominate odd squares and occupy half in even squares', () => {
+            // Given the initial state with a custom config with increment = 1
+            const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                increment: 1,
+            });
+
+            // When creating initial state with it
+            const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
+
+            // Then the number of piece by player should be correct
+            // For squares being of size                 [4, 3, 2, 1],
+            // the number of available pieces should be: [2, 2, 1, 1] = 6 in total
+            expect(state.getRemaining(Player.ZERO)).toBe(6);
+        });
+
     });
 
 });

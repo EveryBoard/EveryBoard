@@ -1,17 +1,26 @@
-import { Component } from '@angular/core';
-import { Router } from '@angular/router';
-import { ThemeService } from 'src/app/services/ThemeService';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { Component, inject } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faNetworkWired, faDesktop, faBookOpen, IconDefinition } from '@fortawesome/free-solid-svg-icons';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
+
+import { CurrentGameService } from '../../../services/CurrentGameService';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { ThemeService } from '../../../services/ThemeService';
+import { GameInfo, PickGameComponent } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-welcome',
     templateUrl: './welcome.component.html',
+    imports: [RouterLink, FaIconComponent, PickGameComponent],
 })
 export class WelcomeComponent {
+
+    public readonly router: Router = inject(Router);
+    public readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+    public readonly currentGameService: CurrentGameService = inject(CurrentGameService);
+
     public readonly numberOfColumns: number = 5;
     public readonly games: GameInfo[][] = [];
     public readonly theme: 'dark' | 'light';
@@ -21,12 +30,9 @@ export class WelcomeComponent {
 
     public gameInfoDetails: MGPOptional<GameInfo> = MGPOptional.empty();
 
-    public constructor(public readonly router: Router,
-                       public readonly messageDisplayer: MessageDisplayer,
-                       public readonly currentGameService: CurrentGameService,
-                       themeService: ThemeService)
+    public constructor()
     {
-        this.theme = themeService.getTheme();
+        this.theme = inject(ThemeService).getTheme();
         const allGames: GameInfo[] = GameInfo.getAllGames();
         let column: number = 0;
         for (let i: number = 0; i < allGames.length; i++) {
@@ -53,7 +59,7 @@ export class WelcomeComponent {
     }
 
     public async createLocalGame(game: string): Promise<boolean> {
-        return this.router.navigate(['/local', game]);
+        return this.router.navigate(['/local', game, 'config']);
     }
 
     public createTutorial(game: string): Promise<boolean> {

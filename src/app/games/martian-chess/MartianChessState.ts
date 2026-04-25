@@ -1,8 +1,10 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { Table } from '../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessPiece } from './MartianChessPiece';
 
@@ -31,9 +33,9 @@ export class MartianChessCapture {
 
     public toValue(): number {
         let sum: number = 0;
-        this.captures.forEach((item: {key: MartianChessPiece, value: number}) => {
-            sum += item.key.getValue() * item.value;
-        });
+        for (const [piece, value] of this.captures) {
+            sum += piece.getValue() * value;
+        }
         return sum;
     }
 
@@ -56,6 +58,10 @@ export class MartianChessState extends GameStateWithTable<MartianChessPiece> {
 
     public static isOnBoard(coord: Coord): boolean {
         return coord.isInRange(MartianChessState.WIDTH, MartianChessState.HEIGHT);
+    }
+
+    public static isNotOnBoard(coord: Coord): boolean {
+        return MartianChessState.isOnBoard(coord) === false;
     }
 
     public readonly captured: MGPMap<Player, MartianChessCapture>;

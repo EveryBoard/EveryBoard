@@ -1,18 +1,21 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
 import { ApagosFailure } from './ApagosFailure';
+import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
+import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
-import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
 
 interface PieceLocation {
 
@@ -32,9 +35,9 @@ interface DropArrow {
     selector: 'app-apagos',
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
-    public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
 
     public board: readonly ApagosSquare[];
 
@@ -74,8 +77,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Apagos');
         this.availableAIs = [
             new ApagosRightmostMinimax(),
@@ -95,7 +98,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.showPossibleDrops();
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         const width: number = this.board.length;

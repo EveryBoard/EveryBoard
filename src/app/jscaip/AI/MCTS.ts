@@ -1,13 +1,15 @@
 import { ArrayUtils, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameState } from '../state/GameState';
+
+import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
-import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
-import { GameNode } from './GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { SuperRules } from '../Rules';
-import { Debug } from 'src/app/utils/Debug';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameState } from '../state/GameState';
+
+import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
+import { GameNode } from './GameNode';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
     node: GameNode<M, S>,
@@ -103,7 +105,7 @@ implements AI<M, S, AITimeLimitOptions, C>
     private ucb(node: GameNode<M, S>, parentSimulations: number): number {
         const simulations: number = this.simulations(node);
         if (parentSimulations === 0 || simulations === 0) {
-            return Number.MAX_SAFE_INTEGER;
+            return Number.POSITIVE_INFINITY;
         }
         return (this.wins(node) / simulations) +
                this.explorationParameter * Math.sqrt(Math.log(parentSimulations) / simulations);

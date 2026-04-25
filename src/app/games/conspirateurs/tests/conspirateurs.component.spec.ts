@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { ConspirateursComponent } from '../conspirateurs.component';
+
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursState } from '../ConspirateursState';
+import { ConspirateursComponent } from '../conspirateurs.component';
 
 describe('ConspirateursComponent', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
@@ -406,5 +407,43 @@ describe('ConspirateursComponent', () => {
         // And player one too
         testUtils.expectElementToHaveClass('#space_16_16', 'victory-fill');
     }));
+
+    describe('score', () => {
+        it('should show 0 protected pieces when there are none', fakeAsync(async() => {
+            // Given the initial state
+            // When displaying it
+            // Then it should show a score of 0
+            testUtils.expectTextToBe('#score-0', '0 protected pieces');
+            testUtils.expectTextToBe('#score-1', '0 protected pieces');
+        }));
+        it('should show protected piece when there are', fakeAsync(async() => {
+            // Given a state with two protected pieces for player 0 and one protected piece for player 1
+            const state: ConspirateursState = new ConspirateursState([
+                [X, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 40);
+            await testUtils.setupState(state);
+            // When displaying it
+            // Then it should show a score of 2 for player 0 and 1 for player 1
+            testUtils.expectTextToBe('#score-0', '2 protected pieces');
+            testUtils.expectTextToBe('#score-1', '1 protected piece');
+        }));
+    });
+
 
 });

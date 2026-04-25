@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { KamisadoColor } from '../KamisadoColor';
+import { KamisadoFailure } from '../KamisadoFailure';
 import { KamisadoMove } from '../KamisadoMove';
-import { KamisadoState } from '../KamisadoState';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoNode, KamisadoRules } from '../KamisadoRules';
-import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { KamisadoFailure } from '../KamisadoFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { KamisadoState } from '../KamisadoState';
 
 describe('KamisadoRules', () => {
 
@@ -379,7 +380,8 @@ describe('KamisadoRules', () => {
                 new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
             const node: KamisadoNode = new KamisadoNode(state);
 
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -399,12 +401,15 @@ describe('KamisadoRules', () => {
                 new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
             const node: KamisadoNode = new KamisadoNode(state);
 
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should declare blocking player as loser', () => {
             // Given a board where Player.ONE blocked everyone
+            // Given a board where Player.ZERO just passed and Player.ONE is now blocked too
+            // (hence Player.ONE blocked everyone)
             const board: Table<KamisadoPiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -417,11 +422,10 @@ describe('KamisadoRules', () => {
             ];
             const state: KamisadoState =
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
-
-            // When it's Player.ONE to play after Player.ZERO had to pass
             const node: KamisadoNode = new KamisadoNode(state);
 
-            // Then it should be victory for Player.ZERO
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 

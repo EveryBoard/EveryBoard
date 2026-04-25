@@ -1,19 +1,22 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Vector } from '../../jscaip/Vector';
+
+import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
+import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
-import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 interface ViewInfo {
     boardInfo: SquareInfo[][],
@@ -36,6 +39,7 @@ interface SquareInfo {
     selector: 'app-conspirateurs',
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
 
@@ -64,8 +68,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     private lastStep: MGPOptional<ConspirateursMoveSimple> = MGPOptional.empty();
     private victoriousCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Conspirateurs');
         this.availableAIs = [
             new ConspirateursJumpMinimax(),
@@ -75,8 +79,17 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.updateViewInfo();
+        this.updateScores();
+    }
+
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.rules.getProtectedPieces(this.getState()));
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.PROTECTED_PIECES;
     }
 
     private updateViewInfo(): void {
@@ -132,7 +145,6 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
             if (shelterBelongToWinner || spaceIsOccupiedButNobodyWon)
             {
                 squareInfo.shelterClasses.push('selectable-stroke');
-                // squareInfo.pieceClasses.push('victory-stroke');
                 this.victoriousCoords.push(shelter);
                 squareInfo.squareClasses.push('victory-fill');
             }

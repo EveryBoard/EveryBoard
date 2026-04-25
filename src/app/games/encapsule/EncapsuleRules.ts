@@ -1,33 +1,37 @@
 import { ArrayUtils, MGPFallible, MGPMap, MGPOptional } from '@everyboard/lib';
+
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap, EncapsuleRemainingPieces } from './EncapsuleState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
-import { EncapsuleFailure } from './EncapsuleFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap, EncapsuleRemainingPieces } from './EncapsuleState';
 
-export type EncapsuleConfig = {
+export type EncapsuleConfig = RulesConfig & {
 
-    nInARow: number,
+    nInARow: number;
 
-    width: number,
+    width: number;
 
-    height: number,
+    height: number;
 
-    nbOfSizes: number,
+    nbOfSizes: number;
 
-    nbOfEachPiece: number,
-}
+    nbOfEachPiece: number;
+
+};
 
 export type EncapsuleLegalityInformation = EncapsuleSpace;
 

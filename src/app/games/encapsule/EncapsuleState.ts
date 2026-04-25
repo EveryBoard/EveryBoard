@@ -1,9 +1,11 @@
 import { ArrayUtils, MGPMap, MGPOptional, NumberMap, Utils } from '@everyboard/lib';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { Table } from '../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+
+import { EncapsulePiece } from './EncapsulePiece';
 
 export class EncapsuleRemainingPieces extends PlayerMap<EncapsuleSizeToNumberMap> {
 }
@@ -12,22 +14,16 @@ export class EncapsuleSizeToNumberMap extends NumberMap<number> {
 
 export class EncapsuleState extends GameStateWithTable<EncapsuleSpace> {
 
-    public readonly remainingPieces: EncapsuleRemainingPieces;
-
-    public readonly nbOfPieceSize: number;
-
     public constructor(
         board: Table<EncapsuleSpace>,
         turn: number,
-        remainingPieces: EncapsuleRemainingPieces,
-        nbOfPieceSize: number)
+        public readonly remainingPieces: EncapsuleRemainingPieces,
+        public readonly nbOfPieceSize: number)
     {
         super(board, turn);
-        this.remainingPieces = remainingPieces;
         this.remainingPieces.get(Player.ZERO).makeImmutable();
         this.remainingPieces.get(Player.ONE).makeImmutable();
         this.remainingPieces.makeImmutable();
-        this.nbOfPieceSize = nbOfPieceSize;
     }
 
     public getRemainingPiecesCopy(): EncapsuleRemainingPieces {

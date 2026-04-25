@@ -2,20 +2,22 @@
 import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { P4Config, P4Node, P4Rules } from 'src/app/games/p4/P4Rules';
-import { LodestoneNode, LodestoneRules } from 'src/app/games/lodestone/LodestoneRules';
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { P4State } from 'src/app/games/p4/P4State';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { AbstractRules } from 'src/app/jscaip/Rules';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPOptional, Utils } from '@everyboard/lib';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
-import { RulesConfig, RulesConfigUtils } from 'src/app/jscaip/RulesConfigUtil';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+
+import { LodestoneNode, LodestoneRules } from '../../../games/lodestone/LodestoneRules';
+import { P4Move } from '../../../games/p4/P4Move';
+import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
+import { P4State } from '../../../games/p4/P4State';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { AbstractRules } from '../../../jscaip/Rules';
+import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
+import { Table, TableUtils } from '../../../jscaip/TableUtils';
+import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
+
+import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
 
 describe('DemoCardComponent', () => {
 
@@ -24,7 +26,7 @@ describe('DemoCardComponent', () => {
     const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
 
     async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
-        testUtils.getComponent().demoNodeInfo = nodeInfo;
+        testUtils.setInput('demoNodeInfo', nodeInfo);
         await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
         testUtils.detectChanges();
         tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit
@@ -40,6 +42,7 @@ describe('DemoCardComponent', () => {
 
         // When displaying it for a given game
         await loadNode({
+            title: 'P4',
             name: 'P4',
             // Current player is player 1
             node: new P4Node(new P4State(board, 1)),
@@ -60,6 +63,7 @@ describe('DemoCardComponent', () => {
         // Given a demo component
         // When displaying it for a game that has intermediary clicks
         await loadNode({
+            title: 'Lodestone',
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
             click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
@@ -71,6 +75,7 @@ describe('DemoCardComponent', () => {
     it('should not allow clicks', fakeAsync(async() => {
         // Given a demo component displayed for a game
         await loadNode({
+            title: 'P4',
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -101,6 +106,7 @@ describe('DemoCardComponent', () => {
     it('should reload node when inputs are updated by parents', fakeAsync(async() => {
         // Given a component already initialized with one given set of infos
         await loadNode({
+            title: 'P4',
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
@@ -111,6 +117,7 @@ describe('DemoCardComponent', () => {
         const boardWithPiece: Table<PlayerOrNone> = TableUtils.create(7, 6, PlayerOrNone.ZERO);
         const stateWithPieces: P4State = new P4State(boardWithPiece, 42);
         await loadNode({
+            title: 'P4',
             name: 'P4',
             node: new GameNode(stateWithPieces),
             click: MGPOptional.empty(),
@@ -139,6 +146,7 @@ describe('DemoCardComponent', () => {
                 mais_quelles_belles_chaussettes: 42,
             });
             await loadNode({
+                title: 'P4',
                 name: 'P4',
                 node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),

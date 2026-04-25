@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GoMove } from '../GoMove';
-import { GoState } from '../GoState';
-import { GoPiece } from '../GoPiece';
-import { GoNode } from '../AbstractGoRules';
+
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoConfig, GoRules } from '../go/GoRules';
+import { GoNode } from '../AbstractGoRules';
+import { GoMove } from '../GoMove';
+import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
 import { GoMoveGenerator } from '../go/GoMoveGenerator';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GoConfig, GoRules } from '../go/GoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -23,7 +25,11 @@ describe('GoMoveGenerator', () => {
 
     let moveGenerator: AbstractGoMoveGenerator<RulesConfig>;
 
-    const config: MGPOptional<GoConfig> = MGPOptional.of({ width: 5, height: 5, handicap: 0 });
+    const config: MGPOptional<GoConfig> = MGPOptional.of({
+        width: 5,
+        height: 5,
+        handicap: 0,
+    });
 
     beforeEach(() => {
         moveGenerator = new GoMoveGenerator();
@@ -40,9 +46,9 @@ describe('GoMoveGenerator', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING');
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
             expect(moves.length).toBe(23);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
@@ -50,9 +56,9 @@ describe('GoMoveGenerator', () => {
         it('should only have GoMove.ACCEPT in ACCEPT GoPhase when agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
-                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'ACCEPT');
+                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
 
@@ -62,20 +68,20 @@ describe('GoMoveGenerator', () => {
                                                PlayerNumberMap.of(0, 0),
                                                0,
                                                MGPOptional.empty(),
-                                               'COUNTING');
+                                               GoPhase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
 
         it('should only have counting moves in GoPhase.COUNTING when not agreeing on the result', () => {
             const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
-                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'ACCEPT');
+                new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
 
@@ -88,9 +94,9 @@ describe('GoMoveGenerator', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'COUNTING');
+                new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });
@@ -104,9 +110,9 @@ describe('GoMoveGenerator', () => {
                 [_, _, _, _, _],
             ];
             const state: GoState =
-                new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), 'COUNTING');
+                new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.COUNTING);
             const initialNode: GoNode = new GoNode(state);
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
             expect(moves.length).toBe(1);
             expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
         });

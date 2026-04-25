@@ -1,6 +1,8 @@
-import { GroupData } from 'src/app/jscaip/BoardData';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap, Utils } from '@everyboard/lib';
+
+import { GroupData } from '../../jscaip/BoardData';
+import { Coord } from '../../jscaip/Coord';
+
 import { GoPiece } from './GoPiece';
 
 export class GoGroupData extends GroupData<GoPiece> {
@@ -69,16 +71,16 @@ export class GoGroupData extends GroupData<GoPiece> {
         }
     }
 
-    public isMonoWrapped(): boolean {
+    public override isMonoWrapped(): boolean {
         // If a group is empty, we assign him 1, else 2
-        // If only the group of the group and the group of his wrapper are filled, result will be 2*2*1
+        // If only the group of the group and the group of its wrapper are filled, result will be 2*2*1
         const darkWrapper: number = (this.darkCoords.length + this.deadLightCoords.length) === 0 ? 0 : 1;
         const lightWrapper: number = (this.lightCoords.length + this.deadDarkCoords.length) === 0 ? 0 : 1;
         return darkWrapper + lightWrapper === 1;
     }
 
     public getWrapper(): GoPiece {
-        // If a piece is wrapped by a player and/or by dead piece of his opponent, it's returning the player
+        // If a piece is wrapped by a player and/or by dead piece of their opponent, it's returning the player
         // If a piece is wrapped by two player, it's throwing
         // If a piece is wrapped by a player and dead piece of this player, it's throwing
         // color, [empty, dark, light, deadDark, deadLight]
@@ -97,7 +99,7 @@ export class GoGroupData extends GroupData<GoPiece> {
         return nonEmptyWrapper.getAnyPair().get().key;
     }
 
-    public getNeighborsEntryPoints(): Coord[] {
+    public override getNeighborsEntryPoints(): Coord[] {
         const neighborsEntryPoints: Coord[] = [];
         if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {
             neighborsEntryPoints.push(this.emptyCoords[0]);

@@ -1,9 +1,10 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { ConspirateursMove } from './ConspirateursMove';
-import { ConspirateursState } from './ConspirateursState';
-import { ConspirateursRules } from './ConspirateursRules';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
 import { ConspirateursHeuristic } from './ConspirateursHeuristic';
+import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursOrderedMoveGenerator } from './ConspirateursOrderedMoveGenerator';
+import { ConspirateursRules } from './ConspirateursRules';
+import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursJumpMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
 

@@ -1,18 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
-import { GipfMove, GipfPlacement } from '../GipfMove';
-import { GipfState } from '../GipfState';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
+
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
+import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { GipfFailure } from '../GipfFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GipfCapture } from 'src/app/jscaip/GipfProjectHelper';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { GipfMove, GipfPlacement } from '../GipfMove';
+import { GipfLegalityInformation, GipfNode, GipfRules } from '../GipfRules';
+import { GipfState } from '../GipfState';
 
 describe('GipfRules', () => {
 
@@ -473,6 +474,9 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 0), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -488,6 +492,9 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

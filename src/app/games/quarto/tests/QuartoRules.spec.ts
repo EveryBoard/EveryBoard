@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { QuartoFailure } from '../QuartoFailure';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { QuartoFailure } from '../QuartoFailure';
-import { MGPOptional } from '@everyboard/lib';
 
 const AAAA: QuartoPiece = QuartoPiece.AAAA;
 const AABA: QuartoPiece = QuartoPiece.AABA;
@@ -183,11 +184,10 @@ describe('QuartoRules', () => {
                 [____, ____, ____, AABA],
             ];
             const state: QuartoState = new QuartoState(board, 10, AABA);
-
-            // When evaluating it's board status
-            // Then it should be a victory for Player.ONE
             const node: QuartoNode = new QuartoNode(state);
 
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -226,8 +226,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 4, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then that player should win
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
         });
 
@@ -246,8 +246,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 4, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ZERO should win
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
 
@@ -266,8 +266,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ZERO should win
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
 
@@ -286,8 +286,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 7, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ONE should win
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
         });
 
@@ -306,8 +306,8 @@ describe('QuartoRules', () => {
             const state: QuartoState = new QuartoState(board, 5, BAAA);
             const node: QuartoNode = new QuartoNode(state);
 
-            // When evaluating the board status
-            // Then Player.ZERO should win
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
         });
 

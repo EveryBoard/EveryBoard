@@ -1,6 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
+
+import { AuthUser } from '../services/ConnectedUserService';
+
 import { AccountGuard } from './account-guard';
 
 @Injectable({
@@ -8,11 +10,8 @@ import { AccountGuard } from './account-guard';
 })
 export class NotConnectedGuard extends AccountGuard {
 
-    public constructor(connectedUserService: ConnectedUserService,
-                       private readonly router: Router)
-    {
-        super(connectedUserService);
-    }
+    private readonly router: Router = inject(Router);
+
     protected async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
         if (user.isConnected() === false) {
             // Ok, the user can proceed

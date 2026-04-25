@@ -1,8 +1,10 @@
 import { MGPMap, MGPOptional, Utils, comparableEquals } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
-import { GameState } from './GameState';
-import { Table, TableUtils } from '../TableUtils';
 import { CoordSet } from '../CoordSet';
+import { Table, TableUtils } from '../TableUtils';
+
+import { GameState } from './GameState';
 
 export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 
@@ -25,43 +27,49 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
     public getPieceAt(coord: Coord): P {
         Utils.assert(this.isOnBoard(coord),
                      'Accessing coord not on board ' + coord + '.');
+        return this.getUnsafe(coord);
+    }
+
+    protected getUnsafe(coord: Coord): P {
         return this.board[coord.y][coord.x];
     }
 
     public hasPieceAt(coord: Coord, value: P): boolean {
         return this.isOnBoard(coord) &&
-               comparableEquals(this.getPieceAt(coord), value);
+               comparableEquals(this.getUnsafe(coord), value);
     }
 
-    public tryToGetPieceAt(coord: Coord): MGPOptional<P> {
+    public hasInequalPieceAt(coord: Coord, value: P): boolean {
+        return this.isOnBoard(coord) &&
+               comparableEquals(this.getUnsafe(coord), value) === false;
+    }
+
+    public getOptionalPieceAt(coord: Coord): MGPOptional<P> {
         if (this.isOnBoard(coord)) {
-            return MGPOptional.of(this.board[coord.y][coord.x]);
+            const value: P = this.getUnsafe(coord);
+            return MGPOptional.of(value);
         } else {
             return MGPOptional.empty();
         }
-    }
-
-    public isOnBoard(coord: Coord): boolean {
-        const width: number = this.board[0].length;
-        const height: number = this.board.length;
-        return coord.isInRange(width, height);
-    }
-
-    public getPieceAtXY(x: number, y: number): P {
-        return this.getPieceAt(new Coord(x, y));
     }
 
     public getOptionalPieceAtXY(x: number, y: number): MGPOptional<P> {
         const coord: Coord = new Coord(x, y);
-        if (this.isOnBoard(coord)) {
-            return MGPOptional.of(this.getPieceAt(coord));
-        } else {
-            return MGPOptional.empty();
-        }
+        return this.getOptionalPieceAt(coord);
     }
 
-    public getOptionalPieceAt(coord: Coord): MGPOptional<P> {
-        return this.getOptionalPieceAtXY(coord.x, coord.y);
+    public isOnBoard(coord: Coord): boolean {
+        const width: number = this.getWidth();
+        const height: number = this.getHeight();
+        return coord.isInRange(width, height);
+    }
+
+    public isNotOnBoard(coord: Coord): boolean {
+        return this.isOnBoard(coord) === false;
+    }
+
+    public getPieceAtXY(x: number, y: number): P {
+        return this.getPieceAt(new Coord(x, y));
     }
 
     public forEachCoord(callback: (coord: Coord, content: P) => void): void {
@@ -70,10 +78,20 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         }
     }
 
+    public findMatchingCoord(predicate: (coord: Coord, content: P) => boolean): MGPOptional<Coord> {
+        for (const { coord, content } of this.getCoordsAndContents()) {
+            const result: boolean = predicate(coord, content);
+            if (result) {
+                return MGPOptional.of(coord);
+            }
+        }
+        return MGPOptional.empty();
+    }
+
     public getCoordsAndContents(): {coord: Coord, content: P}[] {
         const coordsAndContents: {coord: Coord, content: P}[] = [];
         for (let y: number = 0; y < this.getHeight(); y++) {
-            for (let x: number = 0; x < this.board[y].length; x++) {
+            for (let x: number = 0; x < this.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.isOnBoard(coord)) { // Could be overriden for unreachable coords
                     coordsAndContents.push({
@@ -84,6 +102,14 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
             }
         }
         return coordsAndContents;
+    }
+
+    public allCoords(): Coord[] {
+        const coords: Coord[] = [];
+        this.forEachCoord((coord: Coord) => {
+            coords.push(coord);
+        });
+        return coords;
     }
 
     public getCopiedBoard(): P[][] {
@@ -133,7 +159,27 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
                this.isVerticalEdge(coord);
     }
 
-    [Symbol.iterator](): IterableIterator<P> {
+    public countPieceInRow(piece: P, row: number): number {
+        let result: number = 0;
+        for (let x: number = 0; x < this.getWidth(); x++) {
+            if (comparableEquals(this.board[row][x], piece)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public countPieceOnBoard(piece: P): number {
+        let result: number = 0;
+        for (const coordAndContent of this.getCoordsAndContents()) {
+            if (comparableEquals(coordAndContent.content, piece)) {
+                result++;
+            }
+        }
+        return result;
+    }
+
+    public [Symbol.iterator](): IterableIterator<P> {
         const linedUpElements: P[] = [];
         for (const lines of this.board) {
             linedUpElements.push(...lines);

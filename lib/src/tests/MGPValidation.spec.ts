@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from '../MGPFallible';
-import { MGPValidation, MGPValidationTestUtils } from '../MGPValidation';
+import { MGPValidation } from '../MGPValidation';
+
+import { MGPValidationTestUtils } from './MGPValidationTestUtils';
 
 describe('MGPValidation', () => {
 
@@ -18,7 +20,7 @@ describe('MGPValidation', () => {
             const validation: MGPValidation = MGPValidation.ofFallible(fallible);
 
             // Then it should be MGPValidation.SUCCESS
-            expect(validation).toBe(MGPValidation.SUCCESS);
+            expect(validation).toEqual(MGPValidation.SUCCESS);
         });
 
         it('should return a failure when given a failed fallible', () => {
@@ -33,6 +35,7 @@ describe('MGPValidation', () => {
             expect(MGPValidation.failure('error').isFailure()).toBeTrue();
         });
     });
+
 });
 
 describe('MGPValidationTestUtils', () => {
@@ -48,4 +51,5 @@ describe('MGPValidationTestUtils', () => {
         const failure: MGPValidation = MGPValidation.failure('I am a failure!');
         MGPValidationTestUtils.expectToBeFailure(failure, 'I am a failure!');
     });
+
 });

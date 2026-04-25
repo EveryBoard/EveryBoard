@@ -1,13 +1,15 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional, Set } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+
 import { MartianChessMove } from './MartianChessMove';
-import { MartianChessState } from './MartianChessState';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessNode } from './MartianChessRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, MartianChessState> {
 
@@ -101,16 +103,14 @@ export class MartianChessMoveGenerator extends MoveGenerator<MartianChessMove, M
         for (const dir of Ordinal.ORDINALS) {
             let dist: number = 1;
             let landingCoord: Coord = startingCoord.getNext(dir, dist);
-            let landingContent: MGPOptional<MartianChessPiece> = state.tryToGetPieceAt(landingCoord);
-            let possible: boolean = landingContent.equalsValue(MartianChessPiece.EMPTY);
+            let possible: boolean = state.hasPieceAt(landingCoord, MartianChessPiece.EMPTY);
             while (possible) {
                 landingCoords.push(landingCoord);
                 dist++;
                 landingCoord = startingCoord.getNext(dir, dist);
-                landingContent = state.tryToGetPieceAt(landingCoord);
-                possible = landingContent.equalsValue(MartianChessPiece.EMPTY) && (dist < maxDist);
+                possible = state.hasPieceAt(landingCoord, MartianChessPiece.EMPTY) && (dist < maxDist);
             }
-            if (landingContent.isPresent()) {
+            if (state.getOptionalPieceAt(landingCoord).isPresent()) {
                 landingCoords.push(landingCoord);
             }
         }

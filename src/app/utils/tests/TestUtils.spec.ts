@@ -1,57 +1,53 @@
 /* eslint-disable max-lines-per-function */
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { HttpClient, provideHttpClient } from '@angular/common/http';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute, Route, Router } from '@angular/router';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { GameState } from '../../jscaip/state/GameState';
-import { Move } from '../../jscaip/Move';
-import { AppModule } from '../../app.module';
-import { UserDAO } from '../../dao/UserDAO';
-import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
-import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
-import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
-import { OnlineGameWrapperComponent }
-    from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { ChatDAO } from '../../dao/ChatDAO';
-import { ConfigRoomDAOMock } from '../../dao/tests/ConfigRoomDAOMock.spec';
-import { PartDAO } from '../../dao/PartDAO';
-import { ConfigRoomDAO } from '../../dao/ConfigRoomDAO';
-import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
-import { ChatDAOMock } from '../../dao/tests/ChatDAOMock.spec';
-import { PartDAOMock } from '../../dao/tests/PartDAOMock.spec';
-import { LocalGameWrapperComponent }
-    from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { HttpClient, HttpClientModule } from '@angular/common/http';
-import { ErrorLoggerService } from 'src/app/services/ErrorLoggerService';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { AbstractGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { findMatchingRoute } from 'src/app/app.module.spec';
-import { HumanDurationPipe } from 'src/app/pipes-and-directives/human-duration.pipe';
-import { ToggleVisibilityDirective } from 'src/app/pipes-and-directives/toggle-visibility.directive';
-import { FirestoreTimePipe } from 'src/app/pipes-and-directives/firestore-time.pipe';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+import { BrowserModule, By } from '@angular/platform-browser';
+import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
-import { Subscription } from 'rxjs';
-import { CurrentGameService } from 'src/app/services/CurrentGameService';
-import { CurrentGameServiceMock } from 'src/app/services/tests/CurrentGameService.spec';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { TestVars } from 'src/TestVars.spec';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { GameServiceMock } from 'src/app/services/tests/GameServiceMock.spec';
-import { GameService } from 'src/app/services/GameService';
-import { ConfigRoomService } from 'src/app/services/ConfigRoomService';
-import { ServerTimeService } from 'src/app/services/ServerTimeService';
-import { ServerTimeServiceMock } from 'src/app/services/tests/ServerTimeServiceMock.spec';
-import { ConfigRoomServiceMock } from 'src/app/services/tests/ConfigRoomServiceMock.spec';
+import { firstValueFrom, Subscription } from 'rxjs';
+
+import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { TestVars } from '../../../TestVars.spec';
+import { initializeFirebase, routes } from '../../app.routes';
+import { findMatchingRoute } from '../../app.routes.spec';
+import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
+import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
+import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
+import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
+import { OGWCTimeManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCTimeManagerService';
+import { UserDAO } from '../../dao/UserDAO';
+import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { AIDepthLimitOptions } from '../../jscaip/AI/AI';
+import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { Move } from '../../jscaip/Move';
+import { Player } from '../../jscaip/Player';
+import { SuperRules } from '../../jscaip/Rules';
+import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { GameState } from '../../jscaip/state/GameState';
+import { ActiveConfigRoomsService } from '../../services/ActiveConfigRoomsService';
+import { BackendService } from '../../services/BackendService';
+import { ChatService } from '../../services/ChatService';
+import { ConfigRoomService } from '../../services/ConfigRoomService';
+import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
+import { CurrentGameService } from '../../services/CurrentGameService';
+import { ErrorLoggerService } from '../../services/ErrorLoggerService';
+import { GameService } from '../../services/GameService';
+import { MessageDisplayer } from '../../services/MessageDisplayer';
+import { ActiveConfigRoomsServiceMock } from '../../services/tests/ActiveConfigRoomServiceMock.spec';
+import { BackendServiceMock } from '../../services/tests/BackendServiceMock.spec';
+import { ChatServiceMock } from '../../services/tests/ChatServiceMock.spec';
+import { ConfigRoomServiceMock } from '../../services/tests/ConfigRoomServiceMock.spec';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
+import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceMock.spec';
+import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
+import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -59,19 +55,28 @@ export class BlankComponent {}
 export class ActivatedRouteStub {
 
     private route: {[key: string]: string} = {};
-    public snapshot: { paramMap: { get: (str: string) => string } };
-    public constructor(compo?: string, id?: string) {
+    private params: {[key: string]: string} = {};
+
+    public snapshot: {
+        paramMap: { get: (str: string) => string },
+        queryParamMap: { get: (str: string) => string, keys: string[] },
+    };
+    public constructor(game?: string, id?: string) {
         this.snapshot = {
             paramMap: {
-                get: (str: string): string => {
+                get: (name: string): string => {
                     // Returns null in case the route does not exist.
                     // This is the same behavior than ActivatedRoute
-                    return this.route[str];
+                    return this.route[name];
                 },
             },
+            queryParamMap: {
+                keys: [],
+                get: (name: string): string => this.params[name],
+            },
         };
-        if (compo != null) {
-            this.setRoute('compo', compo);
+        if (game != null) {
+            this.setRoute('game', game);
         }
         if (id != null) {
             this.setRoute('id', id);
@@ -79,6 +84,10 @@ export class ActivatedRouteStub {
     }
     public setRoute(key: string, value: string): void {
         this.route[key] = value;
+    }
+    public setParam(key: string, value: string): void {
+        this.params[key] = value;
+        this.snapshot.queryParamMap.keys.push(key);
     }
 }
 export class SimpleComponentTestUtils<T> {
@@ -145,7 +154,7 @@ export class SimpleComponentTestUtils<T> {
 
     private failOn(typeOfMessage: string): (message: string) => void {
         return (message: string) => {
-            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay"!`);
+            fail(`MessageDisplayer: ${typeOfMessage} was called with '${message}' but no toast was expected, use expectToDisplay!`);
         };
     }
 
@@ -195,9 +204,15 @@ export class SimpleComponentTestUtils<T> {
     public findElement(elementName: string): DebugElement {
         this.forceChangeDetection();
         const elements: DebugElement[] = this.fixture.debugElement.queryAll(By.css(elementName));
-        expect(elements.length)
-            .withContext(`element should exist but does not: ${elementName}`)
-            .toBeGreaterThan(0);
+        if (['.', '#'].includes(elementName[0])) {
+            expect(elements.length)
+                .withContext(`element should exist but does not: ${elementName}`)
+                .toBeGreaterThan(0);
+        } else {
+            expect(elements.length)
+                .withContext(`element should exist but does not: ${elementName}. Note, it does neither start by '#' nor by '.'`)
+                .toBeGreaterThan(0);
+        }
         expect(elements.length)
             .withContext(`findElement with id as argument expects a unique result, but got ${elements.length} results instead for element '${elementName}'`)
             .toBe(1);
@@ -289,7 +304,7 @@ export class SimpleComponentTestUtils<T> {
         const dropdown: DebugElement = this.findElement(dropdownId);
         expect(dropdown.nativeElement.value)
             .withContext(`${dropdownId} should not have value ${optionValue}`)
-            .not.toBe(optionValue);
+            .not.toEqual(optionValue);
     }
 
     public expectElementToBeDisabled(elementName: string): void {
@@ -309,13 +324,28 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public selectChildElementOfDropDown(dropDownName: string, childName: string): void {
-        const selectedDropDOwn: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
-        selectedDropDOwn.value = selectedDropDOwn.options[childName].value;
-        selectedDropDOwn.dispatchEvent(new Event('change'));
+        const selectedDropDown: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        selectedDropDown.value = selectedDropDown.options[childName].value;
+        selectedDropDown.dispatchEvent(new Event('change'));
         this.detectChanges();
         tick();
     }
 
+    public chooseConfig(configName: string): void {
+        const selectAI: HTMLSelectElement = this.findElement('#ruleSelect').nativeElement;
+        const option: HTMLOptionElement | undefined = Array.from(selectAI.options)
+            .find((opt: HTMLOptionElement) => {
+                return opt.value === configName;
+            });
+        expect(option).withContext('No config found with name "' + configName + '"').toBeDefined();
+        selectAI.value = option?.value as string;
+        selectAI.dispatchEvent(new Event('change'));
+        this.detectChanges();
+    }
+
+    public setInput(input: string, value: unknown): void {
+        this.fixture.componentRef.setInput(input, value);
+    }
 }
 
 export class ComponentTestUtils<C extends AbstractGameComponent, P extends Comparable = string>
@@ -330,28 +360,26 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public static async forGame<Component extends AbstractGameComponent>(
         game: string,
-        configureTestingModule: boolean = true,
-        chooseDefaultConfig: boolean = true)
+        configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<Component>>
     {
-        const optionalGameInfo: MGPOptional<GameInfo> =
-            MGPOptional.ofNullable(GameInfo.getAllGames().find((gameInfo: GameInfo) => gameInfo.urlName === game));
+        const gameInfos: GameInfo[] = GameInfo.getAllGames();
+        const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
+        const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo');
+            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
                                                      AuthUser.NOT_CONNECTED,
-                                                     configureTestingModule,
-                                                     chooseDefaultConfig);
+                                                     configureTestingModule);
     }
 
     public static async forGameWithWrapper<Component extends AbstractGameComponent, Actor extends Comparable>(
         game: string,
         wrapperKind: Type<GameWrapper<Actor>>,
         user: AuthUser = AuthUser.NOT_CONNECTED,
-        configureTestingModule: boolean = true,
-        chooseDefaultConfig: boolean = true)
+        configureTestingModule: boolean = true)
     : Promise<ComponentTestUtils<Component, Actor>>
     {
         const testUtils: ComponentTestUtils<Component, Actor> =
@@ -360,19 +388,8 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         testUtils.prepareFixture(wrapperKind);
         testUtils.detectChanges();
         tick(1); // Need to be at least 1ms
-        if (chooseDefaultConfig) {
-            const wrapperIsLocal: boolean = testUtils.getWrapper() instanceof LocalGameWrapperComponent;
-            const config: MGPOptional<RulesConfig> = GameInfo.getByUrlName(game).get().getRulesConfig();
-            if (wrapperIsLocal && config.isPresent()) {
-                await testUtils.acceptDefaultConfig();
-            }
-            /**
-             * If we just choose default config, here, the local game wrapper is not yet in playing phase
-             * so most things are not spyable
-             */
-            testUtils.bindGameComponent();
-            testUtils.prepareSpies();
-        }
+        testUtils.bindGameComponent();
+        testUtils.prepareSpies();
         return testUtils;
     }
 
@@ -388,11 +405,6 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         const testUtils: ComponentTestUtils<Component, Actor> = new ComponentTestUtils<Component, Actor>();
         testUtils.prepareMessageDisplayerSpies();
         return testUtils;
-    }
-
-    public async acceptDefaultConfig(): Promise<void> {
-        await this.clickElement('#start-game-with-config');
-        tick(1);
     }
 
     public bindGameComponent(): void {
@@ -416,7 +428,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public expectToBeCreated(): void {
         expect(this.getWrapper()).withContext('Wrapper should be created').toBeTruthy();
-        expect(this.getGameComponent()).withContext('Component should be created').toBeTruthy();
+        expect(this.getGameComponent()).withContext('Game component should be created').toBeTruthy();
     }
 
     public override forceChangeDetection(): void {
@@ -424,23 +436,21 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.detectChanges();
     }
 
-    public setRoute(id: string, value: string): void {
-        TestBed.inject(ActivatedRouteStub).setRoute(id, value);
-    }
-
     public async setupState(state: GameState,
                             params: { previousState?: GameState,
                                       previousMove?: Move,
-                                      config?: MGPOptional<RulesConfig>
-                            } = {})
+                                      config?: MGPOptional<RulesConfig> } = {})
     : Promise<void>
     {
         const config: MGPOptional<RulesConfig> = this.getConfigFrom(params.config);
         if (config.isPresent()) {
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
-            wrapper.updateConfig(config);
+            Object.entries(config.get())
+                .map((configElement: [string, ConfigDescriptionType]) => {
+                    TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
+                });
+            await wrapper.setConfigFromParams();
             this.gameComponent.config = config;
-            wrapper.markConfigAsFilled();
             tick(0);
         }
         this.gameComponent.node = new GameNode(
@@ -614,32 +624,39 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy.calls.reset();
     }
 
+    public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {
+        const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
+        const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;
+        selectAI.dispatchEvent(new Event('change'));
+        this.detectChanges();
+        tick(0);
+    }
+
 }
 
 export class ConfigureTestingModuleUtils {
 
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
-            imports: [
-                AppModule,
-                RouterTestingModule.withRoutes([
-                    { path: 'play', component: OnlineGameWrapperComponent },
-                    { path: 'server', component: BlankComponent },
-                ]),
-            ],
+            imports: [],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: PartDAO, useClass: PartDAOMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
+                { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
+                OGWCTimeManagerService,
+                OGWCRequestManagerService,
             ],
         }).compileComponents();
     }
@@ -649,55 +666,40 @@ export class ConfigureTestingModuleUtils {
     : Promise<void>
     {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
-                    { path: '**', component: BlankComponent },
-                ]),
-                FormsModule,
-                ReactiveFormsModule,
-                NoopAnimationsModule,
-            ],
-            declarations: [
-                componentType,
-                FirestoreTimePipe,
-                HumanDurationPipe,
-                ToggleVisibilityDirective,
-            ],
-            schemas: [
-                CUSTOM_ELEMENTS_SCHEMA,
-            ],
+            imports: [],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: ConfigRoomDAO, useClass: ConfigRoomDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: ActivatedRouteStub, useValue: activatedRouteStub },
                 { provide: UserDAO, useClass: UserDAOMock },
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
-                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: ErrorLoggerService, useClass: ErrorLoggerServiceMock },
+                { provide: CurrentGameService, useClass: CurrentGameServiceMock },
                 { provide: GameService, useClass: GameServiceMock },
                 { provide: ConfigRoomService, useClass: ConfigRoomServiceMock },
-                { provide: ServerTimeService, useClass: ServerTimeServiceMock },
+                { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ActiveConfigRoomsService, useClass: ActiveConfigRoomsServiceMock },
+                { provide: BackendService, useClass: BackendServiceMock },
             ],
         }).compileComponents();
     }
 }
 
 export async function setupEmulators(): Promise<unknown> {
-    new AppModule(); // This will initialize firebase with the emulators
+    initializeFirebase();
     await TestBed.configureTestingModule({
-        imports: [
-            HttpClientModule,
-        ],
         providers: [
+            provideHttpClient(),
             ConnectedUserService,
         ],
     }).compileComponents();
     const http: HttpClient = TestBed.inject(HttpClient);
     // Clear the content of the firestore database in the emulator
-    await http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents').toPromise();
+    await firstValueFrom(http.delete('http://localhost:8080/emulator/v1/projects/my-project/databases/(default)/documents'));
     // Clear the auth data in the emulator before each test
-    await http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts').toPromise();
+    await firstValueFrom(http.delete('http://localhost:9099/emulator/v1/projects/my-project/accounts'));
     return;
 }
 
@@ -716,51 +718,63 @@ function getComponentClassName(component: Type<any>): string {
  * routed to matches `component`. In case multiple router.navigate calls happen,
  * set otherRoutes to true.
  */
-export function expectValidRouting(router: Router,
-                                   path: string[],
-                                   component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                   options?: { otherRoutes?: boolean, skipLocationChange?: boolean})
-: void
+export async function expectValidRouting(router: Router,
+                                         path: string[],
+                                         component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
+                                         options?: { otherRoutes?: boolean,
+                                                     skipLocationChange?: boolean,
+                                                     queryParams?: Record<string, string> })
+: Promise<void>
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
-    for (const pathPart of path) {
-        expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+    if (!(path.length === 1 && path[0] === '/')) {
+        // Unless the path is / (in which case, it must finish by /), we need to ensure the presence of /
+        for (const pathPart of path) {
+            expect(pathPart[pathPart.length-1]).withContext('Routing should not include superfluous / at the end').not.toBe('/');
+        }
     }
     const fullPath: string = path.join('/');
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${path}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
     const otherRoutes: boolean = options != null && options.otherRoutes != null && options.otherRoutes;
-    const skipLocationChange: boolean =
-        options != null && options.skipLocationChange != null && options.skipLocationChange;
+    const args: [string[], ...NavigationExtras[]] = [path];
+    const extraArgs: NavigationExtras = {};
+    if (options != null && options.queryParams != null) {
+        extraArgs.queryParams = options.queryParams;
+    }
+    if (options != null && options.skipLocationChange != null) {
+        extraArgs.skipLocationChange = options.skipLocationChange;
+    }
+    if (Object.keys(extraArgs).length > 0) {
+        args.push(extraArgs);
+    }
     if (otherRoutes) {
-        if (skipLocationChange) {
-            expect(router.navigate).toHaveBeenCalledWith(path, { skipLocationChange: true });
-        } else {
-            expect(router.navigate).toHaveBeenCalledWith(path);
-        }
+        expect(router.navigate).toHaveBeenCalledWith(...args);
     } else {
-        if (skipLocationChange) {
-            expect(router.navigate).toHaveBeenCalledOnceWith(path, { skipLocationChange: true });
-        } else {
-            expect(router.navigate).toHaveBeenCalledOnceWith(path);
-        }
+        expect(router.navigate).toHaveBeenCalledOnceWith(...args);
     }
 }
 
 /**
  * Similar to expectValidRouting, but for checking HTML elements that provide a routerLink.
  */
-export function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>): void {
+export async function expectValidRoutingLink(element: DebugElement, fullPath: string, component: Type<unknown>)
+  : Promise<void>
+{
     expect(fullPath[0]).withContext('Routings should start with /').toBe('/');
 
     expect(element.attributes.routerLink).withContext('Routing links should have a routerLink').toBeDefined();
     expect(element.attributes.routerLink).toEqual(fullPath);
     const matchingRoute: MGPOptional<Route> = findMatchingRoute(fullPath);
     expect(matchingRoute.isPresent()).withContext(`Expected route to be present for path: ${fullPath}`).toBeTrue();
-    const routedToComponent: string = getComponentClassName(Utils.getNonNullable(matchingRoute.get().component));
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const resolvedComponent: any = await matchingRoute.get().loadComponent!();
+    const routedToComponent: string = getComponentClassName(resolvedComponent);
     const expectedComponent: string = getComponentClassName(component);
     expect(routedToComponent).withContext('It should route to the expected component').toEqual(expectedComponent);
 }
@@ -789,17 +803,30 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
     let subscribed: boolean = false;
     let unsubscribed: boolean = false;
     const spy: jasmine.Spy = spyOn(service, subscribeMethod);
-    spy.and.callFake((...args: unknown[]): Subscription => {
+    spy.and.callFake((...args: unknown[]): Subscription | Promise<Subscription> => {
         subscribed = true;
         // We need to call the original function.
         // This is a bit hacky, but seems to be the only way:
         // we change the spy to call through, and apply the original method.
         // This is fine for subscribe methods as they are expected to be called only once.
         spy.and.callThrough();
-        service[subscribeMethod](...args);
-        return new Subscription(() => {
-            unsubscribed = true;
-        });
+        // The subscription method could be a promise, we need to deal with both cases
+        const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
+        if (subscription['unsubscribe'] !== undefined) {
+            // This is not a promise, we can wrap it directly
+            return new Subscription(() => {
+                unsubscribed = true;
+                (subscription as Subscription).unsubscribe();
+            });
+        } else {
+            // This is a promise, let's await it then wrap it
+            return (subscription as Promise<Subscription>).then((sub: Subscription): Subscription => {
+                return new Subscription(() => {
+                    unsubscribed = true;
+                    sub.unsubscribe();
+                });
+            });
+        }
     });
     return () => {
         expect(subscribed)

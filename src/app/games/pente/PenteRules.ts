@@ -1,19 +1,21 @@
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PenteConfig } from './PenteConfig';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
@@ -58,7 +60,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
     }
 
     public override isLegal(move: PenteMove, state: PenteState): MGPValidation {
-        if (state.isOnBoard(move.coord) === false) {
+        if (state.isNotOnBoard(move.coord)) {
             return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
         } else if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());

@@ -1,30 +1,24 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
+import { fakeAsync, tick } from '@angular/core/testing';
 
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { MGPOptional } from '@everyboard/lib';
 
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { MancalaState } from '../../common/MancalaState';
-import { MancalaFailure } from '../../common/MancalaFailure';
+import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
 import { MancalaConfig } from '../../common/MancalaConfig';
-
-import { KalahComponent } from '../kalah.component';
-import { KalahRules } from '../KalahRules';
+import { MancalaFailure } from '../../common/MancalaFailure';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaState } from '../../common/MancalaState';
+import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MGPOptional } from '@everyboard/lib';
-import { AbstractAI, AI, AIOptions } from 'src/app/jscaip/AI/AI';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Move } from 'src/app/jscaip/Move';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { KalahRules } from '../KalahRules';
+import { KalahComponent } from '../kalah.component';
 
 describe('KalahComponent', () => {
 
@@ -201,12 +195,13 @@ describe('KalahComponent', () => {
                 // When starting the second turn
                 const element: DebugElement = mancalaTestUtils.testUtils.findElement('#click-0-0');
                 element.triggerEventHandler('click', null);
-                tick(0); // Just start the click effect but we don't need to wait any window.setTimeout
+                tick(0); // Just start the click effect but we don't need to wait any setTimeout
 
                 // Then the capture of last turn should be hidden
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
                 tick(6 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
             }));
+
         });
 
         it('should show constructed move during multi-distribution move', fakeAsync(async() => {
@@ -375,6 +370,7 @@ describe('KalahComponent', () => {
             // Then the capture of last turn should be hidden
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
         }));
+
     });
 
 });

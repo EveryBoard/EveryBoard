@@ -1,8 +1,11 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RelativePlayer } from '../../jscaip/RelativePlayer';
+import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+
 import { TaflPawn } from './TaflPawn';
-import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
 
 export class TaflState extends GameStateWithTable<TaflPawn> {
 
@@ -35,6 +38,19 @@ export class TaflState extends GameStateWithTable<TaflPawn> {
 
     public getSize(): number {
         return this.getHeight();
+    }
+
+    public hasOwnerAt(coord: Coord, owner: PlayerOrNone): boolean {
+        const optional: MGPOptional<TaflPawn> = this.getOptionalPieceAt(coord);
+        if (optional.isPresent()) {
+            return optional.get().getOwner().equals(owner);
+        } else {
+            return false;
+        }
+    }
+
+    public isExternalThrone(coord: Coord): boolean {
+        return this.isCorner(coord);
     }
 
 }

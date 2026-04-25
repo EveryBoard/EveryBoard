@@ -1,20 +1,22 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
 import { Set, MGPMap } from '@everyboard/lib';
-import { SixState } from './SixState';
+
+import { AlignmentStatus, BoardInfo } from '../../jscaip/AI/AlignmentHeuristic';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Player } from '../../jscaip/Player';
+
+import { SixHeuristic } from './SixHeuristic';
 import { SixMove } from './SixMove';
 import { SixMoveGenerator } from './SixMoveGenerator';
-import { SixHeuristic } from './SixHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
-import { AlignmentStatus, BoardInfo } from 'src/app/jscaip/AI/AlignmentHeuristic';
+import { SixState } from './SixState';
 
 export class SixFilteredMoveGenerator extends SixMoveGenerator {
 
     private readonly heuristic: SixHeuristic = new SixHeuristic();
 
-    protected override getMovements(state: SixState, legalLandings: Coord[]): SixMove[] {
+    protected override getTranslations(state: SixState, legalLandings: Coord[]): SixMove[] {
         const safelyMovablePieceOrFirstOne: CoordSet = this.getSafelyMovablePieceOrFirstOne(state);
-        return this.getMovementsFrom(state, safelyMovablePieceOrFirstOne, legalLandings);
+        return this.getTranslationsFrom(state, safelyMovablePieceOrFirstOne, legalLandings);
     }
 
     private getSafelyMovablePieceOrFirstOne(state: SixState): CoordSet {

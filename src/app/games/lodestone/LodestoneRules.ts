@@ -1,20 +1,22 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
 import { MGPFallible, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece } from './LodestonePiece';
 import { LodestonePieceLodestone, LodestonePieceNone, LodestoneDescription, LodestonePiecePlayer } from './LodestonePiece';
 import { LodestoneState, LodestonePositions, LodestonePressurePlates } from './LodestoneState';
 import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressurePlateGroup } from './LodestoneState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
@@ -225,14 +227,13 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         const moved: Coord[] = [];
         const directions: readonly Ordinal[] = orientation === 'diagonal' ? Ordinal.DIAGONALS : Ordinal.ORTHOGONALS;
         for (const direction of directions) {
-            for (let coord: Coord = lodestone.getNext(direction); // eslint-disable-next-line indent
-                 state.isOnBoard(coord); // eslint-disable-next-line indent
-                 coord = coord.getNext(direction)) {
+            let coord: Coord = lodestone.getNext(direction);
+            while (state.isOnBoard(coord)) {
                 const pieceOnTarget: LodestonePiece = board[coord.y][coord.x];
                 const next: Coord = coord.getNext(direction);
-                if (state.isOnBoard(next)) {
+                if (state.coordIsOwnedBy(next, currentPlayer)) {
                     const pieceToMove: LodestonePiece = board[next.y][next.x];
-                    if (pieceToMove.isPlayerPiece() && pieceToMove.owner === currentPlayer) {
+                    if (pieceToMove.isPlayerPiece()) {
                         // We move player piece of the next coord to the current coord
                         // hence in the opposite of direction
                         if (pieceOnTarget.isEmpty()) {
@@ -250,6 +251,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                         }
                     }
                 }
+                coord = coord.getNext(direction);
             }
         }
         return { board, captures, moved };
@@ -272,9 +274,9 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
                  coord.equals(lodestone) === false; // eslint-disable-next-line indent
                  coord = coord.getPrevious(direction))
             {
-                if (state.isOnBoard(coord)) {
+                if (state.coordIsOwnedBy(coord, opponent)) {
                     const pieceToMove: LodestonePiece = board[coord.y][coord.x];
-                    if (pieceToMove.isPlayerPiece() && pieceToMove.owner === opponent) {
+                    if (pieceToMove.isPlayerPiece()) {
                         const next: Coord = coord.getNext(direction);
                         if (state.isOnBoard(next)) {
                             const pieceOnTarget: LodestonePiece = board[next.y][next.x];

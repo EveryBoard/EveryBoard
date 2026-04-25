@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { ArrayUtils } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const ______: TrexoPieceStack = TrexoPieceStack.EMPTY;
 const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 0)]);
@@ -43,7 +44,7 @@ describe('TrexoRules', () => {
         // When dropping the piece
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(4, 3)).get();
 
-        // Then it should succeed
+        // Then the move should succeed
         const expectedState: TrexoState = TrexoState.of([
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
             [______, ______, ______, ______, ______, ______, ______, ______, ______, ______],
@@ -104,7 +105,7 @@ describe('TrexoRules', () => {
         // When dropping the new piece partially on the first piece partially on the second
         const move: TrexoMove = TrexoMove.from(new Coord(4, 4), new Coord(5, 4)).get();
 
-        // Then it should succeed
+        // Then the move should succeed
         LEFT = ArrayUtils.copy(LEFT);
         RIGHT = ArrayUtils.copy(RIGHT);
         LEFT.push(new TrexoPiece(Player.ZERO, 2));

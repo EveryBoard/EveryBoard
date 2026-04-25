@@ -1,17 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaNode, SaharaRules } from '../SaharaRules';
-import { SaharaMove } from '../SaharaMove';
-import { SaharaState } from '../SaharaState';
-import { TriangularCheckerBoard } from 'src/app/jscaip/state/TriangularCheckerBoard';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Player } from 'src/app/jscaip/Player';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SaharaFailure } from '../SaharaFailure';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { SaharaMove } from '../SaharaMove';
+import { SaharaNode, SaharaRules } from '../SaharaRules';
+import { SaharaState } from '../SaharaState';
 
-describe('SaharaHeuristic', () => {
+describe('SaharaRules', () => {
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;
@@ -30,10 +30,10 @@ describe('SaharaHeuristic', () => {
     });
 
     it('TriangularCheckerBoard should always give 3 neighbors', () => {
-        for (let y: number = 0; y < SaharaState.HEIGHT; y++) {
-            for (let x: number = 0; x < SaharaState.WIDTH; x++) {
-                expect(TriangularCheckerBoard.getNeighbors(new Coord(x, y)).length).toBe(3);
-            }
+        const state: SaharaState = rules.getInitialState();
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            const coord: Coord = coordAndContent.coord;
+            expect(TriangularCheckerBoard.getNeighbors(coord).length).toBe(3);
         }
     });
 
@@ -46,6 +46,34 @@ describe('SaharaHeuristic', () => {
 
         // Then the move should be illegal
         const reason: string = SaharaFailure.CAN_ONLY_REBOUND_ON_EMPTY_SPACE();
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+    });
+
+    it('should forbid move starting out of range', () => {
+        // Given any board
+        const state: SaharaState = rules.getInitialState();
+
+        // When attempting a move starting out of board
+        const start: Coord = new Coord(-1, 0);
+        const end: Coord = new Coord(0, 0);
+        const move: SaharaMove = SaharaMove.from(start, end).get();
+
+        // Then the move should be illegal
+        const reason: string = CoordFailure.OUT_OF_RANGE(start);
+        RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+    });
+
+    it('should forbid move ending out of range', () => {
+        // Given any board
+        const state: SaharaState = rules.getInitialState();
+
+        // When attempting a move ending out of board
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(-1, 0);
+        const move: SaharaMove = SaharaMove.from(start, end).get();
+
+        // Then the move should be illegal
+        const reason: string = CoordFailure.OUT_OF_RANGE(end);
         RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
     });
 
@@ -69,6 +97,9 @@ describe('SaharaHeuristic', () => {
         ];
         const state: SaharaState = new SaharaState(board, 4);
         const node: SaharaNode = new SaharaNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 

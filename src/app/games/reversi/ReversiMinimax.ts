@@ -1,9 +1,10 @@
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { ReversiMove } from './ReversiMove';
-import { ReversiState } from './ReversiState';
-import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
-import { ReversiMoveGenerator } from './ReversiMoveGenerator';
+import { Minimax } from '../../jscaip/AI/Minimax';
+
 import { ReversiHeuristic } from './ReversiHeuristic';
+import { ReversiMove } from './ReversiMove';
+import { ReversiMoveGenerator } from './ReversiMoveGenerator';
+import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
+import { ReversiState } from './ReversiState';
 
 export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation> {
 

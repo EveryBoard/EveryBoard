@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
-import { ReversiMove } from '../ReversiMove';
-import { ReversiState } from '../ReversiState';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ReversiFailure } from '../ReversiFailure';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { ReversiMove } from '../ReversiMove';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
+import { ReversiState } from '../ReversiState';
 
 describe('ReversiRules', () => {
 
@@ -107,7 +108,7 @@ describe('ReversiRules', () => {
         // When passing
         const move: ReversiMove = ReversiMove.PASS;
 
-        // Then it should be legal
+        // Then the move should succeed
         const expectedState: ReversiState = new ReversiState(board, 2);
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });

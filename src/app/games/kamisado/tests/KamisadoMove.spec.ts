@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoRules } from '../KamisadoRules';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { KamisadoMove } from '../KamisadoMove';
-import { EncoderTestUtils } from '@everyboard/lib';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
+import { KamisadoRules } from '../KamisadoRules';
 
 describe('KamisadoMove', () => {
 
@@ -42,7 +43,7 @@ describe('KamisadoMove', () => {
     });
 
     it('should assign a length of 0 to PASS moves', () => {
-        expect(KamisadoMove.PASS.length()).toBe(0);
+        expect(KamisadoMove.PASS.getDistance()).toBe(0);
     });
 
 });

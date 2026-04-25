@@ -1,17 +1,20 @@
 /* eslint-disable max-lines-per-function */
-import { Utils, TestUtils } from '@everyboard/lib';
-import { GoPiece } from '../GoPiece';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GoGroupData } from 'src/app/games/gos/GoGroupsData';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
 import { fakeAsync } from '@angular/core/testing';
+
+import { Utils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { GoGroupData } from '../GoGroupsData';
+import { GoPiece } from '../GoPiece';
 
 describe('GoGroupData', () => {
 
     const coord: Coord = new Coord(0, 0);
 
     // dead wrapping => that wrapping alive opposite
-    // dead wrapping and his opposite => that opposing
+    // dead wrapping and its opposite => that opposing
     // two alive wrapping => error
 
     it('should throw when getWrapped is called on a multi wrapped group', () => {

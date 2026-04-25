@@ -1,21 +1,25 @@
-import { TeekoConfig, TeekoRules } from './TeekoRules';
-import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
-import { TeekoState } from './TeekoState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { NgClass } from '@angular/common';
+import { Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { TeekoMoveGenerator } from './TeekoMoveGenerator';
+
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { MCTS } from '../../jscaip/AI/MCTS';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { TeekoMinimax } from './TeekoMinimax';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
+import { TeekoMoveGenerator } from './TeekoMoveGenerator';
+import { TeekoConfig, TeekoRules } from './TeekoRules';
+import { TeekoState } from './TeekoState';
 
 @Component({
     selector: 'app-teeko',
     templateUrl: './teeko.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 
 export class TeekoComponent extends RectangularGameComponent<TeekoRules,
@@ -29,8 +33,8 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public moved: Coord[] = [];
     public victory: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
+    public constructor() {
+        super();
         this.setRulesAndNode('Teeko');
         this.availableAIs = [
             new TeekoMinimax(),
@@ -39,7 +43,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.encoder = TeekoMove.encoder;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.node.gameState.board;
     }
 
@@ -70,13 +74,12 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         }
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().isInDropPhase()) {
-            const move: TeekoDropMove = TeekoDropMove.from(clickedCoord).get();
+            const move: TeekoDropMove = TeekoDropMove.from(clickedCoord);
             return this.chooseMove(move);
         } else {
             if (this.selected.isPresent()) {
                 if (this.selected.equalsValue(clickedCoord)) {
-                    this.selected = MGPOptional.empty();
-                    return MGPValidation.SUCCESS;
+                    return this.cancelMove();
                 } else {
                     const move: TeekoTranslationMove =
                         TeekoTranslationMove.from(this.selected.get(), clickedCoord).get();

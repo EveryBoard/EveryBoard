@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
-import { LinesOfActionState } from '../LinesOfActionState';
 import { MGPOptional } from '@everyboard/lib';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionHeuristic', () => {
 

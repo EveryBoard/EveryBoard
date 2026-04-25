@@ -1,14 +1,16 @@
-import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
-import { Move } from '../Move';
-import { BoardValue } from './BoardValue';
 import { ArrayUtils, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
-import { GameState } from '../state/GameState';
-import { Player } from '../Player';
+
 import { GameStatus } from '../GameStatus';
+import { Move } from '../Move';
+import { Player } from '../Player';
+import { PlayerNumberTable } from '../PlayerNumberTable';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameState } from '../state/GameState';
+
+import { AI, AIDepthLimitOptions, MoveGenerator } from './AI';
+import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
-import { PlayerNumberTable } from '../PlayerNumberTable';
 
 export type HeuristicBounds<B> = {
     player0Best: B,
@@ -224,7 +226,8 @@ implements AI<M, S, AIDepthLimitOptions, C>
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
             const moveString: string = move.toString();
-            Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move (' + moveString + '), refusal reason: ' + legality.getReasonOr('') + ' this should not happen.');
+            Utils.assert(legality.isSuccess(), 'The minimax "' + this.name + '" has proposed an illegal move at turn ' + node.gameState.turn + ' (' + moveString + '), ' +
+                                               'refusal reason: "' + legality.getReasonOr('') + '", this should not happen.');
             const state: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
             const newChild: GameNode<M, S> = new GameNode(state,
                                                           MGPOptional.of(node),
