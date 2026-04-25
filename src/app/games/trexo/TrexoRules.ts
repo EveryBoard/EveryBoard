@@ -47,7 +47,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (BoardValue.isVictory(squareScore)) {
+                if (BoardValue.isVictoryValue(squareScore)) {
                     if (pieceOwner === previousPlayer) {
                         victoryOfLastPlayer.push(coord);
                     } else {
@@ -111,7 +111,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = coordAndContent.content.getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (BoardValue.isVictory(squareScore)) {
+                if (BoardValue.isVictoryValue(squareScore)) {
                     if (pieceOwner === previousPlayer) {
                         // Cannot return right away
                         // because the last player only wins if the other does not get an alignment

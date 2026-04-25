@@ -27,10 +27,10 @@ export class ViewBox {
     }
 
     private static getLimits(coords: Coord[]): Limits {
-        let maxX: number = Number.NEGATIVE_INFINITY;
-        let maxY: number = Number.NEGATIVE_INFINITY;
-        let minX: number = Number.POSITIVE_INFINITY;
-        let minY: number = Number.POSITIVE_INFINITY;
+        let maxX: number = -Infinity;
+        let maxY: number = -Infinity;
+        let minX: number = Infinity;
+        let minY: number = Infinity;
         for (const coord of coords) {
             minX = Math.min(minX, coord.x);
             minY = Math.min(minY, coord.y);

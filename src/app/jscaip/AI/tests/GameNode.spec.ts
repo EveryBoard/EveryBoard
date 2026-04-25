@@ -117,10 +117,10 @@ describe('GameNode', () => {
     node_2 -> node_3 [label="MoveMock"; color="#994d00"];
     node_3 [label="#3: 4", style=filled, fillcolor="#994d00"];
     node_2 [label="#2: 3", style=filled, fillcolor="#994d00"];
-    node_1 [label="#1: 1", style=filled, fillcolor="#994d00"];
+    node_1 [label="#1: 1", style=filled, fillcolor="white"];
     node_0 -> node_4 [label="MoveMock"; color="#994d00"];
     node_4 [label="#1: 2", style=filled, fillcolor="white"];
-    node_0 [label="#0: 0", style=filled, fillcolor="#994d00"];
+    node_0 [label="#0: 0", style=filled, fillcolor="white"];
 }`;
             expect(dot).toEqual(expectedDot);
         });
@@ -142,11 +142,11 @@ describe('GameNode', () => {
             const dot: string = treeRoot.showDot(rules, config, undefined, 1).dot;
             // Then it should have only shown the relevant nodes
             const expectedDot: string = `digraph G {
-    node_0 -> node_1 [label="MoveMock"; color="#994d00"];
-    node_1 [label="#1: 1", style=filled, fillcolor="#994d00"];
-    node_0 -> node_2 [label="MoveMock"; color="#994d00"];
-    node_2 [label="#1: 2", style=filled, fillcolor="#994d00"];
-    node_0 [label="#0: 0", style=filled, fillcolor="#994d00"];
+   node_0 -> node_1 [label="MoveMock"; color="#994d00"];
+   node_1 [label="#1: 1", style=filled, fillcolor="white"];
+   node_0 -> node_2 [label="MoveMock"; color="#994d00"];
+   node_2 [label="#1: 2", style=filled, fillcolor="white"];
+   node_0 [label="#0: 0", style=filled, fillcolor="white"];
 }`;
             expect(dot).toEqual(expectedDot);
         });
