@@ -10,7 +10,6 @@ export class Utils {
      */
     public static logError: (kind: string, message: string, data?: JSONValue) => MGPValidation =
         (kind: string, message: string, data?: JSONValue) => {
-            console.log(kind, message, data)
             return MGPValidation.failure(message);
         };
 
