@@ -991,7 +991,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player zero wins
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -1005,7 +1006,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player one wins
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -1019,7 +1021,8 @@ describe('HiveRules', () => {
             const state: HiveState = HiveState.fromRepresentation(board, 4);
             const node: HiveNode = new HiveNode(state, MGPOptional.empty(), MGPOptional.empty());
 
-            // Then player it is a draw
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

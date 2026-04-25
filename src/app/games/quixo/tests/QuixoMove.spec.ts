@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';

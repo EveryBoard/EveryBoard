@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { CoordFailure } from '../../../jscaip/Coord';
@@ -379,8 +380,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect a victory for the blocked player
+            // When checking the game status
+            // Then it should be a victory for Player.ONE (who is blocked)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -396,9 +397,9 @@ describe('DiaballikRules', () => {
                 [_, _, O, Ȯ, O, _, O],
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
-            // When checking for victory
 
-            // Then it should detect a victory for the blocked player
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO (who is blocked)
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -415,8 +416,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect a defeat for the current player (here, zero loses so one wins)
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -433,8 +434,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect the victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -451,8 +452,8 @@ describe('DiaballikRules', () => {
             ], 0);
             const node: DiaballikNode = new DiaballikNode(state);
 
-            // When checking for victory
-            // Then it should detect the victory
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

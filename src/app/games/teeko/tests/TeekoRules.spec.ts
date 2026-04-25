@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -419,8 +420,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 9);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -436,8 +437,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 9);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -453,8 +454,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 9);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -470,8 +471,8 @@ describe('TeekoRules', () => {
             const state: TeekoState = new TeekoState(board, 10);
             const node: TeekoNode = new TeekoNode(state);
 
-            // When checking game status
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

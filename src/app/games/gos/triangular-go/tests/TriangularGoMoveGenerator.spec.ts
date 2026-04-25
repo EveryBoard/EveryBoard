@@ -8,8 +8,8 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { TrigoMoveGenerator } from '../TrigoMoveGenerator';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { TriangularGoMoveGenerator } from '../../triangular-go/TriangularGoMoveGenerator';
+import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -20,14 +20,14 @@ const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-describe('TrigoMoveGenerator', () => {
+describe('TriangularGoMoveGenerator', () => {
 
-    let moveGenerator: TrigoMoveGenerator;
+    let moveGenerator: TriangularGoMoveGenerator;
 
-    const config: MGPOptional<TrigoConfig> = MGPOptional.of({ size: 2, hexagonal: false });
+    const config: MGPOptional<TriangularGoConfig> = MGPOptional.of({ size: 2, hexagonal: false });
 
     beforeEach(() => {
-        moveGenerator = new TrigoMoveGenerator();
+        moveGenerator = new TriangularGoMoveGenerator();
     });
 
     describe('getListMove', () => {
@@ -46,7 +46,7 @@ describe('TrigoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then it should include one move per empty space (25) + the move PASS
             expect(moves.length).toBe(25 + 1);
@@ -64,7 +64,7 @@ describe('TrigoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then there should only be 'ACCEPT'
             expect(moves).toEqual([GoMove.ACCEPT]);
@@ -72,7 +72,7 @@ describe('TrigoMoveGenerator', () => {
 
         it('should only have GoMove.ACCEPT in COUNTNG GoPhase when agreeing on the result', () => {
             // Given a board in counting phase when minimax agrees with the result
-            const initialBoard: GoPiece[][] = TrigoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = TriangularGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard,
                                                PlayerNumberMap.of(0, 0),
                                                0,
@@ -82,7 +82,7 @@ describe('TrigoMoveGenerator', () => {
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([]);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then there should only be 'ACCEPT'
             expect(moves).toEqual([GoMove.ACCEPT]);
@@ -90,14 +90,14 @@ describe('TrigoMoveGenerator', () => {
 
         it('should only have counting moves in GoPhase.COUNTING when not agreeing on the result', () => {
             // Given a board in ACCEPT phase but having a disagreement on the final state
-            const initialBoard: GoPiece[][] = TrigoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = TriangularGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);
             spyOn(moveGenerator, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
 
             // When generating the list of move
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then the list of move should be the disagreements
             expect(moves).toEqual([new GoMove(1, 1)]);
@@ -117,7 +117,7 @@ describe('TrigoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then it should include the moves that puts them back alive
             expect(moves.length).toBe(1);
@@ -138,7 +138,7 @@ describe('TrigoMoveGenerator', () => {
             const initialNode: GoNode = new GoNode(state);
 
             // When listing the moves
-            const moves: GoMove[] = moveGenerator.getListMoves(initialNode);
+            const moves: GoMove[] = moveGenerator.getListMoves(initialNode, config);
 
             // Then it should include the moves that puts them back alive
             expect(moves.length).toBe(1);

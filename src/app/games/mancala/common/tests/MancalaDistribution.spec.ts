@@ -1,4 +1,4 @@
-import { TestUtils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { MancalaDistribution } from '../MancalaMove';
 

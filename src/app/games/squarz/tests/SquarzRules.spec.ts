@@ -188,8 +188,10 @@ describe('SquarzRules', () => {
                 [O, O, O, O, O, O, X, X],
                 [O, O, O, O, O, O, X, X],
             ], 64);
-            // Then victory should be granted to Player.ZERO
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -205,8 +207,10 @@ describe('SquarzRules', () => {
                 [_, _, _, X, X, X, O, O],
                 [_, _, _, X, X, X, O, O],
             ], 64);
-            // Then victory should be granted to Player.ONE
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -222,8 +226,10 @@ describe('SquarzRules', () => {
                 [O, O, O, O, X, X, X, X],
                 [O, O, O, O, X, X, X, X],
             ], 64);
-            // Then it should be a draw
             const node: SquarzNode = new SquarzNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

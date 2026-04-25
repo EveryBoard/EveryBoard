@@ -13,6 +13,7 @@ import { CurrentGameService, GameActionFailure } from '../../../services/Current
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { ChatComponent } from '../chat/chat.component';
+import { EloComponent } from '../elo/elo.component';
 import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
 import { GameInfo } from '../pick-game/pick-game.component';
 
@@ -25,7 +26,7 @@ type WithId<T> = T & {
 @Component({
     selector: 'app-lobby',
     templateUrl: './lobby.component.html',
-    imports: [NgClass, OnlineGameSelectionComponent, ChatComponent],
+    imports: [NgClass, OnlineGameSelectionComponent, ChatComponent, EloComponent],
 })
 @Debug.log
 export class LobbyComponent implements OnInit, OnDestroy {
@@ -94,10 +95,6 @@ export class LobbyComponent implements OnInit, OnDestroy {
 
     public getGameName(configRoom: ConfigRoom): string {
         return GameInfo.getByUrlName(configRoom.gameName).get().name;
-    }
-
-    public getCreatorLine(configRoom: ConfigRoom): string {
-        return `${configRoom.creator.name} (${Math.floor(configRoom.creatorElo)})`;
     }
 
     public async joinGame(configRoom: WithId<ConfigRoom>): Promise<void> {

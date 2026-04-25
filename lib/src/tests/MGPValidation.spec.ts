@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from '../MGPFallible';
-import { MGPValidation, MGPValidationTestUtils } from '../MGPValidation';
+import { MGPValidation } from '../MGPValidation';
+
+import { MGPValidationTestUtils } from './MGPValidationTestUtils';
 
 describe('MGPValidation', () => {
 

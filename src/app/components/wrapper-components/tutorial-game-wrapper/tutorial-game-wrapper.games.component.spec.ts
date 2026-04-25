@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Comparable, MGPFallible, MGPOptional, MGPValidation, MGPValidationTestUtils, Utils } from '@everyboard/lib';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPValidationTestUtils } from '@everyboard/lib/testing';
 
 import { AbaloneMove } from '../../../games/abalone/AbaloneMove';
 import { AbaloneRules } from '../../../games/abalone/AbaloneRules';

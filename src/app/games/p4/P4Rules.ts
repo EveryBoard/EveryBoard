@@ -7,6 +7,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
 import { MGPValidators } from '../../utils/MGPValidator';
@@ -15,9 +16,12 @@ import { P4Failure } from './P4Failure';
 import { P4Move } from './P4Move';
 import { P4State } from './P4State';
 
-export type P4Config = {
+export type P4Config = RulesConfig & {
+
     width: number;
+
     height: number;
+
 };
 
 export class P4Node extends GameNode<P4Move, P4State> {}

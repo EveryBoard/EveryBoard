@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Encoder, EncoderTestUtils } from '../Encoder';
+import { Encoder } from '../Encoder';
 import { MGPOptional } from '../MGPOptional';
+
+import { EncoderTestUtils } from './EncoderTestUtils';
 
 describe('MGPOptional', () => {
 
@@ -118,6 +120,10 @@ describe('MGPOptional', () => {
 
         it('should include value for non-empty values', () => {
             expect(MGPOptional.of('foo').toString()).toBe('MGPOptional.of(foo)');
+        });
+
+        it('should rely on the toString of the contained value', () => {
+            expect(MGPOptional.of(MGPOptional.of('foo')).toString()).toBe('MGPOptional.of(MGPOptional.of(foo))');
         });
     });
 

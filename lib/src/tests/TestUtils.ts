@@ -1,5 +1,5 @@
-import { MGPValidation } from './MGPValidation';
-import { Utils } from './Utils';
+import { MGPValidation } from '../MGPValidation';
+import { Utils } from '../Utils';
 
 export class TestUtils {
 
