@@ -481,7 +481,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(winnerTag).toBe('You lost');
         }));
 
-        fit(`should display 'You won' when human wins against AI`, fakeAsync(async() => {
+        it(`should display 'You won' when human wins against AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for human (against AI)
             const state: P4State = new P4State(preVictoryBoard, 39);
             await testUtils.setupState(state);

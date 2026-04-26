@@ -17,9 +17,9 @@ export class BoardValue {
 
     public static getVictoryValueOf(player: Player): number {
         if (player === Player.ZERO) {
-            return Number.MIN_SAFE_INTEGER;
+            return Number.NEGATIVE_INFINITY;
         } else {
-            return Number.MAX_SAFE_INTEGER;
+            return Number.POSITIVE_INFINITY;
         }
     }
 
