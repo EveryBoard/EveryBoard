@@ -2,6 +2,7 @@ package internal
 
 import (
 	"encoding/json"
+	"fmt"
 	"testing"
 	"time"
 
@@ -197,8 +198,9 @@ func TestRejectProposal(t *testing.T) {
 
 func TestAddTime(t *testing.T) {
 	sb, player, _, _ := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
 	sb.AddTime(player)
-	sb.Cleanup()
 }
 
 func TestInvalidMessages(t *testing.T) {
@@ -268,3 +270,97 @@ func TestInvalidMessages(t *testing.T) {
 	sendMessage(t, client, `["Move", {}]`)
 	expectMessage(t, client, `["Error",{"reason":"invalid-data"}]`)
 }
+
+func TestSelectOpponentOnStartedGame(t *testing.T) {
+	sb, player, opponent, _ := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
+	// Given a started game
+	gameId := sb.getSubscribedGameId(player)
+	configRoom := sb.getConfigRoom(gameId)
+	configRoom.Status = model.StatusStarted
+
+	// When trying to select an opponent
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	userOpponent := sb.getUser(opponent)
+	sendMessage(t, sb.getConnection(player), fmt.Sprintf(`["SelectOpponent",{"opponent":%s}]`, toJSON(t, userOpponent)))
+
+	// Then it should be disallowed
+	expectMessage(t, sb.getConnection(player), `["Error",{"reason":"not-allowed"}]`)
+}
+
+func TestProposeConfigOnStartedGame(t *testing.T) {
+	sb, player, _, _ := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
+	// Given a started game
+	gameId := sb.getSubscribedGameId(player)
+	configRoom := sb.getConfigRoom(gameId)
+	configRoom.Status = model.StatusStarted
+
+	// When trying to propose the config
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	config := model.ConfigProposal{
+		GameType:     model.GameTypeStandard,
+		MoveDuration: 120,
+		GameDuration: 1800,
+		FirstPlayer:  model.FirstPlayerCreator,
+		RulesConfig:  json.RawMessage(`null`),
+	}
+	sendMessage(t, sb.getConnection(player), fmt.Sprintf(`["ProposeConfig",{"config":%s}]`, toJSON(t, config)))
+
+	// Then it should be disallowed
+	expectMessage(t, sb.getConnection(player), `["Error",{"reason":"not-allowed"}]`)
+}
+
+func TestReviewConfigOnStartedGame(t *testing.T) {
+	// Given a started game
+	sb, player, _, gameId := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
+	configRoom := sb.getConfigRoom(gameId)
+	configRoom.Status = model.StatusStarted
+
+	// When trying to review it
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	sendMessage(t, sb.getConnection(player), `["ReviewConfig"]`)
+
+	// Then it should be disallowed
+	expectMessage(t, sb.getConnection(player), `["Error",{"reason":"not-allowed"}]`)
+}
+
+func TestAcceptConfigOnStartedGame(t *testing.T) {
+	// Given a started game
+	sb, player, _, gameId := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
+	configRoom := sb.getConfigRoom(gameId)
+	configRoom.Status = model.StatusStarted
+
+	// When trying to accept it
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	sendMessage(t, sb.getConnection(player), `["AcceptConfig"]`)
+
+	// Then it should be disallowed
+	expectMessage(t, sb.getConnection(player), `["Error",{"reason":"not-allowed"}]`)
+}
+
+func TestSendMoveFromObserverOnStartedGame(t *testing.T) {
+	// Given a started game and an observer
+	sb, _, _, gameId := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
+	configRoom := sb.getConfigRoom(gameId)
+
+	observer := sb.EstablishConnection("observer")
+	sb.SubscribeGame(observer, gameId)
+
+	// When the observer sends a move
+	sb.Move(observer, json.RawMessage(`{"lol":true}`))
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+
+	// Then it should be disallowed
+	expectMessage(t, sb.getConnection(observer), `["Error",{"reason":"not-allowed"}]`)
+}
+
+// func TestSendMoveOnUnstartedGame

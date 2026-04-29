@@ -28,7 +28,7 @@ func InitDatabase(dialector gorm.Dialector) error {
 		Logger: logger.Default.LogMode(logger.Silent), // we will log errors ourselves
 	})
 	if err != nil {
-		return fmt.Errorf("Failed to connect to DB: %v", err)
+		return fmt.Errorf("failed to connect to DB: %v", err)
 	}
 
 	switch dialector.(type) {
@@ -41,7 +41,7 @@ func InitDatabase(dialector gorm.Dialector) error {
 
 	err = db.AutoMigrate(&ConfigRoom{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB (AutoMigrate ConfigRoom): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate ConfigRoom): %v", err)
 	}
 
 	// Create first config room, which is actually the lobby
@@ -61,38 +61,38 @@ func InitDatabase(dialector gorm.Dialector) error {
 		}
 		result := db.Create(&lobby)
 		if result.Error != nil {
-			return fmt.Errorf("Cannot initialize DB (Create lobby): %v", err)
+			return fmt.Errorf("cannot initialize DB (Create lobby): %v", err)
 		}
 	}
 
 	err = db.AutoMigrate(&Message{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB (AutoMigrate Message): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate Message): %v", err)
 	}
 
 	err = db.AutoMigrate(&Elo{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB (AutoMigrate Elo): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate Elo): %v", err)
 	}
 
 	err = db.AutoMigrate(&Candidate{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB (AutoMigrate Candidate): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate Candidate): %v", err)
 	}
 
 	err = db.AutoMigrate(&Game{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB (AutoMigrate Game): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate Game): %v", err)
 	}
 
 	err = db.AutoMigrate(&GameEvent{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB (AutoMigrate GameEvent): %v", err)
+		return fmt.Errorf("cannot initialize DB (AutoMigrate GameEvent): %v", err)
 	}
 
 	err = db.AutoMigrate(&CurrentGame{})
 	if err != nil {
-		return fmt.Errorf("Cannot initialize DB: %v (AutoMigrate CurrentGame)", err)
+		return fmt.Errorf("cannot initialize DB: %v (AutoMigrate CurrentGame)", err)
 	}
 	return nil
 }
@@ -156,7 +156,7 @@ func (configRoom *ConfigRoom) SelectOpponent(opponent MinimalUser) error {
 
 func (configRoom *ConfigRoom) RemoveOpponent() error {
 	// A bit ugly because setting ChosenOpponent to nil will make gorm ignore this field...
-	result := db.Model(configRoom).Updates(map[string]interface{}{
+	result := db.Model(configRoom).Updates(map[string]any{
 		"chosen_opponent_id":   nil,
 		"chosen_opponent_name": nil,
 		"chosen_opponent_elo":  nil,
@@ -415,7 +415,7 @@ func RemoveCurrentGame(user MinimalUser) error {
 	return wrapError("RemoveCurrentGame", result.Error)
 }
 
-func ApplyToQueryResult[T interface{}](tx *gorm.DB, action func(T) error) error {
+func ApplyToQueryResult[T any](tx *gorm.DB, action func(T) error) error {
 	rows, err := tx.Rows()
 	if err != nil {
 		return err

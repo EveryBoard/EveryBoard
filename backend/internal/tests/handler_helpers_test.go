@@ -599,7 +599,7 @@ func find(arr []string, value string) *int {
 	return nil
 }
 
-func (sb ScenarioBuilder) removeLobbySubscription(userId string) {
+func (sb *ScenarioBuilder) removeLobbySubscription(userId string) {
 	idx := find(sb.lobbySubscribers, userId)
 	if idx == nil {
 		sb.t.Fatalf("cannot find subscriber: %s", userId)
@@ -1041,6 +1041,9 @@ func (sb ScenarioBuilder) ProposeConfig(userId string, proposal model.ConfigProp
 	connPlayer := sb.getConnection(userId)
 	gameId := sb.getSubscribedGameId(userId)
 	configRoom := sb.getConfigRoom(gameId)
+
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+
 	configRoom.Status = model.StatusConfigProposed
 	configRoom.FirstPlayer = model.FirstPlayerCreator
 	configRoom.GameType = proposal.GameType
@@ -1048,11 +1051,10 @@ func (sb ScenarioBuilder) ProposeConfig(userId string, proposal model.ConfigProp
 	configRoom.GameDuration = proposal.GameDuration
 	configRoom.FirstPlayer = proposal.FirstPlayer
 	configRoom.RulesConfig = proposal.RulesConfig
-
-	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	ExpectConfigRoomUpdateProposeConfig(sb.mock, *configRoom)
 	sendMessage(sb.t, connPlayer,
 		fmt.Sprintf(`["ProposeConfig",{"config":%s}]`, toJSON(sb.t, proposal)))
+
 
 	encodedGameId := encodeID(sb.t, gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
@@ -1133,6 +1135,10 @@ func (sb ScenarioBuilder) doEvent(userId string, data model.EventData, eventStr 
 	user := sb.getUser(userId)
 	gameId := sb.getSubscribedGameId(userId)
 	configRoom := sb.getConfigRoom(gameId)
+	game := sb.getGame(gameId)
+
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	ExpectSpecificGameSelection(sb.mock, *game)
 
 	event := model.GameEvent{
 		ID:        sb.getNextEventId(),
@@ -1213,6 +1219,8 @@ func (sb ScenarioBuilder) AcceptDraw(userId string) {
 	configRoom := sb.getConfigRoom(gameId)
 	game := sb.getGame(gameId)
 
+	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
+	ExpectSpecificGameSelection(sb.mock, *game)
 	data := model.EventDataReplyAccept(model.PropositionDraw, nil)
 	eventStr := `["Accept",{"proposition":"Draw"}]`
 	conn := sb.getConnection(userId)
@@ -1433,6 +1441,10 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	}
 	sb.addEvent(rematchId, eventStartGame)
 	ExpectEventInsertion(sb.mock, eventStartGame)
+
+	// addEvent (for the accept rematch event) fetches configRoom and game for authorization
+	ExpectSpecificConfigRoomSelection(sb.mock, configRoom)
+	ExpectSpecificGameSelection(sb.mock, game)
 
 	// Fifth, the rematch accept event is added
 	rawId, err := json.Marshal(rematchConfigRoom.ID)

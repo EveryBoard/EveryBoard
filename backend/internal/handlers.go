@@ -3,6 +3,7 @@ package internal
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"math/rand"
 	"time"
 
@@ -478,9 +479,11 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 	if configRoom == nil {
 		return h.error(model.ErrorUnknownGame)
 	}
-	if configRoom.Creator.ID != h.user.ID {
+	// User selecting should be the creator, and the game should not have been started, nor the config proposed
+	if configRoom.Creator.ID != h.user.ID || configRoom.Status != model.StatusCreated {
 		return h.error(model.ErrorNotAllowed)
 	}
+	log.Printf("selectOpponent with status %v", configRoom.Status)
 
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
@@ -522,13 +525,15 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 
 func (h *Handlers) proposeConfig(config model.ConfigProposal) error {
 	configRoom, err := h.getSubscribedConfigRoom()
+	log.Printf("proposing %v", configRoom)
 	if err != nil {
 		return err
 	}
 	if configRoom == nil {
 		return h.error(model.ErrorUnknownGame)
 	}
-	if configRoom.Creator.ID != h.user.ID || configRoom.ChosenOpponent == nil {
+	if configRoom.Creator.ID != h.user.ID || configRoom.ChosenOpponent == nil || configRoom.Status != model.StatusCreated {
+		log.Printf("cannot propose because status is %v", configRoom.Status)
 		return h.error(model.ErrorNotAllowed)
 	}
 
@@ -548,7 +553,7 @@ func (h *Handlers) reviewConfig() error {
 	if configRoom == nil {
 		return h.error(model.ErrorUnknownGame)
 	}
-	if configRoom.Creator.ID != h.user.ID {
+	if configRoom.Creator.ID != h.user.ID || configRoom.Status != model.StatusConfigProposed {
 		return h.error(model.ErrorNotAllowed)
 	}
 
@@ -664,12 +669,12 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 	if configRoom == nil || game == nil {
 		return h.error(model.ErrorUnknownGame)
 	}
-	result := getResult(&game.PlayerZero, &game.PlayerOne)
 	if configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID {
 		// Only a player can finish a game. And they have to play in the game
 		return h.error(model.ErrorNotAllowed)
 	}
 
+	result := getResult(&game.PlayerZero, &game.PlayerOne)
 	if !((configRoom.Status == model.StatusFinished && result.IsTimeout()) || configRoom.Status == model.StatusStarted) {
 		// Player can only notify a non-finished game, except in the case of timeout.
 		// For the timeout case, this is because both players may notify the timeout,
@@ -775,12 +780,10 @@ func (h *Handlers) notifyTimeout(timeoutedPlayer model.Player) error {
 
 func (h *Handlers) gameEnd(winner model.PlayerOrNone) error {
 	return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
-		if winner == model.PlayerOrNoneZero {
-			return model.ResultVictoryOfZero
-		} else if winner == model.PlayerOrNoneOne {
-			return model.ResultVictoryOfOne
-		} else {
-			return model.ResultHardDraw
+		switch winner {
+		case model.PlayerOrNoneZero: return model.ResultVictoryOfZero
+		case model.PlayerOrNoneOne : return model.ResultVictoryOfOne
+		default: return model.ResultHardDraw
 		}
 	})
 }
@@ -791,13 +794,26 @@ func (h *Handlers) addEvent(eventData model.EventData) error {
 		return h.error(model.ErrorNotSubscribed)
 	}
 
+	configRoom, game, err := h.getSubscribedConfigRoomAndGame()
+	if err != nil {
+		return err
+	}
+	if configRoom == nil || game == nil {
+		return h.error(model.ErrorUnknownGame)
+	}
+	if configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID {
+		// Only a player can add events
+		return h.error(model.ErrorNotAllowed)
+	}
+	// TODO: user must be in game, game must be started but not finished
+
 	event := model.GameEvent{
 		Timestamp: Now(),
 		User:      h.user,
 		Data:      eventData,
 	}
 
-	err := model.AddEvent(gameId, event)
+	err = model.AddEvent(gameId, event)
 	if err != nil {
 		return err
 	}
@@ -922,7 +938,7 @@ func (h *Handlers) move(move json.RawMessage) error {
 	return h.addEvent(model.EventDataMove(move))
 }
 
-func getMessageArgument[T interface{}](messageData map[string]json.RawMessage, key string) (*T, error) {
+func getMessageArgument[T any](messageData map[string]json.RawMessage, key string) (*T, error) {
 	arg, ok := messageData[key]
 	if !ok {
 		return nil, fmt.Errorf("missing data")

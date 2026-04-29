@@ -355,7 +355,7 @@ func TestCandidatesFlow(t *testing.T) {
 	expectCandidates(1)
 }
 
-func TestGameFlow(t *testing.T) {
+func TestDBGameFlow(t *testing.T) {
 	// Given a db with a game
 	err := model.InitDatabase(sqlite.Open(":memory:"))
 	if err != nil {
@@ -469,7 +469,7 @@ func TestManyGameEvents(t *testing.T) {
 	// Then it should work as expected
 
 	// Adding an event
-	for _ = range 42 {
+	for range 42 {
 		err = model.AddEvent(game.GameID, model.GameEvent{
 			Timestamp: 42,
 			User:      creator,
@@ -663,15 +663,18 @@ func TestUpdateElos(t *testing.T) {
 	}
 	winner := model.MinimalUser{ID: "foo", Name: "foo"}
 	loser := model.MinimalUser{ID: "bar", Name: "bar"}
+
+	// Accessing the elos ensure that they are initialized (to 0)
 	gameName := "Go"
-	eloWinner, err := model.GetElo(gameName, winner)
+	_, err = model.GetElo(gameName, winner)
 	if err != nil {
 		t.Fatalf("error when getting elo: %v", err)
 	}
-	eloLoser, err := model.GetElo(gameName, loser)
+	_, err = model.GetElo(gameName, loser)
 	if err != nil {
 		t.Fatalf("error when getting elo: %v", err)
 	}
+
 	// When updating the elos
 	err = model.UpdateElos(gameName,
 		winner, model.Elo{
@@ -686,9 +689,12 @@ func TestUpdateElos(t *testing.T) {
 			CurrentElo:  1.0,
 			GamesPlayed: 1,
 		})
+	if err != nil {
+		t.Fatalf("cannot update elos: %v", err)
+	}
 
 	// Then the elos should be updated
-	eloWinner, eloLoser, err = model.GetElos(gameName, winner, loser)
+	eloWinner, eloLoser, err := model.GetElos(gameName, winner, loser)
 	if err != nil {
 		t.Fatalf("error when getting elo: %v", err)
 	}
@@ -917,10 +923,13 @@ func TestChatMessageFlow(t *testing.T) {
 
 	// Then they should be added and can be retrieved in timestamp order
 	seenMessages := []model.Message{}
-	model.ApplyToMessagesOfGame(42, func(m *model.Message) error {
+	err = model.ApplyToMessagesOfGame(42, func(m *model.Message) error {
 		seenMessages = append(seenMessages, *m)
 		return nil
 	})
+	if err != nil {
+		t.Fatalf("cannot apply to messages: %v", err)
+	}
 	if len(seenMessages) != 2 {
 		t.Fatalf("should have seen 2 messages, but I've seen %d instead", len(seenMessages))
 	}
