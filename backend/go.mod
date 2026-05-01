@@ -5,7 +5,6 @@ go 1.25.0
 require (
 	cloud.google.com/go/firestore v1.21.0
 	firebase.google.com/go/v4 v4.19.0
-	github.com/DATA-DOG/go-sqlmock v1.5.2
 	github.com/gorilla/websocket v1.5.3
 	github.com/sqids/sqids-go v0.4.1
 	google.golang.org/api v0.272.0

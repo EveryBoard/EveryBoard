@@ -83,12 +83,12 @@ func ComputeNewElos(winnerElo model.Elo, loserElo model.Elo, draw bool) (model.E
 	return newEloWinner, newEloLoser
 }
 
-func computeAndUpdateElos(gameName string, winner model.MinimalUser, loser model.MinimalUser, draw bool) error {
-	winnerElo, loserElo, err := model.GetElos(gameName, winner, loser)
+func computeAndUpdateElos(store Store, gameName string, winner model.MinimalUser, loser model.MinimalUser, draw bool) error {
+	winnerElo, loserElo, err := store.GetElos(gameName, winner, loser)
 	if err != nil {
 		return err
 	}
 	newEloWinner, newEloLoser := ComputeNewElos(*winnerElo, *loserElo, draw)
 
-	return model.UpdateElos(gameName, winner, newEloWinner, loser, newEloLoser)
+	return store.UpdateElos(gameName, winner, newEloWinner, loser, newEloLoser)
 }

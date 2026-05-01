@@ -23,6 +23,7 @@ type Configuration struct {
 	Firebase  auth.FirebaseLike
 	IDEncoder model.IDEncoder
 	Database  gorm.Dialector
+	Store     Store
 
 	ListenAddr string
 	Origin     string
@@ -42,7 +43,7 @@ func ReadConfiguration() (*Configuration, error) {
 	if os.Getenv("DATABASE_TYPE") == "postgres" {
 		databaseDsn := os.Getenv("DATABASE_DSN")
 		if databaseDsn == "" {
-			return nil, fmt.Errorf("For postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
+			return nil, fmt.Errorf("for postgres, you must provide a database DSN through the DATABASE_DSN environment variable")
 		}
 		database = postgres.Open(databaseDsn)
 	} else {
@@ -95,8 +96,8 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	Connections.AddConnection(minimalUser, connection)
 	defer Connections.RemoveConnection(minimalUser, connection)
 
-	handlers := Handlers{connection: connection, user: minimalUser}
-	currentGame, err := model.GetCurrentGame(minimalUser)
+	handlers := Handlers{connection: connection, user: minimalUser, store: config.Store}
+	currentGame, err := config.Store.GetCurrentGame(minimalUser)
 	if err != nil {
 		utils.Errorf("cannot get current game: %v", err)
 		return
@@ -173,10 +174,13 @@ func Prepare(config Configuration) (*http.Server, error) {
 	if err != nil {
 		return nil, fmt.Errorf("error initializing encoder: %v", err)
 	}
-	log.Println("Initializing DB")
-	err = model.InitDatabase(config.Database)
-	if err != nil {
-		return nil, fmt.Errorf("error initializing database: %v", err)
+	if config.Store == nil {
+		log.Println("Initializing DB")
+		err = model.InitDatabase(config.Database)
+		if err != nil {
+			return nil, fmt.Errorf("error initializing database: %v", err)
+		}
+		config.Store = GORMStore{}
 	}
 	Subscriptions = NewSubscriptionManager[*websocket.Conn]()
 	Connections = NewConnectionManager[*websocket.Conn]()

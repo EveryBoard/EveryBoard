@@ -33,6 +33,7 @@ var RandBool = randBoolImpl
 type Handlers struct {
 	connection *websocket.Conn
 	user       model.MinimalUser
+	store      Store
 }
 
 func sendMessage(connection *websocket.Conn, message model.OutgoingMessage) error {
@@ -82,19 +83,19 @@ func (h *Handlers) broadcastToGame(gameId model.GameID, message model.OutgoingMe
 }
 
 func (h *Handlers) sendChatMessages(gameId model.GameID) error {
-	return model.ApplyToMessagesOfGame(gameId, func(message *model.Message) error {
+	return h.store.ApplyToMessagesOfGame(gameId, func(message *model.Message) error {
 		return h.send(model.ChatMessage{Message: *message})
 	})
 }
 
 func (h *Handlers) sendGameEvents(gameId model.GameID) error {
-	return model.ApplyToGameEvents(gameId, func(event *model.GameEvent) error {
+	return h.store.ApplyToGameEvents(gameId, func(event *model.GameEvent) error {
 		return h.send(model.GameEventMessage{Event: *event, ServerTime: NowFloat()})
 	})
 }
 
 func (h *Handlers) sendActiveConfigRooms() error {
-	return model.ApplyToConfigRooms(func(configRoom model.ConfigRoom) error {
+	return h.store.ApplyToConfigRooms(func(configRoom model.ConfigRoom) error {
 		return h.send(model.ConfigRoomUpdateMessage{
 			GameID:     configRoom.ID,
 			ConfigRoom: configRoom,
@@ -128,7 +129,7 @@ func (h *Handlers) chatSend(content string) error {
 		Timestamp: Now(),
 		Content:   content,
 	}
-	err := model.AddChatMessage(gameId, &message)
+	err := h.store.AddChatMessage(gameId, &message)
 	if err != nil {
 		return err
 	}
@@ -136,7 +137,7 @@ func (h *Handlers) chatSend(content string) error {
 }
 
 func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
-	err := model.SetCurrentGame(currentGame)
+	err := h.store.SetCurrentGame(currentGame)
 	if err != nil {
 		return err
 	}
@@ -145,7 +146,7 @@ func (h *Handlers) setCurrentGame(user model.MinimalUser, currentGame model.Curr
 }
 
 func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
-	err := model.UpdateCurrentGame(user, currentGame)
+	err := h.store.UpdateCurrentGame(user, currentGame)
 	if err != nil {
 		return err
 	}
@@ -154,7 +155,7 @@ func (h *Handlers) updateCurrentGame(user model.MinimalUser, currentGame model.C
 }
 
 func (h *Handlers) removeCurrentGame(user model.MinimalUser) error {
-	err := model.RemoveCurrentGame(user)
+	err := h.store.RemoveCurrentGame(user)
 	if err != nil {
 		return err
 	}
@@ -170,7 +171,7 @@ func (h *Handlers) createGame(gameName string) error {
 	// Contrary to other place where checking subscription is enough, we need to
 	// check that the creator does not have a current game. They could have
 	// created a game, left, and be trying to create a new one.
-	currentGame, err := model.GetCurrentGame(h.user)
+	currentGame, err := h.store.GetCurrentGame(h.user)
 	if err != nil {
 		return err
 	}
@@ -178,7 +179,7 @@ func (h *Handlers) createGame(gameName string) error {
 		return h.error(model.ErrorAlreadySubscribed)
 	}
 
-	configRoom, err := model.CreateConfigRoom(h.user, gameName)
+	configRoom, err := h.store.CreateConfigRoom(h.user, gameName)
 	if err != nil {
 		return err
 	}
@@ -211,7 +212,7 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 		return h.error(model.ErrorAlreadySubscribed)
 	}
 
-	configRoom, err := model.GetConfigRoom(gameId)
+	configRoom, err := h.store.GetConfigRoom(gameId)
 	if err != nil {
 		return err
 	}
@@ -237,12 +238,12 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 
 		if uid != configRoom.Creator.ID {
 			// A new candidate appears!
-			elo, err := model.GetElo(configRoom.GameName, h.user)
+			elo, err := h.store.GetElo(configRoom.GameName, h.user)
 			if err != nil {
 				return err
 			}
 
-			err = configRoom.AddCandidate(h.user, elo.CurrentElo)
+			err = h.store.AddCandidate(*configRoom, h.user, elo.CurrentElo)
 			if err != nil {
 				return err
 			}
@@ -267,9 +268,9 @@ func (h *Handlers) subscribeToConfigRoom(gameId model.GameID) error {
 			}
 		}
 
-		return model.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
+		return h.store.ApplyToCandidates(gameId, func(candidate model.Candidate) error {
 			if candidate.User.ID != uid { // don't send the user to itself twice
-				elo, err := model.GetElo(configRoom.GameName, h.user)
+				elo, err := h.store.GetElo(configRoom.GameName, h.user)
 				if err != nil {
 					return err
 				}
@@ -289,7 +290,7 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 		return h.error(model.ErrorAlreadySubscribed)
 	}
 
-	game, err := model.GetGame(gameId)
+	game, err := h.store.GetGame(gameId)
 	if err != nil {
 		return err
 	}
@@ -302,7 +303,7 @@ func (h *Handlers) subscribeToGame(gameId model.GameID) error {
 	// Let the observers know their current game. The players already know it from game creation
 	if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
 		// Need the config room to get creator and opponent
-		configRoom, err := model.GetConfigRoom(gameId)
+		configRoom, err := h.store.GetConfigRoom(gameId)
 		if err != nil {
 			return err
 		}
@@ -360,7 +361,7 @@ func (h *Handlers) unsubscribe() error {
 		// Leaving a game: only remove the current game if user was an observer,
 		// because anyone is allowed only one subscription at a time, if they observe and unsubscribe, they have no current game.
 		// A player however must remain in game, otherwise they could close their tab and join a new game in another tab.
-		game, err := model.GetGame(gameId)
+		game, err := h.store.GetGame(gameId)
 		if err != nil {
 			return err
 		}
@@ -370,7 +371,7 @@ func (h *Handlers) unsubscribe() error {
 		return nil
 	case SubscriptionToConfigRoom:
 		// Leaving a config room means we may need to remove the candidate or cancel the game entirely
-		configRoom, err := model.GetConfigRoom(gameId)
+		configRoom, err := h.store.GetConfigRoom(gameId)
 		if err != nil {
 			return err
 		}
@@ -383,7 +384,7 @@ func (h *Handlers) unsubscribe() error {
 		if configRoom.Status.IsUnstarted() {
 			if configRoom.Creator.ID == h.user.ID {
 				// Creator is leaving its unstarted game, remove it
-				err = configRoom.Delete()
+				err = h.store.DeleteConfigRoom(*configRoom)
 				if err != nil {
 					return err
 				}
@@ -401,7 +402,7 @@ func (h *Handlers) unsubscribe() error {
 				}
 
 				// Remove current game from all candidates and from creator
-				err = model.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+				err = h.store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
 					return h.removeCurrentGame(candidate.User)
 				})
 				if err != nil {
@@ -411,7 +412,7 @@ func (h *Handlers) unsubscribe() error {
 				return h.removeCurrentGame(configRoom.Creator)
 			} else {
 				// Candidate has left, remove them
-				err = configRoom.DeleteCandidate(h.user.ID)
+				err = h.store.DeleteCandidate(*configRoom, h.user.ID)
 				if err != nil {
 					return err
 				}
@@ -423,7 +424,7 @@ func (h *Handlers) unsubscribe() error {
 
 				// Adapt config room and current game from creator if needed (if candidate was chosen opponent)
 				if configRoom.ChosenOpponent != nil && configRoom.ChosenOpponent.ID == h.user.ID {
-					err = configRoom.RemoveOpponent()
+					err = h.store.RemoveOpponent(configRoom)
 					if err != nil {
 						return err
 					}
@@ -464,7 +465,7 @@ func (h *Handlers) getSubscribedConfigRoom() (*model.ConfigRoom, error) {
 		return nil, h.error(model.ErrorNotSubscribed)
 	}
 
-	configRoom, err := model.GetConfigRoom(gameId)
+	configRoom, err := h.store.GetConfigRoom(gameId)
 	if err != nil {
 		return nil, err
 	}
@@ -485,7 +486,7 @@ func (h *Handlers) selectOpponent(opponent model.MinimalUser) error {
 	}
 	log.Printf("selectOpponent with status %v", configRoom.Status)
 
-	err = configRoom.SelectOpponent(opponent)
+	err = h.store.SelectOpponent(configRoom, opponent)
 	if err != nil {
 		return err
 	}
@@ -537,7 +538,7 @@ func (h *Handlers) proposeConfig(config model.ConfigProposal) error {
 		return h.error(model.ErrorNotAllowed)
 	}
 
-	err = configRoom.Propose(config)
+	err = h.store.ProposeConfig(configRoom, config)
 	if err != nil {
 		return err
 	}
@@ -557,7 +558,7 @@ func (h *Handlers) reviewConfig() error {
 		return h.error(model.ErrorNotAllowed)
 	}
 
-	err = configRoom.Review()
+	err = h.store.ReviewConfig(configRoom)
 	if err != nil {
 		return err
 	}
@@ -580,13 +581,13 @@ func (h *Handlers) acceptConfig() error {
 	}
 
 	// Change the config room status to "started"
-	err = configRoom.Start()
+	err = h.store.StartConfigRoom(configRoom)
 	if err != nil {
 		return err
 	}
 
 	// Create the game
-	_, err = configRoom.CreateGame(Now(), RandBool())
+	_, err = h.store.CreateGame(configRoom, Now(), RandBool())
 	if err != nil {
 		return err
 	}
@@ -597,7 +598,7 @@ func (h *Handlers) acceptConfig() error {
 		User:      h.user,
 		Data:      model.EventDataStartGame,
 	}
-	err = model.AddEvent(configRoom.ID, event)
+	err = h.store.AddEvent(configRoom.ID, event)
 	if err != nil {
 		return err
 	}
@@ -605,7 +606,7 @@ func (h *Handlers) acceptConfig() error {
 	// They will get it when subscribing.
 
 	// Updates the current game of both players, and remove the current game of all non-chosen candidates
-	err = model.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+	err = h.store.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
 		if candidate.User.ID == configRoom.ChosenOpponent.ID {
 			return nil // skip the opponent
 		}
@@ -653,7 +654,7 @@ func (h *Handlers) getSubscribedConfigRoomAndGame() (*model.ConfigRoom, *model.G
 		return nil, nil, err
 	}
 
-	game, err := model.GetGame(configRoom.ID)
+	game, err := h.store.GetGame(configRoom.ID)
 	if err != nil {
 		return nil, nil, err
 	}
@@ -682,7 +683,7 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 		return h.error(model.ErrorNotAllowed)
 	}
 
-	err = game.SetResult(result)
+	err = h.store.SetGameResult(game, result)
 	if err != nil {
 		return err
 	}
@@ -713,17 +714,17 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 		User:      h.user,
 		Data:      model.EventDataEndGame,
 	}
-	err = model.AddEvent(game.GameID, event)
+	err = h.store.AddEvent(game.GameID, event)
 	if err != nil {
 		return err
 	}
 
-	err = computeAndUpdateElos(configRoom.GameName, winner, loser, draw)
+	err = computeAndUpdateElos(h.store, configRoom.GameName, winner, loser, draw)
 	if err != nil {
 		return err
 	}
 
-	err = configRoom.Finish()
+	err = h.store.FinishConfigRoom(configRoom)
 	if err != nil {
 		return err
 	}
@@ -737,7 +738,7 @@ func (h *Handlers) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUs
 	if err != nil {
 		return err
 	}
-	err = model.ApplyToObservers(game.GameID, func(observer model.MinimalUser) error {
+	err = h.store.ApplyToObservers(game.GameID, func(observer model.MinimalUser) error {
 		return h.removeCurrentGame(observer)
 	})
 	if err != nil {
@@ -781,9 +782,12 @@ func (h *Handlers) notifyTimeout(timeoutedPlayer model.Player) error {
 func (h *Handlers) gameEnd(winner model.PlayerOrNone) error {
 	return h.doEndGame(func(playerZero *model.MinimalUser, playerOne *model.MinimalUser) model.Result {
 		switch winner {
-		case model.PlayerOrNoneZero: return model.ResultVictoryOfZero
-		case model.PlayerOrNoneOne : return model.ResultVictoryOfOne
-		default: return model.ResultHardDraw
+		case model.PlayerOrNoneZero:
+			return model.ResultVictoryOfZero
+		case model.PlayerOrNoneOne:
+			return model.ResultVictoryOfOne
+		default:
+			return model.ResultHardDraw
 		}
 	})
 }
@@ -813,7 +817,7 @@ func (h *Handlers) addEvent(eventData model.EventData) error {
 		Data:      eventData,
 	}
 
-	err = model.AddEvent(gameId, event)
+	err = h.store.AddEvent(gameId, event)
 	if err != nil {
 		return err
 	}
@@ -856,13 +860,13 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 			return err
 		}
 		// Create the new config room
-		rematchConfigRoom, err := configRoom.CreateRematch(h.user, *game)
+		rematchConfigRoom, err := h.store.CreateRematch(*configRoom, h.user, *game)
 		if err != nil {
 			return err
 		}
 
 		// Create the game
-		rematchGame, err := rematchConfigRoom.CreateGame(Now(), RandBool())
+		rematchGame, err := h.store.CreateGame(rematchConfigRoom, Now(), RandBool())
 		if err != nil {
 			return err
 		}
@@ -905,7 +909,7 @@ func (h *Handlers) accept(proposition model.Proposition) error {
 			User:      h.user,
 			Data:      model.EventDataStartGame,
 		}
-		err = model.AddEvent(rematchConfigRoom.ID, event)
+		err = h.store.AddEvent(rematchConfigRoom.ID, event)
 		if err != nil {
 			return err
 		}

@@ -32,25 +32,20 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	everyboard.Now = func() int64 {
 		return 42
 	}
-	stopServer, mock := PrepareServer(t)
+	stopServer, fakeStore := PrepareServer(t)
 	defer stopServer()
 
-	// Given an established connection to a server with a config room and a lobby message
-	otherConnection := EstablishWebSocketConnection(t, "foo")
-	defer otherConnection.Close()
-
-	ExpectMessageSelection(mock, 1, []model.Message{})
-	ExpectInGameConfigRoomSelection(mock, []model.ConfigRoom{})
-	sendMessage(t, otherConnection, `["SubscribeLobby"]`)
-
 	userFoo := model.MinimalUser{ID: "foo", Name: "foo"}
-	message := model.Message{
-		ID:        1,
+
+	// Pre-populate the fakeStore with a lobby message and a config room
+	msg := model.Message{
 		GameID:    model.GameIDLobby,
 		Sender:    userFoo,
 		Timestamp: 42,
 		Content:   "hello",
 	}
+	fakeStore.Messages[model.GameIDLobby] = []*model.Message{&msg}
+
 	configRoom := model.ConfigRoom{
 		ID:                2,
 		Creator:           userFoo,
@@ -65,43 +60,20 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		RulesConfig:       nil,
 		GameName:          "P4",
 	}
-	ExpectMessageInsertion(mock, message)
-	sendMessage(t, otherConnection, `["ChatSend",{"message":"hello"}]`)
-	sendMessage(t, otherConnection, `["Unsubscribe"]`)
+	fakeStore.ConfigRooms[configRoom.ID] = &configRoom
+	fakeStore.nextID = configRoom.ID
 
-	ExpectEloSelection(mock, "foo", "P4", nil)
-	ExpectEloInsertion(mock, model.Elo{
-		ID:          1,
-		User:        userFoo,
-		GameName:    "P4",
-		CurrentElo:  0,
-		GamesPlayed: 0,
-	})
-	ExpectConfigRoomInsertion(mock, configRoom)
-	currentGame := model.CurrentGame{
-		ID:       1,
-		User:     userFoo,
-		GameID:   configRoom.ID,
-		GameName: "P4",
-		Creator:  userFoo,
-		Opponent: nil,
-		Role:     model.UserRoleCreator,
-	}
-	ExpectCurrentGameInsertion(mock, currentGame)
-
-	sendMessage(t, otherConnection, `["Create", {"gameName":"P4"}]`)
-
-	// When subscribing to the lobby
+	// Given an established connection to a server with a config room and a lobby message
 	c := EstablishWebSocketConnection(t, "bar")
 	defer c.Close()
 
-	ExpectMessageSelection(mock, 1, []model.Message{message})
-	ExpectInGameConfigRoomSelection(mock, []model.ConfigRoom{configRoom})
+	// When subscribing to the lobby
 	sendMessage(t, c, `["SubscribeLobby"]`)
 
+	encodedId, _ := model.EncodeID(configRoom.ID)
 	// Then we should receive one message for the chat message and one for the config room
 	expectMessage(t, c, `["ChatMessage",{"message":{"sender":{"id":"foo","name":"foo"},"timestamp":42,"content":"hello"}}]`)
-	expectMessage(t, c, `["ConfigRoomUpdate",{"gameId":"gbHJd","configRoom":{"creator":{"id":"foo","name":"foo"},"creatorElo":0,"chosenOpponent":null,"chosenOpponentElo":null,"status":"Created","firstPlayer":"Random","gameType":"Standard","moveDuration":120,"gameDuration":1800,"rulesConfig":null,"gameName":"P4"}}]`)
+	expectMessage(t, c, fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedId, toJSON(t, &configRoom)))
 }
 
 func TestGameFlow(t *testing.T) {
@@ -272,16 +244,11 @@ func TestInvalidMessages(t *testing.T) {
 }
 
 func TestSelectOpponentOnStartedGame(t *testing.T) {
+	// Given a started game (setupTwoPlayersGame sets Status=Started via AcceptConfig)
 	sb, player, opponent, _ := setupTwoPlayersGame(t)
 	defer sb.Cleanup()
 
-	// Given a started game
-	gameId := sb.getSubscribedGameId(player)
-	configRoom := sb.getConfigRoom(gameId)
-	configRoom.Status = model.StatusStarted
-
 	// When trying to select an opponent
-	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	userOpponent := sb.getUser(opponent)
 	sendMessage(t, sb.getConnection(player), fmt.Sprintf(`["SelectOpponent",{"opponent":%s}]`, toJSON(t, userOpponent)))
 
@@ -290,16 +257,11 @@ func TestSelectOpponentOnStartedGame(t *testing.T) {
 }
 
 func TestProposeConfigOnStartedGame(t *testing.T) {
+	// Given a started game
 	sb, player, _, _ := setupTwoPlayersGame(t)
 	defer sb.Cleanup()
 
-	// Given a started game
-	gameId := sb.getSubscribedGameId(player)
-	configRoom := sb.getConfigRoom(gameId)
-	configRoom.Status = model.StatusStarted
-
 	// When trying to propose the config
-	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	config := model.ConfigProposal{
 		GameType:     model.GameTypeStandard,
 		MoveDuration: 120,
@@ -315,14 +277,10 @@ func TestProposeConfigOnStartedGame(t *testing.T) {
 
 func TestReviewConfigOnStartedGame(t *testing.T) {
 	// Given a started game
-	sb, player, _, gameId := setupTwoPlayersGame(t)
+	sb, player, _, _ := setupTwoPlayersGame(t)
 	defer sb.Cleanup()
 
-	configRoom := sb.getConfigRoom(gameId)
-	configRoom.Status = model.StatusStarted
-
 	// When trying to review it
-	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	sendMessage(t, sb.getConnection(player), `["ReviewConfig"]`)
 
 	// Then it should be disallowed
@@ -331,14 +289,10 @@ func TestReviewConfigOnStartedGame(t *testing.T) {
 
 func TestAcceptConfigOnStartedGame(t *testing.T) {
 	// Given a started game
-	sb, player, _, gameId := setupTwoPlayersGame(t)
+	sb, player, _, _ := setupTwoPlayersGame(t)
 	defer sb.Cleanup()
 
-	configRoom := sb.getConfigRoom(gameId)
-	configRoom.Status = model.StatusStarted
-
 	// When trying to accept it
-	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
 	sendMessage(t, sb.getConnection(player), `["AcceptConfig"]`)
 
 	// Then it should be disallowed
@@ -350,17 +304,10 @@ func TestSendMoveFromObserverOnStartedGame(t *testing.T) {
 	sb, _, _, gameId := setupTwoPlayersGame(t)
 	defer sb.Cleanup()
 
-	configRoom := sb.getConfigRoom(gameId)
-
 	observer := sb.EstablishConnection("observer")
 	sb.SubscribeGame(observer, gameId)
 
-	// When the observer sends a move
-	sb.Move(observer, json.RawMessage(`{"lol":true}`))
-	ExpectSpecificConfigRoomSelection(sb.mock, *configRoom)
-
-	// Then it should be disallowed
+	// When the observer sends a move, it should be disallowed
+	sendMessage(t, sb.getConnection(observer), `["Move",{"move":{"lol":true}}]`)
 	expectMessage(t, sb.getConnection(observer), `["Error",{"reason":"not-allowed"}]`)
 }
-
-// func TestSendMoveOnUnstartedGame
