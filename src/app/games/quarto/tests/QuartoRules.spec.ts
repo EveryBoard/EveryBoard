@@ -213,7 +213,7 @@ describe('QuartoRules', () => {
 
         it('should allow player to make victory by strong level victory (square)', () => {
             // Given a config where both player are level 2 and Player.ONE made a square
-            const alternateConfig: QuartoConfig = {
+            const customConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 2,
             };
@@ -228,12 +228,12 @@ describe('QuartoRules', () => {
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
         });
 
         it('should give victory to player with stronger level when weaker level make a strong level victory (square)', () => {
             // Given a config where Player.ZERO is level 2 and Player.ONE is not but made a square anyway
-            const alternateConfig: QuartoConfig = {
+            const customConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 1,
             };
@@ -248,12 +248,12 @@ describe('QuartoRules', () => {
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, customConfig);
         });
 
         it('should give victory to player with stronger level when they do a strong level victory (square)', () => {
             // Given a config where Player.ONE is level 1 and Player.ZERO is level 2 and made a square
-            const alternateConfig: QuartoConfig = {
+            const customConfig: QuartoConfig = {
                 playerZeroLevel: 2,
                 playerOneLevel: 1,
             };
@@ -268,12 +268,12 @@ describe('QuartoRules', () => {
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, customConfig);
         });
 
         it('shoud give victory to stronger level when weaker level make both a strong and weak victory at the same turn', () => {
             // Given a config where Player.ONE is level 2 and Player.ZERO is level 1 and just made a square and a line
-            const alternateConfig: QuartoConfig = {
+            const customConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
             };
@@ -288,12 +288,12 @@ describe('QuartoRules', () => {
 
             // When checking the game status
             // Then it should be a victory for Player.ONE
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, alternateConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
         });
 
         it('shoud give victory to weaker level when weaker level make a weak victory', () => {
             // Given a config where Player.ONE is level 2 and Player.ZERO is level 1 and made a line
-            const alternateConfig: QuartoConfig = {
+            const customConfig: QuartoConfig = {
                 playerZeroLevel: 1,
                 playerOneLevel: 2,
             };
@@ -308,7 +308,7 @@ describe('QuartoRules', () => {
 
             // When checking the game status
             // Then it should be a victory for Player.ZERO
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, alternateConfig);
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, customConfig);
         });
 
     });

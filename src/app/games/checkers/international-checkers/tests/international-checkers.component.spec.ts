@@ -420,7 +420,7 @@ describe('InternationalCheckersComponent', () => {
 
         it('Should allow forward frisian-capture when config allows it', fakeAsync(async() => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
@@ -433,7 +433,7 @@ describe('InternationalCheckersComponent', () => {
                 [_, _, _, U, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 2);
-            await testUtils.setupState(state, { config: alternateConfig });
+            await testUtils.setupState(state, { config: customConfig });
             await testUtils.expectClickSuccess('#coord-3-5');
 
             // When doing the move

@@ -64,17 +64,18 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
 
     public async startGame(): Promise<boolean> {
         Utils.assert(this.rulesConfig.isPresent(), 'Cannot start the game without having chosen a config');
-        if (Object.keys(this.rulesConfig.get()).length === 0) {
+        const rulesConfig: RulesConfig = this.rulesConfig.get();
+        if (Object.keys(rulesConfig).length === 0) {
             // game without config, start it
             return this.router.navigate(['/local', this.getGameUrlName()]);
         }
         const defaultConfig: RulesConfig = this.getRulesConfigDescription().getDefaultConfig().config;
-        if (comparableEquals(this.rulesConfig.get(), defaultConfig)) {
+        if (comparableEquals(rulesConfig, defaultConfig)) {
             // This is the default config, no need to specify it in the parameters
             return this.router.navigate(['/local', this.getGameUrlName()]);
         } else {
             const queryParams: { [key: string]: string } =
-                Object.fromEntries(Object.entries(this.rulesConfig.get())
+                Object.fromEntries(Object.entries(rulesConfig)
                     .map((configElement: [string, ConfigDescriptionType]) => {
                         return [configElement[0], JSON.stringify(configElement[1])];
                     }));

@@ -854,7 +854,7 @@ describe('InternationalCheckersRules', () => {
         it('Should capture instead of stacking when config demands it', () => {
             // Given a board where a kill is possible
             // And a config requesting to do capture instead of kill
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 canStackPieces: false,
             };
@@ -881,7 +881,7 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('should put piece on even squares if config requires it', () => {
@@ -912,7 +912,7 @@ describe('InternationalCheckersRules', () => {
 
         it('Should allow forward frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
@@ -939,12 +939,12 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('Should allow lateral frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
@@ -971,12 +971,12 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('Should allow backward frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
                 simplePieceCanCaptureBackwards: true,
@@ -1004,12 +1004,12 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, U, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('Should refuse frisian-step even if config allows frisian capture', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
@@ -1028,12 +1028,12 @@ describe('InternationalCheckersRules', () => {
 
             // Then it should fail
             const reason: string = CheckersFailure.INVALID_FRISIAN_MOVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, alternateConfig);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
         });
 
         it('Should refuse a uneven frisian capture even if config allows frisian capture', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
@@ -1052,12 +1052,12 @@ describe('InternationalCheckersRules', () => {
 
             // Then it should fail
             const reason: string = CheckersFailure.FRISIAN_CAPTURE_MUST_BE_EVEN();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, alternateConfig);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
         });
 
         it('Should allow flying-frisian when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: CheckersConfig = {
+            const customConfig: CheckersConfig = {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
                 promotedPiecesCanFly: true,
@@ -1085,7 +1085,7 @@ describe('InternationalCheckersRules', () => {
                 [_, _, _, _, _, _, _],
                 [O, _, _, _, _, _, _],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
     });
