@@ -121,7 +121,7 @@ describe('PickGameComponent', () => {
         testUtils.fillInput('#search-term', 'Lolestone');
         testUtils.detectChanges();
 
-        // Then it should find P4
+        // Then it should find Lodestone
         testUtils.expectElementToExist('#image-Lodestone');
     }));
 
