@@ -869,6 +869,9 @@
       <trans-unit id="4053624367526659457" datatype="html">
         <source>Number of pieces rows</source>
       </trans-unit>
+      <trans-unit id="6874699210811358423" datatype="html">
+        <source>Toric</source>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
       </trans-unit>

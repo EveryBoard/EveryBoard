@@ -557,6 +557,10 @@
         <source>Number of pieces rows</source>
         <target>Nombre de rangées de pièces</target>
       </trans-unit>
+      <trans-unit id="6874699210811358423" datatype="html">
+        <source>Toric</source>
+        <target>Torique</target>
+      </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
         <target>19 x 19</target>
