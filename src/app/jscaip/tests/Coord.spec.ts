@@ -3,6 +3,7 @@ import { TestUtils } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
 import { Ordinal } from '../Ordinal';
+import { Direction } from '../Direction';
 
 describe('Coord', () => {
 
@@ -157,6 +158,50 @@ describe('Coord', () => {
                 'Cannot calculate distance with non aligned coords.',
             );
         });
+
+    });
+
+    describe('getNextToric', () => {
+        type CoordPlusDirectionPlusStep = {
+
+            title: string;
+
+            coord: Coord;
+
+            direction: Direction;
+
+            step: number;
+
+            result: Coord;
+        };
+        const coordPlusDirectionPlusSteps: CoordPlusDirectionPlusStep[] = [
+            { title: 'should go back left when going too much right                         : ', coord: new Coord(7, 4), direction: Ordinal.RIGHT,      step: 1, result: new Coord(0, 4) },
+            { title: 'should go back right when going too much left                         : ', coord: new Coord(0, 4), direction: Ordinal.LEFT,       step: 1, result: new Coord(7, 4) },
+            { title: 'should go back top when going too much bottom                         : ', coord: new Coord(4, 7), direction: Ordinal.DOWN,       step: 1, result: new Coord(4, 0) },
+            { title: 'should go back bottom when going too much top                         : ', coord: new Coord(4, 0), direction: Ordinal.UP,         step: 1, result: new Coord(4, 7) },
+            { title: 'should go to other corner when diagonalign from corner                : ', coord: new Coord(0, 0), direction: Ordinal.UP_LEFT,    step: 1, result: new Coord(7, 7) },
+            { title: 'should go to other side when diagonligh from left border              : ', coord: new Coord(7, 4), direction: Ordinal.DOWN_RIGHT, step: 1, result: new Coord(0, 5) },
+            { title: 'should go back left when going too much right (double step)           : ', coord: new Coord(7, 4), direction: Ordinal.RIGHT,      step: 2, result: new Coord(1, 4) },
+            { title: 'should go back right when going too much left (double step)           : ', coord: new Coord(0, 4), direction: Ordinal.LEFT,       step: 2, result: new Coord(6, 4) },
+            { title: 'should go back top when going too much bottom (double step)           : ', coord: new Coord(4, 7), direction: Ordinal.DOWN,       step: 2, result: new Coord(4, 1) },
+            { title: 'should go back bottom when going too much top (double step)           : ', coord: new Coord(4, 0), direction: Ordinal.UP,         step: 2, result: new Coord(4, 6) },
+            { title: 'should go to other corner when diagonalign from corner (double step)  : ', coord: new Coord(0, 0), direction: Ordinal.UP_LEFT,    step: 2, result: new Coord(6, 6) },
+            { title: 'should go to other side when diagonligh from left border (double step): ', coord: new Coord(7, 4), direction: Ordinal.DOWN_RIGHT, step: 2, result: new Coord(1, 6) },
+        ];
+        for (const coordPlusDirectionPlusStep of coordPlusDirectionPlusSteps) {
+            it(coordPlusDirectionPlusStep.title, () => {
+                // Given coord, step and direction
+                const coord: Coord = coordPlusDirectionPlusStep.coord;
+                const step: number = coordPlusDirectionPlusStep.step;
+                const direction: Direction = coordPlusDirectionPlusStep.direction;
+
+                // When calling getNextToric
+                const nextCoord: Coord = coord.getNextToric(direction, 8, 8, step);
+
+                // Then appropriate result is expected
+                expect(nextCoord).toEqual(coordPlusDirectionPlusStep.result);
+            });
+        }
 
     });
 

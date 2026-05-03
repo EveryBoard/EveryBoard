@@ -1,6 +1,7 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -8,6 +9,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -28,9 +30,13 @@ export class ReversiMoveWithSwitched {
 
 export class ReversiNode extends GameNode<ReversiMove, ReversiState> {}
 
-export type ReversiConfig = {
-    width: number,
-    height: number,
+export type ReversiConfig = RulesConfig & {
+
+    width: number;
+
+    height: number;
+
+    toric: boolean;
 };
 
 @Debug.log
@@ -55,6 +61,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
             config: {
                 width: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
                 height: new NumberConfig(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
+                toric: new BooleanConfig(false, RulesConfigDescriptionLocalizable.TORIC),
             },
         });
 
@@ -95,16 +102,16 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return resultingState;
     }
 
-    public getAllSwitcheds(move: ReversiMove, player: Player, state: ReversiState): Coord[] {
+    public getAllSwitcheds(move: ReversiMove, player: Player, state: ReversiState, config: ReversiConfig): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
         const opponent: Player = player.getOpponent();
 
         for (const direction of Ordinal.ORDINALS) {
-            const firstSpace: Coord = move.coord.getNext(direction);
+            const firstSpace: Coord = this.getNextCoord(move.coord, direction, state, config.toric);
             if (state.hasPieceAt(firstSpace, opponent)) {
                 // let's test this direction
-                const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
+                const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state, config);
                 for (const switched of switchedInDir) {
                     switcheds.push(switched);
                 }
@@ -113,20 +120,28 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return switcheds;
     }
 
+    private getNextCoord(coord: Coord, direction: Ordinal, state: ReversiState, toric: boolean): Coord {
+        if (toric) {
+            return coord.getNextToric(direction, state.getWidth(), state.getHeight());
+        } else {
+            return coord.getNext(direction);
+        }
+    }
+
     public getSandwicheds(capturer: Player,
                           direction: Ordinal,
                           start: Coord,
-                          state: ReversiState)
-    : Coord[]
-    {
+                          state: ReversiState,
+                          config: ReversiConfig,
+    ) : Coord[] {
         /* expected that 'start' is in range, and is captured
          * if we don't reach another capturer, returns []
          * else : return all the coord between start and the first 'capturer' found (exluded)
          */
 
         const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
-        let testedCoord: Coord = start.getNext(direction);
-        while (state.isOnBoard(testedCoord)) {
+        let testedCoord: Coord = this.getNextCoord(start, direction, state, config.toric);
+        while (state.isOnBoard(testedCoord) && testedCoord.equals(start) === false) {
             const testedCoordContent: PlayerOrNone = state.getPieceAt(testedCoord);
             if (testedCoordContent === capturer) {
                 // we found a sandwicher, in range, in this direction
@@ -137,7 +152,8 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
                 return [];
             } // we found a switched/captured
             sandwichedsCoord.push(testedCoord); // we add it
-            testedCoord = testedCoord.getNext(direction); // next loop will observe the next
+            // next loop will observe the next // next loop will observe the next
+            testedCoord = this.getNextCoord(testedCoord, direction, state, config.toric);
         }
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }
@@ -178,7 +194,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         return this.playerCanOnlyPass(nextState, config);
     }
 
-    public getListMoves(state: ReversiState, _config: MGPOptional<ReversiConfig>): ReversiMoveWithSwitched[] {
+    public getListMoves(state: ReversiState, config: MGPOptional<ReversiConfig>): ReversiMoveWithSwitched[] {
         const moves: ReversiMoveWithSwitched[] = [];
 
         let nextBoard: PlayerOrNone[][];
@@ -195,7 +211,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
                     // if one of the 8 neighboring space is an opponent then, there could be a switch,
                     // and hence a legal move
                     const move: ReversiMove = new ReversiMove(coord.x, coord.y);
-                    const result: Coord[] = this.getAllSwitcheds(move, player, state);
+                    const result: Coord[] = this.getAllSwitcheds(move, player, state, config.get());
                     if (result.length > 0) {
                         // there was switched piece and hence, a legal move
                         for (const switched of result) {
@@ -232,7 +248,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
-        const switched: Coord[] = this.getAllSwitcheds(move, state.getCurrentPlayer(), state);
+        const switched: Coord[] = this.getAllSwitcheds(move, state.getCurrentPlayer(), state, config.get());
         if (switched.length === 0) {
             return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
         } else {

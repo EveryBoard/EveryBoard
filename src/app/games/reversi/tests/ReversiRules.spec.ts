@@ -204,4 +204,84 @@ describe('ReversiRules', () => {
 
     });
 
+    describe('alternative config', () => {
+
+        describe('Toric Board', () => {
+
+            it('should capture piece sandwiched from across the board horizontally', () => {
+                const toricConfig: MGPOptional<ReversiConfig> = MGPOptional.of({
+                    ...defaultConfig.get(),
+                    toric: true,
+                });
+                // Given a board where current can capture torically
+                const board: Table<PlayerOrNone> = [
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, O, X, O, O, O, O, O],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                ];
+                const state: ReversiState = new ReversiState(board, 1);
+
+                // When doing a move that could capture piece across the board
+                const move: ReversiMove = new ReversiMove(0, 3);
+
+                // Then the move should succeed
+                const expectedBoard: Table<PlayerOrNone> = [
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [X, X, X, X, X, X, X, X],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _],
+                ];
+                const expectedState: ReversiState = new ReversiState(expectedBoard, 2);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, toricConfig);
+            });
+
+            it('should capture piece sandwiched from across the board vertically', () => {
+                const toricConfig: MGPOptional<ReversiConfig> = MGPOptional.of({
+                    ...defaultConfig.get(),
+                    toric: true,
+                });
+                // Given a board where current can capture torically
+                const board: Table<PlayerOrNone> = [
+                    [_, _, _, _, _, _, _, _],
+                    [_, _, _, _, X, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, X, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, X, _, _, _],
+                    [_, _, _, _, X, _, _, _],
+                    [_, _, _, _, X, _, _, _],
+                ];
+                const state: ReversiState = new ReversiState(board, 2);
+
+                // When doing a move that could capture piece across the board
+                const move: ReversiMove = new ReversiMove(4, 0);
+
+                // Then the move should succeed
+                const expectedBoard: Table<PlayerOrNone> = [
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, X, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                    [_, _, _, _, O, _, _, _],
+                ];
+                const expectedState: ReversiState = new ReversiState(expectedBoard, 3);
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, toricConfig);
+            });
+
+        });
+
+    });
+
 });
