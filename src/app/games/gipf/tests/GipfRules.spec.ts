@@ -474,6 +474,9 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P1Turn, PlayerNumberMap.of(5, 0), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -489,6 +492,9 @@ describe('GipfRules', () => {
             ];
             const state: GipfState = new GipfState(board, P0Turn, PlayerNumberMap.of(0, 5), PlayerNumberMap.of(0, 0));
             const node: GipfNode = new GipfNode(state, MGPOptional.empty(), MGPOptional.of(dummyMove));
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

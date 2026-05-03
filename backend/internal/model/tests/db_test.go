@@ -48,8 +48,13 @@ func TestConfigRoomFlow(t *testing.T) {
 		t.Fatalf("created config room is not as expected: %v", configRoom)
 	}
 
+	// Add a candidate
+	err = configRoom.AddCandidate(opponent, 42)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
+	}
+
 	// Select an opponent
-	t.Logf("config room is: %v", configRoom)
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		t.Fatalf("cannot select opponent: %v", err)
@@ -181,6 +186,10 @@ func TestRematchForCreator(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
+	err = configRoom.AddCandidate(opponent, 0)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
+	}
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
@@ -221,6 +230,10 @@ func TestRematchForOpponent(t *testing.T) {
 	configRoom, err := model.CreateConfigRoom(creator, gameName)
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
+	}
+	err = configRoom.AddCandidate(opponent, 0)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
 	}
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
@@ -356,6 +369,10 @@ func TestGameFlow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
+	err = configRoom.AddCandidate(opponent, 0)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
+	}
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
@@ -435,6 +452,10 @@ func TestManyGameEvents(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
+	err = configRoom.AddCandidate(opponent, 0)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
+	}
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
@@ -489,6 +510,10 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
+	err = configRoom.AddCandidate(opponent, 0)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
+	}
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
@@ -529,6 +554,10 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	configRoom, err := model.CreateConfigRoom(creator, gameName)
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
+	}
+	err = configRoom.AddCandidate(opponent, 0)
+	if err != nil {
+		t.Fatalf("cannot add candidate: %v", err)
 	}
 	err = configRoom.SelectOpponent(opponent)
 	if err != nil {

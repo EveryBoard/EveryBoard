@@ -7,12 +7,14 @@ import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';
 
+export type Candidate = { user: MinimalUser, elo: number };
+
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,
                          configRoomUpdate: (configRoom: ConfigRoom) => void,
                          configRoomDeleted: () => void,
-                         candidateJoined: (candidate: MinimalUser) => void,
-                         candidateLeft: (candidate: MinimalUser) => void,
+                         candidateJoined: (candidate: Candidate) => void,
+                         candidateLeft: (user: MinimalUser) => void,
                          error: (reason: string) => void)
     : Promise<Subscription>;
 
@@ -36,8 +38,8 @@ export class ConfigRoomService extends AbstractConfigRoomService {
     public override async join(gameId: string,
                                configRoomUpdate: (configRoom: ConfigRoom) => void,
                                configRoomDeleted: () => void,
-                               candidateJoined: (candidate: MinimalUser) => void,
-                               candidateLeft: (candidate: MinimalUser) => void,
+                               candidateJoined: (candidate: Candidate) => void,
+                               candidateLeft: (user: MinimalUser) => void,
                                error: (reason: string) => void)
     : Promise<Subscription>
     {
@@ -52,7 +54,7 @@ export class ConfigRoomService extends AbstractConfigRoomService {
             });
         const candidateJoinedSubscription: Subscription =
             this.backendService.setCallback('CandidateJoined', (message: BackendMessage): void => {
-                candidateJoined(message.getArgument('candidate'));
+                candidateJoined({ user: message.getArgument('candidate'), elo: message.getArgument('elo') });
             });
         const candidateLeftSubscription: Subscription =
             this.backendService.setCallback('CandidateLeft', (message: BackendMessage): void => {

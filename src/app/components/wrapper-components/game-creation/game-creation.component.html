@@ -49,13 +49,13 @@
                                                     </thead>
                                                     <tbody>
                                                         @for (candidate of viewInfo.candidates; track candidate) {
-                                                            <tr id="presenceOf_{{ candidate }}"
-                                                                [ngClass]="viewInfo.candidateClasses[candidate]"
-                                                                (click)="selectOpponent(candidate)">
-                                                                <td [id]="viewInfo.chosenOpponent === candidate ? ('selected_' + candidate) : ('candidate_' + candidate)"
-                                                                    class="td">{{ candidate }}</td>
+                                                            <tr id="presenceOf_{{ candidate.name }}"
+                                                                [ngClass]="viewInfo.candidateClasses[candidate.name]"
+                                                                (click)="selectOpponent(candidate.name)">
+                                                                <td [id]="viewInfo.chosenOpponent === candidate.name ? ('selected_' + candidate.name) : ('candidate_' + candidate.name)"
+                                                                    class="td">{{ candidate.name }} (<app-elo [elo]="candidate.elo"/>)</td>
                                                                 <td class="td">
-                                                                    @if (viewInfo.chosenOpponent !== candidate) {
+                                                                    @if (viewInfo.chosenOpponent !== candidate.name) {
                                                                         <button class="button is-primary"
                                                                                 i18n>Pick</button>
                                                                     }
@@ -237,72 +237,72 @@
                                i18n>Configuration proposal for {{ getGameName().getOrElse('') }}</p>
                             <p i18n>You have been selected as the opponent.<br/>
                                 {{ viewInfo.creator }} is modifying the configuration.</p>
-                            </div>
-                        </div>
-                    } @else {
-                        <div class="columns is-vcentered is-align-items-stretch">
-                            <div class="column">
-                                <div class="box is-fullheight">
-                                    <p class="title"
-                                       i18n>Configuration proposal for {{ getGameName().getOrElse('') }}</p>
-                                    <div class="content">
-                                        <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.gameTypeName }} game</p>
-                                        <ul>
-                                            <li>
-                                                @if (viewInfo.firstPlayer === FirstPlayer.CREATOR) {
-                                                    <span i18n>{{ viewInfo.creator }} plays first</span>
-                                                }
-                                                @if (viewInfo.firstPlayer === FirstPlayer.CHOSEN_OPPONENT) {
-                                                    <span i18n>you play first</span>
-                                                }
-                                                @if (viewInfo.firstPlayer === FirstPlayer.RANDOM) {
-                                                    <span i18n>the first player is selected randomly</span>
-                                                }
-                                            </li>
-                                            <li i18n>a turn lasts at most <strong>{{ (viewInfo.moveDuration || 0) | humanDuration }} </strong></li>
-                                            <li i18n>the game lasts at most <strong>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</strong></li>
-                                        </ul>
-                                        <app-rules-configuration #rulesConfigurationComponent
-                                                                 [rulesConfigDescriptionOptional]="rulesConfigDescription()"
-                                                                 [editable]="false"
-                                                                 [rulesConfigToDisplay]="getRulesConfigToDisplay()">
-                                        </app-rules-configuration>
-                                        <button class="button is-primary is-fullwidth mt-2"
-                                                (click)="acceptConfig()"
-                                                id="acceptConfig"
-                                                i18n>Accept and start</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="column">
-                                <div class="box is-fullheight">
-                                    @if (getConfigDemo() !== undefined) {
-                                        <app-demo-card id="demoCard"
-                                                       [demoNodeInfo]="getConfigDemo()!"></app-demo-card>
-                                    }
-                                </div>
-                            </div>
-                        </div>
-                    }
-                </div>
-            }
-            @if (viewInfo.userIsObserver) {
-                <div class="box">
-                    <div class="message is-primary">
-                        <div class="message-header">
-                            <p i18n>One moment...</p>
-                        </div>
-                        <div class="message-body">
-                            <p>
-                                @if (viewInfo.creatorIsModifyingConfig) {
-                                    <ng-container i18n>{{ viewInfo.creator }} is configuring the game.</ng-container>
-                                } @else {
-                                    <ng-container i18n>{{ viewInfo.creator }} has proposed a configuration to {{ viewInfo.chosenOpponent }}.</ng-container>
-                                }
-                            </p>
-                        </div>
                     </div>
                 </div>
-            }
-        </div>
-    }
+                } @else {
+                    <div class="columns is-vcentered is-align-items-stretch">
+                        <div class="column">
+                            <div class="box is-fullheight">
+                                <p class="title"
+                                   i18n>Configuration proposal for {{ getGameName().getOrElse('') }}</p>
+                                <div class="content">
+                                    <p i18n>{{ viewInfo.creator }} proposes to play a {{ viewInfo.gameTypeName }} game</p>
+                                    <ul>
+                                        <li>
+                                            @if (viewInfo.firstPlayer === FirstPlayer.CREATOR) {
+                                                <span i18n>{{ viewInfo.creator }} plays first</span>
+                                            }
+                                            @if (viewInfo.firstPlayer === FirstPlayer.CHOSEN_OPPONENT) {
+                                                <span i18n>you play first</span>
+                                            }
+                                            @if (viewInfo.firstPlayer === FirstPlayer.RANDOM) {
+                                                <span i18n>the first player is selected randomly</span>
+                                            }
+                                        </li>
+                                        <li i18n>a turn lasts at most <strong>{{ (viewInfo.moveDuration || 0) | humanDuration }} </strong></li>
+                                        <li i18n>the game lasts at most <strong>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</strong></li>
+                                    </ul>
+                                    <app-rules-configuration #rulesConfigurationComponent
+                                                             [rulesConfigDescriptionOptional]="rulesConfigDescription()"
+                                                             [editable]="false"
+                                                             [rulesConfigToDisplay]="getRulesConfigToDisplay()">
+                                    </app-rules-configuration>
+                                    <button class="button is-primary is-fullwidth mt-2"
+                                            (click)="acceptConfig()"
+                                            id="acceptConfig"
+                                            i18n>Accept and start</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="box is-fullheight">
+                                @if (getConfigDemo() !== undefined) {
+                                    <app-demo-card id="demoCard"
+                                                   [demoNodeInfo]="getConfigDemo()!"></app-demo-card>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        }
+        @if (viewInfo.userIsObserver) {
+            <div class="box">
+                <div class="message is-primary">
+                    <div class="message-header">
+                        <p i18n>One moment...</p>
+                    </div>
+                    <div class="message-body">
+                        <p>
+                            @if (viewInfo.creatorIsModifyingConfig) {
+                                <ng-container i18n>{{ viewInfo.creator }} is configuring the game.</ng-container>
+                            } @else {
+                                <ng-container i18n>{{ viewInfo.creator }} has proposed a configuration to {{ viewInfo.chosenOpponent }}.</ng-container>
+                            }
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

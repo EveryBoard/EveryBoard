@@ -123,18 +123,3 @@ class MGPFallibleFailure<T> extends MGPFallible<T> {
         return MGPFallible.failure(this.reason);
     }
 }
-
-export class MGPFallibleTestUtils {
-
-    public static expectToBeSuccess<T>(fallible: MGPFallible<T>, value?: T): void {
-        expect(fallible.isSuccess()).toBeTrue();
-        if (value != null) {
-            expect(fallible.get()).toBe(value);
-        }
-    }
-
-    public static expectToBeFailure<T>(fallible: MGPFallible<T>, reason: string): void {
-        expect(fallible.isFailure()).toBeTrue();
-        expect(fallible.getReason()).toBe(reason);
-    }
-}

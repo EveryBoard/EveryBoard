@@ -50,8 +50,8 @@
     }
     <g #switchModeIndicator>
         @if (chosenMode === '2D') {
-            <g id="switchTo3D"
-               app-trexo-half-piece
+            <g app-trexo-half-piece
+               id="switchTo3D"
                (click)="switchToMode('3D')"
                [mode]="TrexoComponent.modeMap['3D']"
                [attr.transform]="get3DSwitcherTransform()"

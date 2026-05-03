@@ -367,7 +367,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Ordinal.DOWN);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a victory for 0
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -390,7 +392,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Ordinal.UP);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a victory for player 1
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -436,7 +440,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 1);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a win for player zero
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -459,7 +465,9 @@ describe('EpaminondasRules', () => {
             const state: EpaminondasState = new EpaminondasState(board, 2);
             const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Ordinal.LEFT);
             const node: EpaminondasNode = new EpaminondasNode(state, MGPOptional.empty(), MGPOptional.of(move));
-            // Then it should be a win for player one
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

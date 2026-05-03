@@ -37,6 +37,7 @@ export type ReversiConfig = RulesConfig & {
     height: number;
 
     toric: boolean;
+
 };
 
 @Debug.log

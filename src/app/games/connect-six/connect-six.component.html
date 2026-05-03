@@ -6,8 +6,7 @@
     <g app-blank-goban
        [width]="getState().getWidth()"
        [height]="getState().getHeight()"
-       (clickCallBack)="onClick($event)">
-    </g>
+       (clickCallBack)="onClick($event)"/>
 
     <g id="pieces">
         @for (line of board; track $index; let y = $index) {

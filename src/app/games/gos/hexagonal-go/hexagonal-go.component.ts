@@ -1,17 +1,17 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
+import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
+import { HexaLayout } from 'src/app/jscaip/HexaLayout';
+import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
-import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { TableUtils } from '../../../jscaip/TableUtils';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
@@ -19,23 +19,23 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { TrigoMinimax } from './TrigoMinimax';
-import { TrigoMoveGenerator } from './TrigoMoveGenerator';
-import { TrigoConfig, TrigoRules } from './TrigoRules';
+import { HexagonalGoMinimax } from './HexagonalGoMinimax';
+import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
+import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 @Component({
-    selector: 'app-trigo',
-    templateUrl: './trigo.component.html',
+    selector: 'app-hexagonal-go',
+    templateUrl: './hexagonal-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
 @Debug.log
-export class TrigoComponent extends TriangularGameComponent<TrigoRules,
-                                                            GoMove,
-                                                            GoState,
-                                                            GoPiece,
-                                                            TrigoConfig,
-                                                            GoLegalityInformation>
+export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRules,
+                                                                 GoMove,
+                                                                 GoState,
+                                                                 GoPiece,
+                                                                 HexagonalGoConfig,
+                                                                 GoLegalityInformation>
 {
 
     public boardInfo: GroupData<GoPiece>;
@@ -50,14 +50,27 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
 
     public constructor() {
         super();
-        this.setRulesAndNode('Trigo');
+        this.setRulesAndNode('HexagonalGo');
         this.availableAIs = [
-            new TrigoMinimax(),
-            new MCTS($localize`MCTS`, new TrigoMoveGenerator(), this.rules),
+            new HexagonalGoMinimax(),
+            new MCTS($localize`MCTS`, new HexagonalGoMoveGenerator(), this.rules),
         ];
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.setHexaLayout();
+    }
+
+    private setHexaLayout(): void {
+        const halfStroke: number = this.STROKE_WIDTH / 2;
+        const configSize: number = Math.floor(this.getState().getWidth() / 2);
+        const hexaLayoutStartX: number =
+            (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
+        const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
+        const hexaLayoutStartingCoord: Coord = new Coord(hexaLayoutStartX, hexaLayoutStartY);
+        this.hexaLayout = new HexaLayout(this.SPACE_SIZE,
+                                         hexaLayoutStartingCoord,
+                                         PointyHexaOrientation.INSTANCE);
     }
 
     public override async showLastMove(move: GoMove): Promise<void> {
@@ -71,19 +84,13 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
     }
 
     public getViewBox(): ViewBox {
-        const state: GoState = this.getState();
-        const leftmostOccupiedX: number = TableUtils.getLeftmostMatchColumn(state.board, GoPiece.isReachable).get();
-        const width: number = state.board[0].length;
-        const occupiedWidth: number = width - leftmostOccupiedX;
-        const abstractSize: number = occupiedWidth / 2;
-        const oddnessOffset: number = 0.5 * this.SPACE_SIZE * (occupiedWidth % 2);
-        const evennessOffset: number = leftmostOccupiedX * 0.5 * this.SPACE_SIZE;
-        return new ViewBox(
-            evennessOffset,
-            0,
-            (this.SPACE_SIZE * abstractSize) + oddnessOffset,
-            this.SPACE_SIZE * state.getHeight(),
-        ).expandAll(this.STROKE_WIDTH / 2);
+        return ViewBox.fromHexa(
+            this.getState().allCoords(),
+            this.hexaLayout,
+            this.STROKE_WIDTH,
+        )
+            .expandAbove(this.SPACE_SIZE)
+            .expandBelow(this.SPACE_SIZE);
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -101,7 +108,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         const state: GoState = this.getState();
         const phase: GoPhase = state.phase;
 
-        this.board = state.getCopiedBoard();
+        this.hexaBoard = state.getCopiedBoard();
         this.updateScores();
 
         this.ko = state.koCoord;
@@ -122,7 +129,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         for (const coordAndContent of this.getState().getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
             const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
-            const isEmpty: boolean = this.board[coord.y][coord.x] === GoPiece.EMPTY;
+            const isEmpty: boolean = this.hexaBoard[coord.y][coord.x] === GoPiece.EMPTY;
             const isNotKo: boolean = this.ko.equalsValue(coord) === false;
             if (wasOccupied && isEmpty && isNotKo) {
                 this.captures.push(coord);
@@ -136,7 +143,7 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
             return this.onClick(GoMove.PASS.coord);
         }
         Utils.assert(phase.isCounting() || phase.isAccept(),
-                     'TrigoComponent: pass() must be called only in playing, passed, counting, or accept phases');
+                     'HexagonalGoComponent: pass() must be called only in playing, passed, counting, or accept phases');
         return this.onClick(GoMove.ACCEPT.coord);
     }
 
@@ -152,35 +159,12 @@ export class TrigoComponent extends TriangularGameComponent<TrigoRules,
         return classes;
     }
 
-    public getTerritoryTriangleTransform(coord: Coord): string {
-        let y: number;
-        if (this.isUpward(coord)) {
-            y = 25;
-        } else {
-            y = 15;
-        }
-        return this.getSVGTranslation(20, y) + ' scale(0.6)';
+    public getTerritoryHexagonalTransform(): string {
+        return 'scale(0.6) ';
     }
 
-    public isUpward(coord: Coord): boolean {
-        return TriangularCheckerBoard.isSpaceDark(coord);
-    }
-
-    public isDownward(coord: Coord): boolean {
-        return TriangularCheckerBoard.isSpaceDark(coord) === false;
-    }
-
-    public getKoTranslationAt(koCoord: Coord): string {
-        const koTranslationCoord: Coord = this.getKoTranslationCoordAt(koCoord);
-        return this.getSVGTranslationAt(koTranslationCoord);
-    }
-
-    private getKoTranslationCoordAt(koCoord: Coord): Coord {
-        if (this.isUpward(koCoord)) {
-            return this.getTriangleTranslationCoord(koCoord).getNext(new Coord(0, 25));
-        } else {
-            return this.getTriangleTranslationCoord(koCoord);
-        }
+    public getHexaDiagonalPoints(): string {
+        return this.hexaLayout.getHexaDiagonalPoints();
     }
 
 }

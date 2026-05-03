@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
