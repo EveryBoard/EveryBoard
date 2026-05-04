@@ -24,7 +24,7 @@
                             }
                         </div>
                     }
-                    @for (player of [Player.of(0), Player.of(1)]; track player) {
+                    @for (player of Player.PLAYERS; track player) {
                         <div class="px-2 py-4 mb-4"
                              [ngClass]="player.getHTMLClass('-bg')">
                             <p class="mb-2 subtitle"
