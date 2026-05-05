@@ -8,9 +8,10 @@ import (
 
 func TestMarshalElo(t *testing.T) {
 	original := model.Elo{
-		// ID, User, and GameName are used in the DB but not in the JSON marshalling, hence we leave them empty
+		// ID, UserID, UserName, and GameName are used in the DB but not in the JSON marshalling, hence we leave them empty
 		ID:       0,
-		User:     model.MinimalUser{ID: "", Name: ""},
+		UserID:   "",
+		UserName: "",
 		GameName: "",
 
 		CurrentElo:  1.0,

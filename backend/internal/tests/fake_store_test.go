@@ -3,7 +3,6 @@ package internal
 import (
 	"fmt"
 
-	everyboard "github.com/EveryBoard/EveryBoard/internal"
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
@@ -42,6 +41,10 @@ func NewFakeStore() *FakeStore {
 		Messages:     make(map[model.GameID][]*model.Message),
 		nextID:       model.GameIDLobby,
 	}
+}
+
+func (s *FakeStore) Transaction(fn func(store model.Store) error) error {
+	return fn(s)
 }
 
 func (s *FakeStore) allocateID() model.GameID {
@@ -215,7 +218,7 @@ func (s *FakeStore) GetGame(gameId model.GameID) (*model.Game, error) {
 	return s.Games[gameId], nil
 }
 
-func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
+func (s *FakeStore) CreateGame(configRoom model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
 	if configRoom.ChosenOpponent == nil {
 		return nil, fmt.Errorf("cannot create a game if a config room has no opponent")
 	}
@@ -286,7 +289,8 @@ func (s *FakeStore) GetElo(gameName string, user model.MinimalUser) (*model.Elo,
 	elo, ok := s.Elos[user.ID][gameName]
 	if !ok {
 		elo = &model.Elo{
-			User:        user,
+			UserID:      user.ID,
+			UserName:    user.Name,
 			GameName:    gameName,
 			CurrentElo:  0,
 			GamesPlayed: 0,
@@ -380,4 +384,4 @@ func (s *FakeStore) ApplyToObservers(gameId model.GameID, action func(model.Mini
 	return nil
 }
 
-var _ everyboard.Store = (*FakeStore)(nil)
+var _ model.Store = (*FakeStore)(nil)

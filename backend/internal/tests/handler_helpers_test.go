@@ -501,6 +501,9 @@ func (sb ScenarioBuilder) doEvent(userId string, eventStr string) {
 	sendMessage(sb.t, conn, eventStr)
 
 	events := sb.fakeStore.Events[gameId]
+	if len(events) == eventsBefore {
+		sb.t.Fatalf("doEvent did not result in a new event when doing event %s", eventStr)
+	}
 	event := events[eventsBefore]
 	eventJSON := toJSON(sb.t, &event)
 	for _, subscriber := range sb.gameSubscribers[gameId] {

@@ -2,6 +2,7 @@ package internal
 
 import (
 	"testing"
+	"time"
 
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
 	"github.com/EveryBoard/EveryBoard/internal/model"
@@ -12,6 +13,10 @@ type MockConnection struct {
 }
 
 func (m *MockConnection) WriteMessage(messageType int, data []byte) error {
+	return nil
+}
+
+func (m *MockConnection) SetWriteDeadline(t time.Time) error {
 	return nil
 }
 

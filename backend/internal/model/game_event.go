@@ -98,7 +98,7 @@ const (
 
 type EventData struct {
 	Type    EventType
-	Payload interface{}
+	Payload any
 }
 
 var (
@@ -150,11 +150,23 @@ func EventDataMove(move json.RawMessage) EventData {
 	}
 }
 
+func (e EventData) AllowedInConfigRoomStatus(status Status) bool {
+	// Rematch is different from other events: it is only allowed after the game has finished
+	if e.Type == EventTypeRequest && e.Payload.(RequestPayload).RequestType == PropositionRematch {
+		return status == StatusFinished
+	}
+	if e.Type == EventTypeReply && e.Payload.(ReplyPayload).RequestType == PropositionRematch {
+		return status == StatusFinished
+	}
+	// Any other event is allowed only during play
+	return status == StatusStarted
+}
+
 func (e EventData) Value() (driver.Value, error) {
 	return json.Marshal(e)
 }
 
-func (e *EventData) Scan(value interface{}) error {
+func (e *EventData) Scan(value any) error {
 	bytes, ok := value.([]byte)
 	if !ok {
 		return fmt.Errorf("failed to unmarshal EventData: not []byte")

@@ -85,6 +85,10 @@ func (c *CountMessagesConnection) WriteMessage(messageType int, data []byte) err
 	c.messagesReceived++
 	return nil
 }
+
+func (c *CountMessagesConnection) SetWriteDeadline(t time.Time) error {
+	return nil
+}
 func TestManyMessages(t *testing.T) {
 	// Given a connection manager with one connection
 	user := model.MinimalUser{ID: "foo", Name: "foo"}

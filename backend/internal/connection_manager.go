@@ -2,8 +2,10 @@ package internal
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"sync"
+	"time"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 	"github.com/EveryBoard/EveryBoard/internal/utils"
@@ -37,6 +39,7 @@ func (q *queue) pop() (model.OutgoingMessage, bool) {
 type ConnectionLike interface {
 	comparable
 	WriteMessage(messageType int, data []byte) error
+	SetWriteDeadline(t time.Time) error
 }
 
 type infos struct {
@@ -96,8 +99,9 @@ func (connectionManager *ConnectionManager[Connection]) AddConnection(user model
 						log.Printf("error when marshalling message: %v", err)
 					}
 					log.Printf("\033[32m>>> [%s] %v\033[0m", user.Name, string(toSend))
+					_ = client.SetWriteDeadline(time.Now().Add(10 * time.Second))
 					err = client.WriteMessage(websocket.TextMessage, toSend)
-					if err != nil && !(websocket.IsCloseError(err) || err == websocket.ErrCloseSent) {
+					if err != nil && !(websocket.IsCloseError(err) || errors.Is(err, websocket.ErrCloseSent)) {
 						// in case the connection has been closed, we will ignore sent messages
 						log.Printf("error when sending message: %v", err)
 					}
@@ -144,7 +148,7 @@ func (connectionManager *ConnectionManager[Connection]) RemoveConnection(user mo
 	infos, exists := connectionManager.clientToInfos[client]
 	if exists {
 		delete(connectionManager.clientToInfos, client)
-		infos.done <- struct{}{} // will stop the goroutine that sends messages
+		close(infos.done) // will stop the goroutine that sends messages
 	}
 }
 
@@ -153,7 +157,7 @@ func (connectionManager *ConnectionManager[Connection]) AllUserConnections(user 
 	defer connectionManager.lock.RUnlock()
 
 	clients := connectionManager.userToClients[user]
-	return clients
+	return clients.Clone()
 }
 
 func (connectionManager *ConnectionManager[Connection]) GetUserOfClient(client Connection) *model.MinimalUser {

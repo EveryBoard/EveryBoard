@@ -81,3 +81,33 @@ func TestMarshalInvalidGameEventFails(t *testing.T) {
 	// Invalid because empty payload
 	ExpectMarshallingToFail(t, MakeGameEvent(model.EventData{Type: model.EventTypeMove, Payload: nil}))
 }
+
+func TestEventInGameOrNot(t *testing.T) {
+	expectToBeAllowedOnlyIn := func(eventData model.EventData, allowedStatus model.Status) {
+		for _, status := range model.AllStatus {
+			if status == allowedStatus {
+				if !eventData.AllowedInConfigRoomStatus(status) {
+					t.Fatalf("event is not allowed in status %v but should be: %v", status, eventData)
+				}
+			} else {
+				if eventData.AllowedInConfigRoomStatus(status) {
+					t.Fatalf("event is allowed in status %v but should not be: %v", status, eventData)
+				}
+			}
+		}
+	}
+	expectToBeAllowedOnlyIn(model.EventDataMove(json.RawMessage(`{"x": 42}`)), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataAddTime(model.AddTimeGame), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataAddTime(model.AddTimeMove), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataStartGame, model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataEndGame, model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataRequest(model.PropositionTakeBack), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataRequest(model.PropositionDraw), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataRequest(model.PropositionRematch), model.StatusFinished)
+	expectToBeAllowedOnlyIn(model.EventDataReplyAccept(model.PropositionTakeBack, nil), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataReplyAccept(model.PropositionDraw, nil), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataReplyAccept(model.PropositionRematch, nil), model.StatusFinished)
+	expectToBeAllowedOnlyIn(model.EventDataReplyReject(model.PropositionTakeBack), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataReplyReject(model.PropositionDraw), model.StatusStarted)
+	expectToBeAllowedOnlyIn(model.EventDataReplyReject(model.PropositionRematch), model.StatusFinished)
+}

@@ -37,6 +37,8 @@ const (
 	StatusFinished       Status = "Finished"
 )
 
+var AllStatus = []Status{StatusCreated, StatusConfigProposed, StatusStarted, StatusFinished}
+
 func (status *Status) UnmarshalJSON(data []byte) error {
 	var s string
 	err := json.Unmarshal(data, &s)

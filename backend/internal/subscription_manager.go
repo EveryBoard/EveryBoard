@@ -46,10 +46,15 @@ func NewSubscriptionManager[Connection comparable]() SubscriptionManager[Connect
 }
 
 // Subscribe subscribes a client and its corresponding user to a game
-// Assumes that the client is not yet subscribed to a game
-func (manager *SubscriptionManager[Connection]) Subscribe(client Connection, user string, gameID model.GameID, kind SubscriptionKind) {
+// Returns true if subscription succeeded, false if the user was already subscribed and the subscription failed
+func (manager *SubscriptionManager[Connection]) Subscribe(client Connection, user string, gameID model.GameID, kind SubscriptionKind) bool {
 	manager.lock.Lock()
 	defer manager.lock.Unlock()
+
+	_, alreadySubscribed := manager.userToClient[user]
+	if alreadySubscribed {
+		return false
+	}
 
 	subscriptionKindAndGameId := SubscriptionKindAndGameId{kind, gameID}
 
@@ -66,6 +71,7 @@ func (manager *SubscriptionManager[Connection]) Subscribe(client Connection, use
 
 	manager.clientToUser[client] = user
 	manager.userToClient[user] = client
+	return true
 }
 
 // Unsubscribe removes a client from the subscription lists.
@@ -100,10 +106,11 @@ func (manager *SubscriptionManager[Connection]) SubscriptionsTo(kind Subscriptio
 
 	subscriptionAndGameId := SubscriptionKindAndGameId{kind, gameId}
 
-	return manager.gameToClients[subscriptionAndGameId]
+	return manager.gameToClients[subscriptionAndGameId].Clone()
 }
 
 // Checks if a user is already subscribed to a game.
+// Only for testing purposes
 func (manager *SubscriptionManager[Connection]) IsSubscribed(user string) bool {
 	manager.lock.RLock()
 	defer manager.lock.RUnlock()

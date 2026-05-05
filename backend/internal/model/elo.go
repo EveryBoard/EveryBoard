@@ -1,11 +1,12 @@
 package model
 
 type Elo struct {
-	ID          uint64      `gorm:"primaryKey;autoincrement" json:"-"`
-	User        MinimalUser `gorm:"embedded;embeddedPrefix:user_;not null" json:"-"`
-	GameName    string      `gorm:"not null" json:"-"`
-	CurrentElo  float64     `gorm:"not null" json:"currentElo"`
-	GamesPlayed uint        `goorm:"not null" json:"gamesPlayed"`
+	ID          uint64  `gorm:"primaryKey;autoincrement" json:"-"`
+	UserID      string  `gorm:"column:user_id;not null;uniqueIndex:idx_user_gamename" json:"-"`
+	UserName    string  `gorm:"column:user_name;not null" json:"-"`
+	GameName    string  `gorm:"not null;uniqueIndex:idx_user_gamename" json:"-"`
+	CurrentElo  float64 `gorm:"not null" json:"currentElo"`
+	GamesPlayed uint    `gorm:"not null" json:"gamesPlayed"`
 }
 
 var EloRows = []string{

@@ -4,21 +4,27 @@ type OutgoingMessage interface {
 	Tag() string
 }
 
-type Error string
+type BackendError struct {
+	Msg string `json:"reason"`
+}
 
-const (
-	ErrorInternal          Error = "internal-error"
-	ErrorInvalidData       Error = "invalid-data"
-	ErrorAlreadySubscribed Error = "already-subscribed"
-	ErrorNotSubscribed     Error = "not-subscribed"
-	ErrorUnknownMessage    Error = "unknown-message"
-	ErrorUnknownGame       Error = "unknown-game"
-	ErrorGameDoesNotExist  Error = "game-does-not-exist"
-	ErrorNotAllowed        Error = "not-allowed"
+func (e BackendError) Error() string {
+	return e.Msg
+}
+
+var (
+	ErrorInternal          BackendError = BackendError{Msg: "internal-error"}
+	ErrorInvalidData       BackendError = BackendError{Msg: "invalid-data"}
+	ErrorAlreadySubscribed BackendError = BackendError{Msg: "already-subscribed"}
+	ErrorNotSubscribed     BackendError = BackendError{Msg: "not-subscribed"}
+	ErrorUnknownMessage    BackendError = BackendError{Msg: "unknown-message"}
+	ErrorGameDoesNotExist  BackendError = BackendError{Msg: "game-does-not-exist"}
+	ErrorNotAllowed        BackendError = BackendError{Msg: "not-allowed"}
+	ErrorUnknownGame       BackendError = BackendError{Msg: "unknown-game"}
 )
 
 type ErrorMessage struct {
-	Reason Error `json:"reason"`
+	Reason string `json:"reason"`
 }
 
 func (m ErrorMessage) Tag() string {

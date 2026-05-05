@@ -2,7 +2,6 @@ package auth
 
 import (
 	"context"
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -18,16 +17,11 @@ func fetchUserDocument(context context.Context, uid string) (*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	data, err := json.Marshal(doc)
-	if err != nil {
-		return nil, fmt.Errorf("cannot encode user: %v", err)
+	username, ok := doc["username"].(string)
+	if !ok {
+		return nil, fmt.Errorf("user document does not contain a string 'username'")
 	}
-	var user User
-	err = json.Unmarshal(data, &user)
-	if err != nil {
-		return nil, fmt.Errorf("cannot decode user: %v", err)
-	}
-	return &user, nil
+	return &User{Username: username}, nil
 }
 
 func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {

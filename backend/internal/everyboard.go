@@ -23,7 +23,7 @@ type Configuration struct {
 	Firebase  auth.FirebaseLike
 	IDEncoder model.IDEncoder
 	Database  gorm.Dialector
-	Store     Store
+	Store     model.Store
 
 	ListenAddr string
 	Origin     string
@@ -68,7 +68,7 @@ func ReadConfiguration() (*Configuration, error) {
 	}
 
 	if config.Origin == "" {
-		return nil, fmt.Errorf("Origin is not set. Use ALLOW_ORIGIN environment variable")
+		return nil, fmt.Errorf("origin is not set. Use ALLOW_ORIGIN environment variable")
 	}
 
 	// The other elements of the config will be checked by the respective packages that need them
@@ -112,9 +112,9 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			if err == io.EOF || websocket.IsUnexpectedCloseError(err) {
 				// WebSocket closed, stop this handler after disconnecting client
 				log.Printf("[%v] Disconnect", user.Username)
-				err = handlers.ClientLeft()
+				err = handlers.clientLeft()
 				if err != nil {
-					utils.Errorf("Error when disconnecting client: %w", err)
+					utils.Errorf("Error when disconnecting client: %v", err)
 				}
 				break
 			}
@@ -124,10 +124,7 @@ func (config Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		log.Printf("\033[33m<<< [%v] %v\033[0m", user.Username, string(msg))
 		messageType, messageData, err := model.DecodeIncomingMessage(msg)
 		if err != nil {
-			err = handlers.error(model.ErrorUnknownMessage)
-			if err != nil {
-				utils.Errorf("Error when sending error to client: %v", err)
-			}
+			handlers.sendError(model.ErrorUnknownMessage)
 			continue
 		}
 		err = handlers.handle(messageType, messageData)
@@ -176,11 +173,11 @@ func Prepare(config Configuration) (*http.Server, error) {
 	}
 	if config.Store == nil {
 		log.Println("Initializing DB")
-		err = model.InitDatabase(config.Database)
+		store, err := model.InitDatabase(config.Database)
 		if err != nil {
 			return nil, fmt.Errorf("error initializing database: %v", err)
 		}
-		config.Store = GORMStore{}
+		config.Store = store
 	}
 	Subscriptions = NewSubscriptionManager[*websocket.Conn]()
 	Connections = NewConnectionManager[*websocket.Conn]()

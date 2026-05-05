@@ -6,8 +6,8 @@ func NewSet[T comparable]() Set[T] {
 	return make(Set[T])
 }
 
-func (set *Set[T]) Add(value T) {
-	(*set)[value] = struct{}{}
+func (set Set[T]) Add(value T) {
+	set[value] = struct{}{}
 }
 
 func (set Set[T]) Exists(value T) bool {
@@ -16,7 +16,13 @@ func (set Set[T]) Exists(value T) bool {
 }
 
 func (set Set[T]) Remove(value T) {
-	if set.Exists(value) {
-		delete(set, value)
+	delete(set, value)
+}
+
+func (set Set[T]) Clone() Set[T] {
+	clone := make(Set[T], len(set))
+	for k := range set {
+		clone[k] = struct{}{}
 	}
+	return clone
 }
