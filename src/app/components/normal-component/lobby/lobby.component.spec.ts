@@ -249,7 +249,7 @@ describe('LobbyComponent', () => {
         expect(gameName.nativeElement.innerText).toEqual('Four in a Row');
     }));
 
-    it('should display creator elo as a whole number', fakeAsync(async() => {
+    it('should display creator elo as a whole rounded number', fakeAsync(async() => {
         // Given a lobby with an existing game, with a creator elo
         testUtils.detectChanges();
         setActiveConfigRooms(MGPMap.from({ gameId: { ...configRoom, creatorElo: 12.67865 } }));
@@ -259,7 +259,7 @@ describe('LobbyComponent', () => {
 
         // Then it should show the creator elo as a whole number
         const creatorElo: DebugElement = testUtils.findElement('#part-of-creator');
-        expect(creatorElo.nativeElement.innerText).toEqual('creator (12)');
+        expect(creatorElo.nativeElement.innerText).toEqual('creator (13)');
     }));
 
     it('should show the chat when clicking on the corresponding tab', fakeAsync(async() => {

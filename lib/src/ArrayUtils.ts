@@ -3,6 +3,13 @@ import { Utils } from './Utils';
 
 export class ArrayUtils {
 
+    /**
+     * Create an array of size width containing initValue.
+     * Watch out: initValue is repeated without copy,
+     * so if it is an object that will be mutated,
+     * it will also change the values of all fields.
+     * General rule: don't mutate objects stored in such arrays.
+     */
     public static create<T>(width: number, initValue: T): T[] {
         const array: Array<T> = [];
         for (let x: number = 0; x < width; x++) {
@@ -67,6 +74,7 @@ export class ArrayUtils {
     /**
      * Gets a random element from an array.
      * Throws if the array is empty.
+     * Does not use a cryptographically secure random selection.
      */
     public static getRandomElement<T>(array: T[]): T {
         Utils.assert(array.length > 0, 'ArrayUtils.getRandomElement must be called on an array containing elements');

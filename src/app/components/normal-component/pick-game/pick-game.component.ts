@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
+import Fuse, { FuseResult } from 'fuse.js';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -45,9 +46,12 @@ import { GipfComponent } from '../../../games/gipf/gipf.component';
 import { GoRules } from '../../../games/gos/go/GoRules';
 import { GoTutorial } from '../../../games/gos/go/GoTutorial';
 import { GoComponent } from '../../../games/gos/go/go.component';
-import { TrigoRules } from '../../../games/gos/trigo/TrigoRules';
-import { TrigoTutorial } from '../../../games/gos/trigo/TrigoTutorial';
-import { TrigoComponent } from '../../../games/gos/trigo/trigo.component';
+import { HexagonalGoRules } from '../../../games/gos/hexagonal-go/HexagonalGoRules';
+import { HexagonalGoTutorial } from '../../../games/gos/hexagonal-go/HexagonalGoTutorial';
+import { HexagonalGoComponent } from '../../../games/gos/hexagonal-go/hexagonal-go.component';
+import { TriangularGoRules } from '../../../games/gos/triangular-go/TriangularGoRules';
+import { TriangularGoTutorial } from '../../../games/gos/triangular-go/TriangularGoTutorial';
+import { TriangularGoComponent } from '../../../games/gos/triangular-go/triangular-go.component';
 import { HexodiaRules } from '../../../games/hexodia/HexodiaRules';
 import { HexodiaTutorial } from '../../../games/hexodia/HexodiaTutorial';
 import { HexodiaComponent } from '../../../games/hexodia/hexodia.component';
@@ -171,6 +175,8 @@ class GameDescription {
 
     public static readonly GO: Localized = () => $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
+    public static readonly HEXAGONAL_GO: Localized = () => $localize`A version of Go on a hexagonal board!`;
+
     public static readonly HEXODIA: Localized = () => $localize`A hexagonal alignment game with weird "diagonals"!`;
 
     public static readonly HIVE: Localized = () => $localize`You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent's queen in order to win!`;
@@ -221,7 +227,7 @@ class GameDescription {
 
     public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!`;
 
-    public static readonly TRI_GO: Localized = () => $localize`A version of Go on triangular spaces!`;
+    public static readonly TRIANGULAR_GO: Localized = () => $localize`A version of Go on triangular spaces!`;
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
@@ -287,10 +293,12 @@ export class GameInfo {
             new GameInfo($localize`Ba-awa`,                 'BaAwa',                 BaAwaComponent,                 new BaAwaTutorial(),                 BaAwaRules.get(),                 new Date('2024-01-28'), GameDescription.BA_AWA()                ), // 36:                             * Martin
             new GameInfo($localize`Squarz`,                 'Squarz',                SquarzComponent,                new SquarzTutorial(),                SquarzRules.get(),                new Date('2024-05-08'), GameDescription.SQUARZ()                ), // 37:                             * Martin
             new GameInfo($localize`Hexodia`,                'Hexodia',               HexodiaComponent,               new HexodiaTutorial(),               HexodiaRules.get(),               new Date('2024-06-26'), GameDescription.HEXODIA()               ), // 38:                             * Martin
-            new GameInfo($localize`Trigo`,                  'Trigo',                 TrigoComponent,                 new TrigoTutorial(),                 TrigoRules.get(),                 new Date('2024-06-29'), GameDescription.TRI_GO()                ), // 39:                             * Martin
+            new GameInfo($localize`Triangular Go`,          'TriangularGo',          TriangularGoComponent,          new TriangularGoTutorial(),          TriangularGoRules.get(),          new Date('2024-06-29'), GameDescription.TRIANGULAR_GO()         ), // 39:                             * Martin
 
             new GameInfo($localize`International Checkers`, 'InternationalCheckers', InternationalCheckersComponent, new InternationalCheckersTutorial(), InternationalCheckersRules.get(), new Date('2025-02-03'), GameDescription.INTERNATIONAL_CHECKERS()), // 40:                             * Martin
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
+
+            new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
@@ -360,9 +368,18 @@ export class PickGameComponent {
     }
 
     public search(input: EventTarget | null): void {
-        const searchTerm: string = (input as HTMLInputElement).value;
-        this.matchingGames = this.games.filter((info: GameInfo) =>
-            this.normalize(info.name).includes(this.normalize(searchTerm)));
+        const searchTerm: string = this.normalize((input as HTMLInputElement).value);
+        if (searchTerm.length === 0) {
+            this.matchingGames = this.games;
+        } else {
+            const fuse: Fuse<GameInfo> = new Fuse(this.games, {
+                keys: ['name', 'urlName'],
+                ignoreLocation: true,
+                threshold: 0.5,
+            });
+            this.matchingGames = fuse.search(searchTerm)
+                .map((result: FuseResult<GameInfo>): GameInfo => result.item);
+        }
     }
 
     private normalize(term: string): string {
@@ -377,4 +394,5 @@ export class PickGameComponent {
         // not characters, thereby removing all diacritics. This is not the work
         // of Morgoth as one may think, but regular Unicode manipulation.
     }
+
 }

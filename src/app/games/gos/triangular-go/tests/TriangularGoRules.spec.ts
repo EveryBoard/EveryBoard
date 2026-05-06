@@ -12,11 +12,11 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
-describe('TrigoRules', () => {
+describe('TriangularGoRules', () => {
 
-    let rules: TrigoRules;
+    let rules: TriangularGoRules;
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -26,12 +26,12 @@ describe('TrigoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
     const N: GoPiece = GoPiece.UNREACHABLE;
-    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+    const defaultConfig: MGPOptional<TriangularGoConfig> = TriangularGoRules.get().getDefaultRulesConfig();
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     beforeEach(() => {
-        rules = TrigoRules.get();
+        rules = TriangularGoRules.get();
     });
 
     it('should be created', () => {
@@ -42,7 +42,7 @@ describe('TrigoRules', () => {
 
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = TrigoRules.get().getInitialState(defaultConfig);
+            const state: GoState = TriangularGoRules.get().getInitialState(defaultConfig);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -279,7 +279,7 @@ describe('TrigoRules', () => {
 
         it('GoPhase.PLAYING + GoMove.PASS = GoPhase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = TrigoRules.get().getInitialState(defaultConfig);
+            const state: GoState = TriangularGoRules.get().getInitialState(defaultConfig);
             expect(state.phase).toBe(GoPhase.PLAYING);
 
             // When passing
@@ -324,7 +324,7 @@ describe('TrigoRules', () => {
             const move: GoMove = new GoMove(1, 6);
 
             // Then the move should be illegal
-            const reason: string = GoFailure.OCCUPIED_INTERSECTION();
+            const reason: string = GoFailure.OCCUPIED_SPACE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -613,7 +613,7 @@ describe('TrigoRules', () => {
     describe('GoPhase.ACCEPT', () => {
 
         it('GoPhase.ACCEPT + GoMove/play = GoPhase.PLAYING', () => {
-            // Given a board on counting phase (for example, incorrectly marked)
+            // Given a board on ACCEPT phase (for example, incorrectly marked)
             const board: Table<GoPiece> = [
                 [N, N, N, N, b, N, N, N, N],
                 [N, N, N, _, O, _, N, N, N],
@@ -695,7 +695,7 @@ describe('TrigoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('GoPhase.ACCEPT + GoMove.ACCEPT = Game Over', () => {
+        it('GoPhase.ACCEPT + GoMove.ACCEPT = GoPhase.FINISHED', () => {
             // Given a board on accepted phase
             const board: Table<GoPiece> = [
                 [N, N, N, N, b, N, N, N, N],
@@ -712,16 +712,14 @@ describe('TrigoRules', () => {
             // Then the move should succeed and the game should be over
             const expectedState: GoState =
                 new GoState(board, PlayerNumberMap.of(1, 2), 2, MGPOptional.empty(), GoPhase.FINISHED);
-            const node: GoNode = new GoNode(expectedState);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
     });
 
     describe('End Game', () => {
 
-        it('should calculate correctly board with dead stones (And Recognize Draw)', () => {
+        it('should recognize draw on a board with dead stones', () => {
             // Given a board with the same number of point for every player
             const board: Table<GoPiece> = [
                 [N, N, N, N, N, N, _, N, N, N, N, N, N],
@@ -736,8 +734,8 @@ describe('TrigoRules', () => {
                 new GoState(board, PlayerNumberMap.of(5, 5), 4, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
-            // When evaluating its value
-            // Then it should see the draw
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
@@ -756,8 +754,8 @@ describe('TrigoRules', () => {
                 new GoState(board, PlayerNumberMap.of(2, 0), 2, MGPOptional.empty(), GoPhase.FINISHED);
             const node: GoNode = new GoNode(state);
 
-            // When evaluating it
-            // Then it should be recognized as a victory for Player.ZERO
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -767,7 +765,7 @@ describe('TrigoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 1)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
+            const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 1,
             });
@@ -785,7 +783,7 @@ describe('TrigoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 2)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TrigoConfig> = MGPOptional.of({
+            const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 2,
             });

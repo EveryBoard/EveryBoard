@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { TestUtils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../utils/MGPValidator';
@@ -50,9 +50,11 @@ describe('RulesConfigUtil', () => {
 
         it('should throw when standard configs are of different type', () => {
             // Given any RulesConfigDescription
-            interface MaConfigInterface extends RulesConfig {
+            type MaConfigInterface = RulesConfig & {
+
                 helaRosee: number;
-            }
+
+            };
             const defaultConfig: DefaultConfigDescription<MaConfigInterface> = {
                 name: () => 'My Default Config',
                 config: {

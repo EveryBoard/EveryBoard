@@ -9,6 +9,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
@@ -17,9 +18,11 @@ import { CoerceoFailure } from './CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
 
-export type CoerceoConfig = {
+export type CoerceoConfig = RulesConfig & {
+
     smallBoard: boolean;
-}
+
+};
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 

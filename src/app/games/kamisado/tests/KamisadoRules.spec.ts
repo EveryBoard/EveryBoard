@@ -380,7 +380,8 @@ describe('KamisadoRules', () => {
                 new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
             const node: KamisadoNode = new KamisadoNode(state);
 
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -400,12 +401,15 @@ describe('KamisadoRules', () => {
                 new KamisadoState(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
             const node: KamisadoNode = new KamisadoNode(state);
 
-            // Then it should be a victory
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
         it('should declare blocking player as loser', () => {
             // Given a board where Player.ONE blocked everyone
+            // Given a board where Player.ZERO just passed and Player.ONE is now blocked too
+            // (hence Player.ONE blocked everyone)
             const board: Table<KamisadoPiece> = [
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -418,11 +422,10 @@ describe('KamisadoRules', () => {
             ];
             const state: KamisadoState =
                 new KamisadoState(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
-
-            // When it's Player.ONE to play after Player.ZERO had to pass
             const node: KamisadoNode = new KamisadoNode(state);
 
-            // Then it should be victory for Player.ZERO
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 

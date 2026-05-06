@@ -288,6 +288,9 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
@@ -304,6 +307,9 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         const node: LinesOfActionNode = new LinesOfActionNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ZERO
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 

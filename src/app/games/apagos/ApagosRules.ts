@@ -6,6 +6,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { ApagosFailure } from './ApagosFailure';
@@ -13,10 +14,13 @@ import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 
-export type ApagosConfig = {
+export type ApagosConfig = RulesConfig & {
+
     width: number;
+
     increment: number;
-}
+
+};
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 

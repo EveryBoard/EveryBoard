@@ -19,15 +19,12 @@
                                [ngClass]="getPieceGroupClasses(x, y)"
                                [attr.transform]="getSVGTranslationAt(getCenterAtXY(x, y))">
                                 @if (isRing(x, y)) {
-                                    <g>
-                                        <circle [attr.r]="viewInfo.ringOuterSize"
-                                                class="base no-fill mid-stroke"/>
-                                        <circle id="ring_{{ x }}_{{ y }}"
-                                                [attr.r]="viewInfo.ringMidSize"
-                                                [ngClass]="getRingClasses(x, y)"
-                                                class="base no-fill"/>
-                                        <circle [attr.r]="viewInfo.ringInnerSize"
-                                                class="base no-fill mid-stroke"/>
+                                    <g app-ring
+                                       id="ring_{{ x }}_{{ y }}"
+                                       transform="scale(0.43)"
+                                       [strokeWidth]="10"
+                                       [width]="20"
+                                       [midRingClasses]="getRingClasses(x, y)">
                                     </g>
                                 }
                                 @if (isMarker(x, y)) {
@@ -78,23 +75,15 @@
     @for (player of Player.PLAYERS; track player) {
         <g [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
             @for (_ of [].constructor(viewInfo.sideRings.get(player)); track $index; let ring = $index) {
-                <g>
-                    <circle id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
-                            [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                            [attr.cy]="player === Player.ZERO ? 300 : 1260"
-                            [attr.r]="viewInfo.ringOuterSize"
-                            class="base no-fill mid-stroke"/>
-                    <circle [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                            [attr.cy]="(player === Player.ZERO ? 300 : 1260)"
-                            [attr.r]="viewInfo.ringInnerSize"
-                            class="base no-fill mid-stroke"/>
-                    <circle [attr.cx]="(player === Player.ZERO ? 15 : 1050) + (player === Player.ZERO ? 1 : -1) * 1.2 * viewInfo.ringOuterSize * (ring + 1)"
-                            [attr.cy]="player === Player.ZERO ? 300 : 1260"
-                            [attr.r]="viewInfo.ringMidSize"
-                            [ngClass]="viewInfo.sideRingClass.get(player)"
-                            class="base no-fill"/>
+                <g app-ring
+                   id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
+                   [attr.transform]="translateRing(player, ring) + 'scale(0.43)'"
+                   [strokeWidth]="10"
+                   [width]="20"
+                   [midRingClasses]="viewInfo.sideRingClass.get(player)">
                 </g>
             }
         </g>
     }
+
 </svg>
