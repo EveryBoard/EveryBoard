@@ -19,12 +19,12 @@ export abstract class GoGroupDataFactory extends GroupDataFactory<GoPiece, GoGro
 
 export class OrthogonalGoGroupDataFactory extends GoGroupDataFactory {
 
-    public constructor(public readonly stepSize: number) {
+    public constructor(public readonly zoom: number) {
         super();
     }
 
     public getDirections(_: Coord): ReadonlyArray<Vector> {
-        return Orthogonal.ORTHOGONALS.map((value: Orthogonal) => new Vector(0, 0).combine(value, this.stepSize));
+        return Orthogonal.ORTHOGONALS.map((value: Orthogonal) => new Vector(0, 0).combine(value, this.zoom));
     }
 
 }

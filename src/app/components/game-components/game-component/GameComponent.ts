@@ -271,19 +271,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.config;
     }
 
-    /**
-     * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
-     */
-    public getTranslationAt(logicalCoord: Coord): string {
-        return this.getTranslationAtXY(logicalCoord.x, logicalCoord.y);
-    }
-
-    public getTranslationAtXY(logicalX: number, logicalY: number): string {
-        const svgX: number = logicalX * this.SPACE_SIZE;
-        const svgY: number = logicalY * this.SPACE_SIZE;
-        return this.getSVGTranslation(svgX, svgY);
-    }
-
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
         // The triangle that forms the arrow head will be wrapped inside a square
         // The board will be considered here as a 3x3 on which we place the triangle in (tx, ty)

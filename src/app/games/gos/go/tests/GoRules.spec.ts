@@ -15,7 +15,7 @@ import { GoState } from '../../GoState';
 import { GoConfig, GoRules } from '../GoRules';
 
 
-fdescribe('GoRules', () => {
+describe('GoRules', () => {
 
     let rules: GoRules;
 
@@ -31,7 +31,7 @@ fdescribe('GoRules', () => {
         width: 5,
         height: 5,
         handicap: 0,
-        stepSize: 1,
+        zoom: 1,
     };
     const config: MGPOptional<GoConfig> = MGPOptional.of(goConfig);
 
@@ -711,14 +711,15 @@ fdescribe('GoRules', () => {
 
     describe('alternative config', () => {
 
-        it('should capture piece surrounded by 4 distance=2 neighbors', () => {
+        const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+            ...goConfig,
+            zoom: 2,
+        });
+
+        it('should capture piece surrounded at higher zooms', () => {
             // Given:
-            // - a board with zoom = 2
+            // - a config with zoom = 2
             // - a board with an atari on zoom=2 (capture threat)
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
-                ...goConfig,
-                stepSize: 2,
-            });
             const board: Table<GoPiece> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -748,14 +749,10 @@ fdescribe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        it('should capture piece surrounded normally too', () => {
+        it('should capture piece surrounded at zoom=1', () => {
             // Given:
-            // - a board with zoom = 2
+            // - a config with zoom = 2
             // - a board with an atari on zoom=1 (capture threat)
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
-                ...goConfig,
-                stepSize: 2,
-            });
             const board: Table<GoPiece> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -785,7 +782,108 @@ fdescribe('GoRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
-        // it('should capture piece surrounded by 3 distance=2 neighbors and one distance=2 edge');
+        it('should forbid suicide at higher zooms', () => {
+            // Given:
+            // - a config with zoom = 2
+            // - a board with a coord without freedom on zoom = 2
+            const board: Table<GoPiece> = [
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [X, _, _, _, _],
+                [_, _, _, _, _],
+                [_, _, X, _, _],
+            ];
+            const state: GoState =
+                new GoState(board, noCaptures, 0, MGPOptional.empty(), GoPhase.PLAYING);
+
+            // When trying to play in that coord without capturing
+            const move: GoMove = new GoMove(0, 4);
+
+            // Then the move should be illegal
+            const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+        });
+
+        it('should forbid suicide in one zoom even if it captures on another zoom', () => {
+            // Given:
+            // - a config with zoom = 2
+            // - a board with a coord without freedom on zoom = 2 that could capture in zoom = 1
+            const board: Table<GoPiece> = [
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [_, O, _, _, _],
+                [X, _, _, _, _],
+                [O, _, _, O, _],
+            ];
+            const state: GoState =
+                new GoState(board, noCaptures, 1, MGPOptional.empty(), GoPhase.PLAYING);
+
+            // When trying to play that illegal "fake suicide" (hence real suicide)
+            const move: GoMove = new GoMove(1, 4);
+
+            // Then the move should be illegal
+            const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+        });
+
+        it('should allow suicide at zoom=x if a capture on another zoom remove a threat at zoom=x', () => {
+            // Given:
+            // - a config with zoom = 2
+            // - a board with several piece -- including square A (2, 0) -- capturable at zoom = 1,
+            //      by playing on square B (4, 0)
+            // - that square B being threatened on zoom = 2 by square A
+            const board: Table<GoPiece> = [
+                [X, X, X, X, _],
+                [O, O, O, O, _],
+                [_, _, _, _, X],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: GoState =
+                new GoState(board, noCaptures, 0, MGPOptional.empty(), GoPhase.PLAYING);
+
+            // When trying to play at that coord B which
+            //     - is a real suicide at zoom = 2 (aka has no freedom and captured nothing)
+            //     - capture A (via zoom = 1), one of those pieces threatening it at zoom = 2
+            const move: GoMove = new GoMove(4, 0);
+
+            // Then the move should be legal
+            const expectedBoard: Table<GoPiece> = [
+                [_, _, _, _, O],
+                [O, O, O, O, _],
+                [_, _, _, _, X],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const expectedState: GoState = new GoState(expectedBoard,
+                                                       PlayerNumberMap.of(4, 0),
+                                                       1,
+                                                       MGPOptional.empty(),
+                                                       GoPhase.PLAYING);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        it('should still forbid suicide on zoom=1', () => {
+            // Given:
+            // - a config with zoom = 2
+            // - a board with a coord without freedom on zoom = 1
+            const board: Table<GoPiece> = [
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [X, _, _, _, _],
+                [_, X, _, _, _],
+            ];
+            const state: GoState =
+                new GoState(board, noCaptures, 0, MGPOptional.empty(), GoPhase.PLAYING);
+
+            // When trying to play in that coord without capturing
+            const move: GoMove = new GoMove(0, 4);
+
+            // Then the move should be illegal
+            const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+        });
 
     });
 

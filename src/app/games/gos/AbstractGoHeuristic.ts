@@ -18,8 +18,8 @@ export abstract class AbstractGoHeuristic<C extends AbstractGoConfig>
         super();
     }
 
-    public override getMetrics(node: GoNode, config: MGPOptional<C>): PlayerNumberTable {
-        const goState: GoState = this.rules.markTerritoryAndCount(node.gameState, config);
+    public override getMetrics(node: GoNode): PlayerNumberTable {
+        const goState: GoState = this.rules.markTerritoryAndCount(node.gameState);
         const goScore: PlayerNumberMap = goState.getCapturedCopy();
         const goKilled: PlayerNumberMap = this.getDeadStones(goState);
         return PlayerNumberTable.ofSingle(

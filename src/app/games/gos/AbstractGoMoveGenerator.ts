@@ -65,8 +65,8 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         // TODO: içi on marque les groupes morts ou vivants et on ne laisse qu'un choix au minimax
         // Mais pour l'instant les règles du jeux ne comptent comme morts que les morts du zoom = 1
         const maxStepSize: number = 1;
-        for (let stepSize: number = 1; stepSize <= maxStepSize; stepSize++) {
-            const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory(stepSize);
+        for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
+            const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory(zoom);
             const groupsData: GoGroupData[] =
                 groupDataFactory.getGroupsDataWhere(
                     correctBoard,
@@ -103,9 +103,9 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
                                                   currentState.koCoord,
                                                   currentState.phase,
         );
-        const territoryLikeGroups: GoGroupData[] = this.rules.getTerritoryLikeGroup(allDeadState, config);
+        const territoryLikeGroups: GoGroupData[] = this.rules.getTerritoryLikeGroup(allDeadState);
 
-        return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups, config);
+        return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
     }
 
     public mapBoard(board: GoPiece[][], mapper: (piece: GoPiece) => GoPiece): GoPiece[][] {
@@ -121,7 +121,6 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
 
     public setAliveUniqueWrapper(allDeadState: GoState,
                                  monoWrappedEmptyGroups: GoGroupData[],
-                                 config: MGPOptional<C>, // TODO remove
     ): GoState
     {
         let resultingState: GoState = allDeadState.copy();

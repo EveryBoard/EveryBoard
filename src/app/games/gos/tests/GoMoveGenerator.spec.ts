@@ -29,7 +29,7 @@ describe('GoMoveGenerator', () => {
         width: 5,
         height: 5,
         handicap: 0,
-        stepSize: 1,
+        zoom: 1,
     });
 
     beforeEach(() => {

@@ -109,7 +109,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().captured);
+        this.scores = MGPOptional.of(this.getState().getCapturedCopy());
     }
 
     protected override getScoreName(): ScoreName {

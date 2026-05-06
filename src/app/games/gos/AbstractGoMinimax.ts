@@ -12,12 +12,13 @@ export abstract class AbstractGoMinimax<C extends AbstractGoConfig>
 
     public constructor(rules: AbstractGoRules<C>,
                        moveGenerator: AbstractGoMoveGenerator<C>,
-                       heuristic: AbstractGoHeuristic<C>)
-    {
+                       heuristic: AbstractGoHeuristic<C>,
+    ) {
         super($localize`Minimax`,
               rules,
               heuristic,
-              moveGenerator);
+              moveGenerator,
+        );
     }
 
 }

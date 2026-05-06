@@ -74,8 +74,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
 
     public override applyLegalMove(move: ApagosMove,
                                    state: ApagosState,
-                                   config: MGPOptional<ApagosConfig>,
-                                   _info: void)
+                                   config: MGPOptional<ApagosConfig>)
     : ApagosState
     {
         if (move.isDrop()) {

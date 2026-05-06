@@ -29,8 +29,8 @@ export class TriangularGoRules extends AbstractGoRules<TriangularGoConfig> {
             config: {
                 size: new NumberConfig(7, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 99)),
                 hexagonal: new BooleanConfig(false, () => $localize`Hexagonal`),
-                // TODO: stepSize
-                stepSize: new NumberConfig(1, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 5)),
+                // TODO: zoom
+                zoom: new NumberConfig(1, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 5)),
             },
         });
 

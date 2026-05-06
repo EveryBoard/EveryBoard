@@ -1,15 +1,14 @@
-import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
-import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../../jscaip/AI/MCTS';
-import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
@@ -20,12 +19,14 @@ import { GoState } from '../GoState';
 import { GoMinimax } from './GoMinimax';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
+import { GoSubBoardHelper } from './GoSubBoardHelper';
+import { GoBoardComponent } from './go-board/go-board.component';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgClass],
+    imports: [GoBoardComponent],
 })
 @Debug.log
 export class GoComponent extends GobanGameComponent<GoRules,
@@ -36,15 +37,17 @@ export class GoComponent extends GobanGameComponent<GoRules,
                                                     GoLegalityInformation>
 {
 
-    public boardInfo: GroupData<GoPiece>;
-
     public ko: MGPOptional<Coord> = MGPOptional.empty();
 
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
-    public captures: Coord[]= [];
+    public captures: Coord[] = [];
 
-    public GoPiece: typeof GoPiece = GoPiece;
+    public zooms: ReadonlyArray<Table<GoState>> = [];
+
+    private readonly SUB_BOARD_SEPARATOR: number = 0.5 * this.SPACE_SIZE;
+
+    private readonly ZOOM_SEPARATOR: number = this.SPACE_SIZE;
 
     public constructor() {
         super();
@@ -56,6 +59,19 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    public override getViewBox(): ViewBox {
+        const zooms: number = this.zooms.length;
+        const zoomSeparatorCount: number = zooms - 1;
+        const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
+        const normalWidth: number = this.getState().getWidth() * this.SPACE_SIZE;
+        const width: number = normalWidth + ((zooms - 1) * this.SUB_BOARD_SEPARATOR);
+        const normalHeight: number = this.getState().getHeight() * this.SPACE_SIZE;
+        let height: number = zooms * normalHeight;
+        height += this.SUB_BOARD_SEPARATOR * verticalSubBoardSeparatorCount;
+        height += this.ZOOM_SEPARATOR * zoomSeparatorCount;
+        return ViewBox.fromLimits(0, width, 0, height);
     }
 
     public override async showLastMove(move: GoMove): Promise<void> {
@@ -71,7 +87,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('.data-click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -84,6 +100,23 @@ export class GoComponent extends GobanGameComponent<GoRules,
         const phase: GoPhase = state.phase;
 
         this.board = state.getCopiedBoard();
+        const subBoards: ReadonlyArray<Table<Table<GoPiece>>> = GoSubBoardHelper.splitInSubBoards(
+            this.board,
+            this.getConfig().get().zoom,
+        );
+        this.zooms = subBoards.map(
+            (table: Table<Table<GoPiece>>) => {
+                return TableUtils.map(table, (board: Table<GoPiece>) => {
+                    return new GoState(
+                        board,
+                        PlayerNumberMap.of(0, 0),
+                        state.turn,
+                        state.koCoord,
+                        state.phase,
+                    );
+                });
+            },
+        );
         this.updateScores();
 
         this.ko = state.koCoord;
@@ -92,7 +125,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().captured);
+        this.scores = MGPOptional.of(this.getState().getCapturedCopy());
     }
 
     protected override getScoreName(): ScoreName {
@@ -125,28 +158,53 @@ export class GoComponent extends GobanGameComponent<GoRules,
         return this.onClick(GoMove.ACCEPT.coord);
     }
 
-    public getSpaceClass(coord: Coord): string {
-        const state: GoState = this.getState();
-        const piece: GoPiece = state.getPieceAt(coord);
-        return this.getPlayerClass(piece.getOwner());
+    public translateZoom(zoom: number): string {
+        const translateX: number = this.xZoomTranslate(zoom);
+        const translateY: number = this.yZoomTranslate(zoom);
+        return `translate(${ translateX }, ${ translateY })`;
     }
 
-    public spaceIsFull(coord: Coord): boolean {
-        const state: GoState = this.getState();
-        const piece: GoPiece = state.getPieceAt(coord);
-        return piece !== GoPiece.EMPTY && this.isTerritory(coord) === false;
+    private xZoomTranslate(zoom: number): number {
+        const totalZooms: number = this.zooms.length;
+        return (totalZooms - zoom - 1) * 0.5 * this.SUB_BOARD_SEPARATOR;
     }
 
-    public isLastSpace(coord: Coord): boolean {
-        return this.last.equalsValue(coord);
+    private yZoomTranslate(zoom: number): number {
+        const normalheight: number = this.getState().getHeight() * this.SPACE_SIZE;
+        let translate: number = (zoom) * normalheight;
+        translate += (zoom) * this.ZOOM_SEPARATOR;
+        translate += (zoom) * ((zoom) - 1) * 0.5 * this.SUB_BOARD_SEPARATOR;
+        return translate;
     }
 
-    public isDead(coord: Coord): boolean {
-        return this.getState().isDead(coord);
+    private getTranslateXZoomBoard(zoom: number, subZoomX: number, subZoomY: number): number {
+        let squareLeftCount: number = 0;
+        for (let previousZoomX: number = 0; previousZoomX < subZoomX; previousZoomX++) {
+            const previousState: GoState = this.zooms[zoom][subZoomY][previousZoomX];
+            const abstractWidth: number = previousState.getWidth();
+            squareLeftCount += abstractWidth;
+        }
+        let translateX: number = squareLeftCount * this.SPACE_SIZE;
+        translateX += subZoomX * this.SUB_BOARD_SEPARATOR;
+        return translateX;
     }
 
-    public isTerritory(coord: Coord): boolean {
-        return this.getState().isTerritory(coord);
+    private getTranslateYZoomBoard(zoom: number, subZoomX: number, subZoomY: number): number {
+        let squareTopCount: number = 0;
+        for (let previousZoomY: number = 0; previousZoomY < subZoomY; previousZoomY++) {
+            const previousState: GoState = this.zooms[zoom][previousZoomY][subZoomX];
+            const abstractHeight: number = previousState.getHeight();
+            squareTopCount += abstractHeight;
+        }
+        let translateY: number = squareTopCount * this.SPACE_SIZE;
+        translateY += subZoomY * this.SUB_BOARD_SEPARATOR;
+        return translateY;
+    }
+
+    public translateZoomBoard(zoom: number, subZoomX: number, subZoomY: number): string {
+        const translateX: number = this.getTranslateXZoomBoard(zoom, subZoomX, subZoomY);
+        const translateY: number = this.getTranslateYZoomBoard(zoom, subZoomX, subZoomY);
+        return `translate(${ translateX }, ${ translateY })`;
     }
 
 }

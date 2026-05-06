@@ -12,11 +12,11 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type GoConfig = AbstractGoConfig &
-    GobanConfig & {
-
+export type GoConfig =
+    AbstractGoConfig &
+    GobanConfig &
+    {
         handicap: number;
-
     };
 
 export class GoRules extends AbstractGoRules<GoConfig> {
@@ -30,8 +30,8 @@ export class GoRules extends AbstractGoRules<GoConfig> {
                 width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                 handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
-                // TODO: stepSize
-                stepSize: new NumberConfig(1, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 5)),
+                // TODO: zoom
+                zoom: new NumberConfig(1, RulesConfigDescriptionLocalizable.SIZE, MGPValidators.range(1, 5)),
             },
         }, [{
             name: (): string => $localize`13 x 13`,
@@ -39,7 +39,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
                 width: 13,
                 height: 13,
                 handicap: 0,
-                stepSize: 1,
+                zoom: 1,
             },
         }, {
             name: (): string => $localize`9 x 9`,
@@ -47,7 +47,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
                 width: 9,
                 height: 9,
                 handicap: 0,
-                stepSize: 1,
+                zoom: 1,
             },
         }]);
 
@@ -97,8 +97,8 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
     }
 
-    public override getGoGroupDataFactory(stepSize: number): GoGroupDataFactory {
-        return new OrthogonalGoGroupDataFactory(stepSize);
+    public override getGoGroupDataFactory(zoom: number): GoGroupDataFactory {
+        return new OrthogonalGoGroupDataFactory(zoom);
     }
 
 }

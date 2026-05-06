@@ -50,7 +50,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 2,
-                stepSize: 1,
+                zoom: 1,
             });
 
             // When creating an initialState with it
@@ -92,7 +92,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 4,
-                stepSize: 1,
+                zoom: 1,
             });
 
             // When creating an initialState with it
@@ -134,7 +134,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 5,
-                stepSize: 1,
+                zoom: 1,
             });
 
             // When creating an initialState with it
@@ -176,7 +176,7 @@ describe('GoState for Go', () => {
                 width: 19,
                 height: 19,
                 handicap: 9,
-                stepSize: 1,
+                zoom: 1,
             });
 
             // When creating an initialState with it

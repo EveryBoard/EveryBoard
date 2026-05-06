@@ -1,0 +1,65 @@
+<svg:g app-blank-goban
+       [width]="state().getWidth()"
+       [height]="state().getHeight()"
+       (clickCallBack)="onClick($event)"
+/>
+<svg:g class="data-piece-ko-territory-markers-and-dead-stones">
+    @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+        <svg:g>
+            @if (spaceIsFull(coordAndContent.coord)) {
+                <svg:g>
+                    <svg:circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                                [attr.r]="SPACE_SIZE * 0.44"
+                                [ngClass]="getSpaceClass(coordAndContent.coord)"
+                                class="base"
+                    />
+                    @if (isLastSpace(coordAndContent.coord)) {
+                        <svg:circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                                    [attr.r]="SPACE_SIZE * 0.44"
+                                    class="base no-fill last-move-stroke"
+                        />
+                    }
+                    @if (isDead(coordAndContent.coord)) {
+                        <svg:line (click)="onClick(coordAndContent.coord)"
+                                  [attr.x1]="SPACE_SIZE * coordAndContent.coord.x"
+                                  [attr.y1]="SPACE_SIZE * coordAndContent.coord.y"
+                                  [attr.x2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.x)"
+                                  [attr.y2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.y)"
+                                  class="base no-fill captured-stroke"
+                        />
+                    }
+                </svg:g>
+            } @else {
+                @if (isTerritory(coordAndContent.coord)) {
+                    <svg:circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                                [attr.r]="SPACE_SIZE * 0.2"
+                                [attr.class]="coordAndContent.content === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
+                                (click)="onClick(coordAndContent.coord)"
+                    />
+                }
+            }
+        </svg:g>
+    }
+</svg:g>
+@if (ko().isPresent()) {
+    <svg:rect class="data-ko-{{ ko().get().x }}-{{ ko().get().y }}"
+              [attr.transform]="getTranslationAt(ko().get())"
+              [attr.width]="SPACE_SIZE * 0.5"
+              [attr.height]="SPACE_SIZE * 0.5"
+              [attr.x]="SPACE_SIZE * 0.25"
+              [attr.y]="SPACE_SIZE * 0.25"
+              class="captured-stroke mid-stroke no-fill"
+    />
+}
+@for (capture of adaptedCaptures(); track capture.toString()) {
+    <svg:circle (click)="onClick(capture)"
+                [attr.transform]="getTranslationAt(capture)"
+                [attr.cx]="SPACE_SIZE * 0.5"
+                [attr.cy]="SPACE_SIZE * 0.5"
+                [attr.r]="SPACE_SIZE * 0.14"
+                class="captured-fill"
+    />
+}
