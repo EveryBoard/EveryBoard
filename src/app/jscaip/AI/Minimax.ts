@@ -106,8 +106,11 @@ implements AI<M, S, O, C>
         // This dumb hash works surprisingly well, but it can be useful to redefine it
         // in particular to take benefit of symmetries etc. (but it has to be fast)
         // Typical stuff we want to do:
-        // - remove turn information
         // - remove any score information
+        // Watch out not to do this:
+        // - remove turn information if the same board can be achieved
+        //   irrespective of the turn, otherwise this will confuse the minimax
+        //   (because the best move at board 0 depends on the player)
         return JSON.stringify(state);
     }
 

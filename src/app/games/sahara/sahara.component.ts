@@ -11,7 +11,7 @@ import { Player } from '../../jscaip/Player';
 
 import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax, IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
 import { SaharaFailure } from './SaharaFailure';
-import { SaharaFreedomMinimax, IDSaharaFreedomMinimax } from './SaharaMinimax';
+import { SaharaFreedomMinimax } from './SaharaMinimax';
 import { SaharaMobilityMinimax } from './SaharaMobilityMinimax';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
@@ -44,7 +44,6 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
             new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
             new IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
             new SaharaFreedomMinimax(),
-            new IDSaharaFreedomMinimax(),
             new SaharaMobilityMinimax(),
             new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
         ];

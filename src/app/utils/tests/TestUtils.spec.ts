@@ -23,7 +23,7 @@ import { OGWCTimeManagerService } from '../../components/wrapper-components/onli
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { AIDepthLimitOptions } from '../../jscaip/AI/AI';
+import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
@@ -879,11 +879,12 @@ export namespace SlowTest {
 export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
                                M extends Move,
                                S extends GameState,
+                               O extends AIOptions,
                                C extends RulesConfig,
                                L> = {
     rules: R,
     minimax: Minimax<M, S, C, L>,
-    options: AIDepthLimitOptions,
+    options: O,
     config: MGPOptional<C>,
     shouldFinish: boolean
 }
@@ -892,8 +893,9 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
 export function minimaxTest<R extends SuperRules<M, S, C, L>,
                             M extends Move,
                             S extends GameState,
+                            O extends AIOptions,
                             C extends RulesConfig,
-                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void
+                            L>(options: MinimaxTestOptions<R, M, S, O, C, L>): void
 {
     // Given a component where AI plays against AI
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);

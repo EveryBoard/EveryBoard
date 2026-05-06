@@ -17,14 +17,3 @@ export class SaharaFreedomMinimax extends Minimax<SaharaMove, SaharaState> {
     }
 
 }
-
-export class IDSaharaFreedomMinimax extends IterativeDeepeningMinimax<SaharaMove, SaharaState> {
-
-    public constructor() {
-        super($localize`IDFreedom`,
-              SaharaRules.get(),
-              new SaharaFreedomHeuristic(),
-              new SaharaMoveGenerator());
-    }
-
-}
