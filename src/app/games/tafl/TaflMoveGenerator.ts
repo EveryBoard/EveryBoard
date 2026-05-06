@@ -34,7 +34,7 @@ export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, Tafl
         } else {
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 if (move.getStart().equals(king)) {
-                    if (state.isExternalThrone(move.getEnd()) === true) {
+                    if (state.isExternalThrone(move.getEnd())) {
                         return 2;
                     } else {
                         return 1;

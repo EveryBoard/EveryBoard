@@ -187,7 +187,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
                                      config: TaflConfig)
     : MGPOptional<Coord>
     {
-        if (state.isExternalThrone(backCoord) === true) {
+        if (state.isExternalThrone(backCoord)) {
             if (config.kingFarFromHomeCanBeSandwiched) {
                 return MGPOptional.of(kingCoord);
             }
@@ -316,7 +316,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
             return MGPOptional.of(this.getInvader(config));
         }
         const kingCoord: Coord = optionalKingCoord.get();
-        if (state.isExternalThrone(kingCoord) === true) {
+        if (state.isExternalThrone(kingCoord)) {
             Debug.display('TaflRules', 'getWinner', 'The king escape, victory to defender');
             // king reached one corner!
             return MGPOptional.of(this.getDefender(config));
