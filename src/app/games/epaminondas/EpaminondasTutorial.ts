@@ -17,7 +17,6 @@ const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().get
 
 export class EpaminondasTutorial extends Tutorial {
 
-
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Initial board`,

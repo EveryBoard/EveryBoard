@@ -14,7 +14,6 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
-
 describe('TriangularGoRules', () => {
 
     let rules: TriangularGoRules;

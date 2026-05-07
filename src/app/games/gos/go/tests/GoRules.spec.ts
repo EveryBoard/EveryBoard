@@ -14,7 +14,6 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { GoConfig, GoRules } from '../GoRules';
 
-
 describe('GoRules', () => {
 
     let rules: GoRules;

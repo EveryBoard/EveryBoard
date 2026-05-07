@@ -17,7 +17,6 @@ const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-
 describe('HexagonalGoHeuristic', () => {
 
     let heuristic: HexagonalGoHeuristic;

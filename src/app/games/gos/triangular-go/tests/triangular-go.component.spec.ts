@@ -13,7 +13,6 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { TriangularGoComponent } from '../../triangular-go/triangular-go.component';
 
-
 describe('TriangularGoComponent', () => {
 
     let testUtils: ComponentTestUtils<TriangularGoComponent>;

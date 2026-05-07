@@ -167,7 +167,6 @@ describe('LobbyComponent', () => {
         });
     }
 
-
     describe('clicking on a game', () => {
 
         it('should redirect to /play when the user is allowed to participate to the game', fakeAsync(async() => {

@@ -20,7 +20,6 @@ const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-
 describe('TriangularGoMoveGenerator', () => {
 
     let moveGenerator: TriangularGoMoveGenerator;

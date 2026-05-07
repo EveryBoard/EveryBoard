@@ -15,7 +15,6 @@ const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 
-
 describe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;

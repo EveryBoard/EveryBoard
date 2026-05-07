@@ -6,7 +6,6 @@ import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { HexagonalGoMinimax } from '../HexagonalGoMinimax';
 import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
 
-
 describe('HexagonalGoMinimax', () => {
 
     const rules: HexagonalGoRules = HexagonalGoRules.get();

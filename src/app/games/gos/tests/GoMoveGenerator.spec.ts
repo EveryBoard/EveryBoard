@@ -20,7 +20,6 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-
 describe('GoMoveGenerator', () => {
 
     let moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig>;

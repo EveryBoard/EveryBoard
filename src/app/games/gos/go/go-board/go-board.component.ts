@@ -8,6 +8,7 @@ import { BlankGobanComponent } from '../../../../components/game-components/goba
 import { Coord } from '../../../../jscaip/Coord';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
+import { Vector } from 'src/app/jscaip/Vector';
 
 @Component({
     selector: '[app-go-board]',
@@ -20,25 +21,47 @@ export class GoBoardComponent extends BaseGameComponent {
     public captures: InputSignal<Coord[]> = input.required();
 
     public adaptedCaptures: Signal<Coord[]> = computed(() => {
-        return this.captures()
-            .map((coord: Coord) => this.getZoomAdaptedCoord(coord))
-            .filter((coord: Coord) => this.state().isOnBoard(coord)); // TODO TEST
+        // return this.captures()
+        //     .map((coord: Coord) => this.getZoomAdaptedCoord(coord))
+        //     .filter((coord: Coord) => this.state().isOnBoard(coord)); // TODO TEST
+        const a: Coord[] = this.captures();
+        const b: MGPOptional<Coord>[] = a.map((coord: Coord) => this.fromNormalToZoomedCoord(coord));
+        const c: MGPOptional<Coord>[] = b.filter((coord: MGPOptional<Coord>) => coord.isPresent()); // TODO TEST
+        const d: Coord[] = c.map((coord: MGPOptional<Coord>) => coord.get()); // TODO TEST
+        console.log(this.zoom(), this.zx(), this.zy(), 'A', a)
+        console.log(this.zoom(), this.zx(), this.zy(), 'mapped', b)
+        console.log(this.zoom(), this.zx(), this.zy(), 'filtered', c)
+        return d;
     });
 
     public ko: InputSignal<MGPOptional<Coord>> = input.required();
 
     public adaptedKo: Signal<MGPOptional<Coord>> = computed(() => {
-        const ko: MGPOptional<Coord> = this.ko()
-            .map((coord: Coord) => this.getZoomAdaptedCoord(coord)); // TODO: MGPOptional.filter
-        // TODO TEST
-        if (ko.isPresent() && this.state().isOnBoard(ko.get())) {
-            return MGPOptional.of(ko.get());
+        return this.fromNormalToOptionalZoomedCoord(this.ko());
+        // return this.ko().map((coord: Coord) => this.fromNormalToZoomedCoord(coord));
+    });
+
+    private fromNormalToOptionalZoomedCoord(coord: MGPOptional<Coord>): MGPOptional<Coord> {
+        if (coord.isPresent()) {
+            return this.fromNormalToZoomedCoord(coord.get());
         } else {
             return MGPOptional.empty();
         }
-    });
+    }
 
     public last: InputSignal<MGPOptional<Coord>> = input.required();
+
+    public adaptedLast: Signal<MGPOptional<Coord>> = computed(() => {
+        // TODO TEST
+        // const last: MGPOptional<Coord> = this.last()
+        //     .map((coord: Coord) => this.fromNormalToZoomedCoord(coord)); // TODO: MGPOptional.filter
+        // if (last.isPresent() && this.state().isOnBoard(last.get())) {
+        //     return MGPOptional.of(last.get());
+        // } else {
+        //     return MGPOptional.empty();
+        // }
+
+    });
 
     public state: InputSignal<GoState> = input.required();
 
@@ -52,15 +75,30 @@ export class GoBoardComponent extends BaseGameComponent {
 
     public GoPiece: typeof GoPiece = GoPiece;
 
-    private getZoomAdaptedCoord(coord: Coord): Coord {
+    private fromZoomedToNormalCoord(zoomedCoord: Coord): Coord {
         const oneBasedZoom: number = this.zoom() + 1;
         return new Coord(
-            this.zx() + (coord.x * oneBasedZoom),
-            this.zy() + (coord.y * oneBasedZoom),
+            this.zx() + (zoomedCoord.x * oneBasedZoom),
+            this.zy() + (zoomedCoord.y * oneBasedZoom),
         );
     }
+
+    public fromNormalToZoomedCoord(normalCoord: Coord): MGPOptional<Coord> {
+        const zoomVector: Vector = new Vector(this.zx(), this.zy());
+        const offsetCoord: Coord = normalCoord.getNext(zoomVector, -1);
+        const oneBasedZoom: number = this.zoom() + 1;
+        if (offsetCoord.x % oneBasedZoom === 0 && offsetCoord.y % oneBasedZoom === 0) {
+            return new Coord(
+                offsetCoord.x / oneBasedZoom,
+                offsetCoord.y / oneBasedZoom,
+            );
+        } else {
+            return MGPOptional.empty();
+        }
+    }
+
     public onClick(coord: Coord): void {
-        const zoomAdaptedCoord: Coord = this.getZoomAdaptedCoord(coord);
+        const zoomAdaptedCoord: Coord = this.fromZoomedToNormalCoord(coord);
         this.clicked.emit(zoomAdaptedCoord);
     }
 
@@ -79,7 +117,7 @@ export class GoBoardComponent extends BaseGameComponent {
     }
 
     public isLastSpace(coord: Coord): boolean {
-        const zoomAdaptedCoord: Coord = this.getZoomAdaptedCoord(coord);
+        const zoomAdaptedCoord: Coord = this.fromZoomedToNormalCoord(coord);
         return this.last().equalsValue(zoomAdaptedCoord);
         // TODO: test
     }

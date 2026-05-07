@@ -6,7 +6,6 @@ import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { GoMinimax } from '../GoMinimax';
 import { GoConfig, GoRules } from '../GoRules';
 
-
 describe('GoMinimax', () => {
 
     const rules: GoRules = GoRules.get();

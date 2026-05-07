@@ -55,7 +55,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private readonly requestManager: OGWCRequestManagerService = inject(OGWCRequestManagerService);
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-
     public readonly timerZeroGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroGame');
     public readonly timerOneGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneGame');
     public readonly timerZeroMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroMove');
@@ -482,7 +481,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const rulesConfig: RulesConfig = this.configRoom.rulesConfig;
         return MGPOptional.of(rulesConfig);
     }
-
 
     public isAgreedDraw(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;

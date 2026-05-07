@@ -12,7 +12,6 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { HexagonalGoComponent } from '../hexagonal-go.component';
 
-
 describe('HexagonalGoComponent', () => {
 
     let testUtils: ComponentTestUtils<HexagonalGoComponent>;

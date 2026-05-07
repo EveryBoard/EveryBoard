@@ -19,7 +19,6 @@ const noMorePiece: EncapsuleRemainingPieces =
 
 describe('EncapsuleState', () => {
 
-
     const emptyBoard: EncapsuleSpace[][] = TableUtils.create(3, 3, _);
 
     describe('getPieceAt', () => {

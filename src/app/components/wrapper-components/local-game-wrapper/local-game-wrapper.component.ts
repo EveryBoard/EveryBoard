@@ -29,7 +29,6 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-
     public static readonly AI_TIMEOUT: number = 1500;
 
     public aiOptions: [string, string] = ['none', 'none'];

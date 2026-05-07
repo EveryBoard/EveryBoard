@@ -94,7 +94,6 @@ export class BooleanConfig extends ConfigLine {
 
 }
 
-
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
 
     private readonly defaultConfig: NamedRulesConfig<R>;

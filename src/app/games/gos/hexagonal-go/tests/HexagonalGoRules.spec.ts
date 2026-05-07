@@ -13,7 +13,6 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
 
-
 describe('HexagonalGoRules', () => {
 
     let rules: HexagonalGoRules;

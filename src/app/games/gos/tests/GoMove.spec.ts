@@ -9,7 +9,6 @@ import { GoRules } from '../go/GoRules';
 import { HexagonalGoRules } from '../hexagonal-go/HexagonalGoRules';
 import { TriangularGoRules } from '../triangular-go/TriangularGoRules';
 
-
 describe('GoMove', () => {
 
     const rules: AbstractGoRules<AbstractGoConfig>[] = [

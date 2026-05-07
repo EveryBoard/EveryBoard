@@ -14,8 +14,7 @@ import { GoState } from '../../GoState';
 import { GoConfig, GoRules } from '../GoRules';
 import { GoComponent } from '../go.component';
 
-
-fdescribe('GoComponent', () => {
+describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
     const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
@@ -87,7 +86,6 @@ fdescribe('GoComponent', () => {
         // Then it should render the dead
         testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 > .data-ko-0-0');
     }));
-
 
     describe('hoshi', () => {
 
@@ -212,7 +210,7 @@ fdescribe('GoComponent', () => {
 
     });
 
-    describe('GoBoardComponent', () => {
+    describe('GoBoardComponent', () => { // TODO: move to GoBoard or to zoomed go
 
         it('should display koCoord adequately', fakeAsync(async() => {
             // Given a provided ko coord in (1, 1) in board z=0
@@ -225,7 +223,7 @@ fdescribe('GoComponent', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
                 ...defaultConfig.get(),
                 width: 5,
                 height: 5,
@@ -233,7 +231,7 @@ fdescribe('GoComponent', () => {
             });
 
             // When displaying that koCoord on board (1, 1) at z=2
-            await testUtils.setupState(state, { config });
+            await testUtils.setupState(state, { config: customConfig });
 
             // Then it should be displayed at (0, 0)
             testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 > .data-ko-0-0');
@@ -267,6 +265,53 @@ fdescribe('GoComponent', () => {
                 '.data-click-1-0',
                 move,
             );
+        }));
+
+    });
+
+    describe('Zoomed Go', () => {
+
+        it('should display capture correctly', fakeAsync(async() => {
+            // Given a zoomed go with a board about to have a capture
+            const board: Table<GoPiece> = [
+                [O, X, _, _, _],
+                [O, X, _, _, _],
+                [O, X, _, _, _],
+                [O, X, _, _, _],
+                [O, _, _, _, _],
+            ];
+            const state: GoState = new GoState(
+                board,
+                PlayerNumberMap.of(0, 0),
+                1,
+                MGPOptional.empty(),
+                GoPhase.PLAYING,
+            );
+            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
+                ...defaultConfig.get(),
+                width: 5,
+                height: 5,
+                zoom: 2,
+            });
+            await testUtils.setupState(state, { config: customConfig });
+
+            // When doing the capture
+            const move: GoMove = new GoMove(1, 4);
+            await testUtils.expectMoveSuccess('.data-click-1-4', move);
+
+            // Then the zoom = 0 capture should be correct
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-capture-0-0');
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-capture-0-1');
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-capture-0-2');
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-capture-0-3');
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-capture-0-4');
+
+            // and the zoom = 1 too
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 .data-capture-0-0');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 .data-capture-0-1');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 .data-capture-0-2');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-1 .data-capture-0-1');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-1 .data-capture-0-2');
         }));
 
     });

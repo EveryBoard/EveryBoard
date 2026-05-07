@@ -161,7 +161,6 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     }
 }
 
-
 export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, DiaballikState> {
 
     public constructor(private readonly avoidDuplicates: boolean = true) {
