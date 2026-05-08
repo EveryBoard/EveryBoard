@@ -7,7 +7,8 @@
 <svg:g class="data-piece-ko-territory-markers-and-dead-stones">
     @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <svg:g [attr.transform]="getTranslationAt(coordAndContent.coord)"
-               (mouseenter)=onMouseOver(coordAndContent.coord)
+               (mouseenter)="onMouseOver(coordAndContent.coord)"
+               (click)="onClick(coordAndContent.coord)"
         >
             @if (spaceIsFull(coordAndContent.coord)) {
                 <svg:g>
@@ -25,8 +26,7 @@
                         />
                     }
                     @if (isDead(coordAndContent.coord)) {
-                        <svg:line (click)="onClick(coordAndContent.coord)"
-                                  [attr.x1]="0"
+                        <svg:line [attr.x1]="0"
                                   [attr.y1]="0"
                                   [attr.x2]="SPACE_SIZE"
                                   [attr.y2]="SPACE_SIZE"
@@ -40,7 +40,6 @@
                                 [attr.cy]="SPACE_SIZE * 0.5"
                                 [attr.r]="SPACE_SIZE * 0.2"
                                 [attr.class]="coordAndContent.content === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
-                                (click)="onClick(coordAndContent.coord)"
                     />
                 }
             }
@@ -65,11 +64,10 @@
     />
 }
 @for (capture of adaptedCaptures(); track capture.toString()) {
-    <svg:circle (click)="onClick(capture)"
-                [attr.transform]="getTranslationAt(capture)"
+    <svg:circle [attr.transform]="getTranslationAt(capture)"
                 [attr.cx]="SPACE_SIZE * 0.5"
                 [attr.cy]="SPACE_SIZE * 0.5"
                 [attr.r]="SPACE_SIZE * 0.14"
-                class="captured-fill data-capture data-capture-{{ capture.x }}-{{ capture.y }}"
+                class="captured-fill click-delegator data-capture data-capture-{{ capture.x }}-{{ capture.y }}"
     />
 }
