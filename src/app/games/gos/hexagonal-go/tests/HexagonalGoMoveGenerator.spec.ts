@@ -27,7 +27,6 @@ describe('HexagonalGoMoveGenerator', () => {
     const config: MGPOptional<HexagonalGoConfig> = MGPOptional.of({
         size: 2,
         hexagonal: false,
-        zoom: 1,
     });
 
     beforeEach(() => {

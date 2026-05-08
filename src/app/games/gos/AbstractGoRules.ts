@@ -28,11 +28,7 @@ export type GoLegalityInformation = {
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
-export type AbstractGoConfig = RulesConfig & {
-
-    readonly zoom: number;
-
-};
+export type AbstractGoConfig = RulesConfig;
 
 @Debug.log
 export abstract class AbstractGoRules<C extends AbstractGoConfig>
@@ -45,6 +41,10 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     public abstract getGoGroupDataFactory(zoom: number): GoGroupDataFactory;
 
+    public getZoom(_: MGPOptional<C>): number {
+        return 1;
+    }
+
     private getNewKo(
         move: GoMove,
         newBoard: GoPiece[][],
@@ -55,7 +55,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
             const captured: Coord = goLegalityInformation.uniqueCapture.get();
             const capturerCoord: Coord = move.coord;
             const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
-            const maxStepSize: number = config.get().zoom; // TODO test when one
+            const maxStepSize: number = this.getZoom(config);
             for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
                 const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
                 const capturersInfo: GoGroupData = goGroupDataFactory.getGroupData(capturerCoord, newBoard);
@@ -202,7 +202,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
     private doesPieceHaveFreedoms(coord: Coord, state: GoState, config: MGPOptional<C>): boolean {
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         boardCopy[coord.y][coord.x] = GoPiece.ofPlayer(state.getCurrentPlayer());
-        const maxStepSize: number = config.get().zoom;
+        const maxStepSize: number = this.getZoom(config);
         for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
             const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
             const goGroupsData: GoGroupData = goGroupDataFactory.getGroupData(coord, boardCopy);
@@ -230,7 +230,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
      */
     private applyCaptures(move: GoMove, state: GoState, config: MGPOptional<C>): GoLegalityInformation {
         const captureds: Coord[] = [];
-        const maxStepSize: number = config.get().zoom;
+        const maxStepSize: number = this.getZoom(config);
         for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
             const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
             for (const direction of goGroupDataFactory.getDirections(move.coord)) {

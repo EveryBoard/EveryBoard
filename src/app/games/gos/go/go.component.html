@@ -17,7 +17,9 @@
                        [ko]="ko"
                        [last]="last"
                        [state]="zooms[zoom][subZoomY][subZoomX]"
+                       [hover]="hover()"
                        (clicked)="onClick($event)"
+                       (takeHover)="onTakeHover(zoom, subZoomX, subZoomY, $event)"
                     ></g>
                 }
             }

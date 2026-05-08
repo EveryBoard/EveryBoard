@@ -30,11 +30,6 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
                     RulesConfigDescriptionLocalizable.SIZE,
                     MGPValidators.range(1, 99),
                 ),
-                zoom: new NumberConfig(
-                    1,
-                    RulesConfigDescriptionLocalizable.SIZE,
-                    MGPValidators.range(1, 5),
-                ), // TODO: zoom
             },
         });
 

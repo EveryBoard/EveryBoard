@@ -1,4 +1,8 @@
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
+import { Vector } from '../../../jscaip/Vector';
 
 export class GoSubBoardHelper {
 
@@ -43,5 +47,50 @@ export class GoSubBoardHelper {
             }
         }
         return subBoard;
+    }
+
+    public static fromZoomedToNormalCoord(zoomedCoord: Coord, zx: number, zy: number, zoom: number): Coord {
+        const oneBasedZoom: number = zoom + 1;
+        return new Coord(
+            zx + (zoomedCoord.x * oneBasedZoom),
+            zy + (zoomedCoord.y * oneBasedZoom),
+        );
+    }
+
+    public static fromNormalToZoomedCoord(
+        normalCoord: Coord,
+        zx: number,
+        zy: number,
+        zoom: number,
+    ): MGPOptional<Coord> {
+        const zoomVector: Vector = new Vector(zx, zy);
+        const offsetCoord: Coord = normalCoord.getNext(zoomVector, -1);
+        const oneBasedZoom: number = zoom + 1;
+        if (offsetCoord.x % oneBasedZoom === 0 && offsetCoord.y % oneBasedZoom === 0) {
+            return MGPOptional.of(new Coord(
+                offsetCoord.x / oneBasedZoom,
+                offsetCoord.y / oneBasedZoom,
+            ));
+        } else {
+            return MGPOptional.empty();
+        }
+    }
+
+    public static fromNormalToOptionalZoomedCoord(
+        coord: MGPOptional<Coord>,
+        zx: number,
+        zy: number,
+        zoom: number,
+    ): MGPOptional<Coord> {
+        if (coord.isPresent()) {
+            return GoSubBoardHelper.fromNormalToZoomedCoord(
+                coord.get(),
+                zx,
+                zy,
+                zoom,
+            );
+        } else {
+            return MGPOptional.empty();
+        }
     }
 }

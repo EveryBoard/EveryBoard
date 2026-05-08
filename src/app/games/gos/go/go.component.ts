@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, model, ModelSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -42,6 +42,8 @@ export class GoComponent extends GobanGameComponent<GoRules,
     public last: MGPOptional<Coord> = MGPOptional.empty();
 
     public captures: Coord[] = [];
+
+    public hover: ModelSignal<MGPOptional<Coord>> = model(MGPOptional.empty());
 
     public zooms: ReadonlyArray<Table<GoState>> = [];
 
@@ -205,6 +207,16 @@ export class GoComponent extends GobanGameComponent<GoRules,
         const translateX: number = this.getTranslateXZoomBoard(zoom, subZoomX, subZoomY);
         const translateY: number = this.getTranslateYZoomBoard(zoom, subZoomX, subZoomY);
         return `translate(${ translateX }, ${ translateY })`;
+    }
+
+    // public onMouveOver(coord: Coord): void {
+    //     console.log('jajaette', coord)
+    // }
+
+    public onTakeHover(zoom: number, zx: number, zy: number, zoomedCoord: Coord): void {
+        const normalCoord: Coord = GoSubBoardHelper.fromZoomedToNormalCoord(zoomedCoord, zx, zy, zoom);
+        this.hover.set(MGPOptional.of(normalCoord));
+        // this.hover.set(MGPOptional.of(zoomedCoord));
     }
 
 }

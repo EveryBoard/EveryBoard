@@ -62,25 +62,21 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
 
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState, config).getCopiedBoard();
 
-        // TODO: içi on marque les groupes morts ou vivants et on ne laisse qu'un choix au minimax
-        // Mais pour l'instant les règles du jeux ne comptent comme morts que les morts du zoom = 1
-        const maxStepSize: number = 1;
-        for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
-            const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory(zoom);
-            const groupsData: GoGroupData[] =
-                groupDataFactory.getGroupsDataWhere(
-                    correctBoard,
-                    (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE);
+        const zoom: number = this.rules.getZoom(config);
+        const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory(zoom);
+        const groupsData: GoGroupData[] =
+            groupDataFactory.getGroupsDataWhere(
+                correctBoard,
+                (piece: GoPiece) => piece !== GoPiece.EMPTY && piece !== GoPiece.UNREACHABLE);
 
-            for (const group of groupsData) {
-                const coord: Coord = group.getCoords()[0];
-                const correctContent: GoPiece = correctBoard[coord.y][coord.x];
-                const actualContent: GoPiece = currentState.getPieceAt(coord);
-                if (actualContent !== correctContent) {
-                    const move: GoMove = new GoMove(coord.x, coord.y);
-                    choices.push(move);
-                    return choices;
-                }
+        for (const group of groupsData) {
+            const coord: Coord = group.getCoords()[0];
+            const correctContent: GoPiece = correctBoard[coord.y][coord.x];
+            const actualContent: GoPiece = currentState.getPieceAt(coord);
+            if (actualContent !== correctContent) {
+                const move: GoMove = new GoMove(coord.x, coord.y);
+                choices.push(move);
+                return choices;
             }
         }
         return choices;

@@ -2,39 +2,42 @@
        [width]="state().getWidth()"
        [height]="state().getHeight()"
        (clickCallBack)="onClick($event)"
+       (mouseEnterCallback)="onMouseOver($event)"
 />
 <svg:g class="data-piece-ko-territory-markers-and-dead-stones">
     @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
-        <svg:g>
+        <svg:g [attr.transform]="getTranslationAt(coordAndContent.coord)"
+               (mouseenter)=onMouseOver(coordAndContent.coord)
+        >
             @if (spaceIsFull(coordAndContent.coord)) {
                 <svg:g>
-                    <svg:circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
-                                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                    <svg:circle [attr.cx]="SPACE_SIZE * 0.5"
+                                [attr.cy]="SPACE_SIZE * 0.5"
                                 [attr.r]="SPACE_SIZE * 0.44"
                                 [ngClass]="getSpaceClass(coordAndContent.coord)"
                                 class="base"
                     />
                     @if (isLastSpace(coordAndContent.coord)) {
-                        <svg:circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
-                                    [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                        <svg:circle [attr.cx]="SPACE_SIZE * 0.5"
+                                    [attr.cy]="SPACE_SIZE * 0.5"
                                     [attr.r]="SPACE_SIZE * 0.44"
                                     class="base no-fill last-move-stroke"
                         />
                     }
                     @if (isDead(coordAndContent.coord)) {
                         <svg:line (click)="onClick(coordAndContent.coord)"
-                                  [attr.x1]="SPACE_SIZE * coordAndContent.coord.x"
-                                  [attr.y1]="SPACE_SIZE * coordAndContent.coord.y"
-                                  [attr.x2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.x)"
-                                  [attr.y2]="SPACE_SIZE + (SPACE_SIZE * coordAndContent.coord.y)"
+                                  [attr.x1]="0"
+                                  [attr.y1]="0"
+                                  [attr.x2]="SPACE_SIZE"
+                                  [attr.y2]="SPACE_SIZE"
                                   class="base no-fill captured-stroke"
                         />
                     }
                 </svg:g>
             } @else {
                 @if (isTerritory(coordAndContent.coord)) {
-                    <svg:circle [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
-                                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                    <svg:circle [attr.cx]="SPACE_SIZE * 0.5"
+                                [attr.cy]="SPACE_SIZE * 0.5"
                                 [attr.r]="SPACE_SIZE * 0.2"
                                 [attr.class]="coordAndContent.content === GoPiece.LIGHT_TERRITORY ? 'player1-fill' : 'player0-fill'"
                                 (click)="onClick(coordAndContent.coord)"
@@ -44,14 +47,21 @@
         </svg:g>
     }
 </svg:g>
-@if (ko().isPresent()) {
-    <svg:rect class="data-ko-{{ ko().get().x }}-{{ ko().get().y }}"
-              [attr.transform]="getTranslationAt(ko().get())"
+@if (adaptedKo().isPresent()) {
+    <svg:rect [attr.transform]="getTranslationAt(adaptedKo().get())"
               [attr.width]="SPACE_SIZE * 0.5"
               [attr.height]="SPACE_SIZE * 0.5"
               [attr.x]="SPACE_SIZE * 0.25"
               [attr.y]="SPACE_SIZE * 0.25"
-              class="captured-stroke mid-stroke no-fill"
+              class="captured-stroke mid-stroke no-fill data-ko data-ko-{{ adaptedKo().get().x }}-{{ adaptedKo().get().y }}"
+    />
+}
+@if (adaptedHover().isPresent()) {
+    <svg:circle [attr.transform]="getTranslationAt(adaptedHover().get())"
+                [attr.cx]="SPACE_SIZE * 0.5"
+                [attr.cy]="SPACE_SIZE * 0.5"
+                [attr.r]="SPACE_SIZE * 0.50"
+                class="semi-transparent click-delegator data-hover data-hover-{{ adaptedHover().get().x }}-{{ adaptedHover().get().y }}"
     />
 }
 @for (capture of adaptedCaptures(); track capture.toString()) {
@@ -60,6 +70,6 @@
                 [attr.cx]="SPACE_SIZE * 0.5"
                 [attr.cy]="SPACE_SIZE * 0.5"
                 [attr.r]="SPACE_SIZE * 0.14"
-                class="captured-fill"
+                class="captured-fill data-capture data-capture-{{ capture.x }}-{{ capture.y }}"
     />
 }

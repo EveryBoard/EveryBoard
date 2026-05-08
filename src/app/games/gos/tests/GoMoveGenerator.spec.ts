@@ -20,7 +20,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('GoMoveGenerator', () => {
+describe('GoMoveGenerator', () => { // TODO: move tests inside their own sub folder
 
     let moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig>;
 

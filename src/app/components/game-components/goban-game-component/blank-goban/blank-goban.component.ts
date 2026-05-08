@@ -15,6 +15,7 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
     public readonly width: InputSignal<number> = input.required<number>();
     public readonly height: InputSignal<number> = input.required<number>();
     public readonly clickCallBack: OutputEmitterRef<Coord> = output<Coord>();
+    public readonly mouseEnterCallback: OutputEmitterRef<Coord> = output<Coord>();
     public hoshis: Coord[] = [];
 
     public ngOnChanges(): void {
@@ -31,6 +32,10 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
      */
     public createHoshis(): void {
         this.hoshis = GobanUtils.getHoshis(this.width(), this.height());
+    }
+
+    public onMouseEnter(x: number, y: number): void {
+        this.mouseEnterCallback.emit(new Coord(x, y));
     }
 
 }

@@ -768,7 +768,6 @@ describe('TriangularGoRules', () => {
             const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 1,
-                zoom: 1,
             });
 
             // When getting initial board
@@ -787,7 +786,6 @@ describe('TriangularGoRules', () => {
             const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
                 hexagonal: true,
                 size: 2,
-                zoom: 1,
             });
 
             // When getting initial board

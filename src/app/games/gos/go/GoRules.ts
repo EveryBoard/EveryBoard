@@ -17,6 +17,7 @@ export type GoConfig =
     GobanConfig &
     {
         handicap: number;
+        zoom: number;
     };
 
 export class GoRules extends AbstractGoRules<GoConfig> {
@@ -60,6 +61,10 @@ export class GoRules extends AbstractGoRules<GoConfig> {
 
     public constructor() {
         super(true);
+    }
+
+    public override getZoom(config: MGPOptional<GoConfig>): number {
+        return config.get().zoom;
     }
 
     public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
