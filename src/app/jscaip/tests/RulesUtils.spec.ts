@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { comparableEquals, isComparableObject, JSONValue, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+import { comparableEquals, isComparableObject, MGPFallible } from '@everyboard/lib';
 
 import { GameNode } from '../AI/GameNode';
 import { GameStatus } from '../GameStatus';
@@ -19,7 +19,7 @@ export class RulesUtils {
                                                            state: S,
                                                            move: M,
                                                            expectedState: S,
-                                                           config: MGPOptional<C>)
+                                                           config: C)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
@@ -48,7 +48,7 @@ export class RulesUtils {
         state: S,
         move: M,
         reason: string,
-        config: MGPOptional<C>)
+        config: C)
     : void
     {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
@@ -64,7 +64,7 @@ export class RulesUtils {
         rules: R,
         node: GameNode<M, S>,
         player: Player,
-        config: MGPOptional<C> = MGPOptional.empty())
+        config: C)
     : void
     {
         expect(rules.getGameStatus(node, config))
@@ -79,7 +79,7 @@ export class RulesUtils {
                                     C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S>,
-        config: MGPOptional<C> = MGPOptional.empty())
+        config: C)
     : void
     {
         expect(rules.getGameStatus(node, config)).toEqual(GameStatus.ONGOING);
@@ -92,38 +92,10 @@ export class RulesUtils {
                                  C extends RulesConfig = EmptyRulesConfig>(
         rules: R,
         node: GameNode<M, S>,
-        config: MGPOptional<C> = MGPOptional.empty())
+        config: C)
     : void
     {
         expect(rules.getGameStatus(node, config)).toBe(GameStatus.DRAW);
-    }
-
-    /**
-     * @param ruler the rules of the game you need to debug
-     * @param encodedMoves the encoded moves that caused the bug
-     * @param state the board on which these moves have to be applied
-     * @param moveDecoder the move decoder
-     * @returns the state creates from applying the moves, enjoy you debug !
-     */
-    public static applyMoves<S extends GameState,
-                             M extends Move,
-                             L,
-                             C extends RulesConfig>(ruler: SuperRules<M, S, C, L>,
-                                                    encodedMoves: JSONValue[],
-                                                    state: S,
-                                                    moveDecoder: (em: JSONValue) => M,
-                                                    config: MGPOptional<C> = MGPOptional.empty())
-    : S
-    {
-        let i: number = 0;
-        for (const encodedMove of encodedMoves) {
-            const move: M = moveDecoder(encodedMove);
-            const legality: MGPFallible<L> = ruler.isLegal(move, state, config);
-            Utils.assert(legality.isSuccess(), `Can't create state from invalid moves (` + i + '): ' + legality.toString() + '.');
-            state = ruler.applyLegalMove(move, state, config, legality.get());
-            i++;
-        }
-        return state;
     }
 
 }

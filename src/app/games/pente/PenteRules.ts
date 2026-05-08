@@ -44,8 +44,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return PenteRules.singleton.get();
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<PenteConfig>): PenteState {
-        const config: PenteConfig = optionalConfig.get();
+    public override getInitialState(config: PenteConfig): PenteState {
         const board: PlayerOrNone[][] = TableUtils.create(config.width,
                                                           config.height,
                                                           PlayerOrNone.NONE);
@@ -55,8 +54,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return new PenteState(board, PlayerNumberMap.of(0, 0), 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<PenteConfig>> {
-        return MGPOptional.of(PenteRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<PenteConfig> {
+        return PenteRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override isLegal(move: PenteMove, state: PenteState): MGPValidation {
@@ -69,13 +68,13 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public override applyLegalMove(move: PenteMove, state: PenteState, config: MGPOptional<PenteConfig>, _info: void)
+    public override applyLegalMove(move: PenteMove, state: PenteState, config: PenteConfig, _info: void)
     : PenteState
     {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;
-        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config.get(), player);
+        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config, player);
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
@@ -109,14 +108,14 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return captures;
     }
 
-    public override getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
+    public override getGameStatus(node: PenteNode, config: PenteConfig): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        const capturesNeededToWin: number = config.get().capturesNeededToWin;
+        const capturesNeededToWin: number = config.capturesNeededToWin;
         if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = this.getHelper(config.get()).getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }

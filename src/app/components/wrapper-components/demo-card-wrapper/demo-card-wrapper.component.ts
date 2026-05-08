@@ -17,7 +17,7 @@ export type DemoNodeInfo = {
 }
 
 export type DemoNodeWithConfig = DemoNodeInfo & {
-    config: MGPOptional<RulesConfig>,
+    config: RulesConfig,
 }
 
 @Component({

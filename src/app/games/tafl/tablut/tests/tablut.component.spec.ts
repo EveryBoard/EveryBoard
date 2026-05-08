@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../../jscaip/Coord';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflPawn } from '../../TaflPawn';
@@ -15,7 +13,7 @@ const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 
 const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> = {
     component: TablutComponent,

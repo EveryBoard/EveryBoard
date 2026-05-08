@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
@@ -15,7 +13,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneMoveGenerator', () => {
 
     let moveGenerator: AbaloneMoveGenerator;
-    const defaultConfig: MGPOptional<AbaloneConfig> = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: AbaloneConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new AbaloneMoveGenerator();

@@ -41,8 +41,8 @@ export class LascaRules extends AbstractCheckersRules {
         return LascaRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<CheckersConfig>> {
-        return MGPOptional.of(LascaRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<CheckersConfig> {
+        return LascaRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

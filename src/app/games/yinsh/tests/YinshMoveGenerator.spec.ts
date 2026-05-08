@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { YinshCapture } from '../YinshMove';
 import { YinshMoveGenerator } from '../YinshMoveGenerator';
@@ -19,7 +19,7 @@ describe('YinshMoveGenerator', () => {
     let rules: YinshRules;
 
     let moveGenerator: YinshMoveGenerator;
-    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = YinshRules.get();

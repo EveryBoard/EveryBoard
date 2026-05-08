@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -18,7 +16,7 @@ describe('PenteRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: PenteRules;
-    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: PenteConfig = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = PenteRules.get();

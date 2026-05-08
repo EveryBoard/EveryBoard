@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
@@ -9,7 +7,7 @@ import { AbaloneState } from './AbaloneState';
 
 export class AbaloneScoreHeuristic extends PlayerMetricHeuristic<AbaloneMove, AbaloneState, AbaloneConfig> {
 
-    public override getMetrics(node: AbaloneNode, _config: MGPOptional<AbaloneConfig>): PlayerNumberTable {
+    public override getMetrics(node: AbaloneNode, _config: AbaloneConfig): PlayerNumberTable {
         return node.gameState.getScores().toTable();
     }
 

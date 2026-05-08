@@ -152,12 +152,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<QuebecCastlesConfig>> {
-        return MGPOptional.of(QuebecCastlesRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<QuebecCastlesConfig> {
+        return QuebecCastlesRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<QuebecCastlesConfig>): QuebecCastlesState {
-        const config: QuebecCastlesConfig = optionalConfig.get();
+    public override getInitialState(config: QuebecCastlesConfig): QuebecCastlesState {
         const castles: PlayerMap<MGPOptional<Coord>> = this.getCastles(config);
         const board: Table<PlayerOrNone> = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
         let state: QuebecCastlesState = new QuebecCastlesState(board, 0, castles);
@@ -277,10 +276,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public override isLegal(move: QuebecCastlesMove,
                             state: QuebecCastlesState,
-                            optionalConfig: MGPOptional<QuebecCastlesConfig>)
+                            config: QuebecCastlesConfig)
     : MGPValidation
     {
-        const config: QuebecCastlesConfig = optionalConfig.get();
         if (this.isDropPhase(state, config)) {
             return this.isLegalDrop(move, state, config);
         } else {
@@ -578,10 +576,10 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     public override applyLegalMove(move: QuebecCastlesMove,
                                    state: QuebecCastlesState,
-                                   config: MGPOptional<QuebecCastlesConfig>)
+                                   config: QuebecCastlesConfig)
     : QuebecCastlesState
     {
-        if (this.isDropPhase(state, config.get())) {
+        if (this.isDropPhase(state, config)) {
             return this.applyLegalDrop(move as QuebecCastlesDrop, state, config);
         } else {
             return this.applyLegalNormalMove(move as MoveCoordToCoord, state);
@@ -590,10 +588,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     private applyLegalDrop(move: QuebecCastlesDrop,
                            state: QuebecCastlesState,
-                           optionalConfig: MGPOptional<QuebecCastlesConfig>)
+                           config: QuebecCastlesConfig)
     : QuebecCastlesState
     {
-        const config: QuebecCastlesConfig = optionalConfig.get();
         const currentPlayer: Player = state.getCurrentPlayer();
         if (this.mustPlaceCastle(state, config)) {
             const castles: PlayerMap<MGPOptional<Coord>> = PlayerMap.ofValues(
@@ -603,12 +600,12 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             const castleCoord: Coord = move.coords.getAnyElement().get();
             castles.put(currentPlayer, MGPOptional.of(castleCoord));
             if (config.dropMode === 'AUTO') {
-                const adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-                    ...this.getDefaultRulesConfig().get(),
+                const adaptedDefaultConfig: QuebecCastlesConfig = {
+                    ...this.getDefaultRulesConfig(),
                     width: config.width,
                     height: config.height,
                     isRhombic: config.isRhombic,
-                });
+                };
                 const newState: QuebecCastlesState =
                     this.placeCastlesAndMovePiece(state, castles, adaptedDefaultConfig);
                 return new QuebecCastlesState(newState.board, state.turn + 1, castles);
@@ -626,10 +623,10 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
 
     private placeCastlesAndMovePiece(state: QuebecCastlesState,
                                      castles: PlayerMap<MGPOptional<Coord>>,
-                                     adaptedDefaultConfig: MGPOptional<QuebecCastlesConfig>)
+                                     config: QuebecCastlesConfig)
     : QuebecCastlesState
     {
-        const initialState: QuebecCastlesState = this.getInitialState(adaptedDefaultConfig);
+        const initialState: QuebecCastlesState = this.getInitialState(config);
         let newState: QuebecCastlesState = this.doCastlePlacement(initialState, castles, Player.ZERO);
         if (state.getCurrentPlayer() === Player.ZERO) {
             initialState.forEachCoord((coord: Coord, content: PlayerOrNone) => {
@@ -666,7 +663,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             .incrementTurn();
     }
 
-    public override getGameStatus(node: QuebecCastlesNode, config: MGPOptional<QuebecCastlesConfig>): GameStatus {
+    public override getGameStatus(node: QuebecCastlesNode, config: QuebecCastlesConfig): GameStatus {
         const state: QuebecCastlesState = node.gameState;
         const defenderCastle: MGPOptional<Coord> = state.castles.get(Player.ONE);
         if (defenderCastle.isPresent() && state.getPieceAt(defenderCastle.get()).equals(PlayerOrNone.ZERO)) {
@@ -677,7 +674,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
             return GameStatus.ONE_WON; // Player.ONE (Defender) stepped on Player.ZERO (Invader)'s castle, victory
         }
         const playerZeroPieces: number = state.countPieceOnBoard(Player.ZERO);
-        if (this.isDropPhase(state, config.get()) === false) {
+        if (this.isDropPhase(state, config) === false) {
             if (playerZeroPieces === 0) {
                 return GameStatus.ONE_WON;
             }

@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { AlignmentStatus } from '../../jscaip/AI/AlignmentHeuristic';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
@@ -11,8 +9,7 @@ import { QuartoState } from './QuartoState';
 
 export class QuartoHeuristic extends Heuristic<QuartoMove, QuartoState, BoardValue, QuartoConfig> {
 
-    public getBoardValue(node: QuartoNode, optionalConfig: MGPOptional<QuartoConfig>): BoardValue {
-        const config: QuartoConfig = optionalConfig.get();
+    public getBoardValue(node: QuartoNode, config: QuartoConfig): BoardValue {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             status: AlignmentStatus.NOTHING,

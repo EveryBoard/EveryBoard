@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { PlayerOrNone } from '../../../jscaip/Player';
@@ -17,7 +15,7 @@ describe('ConnectSixMoveGenerator', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
-    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
+    const defaultConfig: GobanConfig = ConnectSixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ConnectSixMoveGenerator();
@@ -25,8 +23,8 @@ describe('ConnectSixMoveGenerator', () => {
 
     it('should propose only one move at first turn', () => {
         // Given the initial node
-        const width: number = defaultConfig.get().width;
-        const height: number = defaultConfig.get().height;
+        const width: number = defaultConfig.width;
+        const height: number = defaultConfig.height;
         const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 

@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
@@ -35,7 +33,7 @@ describe('ViewConfigComponent', () => {
         const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
         testUtils = await SimpleComponentTestUtils.create(ViewConfigComponent, activatedRoute);
         component = testUtils.getComponent();
-        testUtils.setInput('rulesConfigDescription', MGPOptional.of(rulesConfigDescription));
+        testUtils.setInput('rulesConfigDescription', rulesConfigDescription);
         testUtils.setInput('gameName', 'whatever-game');
     });
 
@@ -45,7 +43,7 @@ describe('ViewConfigComponent', () => {
 
     it('should show config when clicking on "show config" (default config)', fakeAsync(async() => {
         // Given a game with default config
-        testUtils.setInput('rulesConfig', MGPOptional.of(defaultConfig));
+        testUtils.setInput('rulesConfig', defaultConfig);
         testUtils.expectElementNotToExist('#rules-config-component');
         // When clicking on "show config" button
         await testUtils.clickElement('#show-config');
@@ -58,7 +56,7 @@ describe('ViewConfigComponent', () => {
 
     it('should hide config when clicking on close button', fakeAsync(async() => {
         // Given a game with config shown
-        testUtils.setInput('rulesConfig', MGPOptional.of(defaultConfig));
+        testUtils.setInput('rulesConfig', defaultConfig);
         testUtils.expectElementNotToExist('#rules-config-component');
         await testUtils.clickElement('#show-config');
         testUtils.expectElementToExist('#rules-config-component');
@@ -70,7 +68,7 @@ describe('ViewConfigComponent', () => {
 
     it('should show config when clicking on "show config" (custom config)', fakeAsync(async() => {
         // Given a game with custom config
-        testUtils.setInput('rulesConfig', MGPOptional.of(customConfig));
+        testUtils.setInput('rulesConfig', customConfig);
         // When clicking on "show config" button
         await testUtils.clickElement('#show-config');
         // Then it should rules config, with the custom config selected

@@ -1,5 +1,6 @@
 /* eslint-disable no-multi-spaces */
 import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
+import Fuse, { FuseResult } from 'fuse.js';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -313,9 +314,9 @@ export class GameInfo {
         }
     }
 
-    public static getStateProvider(urlName: string): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
+    public static getStateProvider(urlName: string): MGPOptional<(config: RulesConfig) => GameState> {
         return GameInfo.getByUrlName(urlName).map((info: GameInfo) => {
-            return (config: MGPOptional<RulesConfig>) => {
+            return (config: RulesConfig) => {
                 return info.rules.getInitialState(config);
             };
         });
@@ -332,17 +333,13 @@ export class GameInfo {
     {
     }
 
-    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
+    public getRulesConfigDescription(): RulesConfigDescription<RulesConfig> {
         return this.rules.getRulesConfigDescription();
     }
 
-    public getRulesConfig(): MGPOptional<RulesConfig> {
-        const description: MGPOptional<RulesConfigDescription<RulesConfig>> = this.getRulesConfigDescription();
-        if (description.isPresent()) {
-            return MGPOptional.of(description.get().getDefaultConfig().config);
-        } else {
-            return MGPOptional.empty();
-        }
+    public getRulesConfig(): RulesConfig {
+        const description: RulesConfigDescription<RulesConfig> = this.getRulesConfigDescription();
+        return description.getDefaultConfig().config;
     }
 
 }
@@ -367,9 +364,18 @@ export class PickGameComponent {
     }
 
     public search(input: EventTarget | null): void {
-        const searchTerm: string = (input as HTMLInputElement).value;
-        this.matchingGames = this.games.filter((info: GameInfo) =>
-            this.normalize(info.name).includes(this.normalize(searchTerm)));
+        const searchTerm: string = this.normalize((input as HTMLInputElement).value);
+        if (searchTerm.length === 0) {
+            this.matchingGames = this.games;
+        } else {
+            const fuse: Fuse<GameInfo> = new Fuse(this.games, {
+                keys: ['name', 'urlName'],
+                ignoreLocation: true,
+                threshold: 0.5,
+            });
+            this.matchingGames = fuse.search(searchTerm)
+                .map((result: FuseResult<GameInfo>): GameInfo => result.item);
+        }
     }
 
     private normalize(term: string): string {
@@ -384,4 +390,5 @@ export class PickGameComponent {
         // not characters, thereby removing all diacritics. This is not the work
         // of Morgoth as one may think, but regular Unicode manipulation.
     }
+
 }

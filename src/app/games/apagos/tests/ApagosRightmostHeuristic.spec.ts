@@ -10,7 +10,7 @@ import { ApagosState } from '../ApagosState';
 describe('ApagosRightmostHeuristic', () => {
 
     let heuristic: ApagosRightmostHeuristic;
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ApagosRightmostHeuristic();

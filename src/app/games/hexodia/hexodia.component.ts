@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
@@ -78,7 +78,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: HexodiaState = this.getState();
         this.hexaBoard = state.getCopiedBoard();
-        const config: MGPOptional<HexodiaConfig> = this.getConfig();
+        const config: HexodiaConfig = this.getConfig();
         this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
     }
 
@@ -95,7 +95,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
-        const totalDrop: number = this.getConfig().get().numberOfDrops;
+        const totalDrop: number = this.getConfig().numberOfDrops;
         if (this.getState().turn === 0) {
             const move: HexodiaMove = HexodiaMove.of([clickedCoord]);
             return this.chooseMove(move);

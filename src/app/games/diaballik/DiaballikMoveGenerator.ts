@@ -6,7 +6,7 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
 import { DiaballikNode, DiaballikRules } from './DiaballikRules';
@@ -168,7 +168,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         super();
     }
 
-    public override getListMoves(node: DiaballikNode, config: NoConfig): DiaballikMove[] {
+    public override getListMoves(node: DiaballikNode, config: EmptyRulesConfig): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
@@ -185,7 +185,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: NoConfig)
+    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: EmptyRulesConfig)
     : DiaballikMove[]
     {
         if (this.avoidDuplicates === false) {

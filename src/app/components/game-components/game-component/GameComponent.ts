@@ -112,7 +112,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public node: GameNode<M, S>;
 
-    public config: MGPOptional<C> = MGPOptional.empty();
+    public config: C;
 
     public availableAIs: AI<M, S, AIOptions, C>[];
 
@@ -260,14 +260,14 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     protected setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
-        const defaultConfig: MGPOptional<C> = gameInfo.getRulesConfig() as MGPOptional<C>;
+        const defaultConfig: C = gameInfo.getRulesConfig() as C;
 
         this.rules = gameInfo.rules as R;
         this.node = this.rules.getInitialNode(defaultConfig);
         this.tutorial = gameInfo.tutorial.tutorial;
     }
 
-    protected getConfig(): MGPOptional<C> {
+    protected getConfig(): C {
         return this.config;
     }
 

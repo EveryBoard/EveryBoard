@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { P4MoveGenerator } from '../P4MoveGenerator';
@@ -14,7 +12,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('P4MoveGenerator', () => {
 
     let moveGenerator: P4MoveGenerator;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new P4MoveGenerator();

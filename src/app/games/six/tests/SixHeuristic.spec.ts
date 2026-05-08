@@ -18,7 +18,7 @@ const _: PlayerOrNone = PlayerOrNone.NONE;
 describe('SixHeuristic', () => {
 
     let heuristic: SixHeuristic;
-    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new SixHeuristic();
@@ -174,10 +174,10 @@ describe('SixHeuristic', () => {
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 20);
-            const customConfig: MGPOptional<SixConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SixConfig = {
+                ...defaultConfig,
                 piecesPerPlayer: 10,
-            });
+            };
             const move: SixMove = SixMove.ofDrop(new Coord(1, 1));
             const node: SixNode = new SixNode(state, MGPOptional.empty(), MGPOptional.of(move));
 

@@ -3,7 +3,7 @@ import { MGPMap } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { LodestoneMove } from '../LodestoneMove';
 import { LodestoneMoveGenerator } from '../LodestoneMoveGenerator';
@@ -14,7 +14,7 @@ import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlate
 describe('LodestoneMoveGenerator', () => {
 
     let moveGenerator: LodestoneMoveGenerator;
-    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     const N: LodestonePiece = LodestonePieceNone.UNREACHABLE;
     const _: LodestonePiece = LodestonePieceNone.EMPTY;

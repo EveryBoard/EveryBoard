@@ -24,10 +24,10 @@ describe('HexagonalGoMoveGenerator', () => {
 
     let moveGenerator: HexagonalGoMoveGenerator;
 
-    const config: MGPOptional<HexagonalGoConfig> = MGPOptional.of({
+    const config: HexagonalGoConfig = {
         size: 2,
         hexagonal: false,
-    });
+    };
 
     beforeEach(() => {
         moveGenerator = new HexagonalGoMoveGenerator();

@@ -18,7 +18,7 @@ describe('ReversiRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ReversiRules;
-    let defaultConfig: MGPOptional<ReversiConfig>;
+    let defaultConfig: ReversiConfig;
 
     beforeEach(() => {
         rules = ReversiRules.get();

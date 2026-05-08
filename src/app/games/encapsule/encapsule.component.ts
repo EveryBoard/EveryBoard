@@ -85,11 +85,11 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
-        const config: MGPOptional<EncapsuleConfig> = this.getConfig();
+        const config: EncapsuleConfig = this.getConfig();
         this.board = this.state.getCopiedBoard();
         this.renderBoardPiece();
         this.calculateLeftPieceCoords();
-        this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(this.state, config.get());
+        this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(this.state, config);
         this.setRingStrokeWidth();
     }
 
