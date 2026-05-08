@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 
@@ -12,12 +12,12 @@ export class CheckersMoveGenerator extends MoveGenerator<CheckersMove, CheckersS
         super();
     }
 
-    public override getListMoves(node: CheckersNode, config: MGPOptional<CheckersConfig>): CheckersMove[] {
-        const captures: CheckersMove[] = this.getLegalCaptures(node.gameState, config.get());
+    public override getListMoves(node: CheckersNode, config: CheckersConfig): CheckersMove[] {
+        const captures: CheckersMove[] = this.getLegalCaptures(node.gameState, config);
         if (captures.length > 0) {
             return captures;
         } else {
-            return this.rules.getSteps(node.gameState, config.get());
+            return this.rules.getSteps(node.gameState, config);
         }
     }
 

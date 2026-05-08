@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
@@ -12,7 +10,7 @@ import { P4State } from '../P4State';
 describe('P4Minimax', () => {
 
     let minimax: Minimax<P4Move, P4State, P4Config>;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new P4Minimax();

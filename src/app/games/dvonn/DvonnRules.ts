@@ -7,7 +7,7 @@ import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 
@@ -153,7 +153,12 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return newState;
     }
 
-    public override applyLegalMove(move: DvonnMove, state: DvonnState, _config: NoConfig, _info: void): DvonnState {
+    public override applyLegalMove(
+        move: DvonnMove,
+        state: DvonnState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): DvonnState {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {
@@ -170,7 +175,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         }
     }
 
-    public override isLegal(move: DvonnMove, state: DvonnState, _config: NoConfig): MGPValidation {
+    public override isLegal(move: DvonnMove, state: DvonnState, _config: EmptyRulesConfig): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself

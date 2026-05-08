@@ -24,7 +24,7 @@ describe('TriangularGoMoveGenerator', () => {
 
     let moveGenerator: TriangularGoMoveGenerator;
 
-    const config: MGPOptional<TriangularGoConfig> = MGPOptional.of({ size: 2, hexagonal: false });
+    const config: TriangularGoConfig = { size: 2, hexagonal: false };
 
     beforeEach(() => {
         moveGenerator = new TriangularGoMoveGenerator();

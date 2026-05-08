@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
@@ -16,7 +14,7 @@ describe('TaflMoveGenerator', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
     it('should not propose to King to go back on the throne when its forbidden', () => {
         // Given a board where king could go back on his throne but the rules forbid it

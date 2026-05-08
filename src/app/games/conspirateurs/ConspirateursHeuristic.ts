@@ -2,7 +2,7 @@ import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursNode } from './ConspirateursRules';
@@ -10,7 +10,7 @@ import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursHeuristic extends PlayerMetricHeuristic<ConspirateursMove, ConspirateursState> {
 
-    public override getMetrics(node: ConspirateursNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: ConspirateursNode, _config: EmptyRulesConfig): PlayerNumberTable {
         const state: ConspirateursState = node.gameState;
         const scores: PlayerNumberTable = PlayerNumberTable.of([0, 0], [0, 0]);
         const shelterCountIndex: number = 0;

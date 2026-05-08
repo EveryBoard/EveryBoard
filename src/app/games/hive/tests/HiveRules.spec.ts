@@ -4,7 +4,7 @@ import { MGPOptional, Set, Utils } from '@everyboard/lib';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -18,7 +18,7 @@ import { HiveState } from '../HiveState';
 describe('HiveRules', () => {
 
     let rules: HiveRules;
-    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');

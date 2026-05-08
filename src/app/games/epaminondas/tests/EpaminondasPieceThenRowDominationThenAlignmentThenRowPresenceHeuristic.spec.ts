@@ -14,7 +14,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic', () => {
 
     let heuristic: EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic();

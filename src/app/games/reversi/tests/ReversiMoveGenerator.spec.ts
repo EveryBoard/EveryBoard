@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ReversiMove } from '../ReversiMove';
@@ -16,7 +14,7 @@ describe('ReversiMoveGenerator', () => {
 
     let rules: ReversiRules;
     let moveGenerator: ReversiMoveGenerator;
-    let defaultConfig: MGPOptional<ReversiConfig>;
+    let defaultConfig: ReversiConfig;
 
     beforeEach(() => {
         rules = ReversiRules.get();

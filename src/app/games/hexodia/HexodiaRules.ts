@@ -57,8 +57,8 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         return HexodiaRules.singleton.get();
     }
 
-    public static getHexodiaHelper(config: MGPOptional<HexodiaConfig>): AbstractNInARowHelper<FourStatePiece> {
-        return HexodiaRules.getHexodiaHelperBySize(config.get().nInARow);
+    public static getHexodiaHelper(config: HexodiaConfig): AbstractNInARowHelper<FourStatePiece> {
+        return HexodiaRules.getHexodiaHelperBySize(config.nInARow);
     }
 
     public static getHexodiaHelperBySize(size: number): AbstractNInARowHelper<FourStatePiece> {
@@ -74,16 +74,16 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         return HexodiaRules.helpers.get(size).get();
     }
 
-    public static getVictoriousCoords(state: HexodiaState, config: MGPOptional<HexodiaConfig>): Coord[] {
+    public static getVictoriousCoords(state: HexodiaState, config: HexodiaConfig): Coord[] {
         return HexodiaRules.getHexodiaHelper(config).getVictoriousCoord(state);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<HexodiaConfig>> {
-        return MGPOptional.of(HexodiaRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<HexodiaConfig> {
+        return HexodiaRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<HexodiaConfig>): HexodiaState {
-        const size: number = config.get().size;
+    public override getInitialState(config: HexodiaConfig): HexodiaState {
+        const size: number = config.size;
         const boardSize: number = (size * 2) - 1;
         const maximumDiagonalIndex: number = (3 * size) - 2;
         const board: FourStatePiece[][] = TableUtils.create(boardSize, boardSize, FourStatePiece.UNREACHABLE);
@@ -110,16 +110,15 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         return new HexodiaState(newBoard, state.turn + 1);
     }
 
-    public override isLegal(move: HexodiaMove, state: HexodiaState, config: MGPOptional<HexodiaConfig>): MGPValidation {
-        const configuration: HexodiaConfig = config.get();
+    public override isLegal(move: HexodiaMove, state: HexodiaState, config: HexodiaConfig): MGPValidation {
         const numberOfDrops: number = move.coords.size();
         if (state.turn === 0) {
             Utils.assert(numberOfDrops === 1, 'HexodiaMove should only drop one piece at first turn');
         } else {
             const remainingSpaces: number = TableUtils.count(state.board, FourStatePiece.EMPTY);
-            const requiredDrop: number = Math.min(remainingSpaces, configuration.numberOfDrops);
+            const requiredDrop: number = Math.min(remainingSpaces, config.numberOfDrops);
             Utils.assert(numberOfDrops === requiredDrop,
-                         'HexodiaMove should have exactly ' + configuration.numberOfDrops+ ' drops (got ' + numberOfDrops + ')');
+                         'HexodiaMove should have exactly ' + config.numberOfDrops+ ' drops (got ' + numberOfDrops + ')');
         }
         return this.isLegalDrop(move, state);
     }
@@ -136,7 +135,7 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, HexodiaState, H
         return MGPValidation.SUCCESS;
     }
 
-    public override getGameStatus(node: HexodiaNode, config: MGPOptional<HexodiaConfig>): GameStatus {
+    public override getGameStatus(node: HexodiaNode, config: HexodiaConfig): GameStatus {
         const state: HexodiaState = node.gameState;
         const victoriousCoord: Coord[] = HexodiaRules.getVictoriousCoords(state, config);
         if (victoriousCoord.length > 0) {

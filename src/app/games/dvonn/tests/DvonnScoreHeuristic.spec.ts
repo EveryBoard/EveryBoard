@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
@@ -16,7 +16,7 @@ const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 describe('DvonnScoreHeuristic', () => {
 
     let heuristic: DvonnScoreHeuristic;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new DvonnScoreHeuristic();

@@ -18,7 +18,7 @@ describe('EpaminondasRules', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = EpaminondasRules.get();

@@ -14,8 +14,8 @@
             </header>
             <section class="modal-card-body">
                 <app-rules-configuration id="rules-config-component"
-                                         [rulesConfigDescriptionOptional]="rulesConfigDescription()"
-                                         [rulesConfigToDisplay]="rulesConfig().get()"
+                                         [rulesConfigDescription]="rulesConfigDescription()"
+                                         [rulesConfigToDisplay]="rulesConfig()"
                                          [editable]="false">
                 </app-rules-configuration>
             </section>
@@ -24,7 +24,7 @@
 }
 <p class="title">
     {{ gameName() }}
-    @if (rulesConfig().isPresent()) {
+    @if (rulesConfigDescription().isCustomizable()) {
         <a id="show-config"
            (click)="openConfig()"
            class="primary-fg"

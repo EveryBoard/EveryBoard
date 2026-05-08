@@ -91,12 +91,11 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
             },
         });
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SiamConfig>> {
-        return MGPOptional.of(SiamRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<SiamConfig> {
+        return SiamRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<SiamConfig>): SiamState {
-        const config: SiamConfig = optionalConfig.get();
+    public override getInitialState(config: SiamConfig): SiamState {
         const board: SiamPiece[][] = TableUtils.create(config.width, config.height, SiamPiece.EMPTY);
         const cy: number = Math.floor(config.height / 2);
         const cx: number = Math.floor(config.width / 2);
@@ -142,7 +141,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                move.coord.y === state.getHeight();
     }
 
-    public override isLegal(move: SiamMove, state: SiamState, optionalConfig: MGPOptional<SiamConfig>)
+    public override isLegal(move: SiamMove, state: SiamState, config: SiamConfig)
     : MGPFallible<SiamLegalityInformation>
     {
         const moveValidity: MGPValidation = this.getMoveValidity(move, state);
@@ -163,7 +162,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
             let movingPiece: SiamPiece;
             if (this.isInsertion(move, state)) {
                 const insertionInfo: {insertedPiece: SiamPiece, legal: MGPValidation} =
-                    this.isLegalInsertion(move.coord, state, optionalConfig.get());
+                    this.isLegalInsertion(move.coord, state, config);
                 if (insertionInfo.legal.isFailure()) {
                     return MGPFallible.failure(insertionInfo.legal.getReason());
                 }
@@ -263,7 +262,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
 
     public override applyLegalMove(_move: SiamMove,
                                    state: SiamState,
-                                   _config: MGPOptional<SiamConfig>,
+                                   _config: SiamConfig,
                                    info: SiamLegalityInformation)
     : SiamState
     {
@@ -531,7 +530,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                     Utils.assert(this.getMoveValidity(move, state).isSuccess(),
                                  'SiamRules.getInsertionsAt should only construct valid insertions');
                     const legality: MGPFallible<SiamLegalityInformation> =
-                        this.isLegal(move, state, MGPOptional.of(config));
+                        this.isLegal(move, state, config);
                     if (legality.isSuccess()) {
                         moves.push(move);
                     }
@@ -604,12 +603,12 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         return moves;
     }
 
-    public override getGameStatus(node: SiamNode, config: MGPOptional<SiamConfig>): GameStatus {
+    public override getGameStatus(node: SiamNode, config: SiamConfig): GameStatus {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
         const winner: PlayerOrNone =
-            this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain, config.get());
+            this.getWinner(node.gameState, node.previousMove, mountainsInfo.nbMountain, config);
         if (winner.isPlayer()) {
             return GameStatus.getVictory(winner);
         } else {

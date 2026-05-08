@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
@@ -13,7 +11,7 @@ import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 describe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
-    const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
+    const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
 
@@ -266,10 +264,10 @@ describe('BaAwaRules', () => {
 
         it('should count "store-dropping" as "passing below 8"', () => {
             // Given a board where we are about to pass by store and drop to 8 or below
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 0, 5, 0, 0, 0],
                 [2, 0, 1, 0, 0, 0],
@@ -294,10 +292,10 @@ describe('BaAwaRules', () => {
                 [0, 0, 2, 0, 3, 1],
             ];
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 splitFinalSeedsEvenly: true,
-            });
+            };
 
             // When the move is done
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
@@ -312,12 +310,12 @@ describe('BaAwaRules', () => {
         it('should allow to do second distribution when multi-lap mancala ends-up in store', () => {
             // Given any board where a move doing a first distribution ending in store, then another distribution
             // and a config allowing to do that
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
                 continueLapUntilCaptureOrEmptyHouse: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 2, 2, 10, 2, 0],
                 [2, 0, 2, 1, 1, 0],

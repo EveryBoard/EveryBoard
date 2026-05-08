@@ -187,7 +187,7 @@
                             <div class="mt-2">
                                 <app-rules-configuration #rulesConfigurationComponent
                                                          id="rulesConfigurationComponent"
-                                                         [rulesConfigDescriptionOptional]="rulesConfigDescription()"
+                                                         [rulesConfigDescription]="rulesConfigDescription()"
                                                          [editable]="viewInfo.canEditConfig || false"
                                                          (updateCallback)="onRulesConfigUpdate($event)">
                                 </app-rules-configuration>
@@ -263,7 +263,7 @@
                                         <li i18n>the game lasts at most <strong>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</strong></li>
                                     </ul>
                                     <app-rules-configuration #rulesConfigurationComponent
-                                                             [rulesConfigDescriptionOptional]="rulesConfigDescription()"
+                                                             [rulesConfigDescription]="rulesConfigDescription()"
                                                              [editable]="false"
                                                              [rulesConfigToDisplay]="getRulesConfigToDisplay()">
                                     </app-rules-configuration>

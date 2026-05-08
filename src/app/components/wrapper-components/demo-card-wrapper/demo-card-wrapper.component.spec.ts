@@ -23,7 +23,7 @@ describe('DemoCardComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
 
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
         testUtils.setInput('demoNodeInfo', nodeInfo);
@@ -142,9 +142,9 @@ describe('DemoCardComponent', () => {
 
         it('should provide initial default config to game component', fakeAsync(async() => {
             // Given any demo card
-            const defaultRulesConfig: MGPOptional<RulesConfig> = MGPOptional.of({
+            const defaultRulesConfig: RulesConfig = {
                 mais_quelles_belles_chaussettes: 42,
-            });
+            };
             await loadNode({
                 title: 'P4',
                 name: 'P4',
@@ -154,7 +154,7 @@ describe('DemoCardComponent', () => {
 
             // When calling getConfig
             spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
-            const actualDefaultRulesConfig: MGPOptional<RulesConfig> = await testUtils.getComponent().getConfig();
+            const actualDefaultRulesConfig: RulesConfig = testUtils.getComponent().getConfig();
 
             // Then the return should be the default game config
             expect(actualDefaultRulesConfig).toEqual(defaultRulesConfig);

@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DvonnMaxStacksHeuristic } from '../DvonnMaxStacksHeuristic';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnRules } from '../DvonnRules';
@@ -12,7 +12,7 @@ import { DvonnState } from '../DvonnState';
 describe('DvonnMaxStacksHeuristic', () => {
 
     let heuristic: DvonnMaxStacksHeuristic;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;

@@ -18,7 +18,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoCapturesAndFreedomHeuristic', () => {
 
     let heuristic: CoerceoCapturesAndFreedomHeuristic;
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new CoerceoCapturesAndFreedomHeuristic();

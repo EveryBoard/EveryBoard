@@ -13,7 +13,7 @@ import { CoerceoState } from '../CoerceoState';
 describe('CoerceoPiecesTilesFreedomHeuristic', () => {
 
     let heuristic: CoerceoPiecesTilesFreedomHeuristic;
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;

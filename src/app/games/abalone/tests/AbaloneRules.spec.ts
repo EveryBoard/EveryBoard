@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GameStatus } from '../../../jscaip/GameStatus';
@@ -20,7 +18,7 @@ describe('AbaloneRules', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
     const X: FourStatePiece = FourStatePiece.ONE;
     let rules: AbaloneRules;
-    const defaultConfig: MGPOptional<AbaloneConfig> = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: AbaloneConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbaloneRules.get();
@@ -432,10 +430,10 @@ describe('AbaloneRules', () => {
 
         it('should allow part to end earlier when configured so', () => {
             // Given a part that is configured with only one piece captured for victory
-            const customConfig: MGPOptional<AbaloneConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: AbaloneConfig = {
+                ...defaultConfig,
                 nbToCapture: 1,
-            });
+            };
             const winningBoard: FourStatePiece[][] = [
                 [N, N, N, N, X, X, X, X, X],
                 [N, N, N, X, X, X, X, X, X],
@@ -457,10 +455,10 @@ describe('AbaloneRules', () => {
 
         it('should allow to push with 5 pieces if config allows it', () => {
             // Given a board with 5 pieces aligned, and a config allowing to push them
-            const customConfig: MGPOptional<AbaloneConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: AbaloneConfig = {
+                ...defaultConfig,
                 maximumPushingGroupSize: 5,
-            });
+            };
             const board: FourStatePiece[][] = [
                 [N, N, N, N, X, X, X, X, X],
                 [N, N, N, X, X, X, X, X, X],

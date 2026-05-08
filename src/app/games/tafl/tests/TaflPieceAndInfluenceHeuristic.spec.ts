@@ -23,7 +23,7 @@ describe('TafPieceAndInfluenceHeuristic', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    let defaultConfig: MGPOptional<TaflConfig>;
+    let defaultConfig: TaflConfig;
 
     for (const tafl of [BrandhubRules, HnefataflRules, TablutRules]) {
 
