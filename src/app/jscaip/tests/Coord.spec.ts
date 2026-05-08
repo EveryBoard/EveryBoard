@@ -175,18 +175,18 @@ describe('Coord', () => {
             result: Coord;
         };
         const coordPlusDirectionPlusSteps: CoordPlusDirectionPlusStep[] = [
-            { title: 'should go back left when going too much right                         : ', coord: new Coord(7, 4), direction: Ordinal.RIGHT,      step: 1, result: new Coord(0, 4) },
-            { title: 'should go back right when going too much left                         : ', coord: new Coord(0, 4), direction: Ordinal.LEFT,       step: 1, result: new Coord(7, 4) },
-            { title: 'should go back top when going too much bottom                         : ', coord: new Coord(4, 7), direction: Ordinal.DOWN,       step: 1, result: new Coord(4, 0) },
-            { title: 'should go back bottom when going too much top                         : ', coord: new Coord(4, 0), direction: Ordinal.UP,         step: 1, result: new Coord(4, 7) },
-            { title: 'should go to other corner when diagonalign from corner                : ', coord: new Coord(0, 0), direction: Ordinal.UP_LEFT,    step: 1, result: new Coord(7, 7) },
-            { title: 'should go to other side when diagonligh from left border              : ', coord: new Coord(7, 4), direction: Ordinal.DOWN_RIGHT, step: 1, result: new Coord(0, 5) },
-            { title: 'should go back left when going too much right (double step)           : ', coord: new Coord(7, 4), direction: Ordinal.RIGHT,      step: 2, result: new Coord(1, 4) },
-            { title: 'should go back right when going too much left (double step)           : ', coord: new Coord(0, 4), direction: Ordinal.LEFT,       step: 2, result: new Coord(6, 4) },
-            { title: 'should go back top when going too much bottom (double step)           : ', coord: new Coord(4, 7), direction: Ordinal.DOWN,       step: 2, result: new Coord(4, 1) },
-            { title: 'should go back bottom when going too much top (double step)           : ', coord: new Coord(4, 0), direction: Ordinal.UP,         step: 2, result: new Coord(4, 6) },
-            { title: 'should go to other corner when diagonalign from corner (double step)  : ', coord: new Coord(0, 0), direction: Ordinal.UP_LEFT,    step: 2, result: new Coord(6, 6) },
-            { title: 'should go to other side when diagonligh from left border (double step): ', coord: new Coord(7, 4), direction: Ordinal.DOWN_RIGHT, step: 2, result: new Coord(1, 6) },
+            { title: 'should go back left when going too much right                         : ', coord: new Coord(7, 4), step: 1, result: new Coord(0, 4), direction: Ordinal.RIGHT },
+            { title: 'should go back right when going too much left                         : ', coord: new Coord(0, 4), step: 1, result: new Coord(7, 4), direction: Ordinal.LEFT },
+            { title: 'should go back top when going too much bottom                         : ', coord: new Coord(4, 7), step: 1, result: new Coord(4, 0), direction: Ordinal.DOWN },
+            { title: 'should go back bottom when going too much top                         : ', coord: new Coord(4, 0), step: 1, result: new Coord(4, 7), direction: Ordinal.UP },
+            { title: 'should go to other corner when diagonalign from corner                : ', coord: new Coord(0, 0), step: 1, result: new Coord(7, 7), direction: Ordinal.UP_LEFT },
+            { title: 'should go to other side when diagonligh from left border              : ', coord: new Coord(7, 4), step: 1, result: new Coord(0, 5), direction: Ordinal.DOWN_RIGHT },
+            { title: 'should go back left when going too much right (double step)           : ', coord: new Coord(7, 4), step: 2, result: new Coord(1, 4), direction: Ordinal.RIGHT },
+            { title: 'should go back right when going too much left (double step)           : ', coord: new Coord(0, 4), step: 2, result: new Coord(6, 4), direction: Ordinal.LEFT },
+            { title: 'should go back top when going too much bottom (double step)           : ', coord: new Coord(4, 7), step: 2, result: new Coord(4, 1), direction: Ordinal.DOWN },
+            { title: 'should go back bottom when going too much top (double step)           : ', coord: new Coord(4, 0), step: 2, result: new Coord(4, 6), direction: Ordinal.UP },
+            { title: 'should go to other corner when diagonalign from corner (double step)  : ', coord: new Coord(0, 0), step: 2, result: new Coord(6, 6), direction: Ordinal.UP_LEFT },
+            { title: 'should go to other side when diagonligh from left border (double step): ', coord: new Coord(7, 4), step: 2, result: new Coord(1, 6), direction: Ordinal.DOWN_RIGHT },
         ];
         for (const coordPlusDirectionPlusStep of coordPlusDirectionPlusSteps) {
             it(coordPlusDirectionPlusStep.title, () => {

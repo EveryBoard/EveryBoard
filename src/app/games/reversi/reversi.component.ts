@@ -66,13 +66,16 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
+        const width: number = this.getState().getWidth();
+        const height: number = this.getState().getHeight();
         for (const dir of Ordinal.ORDINALS) {
-            let captured: Coord = move.coord.getNext(dir, 1);
+            console.log('dir', dir)
+            let captured: Coord = move.coord.getNextToric(dir, width, height, 1);
             while (this.getState().hasPieceAt(captured, opponent) &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {
                 this.capturedCoords.push(captured);
-                captured = captured.getNext(dir, 1);
+                captured = captured.getNextToric(dir, width, height, 1);
             }
         }
     }

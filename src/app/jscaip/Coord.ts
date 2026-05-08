@@ -34,6 +34,7 @@ export class Coord extends Vector {
         const combinedVector: Vector = this.combine(dir, distance);
         const toricX: number = (combinedVector.x + boardWidth) % boardWidth;
         const toricY: number = (combinedVector.y + boardHeight) % boardHeight;
+        console.log('kekek', this.toString() + ' + ', dir.toString() + 'x', distance, '=', toricX, toricY)
         return new Coord(toricX, toricY);
     }
 
