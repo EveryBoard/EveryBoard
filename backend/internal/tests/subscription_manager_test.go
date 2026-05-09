@@ -20,6 +20,10 @@ func (m *MockConnection) SetWriteDeadline(t time.Time) error {
 	return nil
 }
 
+func (m *MockConnection) Close() error {
+	return nil
+}
+
 func TestSubscriptionWorkflow(t *testing.T) {
 	// Given a subscription manager with no subscription for client
 	manager := everyboard.NewSubscriptionManager[MockConnection]()

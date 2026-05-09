@@ -221,7 +221,7 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 	return sub, nil
 }
 
-func PrepareServer(t *testing.T) (func(), *FakeStore) {
+func PrepareServer(t *testing.T) (func(), *FakeStore, *everyboard.Configuration) {
 	os.Clearenv()
 	setenv(t, "USE_EMULATOR", "yes")
 	setenv(t, "PROJECT_ID", "my-project")
@@ -237,7 +237,7 @@ func PrepareServer(t *testing.T) (func(), *FakeStore) {
 	config.Store = fakeStore
 	config.Firebase = FirebaseMock{}
 
-	server, err := everyboard.Prepare(*config)
+	server, err := everyboard.Prepare(config)
 	if err != nil {
 		t.Fatalf("error when preparing the server: %v", err)
 	}
@@ -257,12 +257,12 @@ func PrepareServer(t *testing.T) (func(), *FakeStore) {
 			t.Fatalf("Shutdown failed: %v", err)
 		}
 	}
-	return stopServer, fakeStore
+	return stopServer, fakeStore, config
 }
 
 func TestCors(t *testing.T) {
 	// Given a server
-	stopServer, _ := PrepareServer(t)
+	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
 	// When doing a Options request
@@ -288,7 +288,7 @@ func TestCors(t *testing.T) {
 
 func TestWebSocketRequest(t *testing.T) {
 	// Given a server
-	stopServer, _ := PrepareServer(t)
+	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
 	// When doing a websocket request

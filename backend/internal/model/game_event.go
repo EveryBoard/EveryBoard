@@ -96,237 +96,210 @@ const (
 	EventTypeReply   EventType = "Reply"
 )
 
-type EventData struct {
-	Type    EventType
-	Payload any
+type EventData interface {
+	EventType() EventType
+	AllowedInConfigRoomStatus(status Status) bool
 }
 
-var (
-	EventDataSync      = EventData{Type: EventTypeAction, Payload: ActionPayload{Action: ActionSync}}
-	EventDataEndGame   = EventData{Type: EventTypeAction, Payload: ActionPayload{Action: ActionEndGame}}
-	EventDataStartGame = EventData{Type: EventTypeAction, Payload: ActionPayload{Action: ActionStartGame}}
-)
+type EventPayload struct {
+	EventData
+}
 
-func EventDataRequest(proposition Proposition) EventData {
-	return EventData{
-		Type:    EventTypeRequest,
-		Payload: RequestPayload{RequestType: proposition},
+func (e EventPayload) Value() (driver.Value, error) {
+	if e.EventData == nil {
+		return nil, fmt.Errorf("nil event data")
 	}
-}
-
-func EventDataReplyReject(proposition Proposition) EventData {
-	return EventData{
-		Type: EventTypeReply,
-		Payload: ReplyPayload{
-			RequestType: proposition,
-			Accept:      false,
-			Data:        nil,
-		},
+	// We need to flatten eventType into the same object as EventData.
+	// Since EventData is an interface, we can't use embedding for flattening.
+	// We use a map as a middle ground to achieve the flat structure.
+	data, err := json.Marshal(e.EventData)
+	if err != nil {
+		return nil, err
 	}
-}
-
-func EventDataReplyAccept(proposition Proposition, data json.RawMessage) EventData {
-	return EventData{
-		Type: EventTypeReply,
-		Payload: ReplyPayload{
-			RequestType: proposition,
-			Accept:      true,
-			Data:        data,
-		},
+	var res map[string]any
+	if err := json.Unmarshal(data, &res); err != nil {
+		return nil, err
 	}
+	res["eventType"] = e.EventType()
+	return json.Marshal(res)
 }
 
-func EventDataAddTime(kind AddTimeKind) EventData {
-	return EventData{
-		Type:    EventTypeAction,
-		Payload: ActionAddTime(kind),
-	}
-}
-
-func EventDataMove(move json.RawMessage) EventData {
-	return EventData{
-		Type:    EventTypeMove,
-		Payload: MovePayload{Move: move},
-	}
-}
-
-func (e EventData) AllowedInConfigRoomStatus(status Status) bool {
-	// Rematch is different from other events: it is only allowed after the game has finished
-	if e.Type == EventTypeRequest && e.Payload.(RequestPayload).RequestType == PropositionRematch {
-		return status == StatusFinished
-	}
-	if e.Type == EventTypeReply && e.Payload.(ReplyPayload).RequestType == PropositionRematch {
-		return status == StatusFinished
-	}
-	// Any other event is allowed only during play
-	return status == StatusStarted
-}
-
-func (e EventData) Value() (driver.Value, error) {
-	return json.Marshal(e)
-}
-
-func (e *EventData) Scan(value any) error {
+func (e *EventPayload) Scan(value any) error {
 	bytes, ok := value.([]byte)
 	if !ok {
-		return fmt.Errorf("failed to unmarshal EventData: not []byte")
+		return fmt.Errorf("failed to unmarshal EventPayload: not []byte")
 	}
-	return json.Unmarshal(bytes, e)
-}
-
-func (e EventData) MarshalJSON() ([]byte, error) {
-	payloadBytes, err := json.Marshal(e.Payload)
-	if err != nil {
-		return nil, err
-	}
-
-	var payloadFields map[string]json.RawMessage
-	err = json.Unmarshal(payloadBytes, &payloadFields)
-	if err != nil {
-		return nil, err
-	}
-	if payloadFields == nil {
-		return nil, fmt.Errorf("empty payload")
-	}
-
-	payloadFields["eventType"], err = json.Marshal(string(e.Type))
-	if err != nil {
-		return nil, err
-	}
-
-	return json.Marshal(payloadFields)
-}
-
-func (e *EventData) UnmarshalJSON(data []byte) error {
-	var raw map[string]json.RawMessage
-	err := json.Unmarshal(data, &raw)
+	data, err := UnmarshalEventData(bytes)
 	if err != nil {
 		return err
 	}
-
-	typeField, ok := raw["eventType"]
-	if !ok {
-		return fmt.Errorf("missing eventType field")
-	}
-	err = json.Unmarshal(typeField, &e.Type)
-	if err != nil {
-		return err
-	}
-	delete(raw, "eventType")
-
-	payloadBytes, err := json.Marshal(raw)
-	if err != nil {
-		return err
-	}
-
-	switch e.Type {
-	case EventTypeRequest:
-		var p RequestPayload
-		if err := json.Unmarshal(payloadBytes, &p); err != nil {
-			return err
-		}
-		e.Payload = p
-	case EventTypeReply:
-		var p ReplyPayload
-		if err := json.Unmarshal(payloadBytes, &p); err != nil {
-			return err
-		}
-		e.Payload = p
-	case EventTypeAction:
-		var p ActionPayload
-		if err := json.Unmarshal(payloadBytes, &p); err != nil {
-			return err
-		}
-		e.Payload = p
-	case EventTypeMove:
-		var p MovePayload
-		if err := json.Unmarshal(payloadBytes, &p); err != nil {
-			return err
-		}
-		e.Payload = p
-	default:
-		return fmt.Errorf("unknown EventType: %s", e.Type)
-	}
-
+	e.EventData = data
 	return nil
 }
 
+func (p RequestPayload) AllowedInConfigRoomStatus(status Status) bool {
+	if p.RequestType == PropositionRematch {
+		return status == StatusFinished
+	}
+	return status == StatusStarted
+}
+
+func (p ReplyPayload) AllowedInConfigRoomStatus(status Status) bool {
+	if p.RequestType == PropositionRematch {
+		return status == StatusFinished
+	}
+	return status == StatusStarted
+}
+
+func (ActionPayload) AllowedInConfigRoomStatus(status Status) bool {
+	return status == StatusStarted
+}
+
+func (MovePayload) AllowedInConfigRoomStatus(status Status) bool {
+	return status == StatusStarted
+}
+
+func (RequestPayload) EventType() EventType { return EventTypeRequest }
+func (ReplyPayload) EventType() EventType   { return EventTypeReply }
+func (ActionPayload) EventType() EventType  { return EventTypeAction }
+func (MovePayload) EventType() EventType    { return EventTypeMove }
+
+func WrapEventData(e EventData) EventPayload {
+	return EventPayload{e}
+}
+
+var (
+	EventDataSync      = WrapEventData(ActionPayload{Action: ActionSync})
+	EventDataEndGame   = WrapEventData(ActionPayload{Action: ActionEndGame})
+	EventDataStartGame = WrapEventData(ActionPayload{Action: ActionStartGame})
+)
+
+func EventDataRequest(proposition Proposition) EventPayload {
+	return WrapEventData(RequestPayload{RequestType: proposition})
+}
+
+func EventDataReplyReject(proposition Proposition) EventPayload {
+	return WrapEventData(ReplyPayload{
+		RequestType: proposition,
+		Accept:      false,
+		Data:        nil,
+	})
+}
+
+func EventDataReplyAccept(proposition Proposition, data json.RawMessage) EventPayload {
+	return WrapEventData(ReplyPayload{
+		RequestType: proposition,
+		Accept:      true,
+		Data:        data,
+	})
+}
+
+func EventDataAddTime(kind AddTimeKind) EventPayload {
+	return WrapEventData(ActionAddTime(kind))
+}
+
+func EventDataMove(move json.RawMessage) EventPayload {
+	return WrapEventData(MovePayload{Move: move})
+}
+
+func UnmarshalEventData(data []byte) (EventData, error) {
+	var helper struct {
+		EventType EventType `json:"eventType"`
+	}
+	err := json.Unmarshal(data, &helper)
+	if err != nil {
+		return nil, err
+	}
+
+	var e EventData
+	switch helper.EventType {
+	case EventTypeRequest:
+		var p RequestPayload
+		if err := json.Unmarshal(data, &p); err != nil {
+			return nil, err
+		}
+		e = p
+	case EventTypeReply:
+		var p ReplyPayload
+		if err := json.Unmarshal(data, &p); err != nil {
+			return nil, err
+		}
+		e = p
+	case EventTypeAction:
+		var p ActionPayload
+		if err := json.Unmarshal(data, &p); err != nil {
+			return nil, err
+		}
+		e = p
+	case EventTypeMove:
+		var p MovePayload
+		if err := json.Unmarshal(data, &p); err != nil {
+			return nil, err
+		}
+		e = p
+	default:
+		return nil, fmt.Errorf("unknown EventType: %s", helper.EventType)
+	}
+
+	return e, nil
+}
+
 type GameEvent struct {
-	ID        uint64      `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
-	GameID    GameID      `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
-	Timestamp int64       `gorm:"not null" json:"timestamp"`
-	User      MinimalUser `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
-	Data      EventData   `gorm:"not null;serializer:json" json:"data"`
+	ID        uint64       `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
+	GameID    GameID       `gorm:"index;not null;foreignKey:ConfigRoom" json:"-"`
+	Timestamp int64        `gorm:"not null" json:"timestamp"`
+	User      MinimalUser  `gorm:"not null;embedded;embeddedPrefix:user_" json:"user"`
+	Data      EventPayload `gorm:"not null;type:json" json:"data"`
 }
 
 var GameEventRows = []string{"id", "game_id", "timestamp", "user_id", "user_name", "data"}
 
 func (e GameEvent) MarshalJSON() ([]byte, error) {
-	dataBytes, err := json.Marshal(e.Data)
+	if e.Data.EventData == nil {
+		return nil, fmt.Errorf("nil event data")
+	}
+
+	// Since EventData is an interface, embedding it in a struct does not flatten it
+	// (it would be under an "EventData" key). To achieve the flat structure required
+	// by the frontend, we marshal the payload and then merge in the common fields.
+	data, err := json.Marshal(e.Data.EventData)
 	if err != nil {
 		return nil, err
 	}
 
-	var dataFields map[string]json.RawMessage
-	err = json.Unmarshal(dataBytes, &dataFields)
-	if err != nil {
+	var res map[string]any
+	if err := json.Unmarshal(data, &res); err != nil {
 		return nil, err
 	}
 
-	dataFields["timestamp"], err = json.Marshal(e.Timestamp)
-	if err != nil {
-		return nil, err
-	}
+	res["timestamp"] = e.Timestamp
+	res["user"] = e.User
+	res["eventType"] = e.Data.EventType()
 
-	dataFields["user"], err = json.Marshal(e.User)
-	if err != nil {
-		return nil, err
-	}
-
-	return json.Marshal(dataFields)
+	return json.Marshal(res)
 }
 
 func (e *GameEvent) UnmarshalJSON(data []byte) error {
-	var raw map[string]json.RawMessage
-	err := json.Unmarshal(data, &raw)
+	type helper struct {
+		Timestamp int64       `json:"timestamp"`
+		User      MinimalUser `json:"user"`
+	}
+	var h helper
+	if err := json.Unmarshal(data, &h); err != nil {
+		return err
+	}
+
+	eventData, err := UnmarshalEventData(data)
 	if err != nil {
 		return err
 	}
 
-	timestampField, ok := raw["timestamp"]
-	if !ok {
-		return fmt.Errorf("missing timestamp field")
-	}
-	delete(raw, "timestamp")
+	e.Timestamp = h.Timestamp
+	e.User = h.User
+	e.Data = WrapEventData(eventData)
 
-	userField, ok := raw["user"]
-	if !ok {
-		return fmt.Errorf("missing user field")
-	}
-	delete(raw, "user")
-
-	err = json.Unmarshal(timestampField, &e.Timestamp)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(userField, &e.User)
-	if err != nil {
-		return err
-	}
-
-	rawBytes, err := json.Marshal(raw)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(rawBytes, &e.Data)
-	if err != nil {
-		return err
-	}
-
-	if e.Data.Type == EventTypeMove {
-		if string(e.Data.Payload.(MovePayload).Move) == "" {
+	if p, ok := e.Data.EventData.(MovePayload); ok {
+		if string(p.Move) == "" {
 			return fmt.Errorf("missing move payload")
 		}
 	}

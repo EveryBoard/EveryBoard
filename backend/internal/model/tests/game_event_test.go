@@ -7,7 +7,7 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-func MakeGameEvent(data model.EventData) model.GameEvent {
+func MakeGameEvent(data model.EventPayload) model.GameEvent {
 	minimalUser := model.MinimalUser{ID: "foo", Name: "foo"}
 	return model.GameEvent{
 		Timestamp: 42,
@@ -79,11 +79,11 @@ func TestUnmarshalInvalidGameEventFails(t *testing.T) {
 
 func TestMarshalInvalidGameEventFails(t *testing.T) {
 	// Invalid because empty payload
-	ExpectMarshallingToFail(t, MakeGameEvent(model.EventData{Type: model.EventTypeMove, Payload: nil}))
+	ExpectMarshallingToFail(t, MakeGameEvent(model.WrapEventData(nil)))
 }
 
 func TestEventInGameOrNot(t *testing.T) {
-	expectToBeAllowedOnlyIn := func(eventData model.EventData, allowedStatus model.Status) {
+	expectToBeAllowedOnlyIn := func(eventData model.EventPayload, allowedStatus model.Status) {
 		for _, status := range model.AllStatus {
 			if status == allowedStatus {
 				if !eventData.AllowedInConfigRoomStatus(status) {

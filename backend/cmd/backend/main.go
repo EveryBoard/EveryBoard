@@ -13,7 +13,7 @@ func main() {
 		log.Fatalf("Error upon reading configuration: %v", err)
 	}
 	log.Println("Preparing EveryBoard...")
-	server, err := everyboard.Prepare(*config)
+	server, err := everyboard.Prepare(config)
 	if err != nil {
 		log.Fatalf("Error when preparing server: %v", err)
 	}

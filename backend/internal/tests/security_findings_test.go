@@ -3,7 +3,6 @@ package internal
 import (
 	"testing"
 
-	everyboard "github.com/EveryBoard/EveryBoard/internal"
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
@@ -70,13 +69,13 @@ import (
 
 // ROBUSTNESS FINDING: Unbounded Message Queue
 func TestUnboundedMessageQueue_Robustness(t *testing.T) {
-	stopServer, _ := PrepareServer(t)
+	stopServer, _, config := PrepareServer(t)
 	defer stopServer()
 
 	c := EstablishWebSocketConnection(t, "victim")
 	defer c.Close()
 
 	for i := 0; i < 1000; i++ {
-		everyboard.Connections.SendMessage(c, model.ErrorMessage{Reason: model.ErrorUnknownMessage.Msg})
+		config.Connections.SendMessage(c, model.ErrorMessage{Reason: model.ErrorUnknownMessage.Msg})
 	}
 }

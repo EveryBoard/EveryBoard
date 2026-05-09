@@ -70,8 +70,8 @@ func DecodeID(gameId string) (GameID, error) {
 		return GameIDLobby, nil
 	}
 
-	id, error := idEncoder.DecodeID(gameId)
-	return GameID(id), error
+	id, err := idEncoder.DecodeID(gameId)
+	return GameID(id), err
 }
 
 func (id GameID) MarshalJSON() ([]byte, error) {

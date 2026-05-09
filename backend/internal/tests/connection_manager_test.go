@@ -44,14 +44,14 @@ func TestConnectionWorkflow(t *testing.T) {
 	}
 
 	// We should be able to map the connection to the user
-	actualUser := manager.GetUserOfClient(otherConnection)
-	if actualUser == nil || actualUser.ID != user.ID {
+	actualUser, ok := manager.GetUserOfClient(otherConnection)
+	if !ok || actualUser.ID != user.ID {
 		t.Fatalf("connection manager did not properly map connection to user: %v", actualUser)
 	}
 	// And we should get nothing if we look for an unexisting connection
-	noUser := manager.GetUserOfClient(&MockConnection{ID: 44})
-	if noUser != nil {
-		t.Fatalf("connection manager should not have any user mapped to an unexisting connection, but it does: %v", noUser)
+	_, ok = manager.GetUserOfClient(&MockConnection{ID: 44})
+	if ok {
+		t.Fatalf("connection manager should not have any user mapped to an unexisting connection, but it does")
 	}
 
 	// When we remove a connection
@@ -87,6 +87,10 @@ func (c *CountMessagesConnection) WriteMessage(messageType int, data []byte) err
 }
 
 func (c *CountMessagesConnection) SetWriteDeadline(t time.Time) error {
+	return nil
+}
+
+func (c *CountMessagesConnection) Close() error {
 	return nil
 }
 func TestManyMessages(t *testing.T) {

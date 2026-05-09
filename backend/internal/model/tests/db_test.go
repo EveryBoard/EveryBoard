@@ -49,7 +49,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	}
 
 	// Add a candidate
-	err = store.AddCandidate(*configRoom, opponent, 42)
+	err = store.AddCandidate(configRoom, opponent, 42)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -160,7 +160,7 @@ func TestConfigRoomFlow(t *testing.T) {
 	}
 
 	// Delete the config room
-	err = store.DeleteConfigRoom(*configRoom)
+	err = store.DeleteConfigRoom(configRoom)
 	if err != nil {
 		t.Fatalf("cannot delete config room: %v", err)
 	}
@@ -186,7 +186,7 @@ func TestRematchForCreator(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -194,14 +194,14 @@ func TestRematchForCreator(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
 	}
-	game, err := store.CreateGame(*configRoom, 42, true)
+	game, err := store.CreateGame(configRoom, 42, true)
 	if err != nil {
 		t.Fatalf("cannot create game: %v", err)
 	}
 
 	// When creating a rematch
 	// Then it should work
-	rematch, err := store.CreateRematch(*configRoom, creator, *game)
+	rematch, err := store.CreateRematch(configRoom, creator, game)
 	if err != nil {
 		t.Fatalf("cannot create rematch: %v", err)
 	}
@@ -231,7 +231,7 @@ func TestRematchForOpponent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -239,14 +239,14 @@ func TestRematchForOpponent(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
 	}
-	game, err := store.CreateGame(*configRoom, 42, true)
+	game, err := store.CreateGame(configRoom, 42, true)
 	if err != nil {
 		t.Fatalf("cannot create game: %v", err)
 	}
 
 	// When creating a rematch
 	// Then it should work
-	rematch, err := store.CreateRematch(*configRoom, opponent, *game)
+	rematch, err := store.CreateRematch(configRoom, opponent, game)
 	if err != nil {
 		t.Fatalf("cannot create rematch: %v", err)
 	}
@@ -323,11 +323,11 @@ func TestCandidatesFlow(t *testing.T) {
 	// Then it should work as expected
 	candidate1 := model.MinimalUser{ID: "bar", Name: "bar"}
 	candidate2 := model.MinimalUser{ID: "baz", Name: "baz"}
-	err = store.AddCandidate(*configRoom, candidate1, 0)
+	err = store.AddCandidate(configRoom, candidate1, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, candidate2, 0)
+	err = store.AddCandidate(configRoom, candidate2, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -347,7 +347,7 @@ func TestCandidatesFlow(t *testing.T) {
 	}
 
 	expectCandidates(2)
-	err = store.DeleteCandidate(*configRoom, candidate1.ID)
+	err = store.DeleteCandidate(configRoom, candidate1.ID)
 	if err != nil {
 		t.Fatalf("cannot delete candidate: %v", err)
 	}
@@ -369,7 +369,7 @@ func TestDBGameFlow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -377,7 +377,7 @@ func TestDBGameFlow(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
 	}
-	game, err := store.CreateGame(*configRoom, 42, true)
+	game, err := store.CreateGame(configRoom, 42, true)
 	if err != nil {
 		t.Fatalf("cannot create game: %v", err)
 	}
@@ -386,7 +386,7 @@ func TestDBGameFlow(t *testing.T) {
 	// Then it should work as expected
 
 	// Adding an event
-	err = store.AddEvent(game.GameID, model.GameEvent{
+	err = store.AddEvent(game.GameID, &model.GameEvent{
 		Timestamp: 42,
 		User:      creator,
 		Data:      model.EventDataRequest(model.PropositionDraw),
@@ -412,7 +412,7 @@ func TestDBGameFlow(t *testing.T) {
 	expectEvents(1)
 
 	// Adding another event
-	err = store.AddEvent(game.GameID, model.GameEvent{
+	err = store.AddEvent(game.GameID, &model.GameEvent{
 		Timestamp: 42,
 		User:      opponent,
 		Data:      model.EventDataRequest(model.PropositionDraw),
@@ -452,7 +452,7 @@ func TestManyGameEvents(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -460,7 +460,7 @@ func TestManyGameEvents(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannnot select opponent: %v", err)
 	}
-	game, err := store.CreateGame(*configRoom, 42, true)
+	game, err := store.CreateGame(configRoom, 42, true)
 	if err != nil {
 		t.Fatalf("cannot create game: %v", err)
 	}
@@ -470,7 +470,7 @@ func TestManyGameEvents(t *testing.T) {
 
 	// Adding an event
 	for range 42 {
-		err = store.AddEvent(game.GameID, model.GameEvent{
+		err = store.AddEvent(game.GameID, &model.GameEvent{
 			Timestamp: 42,
 			User:      creator,
 			Data:      model.EventDataAddTime(model.AddTimeGame),
@@ -510,7 +510,7 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -531,7 +531,7 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 	}
 
 	// When starting the game
-	game, err := store.CreateGame(*configRoom, 42, true)
+	game, err := store.CreateGame(configRoom, 42, true)
 	if err != nil {
 		t.Fatalf("cannot create game: %v", err)
 	}
@@ -555,7 +555,7 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	if err != nil {
 		t.Fatalf("cannot create config room: %v", err)
 	}
-	err = store.AddCandidate(*configRoom, opponent, 0)
+	err = store.AddCandidate(configRoom, opponent, 0)
 	if err != nil {
 		t.Fatalf("cannot add candidate: %v", err)
 	}
@@ -576,7 +576,7 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	}
 
 	// When starting the game with a false boolean
-	game, err := store.CreateGame(*configRoom, 42, false)
+	game, err := store.CreateGame(configRoom, 42, false)
 	if err != nil {
 		t.Fatalf("cannot create game: %v", err)
 	}
@@ -612,7 +612,7 @@ func TestGameCreationWithoutOpponentFails(t *testing.T) {
 	}
 
 	// When starting the game
-	_, err = store.CreateGame(*configRoom, 42, true)
+	_, err = store.CreateGame(configRoom, 42, true)
 	// Then it should fail
 	if err == nil {
 		t.Fatalf("created a game succesfully although there is no opponent")
@@ -744,12 +744,13 @@ func TestSetCurrentGame(t *testing.T) {
 	currentGame := &model.CurrentGame{
 		GameID:   42,
 		GameName: gameName,
-		User:     user,
+		UserID:   user.ID,
+		UserName: user.Name,
 		Creator:  user,
 		Opponent: nil,
 		Role:     role,
 	}
-	err = store.SetCurrentGame(*currentGame)
+	err = store.SetCurrentGame(currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -779,13 +780,14 @@ func TestUpdateCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		User:     user,
+		UserID:   user.ID,
+		UserName: user.Name,
 		GameName: gameName,
 		Creator:  user,
 		Opponent: nil,
 		Role:     role,
 	}
-	err = store.SetCurrentGame(*currentGame)
+	err = store.SetCurrentGame(currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -793,7 +795,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 	// When updating the current game
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame.Opponent = &opponent
-	err = store.UpdateCurrentGame(user, *currentGame)
+	err = store.UpdateCurrentGame(user, currentGame)
 	if err != nil {
 		t.Fatalf("error when updating current game: %v", err)
 	}
@@ -824,13 +826,14 @@ func TestRemoveCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		User:     user,
+		UserID:   user.ID,
+		UserName: user.Name,
 		GameName: gameName,
 		Creator:  user,
 		Opponent: nil,
 		Role:     role,
 	}
-	err = store.SetCurrentGame(*currentGame)
+	err = store.SetCurrentGame(currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
@@ -861,19 +864,28 @@ func TestApplyToObservers(t *testing.T) {
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		User:     user1,
+		UserID:   user1.ID,
+		UserName: user1.Name,
 		GameName: "Go",
 		Creator:  user1,
 		Opponent: nil,
 		Role:     model.UserRoleObserver,
 	}
-	err = store.SetCurrentGame(*currentGame)
+	err = store.SetCurrentGame(currentGame)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}
 
-	currentGame.User = user2
-	err = store.SetCurrentGame(*currentGame)
+	currentGame2 := &model.CurrentGame{
+		GameID:   42,
+		UserID:   user2.ID,
+		UserName: user2.Name,
+		GameName: "Go",
+		Creator:  user1,
+		Opponent: nil,
+		Role:     model.UserRoleObserver,
+	}
+	err = store.SetCurrentGame(currentGame2)
 	if err != nil {
 		t.Fatalf("error when setting current game: %v", err)
 	}

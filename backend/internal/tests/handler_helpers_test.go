@@ -153,6 +153,7 @@ func toJSON(t *testing.T, v any) string {
 type ScenarioBuilder struct {
 	t                *testing.T
 	fakeStore        *FakeStore
+	config           *everyboard.Configuration
 	cleanupFunctions []func()
 
 	connections           map[string]*websocket.Conn
@@ -168,10 +169,11 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 	everyboard.NowFloat = func() float64 { return 42 }
 	everyboard.RandBool = func() bool { return true }
 
-	stopServer, fakeStore := PrepareServer(t)
+	stopServer, fakeStore, config := PrepareServer(t)
 	return ScenarioBuilder{
 		t:                     t,
 		fakeStore:             fakeStore,
+		config:                config,
 		cleanupFunctions:      []func(){stopServer},
 		connections:           make(map[string]*websocket.Conn),
 		users:                 make(map[string]model.MinimalUser),

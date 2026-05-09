@@ -3,7 +3,6 @@ package internal
 import (
 	"encoding/json"
 	"errors"
-	"log"
 	"sync"
 	"time"
 
@@ -18,10 +17,14 @@ type queue struct {
 	list []model.OutgoingMessage
 }
 
-func (q *queue) push(m model.OutgoingMessage) {
+func (q *queue) push(m model.OutgoingMessage) bool {
 	q.mu.Lock()
+	defer q.mu.Unlock()
+	if len(q.list) >= 256 {
+		return false
+	}
 	q.list = append(q.list, m)
-	q.mu.Unlock()
+	return true
 }
 
 func (q *queue) pop() (model.OutgoingMessage, bool) {
@@ -40,6 +43,7 @@ type ConnectionLike interface {
 	comparable
 	WriteMessage(messageType int, data []byte) error
 	SetWriteDeadline(t time.Time) error
+	Close() error
 }
 
 type infos struct {
@@ -96,14 +100,14 @@ func (connectionManager *ConnectionManager[Connection]) AddConnection(user model
 
 					toSend, err := json.Marshal([]any{message.Tag(), message})
 					if err != nil {
-						log.Printf("error when marshalling message: %v", err)
+						utils.DefaultLogger.Errorf("error when marshalling message: %v", err)
 					}
-					log.Printf("\033[32m>>> [%s] %v\033[0m", user.Name, string(toSend))
+					utils.DefaultLogger.Debugf(">>> [%s] %v", user.Name, string(toSend))
 					_ = client.SetWriteDeadline(time.Now().Add(10 * time.Second))
 					err = client.WriteMessage(websocket.TextMessage, toSend)
 					if err != nil && !(websocket.IsCloseError(err) || errors.Is(err, websocket.ErrCloseSent)) {
 						// in case the connection has been closed, we will ignore sent messages
-						log.Printf("error when sending message: %v", err)
+						utils.DefaultLogger.Errorf("error when sending message: %v", err)
 					}
 				}
 			case <-infos.done:
@@ -120,12 +124,16 @@ func (connectionManager *ConnectionManager[Connection]) SendMessage(client Conne
 
 	if !ok {
 		// Should never happen if the client has been properly added
-		log.Printf("Unexpected: sending a message to a non-existing client!")
+		utils.DefaultLogger.Errorf("Unexpected: sending a message to a non-existing client!")
 		return
 	}
 
 	// Queue the message and signal the handler
-	infos.queue.push(message)
+	if !infos.queue.push(message) {
+		utils.DefaultLogger.Errorf("Queue full for user %s, disconnecting", infos.user.Name)
+		_ = client.Close()
+		return
+	}
 	select {
 	case infos.signal <- struct{}{}:
 	default:
@@ -160,14 +168,14 @@ func (connectionManager *ConnectionManager[Connection]) AllUserConnections(user 
 	return clients.Clone()
 }
 
-func (connectionManager *ConnectionManager[Connection]) GetUserOfClient(client Connection) *model.MinimalUser {
+func (connectionManager *ConnectionManager[Connection]) GetUserOfClient(client Connection) (model.MinimalUser, bool) {
 	connectionManager.lock.RLock()
 	defer connectionManager.lock.RUnlock()
 
 	infos, exists := connectionManager.clientToInfos[client]
 	if !exists {
-		return nil
+		return model.MinimalUser{}, false
 	}
 
-	return &infos.user
+	return infos.user, true
 }

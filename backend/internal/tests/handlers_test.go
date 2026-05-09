@@ -11,7 +11,7 @@ import (
 )
 
 func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
-	stopServer, _ := PrepareServer(t)
+	stopServer, _, config := PrepareServer(t)
 	defer stopServer()
 
 	// Given an established connection
@@ -23,14 +23,14 @@ func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 	time.Sleep(100 * time.Millisecond)
 
 	// Then we should should be subscribed
-	if !everyboard.Subscriptions.IsSubscribed("foo") {
+	if !config.Subscriptions.IsSubscribed("foo") {
 		t.Fatalf("user should be subscribed")
 	}
 }
 
 func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 	everyboard.Now = func() int64 { return 42 }
-	stopServer, fakeStore := PrepareServer(t)
+	stopServer, fakeStore, _ := PrepareServer(t)
 	defer stopServer()
 
 	userFoo := model.MinimalUser{ID: "foo", Name: "foo"}
@@ -174,7 +174,7 @@ func TestAddTime(t *testing.T) {
 }
 
 func TestInvalidMessages(t *testing.T) {
-	stopServer, _ := PrepareServer(t)
+	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
 	client := EstablishWebSocketConnection(t, "player")
@@ -348,7 +348,7 @@ func TestSendChatMessageTooLong(t *testing.T) {
 
 func TestLobbyUserCannotSendMove(t *testing.T) {
 	// Given a lobby subscriber
-	stopServer, _ := PrepareServer(t)
+	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
 	c := EstablishWebSocketConnection(t, "malicious")

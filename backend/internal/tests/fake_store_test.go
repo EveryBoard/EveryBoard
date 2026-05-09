@@ -85,7 +85,7 @@ func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string)
 	return configRoom, nil
 }
 
-func (s *FakeStore) DeleteConfigRoom(configRoom model.ConfigRoom) error {
+func (s *FakeStore) DeleteConfigRoom(configRoom *model.ConfigRoom) error {
 	delete(s.ConfigRooms, configRoom.ID)
 	return nil
 }
@@ -134,7 +134,7 @@ func (s *FakeStore) FinishConfigRoom(configRoom *model.ConfigRoom) error {
 	return nil
 }
 
-func (s *FakeStore) CreateRematch(configRoom model.ConfigRoom, creator model.MinimalUser, game model.Game) (*model.ConfigRoom, error) {
+func (s *FakeStore) CreateRematch(configRoom *model.ConfigRoom, creator model.MinimalUser, game *model.Game) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(configRoom.GameName, creator)
 	if err != nil {
 		return nil, err
@@ -185,7 +185,7 @@ func (s *FakeStore) ApplyToConfigRooms(action func(model.ConfigRoom) error) erro
 	return nil
 }
 
-func (s *FakeStore) AddCandidate(configRoom model.ConfigRoom, user model.MinimalUser, elo float64) error {
+func (s *FakeStore) AddCandidate(configRoom *model.ConfigRoom, user model.MinimalUser, elo float64) error {
 	s.Candidates[configRoom.ID] = append(s.Candidates[configRoom.ID], model.Candidate{
 		GameID: configRoom.ID,
 		User:   user,
@@ -194,7 +194,7 @@ func (s *FakeStore) AddCandidate(configRoom model.ConfigRoom, user model.Minimal
 	return nil
 }
 
-func (s *FakeStore) DeleteCandidate(configRoom model.ConfigRoom, uid string) error {
+func (s *FakeStore) DeleteCandidate(configRoom *model.ConfigRoom, uid string) error {
 	candidates := s.Candidates[configRoom.ID]
 	for i, c := range candidates {
 		if c.User.ID == uid {
@@ -218,7 +218,7 @@ func (s *FakeStore) GetGame(gameId model.GameID) (*model.Game, error) {
 	return s.Games[gameId], nil
 }
 
-func (s *FakeStore) CreateGame(configRoom model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
+func (s *FakeStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
 	if configRoom.ChosenOpponent == nil {
 		return nil, fmt.Errorf("cannot create a game if a config room has no opponent")
 	}
@@ -267,9 +267,9 @@ func (s *FakeStore) SetGameResult(game *model.Game, result model.Result) error {
 	return nil
 }
 
-func (s *FakeStore) AddEvent(gameId model.GameID, event model.GameEvent) error {
+func (s *FakeStore) AddEvent(gameId model.GameID, event *model.GameEvent) error {
 	event.GameID = gameId
-	s.Events[gameId] = append(s.Events[gameId], event)
+	s.Events[gameId] = append(s.Events[gameId], *event)
 	return nil
 }
 
@@ -330,22 +330,13 @@ func (s *FakeStore) GetCurrentGame(user model.MinimalUser) (*model.CurrentGame, 
 	return s.CurrentGames[user.ID], nil
 }
 
-func (s *FakeStore) SetCurrentGame(currentGame model.CurrentGame) error {
-	cg := currentGame
-	s.CurrentGames[currentGame.User.ID] = &cg
+func (s *FakeStore) SetCurrentGame(currentGame *model.CurrentGame) error {
+	s.CurrentGames[currentGame.UserID] = currentGame
 	return nil
 }
 
-func (s *FakeStore) UpdateCurrentGame(user model.MinimalUser, currentGame model.CurrentGame) error {
-	existing, ok := s.CurrentGames[user.ID]
-	if !ok {
-		return fmt.Errorf("no current game for user %s", user.ID)
-	}
-	existing.GameID = currentGame.GameID
-	existing.GameName = currentGame.GameName
-	existing.Creator = currentGame.Creator
-	existing.Opponent = currentGame.Opponent
-	existing.Role = currentGame.Role
+func (s *FakeStore) UpdateCurrentGame(user model.MinimalUser, currentGame *model.CurrentGame) error {
+	s.CurrentGames[user.ID] = currentGame
 	return nil
 }
 
@@ -373,7 +364,7 @@ func (s *FakeStore) ApplyToObservers(gameId model.GameID, action func(model.Mini
 	var observers []model.MinimalUser
 	for _, cg := range s.CurrentGames {
 		if cg.GameID == gameId && cg.Role == model.UserRoleObserver {
-			observers = append(observers, cg.User)
+			observers = append(observers, cg.GetUser())
 		}
 	}
 	for _, observer := range observers {
