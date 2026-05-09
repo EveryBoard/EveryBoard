@@ -223,23 +223,13 @@ implements AI<M, S, O, C>
         }
     }
 
-<<<<<<< HEAD
     private getBestMoves(node: GameNode<M, S>,
                          possibleMoves: Set<M>,
                          depth: number,
                          alpha: BoardValue,
                          beta: BoardValue,
-                         config: MGPOptional<C>)
+                         config: C)
     : { move: M, score: BoardValue }[]
-=======
-    private getBestChildren(node: GameNode<M, S>,
-                            possibleMoves: Set<M>,
-                            depth: number,
-                            alpha: BoardValue,
-                            beta: BoardValue,
-                            config: C)
-    : GameNode<M, S>[]
->>>>>>> 0fd9b88908567a684ac2a9cc76f6074dfbf0bde2
     {
         let bestMoves: { move: M, score: BoardValue }[] = [];
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
@@ -281,11 +271,7 @@ implements AI<M, S, O, C>
         return bestMoves;
     }
 
-<<<<<<< HEAD
-    protected getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
-=======
-    private getExpectedExtremum(node: GameNode<M, S>, config: C): BoardValue {
->>>>>>> 0fd9b88908567a684ac2a9cc76f6074dfbf0bde2
+    protected getExpectedExtremum(node: GameNode<M, S>, config: C): BoardValue {
         const childValue: BoardValue = this.getScore(node, config);
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         if (currentPlayer === Player.ZERO) {
@@ -378,7 +364,7 @@ export class Minimax<M extends Move,
         }
     }
 
-    public doChooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
+    public doChooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: C): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
         const boardValue: BoardValue = this.getExpectedExtremum(node, config);
@@ -406,7 +392,7 @@ export class IterativeDeepeningMinimax<M extends Move,
         }
     }
 
-    public doChooseNextMove(node: GameNode<M, S>, options: AITimeLimitOptions, config: MGPOptional<C>): M {
+    public doChooseNextMove(node: GameNode<M, S>, options: AITimeLimitOptions, config: C): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
         const boardValue: BoardValue = this.getExpectedExtremum(node, config);
