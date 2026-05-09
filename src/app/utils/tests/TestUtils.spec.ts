@@ -23,7 +23,7 @@ import { OGWCTimeManagerService } from '../../components/wrapper-components/onli
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { AIOptions } from '../../jscaip/AI/AI';
+import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
@@ -895,7 +895,7 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
 export function minimaxTest<R extends SuperRules<M, S, C, L>,
                             M extends Move,
                             S extends GameState,
-                            O extends AIOptions,
+                            O extends AIDepthLimitOptions,
                             C extends RulesConfig,
                             L>(options: MinimaxTestOptions<R, M, S, O, C, L>): void
 {

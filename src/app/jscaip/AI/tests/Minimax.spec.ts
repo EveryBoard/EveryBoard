@@ -90,7 +90,7 @@ describe('Minimax', () => {
         expect(ArrayUtils.getRandomElement).not.toHaveBeenCalled();
     });
 
-    it('should have getBestChildren return all children when all have the same value', () => {
+    it('should have getBestMove return all moves when all have the same value', () => {
         // Given any node with equivalent moves
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -107,8 +107,8 @@ describe('Minimax', () => {
         const possibleMoves: Set<P4Move> = new Set([P4Move.of(0), P4Move.of(6)]);
         const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
 
-        // When calling getBestChildren on it
-        const bestChildrens: P4Node[] = minimax['getBestChildren'](
+        // When calling getBestMove on it
+        const bestMoves: { move: P4Move, score: BoardValue }[] = minimax['getBestMoves'](
             node,
             possibleMoves,
             1,
@@ -118,7 +118,7 @@ describe('Minimax', () => {
         );
 
         // Then all the choice should be best choices
-        expect(bestChildrens.length).toBe(2);
+        expect(bestMoves.length).toBe(2);
     });
 
 });
