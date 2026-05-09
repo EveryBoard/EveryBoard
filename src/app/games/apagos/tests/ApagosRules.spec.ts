@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Player } from '../../../jscaip/Player';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ApagosFailure } from '../ApagosFailure';
@@ -12,7 +10,7 @@ import { ApagosState } from '../ApagosState';
 describe('ApagosRules', () => {
 
     let rules: ApagosRules;
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     let stateWithOneFullSquare: ApagosState;
 
@@ -194,10 +192,10 @@ describe('ApagosRules', () => {
 
         it('should give a [4, 3, 2, 1] board when increment is 1 and size is 4', () => {
             // Given the initial state with a custom config with increment = 1
-            const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: ApagosConfig = {
+                ...defaultConfig,
                 increment: 1,
-            });
+            };
 
             // When creating initial state with it
             const state: ApagosState = ApagosRules.get().getInitialState(customConfig);
@@ -208,10 +206,10 @@ describe('ApagosRules', () => {
 
         it('should give by default just enough piece to dominate odd squares and occupy half in even squares', () => {
             // Given the initial state with a custom config with increment = 1
-            const customConfig: MGPOptional<ApagosConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: ApagosConfig = {
+                ...defaultConfig,
                 increment: 1,
-            });
+            };
 
             // When creating initial state with it
             const state: ApagosState = ApagosRules.get().getInitialState(customConfig);

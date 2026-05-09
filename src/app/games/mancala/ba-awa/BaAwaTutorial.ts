@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -10,7 +8,7 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 import { BaAwaConfig } from './BaAwaConfig';
 import { BaAwaRules } from './BaAwaRules';
 
-const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
+const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
 
 export class BaAwaTutorial extends Tutorial {
 

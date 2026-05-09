@@ -2,8 +2,6 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
@@ -18,7 +16,7 @@ import { BaAwaComponent } from '../ba-awa.component';
 describe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
-    const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
+    const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
 
     doMancalaComponentTests({
         component: BaAwaComponent,
@@ -132,10 +130,10 @@ describe('BaAwaComponent', () => {
 
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
             // Given a Ba-awa state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
-            });
+            };
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
 
@@ -143,16 +141,16 @@ describe('BaAwaComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then this should trigger a single distribution move
-            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig);
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
             // Given a Ba-awa state with where multiple so would be possible, and the first sowing is done
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [1, 0, 1, 1, 1, 0],
@@ -164,7 +162,7 @@ describe('BaAwaComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
 
             // Then this should trigger a single distribution move
-            await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig);
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],

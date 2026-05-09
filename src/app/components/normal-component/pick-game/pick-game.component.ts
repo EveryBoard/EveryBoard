@@ -320,9 +320,9 @@ export class GameInfo {
         }
     }
 
-    public static getStateProvider(urlName: string): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
+    public static getStateProvider(urlName: string): MGPOptional<(config: RulesConfig) => GameState> {
         return GameInfo.getByUrlName(urlName).map((info: GameInfo) => {
-            return (config: MGPOptional<RulesConfig>) => {
+            return (config: RulesConfig) => {
                 return info.rules.getInitialState(config);
             };
         });
@@ -339,17 +339,13 @@ export class GameInfo {
     {
     }
 
-    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
+    public getRulesConfigDescription(): RulesConfigDescription<RulesConfig> {
         return this.rules.getRulesConfigDescription();
     }
 
-    public getRulesConfig(): MGPOptional<RulesConfig> {
-        const description: MGPOptional<RulesConfigDescription<RulesConfig>> = this.getRulesConfigDescription();
-        if (description.isPresent()) {
-            return MGPOptional.of(description.get().getDefaultConfig().config);
-        } else {
-            return MGPOptional.empty();
-        }
+    public getRulesConfig(): RulesConfig {
+        const description: RulesConfigDescription<RulesConfig> = this.getRulesConfigDescription();
+        return description.getDefaultConfig().config;
     }
 
 }

@@ -2,7 +2,7 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
@@ -57,7 +57,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             function expectPiecesNotToBeHighlighted(): void {
                 const component: C = testUtils.getGameComponent();
                 const rules: R = component.rules;
-                const defaultConfig: MGPOptional<TaflConfig> = rules.getDefaultRulesConfig();
+                const defaultConfig: TaflConfig = rules.getDefaultRulesConfig();
                 rules.getInitialState(defaultConfig)
                     .getCoordsAndContents()
                     .forEach((value: { coord: Coord, content: TaflPawn }) => {
@@ -213,7 +213,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
             const rules: R = testUtils.getGameComponent().rules;
             const encoder: Encoder<M> = testUtils.getGameComponent().encoder;
             const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(rules);
-            const defaultConfig: MGPOptional<TaflConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+            const defaultConfig: TaflConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
             const firstTurnMoves: M[] = moveGenerator
                 .getListMoves(rules.getInitialNode(defaultConfig), defaultConfig)
                 .map((move: TaflMove) => {

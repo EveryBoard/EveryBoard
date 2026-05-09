@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
@@ -8,7 +8,7 @@ import { PylosNode, PylosRules } from '../PylosRules';
 describe('PylosOrderedMoveGenerator', () => {
 
     let moveGenerator: PylosOrderedMoveGenerator;
-    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PylosRules.get().getDefaultRulesConfig();
     const coord0: PylosCoord = new PylosCoord(0, 0, 0);
     const coord1: PylosCoord = new PylosCoord(0, 0, 1);
     const coord2: PylosCoord = new PylosCoord(0, 0, 2);

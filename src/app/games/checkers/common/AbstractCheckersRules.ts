@@ -66,11 +66,10 @@ export class CheckersNode extends GameNode<CheckersMove, CheckersState> {}
 
 export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMove, CheckersState, CheckersConfig> {
 
-    public override getInitialState(optionalConfig: MGPOptional<CheckersConfig>): CheckersState {
+    public override getInitialState(config: CheckersConfig): CheckersState {
         const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
         const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
         const _: CheckersStack = CheckersStack.EMPTY;
-        const config: CheckersConfig = optionalConfig.get();
         const height: number = config.emptyRows + (2 * config.playerRows);
         const board: CheckersStack[][] = TableUtils.create(config.width, height, _);
         const occupiedSquare: number = config.occupyEvenSquare ? 0 : 1;
@@ -355,7 +354,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         return pieceMoves;
     }
 
-    public override applyLegalMove(move: CheckersMove, state: CheckersState, config: MGPOptional<CheckersConfig>)
+    public override applyLegalMove(move: CheckersMove, state: CheckersState, config: CheckersConfig)
     : CheckersState
     {
         return this.applyMove(move, state, config.get()).incrementTurn();
@@ -398,22 +397,22 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             coord.equals(move.getStartingCoord()) === false);
     }
 
-    public override isLegal(move: CheckersMove, state: CheckersState, config: MGPOptional<CheckersConfig>)
+    public override isLegal(move: CheckersMove, state: CheckersState, config: CheckersConfig)
     : MGPValidation
     {
-        const moveOwnershipValidity: MGPValidation = this.getMoveOwnershipValidity(move, state, config.get());
+        const moveOwnershipValidity: MGPValidation = this.getMoveOwnershipValidity(move, state, config);
         if (moveOwnershipValidity.isFailure()) { // out of range, opponent, empty spaces
             return moveOwnershipValidity;
         }
-        const moveValidity: MGPValidation = this.isLegalSubMoveList(move, state, config.get());
+        const moveValidity: MGPValidation = this.isLegalSubMoveList(move, state, config);
         if (moveValidity.isFailure()) {
             return moveValidity;
         }
-        const possibleCaptures: CheckersMove[] = this.getCompleteCaptures(state, config.get());
+        const possibleCaptures: CheckersMove[] = this.getCompleteCaptures(state, config);
         if (possibleCaptures.length === 0) {
             return MGPValidation.SUCCESS;
         } else {
-            return this.isLegalCaptureChoice(move, possibleCaptures, config.get());
+            return this.isLegalCaptureChoice(move, possibleCaptures, config);
         }
     }
 
@@ -663,10 +662,10 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         }
     }
 
-    public override getGameStatus(node: CheckersNode, config: MGPOptional<CheckersConfig>): GameStatus {
+    public override getGameStatus(node: CheckersNode, config: CheckersConfig): GameStatus {
         const state: CheckersState = node.gameState;
-        const captures: CheckersMove[] = this.getCompleteCaptures(state, config.get());
-        if (captures.length > 0 || this.getSteps(state, config.get()).length > 0) {
+        const captures: CheckersMove[] = this.getCompleteCaptures(state, config);
+        if (captures.length > 0 || this.getSteps(state, config).length > 0) {
             return GameStatus.ONGOING;
         } else {
             return GameStatus.getVictory(state.getCurrentOpponent());

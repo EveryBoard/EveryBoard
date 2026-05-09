@@ -15,7 +15,7 @@ import { SixState } from '../SixState';
 describe('SixRules', () => {
 
     let rules: SixRules;
-    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = Player.ZERO;
@@ -589,10 +589,10 @@ describe('SixRules', () => {
 
         it('should recognize victory when dropping below 6 pieces in shorter game', () => {
             // Given a custom config where you need to drop less pieces to reach second phase
-            const customConfig: MGPOptional<SixConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SixConfig = {
+                ...defaultConfig,
                 piecesPerPlayer: 5,
-            });
+            };
             // And a state in phase two
             const board: Table<PlayerOrNone> = [
                 [O, O, X, _, _],

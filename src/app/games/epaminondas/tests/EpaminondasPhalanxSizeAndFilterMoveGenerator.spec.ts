@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { EpaminondasMove } from '../EpaminondasMove';
@@ -16,7 +14,7 @@ describe('EpaminondasPhalanxSizeAndFilterMoveGenerator', () => {
 
     let rules: EpaminondasRules;
     let moveGenerator: EpaminondasPhalanxSizeAndFilterMoveGenerator;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = EpaminondasRules.get();

@@ -16,7 +16,7 @@ import { TablutRules } from '../tablut/TablutRules';
 describe('TaflPieceAndControlHeuristic', () => {
 
     let heuristic: TaflPieceAndControlHeuristic<TaflMove>;
-    let defaultConfig: MGPOptional<TaflConfig>;
+    let defaultConfig: TaflConfig;
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;

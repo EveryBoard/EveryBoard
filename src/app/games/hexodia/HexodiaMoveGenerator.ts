@@ -1,4 +1,4 @@
-import { MGPOptional, Set } from '@everyboard/lib';
+import { Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -11,7 +11,7 @@ import { HexodiaState } from './HexodiaState';
 
 export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaState, HexodiaConfig> {
 
-    public override getListMoves(node: HexodiaNode, _config: MGPOptional<HexodiaConfig>): HexodiaMove[] {
+    public override getListMoves(node: HexodiaNode, _config: HexodiaConfig): HexodiaMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {

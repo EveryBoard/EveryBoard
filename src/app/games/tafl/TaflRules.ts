@@ -33,10 +33,9 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         super();
     }
 
-    public override isLegal(move: TaflMove, state: TaflState, optionalConfig: MGPOptional<TaflConfig>)
+    public override isLegal(move: TaflMove, state: TaflState, config: TaflConfig)
     : MGPValidation
     {
-        const config: TaflConfig = optionalConfig.get();
         const player: Player = state.getCurrentPlayer();
         const validity: MGPValidation = this.getMoveValidity(player, move, state, config);
         if (validity.isFailure()) {
@@ -280,7 +279,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
 
     public override applyLegalMove(move: TaflMove,
                                    state: TaflState,
-                                   config: MGPOptional<TaflConfig>,
+                                   config: TaflConfig,
                                    _info: void): TaflState {
         const turn: number = state.turn;
 
@@ -291,7 +290,7 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         board[end.y][end.x] = board[start.y][start.x]; // move the piece to the new position
         board[start.y][start.x] = TaflPawn.UNOCCUPIED; // remove it from the previous position
         for (const d of Orthogonal.ORTHOGONALS) {
-            const captured: MGPOptional<Coord> = this.tryCapture(player, move.getEnd(), d, state, config.get());
+            const captured: MGPOptional<Coord> = this.tryCapture(player, move.getEnd(), d, state, config);
             if (captured.isPresent()) {
                 board[captured.get().y][captured.get().x] = TaflPawn.UNOCCUPIED;
             }
@@ -299,9 +298,8 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
         return new TaflState(board, turn + 1);
     }
 
-    public override getGameStatus(node: TaflNode<M>, optionalConfig: MGPOptional<TaflConfig>): GameStatus {
+    public override getGameStatus(node: TaflNode<M>, config: TaflConfig): GameStatus {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = optionalConfig.get();
 
         const winner: MGPOptional<Player> = this.getWinner(state, config);
         if (winner.isPresent()) {

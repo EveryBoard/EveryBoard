@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoHeuristic } from '../KamisadoHeuristic';
@@ -17,7 +17,7 @@ const b: KamisadoPiece = KamisadoPiece.ONE.BROWN;
 describe('KamisadoHeuristic', () => {
 
     let heuristic: KamisadoHeuristic;
-    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new KamisadoHeuristic();

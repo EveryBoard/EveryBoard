@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -10,7 +10,7 @@ import { MancalaTutorial } from '../common/MancalaTutorial';
 
 import { KalahRules } from './KalahRules';
 
-const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
 export class KalahTutorial extends Tutorial {
 

@@ -39,16 +39,16 @@ export class MyTaflRules extends TaflRules<MyTaflMove> {
         super(MyTaflMove.from);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
-        return MGPOptional.of(MyTaflRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
+        return MyTaflRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<TaflConfig>): TaflState {
+    public override getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-        if (config.get().invaderStarts === false) {
+        if (config.invaderStarts === false) {
             I = TaflPawn.PLAYER_ONE_PAWN;
             D = TaflPawn.PLAYER_ZERO_PAWN;
             K = TaflPawn.PLAYER_ZERO_KING;

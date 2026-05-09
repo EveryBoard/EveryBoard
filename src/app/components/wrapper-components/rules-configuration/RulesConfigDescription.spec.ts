@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { JSONValue, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { JSONValue, MGPValidation } from '@everyboard/lib';
 
 import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
@@ -11,26 +11,22 @@ describe(`RulesConfigDescriptions`, () => {
 
     for (const gameInfo of GameInfo.getAllGames()) {
 
-        const rulesConfigDescription: MGPOptional<RulesConfigDescription<RulesConfig>> =
+        const rulesConfigDescription: RulesConfigDescription<RulesConfig> =
             gameInfo.rules.getRulesConfigDescription();
 
-        if (rulesConfigDescription.isPresent()) {
+        it(`should have internationalized fields of ${ gameInfo.urlName }`, () => {
+            for (const field of rulesConfigDescription.getFields()) {
+                const defaultConfigDescription: DefaultConfigDescription =
+                    rulesConfigDescription.defaultConfigDescription;
+                expect(defaultConfigDescription.config[field].title().length).toBeGreaterThan(0);
+            }
+        });
 
-            it(`should have internationalized fields of ${ gameInfo.urlName }`, () => {
-                for (const field of rulesConfigDescription.get().getFields()) {
-                    const defaultConfigDescription: DefaultConfigDescription =
-                        rulesConfigDescription.get().defaultConfigDescription;
-                    expect(defaultConfigDescription.config[field].title().length).toBeGreaterThan(0);
-                }
-            });
-
-            it(`should have an internationalized name for each standard config of ${ gameInfo.urlName }`, () => {
-                for (const standardConfig of rulesConfigDescription.get().getStandardConfigs()) {
-                    expect(standardConfig.name().length).toBeGreaterThan(0);
-                }
-            });
-
-        }
+        it(`should have an internationalized name for each standard config of ${ gameInfo.urlName }`, () => {
+            for (const standardConfig of rulesConfigDescription.getStandardConfigs()) {
+                expect(standardConfig.name().length).toBeGreaterThan(0);
+            }
+        });
 
     }
 

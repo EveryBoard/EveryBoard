@@ -18,7 +18,7 @@ describe('TeekoRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: TeekoRules;
-    let defaultConfig: MGPOptional<TeekoConfig>;
+    let defaultConfig: TeekoConfig;
 
     function translate(start: Coord, end: Coord): TeekoMove {
         return TeekoTranslationMove.from(start, end).get();
@@ -389,9 +389,9 @@ describe('TeekoRules', () => {
                 [_, _, _, _, _],
             ];
             const state: TeekoState = new TeekoState(board, 8);
-            const customConfig: MGPOptional<TeekoConfig> = MGPOptional.of({
+            const customConfig: TeekoConfig = {
                 teleport: true,
-            });
+            };
 
             // When doing a teleportation
             const move: TeekoMove = translate(new Coord(0, 0), new Coord(2, 1));

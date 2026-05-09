@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
@@ -15,9 +13,8 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         super();
     }
 
-    public override getMetrics(node: TaflNode<M>, optConfig: MGPOptional<TaflConfig>): PlayerNumberTable {
+    public override getMetrics(node: TaflNode<M>, config: TaflConfig): PlayerNumberTable {
         const state: TaflState = node.gameState;
-        const config: TaflConfig = optConfig.get();
         // We just count the pawns
         const nbPlayerZeroPawns: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const nbPlayerOnePawns: number = this.rules.getPlayerListPawns(Player.ONE, state).length;

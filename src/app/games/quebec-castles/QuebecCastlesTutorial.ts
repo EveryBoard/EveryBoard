@@ -7,32 +7,32 @@ import { Coord } from '../../jscaip/Coord';
 import { QuebecCastlesMove } from './QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 
-const defaultConfig: MGPOptional<QuebecCastlesConfig> = QuebecCastlesRules.get().getDefaultRulesConfig();
-const rectangularWidthHeightConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-    ...defaultConfig.get(),
+const defaultConfig: QuebecCastlesConfig = QuebecCastlesRules.get().getDefaultRulesConfig();
+const rectangularWidthHeightConfig: QuebecCastlesConfig = {
+    ...defaultConfig,
     height: 12,
     width: 14,
     isRhombic: false,
-});
-const playersPlaceCastleConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-    ...defaultConfig.get(),
+};
+const playersPlaceCastleConfig: QuebecCastlesConfig = {
+    ...defaultConfig,
     playersPlaceCastle: true,
-});
-const dropByBatchConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-    ...defaultConfig.get(),
+};
+const dropByBatchConfig: QuebecCastlesConfig = {
+    ...defaultConfig,
     dropMode: 'BY_BATCH',
-});
-const dropPieceByPieceConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-    ...defaultConfig.get(),
+};
+const dropPieceByPieceConfig: QuebecCastlesConfig = {
+    ...defaultConfig,
     dropMode: 'PIECE_BY_PIECE',
-});
-const numberOfPieceAndTerritorySizeConfig: MGPOptional<QuebecCastlesConfig> = MGPOptional.of<QuebecCastlesConfig>({
-    ...defaultConfig.get(),
+};
+const numberOfPieceAndTerritorySizeConfig: QuebecCastlesConfig = {
+    ...defaultConfig,
     linesForTerritory: 3,
     dropMode: 'PIECE_BY_PIECE',
     defenders: 2,
     invaders: 5,
-});
+};
 
 export class QuebecCastlesTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -60,7 +60,7 @@ export class QuebecCastlesTutorial extends Tutorial {
             $localize`Custom config: rhombic, width, height`,
             $localize`You have the option to change the shape of the board, if it's not rhombic, it's rectangular. You also can change the size`,
             QuebecCastlesRules.get().getInitialState(rectangularWidthHeightConfig),
-            rectangularWidthHeightConfig,
+            MGPOptional.of(rectangularWidthHeightConfig),
         ),
         TutorialStep.anyMove(
             $localize`Custom config: place castle yourself`,
@@ -68,7 +68,7 @@ export class QuebecCastlesTutorial extends Tutorial {
             QuebecCastlesRules.get().getInitialState(playersPlaceCastleConfig),
             QuebecCastlesMove.drop([new Coord(7, 7)]),
             TutorialStepMessage.CONGRATULATIONS(),
-            playersPlaceCastleConfig,
+            MGPOptional.of(playersPlaceCastleConfig),
         ),
         TutorialStep.anyMove(
             $localize`Custom config: drop mode: by batch`,
@@ -86,7 +86,7 @@ export class QuebecCastlesTutorial extends Tutorial {
                 new Coord(8, 5),
             ]),
             TutorialStepMessage.CONGRATULATIONS(),
-            dropByBatchConfig,
+            MGPOptional.of(dropByBatchConfig),
         ),
         TutorialStep.anyMove(
             $localize`Custom config: drop mode: piece by piece`,
@@ -94,13 +94,13 @@ export class QuebecCastlesTutorial extends Tutorial {
             QuebecCastlesRules.get().getInitialState(dropPieceByPieceConfig),
             QuebecCastlesMove.drop([new Coord(7, 7)]),
             TutorialStepMessage.CONGRATULATIONS(),
-            dropPieceByPieceConfig,
+            MGPOptional.of(dropPieceByPieceConfig),
         ),
         TutorialStep.informational(
             $localize`Custom config: number of piece & territory size`,
             $localize`You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.`,
             QuebecCastlesRules.get().getInitialState(numberOfPieceAndTerritorySizeConfig),
-            numberOfPieceAndTerritorySizeConfig,
+            MGPOptional.of(numberOfPieceAndTerritorySizeConfig),
         ),
     ];
 }

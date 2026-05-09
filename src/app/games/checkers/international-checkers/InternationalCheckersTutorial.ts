@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -14,7 +14,7 @@ const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
 const _: CheckersStack = CheckersStack.EMPTY;
-const defaultConfig: MGPOptional<CheckersConfig> = InternationalCheckersRules.get().getDefaultRulesConfig();
+const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 
 export class InternationalCheckersTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
@@ -11,7 +9,7 @@ import { ApagosState } from './ApagosState';
 
 export class ApagosFullBoardHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState, ApagosConfig> {
 
-    public override getMetrics(node: ApagosNode, _config: MGPOptional<ApagosConfig>): PlayerNumberTable {
+    public override getMetrics(node: ApagosNode, _config: ApagosConfig): PlayerNumberTable {
         const result: PlayerNumberTable = PlayerNumberTable.of(
             [0, 0, 0, 0],
             [0, 0, 0, 0],

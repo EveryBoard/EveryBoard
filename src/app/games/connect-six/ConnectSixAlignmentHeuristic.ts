@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
 import { GobanConfig } from '../../jscaip/GobanConfig';
@@ -10,7 +8,7 @@ import { ConnectSixState } from './ConnectSixState';
 
 export class ConnectSixAlignmentHeuristic extends Heuristic<ConnectSixMove, ConnectSixState, BoardValue, GobanConfig> {
 
-    public getBoardValue(node: ConnectSixNode, _config: MGPOptional<GobanConfig>): BoardValue {
+    public getBoardValue(node: ConnectSixNode, _config: GobanConfig): BoardValue {
         const state: ConnectSixState = node.gameState;
         let score: number = 0;
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {

@@ -46,8 +46,8 @@ export class InternationalCheckersRules extends AbstractCheckersRules {
         return InternationalCheckersRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<CheckersConfig>> {
-        return MGPOptional.of(InternationalCheckersRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<CheckersConfig> {
+        return InternationalCheckersRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

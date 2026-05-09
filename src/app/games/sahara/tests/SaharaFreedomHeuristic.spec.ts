@@ -4,7 +4,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { SaharaFreedomHeuristic } from '../SaharaFreedomHeuristic';
 import { SaharaRules } from '../SaharaRules';
 import { SaharaState } from '../SaharaState';
@@ -12,7 +12,7 @@ import { SaharaState } from '../SaharaState';
 describe('SaharaFreedomHeuristic', () => {
 
     let heuristic: SaharaFreedomHeuristic;
-    const defaultConfig: NoConfig = SaharaRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = SaharaRules.get().getDefaultRulesConfig();
 
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
     const O: FourStatePiece = FourStatePiece.ZERO;

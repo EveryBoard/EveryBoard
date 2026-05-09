@@ -8,7 +8,7 @@ import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 
@@ -38,7 +38,7 @@ export class HiveRules extends Rules<HiveMove, HiveState> {
 
     public override applyLegalMove(move: HiveMove,
                                    state: HiveState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    _info: void)
     : HiveState
     {

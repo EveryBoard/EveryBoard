@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
@@ -11,7 +11,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 describe('LinesOfActionHeuristic', () => {
 
     let heuristic: LinesOfActionHeuristic;
-    const defaultConfig: NoConfig = LinesOfActionRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = LinesOfActionRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

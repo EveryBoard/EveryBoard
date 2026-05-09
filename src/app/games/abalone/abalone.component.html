@@ -4,7 +4,7 @@
      [attr.transform]="rotation"
      preserveAspectRatio="xMidYMid meet">
 
-    @for (invisibleSpace of boardNeighboringCoords; track invisibleSpace) {
+    @for (invisibleSpace of boardNeighboringCoords; track invisibleSpace.toString()) {
         <polygon id="invisible-space-{{ invisibleSpace.x }}-{{ invisibleSpace.y }}"
                  [attr.transform]="getHexaCenterTranslationAt(invisibleSpace)"
                  (click)="onInvisibleSpaceClick(invisibleSpace)"
@@ -37,7 +37,7 @@
         </g>
     }
 
-    @for (captured of captureds; track captured.coord) {
+    @for (captured of captureds; track captured.coord.toString()) {
         <g [attr.transform]="getHexaCenterTranslationAt(captured.coord)">
             <polygon id="captured-space-{{ captured.coord.x }}-{{ captured.coord.y }}"
                      [ngClass]="getSquareClassesAt(captured.coord)"

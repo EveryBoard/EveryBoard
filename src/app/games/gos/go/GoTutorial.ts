@@ -17,7 +17,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
+const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
 
 export class GoTutorial extends Tutorial {
 

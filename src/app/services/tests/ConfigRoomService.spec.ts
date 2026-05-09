@@ -75,7 +75,7 @@ describe('ConfigRoomService', () => {
                                              ignore);
 
             // When there are config room updates
-            const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+            const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
             updateConfigRoom('gameId', updatedConfigRoom);
             // Then we are notified about it
             expect(configRoom.isPresent()).toBeTrue();
@@ -186,7 +186,7 @@ describe('ConfigRoomService', () => {
                                              recordObservation);
             subscription.unsubscribe();
             // When anything occurs on the backend
-            const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+            const updatedConfigRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
             updateConfigRoom('gameId', updatedConfigRoom);
             const candidate: MinimalUser = UserMocks.CANDIDATE_MINIMAL_USER;
             addCandidate(candidate);

@@ -1,6 +1,6 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { GipfCapture, GipfProjectHelper } from '../../jscaip/GipfProjectHelper';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Table } from '../../jscaip/TableUtils';
 
 import { GipfMove, GipfPlacement } from './GipfMove';
@@ -9,7 +9,7 @@ import { GipfState } from './GipfState';
 
 export class GipfMoveGenerator extends MoveGenerator<GipfMove, GipfState> {
 
-    public override getListMoves(node: GipfNode, _config: NoConfig): GipfMove[] {
+    public override getListMoves(node: GipfNode, _config: EmptyRulesConfig): GipfMove[] {
         const state: GipfState = node.gameState;
         const moves: GipfMove[] = [];
 

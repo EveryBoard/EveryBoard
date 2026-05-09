@@ -1,7 +1,7 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
 import { PlayerOrNone } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';
@@ -9,7 +9,7 @@ import { TrexoState } from './TrexoState';
 
 export class TrexoAlignmentHeuristic extends Heuristic<TrexoMove, TrexoState> {
 
-    public getBoardValue(node: TrexoNode, _config: NoConfig): BoardValue {
+    public getBoardValue(node: TrexoNode, _config: EmptyRulesConfig): BoardValue {
         let score: number = 0;
         const state: TrexoState = node.gameState;
         for (const coordAndContent of state.getCoordsAndContents()) {

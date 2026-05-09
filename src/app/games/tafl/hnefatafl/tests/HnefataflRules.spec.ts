@@ -15,7 +15,7 @@ import { HnefataflNode, HnefataflRules } from '../HnefataflRules';
 describe('HnefataflRules', () => {
 
     let rules: HnefataflRules;
-    const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = HnefataflRules.get().getDefaultRulesConfig();
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;

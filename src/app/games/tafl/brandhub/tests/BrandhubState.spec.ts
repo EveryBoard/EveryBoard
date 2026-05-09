@@ -1,11 +1,9 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../../jscaip/Player';
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
 import { BrandhubRules } from '../BrandhubRules';
 
-const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
 describe('TaflState', () => {
 
@@ -13,10 +11,10 @@ describe('TaflState', () => {
 
         it('should make invader Player.ZERO when invaders start', () => {
             // Given an initial state with a config where invader starts
-            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: TaflConfig = {
+                ...defaultConfig,
                 invaderStarts: true,
-            });
+            };
             const state: TaflState = BrandhubRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord
@@ -27,10 +25,10 @@ describe('TaflState', () => {
 
         it('should make invader Player.ONE when invaders does not start', () => {
             // Given an initial state with a config where invader does not starts
-            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: TaflConfig = {
+                ...defaultConfig,
                 invaderStarts: false,
-            });
+            };
             const state: TaflState = BrandhubRules.get().getInitialState(customConfig);
 
             // When checking the invaders coord

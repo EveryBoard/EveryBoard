@@ -57,7 +57,7 @@ describe('HexagonalGoComponent', () => {
             [_, _, _, _, _, _, _, N, N, N, N, N, N],
         ];
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // When capturing a piece
         const move: GoMove = new GoMove(10, 8);
@@ -85,7 +85,7 @@ describe('HexagonalGoComponent', () => {
             [X, _, _, _, _, _, _, N, N, N, N, N, N],
         ];
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 2, MGPOptional.empty(), GoPhase.PLAYING);
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // When capturing a piece
         const move: GoMove = new GoMove(1, 12);
@@ -113,7 +113,7 @@ describe('HexagonalGoComponent', () => {
             [X, _, _, _, _, _, _, N, N, N, N, N, N],
         ];
         const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // When capturing a piece
         const move: GoMove = new GoMove(5, 7);
@@ -153,7 +153,7 @@ describe('HexagonalGoComponent', () => {
             new GoState(board, PlayerNumberMap.of(2, 4), 3, MGPOptional.empty(), GoPhase.COUNTING);
 
         // When rendering it
-        await testUtils.setupState(state, { config: MGPOptional.of({ size: 5 }) });
+        await testUtils.setupState(state, { config: { size: 5 } });
 
         // Then it should render the dead
         testUtils.expectElementToExist('#dead-0-11');

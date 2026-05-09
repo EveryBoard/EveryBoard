@@ -86,8 +86,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         };
     }
 
-    public static getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
-        const config: MancalaConfig = optionalConfig.get();
+    public static getInitialState(config: MancalaConfig): MancalaState {
         const board: number[][] = TableUtils.create(config.width, 2, config.seedsByHouse);
         return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
     }
@@ -96,10 +95,9 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         super();
     }
 
-    public override isLegal(move: MancalaMove, state: MancalaState, optionalConfig: MGPOptional<MancalaConfig>)
+    public override isLegal(move: MancalaMove, state: MancalaState, config: MancalaConfig)
     : MGPValidation
     {
-        const config: MancalaConfig = optionalConfig.get();
         const playerY: number = state.getCurrentPlayerY();
         let canStillPlay: boolean = true;
         for (const distribution of move) {
@@ -129,8 +127,8 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return MGPValidation.SUCCESS;
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<MancalaConfig>): MancalaState {
-        return MancalaRules.getInitialState(optionalConfig);
+    public override getInitialState(config: MancalaConfig): MancalaState {
+        return MancalaRules.getInitialState(config);
     }
 
     /**
@@ -233,10 +231,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return [];
     }
 
-    public override getGameStatus(node: MancalaNode, config: MGPOptional<C>): GameStatus {
+    public override getGameStatus(node: MancalaNode, config: C): GameStatus {
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
-        const seedsByHouse: number = config.get().seedsByHouse;
+        const seedsByHouse: number = config.seedsByHouse;
         const halfOfTotalSeeds: number = width * seedsByHouse;
         if (state.scores.get(Player.ZERO) > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
@@ -252,13 +250,13 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return GameStatus.ONGOING;
     }
 
-    public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MGPOptional<MancalaConfig>, _: void)
+    public override applyLegalMove(move: MancalaMove, state: MancalaState, config: MancalaConfig, _: void)
     : MancalaState
     {
-        const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config.get());
-        const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config.get());
+        const distributionsResult: MancalaDistributionResult = this.distributeMove(move, state, config);
+        const captureResult: MancalaCaptureResult = this.applyCapture(distributionsResult, config);
         let resultingState: MancalaState = captureResult.resultingState;
-        const playerToMonsoon: Player[] = this.mustMonsoon(resultingState, config.get());
+        const playerToMonsoon: Player[] = this.mustMonsoon(resultingState, config);
         if (playerToMonsoon.length === 1) {
             // if the player distributed their last seeds and the opponent could not give them seeds
             const monsoonResult: MancalaCaptureResult = this.monsoon(playerToMonsoon[0], captureResult);

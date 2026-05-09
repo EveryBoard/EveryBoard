@@ -6,7 +6,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 
@@ -36,8 +36,12 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         return new ConspirateursState(board, 0);
     }
 
-    public override applyLegalMove(move: ConspirateursMove, state: ConspirateursState, _config: NoConfig, _info: void)
-    : ConspirateursState
+    public override applyLegalMove(
+        move: ConspirateursMove,
+        state: ConspirateursState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): ConspirateursState
     {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
         if (ConspirateursMove.isDrop(move)) {

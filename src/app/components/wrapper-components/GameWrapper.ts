@@ -79,7 +79,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     protected async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>): Promise<void> {
         await this.createGameComponent(componentType);
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         this.gameComponent.config = config;
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         await this.setRole(this.role);
@@ -143,7 +143,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         const legality: MGPFallible<unknown> =
             this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState, config);
         if (legality.isFailure()) {
@@ -160,7 +160,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.isMoveAttemptOngoing = false;
     }
 
-    public getConfig(): MGPOptional<RulesConfig> {
+    public getConfig(): RulesConfig {
         const urlName: string = this.getGameUrlName();
         return RulesConfigUtils.getGameDefaultConfig(urlName);
     }

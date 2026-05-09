@@ -44,13 +44,13 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         return ApagosRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<ApagosConfig>> {
-        return MGPOptional.of(ApagosRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<ApagosConfig> {
+        return ApagosRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<ApagosConfig>): ApagosState {
-        const width: number = config.get().width;
-        const increment: number = config.get().increment;
+    public override getInitialState(config: ApagosConfig): ApagosState {
+        const width: number = config.width;
+        const increment: number = config.increment;
 
         const zeroPieces: number[] = [];
         const onePieces: number[] = [];
@@ -74,12 +74,12 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
 
     public override applyLegalMove(move: ApagosMove,
                                    state: ApagosState,
-                                   config: MGPOptional<ApagosConfig>,
+                                   config: ApagosConfig,
                                    _info: void)
     : ApagosState
     {
         if (move.isDrop()) {
-            return this.applyLegalDrop(move, state, config.get());
+            return this.applyLegalDrop(move, state, config);
         } else {
             return this.applyLegalTransfer(move, state);
         }
@@ -138,8 +138,8 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         return MGPValidation.SUCCESS;
     }
 
-    public override getGameStatus(node: ApagosNode, config: MGPOptional<ApagosConfig>): GameStatus {
-        const width: number = config.get().width;
+    public override getGameStatus(node: ApagosNode, config: ApagosConfig): GameStatus {
+        const width: number = config.width;
         const state: ApagosState = node.gameState;
         for (let x: number = 0; x < width; x++) {
             if (state.getPieceAt(x).isFull() === false) {

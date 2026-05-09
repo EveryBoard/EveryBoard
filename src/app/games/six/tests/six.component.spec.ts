@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
@@ -17,7 +15,7 @@ import { SixComponent } from '../six.component';
 describe('SixComponent', () => {
 
     let testUtils: ComponentTestUtils<SixComponent>;
-    const defaultConfig: MGPOptional<SixConfig> = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = Player.ZERO;
@@ -280,7 +278,7 @@ describe('SixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _],
             ];
             const state: SixState = SixState.ofRepresentation(board, 9);
-            const config: MGPOptional<SixConfig> = MGPOptional.of({ piecesPerPlayer: 5 });
+            const config: SixConfig = { piecesPerPlayer: 5 };
             await testUtils.setupState(state, { config });
             // When displaying it
             // Then the score should be 0 and 1 pieces to drop
@@ -308,10 +306,10 @@ describe('SixComponent', () => {
 
         it('should cancel move when clicking on empty space as first click after 10th turn on shorter configs', fakeAsync(async() => {
             // Given a game with shorter config, on second phase
-            const customConfig: MGPOptional<SixConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SixConfig = {
+                ...defaultConfig,
                 piecesPerPlayer: 5,
-            });
+            };
             const board: Table<PlayerOrNone> = [
                 [O],
                 [X],
@@ -330,10 +328,10 @@ describe('SixComponent', () => {
 
         it('should do movement after the 9th turn on shorter configs', fakeAsync(async() => {
             // Given a game with shorter config, on second phase
-            const customConfig: MGPOptional<SixConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SixConfig = {
+                ...defaultConfig,
                 piecesPerPlayer: 5,
-            });
+            };
             const board: Table<PlayerOrNone> = [
                 [O],
                 [X],

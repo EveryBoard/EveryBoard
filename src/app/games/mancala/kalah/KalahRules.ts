@@ -34,8 +34,8 @@ export class KalahRules extends MancalaRules {
         return KalahRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<MancalaConfig>> {
-        return MGPOptional.of(KalahRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {
+        return KalahRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {

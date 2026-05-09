@@ -1,6 +1,6 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Player } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { HiveMove } from './HiveMove';
 import { HivePiece } from './HivePiece';
@@ -9,7 +9,7 @@ import { HiveState } from './HiveState';
 
 export class HiveMoveGenerator extends MoveGenerator<HiveMove, HiveState> {
 
-    public override getListMoves(node: HiveNode, _config: NoConfig): HiveMove[] {
+    public override getListMoves(node: HiveNode, _config: EmptyRulesConfig): HiveMove[] {
         const dropMoves: HiveMove[] = this.getListDrops(node.gameState);
         const movesOnBoard: HiveMove[] = this.getListOfOnBoardMoves(node.gameState);
         const moves: HiveMove[] = dropMoves.concat(movesOnBoard);

@@ -2,7 +2,7 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Encoder, MGPOptional } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../../jscaip/Coord';
@@ -77,7 +77,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
     let testUtils: ComponentTestUtils<C>;
 
-    const defaultConfig: MGPOptional<CheckersConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+    const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
     describe(entries.gameName + ' component generic tests', () => {
 

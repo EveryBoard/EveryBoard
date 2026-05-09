@@ -14,7 +14,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('P4Heuristic', () => {
 
     let heuristic: P4Heuristic;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new P4Heuristic();

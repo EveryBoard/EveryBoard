@@ -30,7 +30,7 @@ describe('SiamRules', () => {
     const r: SiamPiece = SiamPiece.DARK_RIGHT;
     const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = SiamRules.get();
@@ -588,10 +588,10 @@ describe('SiamRules', () => {
 
         it('should allow inserting a 6th piece when config announce there are as much pieces', () => {
             // Given a state with a higher number of piece
-            const customConfig: MGPOptional<SiamConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SiamConfig = {
+                ...defaultConfig,
                 numberOfPiece: 6,
-            });
+            };
             const board: Table<SiamPiece> = [
                 [_, _, _, _, _],
                 [_, _, _, _, _],
@@ -618,10 +618,10 @@ describe('SiamRules', () => {
 
         it('should notice victory with lower amount of mountain', () => {
             // Given a board with at start only two mountains
-            const customConfig: MGPOptional<SiamConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: SiamConfig = {
+                ...defaultConfig,
                 numberOfBonusMountain: 1,
-            });
+            };
             const board: Table<SiamPiece> = [
                 [_, _, M, _, _],
                 [_, _, l, _, _],

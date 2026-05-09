@@ -22,9 +22,8 @@ type ConfigFormJSON = {
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
 
-    public readonly rulesConfigDescriptionOptional: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> =
-        input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
-    public rulesConfigDescription: RulesConfigDescription<RulesConfig>;
+    public readonly rulesConfigDescription: InputSignal<RulesConfigDescription<RulesConfig>> =
+        input.required<RulesConfigDescription<RulesConfig>>();
 
     // Only needed for the non-creator
     public readonly rulesConfigToDisplay: InputSignal<RulesConfig | undefined> = input<RulesConfig>();
@@ -61,8 +60,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public ngOnInit(): void {
         this.checkInputs();
         this.urlName = this.getGameUrlName();
-        if (this.isCustomisable()) {
-            const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription.getDefaultConfig();
+        if (this.isCustomizable()) {
+            const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
             this.setChosenConfig(defaultConfig.name());
         } else {
             return this.updateCallback.emit(MGPOptional.of({}));
@@ -109,7 +108,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         // Note: we may receive updates just because the form has changed from "editable" to "non editable"
         // (e.g., due to proposing to the opponent or clicking on "changing configuration").
         const rulesConfig: RulesConfig = {};
-        const fieldNames: string[] = this.rulesConfigDescription.getFields();
+        const fieldNames: string[] = this.rulesConfigDescription().getFields();
         for (const field of fieldNames) {
             if (this.isValid(field)) {
                 rulesConfig[field] = this.rulesConfigForm.controls[field].value;
@@ -124,7 +123,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private checkForValidators(rulesConfig: RulesConfig): void {
         const validators: ((config: RulesConfig) => MGPValidation)[] =
-            this.rulesConfigDescription.defaultConfigDescription.validators ?? [];
+            this.rulesConfigDescription().defaultConfigDescription.validators ?? [];
         this.errorMessages = [];
         for (const validator of validators) {
             const validation: MGPValidation = validator(rulesConfig);
@@ -140,22 +139,22 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public typeOfConfig(field: string): string {
-        const config: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
+        const config: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
         const value: ConfigDescriptionType = config[field];
         return typeof value;
     }
 
     public isValid(field: string): boolean {
-        return this.rulesConfigDescription.isValid(field, this.rulesConfigForm.controls[field].value);
+        return this.rulesConfigDescription().isValid(field, this.rulesConfigForm.controls[field].value);
     }
 
     public getErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
-        return this.rulesConfigDescription.getValidityError(field, fieldValue);
+        return this.rulesConfigDescription().getValidityError(field, fieldValue);
     }
 
     public getFields(): string[] {
-        return this.rulesConfigDescription.getFields();
+        return this.rulesConfigDescription().getFields();
     }
 
     public onChange(event: Event): void {
@@ -164,7 +163,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
-        const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription.defaultConfigDescription;
+        const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription().defaultConfigDescription;
         const config: EnumConfig = defaultConfig.config[field] as EnumConfig;
         return Object.keys(config.possibleValues).map((key: string) => {
             return {
@@ -186,26 +185,18 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private setChosenConfig(configName: string): void {
         this.chosenConfigName = configName;
         if (this.chosenConfigName === 'Custom') {
-            const defaultConfig: RulesConfig = this.rulesConfigDescription.getDefaultConfig().config;
+            const defaultConfig: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
             this.generateForm(defaultConfig, this.editable());
         } else {
-            const chosenConfig: RulesConfig = this.rulesConfigDescription.getConfig(this.chosenConfigName);
+            const chosenConfig: RulesConfig = this.rulesConfigDescription().getConfig(this.chosenConfigName);
             this.generateForm(chosenConfig, false);
             // Emit the config directly because standard config are always legal
             this.updateCallback.emit(MGPOptional.of(chosenConfig));
         }
     }
 
-    public isCustomisable(): boolean {
-        if (this.rulesConfigDescriptionOptional().isAbsent()) {
-            // This game has no configurability, so no need to show this component
-            return false;
-        } else {
-            Utils.assert(this.rulesConfigDescriptionOptional().get().getFields().length > 0,
-                         'If rulesConfigDescriptionOptional is present it should have fields !');
-            this.rulesConfigDescription = this.rulesConfigDescriptionOptional().get();
-            return true;
-        }
+    public isCustomizable(): boolean {
+        return this.rulesConfigDescription().isCustomizable();
     }
 
     public setEditable(editable: boolean): void {
@@ -233,7 +224,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
      */
     private getDefactoConfigName(): string {
         const currentConfig: RulesConfig = this.rulesConfigToDisplay() as RulesConfig;
-        const defaultConfigs: NamedRulesConfig<RulesConfig>[] = this.rulesConfigDescription.getStandardConfigs();
+        const defaultConfigs: NamedRulesConfig<RulesConfig>[] = this.rulesConfigDescription().getStandardConfigs();
         const matchingConfigs: NamedRulesConfig<RulesConfig>[] = defaultConfigs.filter(
             (nameConfig: NamedRulesConfig<RulesConfig>) => {
                 return comparableEquals(nameConfig.config, currentConfig);
