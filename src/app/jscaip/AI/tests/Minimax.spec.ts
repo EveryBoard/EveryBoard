@@ -36,7 +36,7 @@ describe('Minimax', () => {
         const getListMovesSpy: jasmine.Spy = spyOn(moveGenerator, 'getListMoves').and.callThrough();
 
         // Given the number of moves of a minimax without alpha-beta pruning
-        minimax.prune = false;
+        minimax['prune'] = false;
         let node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         const callsToGetBoardValueWithoutPruning: number = getBoardValueSpy.calls.count();
@@ -45,7 +45,7 @@ describe('Minimax', () => {
         getListMovesSpy.calls.reset();
 
         // When computing the same information with alpha-beta pruning enabled
-        minimax.prune = true;
+        minimax['prune'] = true;
         node = new P4Node(P4Rules.get().getInitialState(defaultConfig));
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         const callsToGetBoardValueWithPruning: number = getBoardValueSpy.calls.count();
@@ -72,7 +72,7 @@ describe('Minimax', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
-        minimax.random = true;
+        minimax['random'] = true;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         // Then it should have selected it randomly among all the best
@@ -83,7 +83,7 @@ describe('Minimax', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
-        minimax.random = false;
+        minimax['random'] = false;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         // Then it should have selected it randomly among all the best
