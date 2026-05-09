@@ -25,7 +25,7 @@ describe('HexagonalGoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
     const N: GoPiece = GoPiece.UNREACHABLE;
-    const defaultConfig: MGPOptional<HexagonalGoConfig> = HexagonalGoRules.get().getDefaultRulesConfig();
+    const defaultConfig: HexagonalGoConfig = HexagonalGoRules.get().getDefaultRulesConfig();
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 

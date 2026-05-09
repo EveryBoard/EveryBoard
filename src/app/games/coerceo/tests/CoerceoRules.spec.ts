@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
@@ -17,7 +16,7 @@ import { CoerceoState } from '../CoerceoState';
 describe('CoerceoRules', () => {
 
     let rules: CoerceoRules;
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -574,9 +573,9 @@ describe('CoerceoRules', () => {
 
         it('should mark Player.ZERO as winner when Player.ONE is out of pieces', () => {
             // Given a board where all piece of Player.ONE are dead, but on small config
-            const smallConfig: MGPOptional<CoerceoConfig> = MGPOptional.of({
+            const smallConfig: CoerceoConfig = {
                 smallBoard: true,
-            });
+            };
             const board: FourStatePiece[][] = [
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -600,9 +599,9 @@ describe('CoerceoRules', () => {
 
         it('should be a smaller board (for coverage)', () => {
             // Given the small config
-            const smallConfig: MGPOptional<CoerceoConfig> = MGPOptional.of({
+            const smallConfig: CoerceoConfig = {
                 smallBoard: true,
-            });
+            };
 
             // When creating state for this config
             const state: CoerceoState = rules.getInitialState(smallConfig);

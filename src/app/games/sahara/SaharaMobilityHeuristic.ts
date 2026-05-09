@@ -6,7 +6,7 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { SaharaMove } from './SaharaMove';
 import { SaharaNode, SaharaRules } from './SaharaRules';
@@ -18,7 +18,7 @@ export class SaharaMobilityHeuristic extends PlayerMetricHeuristic<SaharaMove, S
         super();
     }
 
-    public override getMetrics(node: SaharaNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: SaharaNode, _config: EmptyRulesConfig): PlayerNumberTable {
         const zeroMobilities: number[] = this.getMobilities(node.gameState, Player.ZERO);
         const oneMobilities: number[] = this.getMobilities(node.gameState, Player.ONE);
         // Inversing cause high number are bad for you, so good for the opponent

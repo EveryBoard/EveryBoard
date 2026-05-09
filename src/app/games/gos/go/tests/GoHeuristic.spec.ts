@@ -18,7 +18,7 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
-    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();

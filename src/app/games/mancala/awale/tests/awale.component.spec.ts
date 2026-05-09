@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
@@ -15,7 +13,7 @@ import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 import { AwaleComponent } from '../awale.component';
 
-const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
 describe('AwaleComponent', () => {
 
@@ -85,10 +83,10 @@ describe('AwaleComponent', () => {
 
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
             // Given an awale state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
-            });
+            };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
 
@@ -96,16 +94,16 @@ describe('AwaleComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
 
             // Then this should trigger a single distribution move
-            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig);
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
             // Given an awale state with where multiple so would be possible, and the first sowing is done
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            });
+            };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
             await mancalaTestUtils.expectClickSuccess('#click-3-1');
@@ -114,7 +112,7 @@ describe('AwaleComponent', () => {
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
 
             // Then this should trigger a single distribution move
-            await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, customConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, customConfig);
             const expectedState: MancalaState = new MancalaState([
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],

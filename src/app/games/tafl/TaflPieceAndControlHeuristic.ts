@@ -1,4 +1,4 @@
-import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
+import { MGPMap, Set } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
@@ -22,7 +22,7 @@ export type TaflPieceAndControlHeuristicMetrics = {
 
 export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceAndInfluenceHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>, config: TaflConfig): BoardValue {
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
         return BoardValue.multiMetric([
             metrics.safeScore,
@@ -31,7 +31,7 @@ export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceA
         ]);
     }
 
-    protected getControlScoreAndPieceScores(node: TaflNode<M>, config: MGPOptional<TaflConfig>)
+    protected getControlScoreAndPieceScores(node: TaflNode<M>, config: TaflConfig)
     : TaflPieceAndControlHeuristicMetrics
     {
         const state: TaflState = node.gameState;

@@ -13,7 +13,7 @@ const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-const defaultConfig: MGPOptional<TriangularGoConfig> = TriangularGoRules.get().getDefaultRulesConfig();
+const defaultConfig: TriangularGoConfig = TriangularGoRules.get().getDefaultRulesConfig();
 
 export class TriangularGoTutorial extends Tutorial {
 

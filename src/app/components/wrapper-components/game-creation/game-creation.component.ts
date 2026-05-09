@@ -85,8 +85,8 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     public readonly gameId: InputSignal<string> = input.required<string>();
 
-    public readonly rulesConfigDescription: InputSignal<MGPOptional<RulesConfigDescription<RulesConfig>>> =
-        input.required<MGPOptional<RulesConfigDescription<RulesConfig>>>();
+    public readonly rulesConfigDescription: InputSignal<RulesConfigDescription<RulesConfig>> =
+        input.required<RulesConfigDescription<RulesConfig>>();
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     public readonly gameStartNotification: OutputEmitterRef<ConfigRoom> = output<ConfigRoom>();
@@ -414,9 +414,9 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
     }
 
     private setConfigDemo(config: RulesConfig): void {
-        const stateProvider: MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> = this.getStateProvider();
+        const stateProvider: MGPOptional<(config: RulesConfig) => GameState> = this.getStateProvider();
         if (stateProvider.isPresent()) {
-            const state: GameState = stateProvider.get()(MGPOptional.of(config));
+            const state: GameState = stateProvider.get()(config);
             const node: AbstractNode = new GameNode(state);
             this.configDemo = {
                 click: MGPOptional.empty(),

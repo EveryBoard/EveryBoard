@@ -11,7 +11,7 @@ import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Table } from '../../jscaip/TableUtils';
 
 import { GipfFailure } from './GipfFailure';
@@ -52,7 +52,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
 
     public override applyLegalMove(_move: GipfMove,
                                    _state: GipfState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    computedState: GipfLegalityInformation)
     : GipfState
     {

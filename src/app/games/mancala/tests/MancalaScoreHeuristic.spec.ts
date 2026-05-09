@@ -6,7 +6,7 @@ import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { AwaleRules } from '../awale/AwaleRules';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { MancalaScoreHeuristic } from '../common/MancalaScoreHeurisic';
+import { MancalaScoreHeuristic } from '../common/MancalaScoreHeuristic';
 import { MancalaState } from '../common/MancalaState';
 import { KalahRules } from '../kalah/KalahRules';
 
@@ -20,7 +20,7 @@ describe('MancalaScoreHeuristic', () => {
 
     for (const mancala of [AwaleRules, KalahRules]) {
 
-        const defaultConfig: MGPOptional<MancalaConfig> = mancala.get().getDefaultRulesConfig();
+        const defaultConfig: MancalaConfig = mancala.get().getDefaultRulesConfig();
 
         it('should prefer board with better score', () => {
             // Given a board with a big score

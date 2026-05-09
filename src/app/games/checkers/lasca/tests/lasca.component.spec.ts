@@ -120,7 +120,7 @@ DoCheckersTests(lascaEntries);
 
 describe('LascaComponent', () => {
 
-    const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<LascaComponent>;
 
@@ -267,10 +267,10 @@ describe('LascaComponent', () => {
     describe('Custom configs', () => {
         it('should fail when doing invalid frisian capture', fakeAsync(async() => {
             // Given any board with a selected piece that could do a frisian capture
-            const customConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],

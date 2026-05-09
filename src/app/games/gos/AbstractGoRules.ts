@@ -369,7 +369,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
 
     public override applyLegalMove(legalMove: GoMove,
                                    state: GoState,
-                                   _config: MGPOptional<C>,
+                                   _config: C,
                                    infos: GoLegalityInformation)
     : GoState
     {

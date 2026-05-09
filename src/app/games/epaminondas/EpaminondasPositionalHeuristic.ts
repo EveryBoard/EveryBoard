@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
 import { Coord } from '../../jscaip/Coord';
@@ -14,7 +12,7 @@ export class EpaminondasPositionalHeuristic
     extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>
 {
 
-    public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
+    public getBoardValue(node: EpaminondasNode, _config: EpaminondasConfig): BoardValue {
         return BoardValue.of(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
 

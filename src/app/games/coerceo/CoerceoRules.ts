@@ -46,13 +46,13 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         return CoerceoRules.singleton.get();
     }
 
-    public override getInitialState(config: MGPOptional<CoerceoConfig>): CoerceoState {
+    public override getInitialState(config: CoerceoConfig): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
         let board: Table<FourStatePiece>;
-        if (config.get().smallBoard) {
+        if (config.smallBoard) {
             board = [
                 [N, N, N, N, N, N, N, N, N],
                 [N, N, N, O, _, O, N, N, N],
@@ -80,13 +80,13 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         return new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<CoerceoConfig>> {
-        return MGPOptional.of(CoerceoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<CoerceoConfig> {
+        return CoerceoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override applyLegalMove(move: CoerceoMove,
                                    state: CoerceoState,
-                                   _config: MGPOptional<CoerceoConfig>,
+                                   _config: CoerceoConfig,
                                    _info: void)
     : CoerceoState
     {

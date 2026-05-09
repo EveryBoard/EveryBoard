@@ -15,7 +15,7 @@ import { LocalGameConfigurationComponent } from './local-game-configuration.comp
 describe('LocalGameConfigurationComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<LocalGameConfigurationComponent>;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await SimpleComponentTestUtils.create(LocalGameConfigurationComponent, new ActivatedRouteStub('P4'));
@@ -43,7 +43,7 @@ describe('LocalGameConfigurationComponent', () => {
 
         // custom config happens through updateConfig, called by RulesConfigurationComponent
         const config: P4Config = {
-            ...defaultConfig.get(),
+            ...defaultConfig,
             width: 4,
             height: 4,
         };
@@ -61,7 +61,7 @@ describe('LocalGameConfigurationComponent', () => {
         // Given a configuration component with a custom config, which happens to be the same as the default config
         const router: Router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo();
-        await testUtils.getComponent().updateConfig(defaultConfig);
+        await testUtils.getComponent().updateConfig(MGPOptional.of(defaultConfig));
         testUtils.detectChanges();
 
         // When starting the game

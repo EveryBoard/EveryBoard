@@ -56,8 +56,7 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         super(true);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<GoConfig>): GoState {
-        const config: GoConfig = optionalConfig.get();
+    public override getInitialState(config: GoConfig): GoState {
         const board: GoPiece[][] = GoState.getStartingBoard(config.width, config.height);
         let turn: number = 0;
         const left: number = GobanUtils.getHorizontalLeft(config.width);
@@ -87,8 +86,8 @@ export class GoRules extends AbstractGoRules<GoConfig> {
         return new GoState(board, PlayerNumberMap.of(0, 0), turn, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<GoConfig>> {
-        return MGPOptional.of(GoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<GoConfig> {
+        return GoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getGoGroupDataFactory(): GoGroupDataFactory {

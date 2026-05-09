@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMove } from '../KamisadoMove';
@@ -21,7 +21,7 @@ describe('KamisadoMoveGenerator', () => {
 
     let rules: KamisadoRules;
     let moveGenerator: KamisadoMoveGenerator;
-    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = KamisadoRules.get();

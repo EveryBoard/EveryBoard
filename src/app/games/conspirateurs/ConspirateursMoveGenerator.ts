@@ -3,7 +3,7 @@ import { MGPFallible, Set } from '@everyboard/lib';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from './ConspirateursRules';
@@ -11,7 +11,7 @@ import { ConspirateursState } from './ConspirateursState';
 
 export class ConspirateursMoveGenerator extends MoveGenerator<ConspirateursMove, ConspirateursState> {
 
-    public override getListMoves(node: ConspirateursNode, _config: NoConfig): ConspirateursMove[] {
+    public override getListMoves(node: ConspirateursNode, _config: EmptyRulesConfig): ConspirateursMove[] {
         if (node.gameState.turn < ConspirateursRules.NUMBER_OF_PIECES) {
             return this.getListMovesDrop(node.gameState);
         } else {

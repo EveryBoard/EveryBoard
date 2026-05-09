@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
@@ -14,7 +12,7 @@ import { P4Component } from '../p4.component';
 describe('P4Component', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -59,11 +57,11 @@ describe('P4Component', () => {
 
         it('should allow moves in extra board positions', fakeAsync(async() => {
             // Given a P4 config with extra board positions
-            const config: MGPOptional<P4Config> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: P4Config = {
+                ...defaultConfig,
                 width: 10,
                 height: 10,
-            });
+            };
             const state: P4State = P4Rules.get().getInitialState(config);
             await testUtils.setupState(state, { config });
 
@@ -76,11 +74,11 @@ describe('P4Component', () => {
 
         it('should forbid moves outside of board', fakeAsync(async() => {
             // Given a P4 config with a small board
-            const config: MGPOptional<P4Config> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: P4Config = {
+                ...defaultConfig,
                 width: 4,
                 height: 4,
-            });
+            };
             const state: P4State = P4Rules.get().getInitialState(config);
             // When displaying it
             await testUtils.setupState(state, { config });

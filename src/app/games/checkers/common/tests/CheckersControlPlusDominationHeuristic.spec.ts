@@ -22,7 +22,7 @@ for (const rule of rules) {
 
     describe('CheckersControlAndDominationHeuristic for ' + rule.constructor.name, () => {
 
-        const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();
+        const defaultConfig: CheckersConfig = rule.getDefaultRulesConfig();
 
         let heuristic: CheckersControlPlusDominationHeuristic;
 

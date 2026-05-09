@@ -1,6 +1,6 @@
 import { Utils } from '@everyboard/lib';
 
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from './DiaballikMoveGenerator';
@@ -18,7 +18,7 @@ export class DiaballikFilteredMoveGenerator extends DiaballikMoveGenerator {
     /**
      * Implemented similarly as DiaballikMoveGenerator, but only generates moves containing exactly 3 sub moves.
      */
-    public override getListMoves(node: DiaballikNode, _config: NoConfig): DiaballikMove[] {
+    public override getListMoves(node: DiaballikNode, _config: EmptyRulesConfig): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];

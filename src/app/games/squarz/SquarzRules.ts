@@ -49,12 +49,11 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
             },
         });
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SquarzConfig>> {
-        return MGPOptional.of(SquarzRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<SquarzConfig> {
+        return SquarzRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<SquarzConfig>): SquarzState {
-        const config: SquarzConfig = optionalConfig.get();
+    public override getInitialState(config: SquarzConfig): SquarzState {
         const width: number = config.width;
         const height: number = config.height;
         const board: PlayerOrNone[][] = TableUtils.create(width, height, PlayerOrNone.NONE);
@@ -65,11 +64,11 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return new SquarzState(board, 0);
     }
 
-    public override isLegal(move: SquarzMove, state: SquarzState, config: MGPOptional<SquarzConfig>)
+    public override isLegal(move: SquarzMove, state: SquarzState, config: SquarzConfig)
     : MGPValidation
     {
         const distance: number = move.getDistance();
-        const jumpSize: number = config.get().jumpSize;
+        const jumpSize: number = config.jumpSize;
         if (jumpSize < distance) {
             return MGPValidation.failure(SquarzFailure.MAX_DISTANCE_IS_N(jumpSize));
         }
@@ -108,8 +107,8 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return new SquarzState(resultingState.board, resultingState.turn + 1);
     }
 
-    public override getGameStatus(node: SquarzNode, config: MGPOptional<SquarzConfig>): GameStatus {
-        const jumpSize: number = config.get().jumpSize;
+    public override getGameStatus(node: SquarzNode, config: SquarzConfig): GameStatus {
+        const jumpSize: number = config.jumpSize;
         const state: SquarzState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         if (this.canPlayerMove(state, currentPlayer, jumpSize)) {
@@ -130,11 +129,11 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return false;
     }
 
-    public getPossiblesMoves(state: SquarzState, coord: Coord, config: MGPOptional<SquarzConfig>)
+    public getPossiblesMoves(state: SquarzState, coord: Coord, config: SquarzConfig)
     : SquarzMove[]
     {
         const moves: SquarzMove[] = [];
-        const jumpSize: number = config.get().jumpSize;
+        const jumpSize: number = config.jumpSize;
         for (let y: number = -jumpSize; y <= jumpSize; y++) {
             for (let x: number = -jumpSize; x <= jumpSize; x++) {
                 const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);

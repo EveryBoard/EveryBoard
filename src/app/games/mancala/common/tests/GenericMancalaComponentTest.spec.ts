@@ -236,7 +236,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 {
     let mancalaTestUtils: MancalaComponentTestUtils<C, R>;
 
-    const defaultConfig: MGPOptional<MancalaConfig> = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+    const defaultConfig: MancalaConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
     describe(entries.gameName + ' component generic tests', () => {
 
@@ -265,10 +265,10 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // When doing single distribution move
             const move: MancalaMove = entries.distribution.move;
             const suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig);
 
             // Then it should be a success
-            mancalaTestUtils.expectToBeFed(entries.distribution, defaultConfig.get());
+            mancalaTestUtils.expectToBeFed(entries.distribution, defaultConfig);
         }));
 
         it('should display score of players on the board (after point are won)', fakeAsync(async() => {
@@ -280,7 +280,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
 
             // When doing single distribution capture move
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig);
 
             // Then the store should contain newScore +difference
             const newState: MancalaState = mancalaTestUtils.testUtils.getGameComponent().getState();
@@ -294,17 +294,17 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(entries.distribution.state);
             let move: MancalaMove = entries.distribution.move;
             let suffix: string = mancalaTestUtils.getSuffix(entries.distribution);
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig);
 
             // When doing second single distribution move
             move = entries.secondDistribution.move;
 
             // Then it should be a success too
             suffix = mancalaTestUtils.getSuffix(entries.secondDistribution);
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, move, defaultConfig);
 
             // Then it should be a success
-            mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig.get());
+            mancalaTestUtils.expectToBeFed(entries.secondDistribution, defaultConfig);
         }));
 
         it('should display last move after basic move', fakeAsync(async() => {
@@ -312,7 +312,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When player performs a move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
-            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
 
             // Then the moved spaces should be shown
             // Initial element
@@ -357,7 +357,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
         it('should hide last move when taking move back', fakeAsync(async() => {
             // Given a board with a last move
             const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
-            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
 
             // When taking back
             await mancalaTestUtils.testUtils.expectInterfaceClickSuccess('#take-back');
@@ -386,7 +386,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.monsoon);
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.monsoon.move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.monsoon.move, defaultConfig);
 
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.monsoon.result);
@@ -398,7 +398,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
             // When player zero clicks on a house to distribute
             const suffix: string = mancalaTestUtils.getSuffix(entries.capture);
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.capture.move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.capture.move, defaultConfig);
 
             // Then the moved spaces should be shown
             // Initial element
@@ -412,7 +412,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.setupState(entries.fillThenCapture.state);
             // When doing the capturing move
             const suffix: string = mancalaTestUtils.getSuffix(entries.fillThenCapture);
-            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.fillThenCapture.move, defaultConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-' + suffix, entries.fillThenCapture.move, defaultConfig);
 
             // Then the space in question should be marked as "captured"
             mancalaTestUtils.expectToBeCaptured(entries.fillThenCapture.result);

@@ -3,7 +3,7 @@ import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
@@ -12,7 +12,7 @@ import { LodestonePositions, LodestonePressurePlates, LodestoneState } from '../
 describe('LodestoneScoreHeuristic', () => {
 
     let heuristic: LodestoneScoreHeuristic;
-    const defaultConfig: NoConfig = LodestoneRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = LodestoneRules.get().getDefaultRulesConfig();
 
     const _: LodestonePiece = LodestonePieceNone.EMPTY;
     const O: LodestonePiece = LodestonePiecePlayer.ZERO;

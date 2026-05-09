@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
@@ -13,7 +11,7 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
-const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 const initialState: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
 
 export class HexodiaTutorial extends Tutorial {

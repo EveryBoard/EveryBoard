@@ -1,7 +1,7 @@
 import { ArrayUtils, Utils } from '@everyboard/lib';
 
 import { Player } from '../../jscaip/Player';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
@@ -11,7 +11,7 @@ import { DvonnState } from './DvonnState';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
-    public override getListMoves(node: DvonnNode, config: NoConfig): DvonnMove[] {
+    public override getListMoves(node: DvonnNode, config: EmptyRulesConfig): DvonnMove[] {
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = super.getListMoves(node, config);
 

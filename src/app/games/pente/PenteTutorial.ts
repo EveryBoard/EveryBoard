@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
@@ -14,7 +12,7 @@ import { PenteState } from './PenteState';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
+const defaultConfig: PenteConfig = PenteRules.get().getDefaultRulesConfig();
 
 export class PenteTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

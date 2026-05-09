@@ -1,8 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { Player } from '../../../jscaip/Player';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ApagosFailure } from '../ApagosFailure';
@@ -14,7 +12,7 @@ import { ApagosComponent } from '../apagos.component';
 describe('ApagosComponent', () => {
 
     let testUtils: ComponentTestUtils<ApagosComponent>;
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<ApagosComponent>('Apagos');

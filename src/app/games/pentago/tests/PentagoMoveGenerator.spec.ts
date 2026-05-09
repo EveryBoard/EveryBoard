@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
@@ -13,7 +13,7 @@ describe('PentagoMoveGenerator', () => {
 
     let rules: PentagoRules;
     let moveGenerator: PentagoMoveGenerator;
-    const defaultConfig: NoConfig = PentagoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PentagoRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

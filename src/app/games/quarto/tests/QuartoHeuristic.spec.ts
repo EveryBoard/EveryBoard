@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
@@ -14,7 +12,7 @@ import { QuartoState } from '../QuartoState';
 describe('QuartoHeuristic', () => {
 
     let heuristic: QuartoHeuristic;
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     const ____: QuartoPiece = QuartoPiece.EMPTY;
     const AAAA: QuartoPiece = QuartoPiece.AAAA;

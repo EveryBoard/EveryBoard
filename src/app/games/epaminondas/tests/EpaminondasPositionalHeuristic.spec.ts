@@ -15,7 +15,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('EpaminondasPositionalHeuristic', () => {
 
     let heuristic: EpaminondasPositionalHeuristic;
-    const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+    const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new EpaminondasPositionalHeuristic();

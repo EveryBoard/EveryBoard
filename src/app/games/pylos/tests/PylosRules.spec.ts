@@ -2,7 +2,7 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PylosCoord } from '../PylosCoord';
@@ -14,7 +14,7 @@ import { PylosState } from '../PylosState';
 describe('PylosRules', () => {
 
     let rules: PylosRules;
-    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PylosRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

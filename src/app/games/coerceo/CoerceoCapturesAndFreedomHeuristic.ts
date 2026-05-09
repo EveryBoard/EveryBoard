@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
@@ -9,7 +7,7 @@ import { CoerceoState } from './CoerceoState';
 
 export class CoerceoCapturesAndFreedomHeuristic extends CoerceoHeuristic {
 
-    public override getMetrics(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): PlayerNumberTable {
+    public override getMetrics(node: CoerceoNode, _config: CoerceoConfig): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const piecesScores: [number, number] = this.getPiecesFreedomScore(state);
         const scoreZero: number = (2 * state.captures.get(Player.ZERO)) + piecesScores[0];

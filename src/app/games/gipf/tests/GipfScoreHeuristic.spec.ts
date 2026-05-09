@@ -5,7 +5,7 @@ import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
@@ -19,7 +19,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('GipfScoreHeuristic', () => {
 
     let heuristic: GipfScoreHeuristic;
-    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GipfScoreHeuristic();
