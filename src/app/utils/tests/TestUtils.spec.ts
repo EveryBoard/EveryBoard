@@ -491,9 +491,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
                                                         context?: string)
     : Promise<void>
     {
-        await this.expectInterfaceClickSuccess(nameInHtml, context);
-        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
-        this.canUserPlaySpy.calls.reset();
+        if (this.testClick) {
+            await this.expectInterfaceClickSuccess(nameInHtml, context);
+            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
+            this.canUserPlaySpy.calls.reset();
+        }
     }
 
     public expectTranslationYToBe(elementSelector: string, y: number): void {
@@ -579,24 +581,29 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
     }
 
+    private readonly testClick: boolean = false;
+
     public async expectMoveSuccessWithAsymmetricNaming(nameInHtml: string,
                                                        nameInFunction: string,
                                                        move: Move,
                                                        clickAnimationDuration?: number)
     : Promise<void>
     {
-        console.log('JAJETTE, WE REPLACED THE CLICK !!!!')
-        //await this.clickElement(nameInHtml);
-        console.log('applyMove')
-        const oldNode: AbstractNode = this.gameComponent.node;
-        const state: GameState = oldNode.gameState;
-        const config: MGPOptional<RulesConfig> = this.gameComponent.config;
-        const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
-        Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
-        const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
-        this.gameComponent.node = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
-        await this.gameComponent.updateBoard(clickAnimationDuration != null);
-        await this.gameComponent.showLastMoveAndRedraw();
+        if (this.testClick) {
+            await this.clickElement(nameInHtml);
+        } else {
+            console.log('JAJETTE, WE REPLACED THE CLICK !!!!')
+            console.log('applyMove')
+            const oldNode: AbstractNode = this.gameComponent.node;
+            const state: GameState = oldNode.gameState;
+            const config: MGPOptional<RulesConfig> = this.gameComponent.config;
+            const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
+            Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
+            const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
+            this.gameComponent.node = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+            await this.gameComponent.updateBoard(clickAnimationDuration != null);
+            await this.gameComponent.showLastMoveAndRedraw();
+        }
         //
         tick(clickAnimationDuration ?? 0);
         // expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);

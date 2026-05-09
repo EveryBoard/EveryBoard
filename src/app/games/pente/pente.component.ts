@@ -71,7 +71,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     }
 
     public override hideLastMove(): void {
-        this.captured = [];
+        // this.captured = [];
         this.lastMoved = MGPOptional.empty();
     }
 
