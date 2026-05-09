@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../jscaip/Player';
 import { DummyHeuristic, IterativeDeepeningMinimax, Minimax } from '../../jscaip/AI/Minimax';
 
 import { P4Heuristic } from './P4Heuristic';
