@@ -376,7 +376,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public async onLegalUserMove(move: Move): Promise<void> {
+    public override async onLegalUserMove(move: Move): Promise<void> {
         // First, show the move in the component
         await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move

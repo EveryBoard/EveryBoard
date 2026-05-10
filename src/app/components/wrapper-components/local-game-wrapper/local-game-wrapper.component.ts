@@ -29,7 +29,6 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-
     public static readonly AI_TIMEOUT: number = 1500;
 
     public aiOptions: [string, string] = ['none', 'none'];
@@ -75,7 +74,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     /**
      * Reads the URL to get the config from query parameters (e.g., /P4?width=5&height=5)
      * If the config is invalid, redirect to page that lets the user select the config.
-     * Public for being able to trigger it from tests.
+     * public override for being able to trigger it from tests.
      */
     public async setConfigFromParams(): Promise<void> {
         const params: ParamMap = this.activatedRoute.snapshot.queryParamMap;
@@ -155,7 +154,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.proposeAIToPlay();
     }
 
-    public async onLegalUserMove(move: Move): Promise<void> {
+    public override async onLegalUserMove(move: Move): Promise<void> {
         const config: MGPOptional<RulesConfig> = this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
         await this.applyNewMove();
