@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../../jscaip/Player';
@@ -13,7 +14,7 @@ describe('QuixoMove', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<PlayerOrNone> = [

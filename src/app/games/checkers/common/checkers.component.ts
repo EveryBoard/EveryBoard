@@ -82,7 +82,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     protected override getScoreName(): ScoreName {
-        if (this.config.get().canStackPieces) {
+        if (this.config.canStackPieces) {
             return ScoreName.STACKS_UNDER_CONTROL;
         } else {
             return ScoreName.PIECES_UNDER_CONTROL;
@@ -249,7 +249,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private getCaptureValidity(start: Coord, end: Coord): MGPValidation {
         const ongoingMove: MGPFallible<CheckersMove> = CheckersMove.fromCapture(this.currentMoveClicks);
-        const config: CheckersConfig = this.getConfig().get();
+        const config: CheckersConfig = this.getConfig();
         return this.rules.getSubMoveValidity(ongoingMove.get(), start, end, this.getState(), config);
     }
 

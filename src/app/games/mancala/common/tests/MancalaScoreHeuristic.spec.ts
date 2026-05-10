@@ -8,7 +8,7 @@ import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
 import { MancalaConfig } from '../MancalaConfig';
-import { MancalaScoreHeuristic } from '../MancalaScoreHeurisic';
+import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
 import { MancalaState } from '../MancalaState';
 
 describe('MancalaScoreHeuristic', () => {
@@ -17,7 +17,7 @@ describe('MancalaScoreHeuristic', () => {
 
         it('should prefer board with better score', () => {
             const heuristic: MancalaScoreHeuristic = new MancalaScoreHeuristic();
-            const defaultConfig: MGPOptional<MancalaConfig> = mancalaRules.get().getDefaultRulesConfig();
+            const defaultConfig: MancalaConfig = mancalaRules.get().getDefaultRulesConfig();
             // Given a board with a big score
             const board: number[][] = [
                 [0, 0, 0, 3, 2, 1],

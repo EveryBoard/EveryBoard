@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
 import { GipfNode, GipfRules } from '../GipfRules';
@@ -17,7 +17,7 @@ describe('GipfMoveGenerator', () => {
     let rules: GipfRules;
 
     let moveGenerator: GipfMoveGenerator;
-    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = GipfRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = GipfRules.get();

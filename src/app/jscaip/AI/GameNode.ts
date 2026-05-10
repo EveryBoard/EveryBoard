@@ -81,11 +81,11 @@ export class GameNode<M extends Move, S extends GameState> {
      * or by pasting it on a website like https://dreampuf.github.io/GraphvizOnline/
      */
     public printDot(rules: AbstractRules,
+                    config: RulesConfig,
                     labelFn?: (node: GameNode<M, S>) => string,
                     max?: number,
                     level: number = 0,
-                    id: number = 0,
-                    config: MGPOptional<RulesConfig> = MGPOptional.empty())
+                    id: number = 0)
     : number
     {
         if (level === 0) {
@@ -107,7 +107,7 @@ export class GameNode<M extends Move, S extends GameState> {
             }
         }
         let label: string = `#${this.gameState.turn}: ${this.id}`;
-        if (labelFn) {
+        if (labelFn !== undefined) {
             label += ` - ${labelFn(this)}`;
         }
         console.log(`    node_${id} [label="${label}", style=filled, fillcolor="${color}"];`);
@@ -116,7 +116,7 @@ export class GameNode<M extends Move, S extends GameState> {
         if (max === undefined || level < max) {
             for (const child of this.children.getValueList()) {
                 console.log(`    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"];`);
-                nextId = child.printDot(rules, labelFn, max, level+1, nextId);
+                nextId = child.printDot(rules, config, labelFn, max, level+1, nextId);
             }
         }
         if (level === 0) {

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPFallible, MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils, TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { DiaballikFailure } from '../DiaballikFailure';

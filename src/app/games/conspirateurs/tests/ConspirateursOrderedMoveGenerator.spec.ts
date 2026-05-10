@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ConspirateursOrderedMoveGenerator } from '../ConspirateursOrderedMoveGenerator';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
@@ -12,7 +12,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('ConspirateursOrderedMoveGenerator', () => {
 
     let moveGenerator: ConspirateursOrderedMoveGenerator;
-    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ConspirateursOrderedMoveGenerator();

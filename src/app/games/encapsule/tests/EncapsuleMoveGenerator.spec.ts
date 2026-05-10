@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { Player } from '../../../jscaip/Player';
 import { EncapsuleMove } from '../EncapsuleMove';
@@ -17,11 +17,11 @@ const O__: EncapsuleSpace = ___.put(smallDark);
 describe('EncapsuleMoveGenerator', () => {
 
     let moveGenerator: EncapsuleMoveGenerator;
-    const defaultConfig: MGPOptional<EncapsuleConfig> = EncapsuleRules.get().getDefaultRulesConfig();
-    const customConfig: MGPOptional<EncapsuleConfig> = MGPOptional.of({
-        ...defaultConfig.get(),
+    const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();
+    const customConfig: EncapsuleConfig = {
+        ...defaultConfig,
         height: 4,
-    });
+    };
 
     beforeEach(() => {
         moveGenerator = new EncapsuleMoveGenerator();

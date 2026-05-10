@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { DirectionFailure } from '../../../jscaip/Direction';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
@@ -12,7 +13,7 @@ import { MartianChessState } from '../MartianChessState';
 
 describe('MartianChessMove', () => {
 
-    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     it('should be illegal to choose a coord out of the board', () => {
         const move: MGPFallible<MartianChessMove> = MartianChessMove.from(new Coord(-1, -1), new Coord(0, 0));

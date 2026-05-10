@@ -12,7 +12,7 @@ import { QuixoConfig, QuixoState } from '../QuixoState';
 describe('QuixoHeuristic', () => {
 
     let heuristic: QuixoHeuristic;
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;

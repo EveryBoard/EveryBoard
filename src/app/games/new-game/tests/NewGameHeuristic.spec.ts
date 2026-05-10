@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
@@ -16,7 +16,7 @@ import { NewGameState } from '../NewGameState';
 describe('NewGameHeuristic', () => {
 
     let heuristic: NewGameHeuristic;
-    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new NewGameHeuristic();

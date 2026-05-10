@@ -1,17 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
-import { TrigoMinimax } from '../TrigoMinimax';
-import { TrigoConfig, TrigoRules } from '../TrigoRules';
+import { TriangularGoMinimax } from '../../triangular-go/TriangularGoMinimax';
+import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
 
-describe('TrigoMinimax', () => {
+describe('TriangularGoMinimax', () => {
 
-    const rules: TrigoRules = TrigoRules.get();
-    const minimax: TrigoMinimax = new TrigoMinimax();
+    const rules: TriangularGoRules = TriangularGoRules.get();
+    const minimax: TriangularGoMinimax = new TriangularGoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<TrigoConfig> = TrigoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TriangularGoConfig = TriangularGoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -28,10 +26,10 @@ describe('TrigoMinimax', () => {
             rules,
             minimax,
             options: minimaxOptions,
-            config: MGPOptional.of({
-                ...defaultConfig.get(),
+            config: {
+                ...defaultConfig,
                 size: 3,
-            }),
+            },
             shouldFinish: true,
         });
     });

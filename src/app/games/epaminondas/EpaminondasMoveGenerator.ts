@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -11,7 +11,7 @@ import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasMoveGenerator extends MoveGenerator<EpaminondasMove, EpaminondasState, EpaminondasConfig> {
 
-    public override getListMoves(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): EpaminondasMove[] {
+    public override getListMoves(node: EpaminondasNode, _config: EpaminondasConfig): EpaminondasMove[] {
         const player: Player = node.gameState.getCurrentPlayer();
         const opponent: Player = node.gameState.getCurrentOpponent();
         const empty: PlayerOrNone = PlayerOrNone.NONE;

@@ -6,7 +6,7 @@ import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 
@@ -144,7 +144,12 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         }
     }
 
-    public override applyLegalMove(move: PylosMove, state: PylosState, _config: NoConfig, _info: void): PylosState {
+    public override applyLegalMove(
+        move: PylosMove,
+        state: PylosState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): PylosState {
         return state.applyLegalMove(move);
     }
 

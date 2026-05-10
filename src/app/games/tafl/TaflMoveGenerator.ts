@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -17,11 +17,11 @@ export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, Tafl
         super();
     }
 
-    public override getListMoves(node: TaflNode<M>, config: MGPOptional<TaflConfig>): M[] {
+    public override getListMoves(node: TaflNode<M>, config: TaflConfig): M[] {
         const state: TaflState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
-        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config.get());
-        return this.orderMoves(state, listMoves, config.get());
+        const listMoves: M[] = this.rules.getPlayerListMoves(currentPlayer, state, config);
+        return this.orderMoves(state, listMoves, config);
     }
 
     public orderMoves(state: TaflState, listMoves: M[], config: TaflConfig): M[] {
@@ -34,7 +34,7 @@ export class TaflMoveGenerator<M extends TaflMove> extends MoveGenerator<M, Tafl
         } else {
             ArrayUtils.sortByDescending(listMoves, (move: TaflMove) => {
                 if (move.getStart().equals(king)) {
-                    if (state.isExternalThrone(move.getEnd()) === true) {
+                    if (state.isExternalThrone(move.getEnd())) {
                         return 2;
                     } else {
                         return 1;

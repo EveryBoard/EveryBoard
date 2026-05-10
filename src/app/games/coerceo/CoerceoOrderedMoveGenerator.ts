@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 
@@ -9,7 +9,7 @@ import { CoerceoState } from './CoerceoState';
 
 export class CoerceoOrderedMoveGenerator extends CoerceoMoveGenerator {
 
-    public override getListMoves(node: CoerceoNode, config: MGPOptional<CoerceoConfig>): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, config: CoerceoConfig): CoerceoMove[] {
         const moves: CoerceoMove[] = super.getListMoves(node, config);
         return this.putCaptureFirst(node, moves);
     }

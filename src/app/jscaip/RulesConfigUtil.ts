@@ -1,5 +1,5 @@
 /* eslint-disable no-multi-spaces */
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
 import { ConfigLine } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -24,17 +24,16 @@ export type RulesConfig = {
 
 export type EmptyRulesConfig = Record<string, never>;
 
-export type NoConfig = MGPOptional<EmptyRulesConfig>;
-
 export class RulesConfigUtils {
 
     /**
      * Returns the default config for that game. The game should exist.
-     * It can be MGPOptional.empty() in case there is no configurability for this game.
+     * Every game has a default config (empty in case there's nothing to configure).
      */
-    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): MGPOptional<C> {
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
-        return gameInfos.get().getRulesConfig() as MGPOptional<C>;
+    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): C {
+        const gameInfo: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
+        Utils.assert(gameInfo.isPresent(), `Game does not exist but it should: ${gameName}`);
+        return gameInfo.get().getRulesConfig() as C;
     }
 
 }

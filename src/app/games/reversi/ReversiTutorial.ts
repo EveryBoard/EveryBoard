@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerOrNone } from '../../jscaip/Player';
@@ -11,7 +9,7 @@ import { ReversiState } from './ReversiState';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
+const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 
 export class ReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -17,7 +17,7 @@ import { KamisadoState } from '../KamisadoState';
 describe('KamisadoRules', () => {
 
     let rules: KamisadoRules;
-    const defaultConfig: NoConfig = KamisadoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = KamisadoRules.get().getDefaultRulesConfig();
 
     const _: KamisadoPiece = KamisadoPiece.EMPTY;
     const R: KamisadoPiece = KamisadoPiece.ZERO.RED;

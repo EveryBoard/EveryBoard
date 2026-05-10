@@ -2,7 +2,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
 import { TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
@@ -14,7 +14,7 @@ const O1__T0: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ZERO, 
 describe('TrexoHeuristic', () => {
 
     let heuristic: TrexoAlignmentHeuristic;
-    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = TrexoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TrexoAlignmentHeuristic();

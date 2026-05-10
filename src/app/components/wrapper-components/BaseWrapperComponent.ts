@@ -23,21 +23,18 @@ export abstract class BaseWrapperComponent extends BaseComponent {
         return GameInfo.getByUrlName(this.getGameUrlName()).map((info: GameInfo) => info.name);
     }
 
-    public getRulesConfigDescription(): MGPOptional<RulesConfigDescription<RulesConfig>> {
+    public getRulesConfigDescription(): RulesConfigDescription<RulesConfig> {
         const urlName: string = this.getGameUrlName();
         return this.getRulesConfigDescriptionByName(urlName);
     }
 
-    private getRulesConfigDescriptionByName(gameName: string): MGPOptional<RulesConfigDescription<RulesConfig>> {
+    private getRulesConfigDescriptionByName(gameName: string): RulesConfigDescription<RulesConfig> {
         const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
-        if (gameInfos.isAbsent()) {
-            return MGPOptional.empty();
-        } else {
-            return gameInfos.get().getRulesConfigDescription();
-        }
+        Utils.assert(gameInfos.isPresent(), `Game does not exist: ${gameName}`);
+        return gameInfos.get().getRulesConfigDescription();
     }
 
-    public getStateProvider(): MGPOptional<(config: MGPOptional<RulesConfig>) => GameState> {
+    public getStateProvider(): MGPOptional<(config: RulesConfig) => GameState> {
         return GameInfo.getStateProvider(this.getGameUrlName());
     }
 

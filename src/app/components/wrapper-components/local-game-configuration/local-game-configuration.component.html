@@ -4,7 +4,7 @@
         <div class="box is-fullheight">
             <p class="title">{{ getGameName().getOrElse('') }}</p>
             <app-rules-configuration id="rules-config-component"
-                                     [rulesConfigDescriptionOptional]="getRulesConfigDescription()"
+                                     [rulesConfigDescription]="getRulesConfigDescription()"
                                      [editable]="true"
                                      (updateCallback)="updateConfig($event)">
             </app-rules-configuration>
@@ -15,7 +15,6 @@
                         <div class="control">
                             <button id="start-game-with-config"
                                     class="button is-primary is-fullwidth mt-2"
-                                    [disabled]="rulesConfig.isAbsent()"
                                     (click)="startGame()"
                                     i18n>Start with this configuration</button>
                         </div>

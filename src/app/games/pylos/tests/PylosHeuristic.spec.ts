@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { PylosCoord } from '../PylosCoord';
 import { PylosHeuristic } from '../PylosHeuristic';
 import { PylosMove } from '../PylosMove';
@@ -16,7 +16,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('PylosHeuristic', () => {
 
     let heuristic: PylosHeuristic;
-    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PylosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new PylosHeuristic();

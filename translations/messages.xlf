@@ -449,8 +449,8 @@
       <trans-unit id="2686476818050661110" datatype="html">
         <source>Hexodia</source>
       </trans-unit>
-      <trans-unit id="6233664534580457703" datatype="html">
-        <source>Trigo</source>
+      <trans-unit id="7666378010332934902" datatype="html">
+        <source>Triangular Go</source>
       </trans-unit>
       <trans-unit id="5226075040149407867" datatype="html">
         <source>International Checkers</source>
@@ -1926,8 +1926,8 @@
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
       </trans-unit>
-      <trans-unit id="3924059417187590333" datatype="html">
-        <source>The game of HexagonalGo is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      <trans-unit id="4651970609990845575" datatype="html">
+        <source>The game of Hexagonal Go is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>
@@ -1947,8 +1947,8 @@
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
       </trans-unit>
-      <trans-unit id="8684748448570517529" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      <trans-unit id="5964817756364095565" datatype="html">
+        <source>The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="8074559405875826310" datatype="html">
         <source>Since the board is triangular, pieces have only one freedom in the corners.</source>

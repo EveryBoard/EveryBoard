@@ -9,6 +9,7 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { RingComponent } from '../common/ring/ring.component';
 
 import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 import { EncapsuleFailure } from './EncapsuleFailure';
@@ -18,11 +19,22 @@ import { EncapsulePiece } from './EncapsulePiece';
 import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
 import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
 
+type SquareData = {
+    coordClasses: string[] | string;
+    piecesData: PieceData[];
+}
+
+type PieceData = {
+    radius: number;
+    classes: string[];
+    translate: string;
+}
+
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass],
+    imports: [NgClass, RingComponent],
 })
 export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
                                                                  EncapsuleMove,
@@ -33,11 +45,13 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 {
     private lastLandingCoord: MGPOptional<Coord> = MGPOptional.empty();
     private lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
-    public pieceStrokeWidth: number = this.STROKE_WIDTH;
-    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
+    protected ringStrokeWidth: number = this.STROKE_WIDTH;
+    protected chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
     private chosenPiece: MGPOptional<EncapsulePiece> = MGPOptional.empty();
     private remainingPieceCenterCoords: MGPMap<Player, Coord[]> = new MGPMap();
-    public victoryCoords: Coord[] = [];
+    protected victoryCoords: Coord[] = [];
+    protected boardPieces: SquareData[][] = [];
+    protected pieceSizeToRadius: MGPMap<EncapsulePiece, number> = new MGPMap();
 
     public constructor() {
         super();
@@ -52,39 +66,83 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public override getViewBox(): ViewBox {
         const boardViewBox: ViewBox = super.getViewBox();
         return boardViewBox
-            .expandAll(1.3333 * this.SPACE_SIZE);
+            .expandAll((4 / 3) * this.SPACE_SIZE);
     }
 
     public override async showLastMove(move: EncapsuleMove): Promise<void> {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
+        this.renderBoardPiece();
     }
 
     public override hideLastMove(): void {
         this.lastLandingCoord = MGPOptional.empty();
         this.lastStartingCoord = MGPOptional.empty();
+        if (this.board) {
+            this.renderBoardPiece();
+        }
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
-        const config: MGPOptional<EncapsuleConfig> = this.getConfig();
+        const config: EncapsuleConfig = this.getConfig();
         this.board = this.state.getCopiedBoard();
+        this.renderBoardPiece();
         this.calculateLeftPieceCoords();
-        this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(this.state, config.get());
-        this.setPieceStrokeWidth();
+        this.victoryCoords = EncapsuleRules.get().getVictoriousCoords(this.state, config);
+        this.setRingStrokeWidth();
     }
 
-    private setPieceStrokeWidth(): void {
+    private renderBoardPiece(): void {
+        this.boardPieces = this.board.map(
+            (line: EncapsuleSpace[], y: number) => {
+                return line.map((space: EncapsuleSpace, x: number) => {
+                    const piecesData: PieceData[] = this
+                        .getListPieces(space)
+                        .map(
+                            (piece: EncapsulePiece) => {
+                                const radius: number = this.getPieceRadius(piece.getSize());
+                                return {
+                                    radius,
+                                    classes: this.getPieceClasses(piece),
+                                    translate: this.getPieceTranslate(x, y),
+                                };
+                            },
+                        );
+                    return {
+                        piecesData,
+                        coordClasses: this.getRectClasses(x, y),
+                    };
+                });
+            },
+        );
+    }
+
+    private setRingStrokeWidth(): void {
         const configSize: number = this.state.nbOfPieceSize;
-        const innerRadius: number = this.SPACE_SIZE - this.STROKE_WIDTH;
-        this.pieceStrokeWidth = innerRadius / (configSize * 3);
+        const innerRadius: number = (this.SPACE_SIZE - this.STROKE_WIDTH) / 2;
+        // This below is the stroke of the ring + 1 inter-ring-space
+        this.ringStrokeWidth = innerRadius / configSize;
+        // This is only the stroke of the ring (2 stroke + width)
+        this.ringStrokeWidth = 2 * this.ringStrokeWidth / 3;
+        this.calculatePieceSizeToRadius();
     }
 
-    public getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
+    private calculatePieceSizeToRadius(): void {
+        this.pieceSizeToRadius = new MGPMap();
+        for (const player of Player.PLAYERS) {
+            for (let size: number = 1; size <= this.state.nbOfPieceSize; size++) {
+                const piece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(size, player);
+                this.pieceSizeToRadius.set(piece, this.getPieceRadius(size));
+            }
+        }
+    }
+
+    private getListPieces(content: EncapsuleSpace): EncapsulePiece[] {
         return content.toList();
     }
 
-    public getRemainingPiecesTypeOfPlayer(player: Player): Set<EncapsulePiece> {
+    protected getRemainingPiecesTypeOfPlayer(player: Player): Set<EncapsulePiece> {
         const pieceMap: EncapsuleSizeToNumberMap = this.getState().getRemainingPiecesOfPlayer(player);
         const remainingSizeToNumber: MGPMap<number, number> =
             pieceMap.filter((_key: number, value: number) => value > 0);
@@ -92,7 +150,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return remainingPieceSet.map((size: number) => EncapsulePiece.ofSizeAndPlayer(size, player));
     }
 
-    public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
+    protected async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -128,7 +186,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.chosenPiece = MGPOptional.empty();
     }
 
-    public async onPieceClick(piece: EncapsulePiece): Promise<MGPValidation> {
+    protected async onPieceClick(piece: EncapsulePiece): Promise<MGPValidation> {
         const clickedId: string = '#remaining-piece-' + piece.toString();
         const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
         if (clickValidity.isFailure()) {
@@ -150,7 +208,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         }
     }
 
-    public getRectClasses(x: number, y: number): string {
+    private getRectClasses(x: number, y: number): string {
         if (this.isSelected(x, y)) {
             return 'moved-fill';
         }
@@ -168,7 +226,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return false;
     }
 
-    public getPieceClasses(piece: EncapsulePiece): string[] {
+    private getPieceClasses(piece: EncapsulePiece): string[] {
         return [
             this.getPieceStrokeClass(piece),
         ];
@@ -184,15 +242,14 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return this.getPlayerClass(player, 'stroke');
     }
 
-    public getPieceRadius(piece: EncapsulePiece): number {
-        const size: number = piece.getSize();
+    private getPieceRadius(size: number): number {
         // We want a stroke such that:
         //     - the stroke of the biggest piece still fits within a space of (SPACE_SIZE - HALF_STROKE)
         //     - the spacing between concentric circles is half as big as their stroke
-        return ((3 * size) - 1) * this.pieceStrokeWidth * 0.5;
+        return 1.5 * size * this.ringStrokeWidth;
     }
 
-    public getSidePieceClasses(piece: EncapsulePiece): string[] {
+    protected getSidePieceClasses(piece: EncapsulePiece): string[] {
         const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece)) {
             pieceClasses.push('selected-stroke');
@@ -242,18 +299,19 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         }
     }
 
-    public getRemainingPieceTranslate(player: Player, pieceIdX: number): string {
+    protected getRemainingPieceTranslate(player: Player, pieceIdX: number): string {
         const coord: Coord = this.remainingPieceCenterCoords.get(player).get()[pieceIdX];
         return this.getSVGTranslationAt(coord);
     }
 
-    public getPieceTranslate(x: number, y: number): string {
+    private getPieceTranslate(x: number, y: number): string {
         const xCenter: number = this.getPieceCenter(x);
         const yCenter: number = this.getPieceCenter(y);
-        return this.getSVGTranslation(xCenter, yCenter);
+        const translation: string = this.getSVGTranslation(xCenter, yCenter);
+        return translation;
     }
 
-    public getRemainingPieceQuantity(piece: EncapsulePiece): number {
+    protected getRemainingPieceQuantity(piece: EncapsulePiece): number {
         const player: Player = piece.getPlayer() as Player;
         return this.state.remainingPieces
             .get(player)
@@ -261,7 +319,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             .getOrElse(-1);
     }
 
-    public getRemainingPieceQuantityTransform(piece: EncapsulePiece, pieceIdx: number): string {
+    protected getRemainingPieceQuantityTransform(piece: EncapsulePiece, pieceIdx: number): string {
         const offsetX: number = 0.7 * this.SPACE_SIZE;
         let cx: number = - offsetX;
         let cy: number = 0;

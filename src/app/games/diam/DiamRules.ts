@@ -5,7 +5,7 @@ import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 
@@ -38,7 +38,12 @@ export class DiamRules extends Rules<DiamMove, DiamState> {
         return new DiamState(board, [4, 4, 4, 4], 0);
     }
 
-    public override applyLegalMove(move: DiamMove, state: DiamState, _config: NoConfig, _info: void): DiamState {
+    public override applyLegalMove(
+        move: DiamMove,
+        state: DiamState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): DiamState {
         if (move.isDrop()) {
             return this.applyLegalDrop(move, state);
         } else {

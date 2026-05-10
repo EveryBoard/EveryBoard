@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
@@ -16,7 +17,7 @@ import { QuixoConfig, QuixoState } from '../QuixoState';
 describe('QuixoRules', () => {
 
     let rules: QuixoRules;
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;

@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
@@ -23,7 +23,7 @@ describe('ConnectSixRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConnectSixRules;
-    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
+    const defaultConfig: GobanConfig = ConnectSixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConnectSixRules.get();

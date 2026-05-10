@@ -16,7 +16,7 @@ import { AwaleRules } from '../AwaleRules';
 describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
-    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
 
@@ -289,10 +289,10 @@ describe('AwaleRules', () => {
 
         it('should feed store when config requires to', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
-            });
+            };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing simple distribution from the leftmost house
@@ -309,10 +309,10 @@ describe('AwaleRules', () => {
 
         it('should not require additionnal distribution when ending distribution in store', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
-            });
+            };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing simple distribution ending in store
@@ -329,11 +329,11 @@ describe('AwaleRules', () => {
 
         it('should allow multiple sow when config allows it', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            });
+            };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             // When doing a double distribution
@@ -349,10 +349,10 @@ describe('AwaleRules', () => {
 
         it('should stop distribution on capture', () => {
             // Given a board with possible capture and a config with continueLapUntilCaptureOrEmptyHouse = true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 continueLapUntilCaptureOrEmptyHouse: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 2, 0, 4, 0, 0],
                 [0, 3, 0, 4, 0, 0],

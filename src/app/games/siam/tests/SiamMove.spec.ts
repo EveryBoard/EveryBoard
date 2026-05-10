@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Table } from '../../../jscaip/TableUtils';
@@ -14,7 +15,7 @@ describe('SiamMove', () => {
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
     const D: SiamPiece = SiamPiece.LIGHT_DOWN;
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<SiamPiece> = [

@@ -69,16 +69,15 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return EncapsuleRules.singleton.get();
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<EncapsuleConfig>): EncapsuleState {
-        const config: EncapsuleConfig = optionalConfig.get();
+    public override getInitialState(config: EncapsuleConfig): EncapsuleState {
         const _: EncapsuleSpace = new EncapsuleSpace(new MGPMap());
         const startingBoard: EncapsuleSpace[][] = TableUtils.create(config.width, config.height, _);
         const initialPieces: EncapsuleRemainingPieces = this.getInitialEncapsulePieceMap(config);
         return new EncapsuleState(startingBoard, 0, initialPieces, config.nbOfSizes);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<EncapsuleConfig>> {
-        return MGPOptional.of(EncapsuleRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<EncapsuleConfig> {
+        return EncapsuleRules.RULES_CONFIG_DESCRIPTION;
     }
 
     private getInitialEncapsulePieceMap(config: EncapsuleConfig): EncapsuleRemainingPieces {
@@ -159,7 +158,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
 
     public override applyLegalMove(move: EncapsuleMove,
                                    state: EncapsuleState,
-                                   _config: MGPOptional<EncapsuleConfig>,
+                                   _config: EncapsuleConfig,
                                    newLandingSpace: EncapsuleLegalityInformation)
     : EncapsuleState
     {
@@ -185,9 +184,9 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return new EncapsuleState(newBoard, newTurn, newRemainingPiecesMap, state.nbOfPieceSize);
     }
 
-    public override getGameStatus(node: EncapsuleNode, config: MGPOptional<EncapsuleConfig>): GameStatus {
+    public override getGameStatus(node: EncapsuleNode, config: EncapsuleConfig): GameStatus {
         const state: EncapsuleState = node.gameState;
-        const winner: MGPOptional<Player> = this.isVictory(state, config.get());
+        const winner: MGPOptional<Player> = this.isVictory(state, config);
         if (winner.isPresent()) {
             return GameStatus.getVictory(winner.get());
         } else {

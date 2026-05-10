@@ -13,14 +13,14 @@ const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
 const N: GoPiece = GoPiece.UNREACHABLE;
 
-const defaultConfig: MGPOptional<HexagonalGoConfig> = HexagonalGoRules.get().getDefaultRulesConfig();
+const defaultConfig: HexagonalGoConfig = HexagonalGoRules.get().getDefaultRulesConfig();
 
 export class HexagonalGoTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Preliminary information`,
-            $localize`The game of HexagonalGo is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. This tutorial will only review the small differences that this experimental adaptation induced.`,
+            $localize`The game of Hexagonal Go is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. This tutorial will only review the small differences that this experimental adaptation induced.`,
             HexagonalGoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(

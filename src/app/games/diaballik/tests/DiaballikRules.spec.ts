@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { CoordFailure } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
@@ -15,7 +16,7 @@ import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 describe('DiaballikRules', () => {
 
     let rules: DiaballikRules;
-    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;

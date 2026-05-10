@@ -3,7 +3,7 @@ import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessRules } from '../MartianChessRules';
@@ -13,7 +13,7 @@ import { MartianChessCapture, MartianChessState } from '../MartianChessState';
 describe('MartianChessScoreHeuristic', () => {
 
     let heuristic: MartianChessScoreHeuristic;
-    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new MartianChessScoreHeuristic();

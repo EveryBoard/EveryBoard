@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, MGPOptional, TestUtils, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -25,7 +26,7 @@ describe('MartianChessRules', () => {
     const noCapture: MartianChessCapture = MartianChessCapture.of([]);
 
     let rules: MartianChessRules;
-    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     const boardWhereCaptureCanBeDone: Table<MartianChessPiece> = [
         [A, _, _, _],

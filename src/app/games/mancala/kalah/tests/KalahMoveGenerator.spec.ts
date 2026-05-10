@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaMove } from '../../common/MancalaMove';
@@ -12,7 +10,7 @@ import { KalahRules } from '../KalahRules';
 describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new KalahMoveGenerator();

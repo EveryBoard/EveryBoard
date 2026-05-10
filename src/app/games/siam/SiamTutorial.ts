@@ -22,7 +22,7 @@ const l: SiamPiece = SiamPiece.DARK_LEFT;
 const r: SiamPiece = SiamPiece.DARK_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
-const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
 export class SiamTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

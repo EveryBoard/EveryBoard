@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
@@ -9,7 +9,7 @@ import { LinesOfActionState } from '../LinesOfActionState';
 describe('LinesOfActionMoveGenerator', () => {
 
     let moveGenerator: LinesOfActionMoveGenerator;
-    const defaultConfig: NoConfig = LinesOfActionRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = LinesOfActionRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
