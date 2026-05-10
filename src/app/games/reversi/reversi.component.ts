@@ -31,7 +31,7 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 {
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
-    private capturedCoords: Coord[] = [];
+    private captured: Coord[] = [];
 
     public constructor() {
         super();
@@ -63,8 +63,8 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     }
 
     public override async showLastMove(move: ReversiMove): Promise<void> {
-        // console.log('jaaj > showLastMove 0', this.capturedCoords.length)
-        this.capturedCoords = [];
+        console.log('jaaj > showLastMove 0', this.captured.length)
+        // this.captured = [];
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentPlayer();
         const opponent: Player = this.getState().getCurrentOpponent();
@@ -73,22 +73,22 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             while (this.getState().hasPieceAt(captured, opponent) &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {
-                this.capturedCoords.push(captured);
+                this.captured.push(captured);
                 captured = captured.getNext(dir, 1);
             }
         }
-        // console.log('jaaj > showLastMove 1', this.capturedCoords.length)
+        console.log('jaaj > showLastMove 1', this.captured.length)
     }
 
     public override hideLastMove(): void {
-        // this.capturedCoords = [];
-        // console.log('jaaj > hideLastMove', this.capturedCoords.length)
+        // this.captured = [];
+        console.log('jaaj > hideLastMove', this.captured.length)
         this.lastMove = MGPOptional.empty();
     }
 
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured-fill'];
         } else if (this.lastMove.equalsValue(coord)) {
             return ['moved-fill'];

@@ -11,7 +11,7 @@ import { ReversiConfig, ReversiRules } from '../ReversiRules';
 import { ReversiState } from '../ReversiState';
 import { ReversiComponent } from '../reversi.component';
 
-describe('ReversiComponent', () => {
+fdescribe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
     const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
@@ -60,7 +60,7 @@ describe('ReversiComponent', () => {
     }));
 
     it('should show last move and captures and hide previous', fakeAsync(async() => {
-        // console.log('====================')
+        console.log('====================')
         // Given a board with a last move
         const previousState: ReversiState = ReversiRules.get().getInitialState(defaultConfig);
         const previousMove: ReversiMove = new ReversiMove(5, 3);
@@ -78,9 +78,9 @@ describe('ReversiComponent', () => {
         await testUtils.setupState(state, { previousState, previousMove });
 
         const move: ReversiMove = new ReversiMove(5, 4);
-        // console.log('==================== expectMoveSuccess')
+        console.log('==================== expectMoveSuccess')
         await testUtils.expectMoveSuccess('#click_5_4', move);
-        // console.log('==================== move done')
+        console.log('==================== move done')
 
         // const reversiGameComponent: ReversiComponent = testUtils.getGameComponent();
         // expect(reversiGameComponent.getRectClasses(4, 3)).not.toContain('captured-fill');

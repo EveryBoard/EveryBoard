@@ -10,7 +10,7 @@ import { PenteMove } from '../PenteMove';
 import { PenteState } from '../PenteState';
 import { PenteComponent } from '../pente.component';
 
-describe('PenteComponent', () => {
+fdescribe('PenteComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
