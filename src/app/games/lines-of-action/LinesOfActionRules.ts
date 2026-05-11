@@ -8,7 +8,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
 
@@ -84,8 +84,12 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
     }
 
-    public override applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, _config: NoConfig, _info: void)
-    : LinesOfActionState
+    public override applyLegalMove(
+        move: LinesOfActionMove,
+        state: LinesOfActionState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): LinesOfActionState
     {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;

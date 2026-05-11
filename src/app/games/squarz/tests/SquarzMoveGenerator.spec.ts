@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { SquarzMove } from '../SquarzMove';
 import { SquarzMoveGenerator } from '../SquarzMoveGenerator';
@@ -14,7 +12,7 @@ describe('SquarzMoveGenerator', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let moveGenerator: SquarzMoveGenerator;
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         const rules: SquarzRules = SquarzRules.get();

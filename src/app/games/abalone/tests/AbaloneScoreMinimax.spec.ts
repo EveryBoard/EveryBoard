@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
@@ -11,7 +9,7 @@ describe('AbaloneScoreMinimax', () => {
     const rules: AbaloneRules = AbaloneRules.get();
     const minimax: AbaloneScoreMinimax = new AbaloneScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<AbaloneConfig> = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: AbaloneConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

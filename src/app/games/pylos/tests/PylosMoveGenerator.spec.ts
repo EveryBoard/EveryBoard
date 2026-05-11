@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosMoveGenerator } from '../PylosMoveGenerator';
@@ -15,7 +15,7 @@ describe('PylosMoveGenerator', () => {
 
     let rules: PylosRules;
     let moveGenerator: PylosMoveGenerator;
-    const defaultConfig: NoConfig = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PylosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = PylosRules.get();

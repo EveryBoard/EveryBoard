@@ -49,7 +49,7 @@ describe('GameCreationComponent', () => {
 
     async function awaitComponentInitialization(): Promise<void> {
         testUtils.detectChanges();
-        await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
+        await receiveConfigRoomUpdate(ConfigRoomMocks.getInitial(defaultConfig));
         tick(0);
     }
 
@@ -59,7 +59,7 @@ describe('GameCreationComponent', () => {
     async function chooseOpponent(): Promise<void> {
         await clickElement('#presenceOf_' + candidate.name);
         configRoomService.mockConfigRoomUpdate({
-            ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
+            ...ConfigRoomMocks.getInitial(defaultConfig),
             chosenOpponent: candidate,
         });
     }
@@ -94,7 +94,7 @@ describe('GameCreationComponent', () => {
         configRoomService = TestBed.inject(ConfigRoomService) as AbstractConfigRoomService as ConfigRoomServiceMock;
         component = testUtils.getComponent();
         testUtils.setInput('gameId', 'configRoomId');
-        testUtils.setInput('rulesConfigDescription', MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION));
+        testUtils.setInput('rulesConfigDescription', P4Rules.RULES_CONFIG_DESCRIPTION);
         router = TestBed.inject(Router);
     }));
 
@@ -224,7 +224,7 @@ describe('GameCreationComponent', () => {
                 configRoomService.mockCandidateJoined(candidate, 0);
 
                 // Then it is possible to choose a candidate
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(defaultConfig));
                 expectElementToExist('#chooseOpponent');
             }));
 
@@ -256,7 +256,7 @@ describe('GameCreationComponent', () => {
                 const infoMessage: string = candidate.name + ' left the game, please pick another opponent.';
                 await testUtils.expectToDisplayInfoMessage(infoMessage, async() => {
                     await receiveConfigRoomUpdate({
-                        ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
+                        ...ConfigRoomMocks.getInitial(defaultConfig),
                         status: Status.CREATED,
                         chosenOpponent: null,
                     });
@@ -267,7 +267,7 @@ describe('GameCreationComponent', () => {
                 // Then it is not selected anymore
                 expectElementNotToExist('#selected_' + candidate.name);
                 // And configRoom when back to its initial state
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(defaultConfig));
             }));
 
             it('should not display non chosen candidate anymore when they leaves', fakeAsync(async() => {
@@ -281,7 +281,7 @@ describe('GameCreationComponent', () => {
 
                 // Then it is still not selected, configRoom is back to start
                 expectElementNotToExist('#presenceOf_' + candidate.name);
-                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)));
+                expect(component.currentConfigRoom).toEqual(ConfigRoomMocks.getInitial(defaultConfig));
             }));
         });
 
@@ -368,14 +368,14 @@ describe('GameCreationComponent', () => {
                 // When proposing config and getting the update from the server
                 await proposeConfig();
                 configRoomService.mockConfigRoomUpdate({
-                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.of(defaultConfig)),
+                    ...ConfigRoomMocks.getInitialRandom(defaultConfig),
                     chosenOpponent: candidate,
                     status: Status.CONFIG_PROPOSED,
                 });
 
                 // Then currentConfigRoom should be updated with the proposed config
                 const proposedConfig: ConfigRoom = {
-                    ...ConfigRoomMocks.getInitialRandom(MGPOptional.of(defaultConfig)),
+                    ...ConfigRoomMocks.getInitialRandom(defaultConfig),
                     chosenOpponent: candidate,
                     status: Status.CONFIG_PROPOSED,
                 };
@@ -494,7 +494,7 @@ describe('GameCreationComponent', () => {
                 // Given a game creation where the config has been proposed
                 await awaitComponentInitialization();
                 configRoomService.mockConfigRoomUpdate(
-                    ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
+                    ConfigRoomMocks.withProposedConfig(defaultConfig));
 
                 // When the config is reviewed
                 spyOn(configRoomService, 'reviewConfig');
@@ -553,7 +553,7 @@ describe('GameCreationComponent', () => {
             // Then the candidate is added to the configRoom
             expect(configRoomService.join).toHaveBeenCalledTimes(1);
             // and the configRoom is updated once the service receives the update from the server
-            const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig));
+            const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(defaultConfig);
             configRoomService.mockConfigRoomUpdate(configRoom);
             // testUtils.detectChanges();
             expect(component.currentConfigRoom).toEqual(configRoom);
@@ -580,7 +580,7 @@ describe('GameCreationComponent', () => {
 
             // When receiving a blitz update
             const update: ConfigRoom = {
-                ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
+                ...ConfigRoomMocks.getInitial(defaultConfig),
                 gameType: GameType.BLITZ,
                 moveDuration: GameDuration.BLITZ_MOVE_DURATION,
                 gameDuration: GameDuration.BLITZ_GAME_DURATION,
@@ -599,7 +599,7 @@ describe('GameCreationComponent', () => {
 
             // When receiving a custom update
             const update: ConfigRoom = {
-                ...ConfigRoomMocks.getInitial(MGPOptional.of(defaultConfig)),
+                ...ConfigRoomMocks.getInitial(defaultConfig),
                 gameType: GameType.CUSTOM,
                 moveDuration: 100,
                 gameDuration: 1000,
@@ -616,11 +616,11 @@ describe('GameCreationComponent', () => {
             it('should make config acceptation possible for configRoom when config is proposed', fakeAsync(async() => {
                 // Given a game in creation where the candidate is chosen
                 await awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(MGPOptional.of(defaultConfig)));
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withChosenOpponent(defaultConfig));
                 testUtils.expectElementNotToExist('#acceptConfig');
 
                 // When the config is proposed
-                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(defaultConfig));
 
                 // Then the candidate can accept the config
                 expectElementToExist('#acceptConfig');
@@ -631,7 +631,7 @@ describe('GameCreationComponent', () => {
                 // Given a game where the config has been proposed
                 spyOn(configRoomService, 'acceptConfig');
                 await awaitComponentInitialization();
-                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
+                await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(defaultConfig));
 
                 // When accepting the config
                 await clickElement('#acceptConfig');
@@ -646,10 +646,10 @@ describe('GameCreationComponent', () => {
             spyOn(component.gameStartNotification, 'emit').and.callThrough();
             // Given a game where the config has been proposed
             await awaitComponentInitialization();
-            await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(MGPOptional.of(defaultConfig)));
+            await receiveConfigRoomUpdate(ConfigRoomMocks.withProposedConfig(defaultConfig));
 
             // When the config is finished and the game will start
-            const acceptedConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(defaultConfig));
+            const acceptedConfigRoom: ConfigRoom = ConfigRoomMocks.withAcceptedConfig(defaultConfig);
             await receiveConfigRoomUpdate(acceptedConfigRoom);
 
             // Then the game start notification is emitted

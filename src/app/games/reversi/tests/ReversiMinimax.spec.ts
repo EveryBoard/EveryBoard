@@ -1,26 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
-import { ReversiConfig, ReversiLegalityInformation, ReversiNode, ReversiRules } from '../ReversiRules';
-import { ReversiState } from '../ReversiState';
+import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 
 describe('ReversiMinimax', () => {
 
-    let rules: ReversiRules;
-    let defaultConfig: MGPOptional<ReversiConfig>;
-    let minimax: Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation>;
+    const rules: ReversiRules = ReversiRules.get();
+    const defaultConfig: ReversiConfig = rules.getDefaultRulesConfig();
+    const minimax: ReversiMinimax = new ReversiMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-
-    beforeEach(() => {
-        rules = ReversiRules.get();
-        defaultConfig = rules.getDefaultRulesConfig();
-        minimax = new ReversiMinimax();
-    });
 
     it('should not throw at first choice', () => {
         const node: ReversiNode = rules.getInitialNode(defaultConfig);

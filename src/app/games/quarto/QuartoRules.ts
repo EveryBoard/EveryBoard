@@ -307,11 +307,11 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         return QuartoRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<QuartoConfig>> {
-        return MGPOptional.of(QuartoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<QuartoConfig> {
+        return QuartoRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(_: MGPOptional<QuartoConfig>): QuartoState {
+    public override getInitialState(_config: QuartoConfig): QuartoState {
         const board: QuartoPiece[][] = TableUtils.create(4, 4, QuartoPiece.EMPTY);
         return new QuartoState(board, 0, QuartoPiece.AAAA);
     }
@@ -354,7 +354,7 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
 
     public override applyLegalMove(move: QuartoMove,
                                    state: QuartoState,
-                                   _config: MGPOptional<QuartoConfig>,
+                                   _config: QuartoConfig,
                                    _info: void)
     : QuartoState
     {
@@ -481,13 +481,13 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
         return { commonCriterion, sensitiveCoord, boardStatus: MGPOptional.empty() };
     }
 
-    public override getGameStatus(node: QuartoNode, config: MGPOptional<QuartoConfig>): GameStatus {
+    public override getGameStatus(node: QuartoNode, config: QuartoConfig): GameStatus {
         const state: QuartoState = node.gameState;
         let boardStatus: BoardStatus = {
             status: AlignmentStatus.NOTHING,
             sensitiveSquares: new CoordSet(),
         };
-        const maxLevel: number = Math.max(config.get().playerZeroLevel, config.get().playerOneLevel);
+        const maxLevel: number = Math.max(config.playerZeroLevel, config.playerOneLevel);
         const patterns: VictoryPattern[] = this.getPatterns(maxLevel, state);
         // at turn N, the previous opponent is the current player at turn N+1
         const opponent: Player = state.getCurrentPlayer();
@@ -497,9 +497,9 @@ export class QuartoRules extends ConfigurableRules<QuartoMove, QuartoState, Quar
             const boardStatusUpdate: BoardStatusUpdate = this.updateBoardStatus(pattern, state, boardStatus);
             boardStatus = boardStatusUpdate.boardStatus;
             if (boardStatusUpdate.isUpdated && boardStatus.status === AlignmentStatus.VICTORY) {
-                if (this.isOnlyPlayerVictory(pattern, config.get(), opponent)) {
+                if (this.isOnlyPlayerVictory(pattern, config, opponent)) {
                     return GameStatus.getVictory(opponent);
-                } else if (this.isPlayerVictory(pattern, config.get(), player)) {
+                } else if (this.isPlayerVictory(pattern, config, player)) {
                     playerMadeAVictory = true;
                 }
             }

@@ -49,7 +49,9 @@ import { CurrentGameServiceMock } from '../../services/tests/CurrentGameServiceM
 import { ErrorLoggerServiceMock } from '../../services/tests/ErrorLoggerServiceMock.spec';
 import { GameServiceMock } from '../../services/tests/GameServiceMock.spec';
 
-@Component({})
+@Component({
+    template: '',
+})
 export class BlankComponent {}
 
 export class ActivatedRouteStub {
@@ -105,7 +107,7 @@ export class SimpleComponentTestUtils<T> {
     : Promise<SimpleComponentTestUtils<U>>
     {
         if (configureTestModule) {
-            await ConfigureTestingModuleUtils.configureTestingModule(componentType, activatedRouteStub);
+            await ConfigureTestingModuleUtils.configureTestingModule(activatedRouteStub);
         }
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
         const testUtils: SimpleComponentTestUtils<U> = new SimpleComponentTestUtils<U>();
@@ -440,13 +442,14 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     public async setupState(state: GameState,
                             params: { previousState?: GameState,
                                       previousMove?: Move,
-                                      config?: MGPOptional<RulesConfig> } = {})
+                                      config?: RulesConfig } = {})
     : Promise<void>
     {
-        const config: MGPOptional<RulesConfig> = this.getConfigFrom(params.config);
-        if (config.isPresent()) {
+        const config: RulesConfig = this.getConfigFrom(params.config);
+        if (Object.keys(config).length > 0) {
+            // If the game is configurable, set its config
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
-            Object.entries(config.get())
+            Object.entries(config)
                 .map((configElement: [string, ConfigDescriptionType]) => {
                     TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
                 });
@@ -467,7 +470,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.forceChangeDetection();
     }
 
-    private getConfigFrom(config?: MGPOptional<RulesConfig>): MGPOptional<RulesConfig> {
+    private getConfigFrom(config?: RulesConfig): RulesConfig {
         if (config === undefined) {
             return this.gameComponent.rules.getDefaultRulesConfig();
         } else {
@@ -677,8 +680,7 @@ export class ConfigureTestingModuleUtils {
         }).compileComponents();
     }
 
-    public static async configureTestingModule(componentType: object,
-                                               activatedRouteStub?: ActivatedRouteStub)
+    public static async configureTestingModule(activatedRouteStub?: ActivatedRouteStub)
     : Promise<void>
     {
         await TestBed.configureTestingModule({
@@ -885,7 +887,7 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
     rules: R,
     minimax: Minimax<M, S, C, L>,
     options: AIDepthLimitOptions,
-    config: MGPOptional<C>,
+    config: C,
     shouldFinish: boolean
 }
 

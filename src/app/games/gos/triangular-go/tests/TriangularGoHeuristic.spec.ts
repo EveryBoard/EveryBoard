@@ -18,7 +18,7 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('TriangularGoHeuristic', () => {
 
     let heuristic: TriangularGoHeuristic;
-    const defaultConfig: MGPOptional<TriangularGoConfig> = TriangularGoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TriangularGoConfig = TriangularGoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TriangularGoHeuristic();

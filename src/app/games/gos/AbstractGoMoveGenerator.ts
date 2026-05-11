@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { GroupDataFactory } from '../../jscaip/BoardData';
@@ -18,7 +18,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         super();
     }
 
-    public override getListMoves(node: GoNode, config: MGPOptional<C>): GoMove[] {
+    public override getListMoves(node: GoNode, config: C): GoMove[] {
         const currentState: GoState = node.gameState;
         const playingMoves: GoMove[] = this.getPlayingMovesList(currentState, config);
         if (currentState.phase.isPlaying() || currentState.phase.isPassed()) {
@@ -34,7 +34,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         }
     }
 
-    public getPlayingMovesList(state: GoState, config: MGPOptional<C>): GoMove[] {
+    public getPlayingMovesList(state: GoState, config: C): GoMove[] {
         const choices: GoMove[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;

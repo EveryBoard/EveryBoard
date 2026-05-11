@@ -2,7 +2,7 @@
 import { MGPFallible, MGPOptional, Set } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
@@ -81,7 +81,7 @@ describe('DiaballikMoveInConstruction', () => {
 function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
     return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
 }
-const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikMoveGenerator', () => {
 

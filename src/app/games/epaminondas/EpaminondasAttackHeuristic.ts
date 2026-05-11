@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
@@ -18,7 +16,7 @@ export class EpaminondasAttackHeuristic extends EpaminondasHeuristic {
     private readonly CENTER_FACTOR: number = 5;
     private readonly MOBILITY_FACTOR: number = 0.12;
 
-    public override getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
+    public override getBoardValue(node: EpaminondasNode, _config: EpaminondasConfig): BoardValue {
         const state: EpaminondasState = node.gameState;
         const dominance: number = this.getDominance(state);
         const defense: number = this.getDefense(state);

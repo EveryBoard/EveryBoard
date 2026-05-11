@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional, Set } from '@everyboard/lib';
+import { MGPFallible, Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -12,7 +12,7 @@ import { AbaloneState } from './AbaloneState';
 
 export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneState, AbaloneConfig> {
 
-    public override getListMoves(node: AbaloneNode, config: MGPOptional<AbaloneConfig>): AbaloneMove[] {
+    public override getListMoves(node: AbaloneNode, config: AbaloneConfig): AbaloneMove[] {
         const moves: AbaloneMove[] = [];
         const state: AbaloneState = node.gameState;
         const player: Player = state.getCurrentPlayer();
@@ -49,7 +49,7 @@ export class AbaloneMoveGenerator extends MoveGenerator<AbaloneMove, AbaloneStat
         return new Set(moves).toList();
     }
 
-    private isAcceptablePush(move: AbaloneMove, state: AbaloneState, config: MGPOptional<AbaloneConfig>): boolean {
+    private isAcceptablePush(move: AbaloneMove, state: AbaloneState, config: AbaloneConfig): boolean {
         const scores: PlayerNumberMap = state.getScores();
         const status: MGPFallible<AbaloneLegalityInformation> = AbaloneRules.get().isLegal(move, state, config);
         if (status.isSuccess()) {

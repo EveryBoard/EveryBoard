@@ -16,7 +16,7 @@ import { KalahRules } from '../KalahRules';
 describe('KalahRules', () => {
 
     const rules: MancalaRules = KalahRules.get();
-    const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
         DoMancalaRulesTests({
@@ -350,10 +350,10 @@ describe('KalahRules', () => {
 
         it('should not require additionnal distribution when not allowed by config (mustContinueDistributionAfterStore)', () => {
             // Given a mancala state with a config with mustContinueDistributionAfterStore set to false
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 mustContinueDistributionAfterStore: false,
-            });
+            };
             const state: MancalaState = KalahRules.get().getInitialState(customConfig);
 
             // When doing simple distribution ending in store
@@ -371,12 +371,12 @@ describe('KalahRules', () => {
         it('should allow to do second distribution when multi-lap mancala ends-up in store', () => {
             // Given any board where a move doing a first distribution ending in store, then another distribution
             // and a config allowing to do that
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
                 continueLapUntilCaptureOrEmptyHouse: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 2, 2, 0, 2, 0],
                 [2, 0, 2, 1, 1, 0],

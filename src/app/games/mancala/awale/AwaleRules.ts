@@ -34,8 +34,8 @@ export class AwaleRules extends MancalaRules {
         return AwaleRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<MancalaConfig>> {
-        return MGPOptional.of(AwaleRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {
+        return AwaleRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig): MancalaCaptureResult {

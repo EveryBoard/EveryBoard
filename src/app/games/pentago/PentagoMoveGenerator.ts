@@ -1,6 +1,6 @@
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode } from './PentagoRules';
@@ -16,7 +16,7 @@ export class PentagoMoveGenerator extends MoveGenerator<PentagoMove, PentagoStat
         PentagoMove.rotationless(1, 1),
         PentagoMove.rotationless(0, 2),
     ];
-    public override getListMoves(node: PentagoNode, _config: NoConfig): PentagoMove[] {
+    public override getListMoves(node: PentagoNode, _config: EmptyRulesConfig): PentagoMove[] {
         const moves: PentagoMove[] = [];
         const preDropNeutralBlocks: number[] = node.gameState.neutralBlocks;
         if (node.gameState.turn === 0) {

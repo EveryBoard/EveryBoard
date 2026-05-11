@@ -43,8 +43,7 @@ export class TriangularGoRules extends AbstractGoRules<TriangularGoConfig> {
         super(false);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<TriangularGoConfig>): GoState {
-        const config: TriangularGoConfig = optionalConfig.get();
+    public override getInitialState(config: TriangularGoConfig): GoState {
         const size: number = config.size;
         let board: GoPiece[][];
         if (config.hexagonal) {
@@ -55,8 +54,8 @@ export class TriangularGoRules extends AbstractGoRules<TriangularGoConfig> {
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TriangularGoConfig>> {
-        return MGPOptional.of(TriangularGoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TriangularGoConfig> {
+        return TriangularGoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getGoGroupDataFactory(): GoGroupDataFactory {

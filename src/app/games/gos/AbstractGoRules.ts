@@ -41,7 +41,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     public abstract getGoGroupDataFactory(zoom: number): GoGroupDataFactory;
 
-    public getZoom(_: MGPOptional<C>): number {
+    public getZoom(_config: C): number {
         return 1;
     }
 
@@ -49,7 +49,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         move: GoMove,
         newBoard: GoPiece[][],
         goLegalityInformation: GoLegalityInformation,
-        config: MGPOptional<C>,
+        config: C,
     ): MGPOptional<Coord> {
         if (goLegalityInformation.uniqueCapture.isPresent()) {
             const captured: Coord = goLegalityInformation.uniqueCapture.get();
@@ -176,7 +176,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
                (state.phase.isCounting() || state.phase.isAccept());
     }
 
-    private isLegalDrop(move: GoMove, state: GoState, config: MGPOptional<C>)
+    private isLegalDrop(move: GoMove, state: GoState, config: C)
     : MGPFallible<GoLegalityInformation>
     {
         if (this.isKo(move, state)) {
@@ -199,7 +199,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         }
     }
 
-    private doesPieceHaveFreedoms(coord: Coord, state: GoState, config: MGPOptional<C>): boolean {
+    private doesPieceHaveFreedoms(coord: Coord, state: GoState, config: C): boolean {
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         boardCopy[coord.y][coord.x] = GoPiece.ofPlayer(state.getCurrentPlayer());
         const maxStepSize: number = this.getZoom(config);
@@ -228,7 +228,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
      * will return an optional coord if there is a coord that is the only capture
      * (if zero capture, optional will be absent, if two or more it will be absent too)
      */
-    private applyCaptures(move: GoMove, state: GoState, config: MGPOptional<C>): GoLegalityInformation {
+    private applyCaptures(move: GoMove, state: GoState, config: C): GoLegalityInformation {
         const captureds: Coord[] = [];
         const maxStepSize: number = this.getZoom(config);
         for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
@@ -331,7 +331,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
     private applyNormalLegalMove(
         legalMove: GoMove,
         goLegalityInformation: GoLegalityInformation,
-        config: MGPOptional<C>,
+        config: C,
     ): GoState
     {
         let state: GoState = goLegalityInformation.postCaptureState;
@@ -376,7 +376,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         return this.markTerritoryAndCount(resultingState);
     }
 
-    public override isLegal(move: GoMove, state: GoState, config: MGPOptional<C>): MGPFallible<GoLegalityInformation> {
+    public override isLegal(move: GoMove, state: GoState, config: C): MGPFallible<GoLegalityInformation> {
         const defaultSuccess: MGPFallible<GoLegalityInformation> = MGPFallible.success({
             postCaptureState: state,
             uniqueCapture: MGPOptional.empty(),
@@ -420,7 +420,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     public override applyLegalMove(legalMove: GoMove,
                                    state: GoState,
-                                   config: MGPOptional<C>,
+                                   config: C,
                                    infos: GoLegalityInformation)
     : GoState
     {

@@ -1,7 +1,7 @@
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
 
 import { SaharaMobilityHeuristic } from './SaharaMobilityHeuristic';
@@ -12,7 +12,7 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic
     extends SaharaMobilityHeuristic
 {
 
-    public override getMetrics(node: SaharaNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: SaharaNode, _config: EmptyRulesConfig): PlayerNumberTable {
         const capturedAndFreedomForZero: { captured: boolean, freedoms: number } =
             this.getCapturedAndFreedom(node.gameState, Player.ZERO);
         const capturedAndFreedomForOne: { captured: boolean, freedoms: number } =

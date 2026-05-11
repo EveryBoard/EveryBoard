@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
@@ -20,7 +18,7 @@ describe('BrandhubRules', () => {
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     let rules: BrandhubRules;
-    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = BrandhubRules.get();

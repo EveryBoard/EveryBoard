@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../../jscaip/Coord';
@@ -15,7 +13,7 @@ const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 
 export class TablutTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

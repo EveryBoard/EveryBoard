@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { HiveHeuristic } from '../HiveHeuristic';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
@@ -12,7 +12,7 @@ import { HiveState } from '../HiveState';
 describe('HiveHeuristic', () => {
 
     let heuristic: HiveHeuristic;
-    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');

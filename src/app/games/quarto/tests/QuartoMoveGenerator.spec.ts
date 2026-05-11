@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Table } from '../../../jscaip/TableUtils';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
@@ -11,7 +9,7 @@ import { QuartoState } from '../QuartoState';
 describe('QuartoMoveGenerator', () => {
 
     let moveGenerator: QuartoMoveGenerator;
-    const defaultConfig: MGPOptional<QuartoConfig> = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new QuartoMoveGenerator();

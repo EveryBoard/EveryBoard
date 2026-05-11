@@ -31,7 +31,7 @@ export const myTaflConfig: TaflConfig = {
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
-    const defaultConfig: MGPOptional<TaflConfig> = MyTaflRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = MyTaflRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -179,13 +179,13 @@ describe('TaflRules', () => {
 
         it('should return Player.ZERO when invader starts', () => {
             // Given a rules instance configured with a starting invader
-            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: TaflConfig = {
+                ...defaultConfig,
                 invaderStarts: true,
-            });
+            };
 
             // When calling getInvader
-            const invader: Player = rules.getInvader(customConfig.get());
+            const invader: Player = rules.getInvader(customConfig);
 
             // Then the response should be Player.ZERO
             expect(invader).toEqual(Player.ZERO);
@@ -193,13 +193,13 @@ describe('TaflRules', () => {
 
         it(`should return Player.ONE when invader doesn't start`, () => {
             // Given a state instance configured with a starting defender
-            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: TaflConfig = {
+                ...defaultConfig,
                 invaderStarts: false,
-            });
+            };
 
             // When calling getInvader
-            const invader: Player = rules.getInvader(customConfig.get());
+            const invader: Player = rules.getInvader(customConfig);
 
             // Then the response should be Player.ONE
             expect(invader).toEqual(Player.ONE);
@@ -226,7 +226,7 @@ describe('TaflRules', () => {
 
             // When calling getPossibleDestinations
             const possibleDestinations: Coord[] =
-                rules.getPossibleDestinations(new Coord(8, 4), state, defaultConfig.get());
+                rules.getPossibleDestinations(new Coord(8, 4), state, defaultConfig);
 
             // Then the result should have 13 coords
             expect(possibleDestinations.length).toBe(13);

@@ -24,12 +24,12 @@ describe('GoMoveGenerator', () => { // TODO: move tests inside their own sub fol
 
     let moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig>;
 
-    const config: MGPOptional<GoConfig> = MGPOptional.of({
+    const config: GoConfig = {
         width: 5,
         height: 5,
         handicap: 0,
         zoom: 1,
-    });
+    };
 
     beforeEach(() => {
         moveGenerator = new GoMoveGenerator();

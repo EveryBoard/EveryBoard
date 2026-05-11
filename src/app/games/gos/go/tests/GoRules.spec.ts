@@ -26,13 +26,12 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const goConfig: GoConfig = {
+    const config: GoConfig = {
         width: 5,
         height: 5,
         handicap: 0,
         zoom: 1,
     };
-    const config: MGPOptional<GoConfig> = MGPOptional.of(goConfig);
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
@@ -710,10 +709,10 @@ describe('GoRules', () => {
 
     describe('alternative config', () => {
 
-        const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
-            ...goConfig,
+        const customConfig: GoConfig = {
+            ...config,
             zoom: 2,
-        });
+        };
 
         it('should capture piece surrounded at higher zooms', () => {
             // Given:

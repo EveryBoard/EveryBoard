@@ -1,6 +1,6 @@
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
-import { EmptyRulesConfig, NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { NewGameMinimax } from '../NewGameMinimax';
 import { NewGameMove } from '../NewGameMove';
@@ -14,7 +14,7 @@ import { NewGameState } from '../NewGameState';
 describe('NewGameMinimax', () => {
 
     let minimax: Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo>;
-    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new NewGameMinimax();

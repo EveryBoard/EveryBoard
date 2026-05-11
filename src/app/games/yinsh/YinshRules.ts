@@ -8,7 +8,7 @@ import { HexaLine } from '../../jscaip/HexaLine';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 
@@ -51,7 +51,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return new YinshState(board, PlayerNumberMap.of(5, 5), 0);
     }
 
-    public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: NoConfig, info: YinshState)
+    public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: EmptyRulesConfig, info: YinshState)
     : YinshState
     {
         const stateWithoutTurn: YinshState = info;

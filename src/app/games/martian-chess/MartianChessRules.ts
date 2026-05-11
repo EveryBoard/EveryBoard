@@ -4,7 +4,7 @@ import { GameNode } from '../../jscaip/AI/GameNode';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 
@@ -55,7 +55,7 @@ export class MartianChessRules extends Rules<MartianChessMove, MartianChessState
 
     public override applyLegalMove(move: MartianChessMove,
                                    state: MartianChessState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    info: MartianChessMoveResult)
     : MartianChessState
     {

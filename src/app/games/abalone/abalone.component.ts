@@ -220,7 +220,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     private showDirection(): void {
         const state: AbaloneState = this.getState();
-        const config: MGPOptional<AbaloneConfig> = this.getConfig();
+        const config: AbaloneConfig = this.getConfig();
         for (const dir of HexaDirection.factory.all) {
             const startToEnd: AbaloneArrowInfo = this.getArrowPath(dir);
             let theoretical: AbaloneMove;
@@ -276,7 +276,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private async secondClick(coord: Coord): Promise<MGPValidation> {
-        const maxGroup: number = this.getConfig().get().maximumPushingGroupSize;
+        const maxGroup: number = this.getConfig().maximumPushingGroupSize;
         const firstPiece: Coord = this.selecteds[0];
         if (coord.equals(firstPiece)) {
             return this.cancelMove();
@@ -332,7 +332,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
                 // Then it's an extension of the line
                 const firstDistance: number = firstPiece.getLinearDistanceToward(clicked);
                 const secondDistance: number = lastPiece.getLinearDistanceToward(clicked);
-                const config: AbaloneConfig = this.getConfig().get();
+                const config: AbaloneConfig = this.getConfig();
                 const maxSizeGroup: number = config.maximumPushingGroupSize;
                 if (Math.max(firstDistance, secondDistance) === maxSizeGroup - 1) {
                     this.selecteds.push(clicked);

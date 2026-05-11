@@ -11,7 +11,7 @@ import { ReversiState } from '../ReversiState';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
+const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 
 describe('ReversiHeuristic', () => {
 

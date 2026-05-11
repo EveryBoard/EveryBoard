@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { DiamFailure } from '../DiamFailure';
@@ -19,7 +19,7 @@ describe('DiamRules', () => {
     const B2: DiamPiece = DiamPiece.ONE_SECOND;
 
     let rules: DiamRules;
-    const defaultConfig: NoConfig = DiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DiamRules.get();

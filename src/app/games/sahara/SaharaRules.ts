@@ -8,7 +8,7 @@ import { GameStatus } from '../../jscaip/GameStatus';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
@@ -100,7 +100,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaState> {
 
     public override applyLegalMove(move: SaharaMove,
                                    state: SaharaState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    _info: void)
     : SaharaState
     {

@@ -6,8 +6,9 @@ import { ConfigureTestingModuleUtils } from './utils/tests/TestUtils.spec';
 
 describe('AppComponent', () => {
     beforeEach(fakeAsync(async() => {
-        await ConfigureTestingModuleUtils.configureTestingModule(AppComponent);
+        await ConfigureTestingModuleUtils.configureTestingModule();
     }));
+
     it('should create the app', () => {
         const fixture: ComponentFixture<AppComponent> = TestBed.createComponent(AppComponent);
         const app: AppComponent = fixture.debugElement.componentInstance;

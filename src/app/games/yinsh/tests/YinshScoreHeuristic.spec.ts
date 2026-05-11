@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { YinshNode, YinshRules } from '../YinshRules';
 import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
 import { YinshState } from '../YinshState';
@@ -9,7 +9,7 @@ import { YinshState } from '../YinshState';
 describe('YinshScoreHeuristic', () => {
 
     let heuristic: YinshScoreHeuristic;
-    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new YinshScoreHeuristic();

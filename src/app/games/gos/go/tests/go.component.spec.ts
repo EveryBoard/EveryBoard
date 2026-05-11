@@ -17,7 +17,7 @@ import { GoComponent } from '../go.component';
 describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
-    const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -74,11 +74,11 @@ describe('GoComponent', () => {
         ];
         const state: GoState =
             new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
-        const config: MGPOptional<GoConfig> = MGPOptional.of({
-            ...defaultConfig.get(),
+        const config: GoConfig = {
+            ...defaultConfig,
             width: 5,
             height: 5,
-        });
+        };
 
         // When rendering it
         await testUtils.setupState(state, { config });
@@ -111,11 +111,11 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: GoConfig = {
+                ...defaultConfig,
                 height: 13,
                 width: 13,
-            });
+            };
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
@@ -135,11 +135,11 @@ describe('GoComponent', () => {
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: GoConfig = {
+                ...defaultConfig,
                 height: 9,
                 width: 9,
-            });
+            };
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
@@ -159,11 +159,11 @@ describe('GoComponent', () => {
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
             // Given a (odd x odd) board
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: GoConfig = {
+                ...defaultConfig,
                 height: 9,
                 width: 9,
-            });
+            };
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
@@ -175,11 +175,11 @@ describe('GoComponent', () => {
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
             // Given a (even x even) board
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: GoConfig = {
+                ...defaultConfig,
                 height: 10,
                 width: 10,
-            });
+            };
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it

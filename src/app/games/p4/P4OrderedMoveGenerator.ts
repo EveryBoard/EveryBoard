@@ -1,12 +1,10 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
 import { P4Config, P4Node } from './P4Rules';
 
 export class P4OrderedMoveGenerator extends P4MoveGenerator {
 
-    public override getListMoves(node: P4Node, config: MGPOptional<P4Config>): P4Move[] {
+    public override getListMoves(node: P4Node, config: P4Config): P4Move[] {
         const halfWidth: number = (node.gameState.getWidth() - 1) / 2;
         function closestToCenterFirst(left: P4Move, right: P4Move): number {
             const distanceFromCenterLeft: number = Math.abs(left.x - halfWidth);

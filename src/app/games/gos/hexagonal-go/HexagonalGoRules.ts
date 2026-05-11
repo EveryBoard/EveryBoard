@@ -44,8 +44,7 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
         super(false);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<HexagonalGoConfig>): GoState {
-        const config: HexagonalGoConfig = optionalConfig.get();
+    public override getInitialState(config: HexagonalGoConfig): GoState {
         const size: number = config.size;
         const boardSize: number = (size * 2) - 1;
         const maximumDiagonalIndex: number = (3 * size) - 2;
@@ -61,8 +60,8 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
         return new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<HexagonalGoConfig>> {
-        return MGPOptional.of(HexagonalGoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<HexagonalGoConfig> {
+        return HexagonalGoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getGoGroupDataFactory(_: number): GoGroupDataFactory {

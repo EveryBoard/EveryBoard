@@ -1,4 +1,4 @@
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
@@ -27,7 +27,7 @@ function hasNSteps(n: number): (move: DiaballikMove) => boolean {
     };
 }
 
-const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
