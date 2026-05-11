@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -88,11 +89,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         return classes;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clickedCoord: Coord = new Coord(x, y);
         const state: QuixoState = this.getState();
         const coordLegality: MGPValidation = this.rules.isValidCoord(state, clickedCoord);
@@ -122,11 +120,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         return directions;
     }
 
+    @ClickHandler((direction: Orthogonal) => `#choose-direction-${ direction.toString() }`)
     public async chooseDirection(direction: Orthogonal): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#chooseDirection_' + direction.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         this.chosenDirection = direction;
         return await this.tryMove();
     }

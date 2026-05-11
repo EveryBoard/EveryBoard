@@ -6,7 +6,7 @@ import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -176,13 +176,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
+    @ClickHandler((coord: Coord) => `#piece-${ coord.x }-${ coord.y }`)
     public async onPieceClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#piece-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.onLegalPieceClick(coord);
     }
 
@@ -357,11 +352,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return MGPValidation.SUCCESS;
     }
 
+    @ClickHandler((dir: HexaDirection) => `#direction-${ dir.toString() }`)
     public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#direction-' + dir.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this._chooseDirection(dir);
     }
 
@@ -377,19 +369,13 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
+    @ClickHandler((coord: Coord) => `#invisible-space-${ coord.x }-${ coord.y }`)
     public async onInvisibleSpaceClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#invisible-space-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.tryChoosingDirection(coord);
     }
 
+    @ClickHandler((coord: Coord) => `#space-${ coord.x }-${ coord.y }`)
     public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#space-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.getState().getPieceAt(coord).isPlayer()) {
             return this.onLegalPieceClick(coord);
         }

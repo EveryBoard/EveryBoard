@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -133,11 +134,8 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         this.isDroppingGroup = this.rules.isDropPhase(this.constructedState, config);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const config: QuebecCastlesConfig = this.getConfig();
         if (this.isPlayerDropping() && this.getNumberOfAwaitedDrop() === 0) {
             if (this.dropped.contains(coord)) {
@@ -218,11 +216,8 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         this.possibleLanding = new Set(possibleLanding);
     }
 
+    @ClickHandler(() => `#drop-validator`)
     public async validateGroupDrop(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#drop-validator');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const move: QuebecCastlesDrop = QuebecCastlesDrop.of(this.dropped.toList());
         return this.chooseMove(move);
     }

@@ -5,7 +5,7 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everybo
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -155,11 +155,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return this.constructedState.getPieceAt(coord);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
             case GipfComponent.PHASE_FINAL_CAPTURE:

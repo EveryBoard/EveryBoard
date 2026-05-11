@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 
@@ -227,12 +227,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         return classes;
     }
 
+    @ClickHandler((x: number, player: Player) => `#drop-arrow-${ player === Player.ZERO ? 'zero' : 'one' }-${ x }`)
     public async onArrowClick(x: number, player: Player): Promise<MGPValidation> {
-        const playerString: string = (player === Player.ZERO) ? 'zero' : 'one';
-        const clickValidity: MGPValidation = await this.canUserPlay('#dropArrow_' + playerString + '_' + x);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.selectedPiece.isPresent()) {
             const square: number = this.selectedPiece.get().square;
             const move: ApagosMove = ApagosMove.transfer(square, x).get();
@@ -281,11 +277,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     }
 
+    @ClickHandler((x: number) => `#square-${ x }`)
     public async onSquareClick(x: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
             return this.cancelMove();
         }

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
@@ -158,12 +158,9 @@ export class LodestoneComponent
         return new ViewBox(left, up, width, height);
     }
 
+    @ClickHandler((x: number, y: number) => `#square-${ x }-${ y }`)
     public async selectCoord(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
-        const clickValidity: MGPValidation = await this.canUserPlay('#square-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.capturesToPlace > 0) {
             return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
         }
@@ -183,13 +180,9 @@ export class LodestoneComponent
         }
     }
 
-    public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
-        const owner: string = this.getCurrentPlayer().toString();
-        const clickedElement: string = '#lodestone-' + lodestone.direction + '-' + lodestone.orientation + '-' + owner;
-        const clickValidity: MGPValidation = await this.canUserPlay(clickedElement);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+    @ClickHandler((lodestone: LodestoneDescription, owner: string) => `#lodestone-${ lodestone.direction }-${ lodestone.orientation }-${ owner }`)
+    public async selectLodestone(lodestone: LodestoneDescription, _: string): Promise<MGPValidation> {
+        // const owner: string = this.getCurrentPlayer().toString();
         Utils.assert(this.capturesToPlace === 0,
                      'should not be able to click on a lodestone when captures need to be placed');
         const player: Player = this.getCurrentPlayer();
@@ -243,29 +236,30 @@ export class LodestoneComponent
         return this.chooseMove(move);
     }
 
+    @ClickHandler(
+        (position: LodestonePressurePlatePosition,
+         plateIndex: number,
+         pieceIndex: number,
+        ) => `#plate-${ position }-${ plateIndex }-${ pieceIndex}`,
+    )
     public async onPressurePlateClick(position: LodestonePressurePlatePosition,
-                                      plateIndex: number,
-                                      pieceIndex: number)
-    : Promise<MGPValidation>
-    {
-        const squareName: string = '#plate-' + position + '-' + plateIndex + '-' + pieceIndex;
-        const clickValidity: MGPValidation = await this.canUserPlay(squareName);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+                                      _plateIndex: number,
+                                      _pieceIndex: number,
+    ): Promise<MGPValidation> {
         return this.selectPressurePlate(position);
     }
 
+    @ClickHandler(
+        (position: LodestonePressurePlatePosition,
+         plateIndex: number,
+         pieceIndex: number,
+        ) => `#plate-${ position }-${ plateIndex }-${ pieceIndex}`,
+    )
     public async onTemporaryPressurePlateClick(position: LodestonePressurePlatePosition,
-                                               plateIndex: number,
-                                               pieceIndex: number)
+                                               _plateIndex: number,
+                                               _pieceIndex: number)
     : Promise<MGPValidation>
     {
-        const squareName: string = '#plate-' + position + '-' + plateIndex + '-' + pieceIndex;
-        const clickValidity: MGPValidation = await this.canUserPlay(squareName);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.deselectPressurePlate(position);
     }
 

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -36,11 +37,8 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.encoder = P4Move.encoder;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#click-${ x }-${ y }`);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove);
     }

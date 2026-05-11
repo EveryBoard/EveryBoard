@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -150,12 +151,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return remainingPieceSet.map((size: number) => EncapsulePiece.ofSizeAndPlayer(size, player));
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     protected async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const clickedCoord: Coord = new Coord(x, y);
         const state: EncapsuleState = this.getState();
         if (this.chosenCoord.isAbsent()) {
@@ -186,13 +183,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.chosenPiece = MGPOptional.empty();
     }
 
+    @ClickHandler((piece: EncapsulePiece) => '#remaining-piece-' + piece.toString())
     protected async onPieceClick(piece: EncapsulePiece): Promise<MGPValidation> {
-        const clickedId: string = '#remaining-piece-' + piece.toString();
-        const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const state: EncapsuleState = this.getState();
         if (state.isDroppable(piece) === false) {
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());

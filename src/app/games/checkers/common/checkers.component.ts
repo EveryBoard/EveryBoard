@@ -1,7 +1,7 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler, ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { ModeConfig, ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';
@@ -167,11 +167,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.lastMoveds = [];
     }
 
+    @ClickHandler((x: number, y: number) => `#coord-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#coord-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clickedCoord: Coord = new Coord(x, y);
         const clickedSpace: CheckersStack = this.constructedState.getPieceAt(clickedCoord);
         const opponent: Player = this.constructedState.getCurrentOpponent();

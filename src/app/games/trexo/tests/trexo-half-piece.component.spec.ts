@@ -21,22 +21,22 @@ describe('TrexoHalfPieceComponent', () => {
          *   |      |/
          *   5------6
          */
-        testUtils.expectElementToExist('#line_0_to_1');
-        testUtils.expectElementToExist('#line_2_to_3');
-        testUtils.expectElementToExist('#line_5_to_6');
-        testUtils.expectElementToExist('#line_0_to_2');
-        testUtils.expectElementToExist('#line_1_to_3');
-        testUtils.expectElementToExist('#line_4_to_6');
-        testUtils.expectElementToExist('#line_2_to_5');
-        testUtils.expectElementToExist('#line_3_to_6');
-        testUtils.expectElementToExist('#line_1_to_4');
+        testUtils.expectElementToExist('#line-0-to-1');
+        testUtils.expectElementToExist('#line-2-to-3');
+        testUtils.expectElementToExist('#line-5-to-6');
+        testUtils.expectElementToExist('#line-0-to-2');
+        testUtils.expectElementToExist('#line-1-to-3');
+        testUtils.expectElementToExist('#line-4-to-6');
+        testUtils.expectElementToExist('#line-2-to-5');
+        testUtils.expectElementToExist('#line-3-to-6');
+        testUtils.expectElementToExist('#line-1-to-4');
     }
 
     let testUtils: SimpleComponentTestUtils<TrexoHalfPieceComponent>;
 
     let component: TrexoHalfPieceComponent;
 
-    /** Those are all the points, and line_A_to_B is the name of the line going from point A to point B
+    /** Those are all the points, and line-A-to-B is the name of the line going from point A to point B
      * Pretty complex notation right ?
      *     0------1
      *    /      /|
@@ -85,15 +85,15 @@ describe('TrexoHalfPieceComponent', () => {
          *   |
          *   5------6
          */
-        testUtils.expectElementToExist('#line_0_to_1');
-        testUtils.expectElementToExist('#line_2_to_3');
-        testUtils.expectElementToExist('#line_5_to_6');
-        testUtils.expectElementToExist('#line_0_to_2');
-        testUtils.expectElementToExist('#line_2_to_5');
-        testUtils.expectElementNotToExist('#line_1_to_4');
-        testUtils.expectElementNotToExist('#line_1_to_3');
-        testUtils.expectElementNotToExist('#line_4_to_6');
-        testUtils.expectElementNotToExist('#line_3_to_6');
+        testUtils.expectElementToExist('#line-0-to-1');
+        testUtils.expectElementToExist('#line-2-to-3');
+        testUtils.expectElementToExist('#line-5-to-6');
+        testUtils.expectElementToExist('#line-0-to-2');
+        testUtils.expectElementToExist('#line-2-to-5');
+        testUtils.expectElementNotToExist('#line-1-to-4');
+        testUtils.expectElementNotToExist('#line-1-to-3');
+        testUtils.expectElementNotToExist('#line-4-to-6');
+        testUtils.expectElementNotToExist('#line-3-to-6');
     });
 
     it(`should display parallelogram as open to the left when it is the rightmost part of the tile`, () => {
@@ -112,15 +112,15 @@ describe('TrexoHalfPieceComponent', () => {
          *          |/
          *   5------6
          */
-        testUtils.expectElementToExist('#line_0_to_1');
-        testUtils.expectElementToExist('#line_2_to_3');
-        testUtils.expectElementToExist('#line_5_to_6');
-        testUtils.expectElementToExist('#line_1_to_3');
-        testUtils.expectElementToExist('#line_4_to_6');
-        testUtils.expectElementToExist('#line_3_to_6');
-        testUtils.expectElementToExist('#line_1_to_4');
-        testUtils.expectElementNotToExist('#line_0_to_2');
-        testUtils.expectElementNotToExist('#line_2_to_5');
+        testUtils.expectElementToExist('#line-0-to-1');
+        testUtils.expectElementToExist('#line-2-to-3');
+        testUtils.expectElementToExist('#line-5-to-6');
+        testUtils.expectElementToExist('#line-1-to-3');
+        testUtils.expectElementToExist('#line-4-to-6');
+        testUtils.expectElementToExist('#line-3-to-6');
+        testUtils.expectElementToExist('#line-1-to-4');
+        testUtils.expectElementNotToExist('#line-0-to-2');
+        testUtils.expectElementNotToExist('#line-2-to-5');
     });
 
     it(`should display parallelogram as open to the bottom when it is the upper part of the tile`, () => {
@@ -139,15 +139,15 @@ describe('TrexoHalfPieceComponent', () => {
          *           /
          *          6
          */
-        testUtils.expectElementToExist('#line_0_to_1');
-        testUtils.expectElementToExist('#line_0_to_2');
-        testUtils.expectElementToExist('#line_1_to_3');
-        testUtils.expectElementToExist('#line_1_to_4');
-        testUtils.expectElementToExist('#line_4_to_6');
-        testUtils.expectElementNotToExist('#line_2_to_3');
-        testUtils.expectElementNotToExist('#line_2_to_5');
-        testUtils.expectElementNotToExist('#line_3_to_6');
-        testUtils.expectElementNotToExist('#line_5_to_6');
+        testUtils.expectElementToExist('#line-0-to-1');
+        testUtils.expectElementToExist('#line-0-to-2');
+        testUtils.expectElementToExist('#line-1-to-3');
+        testUtils.expectElementToExist('#line-1-to-4');
+        testUtils.expectElementToExist('#line-4-to-6');
+        testUtils.expectElementNotToExist('#line-2-to-3');
+        testUtils.expectElementNotToExist('#line-2-to-5');
+        testUtils.expectElementNotToExist('#line-3-to-6');
+        testUtils.expectElementNotToExist('#line-5-to-6');
     });
 
     it(`should display parallelogram as open to the top when it is the lower part of the tile`, () => {
@@ -166,15 +166,15 @@ describe('TrexoHalfPieceComponent', () => {
          *   |      |/
          *   5------6
          */
-        testUtils.expectElementToExist('#line_2_to_3');
-        testUtils.expectElementToExist('#line_5_to_6');
-        testUtils.expectElementToExist('#line_0_to_2');
-        testUtils.expectElementToExist('#line_1_to_3');
-        testUtils.expectElementToExist('#line_4_to_6');
-        testUtils.expectElementToExist('#line_2_to_5');
-        testUtils.expectElementToExist('#line_3_to_6');
-        testUtils.expectElementNotToExist('#line_0_to_1');
-        testUtils.expectElementNotToExist('#line_1_to_4');
+        testUtils.expectElementToExist('#line-2-to-3');
+        testUtils.expectElementToExist('#line-5-to-6');
+        testUtils.expectElementToExist('#line-0-to-2');
+        testUtils.expectElementToExist('#line-1-to-3');
+        testUtils.expectElementToExist('#line-4-to-6');
+        testUtils.expectElementToExist('#line-2-to-5');
+        testUtils.expectElementToExist('#line-3-to-6');
+        testUtils.expectElementNotToExist('#line-0-to-1');
+        testUtils.expectElementNotToExist('#line-1-to-4');
     });
 
     it(`should work the same when the coord is the "end" of the move not its start`, () => {
@@ -193,15 +193,15 @@ describe('TrexoHalfPieceComponent', () => {
          *   |      |/
          *   5------6
          */
-        testUtils.expectElementToExist('#line_2_to_3');
-        testUtils.expectElementToExist('#line_5_to_6');
-        testUtils.expectElementToExist('#line_0_to_2');
-        testUtils.expectElementToExist('#line_1_to_3');
-        testUtils.expectElementToExist('#line_4_to_6');
-        testUtils.expectElementToExist('#line_2_to_5');
-        testUtils.expectElementToExist('#line_3_to_6');
-        testUtils.expectElementNotToExist('#line_0_to_1');
-        testUtils.expectElementNotToExist('#line_1_to_4');
+        testUtils.expectElementToExist('#line-2-to-3');
+        testUtils.expectElementToExist('#line-5-to-6');
+        testUtils.expectElementToExist('#line-0-to-2');
+        testUtils.expectElementToExist('#line-1-to-3');
+        testUtils.expectElementToExist('#line-4-to-6');
+        testUtils.expectElementToExist('#line-2-to-5');
+        testUtils.expectElementToExist('#line-3-to-6');
+        testUtils.expectElementNotToExist('#line-0-to-1');
+        testUtils.expectElementNotToExist('#line-1-to-4');
     });
 
     it(`should display 'Z' on the piece when mustDisplayHeight is true`, () => {
@@ -212,7 +212,7 @@ describe('TrexoHalfPieceComponent', () => {
         testUtils.detectChanges();
 
         // Then height should be displayed
-        const height: DebugElement = testUtils.findElement('#height_1_1_0');
+        const height: DebugElement = testUtils.findElement('#height-1-1-0');
         expect(height.nativeElement.innerHTML).toBe('0');
     });
 
@@ -224,7 +224,7 @@ describe('TrexoHalfPieceComponent', () => {
         testUtils.detectChanges();
 
         // Then height should be displayed
-        testUtils.expectElementNotToExist('#height_1_1_0');
+        testUtils.expectElementNotToExist('#height-1-1-0');
     });
 
     it('should display the full parallelogram when there is a victory highlight', () => {

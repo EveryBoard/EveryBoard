@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -213,12 +214,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const clickedCoord: Coord = new Coord(x, y);
         return this.onLegalClick(clickedCoord);
     }
@@ -304,12 +301,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         return this.interactive && this.subMoves.length >= 1;
     }
 
+    @ClickHandler(() => `#done`)
     public async done(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#done');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
         if (this.subMoves.length >= 2) {
             second = MGPOptional.of(this.subMoves[1]);

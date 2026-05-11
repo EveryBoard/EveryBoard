@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -189,12 +190,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         this.displayModePanel = false;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.selectedPieceInfo.isPresent()) {
             return this.secondClick(coord);
         } else {
@@ -289,11 +287,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.callTheClock = false;
     }
 
+    @ClickHandler(() => `#clock-or-count-down-view`)
     public async onClockClick(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#clock-or-count-down-view');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const canCallTheClock: boolean = this.getState().countDown.isAbsent();
         if (canCallTheClock) {
             this.callTheClock = this.callTheClock === false;

@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -92,19 +92,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.lastEnd = MGPOptional.empty();
     }
 
+    @ClickHandler((coord: Coord) => `#pyramid-${ coord.x }-${ coord.y }`)
     public async onPyramidClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#pyramid-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.onClick(coord);
     }
 
+    @ClickHandler((coord: Coord) => '#space-' + coord.x + '-' + coord.y)
     public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#space-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.onClick(coord);
     }
 

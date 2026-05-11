@@ -4,7 +4,7 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
@@ -174,11 +174,8 @@ export class SixComponent
         return this.getPlayerClass(player);
     }
 
+    @ClickHandler((piece: Coord) => `#piece-${ piece.x }-${ piece.y }`)
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#piece-' + piece.x + '-' + piece.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const config: SixConfig = this.getConfig();
         const maxPiece: number = 2 * config.piecesPerPlayer;
         if (this.state.turn < maxPiece) {
@@ -200,11 +197,8 @@ export class SixComponent
         }
     }
 
+    @ClickHandler((neighbor: Coord) => `#neighbor-${ neighbor.x }-${ neighbor.y }`)
     public async onNeighborClick(neighbor: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#neighbor-' + neighbor.x + '-' + neighbor.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.nextClickShouldSelectGroup) {
             return this.cancelMove(SixFailure.MUST_CUT());
         }

@@ -8,7 +8,7 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
-import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
+import { AbstractGameComponent, AnyFunction, ClickNamer } from '../game-components/game-component/GameComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';
@@ -113,6 +113,16 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.canUserPlay = (elementName: string): Promise<MGPValidation> => {
             return this.canUserPlay(elementName);
         };
+        this.gameComponent.setClickInterceptor(
+            (fn: AnyFunction, clickNamer: ClickNamer) => async(...args: unknown[]): Promise<MGPValidation> => {
+                const clickedElementName: string = clickNamer(...args);
+                const clickValidity: MGPValidation = await this.gameComponent.canUserPlay(clickedElementName);
+                if (clickValidity.isFailure()) {
+                    return this.gameComponent.cancelMove(clickValidity.getReason());
+                }
+                return fn(...args);
+            },
+        );
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };

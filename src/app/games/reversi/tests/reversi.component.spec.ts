@@ -39,7 +39,7 @@ describe('ReversiComponent', () => {
         await testUtils.setupState(state);
 
         const move: ReversiMove = new ReversiMove(0, 4);
-        await testUtils.expectMoveSuccess('#click_0_4', move);
+        await testUtils.expectMoveSuccess('#click-0-4', move);
 
         const tablutGameComponent: ReversiComponent = testUtils.getGameComponent();
         expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured-fill');

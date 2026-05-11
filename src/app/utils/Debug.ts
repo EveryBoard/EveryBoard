@@ -66,7 +66,8 @@ export class Debug {
             const nullableDescriptor: PropertyDescriptor | undefined = Object.getOwnPropertyDescriptor(
                 // eslint-disable-next-line dot-notation
                 constructor['prototype'],
-                propertyName);
+                propertyName,
+            );
             const descriptor: PropertyDescriptor = Utils.getNonNullable(nullableDescriptor);
             const isMethod: boolean = descriptor.value instanceof Function;
             // In case the following assert ever gets violated, we can simply ignore the cases that are not method

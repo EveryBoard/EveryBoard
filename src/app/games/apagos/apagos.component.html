@@ -21,7 +21,7 @@
         @for (square of board; track $index; let x = $index) {
             <g [attr.transform]="getBlockTransform(x)">
                 @if (canDisplayArrow(x, PlayerOrNone.ZERO)) {
-                    <polygon id="dropArrow_zero_{{ x }}"
+                    <polygon id="drop-arrow-zero-{{ x }}"
                              class="base mid-stroke"
                              [ngClass]="getArrowClasses(PlayerOrNone.ZERO)"
                              (click)="onArrowClick(x, PlayerOrNone.ZERO)"
@@ -29,14 +29,14 @@
                              [attr.transform]="getSVGTranslation(SPACE_SIZE / 2, -SPACE_SIZE / 2)"/>
                 }
                 @if (canDisplayArrow(x, PlayerOrNone.ONE)) {
-                    <polygon id="dropArrow_one_{{ x }}"
+                    <polygon id="drop-arrow-one-{{ x }}"
                              class="base mid-stroke"
                              [ngClass]="getArrowClasses(PlayerOrNone.ONE)"
                              (click)="onArrowClick(x, PlayerOrNone.ONE)"
                              [attr.points]="ARROW_COORD"
                              [attr.transform]="getSVGTranslation(0, -SPACE_SIZE / 2)"/>
                 }
-                <rect id="square_{{ x }}"
+                <rect id="square-{{ x }}"
                       (click)="onSquareClick(x)"
                       x="0"
                       y="0"
@@ -46,7 +46,7 @@
                       class="base mid-stroke"/>
                 @for (i of ArrayUtils.range(square.count(PlayerOrNone.NONE)); track i) {
                     <ng-container>
-                        <circle id="square_{{ x }}_piece_{{ i }}_out_of_{{ square.count(PlayerOrNone.NONE) }}"
+                        <circle id="square-{{ x }}-piece-{{ i }}-out-of-{{ square.count(PlayerOrNone.NONE) }}"
                                 [attr.transform]="getCircleTransform(i, square)"
                                 (click)="onSquareClick(x)"
                                 r="10"

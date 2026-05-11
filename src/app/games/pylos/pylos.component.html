@@ -7,7 +7,7 @@
         @for (player of Player.PLAYERS; track player) {
             <g>
                 @for (p of getPlayerSidePieces(player); track $index) {
-                    <circle id="piece_{{ player.toString() }}_{{ p }}"
+                    <circle id="piece-{{ player.toString() }}-{{ p }}"
                             [attr.cx]="(SPACE_SIZE / 4) + ((boardWidth - (SPACE_SIZE / 4)) * (p / 15))"
                             [attr.cy]="getPiecesCyForPlayer(player)"
                             [attr.r]="(SPACE_SIZE / 4) - STROKE_WIDTH"
@@ -34,7 +34,7 @@
                                 @if (mustDraw(x, y, z)) {
                                     <ng-container>
                                         @if (isOccupied(x, y, z)) {
-                                            <circle id="piece_{{ x }}_{{ y }}_{{ z }}"
+                                            <circle id="piece-{{ x }}-{{ y }}-{{ z }}"
                                                     (click)="onPieceClick(x, y, z)"
                                                     [attr.r]="getPieceRadius(z) - STROKE_WIDTH"
                                                     [attr.cx]="getPieceCx(x, y, z)"
@@ -43,7 +43,7 @@
                                                     class="base mid-stroke"/>
                                         } @else {
                                             @if (mustDisplayLandingCoord(x, y, z)) {
-                                                <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
+                                                <rect id="drop-{{ x }}-{{ y }}-{{ z }}"
                                                       (click)="onDrop(x, y, z)"
                                                       [attr.width]="getPieceRadius(z) * 2"
                                                       [attr.height]="getPieceRadius(z) * 2"
@@ -62,7 +62,7 @@
             </g>
         }
         @if (highCapture.isPresent()) {
-            <rect id="highCapture_{{ highCapture.get().x }}_{{ highCapture.get().y }}_{{ highCapture.get().z }}"
+            <rect id="highCapture-{{ highCapture.get().x }}-{{ highCapture.get().y }}-{{ highCapture.get().z }}"
                   [attr.width]="getPieceRadius(highCapture.get().z) * 2"
                   [attr.height]="getPieceRadius(highCapture.get().z) * 2"
                   [attr.x]="getPieceCxByCoord(highCapture.get()) - getPieceRadius(highCapture.get().z)"
@@ -70,7 +70,7 @@
                   class="base captured-fill mid-stroke"/>
         }
         @if (chosenLandingCoord.isPresent()) {
-            <g id="capture_validation"
+            <g id="capture-validation"
                (click)="validateCapture()"
                [attr.transform]="getTranslationAtXY(4, 4)">
                 <circle [attr.cx]="STROKE_WIDTH / 2"
@@ -86,7 +86,7 @@
         }
         @for (capturable of capturables; track capturable.toString()) {
             <g (click)="onPieceClick(capturable.x, capturable.y, capturable.z)"
-               id="capturable_{{ capturable.x }}_{{ capturable.y }}_{{ capturable.z }}"
+               id="capturable-{{ capturable.x }}-{{ capturable.y }}-{{ capturable.z }}"
                [attr.transform]="getSVGTranslation(getPieceCxByCoord(capturable), getPieceCyByCoord(capturable))">
                 <line [attr.x1]="-0.25 * getPieceRadius(capturable.z)"
                       [attr.y1]="-0.25 * getPieceRadius(capturable.z)"

@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../jscaip/AI/MCTS';
@@ -75,11 +75,8 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.lastMoved = MGPOptional.empty();
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.chooseMove(PenteMove.of(coord));
     }
 

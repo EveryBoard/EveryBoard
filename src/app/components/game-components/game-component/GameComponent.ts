@@ -78,6 +78,23 @@ export class ScoreName {
     }
 }
 
+export type AnyFunction = (...args: unknown[]) => Promise<MGPValidation>;
+
+type MoveInterceptor = (fn: AnyFunction, clickNamer: ClickNamer) => AnyFunction;
+
+export type ClickNamer = (...args: unknown[]) => string;
+
+const CLICK_HANDLERS: symbol = Symbol('clickHandlers');
+
+export function ClickHandler(
+    clickNamer: ClickNamer,
+): (target: unknown, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor {
+    return function(target: object, key: string, descriptor: PropertyDescriptor): PropertyDescriptor {
+        target[CLICK_HANDLERS] ??= new Map<string, ClickNamer>();
+        target[CLICK_HANDLERS].set(key, clickNamer);
+        return descriptor;
+    };
+}
 /**
  * All method are to be implemented by the "final" GameComponent classes
  * Except chooseMove which must be set by the GameWrapper
@@ -98,6 +115,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 {
 
     private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+
     protected readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public encoder: Encoder<M>;
@@ -149,6 +167,17 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public animationOngoing: boolean = false;
 
     public state: S;
+
+    public setClickInterceptor(interceptor: MoveInterceptor): void {
+        const proto: string = Object.getPrototypeOf(this);
+        const handlers: Map<string, ClickNamer> = proto[CLICK_HANDLERS] ?? new Map();
+        for (const [key, moveMapper] of handlers) {
+            (this as unknown as { [key: string]: AnyFunction })[key] = interceptor(
+                (proto as unknown as { [key: string]: AnyFunction })[key].bind(this),
+                moveMapper,
+            );
+        }
+    }
 
     public hasScores(): boolean {
         return this.scores.isPresent();
