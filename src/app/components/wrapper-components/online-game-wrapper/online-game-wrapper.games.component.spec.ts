@@ -14,7 +14,7 @@ import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';
 
-fdescribe('OnlineGameWrapperComponent (games)', () => {
+describe('OnlineGameWrapperComponent (games)', () => {
 
     const refusal: MGPValidation = MGPValidation.failure(OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
     let testUtils: ComponentTestUtils<AbstractGameComponent, MinimalUser>;

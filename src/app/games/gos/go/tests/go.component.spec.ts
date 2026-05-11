@@ -194,11 +194,11 @@ describe('GoComponent', () => {
 
         it('should be absent when board has width of height lower than 5', fakeAsync(async() => {
             // Given a (<5 x <5) board
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: GoConfig = {
+                ...defaultConfig,
                 height: 4,
                 width: 4,
-            });
+            };
             const state: GoState = GoRules.get().getInitialState(config);
 
             // When displaying it
@@ -210,7 +210,7 @@ describe('GoComponent', () => {
 
     });
 
-    describe('GoBoardComponent', () => { // TODO: move to GoBoard or to zoomed go
+    describe('Zoomed Go', () => {
 
         it('should display koCoord adequately', fakeAsync(async() => {
             // Given a provided ko coord in (1, 1) in board z=0
@@ -223,12 +223,12 @@ describe('GoComponent', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: GoConfig = {
+                ...defaultConfig,
                 width: 5,
                 height: 5,
                 zoom: 2,
-            });
+            };
 
             // When displaying that koCoord on board (1, 1) at z=2
             await testUtils.setupState(state, { config: customConfig });
@@ -248,12 +248,12 @@ describe('GoComponent', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
-            const config: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const config: GoConfig = {
+                ...defaultConfig,
                 width: 5,
                 height: 5,
                 zoom: 2,
-            });
+            };
             await testUtils.setupState(state, { config });
 
             // When clicking on one of the zooms (whose local coord is != to the one in zoom 0)
@@ -266,10 +266,6 @@ describe('GoComponent', () => {
                 move,
             );
         }));
-
-    });
-
-    describe('Zoomed Go', () => {
 
         it('should display capture correctly', fakeAsync(async() => {
             // Given a zoomed go with a board about to have a capture
@@ -287,12 +283,12 @@ describe('GoComponent', () => {
                 MGPOptional.empty(),
                 GoPhase.PLAYING,
             );
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: GoConfig = {
+                ...defaultConfig,
                 width: 5,
                 height: 5,
                 zoom: 3,
-            });
+            };
             await testUtils.setupState(state, { config: customConfig });
 
             // When doing the capture
@@ -341,12 +337,12 @@ describe('GoComponent', () => {
                 MGPOptional.of(new Coord(3, 0)),
                 GoPhase.PLAYING,
             );
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: GoConfig = {
+                ...defaultConfig,
                 width: 5,
                 height: 5,
                 zoom: 2,
-            });
+            };
 
             // When rendering state
             await testUtils.setupState(state, { config: customConfig });

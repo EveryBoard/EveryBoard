@@ -50,7 +50,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         return choices;
     }
 
-    public getCountingMovesList(currentState: GoState, config: MGPOptional<C>): GoMove[] {
+    public getCountingMovesList(currentState: GoState, config: C): GoMove[] {
         const choices: GoMove[] = [];
 
         // 1. put all to dead
@@ -60,7 +60,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         // 5. remove the entry points which on the true actual board are link to an already dead group
         // 6. return that list of alive group that AI consider dead
 
-        const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState, config).getCopiedBoard();
+        const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
         const zoom: number = this.rules.getZoom(config);
         const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory(zoom);
@@ -82,7 +82,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
         return choices;
     }
 
-    public getCorrectBoard(currentState: GoState, config: MGPOptional<C>): GoState {
+    public getCorrectBoard(currentState: GoState): GoState {
         const markAsDead: (piece: GoPiece) => GoPiece = (piece: GoPiece) => {
             if (piece === GoPiece.DARK) return GoPiece.DEAD_DARK;
             if (piece === GoPiece.LIGHT) return GoPiece.DEAD_LIGHT;
@@ -117,8 +117,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
 
     public setAliveUniqueWrapper(allDeadState: GoState,
                                  monoWrappedEmptyGroups: GoGroupData[],
-    ): GoState
-    {
+    ): GoState {
         let resultingState: GoState = allDeadState.copy();
         let aliveCoords: Coord[];
         for (const monoWrappedEmptyGroup of monoWrappedEmptyGroups) {

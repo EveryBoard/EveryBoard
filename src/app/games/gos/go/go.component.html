@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (zoom of ArrayUtils.range(config.get().zoom); track $index) {
+    @for (zoom of ArrayUtils.range(config.zoom); track $index) {
         <g [id]="'zoom-' + zoom"
            [attr.transform]="translateZoom(zoom)">
             @for (subZoomX of ArrayUtils.range(zoom + 1); track $index) {

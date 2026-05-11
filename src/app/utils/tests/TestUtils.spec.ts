@@ -188,7 +188,6 @@ export class SimpleComponentTestUtils<T> {
     }
 
     public async clickElement(elementName: string, waitInMs?: number): Promise<void> {
-        console.log('kaak clic', elementName)
         const element: DebugElement = this.findElement(elementName);
         element.triggerEventHandler('click', null);
         tick(0);

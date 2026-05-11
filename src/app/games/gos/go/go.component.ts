@@ -104,7 +104,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.board = state.getCopiedBoard();
         const subBoards: ReadonlyArray<Table<Table<GoPiece>>> = GoSubBoardHelper.splitInSubBoards(
             this.board,
-            this.getConfig().get().zoom,
+            this.getConfig().zoom,
         );
         this.zooms = subBoards.map(
             (table: Table<Table<GoPiece>>) => {
@@ -209,14 +209,9 @@ export class GoComponent extends GobanGameComponent<GoRules,
         return `translate(${ translateX }, ${ translateY })`;
     }
 
-    // public onMouveOver(coord: Coord): void {
-    //     console.log('jajaette', coord)
-    // }
-
     public onTakeHover(zoom: number, zx: number, zy: number, zoomedCoord: Coord): void {
         const normalCoord: Coord = GoSubBoardHelper.fromZoomedToNormalCoord(zoomedCoord, zx, zy, zoom);
         this.hover.set(MGPOptional.of(normalCoord));
-        // this.hover.set(MGPOptional.of(zoomedCoord));
     }
 
 }
