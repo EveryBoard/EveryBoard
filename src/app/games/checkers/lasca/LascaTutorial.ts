@@ -48,7 +48,7 @@ export class LascaTutorial extends Tutorial {
                 [__, _u, __, _u, __, _u, __],
                 [_u, __, _u, __, _u, __, _u],
             ], 2),
-            CheckersMove.fromCapture([new Coord(2, 4), new Coord(0, 2)]).get(),
+            CheckersMove.fromCapture([new Coord(2, 4), new Coord(0, 2)]),
             $localize`Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.`,
         ),
         TutorialStep.anyMove(
@@ -63,7 +63,7 @@ export class LascaTutorial extends Tutorial {
                 [__, _v, __, __, __, __, __],
                 [__, __, _u, __, _u, __, _u],
             ], 2),
-            CheckersMove.fromCapture([new Coord(2, 6), new Coord(0, 4), new Coord(2, 2)]).get(),
+            CheckersMove.fromCapture([new Coord(2, 6), new Coord(0, 4), new Coord(2, 2)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -78,7 +78,7 @@ export class LascaTutorial extends Tutorial {
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
             ], 2),
-            CheckersMove.fromCapture([new Coord(2, 4), new Coord(0, 2)]).get(),
+            CheckersMove.fromCapture([new Coord(2, 4), new Coord(0, 2)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(

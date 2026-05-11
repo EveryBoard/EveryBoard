@@ -110,7 +110,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         [_, U, _, U, _, U, _, U, _, U],
         [U, _, U, _, U, _, U, _, U, _],
     ], 1),
-    simpleCapture: CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 7)]).get(),
+    simpleCapture: CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 7)]),
     stateWithPromotion: CheckersState.of([
         [_, _, _, _, V, _, V],
         [_, U, _, _, _, _, _],
@@ -121,7 +121,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         [U, _, U, _, U, _, U],
     ], 0),
     promotion: CheckersMove.fromStep(new Coord(1, 1), new Coord(0, 0)),
-    stateWithComplexeCapture: CheckersState.of([
+    stateWithComplexCapture: CheckersState.of([
         [_, _, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _, _],
         [_, _, V, _, _, _, _, _, _, _],
@@ -133,7 +133,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         [_, _, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _, _],
     ], 1),
-    complexeCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get(),
+    complexCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]),
     stateWithInvalidCapture: CheckersState.of([
         [_, _, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _, _],
@@ -146,7 +146,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         [_, _, _, _, _, _, _, _, _, _],
         [_, _, _, _, _, _, _, _, _, _],
     ], 1),
-    invalidCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get(),
+    invalidCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     invalidThirdMove: [new Coord(3, 6), new Coord(5, 5)],
 };
 
@@ -186,7 +186,7 @@ describe('InternationalCheckersComponent', () => {
             await testUtils.expectClickSuccess('#coord-1-1');
 
             // When doing a capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(5, 5)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(5, 5)]);
             await testUtils.expectMoveSuccess('#coord-5-5', move);
 
             // Then only captured space should be captured-fill
@@ -221,7 +221,7 @@ describe('InternationalCheckersComponent', () => {
             await testUtils.expectClickSuccess('#coord-4-4');
 
             // When doing a capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 4), new Coord(0, 0)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 4), new Coord(0, 0)]);
 
             // Then it should be a success
             await testUtils.expectMoveSuccess('#coord-0-0', move);
@@ -247,7 +247,7 @@ describe('InternationalCheckersComponent', () => {
 
             // When doing a capture
             const captures: Coord[] = [new Coord(6, 6), new Coord(2, 2), new Coord(0, 0)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then it should be a success
             await testUtils.expectMoveSuccess('#coord-0-0', move);
@@ -351,7 +351,7 @@ describe('InternationalCheckersComponent', () => {
 
             // When doing the last capture
             const captures: Coord[] = [new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then the move should be finalized
             await testUtils.expectMoveSuccess('#coord-6-6', move);
@@ -438,7 +438,7 @@ describe('InternationalCheckersComponent', () => {
 
             // When doing the move
             // Then it should succeed
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]);
             await testUtils.expectMoveSuccess('#coord-3-1', move);
         }));
 

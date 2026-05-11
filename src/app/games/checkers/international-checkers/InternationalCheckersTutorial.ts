@@ -45,7 +45,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, U, _, U, _, U, _, U, _, U],
                 [U, _, U, _, U, _, U, _, U, _],
             ], 4),
-            CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 3)]).get(),
+            CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ).withPreviousMove(CheckersMove.fromStep(new Coord(2, 3), new Coord(1, 4))),
         TutorialStep.anyMove(
@@ -63,7 +63,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, U, _, U, _, U, _, U, _, U],
                 [U, _, U, _, U, _, U, _, U, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(7, 4), new Coord(9, 6)]).get(),
+            CheckersMove.fromCapture([new Coord(7, 4), new Coord(9, 6)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -81,7 +81,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(6, 7), new Coord(8, 5), new Coord(6, 3), new Coord(4, 1)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 7), new Coord(8, 5), new Coord(6, 3), new Coord(4, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -99,7 +99,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(8, 3), new Coord(6, 1)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 5), new Coord(8, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
@@ -170,7 +170,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 new Coord(3, 7),
                 new Coord(5, 9),
                 new Coord(7, 7),
-            ]).get(),
+            ]),
             TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
         ),
     ];

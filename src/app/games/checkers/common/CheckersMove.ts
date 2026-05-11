@@ -1,9 +1,7 @@
-import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
+import { ArrayUtils, Encoder, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
-
-import { CheckersFailure } from './CheckersFailure';
 
 export class CheckersMove extends Move {
 
@@ -11,30 +9,8 @@ export class CheckersMove extends Move {
         return new CheckersMove(coords, isStep);
     }
 
-    public static fromCapture(coords: Coord[], canStackPieces: boolean = false): MGPFallible<CheckersMove> {
-        const jumpsValidity: MGPFallible<MGPUniqueList<Coord>> = CheckersMove.getSteppedOverCoords(coords, canStackPieces);
-        if (jumpsValidity.isSuccess()) {
-            return MGPFallible.success(new CheckersMove(coords, false));
-        } else {
-            return MGPFallible.failure(jumpsValidity.getReason());
-        }
-    }
-
-    public static getSteppedOverCoords(steppedOn: Coord[], _canStackPieces: boolean = false): MGPFallible<MGPUniqueList<Coord>> {
-        let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
-        const allJumpedOverCoords: Coord[] = [];
-        for (const coord of steppedOn) {
-            if (lastCoordOpt.isPresent()) {
-                const lastCoord: Coord = lastCoordOpt.get();
-                const subJumpedOverCoords: Coord[] = lastCoord.getCoordsToward(coord);
-                for (const jumpedOverCoord of subJumpedOverCoords) {
-                    allJumpedOverCoords.push(jumpedOverCoord);
-                }
-            }
-            allJumpedOverCoords.push(coord);
-            lastCoordOpt = MGPOptional.of(coord);
-        }
-        return MGPFallible.success(new MGPUniqueList(allJumpedOverCoords));
+    public static fromCapture(coords: Coord[]): CheckersMove {
+        return new CheckersMove(coords, false);
     }
 
     public static fromStep(start: Coord, end: Coord): CheckersMove {
@@ -62,12 +38,15 @@ export class CheckersMove extends Move {
     }
 
     private getRelation(other: CheckersMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
-        return CheckersMove.getRelation(this.coords as Coord[], other.coords as Coord[]);
+        return CheckersMove.getRelation(this.coords, other.coords);
     }
 
-    public static getRelation(a: Coord[], b: Coord[]): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+    public static getRelation(a: ReadonlyArray<Coord>, b: ReadonlyArray<Coord>): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
         const thisLength: number = a.length;
         const otherLength: number = b.length;
+        if (thisLength > otherLength) {
+            return 'INEQUALITY';
+        }
         const minimalLength: number = Math.min(thisLength, otherLength);
         for (let i: number = 0; i < minimalLength; i++) {
             if (a[i].equals(b[i]) === false) return 'INEQUALITY';
@@ -93,11 +72,28 @@ export class CheckersMove extends Move {
         return this.coords[this.coords.length - 1];
     }
 
-    public getSteppedOverCoords(): MGPFallible<MGPUniqueList<Coord>> {
-        return CheckersMove.getSteppedOverCoords(this.coords as Coord[]);
+    public getSteppedOverCoordsWithDuplicates(): Coord[] {
+        let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
+        const allJumpedOverCoords: Coord[] = [];
+        for (const coord of this.coords) {
+            if (lastCoordOpt.isPresent()) {
+                const lastCoord: Coord = lastCoordOpt.get();
+                const subJumpedOverCoords: Coord[] = lastCoord.getCoordsToward(coord);
+                for (const jumpedOverCoord of subJumpedOverCoords) {
+                    allJumpedOverCoords.push(jumpedOverCoord);
+                }
+            }
+            allJumpedOverCoords.push(coord);
+            lastCoordOpt = MGPOptional.of(coord);
+        }
+        return allJumpedOverCoords;
     }
 
-    public concatenate(move: CheckersMove): MGPFallible<CheckersMove> {
+    public getSteppedOverCoords(): MGPUniqueList<Coord> {
+        return new MGPUniqueList(this.getSteppedOverCoordsWithDuplicates());
+    }
+
+    public concatenate(move: CheckersMove): CheckersMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords[0];
         Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');

@@ -57,9 +57,9 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
     stateWithPromotion: CheckersState;
     promotion: CheckersMove;
 
-    // A state on which a complexe capture is possible
-    stateWithComplexeCapture: CheckersState;
-    complexeCapture: CheckersMove;
+    // A state on which a complex capture is possible
+    stateWithComplexCapture: CheckersState;
+    complexCapture: CheckersMove;
 
     // A state on which an invalid capture is possible
     stateWithInvalidCapture: CheckersState;
@@ -382,9 +382,9 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
                 // Given any board with a selected piece that could do a multiple capture
-                const state: CheckersState = entries.stateWithComplexeCapture;
+                const state: CheckersState = entries.stateWithComplexCapture;
                 await testUtils.setupState(state);
-                const move: CheckersMove = entries.complexeCapture;
+                const move: CheckersMove = entries.complexCapture;
                 const first: Coord = move.coords[0];
                 await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
 

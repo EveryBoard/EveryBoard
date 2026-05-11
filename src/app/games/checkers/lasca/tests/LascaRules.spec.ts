@@ -205,7 +205,7 @@ describe('LascaRules', () => {
 
             // When doing a move that jump over an empty square after capture
             const capture: Coord[] = [new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+            const move: CheckersMove = CheckersMove.fromCapture(capture);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MOVE_CANNOT_CONTINUE_AFTER_NON_CAPTURE_MOVE();
@@ -219,7 +219,7 @@ describe('LascaRules', () => {
             // When trying a move going outside of the board
             const outOfBoardCoord: Coord = new Coord(8, 4);
             const captures: Coord[] = [new Coord(6, 6), outOfBoardCoord, new Coord(6, 2)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then it should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
@@ -259,7 +259,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When capturing the first but not the second
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
@@ -279,7 +279,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing so
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]);
 
             // Then the move should be illegal
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
@@ -299,7 +299,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing so
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
@@ -325,7 +325,7 @@ describe('LascaRules', () => {
                 new Coord(4, 3),
                 new Coord(6, 1),
             ];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
@@ -345,7 +345,7 @@ describe('LascaRules', () => {
             ], 0);
 
             // When trying to do a capture that does too long step
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.NO_PIECE_CAN_DO_LONG_JUMP();
@@ -365,7 +365,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing the small capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -394,7 +394,7 @@ describe('LascaRules', () => {
 
             // When doing the big capture
             const capture: Coord[] = [new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+            const move: CheckersMove = CheckersMove.fromCapture(capture);
 
             // Then the move should succeed
             const stack: CheckersPiece[] = [CheckersPiece.ONE_PROMOTED, CheckersPiece.ZERO, CheckersPiece.ZERO];
@@ -424,7 +424,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When capturing the single piece
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -452,7 +452,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When capturing the commander of the stack
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -483,7 +483,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(2, 0),
                 new Coord(4, 2),
-                new Coord(6, 4)]).get();
+                new Coord(6, 4)]);
 
             // Then the move should succeed
             const vuu: CheckersStack = new CheckersStack([CheckersPiece.ONE, CheckersPiece.ZERO, CheckersPiece.ZERO]);
@@ -534,7 +534,7 @@ describe('LascaRules', () => {
                 ], 2);
 
                 // When doing it
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -673,7 +673,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -728,7 +728,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -760,7 +760,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(5, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(5, 3)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -793,7 +793,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 1), new Coord(3, 5)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 1), new Coord(3, 5)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -825,7 +825,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(3, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.INVALID_FRISIAN_MOVE();
@@ -849,7 +849,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(4, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(4, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.FRISIAN_CAPTURE_MUST_BE_EVEN();
@@ -874,7 +874,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 6)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 6)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([

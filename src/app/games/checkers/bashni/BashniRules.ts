@@ -45,8 +45,8 @@ export class BashniRules extends AbstractCheckersRules {
         return BashniRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<CheckersConfig>> {
-        return MGPOptional.of(BashniRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<CheckersConfig> {
+        return BashniRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

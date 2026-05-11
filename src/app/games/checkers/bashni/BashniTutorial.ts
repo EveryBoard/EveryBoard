@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../../jscaip/Coord';
@@ -17,7 +15,7 @@ const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
-const defaultConfig: MGPOptional<CheckersConfig> = BashniRules.get().getDefaultRulesConfig();
+const defaultConfig: CheckersConfig = BashniRules.get().getDefaultRulesConfig();
 
 export class BashniTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
@@ -51,7 +49,7 @@ export class BashniTutorial extends Tutorial {
                 [__, _u, __, _u, __, _u, __, _u],
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3)]),
             $localize`Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower.`,
         ),
         TutorialStep.anyMove(
@@ -67,7 +65,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, _u, __, __, __, __],
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(5, 4), new Coord(7, 6)]).get(),
+            CheckersMove.fromCapture([new Coord(5, 4), new Coord(7, 6)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -83,7 +81,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, _u, __, _u, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 2),
-            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3), new Coord(6, 1)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
@@ -99,7 +97,7 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 2),
-            CheckersMove.fromCapture([new Coord(3, 4), new Coord(1, 2)]).get(),
+            CheckersMove.fromCapture([new Coord(3, 4), new Coord(1, 2)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
@@ -122,6 +120,26 @@ export class BashniTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You did not choose the correct piece, and got no promotion.`,
         ),
+        TutorialStep.fromMove(
+            $localize`King move`,
+            $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king to capture the opponent's piece!`, // TODO: move all the way to the end to threaten the next one
+            CheckersState.of([
+                [__, __, __, __, __, Uv, __, _v],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, _v, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, _v, __, __, __, __, __, __],
+                [__, __, __, __, _u, __, _u, __],
+            ], 2),
+            [
+                CheckersMove.fromStep(new Coord(5, 0), new Coord(1, 4)),
+                CheckersMove.fromStep(new Coord(5, 0), new Coord(0, 5)),
+            ],
+            TutorialStepMessage.CONGRATULATIONS(),
+            $localize`You did not capture.`,
+        ),
         TutorialStep.anyMove(
             $localize`Promotion mid-capture`,
             $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two Light pieces; Your piece will promote mid-sequence and continue as a king!`,
@@ -135,28 +153,10 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 0),
-            CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 0), new Coord(0, 3)]).get(),
+            CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 0), new Coord(0, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
-        TutorialStep.fromMove(
-            $localize`King move`,
-            $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king to capture the opponent's piece!`,
-            CheckersState.of([
-                [__, __, __, __, __, Uv, __, _v],
-                [__, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __],
-                [__, __, _v, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __, __],
-                [__, __, _u, __, _u, __, _u, __],
-            ], 2),
-            [
-                CheckersMove.fromStep(new Coord(5, 0), new Coord(1, 4)),
-                CheckersMove.fromStep(new Coord(5, 0), new Coord(0, 5)),
-            ],
-            TutorialStepMessage.CONGRATULATIONS(),
-            $localize`You did not capture.`,
-        ),
+        // TODO: tuto step of capturing stack, to show the difference with e.g. lasca
+        // TODO: tuto step where you can pass over the same empty spot twice
     ];
 }

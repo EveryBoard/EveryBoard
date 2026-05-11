@@ -92,7 +92,7 @@ describe('InternationalCheckersRules', () => {
             // Given any board
             const state: CheckersState = rules.getInitialState(defaultConfig);
 
-            // When trying to movea piece vertically
+            // When trying to move a piece vertically
             const move: CheckersMove = CheckersMove.fromStep(new Coord(5, 6), new Coord(5, 4));
 
             // Then the move should be illegal
@@ -282,21 +282,21 @@ describe('InternationalCheckersRules', () => {
 
                 // When doing a move that jump over an empty square after capture
                 const capture: Coord[] = [new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)];
-                const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+                const move: CheckersMove = CheckersMove.fromCapture(capture);
 
                 // Then the move should be illegal
                 const reason: string = CheckersFailure.MOVE_CANNOT_CONTINUE_AFTER_NON_CAPTURE_MOVE();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 
-            it('should forbid to pass out of the board', () => {
+            it('should forbid to go out of the board mid-capture', () => {
                 // Given any board
                 const state: CheckersState = rules.getInitialState(defaultConfig);
 
                 // When trying a move going outside of the board
                 const outOfBoardCoord: Coord = new Coord(-2, 4);
                 const captures: Coord[] = [new Coord(0, 6), outOfBoardCoord, new Coord(0, 2)];
-                const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+                const move: CheckersMove = CheckersMove.fromCapture(captures);
 
                 // Then it should be illegal
                 const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
@@ -339,7 +339,7 @@ describe('InternationalCheckersRules', () => {
                 ], 1);
 
                 // When capturing the first but not the second
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]);
 
                 // Then the move should be illegal
                 const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
@@ -359,7 +359,7 @@ describe('InternationalCheckersRules', () => {
                 ], 1);
 
                 // When doing so
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]);
 
                 // Then the move should be illegal
                 const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
@@ -379,7 +379,7 @@ describe('InternationalCheckersRules', () => {
                 ], 1);
 
                 // When doing the small capture
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
                 // Then it should be illegal
                 const reason: string = CheckersFailure.MUST_DO_LONGEST_CAPTURE();
@@ -402,7 +402,7 @@ describe('InternationalCheckersRules', () => {
                 ], 0);
 
                 // When trying to do a capture that does too long step
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]);
 
                 // Then it should fail
                 const reason: string = CheckersFailure.FLYING_CAPTURE_IS_FORBIDDEN_FOR_NORMAL_PIECES();
@@ -425,7 +425,7 @@ describe('InternationalCheckersRules', () => {
                 ], 1);
 
                 // When doing so
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]);
 
                 // Then the piece should be captured
                 const expectedState: CheckersState = CheckersState.of([
@@ -465,7 +465,7 @@ describe('InternationalCheckersRules', () => {
                     new Coord(7, 3),
                     new Coord(9, 1),
                 ];
-                const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+                const move: CheckersMove = CheckersMove.fromCapture(captures);
 
                 // Then the piece should be captured
                 const expectedState: CheckersState = CheckersState.of([
@@ -500,7 +500,7 @@ describe('InternationalCheckersRules', () => {
 
                 // When doing the big capture
                 const capture: Coord[] = [new Coord(5, 5), new Coord(7, 7), new Coord(9, 9)];
-                const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+                const move: CheckersMove = CheckersMove.fromCapture(capture);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -534,7 +534,7 @@ describe('InternationalCheckersRules', () => {
                 ], 2);
 
                 // When capturing the single piece
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(5, 5), new Coord(3, 3)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(5, 5), new Coord(3, 3)]);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -572,7 +572,7 @@ describe('InternationalCheckersRules', () => {
                     new Coord(2, 0),
                     new Coord(4, 2),
                     new Coord(6, 4),
-                ]).get();
+                ]);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -607,7 +607,7 @@ describe('InternationalCheckersRules', () => {
                 ], 2);
 
                 // When doing it
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -684,7 +684,7 @@ describe('InternationalCheckersRules', () => {
                 ], 0);
 
                 // When trying to do a capture with "right after" landing
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -703,7 +703,7 @@ describe('InternationalCheckersRules', () => {
             });
 
             it('should allow king capture to land far after capture', () => {
-                // Given a board where a king could capture with a longer jump
+                // Given a board where a king can capture and pass twice at the same empty space
                 const state: CheckersState = CheckersState.of([
                     [_, _, _, _, _, _, _, _, _, _],
                     [_, _, _, U, _, _, _, _, _, _],
@@ -718,7 +718,7 @@ describe('InternationalCheckersRules', () => {
                 ], 0);
 
                 // When trying to do a capture with a "further" landing
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(4, 2)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(4, 2)]);
 
                 // Then the move should succeed
                 const expectedState: CheckersState = CheckersState.of([
@@ -734,6 +734,32 @@ describe('InternationalCheckersRules', () => {
                     [_, _, _, _, _, _, _, _, _, _],
                 ], 1);
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+            });
+
+            it('should forbid king to capture the same piece twice', () => {
+                // Given a board where a king could capture with a longer jump
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, V, _, _, _, _],
+                    [_, _, V, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, V, _, _, _, _],
+                    [O, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, V],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 0);
+
+                // When capturing twic the same piece (reminder: pieces are only remove *after* the capture)
+                const move: CheckersMove = CheckersMove.fromCapture([
+                    new Coord(0, 6), new Coord(4, 2), new Coord(6, 4),
+                    new Coord(4, 6), new Coord(1, 3),
+                ]);
+
+                // Then it should be illegal
+                const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 
         });
@@ -787,7 +813,7 @@ describe('InternationalCheckersRules', () => {
 
             // When doing that move
             const captures: Coord[] = [new Coord(2, 2), new Coord(4, 0), new Coord(6, 2)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then the piece should be promoted
             const expectedState: CheckersState = CheckersState.of([
@@ -869,7 +895,7 @@ describe('InternationalCheckersRules', () => {
             ], 1);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -927,7 +953,7 @@ describe('InternationalCheckersRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -959,7 +985,7 @@ describe('InternationalCheckersRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(5, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(5, 3)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -992,7 +1018,7 @@ describe('InternationalCheckersRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 1), new Coord(3, 5)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 1), new Coord(3, 5)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -1024,7 +1050,7 @@ describe('InternationalCheckersRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(3, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.INVALID_FRISIAN_MOVE();
@@ -1048,7 +1074,7 @@ describe('InternationalCheckersRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(4, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(4, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.FRISIAN_CAPTURE_MUST_BE_EVEN();
@@ -1073,7 +1099,7 @@ describe('InternationalCheckersRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 6)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 6)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([

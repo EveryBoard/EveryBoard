@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
@@ -49,7 +49,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public possibleClicks: Set<Coord> = new Set();
     private selectedStack: MGPOptional<Coord> = MGPOptional.empty();
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
-    private flyiedOverCoords: Coord[] = []; // Coord that where flyied over during ongoing turn
+    private flownOverCoords: Coord[] = []; // Coord that where flown over during ongoing turn
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
 
@@ -102,8 +102,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (this.capturedCoords.concat(this.lastCaptures).some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         }
-        const flyiedOverCoords: Coord[] = this.currentMoveClicks.concat(this.lastMoveds.concat(this.flyiedOverCoords));
-        if (flyiedOverCoords.some((c: Coord) => c.equals(coord))) {
+        const flownOverCoords: Coord[] = this.currentMoveClicks.concat(this.lastMoveds.concat(this.flownOverCoords));
+        if (flownOverCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('moved-fill');
         }
         return classes;
@@ -135,9 +135,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (this.rules.isMoveStep(move)) {
             this.lastMoveds.push(move.getEndingCoord());
         } else {
-            const jumpedOverCoord: MGPFallible<MGPUniqueList<Coord>> = move.getSteppedOverCoords();
-            Utils.assert(jumpedOverCoord.isSuccess(), 'Last move is a capture yet has illegal jumps !?');
-            for (const coord of jumpedOverCoord.get().toList().slice(1)) {
+            const jumpedOverCoord: MGPUniqueList<Coord> = move.getSteppedOverCoords();
+            for (const coord of jumpedOverCoord.toList().slice(1)) {
                 if (this.getPreviousState().getPieceAt(coord).isOccupied()) {
                     this.lastCaptures.push(coord);
                 } else {
@@ -189,7 +188,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.constructedState = this.getState();
         this.currentMoveClicks = [];
         this.capturedCoords = [];
-        this.flyiedOverCoords = [];
+        this.flownOverCoords = [];
         this.selectedStack = MGPOptional.empty();
         this.showPossibleClicks();
     }
@@ -209,9 +208,9 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             // Doing the second click, either a step or a first capture
             const delta: Vector = start.getVectorToward(clicked);
             if (delta.isDiagonal()) {
-                const flyiedOverPlayer: Player[] =
-                    this.rules.getFlyiedOverPlayers(start, clicked, this.constructedState);
-                if (flyiedOverPlayer.length === 0) {
+                const flownOverPlayer: Player[] =
+                    this.rules.getFlownOverPlayers(start, clicked, this.constructedState);
+                if (flownOverPlayer.length === 0) {
                     // It is indeed a step
                     const step: CheckersMove = CheckersMove.fromStep(start, clicked);
                     return this.chooseMove(step);
@@ -229,33 +228,33 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (captureValidity.isFailure()) {
             return this.cancelMove(captureValidity.getReason());
         } else {
-            for (const flyiedOver of lastCoord.getCoordsToward(clicked)) {
-                if (this.constructedState.getPieceAt(flyiedOver).isOccupied()) {
-                    this.capturedCoords.push(flyiedOver);
+            for (const flownOver of lastCoord.getCoordsToward(clicked)) {
+                if (this.constructedState.getPieceAt(flownOver).isOccupied()) {
+                    this.capturedCoords.push(flownOver);
                 } else {
-                    this.flyiedOverCoords.push(flyiedOver);
+                    this.flownOverCoords.push(flownOver);
                 }
             }
             this.currentMoveClicks.push(clicked);
-            const currentMove: MGPFallible<CheckersMove> = CheckersMove.fromCapture(this.currentMoveClicks);
-            if (this.legalMoves.some((capture: CheckersMove) => capture.isPrefix(currentMove.get()))) {
+            const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
+            if (this.legalMoves.some((capture: CheckersMove) => capture.isPrefix(currentMove))) {
                 this.showPossibleClicks();
                 return this.applyPartialCapture();
             } else {
-                return this.chooseMove(currentMove.get());
+                return this.chooseMove(currentMove);
             }
         }
     }
 
     private getCaptureValidity(start: Coord, end: Coord): MGPValidation {
-        const ongoingMove: MGPFallible<CheckersMove> = CheckersMove.fromCapture(this.currentMoveClicks);
         const config: CheckersConfig = this.getConfig();
-        return this.rules.getSubMoveValidity(ongoingMove.get(), start, end, this.constructedState, config);
+        const stack: CheckersStack = this.getState().getPieceAt(this.selectedStack.get());
+        return this.rules.getSubMoveValidity(stack, false, start, end, this.getState(), config);
     }
 
     private applyPartialCapture(): MGPValidation {
-        const currentMove: MGPFallible<CheckersMove> = CheckersMove.fromCapture(this.currentMoveClicks);
-        this.constructedState = this.rules.applyMove(currentMove.get(), this.getState(), this.getConfig().get());
+        const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
+        this.constructedState = this.rules.applyMove(currentMove, this.getState(), this.getConfig());
         return MGPValidation.SUCCESS;
     }
 

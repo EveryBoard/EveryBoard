@@ -80,7 +80,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         [_U, __, __, _U, __, _U, __, _U],
         [__, _U, __, _U, __, _U, __, _U],
     ], 1),
-    simpleCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get(),
+    simpleCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     stateWithPromotion: CheckersState.of([
         [__, __, __, __, __, __, _V, __],
         [__, _U, __, __, __, __, __, __],
@@ -92,7 +92,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         [__, _U, __, _U, __, _U, __, _U],
     ], 0),
     promotion: CheckersMove.fromStep(new Coord(1, 1), new Coord(0, 0)),
-    stateWithComplexeCapture: CheckersState.of([
+    stateWithComplexCapture: CheckersState.of([
         [__, __, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
         [__, __, _V, __, __, __, __, __],
@@ -102,7 +102,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         [__, __, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
     ], 1),
-    complexeCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]).get(),
+    complexCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]),
     stateWithInvalidCapture: CheckersState.of([
         [__, __, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
@@ -113,7 +113,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         [__, __, __, __, __, __, __, __],
         [__, __, __, __, __, __, __, __],
     ], 1),
-    invalidCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get(),
+    invalidCapture: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     invalidThirdMove: [new Coord(1, 4), new Coord(3, 5)],
 };
 
@@ -150,7 +150,7 @@ describe('BashniComponent', () => {
             new Coord(6, 2),
             new Coord(4, 0),
             new Coord(1, 3),
-        ]).get();
+        ]);
         await testUtils.expectClickSuccess('#coord-6-2');
         await testUtils.expectClickSuccess('#coord-4-0');
 

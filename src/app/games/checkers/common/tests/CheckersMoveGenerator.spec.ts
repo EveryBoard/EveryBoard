@@ -70,7 +70,7 @@ for (const rule of rules) {
                 new Coord(4, 4),
                 new Coord(1, 1),
             ];
-            expect(moves[0]).toEqual(CheckersMove.fromCapture(captures).get());
+            expect(moves[0]).toEqual(CheckersMove.fromCapture(captures));
         });
 
     });
@@ -134,7 +134,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
                 new Coord(5, 9),
                 new Coord(7, 7),
             ];
-            const move: CheckersMove = CheckersMove.fromCapture(coords).get();
+            const move: CheckersMove = CheckersMove.fromCapture(coords);
             expect(legalCaptures).toEqual([move]);
         });
 
@@ -194,14 +194,14 @@ describe('CheckersMoveGenerator for Lasca', () => {
                 new Coord(2, 4),
                 new Coord(4, 6),
             ];
-            const moveClockwise: CheckersMove = CheckersMove.fromCapture(coordsClockwise).get();
+            const moveClockwise: CheckersMove = CheckersMove.fromCapture(coordsClockwise);
             const coordsCounterClockwise: Coord[] = [
                 new Coord(6, 4),
                 new Coord(4, 6),
                 new Coord(2, 4),
                 new Coord(4, 2),
             ];
-            const moveCounterClockwise: CheckersMove = CheckersMove.fromCapture(coordsCounterClockwise).get();
+            const moveCounterClockwise: CheckersMove = CheckersMove.fromCapture(coordsCounterClockwise);
             expect(legalCaptures).toEqual([moveClockwise, moveCounterClockwise]);
         });
 

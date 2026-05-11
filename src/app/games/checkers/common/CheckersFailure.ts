@@ -2,6 +2,11 @@ import { Localized } from '../../../utils/LocaleUtils';
 
 export class CheckersFailure {
 
+    // TODO FOR REVIEW: une tour c'est une normal piece? Le vocabulaire réel c'est:
+    // - men
+    // - king
+    // - tower (bashni/lasca)
+    // "normal piece" c'est pass clair si c'est men or tower! "non-king piece" ça serait plus correct mais dégueu.
     public static readonly CANNOT_GO_BACKWARD: Localized = () => $localize`You cannot go backward with normal pieces!`;
 
     public static readonly CANNOT_SKIP_CAPTURE: Localized = () => $localize`You must capture when it is possible!`;

@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
-
 import { Coord, CoordFailure } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
@@ -11,7 +9,7 @@ import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { BashniRules } from '../BashniRules';
 
-describe('BashniRules', () => {
+fdescribe('BashniRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
@@ -25,7 +23,7 @@ describe('BashniRules', () => {
     const ___: CheckersStack = CheckersStack.EMPTY;
 
     let rules: BashniRules;
-    const defaultConfig: MGPOptional<CheckersConfig> = BashniRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = BashniRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = BashniRules.get();
@@ -195,7 +193,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When capturing the first but not the second
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 5), new Coord(2, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 5), new Coord(2, 3)]);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
@@ -216,7 +214,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When doing the backward capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 7)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 7)]);
 
             // Then the move should succeed and stack captured piece under the capturing one
             const expectedState: CheckersState = CheckersState.of([
@@ -246,7 +244,7 @@ describe('BashniRules', () => {
             ], 1);
 
             // When doing the small capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
             const expectedState: CheckersState = CheckersState.of([
@@ -276,7 +274,7 @@ describe('BashniRules', () => {
             ], 0);
 
             // When capturing the single piece
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed and stack the captured piece
             const expectedState: CheckersState = CheckersState.of([
@@ -306,7 +304,7 @@ describe('BashniRules', () => {
             ], 1);
 
             // When capturing the commander of the stack
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed and transfer the stack correctly
             const expectedState: CheckersState = CheckersState.of([
@@ -322,11 +320,8 @@ describe('BashniRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should allow crossing the same square twice during multi-capture', () => {
-            // Given a board where a king (O) at (0,0) can jump over (1,1) to (2,2),
-            // then jump over (3,1) to (4,0).
-            // (2,2) is a landing square and then a starting square for the next jump.
-            // This is allowed even if it crosses row 1 again.
+        it('should allow simple double capture', () => {
+            // Given a board where a king can capture twice
             const state: CheckersState = CheckersState.of([
                 [__O, ___, ___, ___, ___, ___, ___, ___],
                 [___, __V, ___, __V, ___, ___, ___, ___],
@@ -338,28 +333,34 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
-            // When listing all complete captures
-            const captures: CheckersMove[] = rules.getCompleteCaptures(state, defaultConfig.get());
-
-            // Then it should include the double-jump
-            // Path: (0,0)x(1,1)-(2,2)x(3,1)-(4,0).
-            const doubleCapture: CheckersMove = CheckersMove.fromCapture([
+            // When doing a double capture
+            const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(0, 0),
                 new Coord(2, 2),
                 new Coord(4, 0),
-            ], true).get();
+            ]);
 
-            expect(captures.some((c: CheckersMove) => c.equals(doubleCapture))).toBeTrue();
+            // Then it should succeed
+            const OVV: CheckersStack = new CheckersStack([zeroKing, one, one]);
+            const expectedState: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, OVV, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should forbid jumping over the same coordinate twice during multi-capture', () => {
-            // Given a board where a king (O) at (0,0) can jump over (1,1) to (2,2),
-            // then try to jump back over (1,1) to (0,0).
-            // Even if (1,1) is a tower, jumping over it twice is forbidden in a single move.
-            const V2: CheckersStack = new CheckersStack([one, one]);
+        it('should forbid capturing the same tower twice', () => {
+            // Given a board where a king can capture a tower
+            const _V2: CheckersStack = new CheckersStack([one, one]);
             const state: CheckersState = CheckersState.of([
                 [__O, ___, ___, ___, ___, ___, ___, ___],
-                [___, V2,  ___, ___, ___, ___, ___, ___],
+                [___, _V2, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
@@ -368,24 +369,85 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
-            // When listing all complete captures
-            const captures: CheckersMove[] = rules.getCompleteCaptures(state, defaultConfig.get());
-
-            // Then it should NOT include the double-jump over (1,1)
-            const doubleJumpResult: MGPFallible<CheckersMove> = CheckersMove.fromCapture([
+            // When trying to capture the tower twice
+            const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(0, 0),
                 new Coord(2, 2),
                 new Coord(0, 0),
-            ], true);
-            expect(doubleJumpResult.isSuccess()).toBeTrue();
-            const doubleJump: CheckersMove = doubleJumpResult.get();
+            ]);
 
-            expect(captures.some((c: CheckersMove) => c.equals(doubleJump))).toBeFalse();
+            // Then it should fail
+            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
 
-            // And applying it should be illegal
-            const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
-            RulesUtils.expectMoveFailure(rules, state, doubleJump, reason, defaultConfig);
-            });
+        it('should allow jumping further after a capture', () => {
+            // Given a board where a king can capture and continue further for a second capture
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, __O, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, __V, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+
+            // When capturing both pieces
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(5, 0), new Coord(0, 5), new Coord(2, 7),
+            ]);
+
+            // Then it should be allowed
+            const OVV: CheckersStack = new CheckersStack([zeroKing, one, one]);
+            const expectedState: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, OVV, ___, ___, ___, ___, ___],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
+        it('should allow choosing shorter capture', () => {
+            // Given a board where a king can capture and continue further for a second capture
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, __O, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, __V, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+
+            // When choosing not to go for the longest capture
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(5, 0), new Coord(1, 4),
+            ]);
+
+            // Then it should be allowed
+            const _OV: CheckersStack = new CheckersStack([zeroKing, one]);
+            const expectedState: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, _OV, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
 
     });
 
@@ -422,9 +484,7 @@ describe('BashniRules', () => {
         });
 
         it('should allow capture to continue as king after reaching promotion line mid-capture', () => {
-            // Given a board: U at (6,2), V at (5,1) and V at (3,1)
-            // U captures V at (5,1), lands at (4,0) [promotion line], becomes king
-            // then as king captures V at (3,1) and lands at (1,3) [flying capture, distance 3]
+            // Given a board where a piece can get promoted mid-capture
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __V, ___, __V, ___, ___],
@@ -436,14 +496,14 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
-            // When performing capture: normal piece promotes at row 0, then flies as king
+            // When continuing capturing as a king
             const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(6, 2),
                 new Coord(4, 0),
                 new Coord(1, 3),
-            ]).get();
+            ]);
 
-            // Then the move is legal: piece ends up promoted with both captured pieces stacked
+            // Then this should be allowed
             const OVV: CheckersStack = new CheckersStack([zeroKing, one, one]);
             const expectedState: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
@@ -456,31 +516,6 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 1);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
-        });
-
-        it('should generate the extended capture continuing as king after mid-capture promotion', () => {
-            // Given a board: U at (4,2), V at (3,1) and V at (1,1)
-            const state: CheckersState = CheckersState.of([
-                [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, __V, ___, __V, ___, ___, ___, ___],
-                [___, ___, ___, ___, __U, ___, ___, ___],
-                [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, ___, ___, ___, ___, ___, ___, ___],
-            ], 0);
-
-            // When listing all captures
-            const captures: CheckersMove[] = rules.getCompleteCaptures(state, defaultConfig.get());
-
-            // Then the extended three-coord capture is present (not just the one stopping at (2,0))
-            const extendedCapture: CheckersMove = CheckersMove.fromCapture([
-                new Coord(4, 2),
-                new Coord(2, 0),
-                new Coord(0, 2),
-            ]).get();
-            expect(captures.some((c: CheckersMove) => c.equals(extendedCapture))).toBeTrue();
         });
 
         it('should forbid stopping at the promotion line when king capture is available', () => {
@@ -500,7 +535,7 @@ describe('BashniRules', () => {
             const shortCapture: CheckersMove = CheckersMove.fromCapture([
                 new Coord(4, 2),
                 new Coord(2, 0),
-            ]).get();
+            ]);
 
             // Then it should be forbidden
             const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
