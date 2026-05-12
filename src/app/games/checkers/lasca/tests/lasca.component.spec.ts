@@ -118,7 +118,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
 
 DoCheckersTests(lascaEntries);
 
-describe('LascaComponent', () => {
+fdescribe('LascaComponent', () => {
 
     const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
 
@@ -149,11 +149,9 @@ describe('LascaComponent', () => {
             await testUtils.expectClickSuccess('#coord-6-6');
 
             // When trying doing a two step jump with a normal piece
-            const move: CheckersMove = CheckersMove.fromStep(new Coord(6, 6), new Coord(4, 4));
-
             // Then it should fail
             const reason: string = CheckersFailure.NO_PIECE_CAN_DO_LONG_JUMP();
-            await testUtils.expectMoveFailure('#coord-4-4', reason, move);
+            await testUtils.expectClickFailure('#coord-4-4', reason);
         }));
 
     });

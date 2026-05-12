@@ -38,7 +38,7 @@ for (const rule of rules) {
             const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
             // Then it should return the list of steps
-            expect(moves.every((move: CheckersMove) => rule.isMoveStep(move))).toBe(true);
+            expect(moves.every((move: CheckersMove) => move.isStep)).toBe(true);
         });
 
         it('should not suggest invalid move (not jumping twice the same coord)', () => {

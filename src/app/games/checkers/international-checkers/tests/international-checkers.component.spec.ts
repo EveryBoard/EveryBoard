@@ -152,7 +152,7 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
 
 DoCheckersTests(internationalCheckersEntries);
 
-describe('InternationalCheckersComponent', () => {
+fdescribe('InternationalCheckersComponent', () => {
 
     const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
 

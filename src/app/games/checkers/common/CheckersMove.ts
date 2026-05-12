@@ -19,7 +19,7 @@ export class CheckersMove extends Move {
 
     public static encoder: Encoder<CheckersMove> = Encoder.tuple(
         [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
-        (move: CheckersMove) => [move.coords as Coord[], move.isStep],
+        (move: CheckersMove) => [[...move.coords], move.isStep],
         (fields: [Coord[], boolean]) => CheckersMove.of(fields[0], fields[1]),
     );
 
@@ -97,10 +97,8 @@ export class CheckersMove extends Move {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
         const startOfSecondMove: Coord = move.coords[0];
         Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
-        const thisCoordList: Coord[] = this.coords as Coord[];
-        const firstPart: Coord[] = ArrayUtils.copy(thisCoordList);
-        const otherCoordList: Coord[] = move.coords as Coord[];
-        const secondPart: Coord[] = ArrayUtils.copy(otherCoordList).slice(1);
+        const firstPart: Coord[] = [...this.coords];
+        const secondPart: Coord[] = [...move.coords].slice(1);
         return CheckersMove.fromCapture(firstPart.concat(secondPart));
     }
 

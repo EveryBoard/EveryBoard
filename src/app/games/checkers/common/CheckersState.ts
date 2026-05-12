@@ -77,12 +77,7 @@ export class CheckersStack {
     }
 
     public addStackBelow(stack: CheckersStack): CheckersStack {
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        let resultingStack: CheckersStack = this;
-        for (const piece of stack.pieces) {
-            resultingStack = resultingStack.capturePiece(piece);
-        }
-        return resultingStack;
+        return new CheckersStack(this.pieces.concat(stack.pieces));
     }
 
     public getStackSize(): number {
@@ -177,11 +172,10 @@ export class CheckersState extends GameStateWithTable<CheckersStack> {
         }
     }
 
-    public getScores(): MGPOptional<PlayerNumberMap> {
+    public getScores(): PlayerNumberMap {
         const zeroScore: number = this.getStacksOf(Player.ZERO).length;
         const oneScore: number = this.getStacksOf(Player.ONE).length;
-        const scores: PlayerNumberMap = PlayerNumberMap.of(zeroScore, oneScore);
-        return MGPOptional.of(scores);
+        return PlayerNumberMap.of(zeroScore, oneScore);
     }
 
     public override toString(): string {

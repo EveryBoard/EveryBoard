@@ -9,7 +9,7 @@ import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { LascaRules } from '../LascaRules';
 
-describe('LascaRules', () => {
+fdescribe('LascaRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;

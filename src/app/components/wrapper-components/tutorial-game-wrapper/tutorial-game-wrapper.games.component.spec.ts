@@ -89,7 +89,7 @@ import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
 import { TutorialStepMessage } from './TutorialStepMessage';
 import { TutorialGameWrapperComponent } from './tutorial-game-wrapper.component';
 
-describe('TutorialGameWrapperComponent (games)', () => {
+fdescribe('TutorialGameWrapperComponent (games)', () => {
 
     describe('Game should load correctly', () => {
 

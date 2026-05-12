@@ -134,8 +134,8 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, _u, __, _u, __],
             ], 2),
             [
-                CheckersMove.fromStep(new Coord(5, 0), new Coord(1, 4)),
-                CheckersMove.fromStep(new Coord(5, 0), new Coord(0, 5)),
+                CheckersMove.fromCapture([new Coord(5, 0), new Coord(1, 4)]),
+                CheckersMove.fromCapture([new Coord(5, 0), new Coord(0, 5)]),
             ],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You did not capture.`,

@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation, Set, MGPUniqueList } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
@@ -7,7 +7,6 @@ import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Vector } from '../../../jscaip/Vector';
 
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
 import { CheckersControlMinimax } from './CheckersControlMinimax';
@@ -33,14 +32,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         parallelogramHeight: 100,
     };
 
-    private LEFT: number;
-    private UP: number;
+    private left: number;
+    private up: number;
     public basicWidth: number;
     public basicHeight: number;
-    private WIDTH: number;
-    private HEIGHT: number;
-    public CX: number;
-    public CY: number;
+    private width: number;
+    private height: number;
 
     public constructedState: CheckersState;
     private currentMoveClicks: Coord[] = [];
@@ -53,19 +50,25 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
 
+    public constructor() {
+        super();
+        this.updateDimensions();
+    }
+
     public override getViewBox(): ViewBox {
+        return new ViewBox(this.left, this.up, this.width, this.height);
+    }
+
+    private updateDimensions(): void {
         const abstractWidth: number = this.getState().getWidth();
         const abstractHeight: number = this.getState().getHeight();
-        this.LEFT = 0 - this.STROKE_WIDTH/2;
-        this.UP = - this.SPACE_SIZE;
+        this.left = -this.STROKE_WIDTH / 2;
+        this.up = -this.SPACE_SIZE;
         this.basicWidth = abstractWidth * this.mode.parallelogramHeight;
         this.basicHeight = abstractHeight * this.mode.parallelogramHeight;
         const boardOffset: number = abstractHeight * this.mode.offsetRatio * this.mode.parallelogramHeight;
-        this.WIDTH = (this.basicWidth * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
-        this.HEIGHT = this.basicHeight + this.THICKNESS + this.STROKE_WIDTH - this.UP;
-        this.CX = this.WIDTH / 2;
-        this.CY = (this.HEIGHT + this.UP) / 2;
-        return new ViewBox(this.LEFT, this.UP, this.WIDTH, this.HEIGHT);
+        this.width = (this.basicWidth * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
+        this.height = this.basicHeight + this.THICKNESS + this.STROKE_WIDTH - this.up;
     }
 
     public override setRulesAndNode(urlName: string): void {
@@ -92,7 +95,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.constructedState = this.getState();
         this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
-        this.scores = this.constructedState.getScores();
+        this.scores = MGPOptional.of(this.constructedState.getScores());
         this.showPossibleClicks();
     }
 
@@ -131,19 +134,22 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override async showLastMove(move: CheckersMove): Promise<void> {
         this.lastCaptures = [];
-        this.lastMoveds = [move.getStartingCoord()];
-        if (this.rules.isMoveStep(move)) {
-            this.lastMoveds.push(move.getEndingCoord());
-        } else {
-            const jumpedOverCoord: MGPUniqueList<Coord> = move.getSteppedOverCoords();
-            for (const coord of jumpedOverCoord.toList().slice(1)) {
-                if (this.getPreviousState().getPieceAt(coord).isOccupied()) {
+        this.lastMoveds = [];
+        const previousState: CheckersState = this.getPreviousState();
+        for (let i: number = 0; i < move.coords.length - 1; i++) {
+            const start: Coord = move.coords[i];
+            const end: Coord = move.coords[i + 1];
+            this.lastMoveds.push(start);
+            for (const coord of start.getCoordsToward(end)) {
+                const isCapture: boolean = move.isStep === false && previousState.getPieceAt(coord).isOccupied();
+                if (isCapture) {
                     this.lastCaptures.push(coord);
                 } else {
                     this.lastMoveds.push(coord);
                 }
             }
         }
+        this.lastMoveds.push(move.getEndingCoord());
     }
 
     private showPossibleClicks(): void {
@@ -153,7 +159,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
                 const numberOfClicks: number = this.currentMoveClicks.length;
                 if (numberOfClicks < validMove.coords.length) {
                     const possibleCoord: Coord = validMove.coords[numberOfClicks];
-                    if (CheckersMove.getRelation(this.currentMoveClicks, validMove.coords as Coord[]) === 'PREFIX') {
+                    if (CheckersMove.getRelation(this.currentMoveClicks, validMove.coords) === 'PREFIX') {
                         this.possibleClicks = this.possibleClicks.addElement(possibleCoord);
                     }
                 }
@@ -204,52 +210,51 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             this.cancelMoveAttempt();
             return this.trySelectingPiece(clicked);
         }
-        if (this.currentMoveClicks.length === 1) {
-            // Doing the second click, either a step or a first capture
-            const delta: Vector = start.getVectorToward(clicked);
-            if (delta.isDiagonal()) {
-                const flownOverPlayer: Player[] =
-                    this.rules.getFlownOverPlayers(start, clicked, this.constructedState);
-                if (flownOverPlayer.length === 0) {
-                    // It is indeed a step
-                    const step: CheckersMove = CheckersMove.fromStep(start, clicked);
-                    return this.chooseMove(step);
-                }
-            }
+        if (this.possibleClicks.contains(clicked) === false) {
+            return this.cancelMove(this.getClickFailureReason(clicked));
         }
-        // Continuing to capture
-        return this.capture(clicked);
-    }
 
-    private async capture(clicked: Coord): Promise<MGPValidation> {
-        const numberOfClicks: number = this.currentMoveClicks.length;
-        const lastCoord: Coord = this.currentMoveClicks[numberOfClicks - 1];
-        const captureValidity: MGPValidation = this.getCaptureValidity(lastCoord, clicked);
-        if (captureValidity.isFailure()) {
-            return this.cancelMove(captureValidity.getReason());
-        } else {
-            for (const flownOver of lastCoord.getCoordsToward(clicked)) {
-                if (this.constructedState.getPieceAt(flownOver).isOccupied()) {
-                    this.capturedCoords.push(flownOver);
-                } else {
-                    this.flownOverCoords.push(flownOver);
-                }
-            }
-            this.currentMoveClicks.push(clicked);
-            const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
-            if (this.legalMoves.some((capture: CheckersMove) => capture.isPrefix(currentMove))) {
-                this.showPossibleClicks();
-                return this.applyPartialCapture();
+        const lastCoord: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
+        const steppedOver: Coord[] = lastCoord.getCoordsToward(clicked);
+        for (const coord of steppedOver) {
+            if (this.constructedState.getPieceAt(coord).isOccupied()) {
+                this.capturedCoords.push(coord);
             } else {
-                return this.chooseMove(currentMove);
+                this.flownOverCoords.push(coord);
             }
+        }
+
+        this.currentMoveClicks.push(clicked);
+        const matchingMove: MGPOptional<CheckersMove> = this.getMatchingLegalMove();
+        if (matchingMove.isPresent()) {
+            return this.chooseMove(matchingMove.get());
+        } else {
+            this.showPossibleClicks();
+            return this.applyPartialCapture();
         }
     }
 
-    private getCaptureValidity(start: Coord, end: Coord): MGPValidation {
-        const config: CheckersConfig = this.getConfig();
-        const stack: CheckersStack = this.getState().getPieceAt(this.selectedStack.get());
-        return this.rules.getSubMoveValidity(stack, false, start, end, this.getState(), config);
+    private getClickFailureReason(clicked: Coord): string {
+        const start: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
+        const stack: CheckersStack = this.constructedState.getPieceAt(start);
+        const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
+        const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
+        const validation: MGPValidation =
+            this.rules.getSubMoveValidity(stack, isSimpleJump, start, clicked, stateWithoutStarting, this.getConfig());
+        if (validation.isFailure()) {
+            return validation.getReason();
+        }
+        return CheckersFailure.INVALID_MOVE();
+    }
+
+    private getMatchingLegalMove(): MGPOptional<CheckersMove> {
+        const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
+        for (const move of this.legalMoves) {
+            if (move.equals(currentMove)) {
+                return MGPOptional.of(move);
+            }
+        }
+        return MGPOptional.empty();
     }
 
     private applyPartialCapture(): MGPValidation {

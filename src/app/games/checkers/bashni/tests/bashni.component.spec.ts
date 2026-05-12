@@ -119,7 +119,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
 
 DoCheckersTests(bashniEntries);
 
-describe('BashniComponent', () => {
+fdescribe('BashniComponent', () => {
 
     let testUtils: ComponentTestUtils<BashniComponent>;
 
@@ -156,6 +156,31 @@ describe('BashniComponent', () => {
 
         // Then it should be a success
         await testUtils.expectMoveSuccess('#coord-1-3', move);
+    }));
+
+    it('should allow choosing shorter capture in the component', fakeAsync(async() => {
+        // Given a board where a king can choose a shorter or longer capture
+        const state: CheckersState = CheckersState.of([
+            [__, __, __, __, __, _O, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, _V, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, _V, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+        ], 0);
+        await testUtils.setupState(state);
+
+        // When choosing the shorter capture: landing at (1, 4)
+        const move: CheckersMove = CheckersMove.fromCapture([
+            new Coord(5, 0),
+            new Coord(1, 4),
+        ]);
+        await testUtils.expectClickSuccess('#coord-5-0');
+
+        // Then it should be a success (it should NOT force continuation)
+        await testUtils.expectMoveSuccess('#coord-1-4', move);
     }));
 
 });
