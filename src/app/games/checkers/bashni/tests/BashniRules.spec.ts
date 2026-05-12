@@ -9,7 +9,7 @@ import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { BashniRules } from '../BashniRules';
 
-fdescribe('BashniRules', () => {
+describe('BashniRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;

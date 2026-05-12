@@ -52,7 +52,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public constructor() {
         super();
-        this.updateDimensions();
     }
 
     public override getViewBox(): ViewBox {
@@ -73,6 +72,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override setRulesAndNode(urlName: string): void {
         super.setRulesAndNode(urlName);
+        this.updateDimensions();
         this.moveGenerator = new CheckersMoveGenerator(this.rules);
         this.availableAIs = [
             new CheckersScoreMinimax(this.rules, this.moveGenerator),
@@ -135,13 +135,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public override async showLastMove(move: CheckersMove): Promise<void> {
         this.lastCaptures = [];
         this.lastMoveds = [];
-        const previousState: CheckersState = this.getPreviousState();
         for (let i: number = 0; i < move.coords.length - 1; i++) {
             const start: Coord = move.coords[i];
             const end: Coord = move.coords[i + 1];
             this.lastMoveds.push(start);
             for (const coord of start.getCoordsToward(end)) {
-                const isCapture: boolean = move.isStep === false && previousState.getPieceAt(coord).isOccupied();
+                const isCapture: boolean = move.isStep === false &&
+                    this.getPreviousState().getPieceAt(coord).isOccupied();
                 if (isCapture) {
                     this.lastCaptures.push(coord);
                 } else {

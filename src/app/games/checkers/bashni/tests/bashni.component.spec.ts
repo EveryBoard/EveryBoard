@@ -119,7 +119,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
 
 DoCheckersTests(bashniEntries);
 
-fdescribe('BashniComponent', () => {
+describe('BashniComponent', () => {
 
     let testUtils: ComponentTestUtils<BashniComponent>;
 
