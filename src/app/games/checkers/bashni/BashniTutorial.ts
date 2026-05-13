@@ -14,6 +14,7 @@ const _u: CheckersStack = new CheckersStack([zero]);
 const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
+const vUv: CheckersStack = new CheckersStack([one, CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
 const defaultConfig: CheckersConfig = BashniRules.get().getDefaultRulesConfig();
 
@@ -122,7 +123,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`King move`,
-            $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king to capture the opponent's piece!`, // TODO: move all the way to the end to threaten the next one
+            $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king to capture two pieces of the opponent!`,
             CheckersState.of([
                 [__, __, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __, __],
@@ -134,11 +135,10 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, _u, __, _u, __],
             ], 2),
             [
-                CheckersMove.fromCapture([new Coord(5, 0), new Coord(1, 4)]),
-                CheckersMove.fromCapture([new Coord(5, 0), new Coord(0, 5)]),
+                CheckersMove.fromCapture([new Coord(5, 0), new Coord(0, 5), new Coord(2, 7)]),
             ],
             TutorialStepMessage.CONGRATULATIONS(),
-            $localize`You did not capture.`,
+            $localize`You should capture twice!`,
         ),
         TutorialStep.anyMove(
             $localize`Promotion mid-capture`,
@@ -156,7 +156,21 @@ export class BashniTutorial extends Tutorial {
             CheckersMove.fromCapture([new Coord(5, 2), new Coord(3, 0), new Coord(0, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
-        // TODO: tuto step of capturing stack, to show the difference with e.g. lasca
-        // TODO: tuto step where you can pass over the same empty spot twice
+        TutorialStep.anyMove(
+            $localize`Tower capture`,
+            $localize`In Bashni, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
+            CheckersState.of([
+                [__, __, __, __, __, __, __, __],
+                [__, __, _u, __, __, __, __, __],
+                [__, __, __, vUv, __, _v, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, _v, __, __, __, __, __],
+                [__, __, __, __, __, _v, __, __],
+                [__, __, __, __, __, __, __, __],
+            ], 0),
+            CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 1)]),
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
+        ),
     ];
 }

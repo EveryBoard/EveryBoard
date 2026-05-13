@@ -35,7 +35,7 @@ export class InternationalCheckersRules extends AbstractCheckersRules {
                 canPromoteMidCapture:
                     new BooleanConfig(false, CheckersOptionLocalizable.CAN_PROMOTE_MID_CAPTURE),
                 allowPathCrossing:
-                    new BooleanConfig(false, CheckersOptionLocalizable.ALLOW_PATH_CROSSING),
+                    new BooleanConfig(true, CheckersOptionLocalizable.ALLOW_PATH_CROSSING),
             },
         });
 

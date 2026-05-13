@@ -1,3 +1,5 @@
+import { computed, signal, Signal, WritableSignal } from '@angular/core';
+
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
@@ -32,12 +34,21 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         parallelogramHeight: 100,
     };
 
-    private left: number;
-    private up: number;
-    public basicWidth: number;
-    public basicHeight: number;
-    private width: number;
-    private height: number;
+    private readonly boardSize: WritableSignal<{w: number, h: number}> = signal({ w: 0, h: 0 });
+
+    public readonly basicWidth: Signal<number> = computed(() =>
+        this.boardSize().w * this.mode.parallelogramHeight);
+
+    public readonly basicHeight: Signal<number> = computed(() =>
+        this.boardSize().h * this.mode.parallelogramHeight);
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
+        const h: number = this.boardSize().h;
+        const boardOffset: number = h * this.mode.offsetRatio * this.mode.parallelogramHeight;
+        const width: number = (this.basicWidth() * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
+        const height: number = this.basicHeight() + this.THICKNESS + this.STROKE_WIDTH + this.SPACE_SIZE;
+        return new ViewBox(-this.STROKE_WIDTH / 2, -this.SPACE_SIZE, width, height);
+    });
 
     public constructedState: CheckersState;
     private currentMoveClicks: Coord[] = [];
@@ -55,24 +66,15 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     public override getViewBox(): ViewBox {
-        return new ViewBox(this.left, this.up, this.width, this.height);
-    }
-
-    private updateDimensions(): void {
-        const abstractWidth: number = this.getState().getWidth();
-        const abstractHeight: number = this.getState().getHeight();
-        this.left = -this.STROKE_WIDTH / 2;
-        this.up = -this.SPACE_SIZE;
-        this.basicWidth = abstractWidth * this.mode.parallelogramHeight;
-        this.basicHeight = abstractHeight * this.mode.parallelogramHeight;
-        const boardOffset: number = abstractHeight * this.mode.offsetRatio * this.mode.parallelogramHeight;
-        this.width = (this.basicWidth * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
-        this.height = this.basicHeight + this.THICKNESS + this.STROKE_WIDTH - this.up;
+        return this.viewBox();
     }
 
     public override setRulesAndNode(urlName: string): void {
         super.setRulesAndNode(urlName);
-        this.updateDimensions();
+        this.boardSize.set({
+            w: this.getState().getWidth(),
+            h: this.getState().getHeight(),
+        });
         this.moveGenerator = new CheckersMoveGenerator(this.rules);
         this.availableAIs = [
             new CheckersScoreMinimax(this.rules, this.moveGenerator),
@@ -230,7 +232,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             return this.chooseMove(matchingMove.get());
         } else {
             this.showPossibleClicks();
-            return this.applyPartialCapture();
+            this.applyPartialCapture();
+            return MGPValidation.SUCCESS;
         }
     }
 
@@ -244,7 +247,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (validation.isFailure()) {
             return validation.getReason();
         }
-        return CheckersFailure.INVALID_MOVE();
+        return 'TODO';
     }
 
     private getMatchingLegalMove(): MGPOptional<CheckersMove> {
@@ -257,10 +260,9 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return MGPOptional.empty();
     }
 
-    private applyPartialCapture(): MGPValidation {
+    private applyPartialCapture(): void {
         const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
         this.constructedState = this.rules.applyMove(currentMove, this.getState(), this.getConfig());
-        return MGPValidation.SUCCESS;
     }
 
     private async trySelectingPiece(clicked: Coord): Promise<MGPValidation> {
@@ -299,25 +301,43 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         }
     }
 
-    public getParallelogramPoints(): string {
-        const parallelogramCoords: Coord[] = this.getParallelogramCoordsForCheckers();
-        return parallelogramCoords
+    public readonly parallelogramPoints: Signal<string> = computed(() => {
+        return this.getParallelogramCoords(this.mode)
             .map((coord: Coord) => coord.x + ', ' + coord.y)
             .join(' ');
-    }
+    });
 
-    private getParallelogramCoordsForCheckers(): Coord[] {
-        return this.getParallelogramCoords(this.mode);
-    }
+    private readonly parallelogramCenter: Signal<Coord> = computed(() => {
+        const coords: Coord[] = this.getParallelogramCoords(this.mode);
+        return this.getParallelogramCenterOf(coords[0], coords[1], coords[2], coords[3]);
+    });
 
-    private getParallelogramCenter(): Coord {
-        const parallelogramCoords: Coord[] = this.getParallelogramCoordsForCheckers();
-        return this.getParallelogramCenterOf(
-            parallelogramCoords[0],
-            parallelogramCoords[1],
-            parallelogramCoords[2],
-            parallelogramCoords[3],
-        );
+    public readonly rightEdge: Signal<string> = computed(() => {
+        const width: number = this.basicWidth() * this.mode.horizontalWidthRatio;
+        const offset: number = this.basicHeight() * this.mode.offsetRatio;
+        const x0: number = offset + width;
+        const y0: number = 0;
+        const x1: number = offset + width;
+        const y1: number = this.THICKNESS;
+        const x2: number = width;
+        const y2: number = this.basicHeight() + this.THICKNESS;
+        const x3: number = width;
+        const y3: number = this.basicHeight();
+        return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
+    });
+
+    public getPieceTranslation(z: number): string {
+        // We want the piece to be in the center of the parallelogram, here are its coords
+        const cy: number = this.parallelogramCenter().y;
+        // We want to center the full piece, which is width=80, height=45, so here are it's center
+        // See the define to confirm these
+        const pieceCy: number = (50 + 15) / 2;
+        // We the need "pieceCx + offsetX" to equal "cx"
+        // and "pieceCy + offsetY" to equal "cy", so :
+        const offsetY: number = cy - pieceCy;
+        // Each piece on the Z axis will be higher, here is how much (see the define to confirm)
+        const pieceHeight: number = this.SPACE_SIZE * 0.15;
+        return this.getSVGTranslation(0, offsetY - (z * pieceHeight));
     }
 
     /**
@@ -336,34 +356,4 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const y: number = (maxY - minY) / 2;
         return new Coord(x, y);
     }
-
-    public getRightEdge(): string {
-        const width: number = this.basicWidth * this.mode.horizontalWidthRatio;
-        const offset: number = this.basicHeight * this.mode.offsetRatio;
-        const x0: number = offset + width;
-        const y0: number = 0;
-        const x1: number = offset + width;
-        const y1: number = this.THICKNESS;
-        const x2: number = width;
-        const y2: number = this.basicHeight + this.THICKNESS;
-        const x3: number = width;
-        const y3: number = this.basicHeight;
-        return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
-    }
-
-    public getPieceTranslation(z: number): string {
-        // We want the piece to be in the center of the parallelogram, here are its coords
-        const parallelogramCenter: Coord = this.getParallelogramCenter();
-        const cy: number = parallelogramCenter.y;
-        // We want to center the full piece, which is width=80, height=45, so here are it's center
-        // See the define to confirm these
-        const pieceCy: number = (50 + 15) / 2;
-        // We the need "pieceCx + offsetX" to equal "cx"
-        // and "pieceCy + offsetY" to equal "cy", so :
-        const offsetY: number = cy - pieceCy;
-        // Each piece on the Z axis will be higher, here is how much (see the define to confirm)
-        const pieceHeight: number = this.SPACE_SIZE * 0.15;
-        return this.getSVGTranslation(0, offsetY - (z * pieceHeight));
-    }
-
 }

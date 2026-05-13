@@ -751,7 +751,7 @@ describe('InternationalCheckersRules', () => {
                     [_, _, _, _, _, _, _, _, _, _],
                 ], 0);
 
-                // When capturing twic the same piece (reminder: pieces are only remove *after* the capture)
+                // When capturing twice the same piece (reminder: pieces are only removed *after* the capture)
                 const move: CheckersMove = CheckersMove.fromCapture([
                     new Coord(0, 6), new Coord(4, 2), new Coord(6, 4),
                     new Coord(4, 6), new Coord(1, 3),
@@ -759,6 +759,32 @@ describe('InternationalCheckersRules', () => {
 
                 // Then it should be illegal
                 const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+                RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            });
+
+            it('should forbid landing on a square that had a piece captured in the same move', () => {
+                // Given a board where a king could capture and land on a square that had a piece
+                const state: CheckersState = CheckersState.of([
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                    [_, _, _, _, _, V, _, _, _, _],
+                    [_, _, _, _, _, _, V, _, V, _],
+                    [_, _, _, _, _, _, _, _, _, O],
+                    [_, _, _, _, V, _, V, _, _, _],
+                    [_, _, _, _, _, _, _, _, _, _],
+                ], 0);
+
+                // When capturing and trying to land on (5, 5) which has a captured piece
+                const move: CheckersMove = CheckersMove.fromCapture([
+                    new Coord(9, 7), new Coord(6, 4), new Coord(3, 7),
+                    new Coord(5, 9), new Coord(7, 7), new Coord(5, 5),
+                ]);
+
+                // Then it should be illegal
+                const reason: string = RulesFailure.MUST_LAND_ON_EMPTY_SPACE();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 

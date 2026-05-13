@@ -39,6 +39,7 @@ export type CheckersConfig = RulesConfig & {
     canPromoteMidCapture: boolean;
 
     allowPathCrossing: boolean;
+
 };
 
 export class CheckersOptionLocalizable {
@@ -161,8 +162,6 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             const remainingStack: CheckersStack = capturedSpace.getPiecesUnderCommander();
             fakePostCaptureState = fakePostCaptureState.set(captured, remainingStack);
             landingPiece = moved.capturePiece(capturedSpace.getCommander());
-        } else {
-            fakePostCaptureState = fakePostCaptureState.remove(captured);
         }
         if (config.canPromoteMidCapture && landing.y === state.getFinishLineOf(pieceOwner)) {
             landingPiece = landingPiece.promoteCommander();

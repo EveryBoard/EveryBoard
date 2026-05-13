@@ -35,6 +35,4 @@ export class CheckersFailure {
 
     public static readonly MOVE_CANNOT_CONTINUE_AFTER_NON_CAPTURE_MOVE: Localized = () => $localize`You have done a step after a capture. A move that starts with a capture can only contain captures.`;
 
-    public static readonly INVALID_MOVE: Localized = () => $localize`Invalid move!`;
-
 }

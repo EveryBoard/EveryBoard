@@ -12,6 +12,7 @@ const zero: CheckersPiece = CheckersPiece.ZERO;
 const one: CheckersPiece = CheckersPiece.ONE;
 const _u: CheckersStack = new CheckersStack([zero]);
 const _v: CheckersStack = new CheckersStack([one]);
+const vU: CheckersStack = new CheckersStack([one, CheckersPiece.ZERO_PROMOTED]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
@@ -21,7 +22,7 @@ export class LascaTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Lasca: origins`,
-            $localize`Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, chess world champion. It's played on a 7x7 board, each player has 11 pieces.`,
+            $localize`Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, a chess world champion. It's played on a 7x7 board, each player has 11 pieces.`,
             LascaRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
@@ -83,7 +84,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),
-            $localize`When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a tower reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             CheckersState.of([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
@@ -98,7 +99,7 @@ export class LascaTutorial extends Tutorial {
                 CheckersMove.fromStep(new Coord(3, 1), new Coord(4, 0)),
             ],
             TutorialStepMessage.CONGRATULATIONS(),
-            $localize`You did not choose the correct stack, and got no promotion.`,
+            $localize`You did not choose the correct tower, and got no promotion.`,
         ),
         TutorialStep.fromMove(
             $localize`Officer move`,
@@ -118,6 +119,22 @@ export class LascaTutorial extends Tutorial {
             ],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`You did not move your officer.`,
+        ),
+        TutorialStep.fromMove(
+            $localize`Tower capture`,
+            $localize`In Lasca, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
+            CheckersState.of([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, vU, __, _v, __],
+                [__, __, __, __, _u, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, _v, __, __, __, __],
+                [__, __, __, __, __, _v, __],
+            ], 0),
+            [CheckersMove.fromCapture([new Coord(4, 3), new Coord(2, 1)])],
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
+            $localize`You did not capture the right piece.`,
         ),
     ];
 }
