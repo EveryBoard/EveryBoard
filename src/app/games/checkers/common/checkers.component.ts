@@ -1,6 +1,6 @@
 import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
-import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
@@ -53,7 +53,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public constructedState: CheckersState;
     private currentMoveClicks: Coord[] = [];
     private lastCaptures: Coord[] = [];
-    private lastMoveds: Coord[] = [];
+    private lastMoved: Coord[] = [];
     public possibleClicks: Set<Coord> = new Set();
     private selectedStack: MGPOptional<Coord> = MGPOptional.empty();
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
@@ -107,7 +107,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (this.capturedCoords.concat(this.lastCaptures).some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         }
-        const flownOverCoords: Coord[] = this.currentMoveClicks.concat(this.lastMoveds.concat(this.flownOverCoords));
+        const flownOverCoords: Coord[] = this.currentMoveClicks.concat(this.lastMoved.concat(this.flownOverCoords));
         if (flownOverCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('moved-fill');
         }
@@ -136,22 +136,22 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override async showLastMove(move: CheckersMove): Promise<void> {
         this.lastCaptures = [];
-        this.lastMoveds = [];
+        this.lastMoved = [];
         for (let i: number = 0; i < move.coords.length - 1; i++) {
             const start: Coord = move.coords[i];
             const end: Coord = move.coords[i + 1];
-            this.lastMoveds.push(start);
+            this.lastMoved.push(start);
             for (const coord of start.getCoordsToward(end)) {
                 const isCapture: boolean = move.isStep === false &&
                     this.getPreviousState().getPieceAt(coord).isOccupied();
                 if (isCapture) {
                     this.lastCaptures.push(coord);
                 } else {
-                    this.lastMoveds.push(coord);
+                    this.lastMoved.push(coord);
                 }
             }
         }
-        this.lastMoveds.push(move.getEndingCoord());
+        this.lastMoved.push(move.getEndingCoord());
     }
 
     private showPossibleClicks(): void {
@@ -171,7 +171,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override hideLastMove(): void {
         this.lastCaptures = [];
-        this.lastMoveds = [];
+        this.lastMoved = [];
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -244,10 +244,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
         const validation: MGPValidation =
             this.rules.getSubMoveValidity(stack, isSimpleJump, start, clicked, stateWithoutStarting, this.getConfig());
-        if (validation.isFailure()) {
-            return validation.getReason();
-        }
-        return 'TODO';
+        Utils.assert(validation.isFailure(), `Invalid click should be an invalid move, but it is valid: ${clicked}`);
+        return validation.getReason();
     }
 
     private getMatchingLegalMove(): MGPOptional<CheckersMove> {
@@ -312,6 +310,19 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return this.getParallelogramCenterOf(coords[0], coords[1], coords[2], coords[3]);
     });
 
+    /**
+     * @returns the center of the parallelogram delineated by four points, @param a, @param b, @param c, and @param d
+     */
+    private getParallelogramCenterOf(a: Coord, b: Coord, c: Coord, d: Coord): Coord {
+        const maxX: number = Math.max(a.x, b.x, c.x, d.x);
+        const maxY: number = Math.max(a.y, b.y, c.y, d.y);
+        const minX: number = Math.min(a.x, b.x, c.x, d.x);
+        const minY: number = Math.min(a.y, b.y, c.y, d.y);
+        const x: number = (maxX - minX) / 2;
+        const y: number = (maxY - minY) / 2;
+        return new Coord(x, y);
+    }
+
     public readonly rightEdge: Signal<string> = computed(() => {
         const width: number = this.basicWidth() * this.mode.horizontalWidthRatio;
         const offset: number = this.basicHeight() * this.mode.offsetRatio;
@@ -340,20 +351,4 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return this.getSVGTranslation(0, offsetY - (z * pieceHeight));
     }
 
-    /**
-     * @param a coord of the parallelogram opposite to c
-     * @param b coord of the parallelogram opposite to d
-     * @param c coord of the parallelogram opposite to a
-     * @param d coord of the parallelogram opposite to b
-     * @returns the center of the parallelogram
-     */
-    private getParallelogramCenterOf(a: Coord, b: Coord, c: Coord, d: Coord): Coord {
-        const maxX: number = Math.max(a.x, b.x, c.x, d.x);
-        const maxY: number = Math.max(a.y, b.y, c.y, d.y);
-        const minX: number = Math.min(a.x, b.x, c.x, d.x);
-        const minY: number = Math.min(a.y, b.y, c.y, d.y);
-        const x: number = (maxX - minX) / 2;
-        const y: number = (maxY - minY) / 2;
-        return new Coord(x, y);
-    }
 }
