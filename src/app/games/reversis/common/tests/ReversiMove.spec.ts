@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
+import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
+import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
-import { ReversiRules } from '../ReversiRules';
 
 describe('ReversiMove', () => {
 

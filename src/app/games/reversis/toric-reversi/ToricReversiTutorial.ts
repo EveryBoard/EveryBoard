@@ -1,17 +1,18 @@
-import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerOrNone } from '../../jscaip/Player';
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { ReversiConfig } from '../common/AbstractReversiRules';
+import { ReversiMove } from '../common/ReversiMove';
+import { ReversiState } from '../common/ReversiState';
 
-import { ReversiMove } from './ReversiMove';
-import { ReversiConfig, ReversiRules } from './ReversiRules';
-import { ReversiState } from './ReversiState';
+import { ToricReversiRules } from './ToricReversiRules';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
+const defaultConfig: ReversiConfig = ToricReversiRules.get().getDefaultRulesConfig();
 
-export class ReversiTutorial extends Tutorial {
+export class ToricReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             TutorialStepMessage.OBJECT_OF_THE_GAME(),
@@ -36,7 +37,7 @@ export class ReversiTutorial extends Tutorial {
         For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
         Do any move by clicking to put your piece
         Dark plays first.`,
-            ReversiRules.get().getInitialState(defaultConfig),
+            ToricReversiRules.get().getInitialState(defaultConfig),
             new ReversiMove(2, 4),
             TutorialStepMessage.CONGRATULATIONS(),
         ),

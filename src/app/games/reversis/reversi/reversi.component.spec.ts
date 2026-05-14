@@ -1,20 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ReversiMove } from '../ReversiMove';
-import { ReversiConfig, ReversiRules } from '../ReversiRules';
-import { ReversiState } from '../ReversiState';
-import { ReversiComponent } from '../reversi.component';
+import { ReversiConfig } from '../common/AbstractReversiRules';
+import { ReversiMove } from '../common/ReversiMove';
+import { ReversiState } from '../common/ReversiState';
+import { ReversiComponent } from '../reversi/reversi.component';
+
+import { ReversiRules } from './ReversiRules';
 
 describe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
-    const defaultConfig: MGPOptional<ReversiConfig> = ReversiRules.get().getDefaultRulesConfig();
+    const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -93,10 +93,10 @@ describe('ReversiComponent', () => {
                 [_, _, O, _, _, _, _, _],
             ];
             const state: ReversiState = new ReversiState(board, 0);
-            const customConfig: MGPOptional<ReversiConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: ReversiConfig = {
+                ...defaultConfig,
                 toric: true,
-            });
+            };
             await testUtils.setupState(state, { config: customConfig });
 
             const move: ReversiMove = new ReversiMove(7, 4);

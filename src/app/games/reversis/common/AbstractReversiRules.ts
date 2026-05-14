@@ -1,19 +1,16 @@
-import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+import { MGPFallible, Utils } from '@everyboard/lib';
 
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TableUtils } from '../../jscaip/TableUtils';
-import { Debug } from '../../utils/Debug';
-import { MGPValidators } from '../../utils/MGPValidator';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Coord } from '../../../jscaip/Coord';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { Ordinal } from '../../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../../jscaip/Rules';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { Debug } from '../../../utils/Debug';
 
 import { ReversiFailure } from './ReversiFailure';
 import { ReversiMove } from './ReversiMove';
@@ -41,34 +38,11 @@ export type ReversiConfig = RulesConfig & {
 };
 
 @Debug.log
-export class ReversiRules extends ConfigurableRules<ReversiMove,
-                                                    ReversiState,
-                                                    ReversiConfig,
-                                                    ReversiLegalityInformation>
+export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove,
+                                                                     ReversiState,
+                                                                     ReversiConfig,
+                                                                     ReversiLegalityInformation>
 {
-
-    private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
-
-    public static get(): ReversiRules {
-        if (ReversiRules.singleton.isAbsent()) {
-            ReversiRules.singleton = MGPOptional.of(new ReversiRules());
-        }
-        return ReversiRules.singleton.get();
-    }
-
-    public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<ReversiConfig> =
-        new RulesConfigDescription<ReversiConfig>({
-            name: (): string => $localize`Reversi`,
-            config: {
-                width: new NumberConfig(8, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 99)),
-                height: new NumberConfig(8, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(3, 99)),
-                toric: new BooleanConfig(false, RulesConfigDescriptionLocalizable.TORIC),
-            },
-        });
-
-    public override getRulesConfigDescription(): RulesConfigDescription<ReversiConfig> {
-        return ReversiRules.RULES_CONFIG_DESCRIPTION;
-    }
 
     public override getInitialState(config: ReversiConfig): ReversiState {
         const board: PlayerOrNone[][] = TableUtils.create(config.width, config.height, PlayerOrNone.NONE);
@@ -248,7 +222,7 @@ export class ReversiRules extends ConfigurableRules<ReversiMove,
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
-        const switched: Coord[] = this.getAllSwitcheds(move, state.getCurrentPlayer(), state, config.get());
+        const switched: Coord[] = this.getAllSwitcheds(move, state.getCurrentPlayer(), state, config);
         if (switched.length === 0) {
             return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
         } else {

@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
+import { ReversiRules } from '../../reversi/ReversiRules';
+import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
 import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
-import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 
 describe('ReversiMinimax', () => {
 

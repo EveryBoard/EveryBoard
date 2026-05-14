@@ -127,6 +127,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     },
     Squarz: { onClick: [0, 0] },
     Tablut: { onClick: [0, 0] },
+    ToricReversi: { onClick: [0, 0] },
     Teeko: { onClick: [0, 0] },
     Trexo: {
         onClick: [0, 0],

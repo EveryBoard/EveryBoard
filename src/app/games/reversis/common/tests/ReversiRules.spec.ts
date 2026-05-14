@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { Player, PlayerOrNone } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { RulesFailure } from '../../../../jscaip/RulesFailure';
+import { Table } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { ReversiRules } from '../../reversi/ReversiRules';
+import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
 import { ReversiFailure } from '../ReversiFailure';
 import { ReversiMove } from '../ReversiMove';
-import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiState } from '../ReversiState';
 
 describe('ReversiRules', () => {
@@ -209,10 +210,10 @@ describe('ReversiRules', () => {
         describe('Toric Board', () => {
 
             it('should capture piece sandwiched from across the board horizontally', () => {
-                const toricConfig: MGPOptional<ReversiConfig> = MGPOptional.of({
-                    ...defaultConfig.get(),
+                const toricConfig: ReversiConfig = {
+                    ...defaultConfig,
                     toric: true,
-                });
+                };
                 // Given a board where current can capture torically
                 const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, _, _, _],
@@ -245,10 +246,10 @@ describe('ReversiRules', () => {
             });
 
             it('should capture piece sandwiched from across the board vertically', () => {
-                const toricConfig: MGPOptional<ReversiConfig> = MGPOptional.of({
-                    ...defaultConfig.get(),
+                const toricConfig: ReversiConfig = {
+                    ...defaultConfig,
                     toric: true,
-                });
+                };
                 // Given a board where current can capture torically
                 const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, _, _, _],
