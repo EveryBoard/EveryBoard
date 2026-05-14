@@ -33,8 +33,6 @@ export class BashniRules extends AbstractCheckersRules {
                     new BooleanConfig(false, CheckersOptionLocalizable.FRISIAN_CAPTURE_ALLOWED),
                 canPromoteMidCapture:
                     new BooleanConfig(true, CheckersOptionLocalizable.CAN_PROMOTE_MID_CAPTURE),
-                allowPathCrossing:
-                    new BooleanConfig(true, CheckersOptionLocalizable.ALLOW_PATH_CROSSING),
             },
         });
 
