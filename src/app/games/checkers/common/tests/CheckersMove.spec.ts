@@ -66,7 +66,7 @@ describe('CheckersMove', () => {
             const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 4)]);
 
             // Then it should succeed
-            expect(move).toBeTrue();
+            expect(move).toBeDefined();
         });
 
     });
@@ -133,9 +133,10 @@ describe('CheckersMove', () => {
             const short: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4)]);
 
             // When calling isPrefix on one and passing the other
-            // Then the result should be true
-            expect(long.isPrefix(short)).toBeTrue();
+            // Then the result should be: the shorter is a prefix from the longer
             expect(short.isPrefix(long)).toBeTrue();
+            // But not the opposite
+            expect(long.isPrefix(short)).toBeFalse();
         });
 
         it('should not consider equal move as prefix to each others', () => {

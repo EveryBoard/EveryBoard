@@ -1,4 +1,4 @@
-import { ArrayUtils, Encoder, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
+import { Encoder, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';

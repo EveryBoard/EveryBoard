@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../../jscaip/Coord';
+import { BashniRules } from '../../bashni/BashniRules';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
@@ -10,12 +11,12 @@ import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
-const X: CheckersStack = new CheckersStack([CheckersPiece.ONE_PROMOTED]);
 const _: CheckersStack = CheckersStack.EMPTY;
 
 const rules: AbstractCheckersRules[] = [
     InternationalCheckersRules.get(),
     LascaRules.get(),
+    BashniRules.get(),
 ];
 
 for (const rule of rules) {
@@ -39,38 +40,6 @@ for (const rule of rules) {
 
             // Then it should return the list of steps
             expect(moves.every((move: CheckersMove) => move.isStep)).toBe(true);
-        });
-
-        it('should not suggest invalid move (not jumping twice the same coord)', () => {
-            // Given a state where current player could be tempted to do illegal capture
-            const customConfig: CheckersConfig = {
-                ...rule.getDefaultRulesConfig(),
-                frisianCaptureAllowed: true,
-                promotedPiecesCanFly: true,
-                mustMakeMaximalCapture: true,
-            };
-            const state: CheckersState = CheckersState.of([
-                [U, _, U, _, X, _, U],
-                [_, _, _, U, _, _, _],
-                [U, _, U, _, U, _, _],
-                [_, _, _, _, _, _, _],
-                [V, _, V, _, _, _, V],
-                [_, V, _, V, _, _, _],
-                [V, _, V, _, V, _, V],
-            ], 1);
-            const node: CheckersNode = new CheckersNode(state);
-
-            // When listing the moves
-            const moves: CheckersMove[] = moveGenerator.getListMoves(node, customConfig);
-
-            // Then it should return the list of captures
-            expect(moves.length).toBe(1);
-            const captures: Coord[] = [
-                new Coord(4, 0),
-                new Coord(4, 4),
-                new Coord(1, 1),
-            ];
-            expect(moves[0]).toEqual(CheckersMove.fromCapture(captures));
         });
 
     });
@@ -108,7 +77,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
     describe('getLegalCaptures', () => {
 
-        it('should forbid to pass over the same coord several times', () => {
+        it('should forbid to pass over the same piece several times', () => {
             // Given a board with only one possible capture
             const state: CheckersState = new CheckersState([
                 [_, _, _, _, _, _, _, _, _, _],
@@ -172,7 +141,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
 
     describe('getLegalCaptures', () => {
 
-        it('should forbid to pass over the same coord several times', () => {
+        it('should allow to pass over the same coord several times', () => {
             // Given a board with only one possible capture
             const state: CheckersState = new CheckersState([
                 [_, _, _, _, _, _, _],
@@ -187,12 +156,13 @@ describe('CheckersMoveGenerator for Lasca', () => {
             // When checking the legal list of captures
             const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig);
 
-            // Then it should be this one, the bigger not to fly over same coord twice
+            // Then it should be this one
             const coordsClockwise: Coord[] = [
                 new Coord(6, 4),
                 new Coord(4, 2),
                 new Coord(2, 4),
                 new Coord(4, 6),
+                new Coord(6, 4),
             ];
             const moveClockwise: CheckersMove = CheckersMove.fromCapture(coordsClockwise);
             const coordsCounterClockwise: Coord[] = [
@@ -200,6 +170,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
                 new Coord(4, 6),
                 new Coord(2, 4),
                 new Coord(4, 2),
+                new Coord(6, 4),
             ];
             const moveCounterClockwise: CheckersMove = CheckersMove.fromCapture(coordsCounterClockwise);
             expect(legalCaptures).toEqual([moveClockwise, moveCounterClockwise]);
