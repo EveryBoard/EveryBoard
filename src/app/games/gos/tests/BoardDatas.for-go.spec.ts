@@ -6,7 +6,7 @@ import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-describe('GoBoardData for Go', () => {
+describe('BoardData for Go', () => {
 
     const _: GoPiece = GoPiece.EMPTY;
     const X: GoPiece = GoPiece.LIGHT;

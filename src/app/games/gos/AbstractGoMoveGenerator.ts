@@ -93,12 +93,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
             }
         };
         const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(), markAsDead);
-        const allDeadState: GoState = new GoState(allDeadBoard,
-                                                  currentState.getCapturedCopy(),
-                                                  currentState.turn,
-                                                  currentState.koCoord,
-                                                  currentState.phase,
-        );
+        const allDeadState: GoState = currentState.withBoard(allDeadBoard);
         const territoryLikeGroups: GoGroupData[] = this.rules.getTerritoryLikeGroup(allDeadState);
 
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
@@ -118,7 +113,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
     public setAliveUniqueWrapper(allDeadState: GoState,
                                  monoWrappedEmptyGroups: GoGroupData[],
     ): GoState {
-        let resultingState: GoState = allDeadState.copy();
+        let resultingState: GoState = allDeadState;
         let aliveCoords: Coord[];
         for (const monoWrappedEmptyGroup of monoWrappedEmptyGroups) {
             aliveCoords = monoWrappedEmptyGroup.deadDarkCoords.concat(monoWrappedEmptyGroup.deadLightCoords);

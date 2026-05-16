@@ -1,12 +1,11 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, EventEmitter, input, InputSignal, Output, Signal } from '@angular/core';
+import { Component, computed, input, InputSignal, output, OutputEmitterRef, Signal } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../../../components/game-components/base-game-component/BaseGameComponent';
 import { BlankGobanComponent } from '../../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { Coord } from '../../../../jscaip/Coord';
-// import { Vector } from '../../../jscaip/Vector';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { GoSubBoardHelper } from '../GoSubBoardHelper';
@@ -71,9 +70,9 @@ export class GoBoardComponent extends BaseGameComponent {
 
     public zy: InputSignal<number> = input.required();
 
-    @Output() public clicked: EventEmitter<Coord> = new EventEmitter<Coord>(); // TODO: output signal
+    public clicked: OutputEmitterRef<Coord> = output<Coord>();
 
-    @Output() public takeHover: EventEmitter<Coord> = new EventEmitter<Coord>(); // TODO: output signal
+    public takeHover: OutputEmitterRef<Coord> = output<Coord>();
 
     public GoPiece: typeof GoPiece = GoPiece;
 

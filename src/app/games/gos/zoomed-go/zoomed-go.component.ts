@@ -6,26 +6,26 @@ import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';
 import { AbstractRectangularGoComponent } from '../abstract-rectangular-go/abstract-rectangular-go.component';
 import { GoBoardComponent } from '../abstract-rectangular-go/go-board/go-board.component';
+import { ZoomedGoMinimax } from '../zoomed-go/ZoomedGoMinimax';
 
-import { GoMinimax } from './GoMinimax';
-import { GoMoveGenerator } from './GoMoveGenerator';
+import { ZoomedGoMoveGenerator } from './ZoomedGoMoveGenerator';
 
 @Component({
-    selector: 'app-go',
+    selector: 'app-zoomed-go',
     templateUrl: '../abstract-rectangular-go/abstract-rectangular-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
     imports: [GoBoardComponent],
 })
-export class GoComponent extends AbstractRectangularGoComponent {
+export class ZoomedGoComponent extends AbstractRectangularGoComponent {
 
     public hover: ModelSignal<MGPOptional<Coord>> = model(MGPOptional.empty());
 
     public constructor() {
         super();
-        this.setRulesAndNode('Go');
+        this.setRulesAndNode('ZoomedGo');
         this.availableAIs = [
-            new GoMinimax(),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
+            new ZoomedGoMinimax(),
+            new MCTS($localize`MCTS`, new ZoomedGoMoveGenerator(), this.rules),
         ];
     }
 

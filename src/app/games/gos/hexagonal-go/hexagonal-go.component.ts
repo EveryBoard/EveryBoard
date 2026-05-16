@@ -116,7 +116,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().getCapturedCopy());
+        this.scores = MGPOptional.of(this.getState().captured);
     }
 
     protected override getScoreName(): ScoreName {

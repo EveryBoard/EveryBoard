@@ -7,8 +7,10 @@ import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
-import { GoConfig, GoRules } from './GoRules';
+import { GoRules } from './GoRules';
+
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -17,7 +19,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
+const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
 export class GoTutorial extends Tutorial {
 

@@ -52,6 +52,9 @@ import { HexagonalGoComponent } from '../../../games/gos/hexagonal-go/hexagonal-
 import { TriangularGoRules } from '../../../games/gos/triangular-go/TriangularGoRules';
 import { TriangularGoTutorial } from '../../../games/gos/triangular-go/TriangularGoTutorial';
 import { TriangularGoComponent } from '../../../games/gos/triangular-go/triangular-go.component';
+import { ZoomedGoRules } from '../../../games/gos/zoomed-go/ZoomedGoRules';
+import { ZoomedGoTutorial } from '../../../games/gos/zoomed-go/ZoomedGoTutorial';
+import { ZoomedGoComponent } from '../../../games/gos/zoomed-go/zoomed-go.component';
 import { HexodiaRules } from '../../../games/hexodia/HexodiaRules';
 import { HexodiaTutorial } from '../../../games/hexodia/HexodiaTutorial';
 import { HexodiaComponent } from '../../../games/hexodia/hexodia.component';
@@ -231,6 +234,8 @@ class GameDescription {
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
+    public static readonly ZOOMED_GO: Localized = () => $localize`A multi-layered remix of the Go Game!`;
+
 }
 
 export class GameInfo {
@@ -299,6 +304,7 @@ export class GameInfo {
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
 
             new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
+            new GameInfo($localize`Zoomed Go`,              'ZoomedGo',              ZoomedGoComponent,              new ZoomedGoTutorial(),              ZoomedGoRules.get(),              new Date('2026-05-15'), GameDescription.ZOOMED_GO()             ), // 43:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

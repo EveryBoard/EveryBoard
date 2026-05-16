@@ -8,8 +8,8 @@ import { Table } from '../../../../jscaip/TableUtils';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { GoHeuristic } from '../GoHeuristic';
-import { GoConfig, GoRules } from '../GoRules';
+import { GoHeuristic } from '../../go/GoHeuristic';
+import { RectangularGoConfig, AbstractRectangularGoRules } from '../AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -18,7 +18,7 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
-    const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: RectangularGoConfig = AbstractRectangularGoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();

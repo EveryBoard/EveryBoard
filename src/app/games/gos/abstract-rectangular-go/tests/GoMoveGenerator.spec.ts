@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table } from '../../../jscaip/TableUtils';
-import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { AbstractGoConfig, GoNode } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-import { GoMoveGenerator } from '../go/GoMoveGenerator';
-import { GoConfig, GoRules } from '../go/GoRules';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
+import { GoNode } from '../../AbstractGoRules';
+import { GoMove } from '../../GoMove';
+import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoState } from '../../GoState';
+import { GoMoveGenerator } from '../../go/GoMoveGenerator';
+import { GoRules } from '../../go/GoRules';
+import { RectangularGoConfig, AbstractRectangularGoRules } from '../AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -20,11 +20,11 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-describe('GoMoveGenerator', () => { // TODO: move tests inside their own sub folder
+describe('GoMoveGenerator', () => {
 
-    let moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig>;
+    let moveGenerator: GoMoveGenerator;
 
-    const config: GoConfig = {
+    const config: RectangularGoConfig = {
         width: 5,
         height: 5,
         handicap: 0,
@@ -63,7 +63,7 @@ describe('GoMoveGenerator', () => { // TODO: move tests inside their own sub fol
         });
 
         it('should only have GoMove.ACCEPT in COUNTNG GoPhase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = AbstractRectangularGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard,
                                                PlayerNumberMap.of(0, 0),
                                                0,
@@ -76,7 +76,7 @@ describe('GoMoveGenerator', () => { // TODO: move tests inside their own sub fol
         });
 
         it('should only have counting moves in GoPhase.COUNTING when not agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = AbstractRectangularGoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);

@@ -12,18 +12,12 @@ import { GoPiece } from './GoPiece';
 export class GoState extends GameStateWithTable<GoPiece> {
 
     public static of(oldState: GoState, newBoard: Table<GoPiece>): GoState {
-        return new GoState(
-            newBoard,
-            oldState.getCapturedCopy(),
-            oldState.turn,
-            oldState.koCoord,
-            oldState.phase,
-        );
+        return oldState.withBoard(newBoard);
     }
 
     public readonly koCoord: MGPOptional<Coord>;
 
-    public readonly captured: PlayerNumberMap; // TODO: made private to enforce immutability by encapsulation, clean it
+    public readonly captured: PlayerNumberMap;
 
     public readonly phase: GoPhase;
 
@@ -31,8 +25,8 @@ export class GoState extends GameStateWithTable<GoPiece> {
                        captured: PlayerNumberMap,
                        turn: number,
                        koCoord: MGPOptional<Coord>,
-                       phase: GoPhase)
-    {
+                       phase: GoPhase,
+    ) {
         super(board, turn);
         this.captured = captured;
         this.captured.makeImmutable();
@@ -40,21 +34,12 @@ export class GoState extends GameStateWithTable<GoPiece> {
         this.phase = phase;
     }
 
-    public getCapturedCopy(): PlayerNumberMap { //TODO: kill this, make all field immutable
+    public getCapturedCopy(): PlayerNumberMap {
         return this.captured.getCopy();
     }
 
     public static getStartingBoard(width: number, height: number): GoPiece[][] {
         return TableUtils.create(width, height, GoPiece.EMPTY);
-    }
-
-    public copy(): GoState { // TODO: berk ?
-        return new GoState(this.getCopiedBoard(),
-                           this.getCapturedCopy(),
-                           this.turn,
-                           this.koCoord,
-                           this.phase,
-        );
     }
 
     public isDead(coord: Coord): boolean {
@@ -65,33 +50,67 @@ export class GoState extends GameStateWithTable<GoPiece> {
         return this.getPieceAt(coord).isTerritory();
     }
 
+    public withBoard(board: Table<GoPiece>): GoState {
+        return new GoState(
+            board,
+            this.captured,
+            this.turn,
+            this.koCoord,
+            this.phase,
+        );
+    }
+
     public incrementTurn(): GoState {
         return new GoState(
-            this.getCopiedBoard(),
-            this.getCapturedCopy(),
+            this.board,
+            this.captured,
             this.turn + 1,
             this.koCoord,
             this.phase,
         );
     }
 
-    public setPieceAt(coord: Coord, value: GoPiece): GoState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             GoState.of,
-        );
-    }
-
-    public addCaptures(player: Player, captures: number): GoState {
-        const newCaptured: PlayerNumberMap = this.getCapturedCopy();
-        newCaptured.add(player, captures);
+    public withCaptures(newCaptured: PlayerNumberMap): GoState {
         return new GoState(
-            this.getCopiedBoard(),
+            this.board,
             newCaptured,
             this.turn,
             this.koCoord,
             this.phase,
+        );
+    }
+
+    public withAddedCaptures(player: Player, captures: number): GoState {
+        const newCaptured: PlayerNumberMap = this.getCapturedCopy();
+        newCaptured.add(player, captures);
+        return this.withCaptures(newCaptured);
+    }
+
+    public withKo(newKo: MGPOptional<Coord>): GoState {
+        return new GoState(
+            this.board,
+            this.captured,
+            this.turn,
+            newKo,
+            this.phase,
+        );
+    }
+
+    public withPhase(newPhase: GoPhase): GoState {
+        return new GoState(
+            this.board,
+            this.captured,
+            this.turn,
+            this.koCoord,
+            newPhase,
+        );
+    }
+
+    public withPieceAt(coord: Coord, value: GoPiece): GoState {
+        return GameStateWithTable.setPieceAt(this,
+                                             coord,
+                                             value,
+                                             GoState.of,
         );
     }
 

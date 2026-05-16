@@ -1,13 +1,13 @@
 import { AbstractGoHeuristic } from '../AbstractGoHeuristic';
 import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
-import { GoRules } from './GoRules';
+import { ZoomedGoRules } from './ZoomedGoRules';
 
 
-export class GoHeuristic extends AbstractGoHeuristic<RectangularGoConfig> {
+export class ZoomedGoHeuristic extends AbstractGoHeuristic<RectangularGoConfig> {
 
     public constructor() {
-        super(GoRules.get());
+        super(ZoomedGoRules.get());
     }
 
 }

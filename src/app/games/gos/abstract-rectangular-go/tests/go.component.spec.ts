@@ -11,13 +11,14 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { GoConfig, GoRules } from '../GoRules';
-import { GoComponent } from '../go.component';
+import { GoRules } from '../../go/GoRules';
+import { GoComponent } from '../../go/go.component';
+import { RectangularGoConfig } from '../AbstractRectangularGoRules';
 
 describe('GoComponent', () => {
 
     let testUtils: ComponentTestUtils<GoComponent>;
-    const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
     const _: GoPiece = GoPiece.EMPTY;
     const O: GoPiece = GoPiece.DARK;
@@ -74,7 +75,7 @@ describe('GoComponent', () => {
         ];
         const state: GoState =
             new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
-        const config: GoConfig = {
+        const config: RectangularGoConfig = {
             ...defaultConfig,
             width: 5,
             height: 5,
@@ -111,7 +112,7 @@ describe('GoComponent', () => {
 
         it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
-            const config: GoConfig = {
+            const config: RectangularGoConfig = {
                 ...defaultConfig,
                 height: 13,
                 width: 13,
@@ -135,7 +136,7 @@ describe('GoComponent', () => {
 
         it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
-            const config: GoConfig = {
+            const config: RectangularGoConfig = {
                 ...defaultConfig,
                 height: 9,
                 width: 9,
@@ -159,7 +160,7 @@ describe('GoComponent', () => {
 
         it('should have a tengen when board has an odd width and height', fakeAsync(async() => {
             // Given a (odd x odd) board
-            const config: GoConfig = {
+            const config: RectangularGoConfig = {
                 ...defaultConfig,
                 height: 9,
                 width: 9,
@@ -175,7 +176,7 @@ describe('GoComponent', () => {
 
         it('should not have a tengen when board has an even width and height', fakeAsync(async() => {
             // Given a (even x even) board
-            const config: GoConfig = {
+            const config: RectangularGoConfig = {
                 ...defaultConfig,
                 height: 10,
                 width: 10,
@@ -194,7 +195,7 @@ describe('GoComponent', () => {
 
         it('should be absent when board has width of height lower than 5', fakeAsync(async() => {
             // Given a (<5 x <5) board
-            const config: GoConfig = {
+            const config: RectangularGoConfig = {
                 ...defaultConfig,
                 height: 4,
                 width: 4,
@@ -223,7 +224,7 @@ describe('GoComponent', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.COUNTING);
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 ...defaultConfig,
                 width: 5,
                 height: 5,
@@ -248,7 +249,7 @@ describe('GoComponent', () => {
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING);
-            const config: GoConfig = {
+            const config: RectangularGoConfig = {
                 ...defaultConfig,
                 width: 5,
                 height: 5,
@@ -283,7 +284,7 @@ describe('GoComponent', () => {
                 MGPOptional.empty(),
                 GoPhase.PLAYING,
             );
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 ...defaultConfig,
                 width: 5,
                 height: 5,
@@ -337,7 +338,7 @@ describe('GoComponent', () => {
                 MGPOptional.of(new Coord(3, 0)),
                 GoPhase.PLAYING,
             );
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 ...defaultConfig,
                 width: 5,
                 height: 5,

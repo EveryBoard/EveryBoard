@@ -13,8 +13,8 @@ export class GoGroupData extends GroupData<GoPiece> {
                        public lightCoords: Coord[],
                        public deadDarkCoords: Coord[],
                        public deadLightCoords: Coord[],
-                       public unreachableCoords: Coord[])
-    {
+                       public unreachableCoords: Coord[],
+    ) {
         super(color);
     }
 

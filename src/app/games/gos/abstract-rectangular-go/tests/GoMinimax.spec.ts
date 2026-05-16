@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
-import { GoMinimax } from '../GoMinimax';
-import { GoConfig, GoRules } from '../GoRules';
+import { GoMinimax } from '../../go/GoMinimax';
+import { GoRules } from '../../go/GoRules';
+import { RectangularGoConfig } from '../AbstractRectangularGoRules';
 
 describe('GoMinimax', () => {
 
     const rules: GoRules = GoRules.get();
     const minimax: GoMinimax = new GoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

@@ -12,11 +12,11 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { GoConfig, GoRules } from '../GoRules';
+import { RectangularGoConfig, AbstractRectangularGoRules } from '../AbstractRectangularGoRules';
 
 describe('GoRules', () => {
 
-    let rules: GoRules;
+    let rules: AbstractRectangularGoRules;
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -26,7 +26,7 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const config: GoConfig = {
+    const config: RectangularGoConfig = {
         width: 5,
         height: 5,
         handicap: 0,
@@ -36,7 +36,7 @@ describe('GoRules', () => {
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     beforeEach(() => {
-        rules = GoRules.get();
+        rules = AbstractRectangularGoRules.get();
     });
 
     it('should be created', () => {
@@ -47,7 +47,7 @@ describe('GoRules', () => {
 
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = AbstractRectangularGoRules.get().getInitialState(config);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -227,7 +227,7 @@ describe('GoRules', () => {
 
         it('GoPhase.PLAYING + GoMove.PASS = GoPhase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = GoRules.get().getInitialState(config);
+            const state: GoState = AbstractRectangularGoRules.get().getInitialState(config);
             expect(state.phase).toBe(GoPhase.PLAYING);
 
             // When passing
@@ -709,7 +709,7 @@ describe('GoRules', () => {
 
     describe('alternative config', () => {
 
-        const customConfig: GoConfig = {
+        const customConfig: RectangularGoConfig = {
             ...config,
             zoom: 2,
         };

@@ -1,10 +1,11 @@
 import { AbstractGoMinimax } from '../AbstractGoMinimax';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
 import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
-import { GoConfig, GoRules } from './GoRules';
+import { GoRules } from './GoRules';
 
-export class GoMinimax extends AbstractGoMinimax<GoConfig> {
+export class GoMinimax extends AbstractGoMinimax<RectangularGoConfig> {
 
     public constructor() {
         super(
