@@ -323,6 +323,9 @@
       <trans-unit id="6432141756227180076" datatype="html">
         <source>Align your 4 pieces or form a square with them to win!</source>
       </trans-unit>
+      <trans-unit id="2856851705672899185" datatype="html">
+        <source>A toric version of Reversi!</source>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
@@ -460,6 +463,9 @@
       </trans-unit>
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
+      </trans-unit>
+      <trans-unit id="3697715893908807208" datatype="html">
+        <source>Toric Reversi</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -872,14 +878,14 @@
       <trans-unit id="6874699210811358423" datatype="html">
         <source>Toric</source>
       </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
       </trans-unit>
       <trans-unit id="4231579860680569680" datatype="html">
         <source>There is no such configuration element</source>
-      </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>

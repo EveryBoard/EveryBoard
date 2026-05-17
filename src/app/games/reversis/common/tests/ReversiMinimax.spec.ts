@@ -10,7 +10,7 @@ describe('ReversiMinimax', () => {
 
     const rules: ReversiRules = ReversiRules.get();
     const defaultConfig: ReversiConfig = rules.getDefaultRulesConfig();
-    const minimax: ReversiMinimax = new ReversiMinimax();
+    const minimax: ReversiMinimax<ReversiRules> = new ReversiMinimax(rules);
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
 
     it('should not throw at first choice', () => {

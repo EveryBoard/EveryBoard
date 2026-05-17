@@ -1,19 +1,19 @@
 import { Minimax } from '../../../jscaip/AI/Minimax';
-import { ReversiRules } from '../reversi/ReversiRules'; // TODO: non nirnet non
 
-import { ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
+import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
 import { ReversiHeuristic } from './ReversiHeuristic';
 import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiState } from './ReversiState';
 
-export class ReversiMinimax extends Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation> {
-
-    public constructor() {
+export class ReversiMinimax<R extends AbstractReversiRules>
+    extends Minimax<ReversiMove, ReversiState, ReversiConfig, ReversiLegalityInformation>
+{
+    public constructor(rules: R) {
         super($localize`Minimax`,
-              ReversiRules.get(),
+              rules,
               new ReversiHeuristic(),
-              new ReversiMoveGenerator(),
+              new ReversiMoveGenerator(rules),
         );
     }
 }

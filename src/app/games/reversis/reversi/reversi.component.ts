@@ -24,8 +24,8 @@ export class ReversiComponent extends AbstractReversiComponent<ReversiRules> {
         super();
         this.setRulesAndNode('Reversi');
         this.availableAIs = [
-            new ReversiMinimax(),
-            new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
+            new ReversiMinimax(this.rules),
+            new MCTS($localize`MCTS`, new ReversiMoveGenerator(this.rules), this.rules),
         ];
         this.encoder = ReversiMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));

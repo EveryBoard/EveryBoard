@@ -3,8 +3,8 @@ import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
 
-import { ReversiMove } from './ReversiMove';
 import { ReversiConfig, ReversiNode } from './AbstractReversiRules';
+import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
 
 export class ReversiHeuristic extends PlayerMetricHeuristic<ReversiMove, ReversiState, ReversiConfig> {

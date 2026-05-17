@@ -382,6 +382,10 @@
         <source>Align your 4 pieces or form a square with them to win!</source>
         <target>Alignez vos 4 pièces ou placez les en carré pour gagner !</target>
       </trans-unit>
+      <trans-unit id="2856851705672899185" datatype="html">
+        <source>A toric version of Reversi!</source>
+        <target>Une version torique du Reversi !</target>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
         <target>Alignez 5 pièces de votre couleur en ligne droite, mais attention, les pièces peuvent s'empiler !</target>
@@ -664,6 +668,10 @@
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
         <target>Go Hexagonal</target>
+      </trans-unit>
+      <trans-unit id="3697715893908807208" datatype="html">
+        <source>Toric Reversi</source>
+        <target>Reversi Torique</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
