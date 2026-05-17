@@ -354,10 +354,11 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     @ClickHandler((dir: HexaDirection) => `#direction-${ dir.toString() }`)
     public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        return this._chooseDirection(dir);
+        // doChooseDirection is reused somewhere else, where no click handling action needs to be used, so we don't merge them
+        return this.doChooseDirection(dir);
     }
 
-    private async _chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
+    private async doChooseDirection(dir: HexaDirection): Promise<MGPValidation> {
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(firstPiece, dir);
@@ -389,7 +390,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async tryChoosingDirection(clicked: Coord): Promise<MGPValidation> {
         for (const direction of this.directions) {
             if (direction.landing.equals(clicked)) {
-                return this._chooseDirection(direction.dir);
+                return this.doChooseDirection(direction.dir);
             }
         }
         return this.cancelMove();

@@ -134,6 +134,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
 
     @ClickHandler((x: number, y: number) => `#square-${ x }-${ y }`)
     public async clickSquare(x: number, y: number): Promise<MGPValidation> {
+        // doSquareClick is used somewhere else where click handling behavior are not desired
         return this.doSquareClick(x, y);
     }
 

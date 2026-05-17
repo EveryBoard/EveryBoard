@@ -113,6 +113,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     @ClickHandler((x: number) => '#click-' + x)
     public async onSpaceClick(x: number): Promise<MGPValidation> {
+        // onSpaceClickAfterCheck is called somewhere else where no click handling check need to be done
         return this.onSpaceClickAfterCheck(x);
     }
 

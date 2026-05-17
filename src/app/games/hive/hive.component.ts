@@ -352,15 +352,17 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     @ClickHandler((x: number, y: number, z: number) => `#piece-${ x }-${ y }-${ z }`)
-    public async selectPiece(x: number, y: number, z: number): Promise<MGPValidation> {
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y));
-        return selectionValidity;
+    public async selectPiece(x: number, y: number, _: number): Promise<MGPValidation> {
+        // having selectPiece and selectSpace separated allow to
+        // test that clicking the space and the piece have the same behavior
+        return this.select(new Coord(x, y));
     }
 
     @ClickHandler((x: number, y: number) => `#space-${ x }-${ y }`)
     public async selectSpace(x: number, y: number): Promise<MGPValidation> {
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y));
-        return selectionValidity;
+        // having selectPiece and selectSpace separated allow to
+        // test that clicking the space and the piece have the same behavior
+        return await this.select(new Coord(x, y));
     }
 
     private async select(coord: Coord): Promise<MGPValidation> {
