@@ -1,6 +1,7 @@
 import { Utils } from '@everyboard/lib';
 
 export class Debug {
+
     /**
      * Enables logging for a class or method programmatically.
      * For example, call `Debug.enableLog([true, false], 'YourClass', 'yourMethod')` in app.component.ts
@@ -22,6 +23,7 @@ export class Debug {
         const stringifiedVerbosity: string = Debug.getStringified(verbosity);
         localStorage.setItem('verbosity', stringifiedVerbosity);
     }
+
     private static getStringified(o: object): string {
         try {
             return JSON.stringify(o);
@@ -29,6 +31,7 @@ export class Debug {
             return 'recursive and not stringifiable!';
         }
     }
+
     private static isVerbose(name: string): [boolean, boolean] {
         const verbosityJSON: string | null = localStorage.getItem('verbosity');
         if (verbosityJSON == null) return [false, false];
@@ -42,17 +45,21 @@ export class Debug {
             throw new Error(`malformed verbosity object: ${verbosityJSON}`);
         }
     }
+
     private static isMethodVerboseEntry(className: string, methodName: string): boolean {
         return Debug.isVerbose(className)[0] || Debug.isVerbose(className + '.' + methodName)[0];
     }
+
     private static isMethodVerboseExit(className: string, methodName: string): boolean {
         return Debug.isVerbose(className)[1] || Debug.isVerbose(className + '.' + methodName)[1];
     }
+
     public static display(className: string, methodName: string, message: unknown): void {
         if (Debug.isMethodVerboseEntry(className, methodName)) {
             console.log(`${className}.${methodName}: ${message}`);
         }
     }
+
     /**
      * Class decorator that enables logging for all methods of a class
      * Note: we could think that T should be typed `T extends { new(...args: unknown[]): unknown }`
@@ -89,6 +96,7 @@ export class Debug {
             Object.defineProperty(constructor['prototype'], propertyName, descriptor);
         }
     }
+
 }
 
 // To make Debug.enableLog accessible in the console, run this somewhere in the app's initialization code:

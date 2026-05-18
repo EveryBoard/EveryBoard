@@ -178,6 +178,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     @ClickHandler((coord: Coord) => `#piece-${ coord.x }-${ coord.y }`)
     public async onPieceClick(coord: Coord): Promise<MGPValidation> {
+        // onLegalPieceClick is called somewhere else where no click handling check need to be done
         return this.onLegalPieceClick(coord);
     }
 
@@ -198,6 +199,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     }
 
     private async opponentClick(coord: Coord): Promise<MGPValidation> {
+        // tryChoosingDirection is called somewhere else where no click handling check need to be done
         return this.tryChoosingDirection(coord);
     }
 
@@ -354,7 +356,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     @ClickHandler((dir: HexaDirection) => `#direction-${ dir.toString() }`)
     public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        // doChooseDirection is reused somewhere else, where no click handling action needs to be used, so we don't merge them
+        // doChooseDirection is called somewhere else where no click handling check need to be done
         return this.doChooseDirection(dir);
     }
 
@@ -372,6 +374,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
 
     @ClickHandler((coord: Coord) => `#invisible-space-${ coord.x }-${ coord.y }`)
     public async onInvisibleSpaceClick(coord: Coord): Promise<MGPValidation> {
+        // tryChoosingDirection is called somewhere else where no click handling check need to be done
         return this.tryChoosingDirection(coord);
     }
 

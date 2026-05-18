@@ -245,24 +245,6 @@ export class LodestoneComponent
                                       _plateIndex: number,
                                       _pieceIndex: number,
     ): Promise<MGPValidation> {
-        return this.selectPressurePlate(position);
-    }
-
-    @ClickHandler(
-        (position: LodestonePressurePlatePosition,
-         plateIndex: number,
-         pieceIndex: number,
-        ) => `#plate-${ position }-${ plateIndex }-${ pieceIndex}`,
-    )
-    public async onTemporaryPressurePlateClick(position: LodestonePressurePlatePosition,
-                                               _plateIndex: number,
-                                               _pieceIndex: number)
-    : Promise<MGPValidation>
-    {
-        return this.deselectPressurePlate(position);
-    }
-
-    private async selectPressurePlate(position: LodestonePressurePlatePosition): Promise<MGPValidation> {
         if (this.capturesToPlace === 0) {
             return this.cancelMove(LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
         }
@@ -284,7 +266,16 @@ export class LodestoneComponent
         return MGPValidation.SUCCESS;
     }
 
-    public async deselectPressurePlate(position: LodestonePressurePlatePosition): Promise<MGPValidation> {
+    @ClickHandler(
+        (position: LodestonePressurePlatePosition,
+         plateIndex: number,
+         pieceIndex: number,
+        ) => `#plate-${ position }-${ plateIndex }-${ pieceIndex}`,
+    )
+    public async onTemporaryPressurePlateClick(position: LodestonePressurePlatePosition,
+                                               _plateIndex: number,
+                                               _pieceIndex: number)
+    : Promise<MGPValidation> {
         this.capturesToPlace++;
         this.captures[position]--;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
