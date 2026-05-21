@@ -28,7 +28,7 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
     private getHeuristicValue(config: TaflConfig, zeroPawnsCount: number, onePawnsCount: number): PlayerNumberMap {
         const invader: Player = this.rules.getInvader(config);
         const scoreZero: number = this.getScoreFor(Player.ZERO, invader, zeroPawnsCount);
-        const scoreOne: number = this.getScoreFor(Player.ZERO, invader, onePawnsCount);
+        const scoreOne: number = this.getScoreFor(Player.ONE, invader, onePawnsCount);
         return PlayerNumberMap.of(scoreZero, scoreOne);
     }
 

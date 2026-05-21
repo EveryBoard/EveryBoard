@@ -59,14 +59,18 @@ export class MCTSWithHeuristic<M extends Move,
                 if (isOutOfBounds && (isPreVictory === false)) {
                     // Our metric is outside of the bounds!
                     // We can warn the user about it. (except for pre-victories)
-                    // TODO: we can get infinite values here! (from P4)
                     console.warn(`MCTSWithHeuristic ${this.name} got a value outside its bounds: ${metric} is outside of [${player0Best}, ${player1Best}]`);
                 }
-                value += (Math.min(metric, player1Best) - player0Best) / (player1Best - player0Best);
+                const boundedMetric: number = Math.max(player0Best, Math.min(metric, player1Best));
+                value += (boundedMetric - player0Best) / (player1Best - player0Best);
             }
             value = value / boardValue.metrics.length;
             Utils.assert(0 <= value && value <= 1, `MCTSWithHeuristic ${this.name} got a value outside of [0,1]`);
-            return value;
+            if (player === Player.ONE) {
+                return value;
+            } else {
+                return 1 - value;
+            }
         } else {
             return super.winScore(node, config, gameStatus, player);
         }

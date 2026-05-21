@@ -7,15 +7,57 @@ import { MancalaConfig } from '../../../games/mancala/common/MancalaConfig';
 import { MancalaMove } from '../../../games/mancala/common/MancalaMove';
 import { MancalaNode } from '../../../games/mancala/common/MancalaRules';
 import { MancalaState } from '../../../games/mancala/common/MancalaState';
+import { P4Move } from '../../../games/p4/P4Move';
+import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
+import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
+import { P4State } from '../../../games/p4/P4State';
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoMoveGenerator } from '../../../games/quarto/QuartoMoveGenerator';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../../../games/quarto/QuartoRules';
 import { QuartoState } from '../../../games/quarto/QuartoState';
 import { Coord } from '../../Coord';
+import { GameStatus } from '../../GameStatus';
+import { Player } from '../../Player';
 import { Table } from '../../TableUtils';
 import { AITimeLimitOptions } from '../AI';
+import { BoardValue } from '../BoardValue';
+import { GameNode } from '../GameNode';
 import { MCTS } from '../MCTS';
+import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
+import { HeuristicBounds, HeuristicWithBounds } from '../Minimax';
+
+class ConstantP4Heuristic extends HeuristicWithBounds<P4Move, P4State, BoardValue, P4Config> {
+
+    public constructor(private readonly value: number) {
+        super();
+    }
+
+    public override getBoardValue(_node: P4Node, _config: MGPOptional<P4Config>): BoardValue {
+        return BoardValue.of(this.value);
+    }
+
+    public override getBounds(_config: MGPOptional<P4Config>): HeuristicBounds<BoardValue> {
+        return {
+            player0Best: BoardValue.ofSingle(10, 0),
+            player1Best: BoardValue.ofSingle(0, 10),
+        };
+    }
+
+}
+
+class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
+
+    public getWinScore(node: P4Node,
+                       config: MGPOptional<P4Config>,
+                       gameStatus: GameStatus,
+                       player: Player)
+    : number
+    {
+        return this.winScore(node, config, gameStatus, player);
+    }
+
+}
 
 describe('MCTS', () => {
 
@@ -94,5 +136,61 @@ describe('MCTS', () => {
         expect(move).toBeTruthy();
     });
 
+    it('should score heuristic values from the searched player viewpoint', () => {
+        // Given a heuristic board value that is best for Player.ONE
+        const p4Config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+        const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const p4Mcts: TestMCTSWithHeuristic =
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(10));
+
+        // When scoring this board for both players
+        const playerZeroScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
+        const playerOneScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
+
+        // Then it should be good for Player.ONE and bad for Player.ZERO
+        expect(playerZeroScore).toBe(0);
+        expect(playerOneScore).toBe(1);
+    });
+
+    it('should clamp heuristic values below their bounds', () => {
+        // Given a heuristic value below the declared lower bound
+        const p4Config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+        const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const p4Mcts: TestMCTSWithHeuristic =
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(-20));
+        spyOn(console, 'warn');
+
+        // When scoring it
+        const playerZeroScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
+        const playerOneScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
+
+        // Then it should be capped to the lower bound and remain a valid win score
+        expect(playerZeroScore).toBe(1);
+        expect(playerOneScore).toBe(0);
+    });
+
+    it('should select opponent children that are bad for the searched player', () => {
+        // Given a node where it is Player.ONE's turn, with two already explored replies
+        const p4Config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+        const p4Mcts: MCTS<P4Move, P4State, P4Config> = new MCTS('MCTS', new P4MoveGenerator(), P4Rules.get());
+        const root: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const playerZeroMove: P4Node = p4Mcts['play'](root, P4Move.of(0), p4Config) as P4Node;
+        const goodForPlayerZero: P4Node = p4Mcts['play'](playerZeroMove, P4Move.of(0), p4Config) as P4Node;
+        const badForPlayerZero: P4Node = p4Mcts['play'](playerZeroMove, P4Move.of(1), p4Config) as P4Node;
+        playerZeroMove.addChild(goodForPlayerZero);
+        playerZeroMove.addChild(badForPlayerZero);
+        p4Mcts['addSimulationResult'](playerZeroMove, 0);
+        for (let i: number = 0; i < 10; i++) {
+            p4Mcts['addSimulationResult'](goodForPlayerZero, 1);
+            p4Mcts['addSimulationResult'](badForPlayerZero, 0);
+        }
+
+        // When selecting from the opponent turn
+        const selected: { node: GameNode<P4Move, P4State>, path: GameNode<P4Move, P4State>[] } =
+            p4Mcts['select']({ node: playerZeroMove, path: [playerZeroMove] }, Player.ZERO);
+
+        // Then the opponent should be modeled as choosing the reply that minimizes Player.ZERO's score
+        expect(selected.node).toBe(badForPlayerZero);
+    });
 
 });

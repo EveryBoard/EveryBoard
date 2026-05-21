@@ -64,7 +64,7 @@ implements AI<M, S, AITimeLimitOptions, C>
         let iterations: number = 0;
         while (Date.now() < endTime) {
             const expansionResult: NodeAndPath<M, S> = this.expand(
-                this.select({ node: root, path: [root] }), config);
+                this.select({ node: root, path: [root] }, player), config);
             const gameStatus: GameStatus = this.simulate(expansionResult.node, endTime, config);
             this.backpropagate(expansionResult.path, this.winScore(expansionResult.node, config, gameStatus, player));
             iterations++;
@@ -102,12 +102,15 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Computes the UCB value of a node.
      * The UCB (Upper-Confidence-Bound) is a value used to select nodes to explore.
      */
-    private ucb(node: GameNode<M, S>, parentSimulations: number): number {
+    private adversarialUcb(node: GameNode<M, S>, parentSimulations: number, player: Player): number {
         const simulations: number = this.simulations(node);
         if (parentSimulations === 0 || simulations === 0) {
             return Number.POSITIVE_INFINITY;
         }
-        return (this.wins(node) / simulations) +
+        const winRatio: number = this.wins(node) / simulations;
+        const exploitation: number =
+            node.gameState.getPreviousPlayer() === player ? winRatio : 1 - winRatio;
+        return exploitation +
                this.explorationParameter * Math.sqrt(Math.log(parentSimulations) / simulations);
     }
 
@@ -145,19 +148,22 @@ implements AI<M, S, AITimeLimitOptions, C>
      * This takes the first unexplored node it finds in a BFS fashion.
      * @returns the selected node
      */
-    private select(nodeAndPath: NodeAndPath<M, S>): NodeAndPath<M, S> {
+    private select(nodeAndPath: NodeAndPath<M, S>, player: Player): NodeAndPath<M, S> {
         const node: GameNode<M, S> = nodeAndPath.node;
         Debug.display('MCTS', 'select', 'Exploring node: ' + node.id);
         if (node.hasChildren()) {
             const simulations: number = this.simulations(node);
             // Select within the child with the highest UCB value.
             Debug.display('MCTS', 'select', 'UCB values: ' +
-                (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.ucb(node, simulations))));
+                (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.adversarialUcb(n, simulations, player))));
             const bestChildren: GameNode<M, S>[] =
-                ArrayUtils.maximumsBy(node.getChildren(), (n: GameNode<M, S>) => this.ucb(n, simulations));
+                ArrayUtils.maximumsBy(
+                    node.getChildren(),
+                    (n: GameNode<M, S>) => this.adversarialUcb(n, simulations, player),
+                );
             const childToVisit: GameNode<M, S> = ArrayUtils.getRandomElement(bestChildren);
             Debug.display('MCTS', 'select', 'selecting children ' + childToVisit.id);
-            return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) });
+            return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) }, player);
         } else {
             // This is a leaf node, we select it.
             Debug.display('MCTS', 'select', 'this is a leaf node, we select it');
