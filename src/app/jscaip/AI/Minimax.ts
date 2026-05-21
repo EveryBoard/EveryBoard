@@ -39,7 +39,7 @@ export abstract class HeuristicWithBounds<M extends Move,
                                           C extends RulesConfig = EmptyRulesConfig>
     extends Heuristic<M, S, B, C>
 {
-    public abstract getBounds(config: MGPOptional<C>): HeuristicBounds<B>
+    public abstract getBounds(config: C): HeuristicBounds<B>
 }
 
 export abstract class PlayerMetricHeuristic<M extends Move,
@@ -64,11 +64,11 @@ export abstract class PlayerMetricHeuristicWithBounds<M extends Move,
                                                       C extends RulesConfig = EmptyRulesConfig>
     extends HeuristicWithBounds<M, S, BoardValue, C>
 {
-    public abstract getMetrics(node: GameNode<M, S>, config: MGPOptional<C>): PlayerNumberTable;
+    public abstract getMetrics(node: GameNode<M, S>, config: C): PlayerNumberTable;
 
     // Yes, this is duplicated from PlayerMetricHeuristic, because we don't have multiple inheritance
     // and probably don't want to use mixins!
-    public getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+    public getBoardValue(node: GameNode<M, S>, config: C): BoardValue {
         const metrics: PlayerNumberTable = this.getMetrics(node, config);
         return BoardValue.ofMultiple(
             metrics.get(Player.ZERO).get(),

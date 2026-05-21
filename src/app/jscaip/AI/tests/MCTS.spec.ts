@@ -31,11 +31,11 @@ class ConstantP4Heuristic extends HeuristicWithBounds<P4Move, P4State, BoardValu
         super();
     }
 
-    public override getBoardValue(_node: P4Node, _config: MGPOptional<P4Config>): BoardValue {
+    public override getBoardValue(_node: P4Node, _config: P4Config): BoardValue {
         return BoardValue.of(this.value);
     }
 
-    public override getBounds(_config: MGPOptional<P4Config>): HeuristicBounds<BoardValue> {
+    public override getBounds(_config: P4Config): HeuristicBounds<BoardValue> {
         return {
             player0Best: BoardValue.ofSingle(10, 0),
             player1Best: BoardValue.ofSingle(0, 10),
@@ -47,7 +47,7 @@ class ConstantP4Heuristic extends HeuristicWithBounds<P4Move, P4State, BoardValu
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
     public getWinScore(node: P4Node,
-                       config: MGPOptional<P4Config>,
+                       config: P4Config,
                        gameStatus: GameStatus,
                        player: Player)
     : number
@@ -136,7 +136,7 @@ describe('MCTS', () => {
 
     it('should score heuristic values from the searched player viewpoint', () => {
         // Given a heuristic board value that is best for Player.ONE
-        const p4Config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+        const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const node: P4Node = P4Rules.get().getInitialNode(p4Config);
         const p4Mcts: TestMCTSWithHeuristic =
             new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(10));
@@ -152,7 +152,7 @@ describe('MCTS', () => {
 
     it('should clamp heuristic values below their bounds', () => {
         // Given a heuristic value below the declared lower bound
-        const p4Config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+        const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const node: P4Node = P4Rules.get().getInitialNode(p4Config);
         const p4Mcts: TestMCTSWithHeuristic =
             new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(-20));
@@ -169,7 +169,7 @@ describe('MCTS', () => {
 
     it('should select opponent children that are bad for the searched player', () => {
         // Given a node where it is Player.ONE's turn, with two already explored replies
-        const p4Config: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+        const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const p4Mcts: MCTS<P4Move, P4State, P4Config> = new MCTS('MCTS', new P4MoveGenerator(), P4Rules.get());
         const root: P4Node = P4Rules.get().getInitialNode(p4Config);
         const playerZeroMove: P4Node = p4Mcts['play'](root, P4Move.of(0), p4Config) as P4Node;

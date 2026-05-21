@@ -85,7 +85,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Returns 1 for win, 0 for losses. Must return a result between 0 and 1 otherwise.
      */
     protected winScore(_node: GameNode<M, S>,
-                       _config: MGPOptional<RulesConfig>,
+                       _config: RulesConfig,
                        gameStatus: GameStatus,
                        player: Player): number {
         switch (gameStatus) {

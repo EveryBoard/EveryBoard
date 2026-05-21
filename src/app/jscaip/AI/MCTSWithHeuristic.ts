@@ -36,7 +36,7 @@ export class MCTSWithHeuristic<M extends Move,
      * Return a win score which is the average of all metrics
      */
     protected override winScore(node: GameNode<M, S>,
-                                config: MGPOptional<C>,
+                                config: C,
                                 gameStatus: GameStatus,
                                 player: Player)
     : number

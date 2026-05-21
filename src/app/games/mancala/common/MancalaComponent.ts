@@ -14,7 +14,7 @@ import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
-import { MancalaScoreHeuristic } from './MancalaScoreHeurisic';
+import { MancalaScoreHeuristic } from './MancalaScoreHeuristic';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MancalaState } from './MancalaState';
 

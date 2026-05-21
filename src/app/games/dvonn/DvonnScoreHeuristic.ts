@@ -15,7 +15,7 @@ export class DvonnScoreHeuristic extends PlayerMetricHeuristicWithBounds<DvonnMo
     }
 
     // Min/max value: all pieces are controlled by one. There are 49 pieces
-    public override getBounds(_config: NoConfig): HeuristicBounds<BoardValue> {
+    public override getBounds(_config: EmptyRulesConfig): HeuristicBounds<BoardValue> {
         const numberOfPieces: number = 49;
         return {
             player0Best: BoardValue.ofSingle(numberOfPieces, 0),

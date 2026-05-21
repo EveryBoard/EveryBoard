@@ -143,16 +143,6 @@ export class GameNode<M extends Move, S extends GameState> {
         }
         buffer += `    node_${id} [label="${label}", style=filled, fillcolor="${color}"];\n`;
 
-        let nextId: number = id+1;
-        if (max === undefined || level < max) {
-            for (const child of this.children.getValueList()) {
-                buffer += `    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"];`;
-                const result: { dot: string, nextId: number, winner: PlayerOrNone } =
-                    child.showDot(rules, config, labelFn, max, level+1, nextId);
-                buffer += result.dot;
-                nextId = result.nextId;
-            }
-        }
         if (level === 0) {
             buffer += '}';
         }

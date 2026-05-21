@@ -23,10 +23,10 @@ export class P4Heuristic extends HeuristicWithBounds<P4Move, P4State, BoardValue
     }
 
     // When there exists a minimal/maximal value for a heuristic, it is useful to know it.
-    public override getBounds(config: MGPOptional<P4Config>): HeuristicBounds<BoardValue> {
+    public override getBounds(config: P4Config): HeuristicBounds<BoardValue> {
         // Experimentally, we hardly find a board with value >20 on a regular board.
         // So we'll count 2 per square to be safe
-        const max: number = 2 * config.get().width * config.get().height;
+        const max: number = 2 * config.width * config.height;
         return {
             player0Best: BoardValue.ofSingle(max, 0),
             player1Best: BoardValue.ofSingle(0, max),
