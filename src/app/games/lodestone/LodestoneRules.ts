@@ -7,7 +7,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 
@@ -94,8 +94,12 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         return new LodestoneState(board, 0, new MGPMap(), plates);
     }
 
-    public override applyLegalMove(move: LodestoneMove, state: LodestoneState, _config: NoConfig, infos: LodestoneInfos)
-    : LodestoneState
+    public override applyLegalMove(
+        move: LodestoneMove,
+        state: LodestoneState,
+        _config: EmptyRulesConfig,
+        infos: LodestoneInfos,
+    ): LodestoneState
     {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();

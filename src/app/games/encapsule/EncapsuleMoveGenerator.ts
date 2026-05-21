@@ -1,4 +1,4 @@
-import { MGPFallible, MGPOptional } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
@@ -11,7 +11,7 @@ import { EncapsuleState } from './EncapsuleState';
 
 export class EncapsuleMoveGenerator extends MoveGenerator<EncapsuleMove, EncapsuleState, EncapsuleConfig> {
 
-    public override getListMoves(node: EncapsuleNode, _config: MGPOptional<EncapsuleConfig>): EncapsuleMove[] {
+    public override getListMoves(node: EncapsuleNode, _config: EncapsuleConfig): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];
         const state: EncapsuleState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();

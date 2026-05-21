@@ -1,4 +1,4 @@
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { PylosMove } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
@@ -6,7 +6,7 @@ import { PylosNode } from './PylosRules';
 
 export class PylosOrderedMoveGenerator extends PylosMoveGenerator {
 
-    public override getListMoves(node: PylosNode, config: NoConfig): PylosMove[] {
+    public override getListMoves(node: PylosNode, config: EmptyRulesConfig): PylosMove[] {
         const moves: PylosMove[] = super.getListMoves(node, config);
         return this.orderMoves(moves);
     }

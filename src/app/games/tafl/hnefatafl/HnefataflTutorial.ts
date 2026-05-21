@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../../jscaip/Coord';
@@ -15,7 +13,7 @@ const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = HnefataflRules.get().getDefaultRulesConfig();
 
 export class HnefataflTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

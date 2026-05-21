@@ -127,7 +127,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                                        [this.timerZeroGame()!, this.timerOneGame()!]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise game-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
-            this.gameComponent.config = MGPOptional.of(configRoom.rulesConfig);
+            this.gameComponent.config = configRoom.rulesConfig;
             await this.subscribeToGameUpdates();
         }, 2);
     }
@@ -377,7 +377,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         // First, show the move in the component
         await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
         const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
         this.moveSentButNotReceivedYet = true;
@@ -390,7 +390,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async applyMove(move: Move, triggerAnimation: boolean): Promise<void> {
         const oldNode: AbstractNode = this.gameComponent.node;
         const state: GameState = oldNode.gameState;
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
         Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
         const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
@@ -478,9 +478,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.gameSubscription.unsubscribe();
     }
 
-    public override getConfig(): MGPOptional<RulesConfig> {
-        const rulesConfig: RulesConfig = this.configRoom.rulesConfig;
-        return MGPOptional.of(rulesConfig);
+    public override getConfig(): RulesConfig {
+        return this.configRoom.rulesConfig;
     }
 
 

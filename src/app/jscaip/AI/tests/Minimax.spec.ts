@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ArrayUtils, MGPOptional, Set } from '@everyboard/lib';
+import { ArrayUtils, Set } from '@everyboard/lib';
 
 import { P4Heuristic } from '../../../games/p4/P4Heuristic';
 import { P4Move } from '../../../games/p4/P4Move';
@@ -12,7 +12,7 @@ import { BoardValue } from '../BoardValue';
 import { MCTS } from '../MCTS';
 import { DummyHeuristic, Minimax } from '../Minimax';
 
-const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
 describe('Minimax', () => {
 

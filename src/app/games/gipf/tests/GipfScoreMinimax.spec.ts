@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { GipfRules } from '../GipfRules';
 import { GipfScoreMinimax } from '../GipfScoreMinimax';
@@ -10,7 +10,7 @@ describe('GipfScoreMinimax', () => {
     const rules: GipfRules = GipfRules.get();
     const minimax: GipfScoreMinimax = new GipfScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: NoConfig = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = GipfRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

@@ -14,7 +14,7 @@ import { TaflState } from './TaflState';
 
 export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends TaflPieceAndControlHeuristic<M> {
 
-    public override getBoardValue(node: TaflNode<M>, config: MGPOptional<TaflConfig>): BoardValue {
+    public override getBoardValue(node: TaflNode<M>, config: TaflConfig): BoardValue {
         const metrics: TaflPieceAndControlHeuristicMetrics = this.getControlScoreAndPieceScores(node, config);
         const stepForEscape: number = this.getStepForEscapeMetric(node.gameState);
         return BoardValue.multiMetric([

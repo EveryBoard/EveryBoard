@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { EncapsuleDummyMinimax } from '../EncapsuleDummyMinimax';
@@ -11,7 +9,7 @@ describe('EncapsuleDummyMinimax', () => {
     const rules: EncapsuleRules = EncapsuleRules.get();
     const minimax: EncapsuleDummyMinimax = new EncapsuleDummyMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EncapsuleConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({

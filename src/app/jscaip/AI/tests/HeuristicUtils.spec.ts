@@ -19,7 +19,7 @@ export class HeuristicUtils {
         strongState: S,
         strongMove: MGPOptional<M>,
         player: Player,
-        config: MGPOptional<C>)
+        config: C)
     : void
     {
         const weakNode: GameNode<M, S> = new GameNode(weakState, undefined, weakMove);
@@ -42,7 +42,7 @@ export class HeuristicUtils {
         previousMove: M,
         player: Player,
         heuristics: Heuristic<M, S, BoardValue, C>[],
-        config: MGPOptional<C>)
+        config: C)
     : void
     {
         for (const heuristic of heuristics) {
@@ -59,7 +59,7 @@ export class HeuristicUtils {
         heuristic: Heuristic<M, S, BoardValue, C>,
         leftState: S,
         rightState: S,
-        config: MGPOptional<C>)
+        config: C)
     : void {
         const leftNode: GameNode<M, S> = new GameNode(leftState);
         const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).metrics;

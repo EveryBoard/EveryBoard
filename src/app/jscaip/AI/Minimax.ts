@@ -27,7 +27,7 @@ export abstract class Heuristic<M extends Move,
                                 B extends BoardValue = BoardValue,
                                 C extends RulesConfig = EmptyRulesConfig>
 {
-    public abstract getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): B;
+    public abstract getBoardValue(node: GameNode<M, S>, config: C): B;
 }
 
 /**
@@ -47,9 +47,9 @@ export abstract class PlayerMetricHeuristic<M extends Move,
                                             C extends RulesConfig = EmptyRulesConfig>
     extends Heuristic<M, S, BoardValue, C>
 {
-    public abstract getMetrics(node: GameNode<M, S>, config: MGPOptional<C>): PlayerNumberTable;
+    public abstract getMetrics(node: GameNode<M, S>, config: C): PlayerNumberTable;
 
-    public getBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+    public getBoardValue(node: GameNode<M, S>, config: C): BoardValue {
         const metrics: PlayerNumberTable = this.getMetrics(node, config);
         return BoardValue.ofMultiple(
             metrics.get(Player.ZERO).get(),
@@ -82,7 +82,7 @@ export class DummyHeuristic<M extends Move, S extends GameState, C extends Rules
     extends PlayerMetricHeuristic<M, S, C>
 {
 
-    public override getMetrics(_node: GameNode<M, S>, _config?: MGPOptional<C>): PlayerNumberTable {
+    public override getMetrics(_node: GameNode<M, S>, _config?: C): PlayerNumberTable {
         // This is really a dummy heuristic: boards have no value
         return PlayerNumberTable.ofSingle(0, 0);
     }
@@ -120,7 +120,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return this.name;
     }
 
-    public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: MGPOptional<C>): M {
+    public chooseNextMove(node: GameNode<M, S>, options: AIDepthLimitOptions, config: C): M {
         Utils.assert(this.rules.getGameStatus(node, config).isEndGame === false,
                      'Minimax has been asked to choose a move from a finished game');
         const boardValue: BoardValue = this.getExpectedExtremum(node, config);
@@ -139,7 +139,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
                      depth: number,
                      alpha: BoardValue,
                      beta: BoardValue,
-                     config: MGPOptional<C>)
+                     config: C)
     : GameNode<M, S>
     {
         if (depth < 1) {
@@ -156,7 +156,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return bestChild;
     }
 
-    private getPossibleMoves(node: GameNode<M, S>, config: MGPOptional<C>): Set<M> {
+    private getPossibleMoves(node: GameNode<M, S>, config: C): Set<M> {
         const currentMoves: MGPOptional<Set<M>> = this.getMoves(node);
         if (currentMoves.isAbsent()) {
             const moves: M[] = this.moveGenerator.getListMoves(node, config);
@@ -172,7 +172,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
                             depth: number,
                             alpha: BoardValue,
                             beta: BoardValue,
-                            config: MGPOptional<C>)
+                            config: C)
     : GameNode<M, S>[]
     {
         let bestChildren: GameNode<M, S>[] = [];
@@ -203,7 +203,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return bestChildren;
     }
 
-    private getExpectedExtremum(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+    private getExpectedExtremum(node: GameNode<M, S>, config: C): BoardValue {
         const childValue: BoardValue = this.getScore(node, config);
         const currentPlayer: Player = node.gameState.getCurrentPlayer();
         if (currentPlayer === Player.ZERO) {
@@ -221,7 +221,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         }
     }
 
-    private getOrCreateChild(node: GameNode<M, S>, move: M, config: MGPOptional<C>): GameNode<M, S> {
+    private getOrCreateChild(node: GameNode<M, S>, move: M, config: C): GameNode<M, S> {
         const child: MGPOptional<GameNode<M, S>> = node.getChild(move);
         if (child.isAbsent()) {
             const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
@@ -243,7 +243,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         node.setCache(this.name + '-score', score);
     }
 
-    private getScore(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+    private getScore(node: GameNode<M, S>, config: C): BoardValue {
         // Scores are created during node creation, so we might think that they are always present
         // but other AIs can expand the tree without creating the scores
         const score: MGPOptional<BoardValue> = node.getCache<BoardValue>(this.name + '-score');
@@ -256,7 +256,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         }
     }
 
-    private computeBoardValue(node: GameNode<M, S>, config: MGPOptional<C>): BoardValue {
+    private computeBoardValue(node: GameNode<M, S>, config: C): BoardValue {
         const gameStatus: GameStatus = this.rules.getGameStatus(node, config);
         if (gameStatus.isEndGame) {
             return gameStatus.toBoardValue();
@@ -273,7 +273,7 @@ implements AI<M, S, AIDepthLimitOptions, C>
         return node.getCache(this.name + '-moves');
     }
 
-    public getInfo(node: GameNode<M, S>, config: MGPOptional<C>): string {
+    public getInfo(node: GameNode<M, S>, config: C): string {
         return 'BoardValue=' + this.heuristic.getBoardValue(node, config).metrics;
     }
 

@@ -4,7 +4,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from '../../GameStatus';
 import { Move } from '../../Move';
 import { Rules } from '../../Rules';
-import { NoConfig } from '../../RulesConfigUtil';
+import { EmptyRulesConfig } from '../../RulesConfigUtil';
 import { GameState } from '../../state/GameState';
 import { GameNode } from '../GameNode';
 
@@ -42,7 +42,7 @@ class RulesMock extends Rules<MoveMock, GameStateMock> {
 
     public override applyLegalMove(_move: MoveMock,
                                    _state: GameStateMock,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    _info: void)
     : GameStateMock
     {

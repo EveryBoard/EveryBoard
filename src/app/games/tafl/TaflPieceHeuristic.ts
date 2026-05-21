@@ -17,7 +17,7 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
         super();
     }
 
-    public override getMetrics(node: TaflNode<M>, config: MGPOptional<TaflConfig>): PlayerNumberTable {
+    public override getMetrics(node: TaflNode<M>, config: TaflConfig): PlayerNumberTable {
         const state: TaflState = node.gameState;
         // We just count the pawns
         const zeroPawnsCount: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;

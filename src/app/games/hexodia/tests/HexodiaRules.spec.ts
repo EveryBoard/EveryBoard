@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
@@ -26,7 +25,7 @@ describe('HexodiaRules', () => {
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     let rules: HexodiaRules;
-    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = HexodiaRules.get();
@@ -500,10 +499,10 @@ describe('HexodiaRules', () => {
                 [_, X, O, X, O],
                 [_, X, O, X, O],
             ], 5);
-            const customConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: HexodiaConfig = {
+                ...defaultConfig,
                 numberOfDrops: 5,
-            });
+            };
 
             // When doing a move with one drop only
             const move: HexodiaMove = HexodiaMove.of([

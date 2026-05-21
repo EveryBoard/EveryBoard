@@ -97,6 +97,11 @@ export class BooleanConfig extends ConfigLine {
 
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
 
+    public static EMPTY: RulesConfigDescription = new RulesConfigDescription({
+        name: () => $localize`Default`,
+        config: {},
+    });
+
     private readonly defaultConfig: NamedRulesConfig<R>;
 
     public constructor(public readonly defaultConfigDescription: DefaultConfigDescription<R>,
@@ -115,6 +120,10 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
             const key: Set<string> = new Set(Object.keys(otherStandardConfig.config));
             Utils.assert(key.equals(defaultKeys), `Field missing in ${ otherStandardConfig.name() } config!`);
         }
+    }
+
+    public isCustomizable(): boolean {
+        return this.getFields().length > 0;
     }
 
     public getStandardConfigs(): NamedRulesConfig<R>[] {

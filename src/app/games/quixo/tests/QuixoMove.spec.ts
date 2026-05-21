@@ -14,7 +14,7 @@ describe('QuixoMove', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<PlayerOrNone> = [

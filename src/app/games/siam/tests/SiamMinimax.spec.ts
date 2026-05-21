@@ -23,7 +23,7 @@ describe('SiamMinimax', () => {
 
     let minimax: Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SiamMinimax();

@@ -26,7 +26,7 @@ describe('TriangularGoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
     const N: GoPiece = GoPiece.UNREACHABLE;
-    const defaultConfig: MGPOptional<TriangularGoConfig> = TriangularGoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TriangularGoConfig = TriangularGoRules.get().getDefaultRulesConfig();
 
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
@@ -765,13 +765,13 @@ describe('TriangularGoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 1)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
+            const customConfig: TriangularGoConfig = {
                 hexagonal: true,
                 size: 1,
-            });
+            };
 
             // When getting initial board
-            const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
+            const board: Table<GoPiece> = rules.getInitialState(customConfig).board;
 
             // Then it should have a correct table (trailing N because sizes are even)
             const expectedBoard: Table<GoPiece> = [
@@ -783,13 +783,13 @@ describe('TriangularGoRules', () => {
 
         it('should make valid shape on hexagonal mode (size 2)', () => {
             // Given an alternative config, hexagonal of size 1
-            const alternateConfig: MGPOptional<TriangularGoConfig> = MGPOptional.of({
+            const customConfig: TriangularGoConfig = {
                 hexagonal: true,
                 size: 2,
-            });
+            };
 
             // When getting initial board
-            const board: Table<GoPiece> = rules.getInitialState(alternateConfig).board;
+            const board: Table<GoPiece> = rules.getInitialState(customConfig).board;
 
             // Then it should have a correct table
             const expectedBoard: Table<GoPiece> = [

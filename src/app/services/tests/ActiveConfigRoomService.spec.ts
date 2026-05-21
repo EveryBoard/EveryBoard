@@ -2,7 +2,7 @@
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Subscription } from 'rxjs';
 
-import { MGPMap, MGPOptional } from '@everyboard/lib';
+import { MGPMap } from '@everyboard/lib';
 
 import { ConfigRoom, FirstPlayer } from '../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../domain/ConfigRoomMocks.spec';
@@ -54,7 +54,7 @@ describe('ActiveConfigRoomsService', () => {
             });
 
         // When a new config room is added
-        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
         // Then the new config room should have been observed
@@ -80,7 +80,7 @@ describe('ActiveConfigRoomsService', () => {
             });
 
         // When a new part is added
-        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
         // Then the new config room should have not been observed
@@ -96,7 +96,7 @@ describe('ActiveConfigRoomsService', () => {
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
             });
-        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
         // When the config room is deleted
@@ -115,7 +115,7 @@ describe('ActiveConfigRoomsService', () => {
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
             });
-        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
         createConfigRoom('otherGameId', configRoom);
 
@@ -135,7 +135,7 @@ describe('ActiveConfigRoomsService', () => {
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
             });
-        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
         // When a config room is updated
@@ -154,9 +154,9 @@ describe('ActiveConfigRoomsService', () => {
             (rooms: MGPMap<string, ConfigRoom>): void => {
                 seenRooms = rooms;
             });
-        const configRoomToBeModified: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoomToBeModified: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoomToBeModified);
-        const configRoomThatWontChange: ConfigRoom = ConfigRoomMocks.withChosenOpponent(MGPOptional.empty());
+        const configRoomThatWontChange: ConfigRoom = ConfigRoomMocks.withChosenOpponent({});
         createConfigRoom('otherGameId', configRoomThatWontChange);
 
         // When a config room is updated
@@ -185,7 +185,7 @@ describe('ActiveConfigRoomsService', () => {
             });
 
         // When a config room appears
-        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial(MGPOptional.empty());
+        const configRoom: ConfigRoom = ConfigRoomMocks.getInitial({});
         createConfigRoom('gameId', configRoom);
 
         // Then it should only appear once

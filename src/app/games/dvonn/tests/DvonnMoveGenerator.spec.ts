@@ -3,7 +3,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
@@ -31,7 +31,7 @@ describe('DvonnMoveGenerator', () => {
 
     let rules: DvonnRules;
     let moveGenerator: DvonnMoveGenerator;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DvonnRules.get();

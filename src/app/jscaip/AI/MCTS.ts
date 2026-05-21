@@ -56,7 +56,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Performs the search, given a node representing a board.
      * The search is performed for at most `iterations` iterations.
      */
-    public chooseNextMove(root: GameNode<M, S>, options: AITimeLimitOptions, config: MGPOptional<C>): M {
+    public chooseNextMove(root: GameNode<M, S>, options: AITimeLimitOptions, config: C): M {
         Utils.assert(this.rules.getGameStatus(root, config).isEndGame === false, 'cannot search from a finished game');
         const player: Player = root.gameState.getCurrentPlayer();
         const startTime: number = Date.now();
@@ -175,7 +175,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Expands a node, i.e., creates children to explore if needed, or returns the node directly.
      * @returns one of the created child, or the node itself if it is terminal
      */
-    private expand(nodeAndPath: NodeAndPath<M, S>, config: MGPOptional<C>): NodeAndPath<M, S> {
+    private expand(nodeAndPath: NodeAndPath<M, S>, config: C): NodeAndPath<M, S> {
         if (this.rules.getGameStatus(nodeAndPath.node, config).isEndGame) {
             // Even though we haven't explicitly explored this node (that is, selected it for expansion),
             // it is a terminal node. We won't try to calculate its child.
@@ -196,7 +196,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Simulate a game from the given node. Does not change anything in the node.
      * @returns the game status at the end of the simulation
      */
-    private simulate(node: GameNode<M, S>, endTime: number, config: MGPOptional<C>): GameStatus {
+    private simulate(node: GameNode<M, S>, endTime: number, config: C): GameStatus {
         Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.previousMove.get().toString());
         let current: GameNode<M, S> = node;
         let steps: number = 0;
@@ -217,7 +217,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Picks a random move and play it
      * @returns the state after the move
      */
-    private playRandomStep(node: GameNode<M, S>, config: MGPOptional<C>): GameNode<M, S> {
+    private playRandomStep(node: GameNode<M, S>, config: C): GameNode<M, S> {
         const moves: M[] = this.moveGenerator.getListMoves(node, config);
         Utils.assert(moves.length > 0, 'MoveGenerator gave empty list of moves for ongoing game to MCTS');
         const move: M = ArrayUtils.getRandomElement(moves);
@@ -228,7 +228,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Plays a move.
      * @returns the state after the move
      */
-    private play(node: GameNode<M, S>, move: M, config: MGPOptional<C>): GameNode<M, S> {
+    private play(node: GameNode<M, S>, move: M, config: C): GameNode<M, S> {
         const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
         Utils.assert(legality.isSuccess(), 'heuristic returned illegal move', { move: move.toString() });
         const childState: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());

@@ -1,4 +1,4 @@
-@if (isCustomisable()) {
+@if (isCustomizable()) {
     <div>
         <div class="field columns is-gapless mb-0">
             <div class="field-label column">
@@ -11,12 +11,12 @@
                         <select id="ruleSelect"
                                 [disabled]="editable() === false"
                                 (change)="onChange($event)">
-                            <option id="config-dropdown-{{ rulesConfigDescription.getDefaultConfig().name() }}"
-                                    [value]="rulesConfigDescription.getDefaultConfig().name()"
-                                    [selected]="isSelectedConfig(rulesConfigDescription.getDefaultConfig().name())">
-                                {{ rulesConfigDescription.getDefaultConfig().name() }}
+                            <option id="config-dropdown-{{ rulesConfigDescription().getDefaultConfig().name() }}"
+                                    [value]="rulesConfigDescription().getDefaultConfig().name()"
+                                    [selected]="isSelectedConfig(rulesConfigDescription().getDefaultConfig().name())">
+                                {{ rulesConfigDescription().getDefaultConfig().name() }}
                             </option>
-                            @for (standardConfig of rulesConfigDescription.getNonDefaultStandardConfigs(); track standardConfig.name()) {
+                            @for (standardConfig of rulesConfigDescription().getNonDefaultStandardConfigs(); track standardConfig.name()) {
                                 <option id="config-dropdown-{{ standardConfig.name() }}"
                                         [value]="standardConfig.name()"
                                         [selected]="isSelectedConfig(standardConfig.name())">
@@ -50,7 +50,7 @@
                          class="mb-2">
                         <div class="field is-horizontal columns is-gapless">
                             <div class="field-label column is-three-quarters">
-                                <label class="label has-text-left">{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}</label>
+                                <label class="label has-text-left">{{ rulesConfigDescription().getFieldLocalizedName(configParameter) }}</label>
                             </div>
                             <div class="field-body column has-text-right">
                                 <div class="field is-narrow">
@@ -72,7 +72,7 @@
                                                        class="input is-small"
                                                        [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
                                                        required
-                                                       placeholder="{{ rulesConfigDescription.getFieldLocalizedName(configParameter) }}"/>
+                                                       placeholder="{{ rulesConfigDescription().getFieldLocalizedName(configParameter) }}"/>
                                             }
                                             @case ('string') {
                                                 <label class="checkbox">

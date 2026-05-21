@@ -39,7 +39,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
-    public rulesConfig: MGPOptional<RulesConfig>; // Set in constructor and in ngAfterViewInit
+    public rulesConfig: RulesConfig; // Set in constructor and in ngAfterViewInit
 
     public constructor()
     {
@@ -82,14 +82,14 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         const params: ParamMap = this.activatedRoute.snapshot.queryParamMap;
         const noConfigIsProvided: boolean = params.keys.length === 0;
 
-        const defaultConfig: MGPOptional<RulesConfig> = RulesConfigUtils.getGameDefaultConfig(this.getGameUrlName());
-        const gameIsNotConfigurable: boolean = defaultConfig.isAbsent();
+        const defaultConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(this.getGameUrlName());
+        const gameIsNotConfigurable: boolean = Object.keys(defaultConfig).length === 0;
 
         if (noConfigIsProvided || gameIsNotConfigurable) {
             this.rulesConfig = defaultConfig;
         } else {
             // Extract the configuration from the query parameters and validate it
-            const rulesConfigDescription: RulesConfigDescription<RulesConfig> = this.getRulesConfigDescription().get();
+            const rulesConfigDescription: RulesConfigDescription<RulesConfig> = this.getRulesConfigDescription();
             const config: RulesConfig = {};
 
             // We set the config to preserve the invariant that rulesConfig should be set when returning.
@@ -122,7 +122,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             if (areValidatorsValid === false) {
                 return this.redirectToConfiguration();
             }
-            this.rulesConfig = MGPOptional.of(config);
+            this.rulesConfig = config;
         }
     }
 
@@ -157,13 +157,13 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
         await this.applyNewMove();
     }
 
     private async updateWrapper(): Promise<void> {
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
         if (gameStatus.isEndGame) {
             this.endGame = true;
@@ -199,7 +199,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
                 setTimeout(async() => {
-                    const config: MGPOptional<RulesConfig> = this.getConfig();
+                    const config: RulesConfig = this.getConfig();
                     const gameIsOngoing: boolean =
                         this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
                     if (gameIsOngoing) {
@@ -218,7 +218,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
      *          true if an AI is selected even if its option is not selected yet
      */
     private async hasSelectedAI(): Promise<boolean> {
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         if (this.gameComponent.rules.getGameStatus(this.gameComponent.node, config).isEndGame) {
             // No AI is playing when the game is finished
             return false;
@@ -269,7 +269,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
         // called only when it's AI's Turn
         const ruler: SuperRules<Move, GameState, RulesConfig, unknown> = this.gameComponent.rules;
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         const gameStatus: GameStatus = ruler.getGameStatus(this.gameComponent.node, config);
         Utils.assert(gameStatus === GameStatus.ONGOING, 'AI should not try to play when game is over!');
         const aiMove: Move = playingAI.chooseNextMove(this.gameComponent.node, options, config);
@@ -331,7 +331,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async restartGame(): Promise<void> {
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
@@ -353,7 +353,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         }
     }
 
-    public override getConfig(): MGPOptional<RulesConfig> {
+    public override getConfig(): RulesConfig {
         return this.rulesConfig;
     }
 

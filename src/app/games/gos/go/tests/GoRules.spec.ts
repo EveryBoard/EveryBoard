@@ -26,9 +26,7 @@ describe('GoRules', () => {
     const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
-    const goConfig: GoConfig = { width: 5, height: 5, handicap: 0 };
-    const config: MGPOptional<GoConfig> = MGPOptional.of(goConfig);
-
+    const config: GoConfig = { width: 5, height: 5, handicap: 0 };
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     beforeEach(() => {

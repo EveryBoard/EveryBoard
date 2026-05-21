@@ -51,8 +51,8 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 4);
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TeekoConfig>> {
-        return MGPOptional.of(TeekoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TeekoConfig> {
+        return TeekoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getInitialState(): TeekoState {
@@ -62,7 +62,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return new TeekoState(board, 0);
     }
 
-    public override isLegal(move: TeekoMove, state: TeekoState, optionalConfig: MGPOptional<TeekoConfig>)
+    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig)
     : MGPValidation
     {
         if (state.isInDropPhase()) {
@@ -70,7 +70,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
             return this.isLegalDrop(move as TeekoDropMove, state);
         } else {
             Utils.assert(move instanceof TeekoTranslationMove, 'Cannot drop in translation phase !');
-            return this.isLegalTranslation(move as TeekoTranslationMove, state, optionalConfig.get());
+            return this.isLegalTranslation(move as TeekoTranslationMove, state, config);
         }
     }
 
@@ -108,7 +108,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: MGPOptional<TeekoConfig>, _info: void)
+    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: TeekoConfig, _info: void)
     : TeekoState
     {
         if (move instanceof TeekoDropMove) {

@@ -13,7 +13,7 @@ describe('SquarzHeuristic', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let heuristic: SquarzHeuristic;
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new SquarzHeuristic();

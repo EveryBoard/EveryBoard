@@ -17,7 +17,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
 
     public currentVictorySource: SixVictorySource;
 
-    public getBoardValue(node: SixNode, config: MGPOptional<SixConfig>): BoardValue {
+    public getBoardValue(node: SixNode, config: SixConfig): BoardValue {
         const move: MGPOptional<SixMove> = node.previousMove;
         const state: SixState = node.gameState;
         const previousPlayer: Player = state.getPreviousPlayer();

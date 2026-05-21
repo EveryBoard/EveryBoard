@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
 import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';
@@ -9,7 +7,7 @@ import { ApagosState } from '../ApagosState';
 describe('ApagosMoveGenerator', () => {
 
     let moveGenerator: ApagosMoveGenerator;
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ApagosMoveGenerator();

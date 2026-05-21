@@ -3,7 +3,7 @@ import { ArrayUtils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
@@ -31,7 +31,7 @@ const X1__T4: TrexoPieceStack = TrexoPieceStack.of([new TrexoPiece(Player.ONE, 4
 describe('TrexoRules', () => {
 
     let rules: TrexoRules;
-    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = TrexoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = TrexoRules.get();

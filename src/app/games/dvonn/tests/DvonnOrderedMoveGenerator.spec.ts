@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DvonnOrderedMoveGenerator } from '../DvonnOrderedMoveGenerator';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 
@@ -7,7 +7,7 @@ describe('DvonnOrderedMoveGenerator', () => {
 
     let rules: DvonnRules;
     let moveGenerator: DvonnOrderedMoveGenerator;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DvonnRules.get();

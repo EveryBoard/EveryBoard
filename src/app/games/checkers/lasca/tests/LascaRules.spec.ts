@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord, CoordFailure } from '../../../../jscaip/Coord';
 import { Player } from '../../../../jscaip/Player';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
@@ -28,7 +26,7 @@ describe('LascaRules', () => {
     const ___: CheckersStack = CheckersStack.EMPTY;
 
     let rules: LascaRules;
-    const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
+    const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = LascaRules.get();
@@ -660,10 +658,10 @@ describe('LascaRules', () => {
         it('Should capture instead of stacking when config demands it', () => {
             // Given a board where a kill is possible
             // And a config requesting to do capture instead of kill
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 canStackPieces: false,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -687,15 +685,15 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
             ], 2);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('should put piece on odd squares if config requires it', () => {
             // Given a customConfig where piece are to be put on odd squares
-            const customConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 occupyEvenSquare: false,
-            });
+            };
 
             // When generating it
             const initialState: CheckersState = rules.getInitialState(customConfig);
@@ -715,10 +713,10 @@ describe('LascaRules', () => {
 
         it('Should allow forward frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -742,15 +740,15 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('Should allow lateral frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -774,16 +772,16 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('Should allow backward frisian-capture when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
                 simplePieceCanCaptureBackwards: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, ___, ___],
@@ -807,15 +805,15 @@ describe('LascaRules', () => {
                 [___, ___, ___, _UV, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
         it('Should refuse frisian-step even if config allows frisian capture', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __V, ___, ___, ___],
@@ -831,15 +829,15 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = CheckersFailure.INVALID_FRISIAN_MOVE();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, alternateConfig);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
         });
 
         it('Should refuse a uneven frisian capture even if config allows frisian capture', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __V, ___, ___, ___],
@@ -855,16 +853,16 @@ describe('LascaRules', () => {
 
             // Then it should fail
             const reason: string = CheckersFailure.FRISIAN_CAPTURE_MUST_BE_EVEN();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, alternateConfig);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
         });
 
         it('Should allow flying-frisian when config allows it', () => {
             // Given a board where a frisian capture is possible
-            const alternateConfig: MGPOptional<CheckersConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: CheckersConfig = {
+                ...defaultConfig,
                 frisianCaptureAllowed: true,
                 promotedPiecesCanFly: true,
-            });
+            };
             const state: CheckersState = CheckersState.of([
                 [__O, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -888,7 +886,7 @@ describe('LascaRules', () => {
                 [___, ___, ___, ___, ___, ___, ___],
                 [_OV, ___, ___, ___, ___, ___, ___],
             ], 3);
-            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, alternateConfig);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
         });
 
     });

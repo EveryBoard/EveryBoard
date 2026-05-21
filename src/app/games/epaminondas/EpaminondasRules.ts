@@ -153,8 +153,7 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
         return MGPFallible.success(board);
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<EpaminondasConfig>): EpaminondasState {
-        const config: EpaminondasConfig = optionalConfig.get();
+    public override getInitialState(config: EpaminondasConfig): EpaminondasState {
         const _: PlayerOrNone = PlayerOrNone.NONE;
         const O: PlayerOrNone = PlayerOrNone.ZERO;
         const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -165,8 +164,8 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
         return new EpaminondasState(board, 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<EpaminondasConfig>> {
-        return MGPOptional.of(EpaminondasRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<EpaminondasConfig> {
+        return EpaminondasRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override isLegal(move: EpaminondasMove, state: EpaminondasState)
@@ -177,7 +176,7 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
 
     public override applyLegalMove(_move: EpaminondasMove,
                                    state: EpaminondasState,
-                                   _config: MGPOptional<EpaminondasConfig>,
+                                   _config: EpaminondasConfig,
                                    newBoard: EpaminondasLegalityInformation)
     : EpaminondasState
     {
@@ -185,7 +184,7 @@ export class EpaminondasRules extends ConfigurableRules<EpaminondasMove,
         return resultingState;
     }
 
-    public override getGameStatus(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): GameStatus {
+    public override getGameStatus(node: EpaminondasNode, _config: EpaminondasConfig): GameStatus {
         const state: EpaminondasState = node.gameState;
         const zerosInFirstLine: number = state.countPieceInRow(Player.ZERO, 0);
         const height: number = state.getHeight();

@@ -10,7 +10,7 @@ import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table } from '../../jscaip/TableUtils';
 
@@ -178,7 +178,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
 
     public override applyLegalMove(_move: DiaballikMove,
                                    state: DiaballikState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    stateAfterSubMoves: DiaballikState)
     : DiaballikState
     {
