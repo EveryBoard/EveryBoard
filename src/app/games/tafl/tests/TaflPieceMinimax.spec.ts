@@ -58,7 +58,7 @@ describe('TaflPieceHeuristic', () => {
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
-    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
     const heuristic: TaflPieceHeuristic<TablutMove> = new TaflPieceHeuristic(TablutRules.get());
 
     it('should weight defender pieces as Player.ONE when invader starts', () => {

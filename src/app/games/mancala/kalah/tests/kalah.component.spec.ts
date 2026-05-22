@@ -34,11 +34,11 @@ describe('KalahComponent', () => {
             public readonly availableOptions: AIOptions[] = [];
             public chooseNextMove(_node: GameNode<Move, GameState>,
                                   _options: AIOptions,
-                                  _config: MGPOptional<RulesConfig>)
+                                  _config: RulesConfig)
             : Move {
                 return move;
             }
-            public getInfo(_node: GameNode<Move, GameState>, _config: MGPOptional<RulesConfig>): string {
+            public getInfo(_node: GameNode<Move, GameState>, _config: RulesConfig): string {
                 return '';
             }
         }();
