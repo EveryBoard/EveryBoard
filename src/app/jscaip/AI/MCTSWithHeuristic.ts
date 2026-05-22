@@ -1,4 +1,4 @@
-import { MGPOptional, Utils } from '@everyboard/lib';
+import { Utils } from '@everyboard/lib';
 
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';

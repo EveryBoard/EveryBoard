@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from '../../../jscaip/AI/Minimax';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
