@@ -3010,6 +3010,42 @@
         <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
         Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
       </trans-unit>
+      <trans-unit id="7531322064121954356" datatype="html">
+        <source>Toric Reversi is a variant of Reversi played on a toric board. If you are not familiar with the base rules of Reversi, check them out &lt;a href=&quot;/tutorial/Reversi&quot;&gt;here&lt;/a&gt; before continuing. This tutorial only covers what changes with the toric board.</source>
+      </trans-unit>
+      <trans-unit id="9138862778564760989" datatype="html">
+        <source>Left-right connectivity</source>
+      </trans-unit>
+      <trans-unit id="5257305474783431137" datatype="html">
+        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three Light pieces by playing on the leftmost column, as the board wraps around to continue the line.</source>
+      </trans-unit>
+      <trans-unit id="7546327022426694322" datatype="html">
+        <source>Not quite. Look at the fourth row: there is a line of Dark pieces that wraps around the left edge.</source>
+      </trans-unit>
+      <trans-unit id="524383038680502602" datatype="html">
+        <source>Top-bottom connectivity</source>
+      </trans-unit>
+      <trans-unit id="8638073032995004657" datatype="html">
+        <source>The same applies vertically: the top edge is connected to the bottom edge. Here, a column of Light pieces wraps around. Find the move that captures them by playing on the top row.</source>
+      </trans-unit>
+      <trans-unit id="4809176753360926412" datatype="html">
+        <source>Not quite. Look at the fourth column: the Dark piece at the bottom wraps around to the top.</source>
+      </trans-unit>
+      <trans-unit id="7079964026141010612" datatype="html">
+        <source>Diagonal wrapping</source>
+      </trans-unit>
+      <trans-unit id="932353025684173867" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of Light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
+      </trans-unit>
+      <trans-unit id="4593196439825767340" datatype="html">
+        <source>Not quite. Follow the diagonal starting from the Dark piece: it wraps around the right edge and continues downward.</source>
+      </trans-unit>
+      <trans-unit id="424008605734944795" datatype="html">
+        <source>Strategic implications</source>
+      </trans-unit>
+      <trans-unit id="2403809755896571919" datatype="html">
+        <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges — every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
+      </trans-unit>
       <trans-unit id="3293657922924170725" datatype="html">
         <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
       </trans-unit>
