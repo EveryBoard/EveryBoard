@@ -4114,15 +4114,9 @@
         <source>Your move should switch at least one piece.</source>
         <target>Votre mouvement doit au moins retourner une pièce.</target>
       </trans-unit>
-      <trans-unit id="8006607638702407149" datatype="html">
-        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
-        When one piece is flipped, its owner changes.
-        The player owning the most pieces at the end of the game wins.
-        Here, Dark has 28 points and Light has 36, hence Light wins.</source>
-        <target>Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième.
-        Quand une pièce est retournée, elle change de propriétaire.
-        Le joueur possédant le plus de pièces en fin de partie gagne.
-        Ici, Foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.</target>
+      <trans-unit id="4123522127538652179" datatype="html">
+        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.</source>
+        <target>Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième. Quand une pièce est retournée, elle change de propriétaire. Le joueur possédant le plus de pièces en fin de partie gagne. Ici, Foncé a 28 points et Clair en a 36, le joueur clair a donc gagné.</target>
       </trans-unit>
       <trans-unit id="5285597397338861824" datatype="html">
         <source>At the beginning of the game, pieces are placed as shown here.
@@ -4135,7 +4129,7 @@
       </trans-unit>
       <trans-unit id="7280078972566788741" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
-        <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt; Vous jouez Clair. Joueez en bas à gauche pour voir un exemple de capture.</target>
+        <target>Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.&lt;br/&gt;&lt;br/&gt; Vous jouez Clair. Jouez en bas à gauche pour voir un exemple de capture.</target>
       </trans-unit>
       <trans-unit id="863291659187903950" datatype="html">
         <source>Lower and more to the left, please.</source>
@@ -4159,37 +4153,37 @@
         <source>Left-right connectivity</source>
         <target>Connexion gauche-droite</target>
       </trans-unit>
-      <trans-unit id="5257305474783431137" datatype="html">
-        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three Light pieces by playing on the leftmost column, as the board wraps around to continue the line.</source>
-        <target>Sur un plateau torique, le bord gauche est connecté au bord droit. Cela signifie qu'une ligne de pièces peut se prolonger horizontalement en bouclant. Ici, vous pouvez capturer les trois pièces Claires en jouant dans la colonne la plus à gauche, car le plateau boucle pour continuer la ligne.</target>
+      <trans-unit id="3675970570388007793" datatype="html">
+        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.</source>
+        <target>Sur un plateau torique, le bord gauche est connecté au bord droit. Cela signifie qu'une ligne de pièces peut se prolonger horizontalement en bouclant. Ici, vous pouvez capturer les trois pièces claires en jouant dans la colonne la plus à gauche, car le plateau boucle pour continuer la ligne.</target>
       </trans-unit>
-      <trans-unit id="7546327022426694322" datatype="html">
-        <source>Not quite. Look at the fourth row: there is a line of dark pieces that wraps around the left edge.</source>
-        <target>Pas tout à fait. Regardez la quatrième ligne : il y a une ligne de pièces foncées qui boucle par le bord gauche.</target>
+      <trans-unit id="447603454412761814" datatype="html">
+        <source>Look at the fourth row: there is a line of dark pieces that wraps around the left edge.</source>
+        <target>Regardez la quatrième ligne : il y a une ligne de pièces foncées qui boucle par le bord gauche.</target>
       </trans-unit>
       <trans-unit id="524383038680502602" datatype="html">
         <source>Top-bottom connectivity</source>
         <target>Connexion haut-bas</target>
       </trans-unit>
-      <trans-unit id="8638073032995004657" datatype="html">
-        <source>The same applies vertically: the top edge is connected to the bottom edge. Here, a column of Light pieces wraps around. Find the move that captures them by playing on the top row.</source>
-        <target>La même logique s'applique verticalement : le bord supérieur est connecté au bord inférieur. Ici, une colonne de pièces Claire boucle. Trouvez le coup qui les capture en jouant sur la ligne du haut.</target>
+      <trans-unit id="1533479423868245608" datatype="html">
+        <source>The same applies vertically: the top edge is connected to the bottom edge. Find the move that captures by playing on the top row.</source>
+        <target>La même logique s'applique verticalement : le bord supérieur est connecté au bord inférieur. Trouvez le coup qui les capture en jouant sur la ligne du haut.</target>
       </trans-unit>
-      <trans-unit id="4809176753360926412" datatype="html">
-        <source>Not quite. Look at the fourth column: the dark piece at the bottom wraps around to the top.</source>
-        <target>Pas tout à fait. Regardez la quatrième colonne  : la pièce foncée en bas boucle jusqu'en haut.</target>
+      <trans-unit id="905915555335437932" datatype="html">
+        <source>Look at the fourth column: the dark piece at the bottom wraps around to the top.</source>
+        <target>Regardez la quatrième colonne : la pièce foncée en bas boucle jusqu'en haut.</target>
       </trans-unit>
       <trans-unit id="7079964026141010612" datatype="html">
         <source>Diagonal wrapping</source>
         <target>Bouclage diagonal</target>
       </trans-unit>
-      <trans-unit id="932353025684173867" datatype="html">
-        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of Light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
-        <target>Le bouclage fonctionne aussi en diagonale. Une diagonale peut traverser à la fois les bords horizontaux et verticaux simultanément. Ici, une diagonale de pièces blanches boucle autour d'un coin du plateau. Pouvez-vous trouver le coup qui les capture ?</target>
+      <trans-unit id="8888657281645108734" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
+        <target>Le bouclage fonctionne aussi en diagonale. Une diagonale peut traverser à la fois les bords horizontaux et verticaux simultanément. Ici, une diagonale de pièces claires boucle autour d'un coin du plateau. Pouvez-vous trouver le coup qui les capture ?</target>
       </trans-unit>
-      <trans-unit id="4593196439825767340" datatype="html">
-        <source>Not quite. Follow the diagonal starting from the Dark piece at (7, 0): it wraps around the right edge and continues downward.</source>
-        <target>Pas tout à fait. Suivez la diagonale depuis la pièce noire en (7, 0) : elle boucle par le bord droit et continue vers le bas.</target>
+      <trans-unit id="6380656983498638368" datatype="html">
+        <source>Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.</source>
+        <target>Suivez la diagonale depuis la pièce noire : elle boucle par le bord droit et continue à gauche.</target>
       </trans-unit>
       <trans-unit id="424008605734944795" datatype="html">
         <source>Strategic implications</source>

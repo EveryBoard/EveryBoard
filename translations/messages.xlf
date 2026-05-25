@@ -2985,11 +2985,8 @@
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
       </trans-unit>
-      <trans-unit id="8006607638702407149" datatype="html">
-        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
-        When one piece is flipped, its owner changes.
-        The player owning the most pieces at the end of the game wins.
-        Here, Dark has 28 points and Light has 36, hence Light wins.</source>
+      <trans-unit id="4123522127538652179" datatype="html">
+        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.</source>
       </trans-unit>
       <trans-unit id="5285597397338861824" datatype="html">
         <source>At the beginning of the game, pieces are placed as shown here.
@@ -3016,29 +3013,29 @@
       <trans-unit id="9138862778564760989" datatype="html">
         <source>Left-right connectivity</source>
       </trans-unit>
-      <trans-unit id="5257305474783431137" datatype="html">
-        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three Light pieces by playing on the leftmost column, as the board wraps around to continue the line.</source>
+      <trans-unit id="3675970570388007793" datatype="html">
+        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.</source>
       </trans-unit>
-      <trans-unit id="7546327022426694322" datatype="html">
-        <source>Not quite. Look at the fourth row: there is a line of Dark pieces that wraps around the left edge.</source>
+      <trans-unit id="447603454412761814" datatype="html">
+        <source>Look at the fourth row: there is a line of dark pieces that wraps around the left edge.</source>
       </trans-unit>
       <trans-unit id="524383038680502602" datatype="html">
         <source>Top-bottom connectivity</source>
       </trans-unit>
-      <trans-unit id="8638073032995004657" datatype="html">
-        <source>The same applies vertically: the top edge is connected to the bottom edge. Here, a column of Light pieces wraps around. Find the move that captures them by playing on the top row.</source>
+      <trans-unit id="1533479423868245608" datatype="html">
+        <source>The same applies vertically: the top edge is connected to the bottom edge. Find the move that captures by playing on the top row.</source>
       </trans-unit>
-      <trans-unit id="4809176753360926412" datatype="html">
-        <source>Not quite. Look at the fourth column: the Dark piece at the bottom wraps around to the top.</source>
+      <trans-unit id="905915555335437932" datatype="html">
+        <source>Look at the fourth column: the dark piece at the bottom wraps around to the top.</source>
       </trans-unit>
       <trans-unit id="7079964026141010612" datatype="html">
         <source>Diagonal wrapping</source>
       </trans-unit>
-      <trans-unit id="932353025684173867" datatype="html">
-        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of Light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
+      <trans-unit id="8888657281645108734" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
       </trans-unit>
-      <trans-unit id="4593196439825767340" datatype="html">
-        <source>Not quite. Follow the diagonal starting from the Dark piece: it wraps around the right edge and continues downward.</source>
+      <trans-unit id="6380656983498638368" datatype="html">
+        <source>Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.</source>
       </trans-unit>
       <trans-unit id="424008605734944795" datatype="html">
         <source>Strategic implications</source>

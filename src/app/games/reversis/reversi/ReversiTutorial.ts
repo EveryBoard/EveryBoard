@@ -16,10 +16,7 @@ export class ReversiTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             TutorialStepMessage.OBJECT_OF_THE_GAME(),
-            $localize`At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
-        When one piece is flipped, its owner changes.
-        The player owning the most pieces at the end of the game wins.
-        Here, Dark has 28 points and Light has 36, hence Light wins.`,
+            $localize`At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.`,
             new ReversiState([
                 [O, O, O, O, O, O, O, O],
                 [O, X, X, X, X, X, X, O],

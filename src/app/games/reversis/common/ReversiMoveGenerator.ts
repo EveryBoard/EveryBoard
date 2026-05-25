@@ -4,11 +4,9 @@ import { ReversiNode, ReversiMoveWithSwitched, ReversiConfig, AbstractReversiRul
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
 
-export class ReversiMoveGenerator<R extends AbstractReversiRules>
-    extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig>
-{
+export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {
 
-    public constructor(public readonly rules: R) {
+    public constructor(public readonly rules: AbstractReversiRules) {
         super();
     }
 
