@@ -11,7 +11,7 @@ func TestUpdateElosSuccess(t *testing.T) {
 	store, _ := model.InitDatabase(sqlite.Open(":memory:"))
 	winner := model.MinimalUser{ID: "w", Name: "winner"}
 	loser := model.MinimalUser{ID: "l", Name: "loser"}
-	
+
 	// Initialize Elos
 	_, _, _ = store.GetElos("test", winner, loser)
 
@@ -20,7 +20,7 @@ func TestUpdateElosSuccess(t *testing.T) {
 	if err != nil {
 		t.Fatalf("UpdateElos failed: %v", err)
 	}
-	
+
 	// GetElos should retrieve them
 	ew, el, err := store.GetElos("test", winner, loser)
 	if err != nil {
@@ -35,7 +35,7 @@ func TestGetElosMissingUser(t *testing.T) {
 	store, _ := model.InitDatabase(sqlite.Open(":memory:"))
 	u1 := model.MinimalUser{ID: "u1", Name: "u1"}
 	u2 := model.MinimalUser{ID: "u2", Name: "u2"}
-	
+
 	// Should work even if users don't exist (returns 0.0 elo)
 	ew, el, err := store.GetElos("test", u1, u2)
 	if err != nil {

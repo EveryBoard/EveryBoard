@@ -2,11 +2,11 @@ package internal
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
-	"encoding/json"
 
 	"github.com/EveryBoard/EveryBoard/internal/auth"
 	"github.com/EveryBoard/EveryBoard/internal/model"
@@ -67,7 +67,7 @@ func TestReadConfigurationInternal(t *testing.T) {
 func TestHandlersInternalEdgeCases(t *testing.T) {
 	store, _ := model.InitDatabase(sqlite.Open(":memory:"))
 	user := model.MinimalUser{ID: "user1", Name: "user1"}
-	
+
 	newH := func() Handlers {
 		subs := NewSubscriptionManager[*websocket.Conn]()
 		cm := NewConnectionManager[*websocket.Conn]()

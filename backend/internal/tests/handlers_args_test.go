@@ -1,9 +1,9 @@
 package internal
 
 import (
+	"github.com/gorilla/websocket"
 	"net/http"
 	"testing"
-	"github.com/gorilla/websocket"
 )
 
 func TestMessageArgumentErrorsExpansion(t *testing.T) {

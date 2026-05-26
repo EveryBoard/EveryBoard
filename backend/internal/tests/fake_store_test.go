@@ -2,11 +2,13 @@ package internal
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
 type FakeStore struct {
+	mu           sync.Mutex
 	ConfigRooms  map[model.GameID]*model.ConfigRoom
 	Games        map[model.GameID]*model.Game
 	Events       map[model.GameID][]model.GameEvent
@@ -44,6 +46,8 @@ func NewFakeStore() *FakeStore {
 }
 
 func (s *FakeStore) Transaction(fn func(store model.Store) error) error {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	return fn(s)
 }
 
@@ -53,7 +57,98 @@ func (s *FakeStore) allocateID() model.GameID {
 }
 
 func (s *FakeStore) PeekNextID() model.GameID {
+	s.mu.Lock()
+	defer s.mu.Unlock()
 	return s.nextID + 1
+}
+
+func (s *FakeStore) ConfigRoomForTest(gameId model.GameID) *model.ConfigRoom {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	configRoom := s.ConfigRooms[gameId]
+	if configRoom == nil {
+		return nil
+	}
+	copy := *configRoom
+	return &copy
+}
+
+func (s *FakeStore) GameForTest(gameId model.GameID) *model.Game {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	game := s.Games[gameId]
+	if game == nil {
+		return nil
+	}
+	copy := *game
+	return &copy
+}
+
+func (s *FakeStore) CurrentGameForTest(userID string) *model.CurrentGame {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	currentGame := s.CurrentGames[userID]
+	if currentGame == nil {
+		return nil
+	}
+	copy := *currentGame
+	return &copy
+}
+
+func (s *FakeStore) CandidatesForTest(gameId model.GameID) []model.Candidate {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	candidates := s.Candidates[gameId]
+	return append([]model.Candidate(nil), candidates...)
+}
+
+func (s *FakeStore) EventsForTest(gameId model.GameID) []model.GameEvent {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	events := s.Events[gameId]
+	return append([]model.GameEvent(nil), events...)
+}
+
+func (s *FakeStore) SetConfigRoomForTest(gameId model.GameID, configRoom *model.ConfigRoom) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.ConfigRooms[gameId] = configRoom
+}
+
+func (s *FakeStore) DeleteConfigRoomForTest(gameId model.GameID) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	delete(s.ConfigRooms, gameId)
+}
+
+func (s *FakeStore) SetGameForTest(gameId model.GameID, game *model.Game) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Games[gameId] = game
+}
+
+func (s *FakeStore) SetCurrentGameForTest(userID string, currentGame *model.CurrentGame) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.CurrentGames[userID] = currentGame
+}
+
+func (s *FakeStore) SetCandidatesForTest(gameId model.GameID, candidates []model.Candidate) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Candidates[gameId] = candidates
+}
+
+func (s *FakeStore) SetMessagesForTest(gameId model.GameID, messages []*model.Message) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.Messages[gameId] = messages
+}
+
+func (s *FakeStore) SetNextIDForTest(nextID model.GameID) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	s.nextID = nextID
 }
 
 func (s *FakeStore) GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error) {

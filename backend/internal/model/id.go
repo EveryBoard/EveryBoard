@@ -13,14 +13,16 @@ type GameID uint64
 // that we can send messages to it and subscribe to it.
 const GameIDLobby GameID = 1
 
-type IDEncoder interface {
-	Initialize() error
-	EncodeID(GameID) (string, error)
-	DecodeID(string) (GameID, error)
-}
-
 type SqidsEncoder struct {
 	encoder *sqids.Sqids
+}
+
+func NewSqidsEncoder() (*SqidsEncoder, error) {
+	encoder := &SqidsEncoder{}
+	if err := encoder.Initialize(); err != nil {
+		return nil, err
+	}
+	return encoder, nil
 }
 
 func (idEncoder *SqidsEncoder) Initialize() error {
@@ -45,24 +47,16 @@ func (idEncoder SqidsEncoder) DecodeID(s string) (GameID, error) {
 
 // Encoder for game ids, so that they are easily human readable
 // For example, id 42 is encoded as JgaEB
-var idEncoder IDEncoder
-
-// Change the encoder, for testing purposes
-func SetIDEncoder(encoder IDEncoder) {
-	idEncoder = encoder
-}
-
-// Initializes the encoder for ids
-func InitEncoder() error {
-	return idEncoder.Initialize()
-}
+var idEncoder, idEncoderErr = NewSqidsEncoder()
 
 func EncodeID(gameId GameID) (string, error) {
 	if gameId == GameIDLobby {
 		return "lobby", nil
 	}
-	id, err := idEncoder.EncodeID(gameId)
-	return id, err
+	if idEncoderErr != nil {
+		return "", idEncoderErr
+	}
+	return idEncoder.EncodeID(gameId)
 }
 
 func DecodeID(gameId string) (GameID, error) {
@@ -70,8 +64,10 @@ func DecodeID(gameId string) (GameID, error) {
 		return GameIDLobby, nil
 	}
 
-	id, err := idEncoder.DecodeID(gameId)
-	return GameID(id), err
+	if idEncoderErr != nil {
+		return 0, idEncoderErr
+	}
+	return idEncoder.DecodeID(gameId)
 }
 
 func (id GameID) MarshalJSON() ([]byte, error) {

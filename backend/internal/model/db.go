@@ -101,8 +101,8 @@ func (s *GORMStore) DB() *gorm.DB {
 	return s.db
 }
 
-func (s *GORMStore) Transaction(f func (store Store) error) error {
-	return s.db.Transaction(func (db *gorm.DB) error {
+func (s *GORMStore) Transaction(f func(store Store) error) error {
+	return s.db.Transaction(func(db *gorm.DB) error {
 		store := &GORMStore{db}
 		return f(store)
 	})

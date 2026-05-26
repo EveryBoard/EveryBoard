@@ -12,19 +12,20 @@ func (h *Handlers) handleSubscribeLobby() error {
 
 	// A lobby subscriber will receive all lobby messages and active config rooms
 	var buf MsgBuffer
-	err := h.store.ApplyToMessagesOfGame(model.GameIDLobby, func(message *model.Message) error {
-		buf.addSend(h.connection, model.ChatMessage{Message: *message})
-		return nil
-	})
-	if err != nil {
-		return err
-	}
-	err = h.store.ApplyToConfigRooms(func(configRoom model.ConfigRoom) error {
-		buf.addSend(h.connection, model.ConfigRoomUpdateMessage{
-			GameID:     configRoom.ID,
-			ConfigRoom: configRoom,
+	err := h.store.Transaction(func(store model.Store) error {
+		if err := store.ApplyToMessagesOfGame(model.GameIDLobby, func(message *model.Message) error {
+			buf.addSend(h.connection, model.ChatMessage{Message: *message})
+			return nil
+		}); err != nil {
+			return err
+		}
+		return store.ApplyToConfigRooms(func(configRoom model.ConfigRoom) error {
+			buf.addSend(h.connection, model.ConfigRoomUpdateMessage{
+				GameID:     configRoom.ID,
+				ConfigRoom: configRoom,
+			})
+			return nil
 		})
-		return nil
 	})
 	if err != nil {
 		return err

@@ -29,13 +29,13 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 	t.Run("AlreadySubscribed", func(t *testing.T) {
 		c := dial("user_already_sub")
 		defer c.Close()
-		
+
 		// Add a config room to ensure SubscribeLobby sends a message
-		fakeStore.ConfigRooms[model.GameID(500)] = &model.ConfigRoom{
+		fakeStore.SetConfigRoomForTest(model.GameID(500), &model.ConfigRoom{
 			ID:       model.GameID(500),
 			GameName: "test",
 			Status:   model.StatusCreated,
-		}
+		})
 
 		// First subscription
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeLobby"]`))
@@ -58,7 +58,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 	t.Run("ConfigRoomDoesNotExist", func(t *testing.T) {
 		c := dial("user_non_existent")
 		defer c.Close()
-		
+
 		encodedID, _ := model.EncodeID(model.GameID(999))
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
 		if err != nil {
@@ -73,15 +73,15 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 	t.Run("StatusStarted", func(t *testing.T) {
 		c := dial("user_observer")
 		defer c.Close()
-		
+
 		configRoomID := model.GameID(200)
 		encodedID, _ := model.EncodeID(configRoomID)
-		fakeStore.ConfigRooms[configRoomID] = &model.ConfigRoom{
+		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
 			Creator: model.MinimalUser{ID: "creator", Name: "creator"},
 			Status:  model.StatusStarted,
-		}
-		
+		})
+
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
 		if err != nil {
 			t.Fatalf("WriteMessage failed: %v", err)
@@ -96,16 +96,16 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 	t.Run("SubscribeAsCandidate", func(t *testing.T) {
 		c := dial("user_candidate")
 		defer c.Close()
-		
+
 		configRoomID := model.GameID(600)
 		encodedID, _ := model.EncodeID(configRoomID)
-		fakeStore.ConfigRooms[configRoomID] = &model.ConfigRoom{
+		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:       configRoomID,
 			Creator:  model.MinimalUser{ID: "creator", Name: "creator"},
 			Status:   model.StatusCreated,
 			GameName: "test",
-		}
-		
+		})
+
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
 		if err != nil {
 			t.Fatalf("WriteMessage failed: %v", err)
@@ -115,7 +115,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 			t.Fatal("expected message")
 		}
 		found := false
-		for _, cand := range fakeStore.Candidates[configRoomID] {
+		for _, cand := range fakeStore.CandidatesForTest(configRoomID) {
 			if cand.User.ID == "user_candidate" {
 				found = true
 				break
@@ -129,15 +129,15 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 	t.Run("StatusFinished", func(t *testing.T) {
 		c := dial("user_finished")
 		defer c.Close()
-		
+
 		configRoomID := model.GameID(201)
 		encodedID, _ := model.EncodeID(configRoomID)
-		fakeStore.ConfigRooms[configRoomID] = &model.ConfigRoom{
+		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
 			ID:      configRoomID,
 			Creator: model.MinimalUser{ID: "creator", Name: "creator"},
 			Status:  model.StatusFinished,
-		}
-		
+		})
+
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
 		if err != nil {
 			t.Fatalf("WriteMessage failed: %v", err)
@@ -168,20 +168,20 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		uid := "player0"
 		c := dial(uid)
 		defer c.Close()
-		
+
 		gameID := model.GameID(700)
 		encodedID, _ := model.EncodeID(gameID)
-		fakeStore.Games[gameID] = &model.Game{
+		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
 			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
-		}
-		fakeStore.ConfigRooms[gameID] = &model.ConfigRoom{
+		})
+		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
 			Creator: model.MinimalUser{ID: uid, Name: uid},
 			Status:  model.StatusStarted,
-		}
-		
+		})
+
 		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
@@ -196,22 +196,22 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		uid := "player_draw"
 		c := dial(uid)
 		defer c.Close()
-		
+
 		gameID := model.GameID(800)
 		encodedID, _ := model.EncodeID(gameID)
-		fakeStore.Games[gameID] = &model.Game{
+		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
 			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
 			Result:     model.ResultInProgress,
-		}
-		fakeStore.ConfigRooms[gameID] = &model.ConfigRoom{
+		})
+		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
 			Creator:        model.MinimalUser{ID: uid, Name: uid},
 			ChosenOpponent: &model.MinimalUser{ID: "player1", Name: "player1"},
 			Status:         model.StatusStarted,
-		}
-		
+		})
+
 		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
@@ -220,8 +220,9 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 			t.Fatalf("WriteMessage failed: %v", err)
 		}
 		time.Sleep(100 * time.Millisecond)
-		if !fakeStore.Games[gameID].Result.IsDraw() {
-			t.Errorf("expected draw, got %s", fakeStore.Games[gameID].Result)
+		game := fakeStore.GameForTest(gameID)
+		if !game.Result.IsDraw() {
+			t.Errorf("expected draw, got %s", game.Result)
 		}
 	})
 }
@@ -245,22 +246,22 @@ func TestHandleGameEnd(t *testing.T) {
 		uid := "player_w0"
 		c := dial(uid)
 		defer c.Close()
-		
+
 		gameID := model.GameID(900)
 		encodedID, _ := model.EncodeID(gameID)
-		fakeStore.Games[gameID] = &model.Game{
+		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
 			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
 			Result:     model.ResultInProgress,
-		}
-		fakeStore.ConfigRooms[gameID] = &model.ConfigRoom{
+		})
+		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
 			Creator:        model.MinimalUser{ID: uid, Name: uid},
 			ChosenOpponent: &model.MinimalUser{ID: "player1", Name: "player1"},
 			Status:         model.StatusStarted,
-		}
-		
+		})
+
 		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
@@ -269,8 +270,9 @@ func TestHandleGameEnd(t *testing.T) {
 			t.Fatalf("WriteMessage failed: %v", err)
 		}
 		time.Sleep(100 * time.Millisecond)
-		if fakeStore.Games[gameID].Result != model.ResultVictoryOfZero {
-			t.Errorf("expected VictoryOfZero, got %s", fakeStore.Games[gameID].Result)
+		game := fakeStore.GameForTest(gameID)
+		if game.Result != model.ResultVictoryOfZero {
+			t.Errorf("expected VictoryOfZero, got %s", game.Result)
 		}
 	})
 
@@ -278,22 +280,22 @@ func TestHandleGameEnd(t *testing.T) {
 		uid := "player_w1"
 		c := dial(uid)
 		defer c.Close()
-		
+
 		gameID := model.GameID(901)
 		encodedID, _ := model.EncodeID(gameID)
-		fakeStore.Games[gameID] = &model.Game{
+		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			PlayerZero: model.MinimalUser{ID: "player0", Name: "player0"},
 			PlayerOne:  model.MinimalUser{ID: uid, Name: uid},
 			Result:     model.ResultInProgress,
-		}
-		fakeStore.ConfigRooms[gameID] = &model.ConfigRoom{
+		})
+		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
 			Creator:        model.MinimalUser{ID: "player0", Name: "player0"},
 			ChosenOpponent: &model.MinimalUser{ID: uid, Name: uid},
 			Status:         model.StatusStarted,
-		}
-		
+		})
+
 		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
@@ -302,8 +304,9 @@ func TestHandleGameEnd(t *testing.T) {
 			t.Fatalf("WriteMessage failed: %v", err)
 		}
 		time.Sleep(100 * time.Millisecond)
-		if fakeStore.Games[gameID].Result != model.ResultVictoryOfOne {
-			t.Errorf("expected VictoryOfOne, got %s", fakeStore.Games[gameID].Result)
+		game := fakeStore.GameForTest(gameID)
+		if game.Result != model.ResultVictoryOfOne {
+			t.Errorf("expected VictoryOfOne, got %s", game.Result)
 		}
 	})
 
@@ -311,22 +314,22 @@ func TestHandleGameEnd(t *testing.T) {
 		uid := "player_wnone"
 		c := dial(uid)
 		defer c.Close()
-		
+
 		gameID := model.GameID(902)
 		encodedID, _ := model.EncodeID(gameID)
-		fakeStore.Games[gameID] = &model.Game{
+		fakeStore.SetGameForTest(gameID, &model.Game{
 			GameID:     gameID,
 			PlayerZero: model.MinimalUser{ID: uid, Name: uid},
 			PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
 			Result:     model.ResultInProgress,
-		}
-		fakeStore.ConfigRooms[gameID] = &model.ConfigRoom{
+		})
+		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:             gameID,
 			Creator:        model.MinimalUser{ID: uid, Name: uid},
 			ChosenOpponent: &model.MinimalUser{ID: "player1", Name: "player1"},
 			Status:         model.StatusStarted,
-		}
-		
+		})
+
 		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
 
@@ -335,8 +338,9 @@ func TestHandleGameEnd(t *testing.T) {
 			t.Fatalf("WriteMessage failed: %v", err)
 		}
 		time.Sleep(100 * time.Millisecond)
-		if fakeStore.Games[gameID].Result != model.ResultHardDraw {
-			t.Errorf("expected HardDraw, got %s", fakeStore.Games[gameID].Result)
+		game := fakeStore.GameForTest(gameID)
+		if game.Result != model.ResultHardDraw {
+			t.Errorf("expected HardDraw, got %s", game.Result)
 		}
 	})
 }
@@ -360,12 +364,12 @@ func TestHandleCreateGameEdgeCases(t *testing.T) {
 		uid := "user_already_in_game"
 		c := dial(uid)
 		defer c.Close()
-		
-		fakeStore.CurrentGames[uid] = &model.CurrentGame{
+
+		fakeStore.SetCurrentGameForTest(uid, &model.CurrentGame{
 			GameID: model.GameID(1000),
 			Role:   model.UserRoleCreator,
-		}
-		
+		})
+
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Create",{"gameName":"test"}]`))
 		if err != nil {
 			t.Fatalf("WriteMessage failed: %v", err)
@@ -395,7 +399,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 	t.Run("NotSubscribed", func(t *testing.T) {
 		c := dial("user_not_sub")
 		defer c.Close()
-		
+
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
 		if err != nil {
 			t.Fatalf("WriteMessage failed: %v", err)
@@ -410,18 +414,18 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 		uid := "user_not_finished"
 		c := dial(uid)
 		defer c.Close()
-		
+
 		gameID := model.GameID(300)
 		encodedID, _ := model.EncodeID(gameID)
-		fakeStore.ConfigRooms[gameID] = &model.ConfigRoom{
+		fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
 			ID:      gameID,
 			Creator: model.MinimalUser{ID: uid, Name: uid},
 			Status:  model.StatusStarted,
-		}
-		
+		})
+
 		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
 		readWithTimeout(t, c)
-		
+
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
 		if err != nil {
 			t.Fatalf("WriteMessage failed: %v", err)

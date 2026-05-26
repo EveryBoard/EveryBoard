@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"sync/atomic"
 	"testing"
 	"time"
 
@@ -76,13 +77,13 @@ func TestConnectionWorkflow(t *testing.T) {
 }
 
 type CountMessagesConnection struct {
-	messagesReceived int
+	messagesReceived atomic.Int32
 	receiveNext      chan struct{} // to signal that we should receive the next message
 }
 
 func (c *CountMessagesConnection) WriteMessage(messageType int, data []byte) error {
 	<-c.receiveNext // wait for being signalled to receive the next message (to simulate network delays)
-	c.messagesReceived++
+	c.messagesReceived.Add(1)
 	return nil
 }
 
@@ -98,8 +99,7 @@ func TestManyMessages(t *testing.T) {
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	manager := everyboard.NewConnectionManager[*CountMessagesConnection]()
 	connection := &CountMessagesConnection{
-		messagesReceived: 0,
-		receiveNext:      make(chan struct{}, 1),
+		receiveNext: make(chan struct{}, 1),
 	}
 	manager.AddConnection(user, connection)
 	// When sending many messages (to simulate a player reconnecting and receiving all events)
@@ -109,14 +109,14 @@ func TestManyMessages(t *testing.T) {
 	}
 
 	// Then it should not lose messages
-	if connection.messagesReceived != 0 {
+	if connection.messagesReceived.Load() != 0 {
 		t.Fatalf("unexpected: we received messages even we shouldn't have (yet)")
 	}
 	for _ = range numberOfMessages {
 		connection.receiveNext <- struct{}{} // will make it receive one more message
 	}
 	time.Sleep(100 * time.Millisecond) // wait a bit to make sure every message has been processed
-	if connection.messagesReceived != numberOfMessages {
-		t.Fatalf("unexpected: received %d messages instead of %d", connection.messagesReceived, numberOfMessages)
+	if got := int(connection.messagesReceived.Load()); got != numberOfMessages {
+		t.Fatalf("unexpected: received %d messages instead of %d", got, numberOfMessages)
 	}
 }

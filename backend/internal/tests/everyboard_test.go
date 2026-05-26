@@ -242,19 +242,31 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *everyboard.Configuration)
 		t.Fatalf("error when preparing the server: %v", err)
 	}
 
+	serverErr := make(chan error, 1)
 	go func() {
 		err := server.ListenAndServe()
 		if err != nil && err != http.ErrServerClosed {
-			t.Fatalf("ListenAndServe error: %v", err)
+			serverErr <- err
 		}
+		close(serverErr)
 	}()
 	time.Sleep(1000 * time.Millisecond) // let the server start
+	select {
+	case err := <-serverErr:
+		if err != nil {
+			t.Fatalf("ListenAndServe error: %v", err)
+		}
+	default:
+	}
 
 	stopServer := func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
 		if err := server.Shutdown(ctx); err != nil {
 			t.Fatalf("Shutdown failed: %v", err)
+		}
+		if err := <-serverErr; err != nil {
+			t.Fatalf("ListenAndServe error: %v", err)
 		}
 	}
 	return stopServer, fakeStore, config

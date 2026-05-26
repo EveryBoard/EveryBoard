@@ -38,7 +38,7 @@ func TestGetEloDoesNotExist(t *testing.T) {
 
 func TestUpdateElosTransaction(t *testing.T) {
 	store, _ := model.InitDatabase(sqlite.Open(":memory:"))
-	
+
 	// Transaction that returns an error
 	err := store.Transaction(func(s model.Store) error {
 		return fmt.Errorf("forced transaction failure")

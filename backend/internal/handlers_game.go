@@ -250,7 +250,8 @@ func (h *Handlers) addEvent(eventData model.EventPayload) error {
 		if game == nil {
 			return model.ErrorUnknownGame
 		}
-		if configRoom.Creator.ID != h.user.ID && configRoom.ChosenOpponent.ID != h.user.ID {
+		if configRoom.Creator.ID != h.user.ID &&
+			(configRoom.ChosenOpponent == nil || configRoom.ChosenOpponent.ID != h.user.ID) {
 			// Only a player can add events
 			return model.ErrorNotAllowed
 		}

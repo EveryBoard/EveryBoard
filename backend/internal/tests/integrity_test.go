@@ -28,7 +28,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	for i := 0; i < numRequests; i++ {
 		go func(id int) {
 			defer wg.Done()
-			
+
 			err := store.Transaction(func(s model.Store) error {
 				cg, err := s.GetCurrentGame(user)
 				if err != nil {
@@ -82,7 +82,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	require.NoError(t, err)
 
 	numSuccess := numRequests - errCount
-	
+
 	t.Logf("Successful creations: %d", numSuccess)
 	t.Logf("Games in DB: %d", len(configRooms))
 

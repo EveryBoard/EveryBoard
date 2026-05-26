@@ -1,24 +1,13 @@
 package model
 
 import (
-	"fmt"
-	"strconv"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/model"
 )
 
-func InitializeSqidsEncoder(t *testing.T) {
-	model.SetIDEncoder(&model.SqidsEncoder{})
-	err := model.InitEncoder()
-	if err != nil {
-		t.Fatalf("cannot initialize encoder: %v", err)
-	}
-}
-
 func TestEncodeAndDecodeIdWithSqids(t *testing.T) {
-	// Given a sqids encoder and a gameId
-	InitializeSqidsEncoder(t)
+	// Given the default sqids encoder and a gameId
 	const gameId model.GameID = 42
 
 	// When encoding the id and decoding it
@@ -38,8 +27,7 @@ func TestEncodeAndDecodeIdWithSqids(t *testing.T) {
 }
 
 func TestEncodeAndDecodeLobbyIdWithSqids(t *testing.T) {
-	// Given a sqids encoder
-	InitializeSqidsEncoder(t)
+	// Given the default sqids encoder
 
 	// When encoding and decoding the lobby id
 	encoded, err := model.EncodeID(model.GameIDLobby)
@@ -58,145 +46,49 @@ func TestEncodeAndDecodeLobbyIdWithSqids(t *testing.T) {
 }
 
 func TestDecodeInvalidIdWithSqids(t *testing.T) {
-	// Given a sqids encoder
-	InitializeSqidsEncoder(t)
+	// Given the default sqids encoder
 
 	// When trying to decode an invalid id (one that would decode to multiple uint64 for example, here to [42, 43])
 	decoded, err := model.DecodeID("5cQlZ")
+
+	// Then it should fail
 	if err == nil {
 		t.Fatalf("expected to fail but did not, decoded id as %v", decoded)
 	}
 }
 
 func TestMarshalIdWithSqids(t *testing.T) {
-	// Given a sqids encoder
-	InitializeSqidsEncoder(t)
-	// Then marshalling should work as expected
+	// Given the default sqids encoder
 	const gameId model.GameID = 42
+
+	// Then marshalling should work as expected
 	ExpectMarshallingToWorkBothWays(t, gameId, `"JgaEB"`)
 }
 
 func TestMarshalInvalidIdWithSqids(t *testing.T) {
-	// Given a sqids encoder
-	InitializeSqidsEncoder(t)
-	// Then unmarshalling an invalid id fails
+	// Given the default sqids encoder
 	var gameId model.GameID
+
+	// Then unmarshalling invalid ids fails
 	ExpectUnmarshallingToFail(t, gameId, `{}`)  // id is not a string
 	ExpectUnmarshallingToFail(t, gameId, `"x"`) // id is too short
 }
 
-type MockEncoder struct {
-	errorOnInitialization bool
-	errorOnEncode         bool
-	errorOnDecode         bool
-}
-
-func (encoder MockEncoder) Initialize() error {
-	if encoder.errorOnInitialization {
-		return fmt.Errorf("encoder initialization error")
-	}
-	return nil
-}
-
-func (encoder MockEncoder) EncodeID(gameId model.GameID) (string, error) {
-	if encoder.errorOnEncode {
-		return "", fmt.Errorf("encoder encoding error")
-	}
-	return fmt.Sprintf("%d", gameId), nil
-}
-
-func (encoder MockEncoder) DecodeID(s string) (model.GameID, error) {
-	if encoder.errorOnDecode {
-		return 0, fmt.Errorf("encoder decoding error")
-	}
-	id, err := strconv.ParseUint(s, 10, 64)
-	return model.GameID(id), err
-}
-
-func TestEncoderInitiliazationFailIsPropagated(t *testing.T) {
-	// Given an encoder that will fail at initialization
-	model.SetIDEncoder(&MockEncoder{
-		errorOnInitialization: true,
-		errorOnEncode:         false,
-		errorOnDecode:         false,
-	})
-	// Restore the sqids encoder when done
-	defer InitializeSqidsEncoder(t)
-
-	// When initializing it
-	err := model.InitEncoder()
-	// Then it should fail
-	if err == nil {
-		t.Fatalf("failure in encoder initialization should propagate")
-	}
-
-}
-
-func TestEncoderEncodeFailureIsPropagated(t *testing.T) {
-	// Given an encoder that will fail during encoding
-	model.SetIDEncoder(&MockEncoder{
-		errorOnInitialization: false,
-		errorOnEncode:         true,
-		errorOnDecode:         false,
-	})
-	// Restore the sqids encoder when done
-	defer InitializeSqidsEncoder(t)
-
-	err := model.InitEncoder()
+func TestNewSqidsEncoder(t *testing.T) {
+	// Given a standalone sqids encoder
+	encoder, err := model.NewSqidsEncoder()
 	if err != nil {
-		t.Fatalf("encoder should be properly initialized")
+		t.Fatalf("cannot initialize encoder: %v", err)
 	}
-	// When encoding
-	_, err = model.EncodeID(42)
 
-	// Then it should fail
-	if err == nil {
-		t.Fatalf("broken encoder should propagate the failure")
-	}
-}
-
-func TestEncoderDecodeFailureIsPropagated(t *testing.T) {
-	// Given an encoder that will fail
-	model.SetIDEncoder(&MockEncoder{
-		errorOnInitialization: false,
-		errorOnEncode:         false,
-		errorOnDecode:         true,
-	})
-	// Restore the sqids encoder when done
-	defer InitializeSqidsEncoder(t)
-
-	err := model.InitEncoder()
+	// When encoding an id directly with it
+	encoded, err := encoder.EncodeID(42)
 	if err != nil {
-		t.Fatalf("encoder should be properly initialized")
+		t.Fatalf("cannot encode: %v", err)
 	}
 
-	// When decoding
-	_, err = model.DecodeID("42")
-
-	// Then it should fail
-	if err == nil {
-		t.Fatalf("broken decoder should propagate the failure")
+	// Then it should use the same wire format as the default encoder
+	if encoded != "JgaEB" {
+		t.Fatalf("unexpected encoded id: %s", encoded)
 	}
-
-}
-
-func TestEncoderMarshalingFailureToBePropagated(t *testing.T) {
-	// Given an encoder that will fail
-	model.SetIDEncoder(&MockEncoder{
-		errorOnInitialization: false,
-		errorOnEncode:         true,
-		errorOnDecode:         false,
-	})
-	// Restore the sqids encoder when done
-	defer InitializeSqidsEncoder(t)
-
-	err := model.InitEncoder()
-	if err != nil {
-		t.Fatalf("encoder should be properly initialized")
-	}
-
-	// When marshalling, then it should fail
-	const gameId model.GameID = 42
-	ExpectMarshallingToFail(t, gameId)
-
 }

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"sync"
 	"testing"
 	"time"
 
@@ -155,6 +156,7 @@ type ScenarioBuilder struct {
 	fakeStore        *FakeStore
 	config           *everyboard.Configuration
 	cleanupFunctions []func()
+	cleanupOnce      *sync.Once
 
 	connections           map[string]*websocket.Conn
 	users                 map[string]model.MinimalUser
@@ -170,11 +172,12 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 	everyboard.RandBool = func() bool { return true }
 
 	stopServer, fakeStore, config := PrepareServer(t)
-	return ScenarioBuilder{
+	sb := ScenarioBuilder{
 		t:                     t,
 		fakeStore:             fakeStore,
 		config:                config,
 		cleanupFunctions:      []func(){stopServer},
+		cleanupOnce:           &sync.Once{},
 		connections:           make(map[string]*websocket.Conn),
 		users:                 make(map[string]model.MinimalUser),
 		lobbySubscribers:      []string{},
@@ -182,15 +185,21 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 		gameSubscribers:       make(map[model.GameID][]string),
 		subscriptions:         make(map[string]model.GameID),
 	}
+	t.Cleanup(func() {
+		sb.Cleanup()
+	})
+	return sb
 }
 
 func (sb ScenarioBuilder) Cleanup() {
-	for _, conn := range sb.connections {
-		conn.Close()
-	}
-	for _, f := range sb.cleanupFunctions {
-		f()
-	}
+	sb.cleanupOnce.Do(func() {
+		for _, conn := range sb.connections {
+			conn.Close()
+		}
+		for _, f := range sb.cleanupFunctions {
+			f()
+		}
+	})
 }
 
 func (sb ScenarioBuilder) EstablishConnection(userId string) string {
@@ -296,8 +305,8 @@ func (sb ScenarioBuilder) subscribeGame(userId string, gameId model.GameID) {
 }
 
 func (sb ScenarioBuilder) getGame(gameId model.GameID) *model.Game {
-	game, ok := sb.fakeStore.Games[gameId]
-	if !ok {
+	game := sb.fakeStore.GameForTest(gameId)
+	if game == nil {
 		sb.t.Fatalf("game does not exist: %d", gameId)
 	}
 	return game
@@ -315,19 +324,16 @@ func (sb ScenarioBuilder) Create(userId string, gameName string) model.GameID {
 
 	sendMessage(sb.t, conn, fmt.Sprintf(`["Create",{"gameName":"%s"}]`, gameName))
 
-	// After sendMessage, fakeStore has the new configRoom and currentGame
-	gameId := sb.fakeStore.PeekNextID() - 1 // the last allocated ID is the one just created
-	// Actually we need to find the configRoom that was just created
-	// Since we know RandBool=true and creator goes first, gameId = nextID before Create
-	// We find it by looking at the GameCreated message
 	gameIdStr := readMessage[string](sb.t, conn, "GameCreated", "gameId")
+	gameId, err := model.DecodeID(gameIdStr)
+	if err != nil {
+		sb.t.Fatalf("cannot decode game id: %v", err)
+	}
 
-	currentGame := sb.fakeStore.CurrentGames[userId]
+	currentGame := sb.fakeStore.CurrentGameForTest(userId)
 	expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
 
-	// Decode the gameId from the string
-	configRoom := sb.fakeStore.ConfigRooms[gameId]
-	_ = gameIdStr
+	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
 	for _, subscriberId := range sb.getConfigRoomSubscribers(configRoom.ID) {
 		expectMessage(sb.t, sb.getConnection(subscriberId), fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, gameIdStr, configRoomJSON))
@@ -345,7 +351,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 	sendMessage(sb.t, conn, fmt.Sprintf(`["SubscribeConfigRoom", {"gameId":"%s"}]`, encodedGameId))
 
 	// After sendMessage, fakeStore has the new candidate and currentGame (if not creator)
-	configRoom := sb.fakeStore.ConfigRooms[gameId]
+	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
 
 	expectMessage(sb.t, conn, fmt.Sprintf(`["ConfigRoomUpdate",{"gameId":"%s","configRoom":%s}]`, encodedGameId, toJSON(sb.t, configRoom)))
 
@@ -361,7 +367,7 @@ func (sb ScenarioBuilder) SubscribeConfigRoom(userId string, gameId model.GameID
 				fmt.Sprintf(`["CandidateJoined",{"candidate":%s,"elo":0}]`, toJSON(sb.t, user)))
 		}
 		// The new subscriber receives their CurrentGameUpdate
-		currentGame := sb.fakeStore.CurrentGames[userId]
+		currentGame := sb.fakeStore.CurrentGameForTest(userId)
 		expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
 	}
 }
@@ -377,12 +383,12 @@ func (sb ScenarioBuilder) SubscribeGame(userId string, gameId model.GameID) {
 
 	isObserver := game.PlayerZero.ID != userId && game.PlayerOne.ID != userId
 	if isObserver {
-		currentGame := sb.fakeStore.CurrentGames[userId]
+		currentGame := sb.fakeStore.CurrentGameForTest(userId)
 		expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
 	}
 	expectMessage(sb.t, conn, fmt.Sprintf(`["GameUpdate",{"game":%s}]`, toJSON(sb.t, game)))
 
-	events := sb.fakeStore.Events[gameId]
+	events := sb.fakeStore.EventsForTest(gameId)
 	for _, event := range events {
 		expectMessage(sb.t, conn, fmt.Sprintf(`["GameEvent",{"event":%s,"serverTime":42}]`, toJSON(sb.t, event)))
 	}
@@ -423,9 +429,9 @@ func (sb ScenarioBuilder) SelectOpponent(creator string, opponent string) {
 		fmt.Sprintf(`["SelectOpponent",{"opponent":%s}]`, toJSON(sb.t, userOpponent)))
 
 	// After sendMessage, fakeStore has updated configRoom and currentGames
-	configRoom := sb.fakeStore.ConfigRooms[gameId]
-	currentGameCreator := sb.fakeStore.CurrentGames[creator]
-	currentGameOpponent := sb.fakeStore.CurrentGames[opponent]
+	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
+	currentGameCreator := sb.fakeStore.CurrentGameForTest(creator)
+	currentGameOpponent := sb.fakeStore.CurrentGameForTest(opponent)
 
 	expectMessage(sb.t, connCreator,
 		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameCreator)))
@@ -448,7 +454,7 @@ func (sb ScenarioBuilder) ProposeConfig(userId string, proposal model.ConfigProp
 		fmt.Sprintf(`["ProposeConfig",{"config":%s}]`, toJSON(sb.t, proposal)))
 
 	// After sendMessage, fakeStore has the updated configRoom
-	configRoom := sb.fakeStore.ConfigRooms[gameId]
+	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
 	encodedGameId := encodeID(sb.t, gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
 	for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
@@ -463,7 +469,7 @@ func (sb ScenarioBuilder) ReviewConfig(userId string) {
 
 	sendMessage(sb.t, connPlayer, `["ReviewConfig"]`)
 
-	configRoom := sb.fakeStore.ConfigRooms[gameId]
+	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
 	encodedGameId := encodeID(sb.t, gameId)
 	configRoomJSON := toJSON(sb.t, configRoom)
 	for _, subscriber := range sb.getConfigRoomSubscribers(configRoom.ID) {
@@ -474,15 +480,16 @@ func (sb ScenarioBuilder) ReviewConfig(userId string) {
 
 func (sb ScenarioBuilder) AcceptConfig(userId string) {
 	gameId := sb.getSubscribedGameId(userId)
-	configRoom := sb.fakeStore.ConfigRooms[gameId]
+	configRoom := sb.fakeStore.ConfigRoomForTest(gameId)
 	userCreator := configRoom.Creator
 	userOpponent := *configRoom.ChosenOpponent
 
 	sendMessage(sb.t, sb.getConnection(userId), `["AcceptConfig"]`)
 
 	// After sendMessage, fakeStore has: configRoom.Status=Started, game created, events added, currentGames updated
-	currentGameCreator := sb.fakeStore.CurrentGames[userCreator.ID]
-	currentGameOpponent := sb.fakeStore.CurrentGames[userOpponent.ID]
+	currentGameCreator := sb.fakeStore.CurrentGameForTest(userCreator.ID)
+	currentGameOpponent := sb.fakeStore.CurrentGameForTest(userOpponent.ID)
+	configRoom = sb.fakeStore.ConfigRoomForTest(gameId)
 
 	expectMessage(sb.t, sb.getConnection(userCreator.ID), fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameCreator)))
 	expectMessage(sb.t, sb.getConnection(userOpponent.ID), fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameOpponent)))
@@ -499,10 +506,10 @@ func (sb ScenarioBuilder) doEvent(userId string, eventStr string) {
 	conn := sb.getConnection(userId)
 	gameId := sb.getSubscribedGameId(userId)
 
-	eventsBefore := len(sb.fakeStore.Events[gameId])
+	eventsBefore := len(sb.fakeStore.EventsForTest(gameId))
 	sendMessage(sb.t, conn, eventStr)
 
-	events := sb.fakeStore.Events[gameId]
+	events := sb.fakeStore.EventsForTest(gameId)
 	if len(events) == eventsBefore {
 		sb.t.Fatalf("doEvent did not result in a new event when doing event %s", eventStr)
 	}
@@ -530,7 +537,7 @@ func (sb ScenarioBuilder) AddTime(userId string) {
 }
 
 func (sb ScenarioBuilder) endGameMessageExpectations(gameId model.GameID, endGameEvent model.GameEvent) {
-	game := sb.fakeStore.Games[gameId]
+	game := sb.fakeStore.GameForTest(gameId)
 	// CurrentGameUpdate(null) for each subscriber (in the order the server sends them: playerZero, playerOne, observers)
 	for _, subscriber := range sb.gameSubscribers[gameId] {
 		expectMessage(sb.t, sb.getConnection(subscriber), `["CurrentGameUpdate",{"currentGame":null}]`)
@@ -546,11 +553,11 @@ func (sb ScenarioBuilder) endGameMessageExpectations(gameId model.GameID, endGam
 
 func (sb ScenarioBuilder) AcceptDraw(userId string) {
 	gameId := sb.getSubscribedGameId(userId)
-	eventsBefore := len(sb.fakeStore.Events[gameId])
+	eventsBefore := len(sb.fakeStore.EventsForTest(gameId))
 
 	sendMessage(sb.t, sb.getConnection(userId), `["Accept",{"proposition":"Draw"}]`)
 
-	events := sb.fakeStore.Events[gameId]
+	events := sb.fakeStore.EventsForTest(gameId)
 	acceptEvent := events[eventsBefore]
 	endGameEvent := events[eventsBefore+1]
 
@@ -566,11 +573,11 @@ func (sb ScenarioBuilder) AcceptDraw(userId string) {
 
 func (sb ScenarioBuilder) endGame(userId string, message string) {
 	gameId := sb.getSubscribedGameId(userId)
-	eventsBefore := len(sb.fakeStore.Events[gameId])
+	eventsBefore := len(sb.fakeStore.EventsForTest(gameId))
 
 	sendMessage(sb.t, sb.getConnection(userId), message)
 
-	events := sb.fakeStore.Events[gameId]
+	events := sb.fakeStore.EventsForTest(gameId)
 	endGameEvent := events[eventsBefore]
 
 	sb.endGameMessageExpectations(gameId, endGameEvent)
@@ -599,7 +606,7 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	// Peek at what the rematch ID will be
 	rematchId := sb.fakeStore.PeekNextID()
 
-	eventsBefore := len(sb.fakeStore.Events[gameId])
+	eventsBefore := len(sb.fakeStore.EventsForTest(gameId))
 
 	sendMessage(sb.t, sb.getConnection(userId), `["Accept", {"proposition":"Rematch"}]`)
 
@@ -613,17 +620,17 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 	_ = rematchId
 	_ = eventsBefore
 
-	currentGameCreator := sb.fakeStore.CurrentGames[creator.ID]
+	currentGameCreator := sb.fakeStore.CurrentGameForTest(creator.ID)
 
 	// Find the opponent from the rematch game
 	var opponentId string
-	rematchGame := sb.fakeStore.Games[rematchId]
+	rematchGame := sb.fakeStore.GameForTest(rematchId)
 	if rematchGame.PlayerZero.ID == creator.ID {
 		opponentId = rematchGame.PlayerOne.ID
 	} else {
 		opponentId = rematchGame.PlayerZero.ID
 	}
-	currentGameOpponent := sb.fakeStore.CurrentGames[opponentId]
+	currentGameOpponent := sb.fakeStore.CurrentGameForTest(opponentId)
 
 	expectMessage(sb.t, sb.getConnection(creator.ID),
 		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameCreator)))
@@ -631,7 +638,7 @@ func (sb ScenarioBuilder) AcceptRematch(userId string) model.GameID {
 		fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGameOpponent)))
 
 	// The accept rematch event in the current game
-	events := sb.fakeStore.Events[gameId]
+	events := sb.fakeStore.EventsForTest(gameId)
 	acceptRematchEvent := events[len(events)-1]
 	acceptRematchJSON := toJSON(sb.t, &acceptRematchEvent)
 	expectMessage(sb.t, sb.getConnection(creator.ID),

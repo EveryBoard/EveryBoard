@@ -42,7 +42,7 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		Timestamp: 42,
 		Content:   "hello",
 	}
-	fakeStore.Messages[model.GameIDLobby] = []*model.Message{&msg}
+	fakeStore.SetMessagesForTest(model.GameIDLobby, []*model.Message{&msg})
 
 	configRoom := model.ConfigRoom{
 		ID:                2,
@@ -58,8 +58,8 @@ func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
 		RulesConfig:       nil,
 		GameName:          "P4",
 	}
-	fakeStore.ConfigRooms[configRoom.ID] = &configRoom
-	fakeStore.nextID = configRoom.ID
+	fakeStore.SetConfigRoomForTest(configRoom.ID, &configRoom)
+	fakeStore.SetNextIDForTest(configRoom.ID)
 
 	// Given an established connection to a server with a config room and a lobby message
 	c := EstablishWebSocketConnection(t, "bar")

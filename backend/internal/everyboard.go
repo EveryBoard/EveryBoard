@@ -18,7 +18,6 @@ const Version = "1.0.1"
 
 type Configuration struct {
 	Firebase      auth.FirebaseLike
-	IDEncoder     model.IDEncoder
 	Database      gorm.Dialector
 	Store         model.Store
 	Subscriptions *SubscriptionManager[*websocket.Conn]
@@ -58,7 +57,6 @@ func ReadConfiguration() (*Configuration, error) {
 	connections := NewConnectionManager[*websocket.Conn]()
 	config := &Configuration{
 		Firebase:      firebase,
-		IDEncoder:     &model.SqidsEncoder{},
 		Origin:        os.Getenv("ALLOW_ORIGIN"),
 		ListenAddr:    os.Getenv("LISTEN_ADDR"),
 		Database:      database,
@@ -167,11 +165,6 @@ func Prepare(config *Configuration) (*http.Server, error) {
 	err := auth.InitFirebase()
 	if err != nil {
 		return nil, fmt.Errorf("error initializing firebase: %v", err)
-	}
-	model.SetIDEncoder(config.IDEncoder)
-	err = model.InitEncoder()
-	if err != nil {
-		return nil, fmt.Errorf("error initializing encoder: %v", err)
 	}
 	if config.Store == nil {
 		utils.DefaultLogger.Infof("Initializing DB")
