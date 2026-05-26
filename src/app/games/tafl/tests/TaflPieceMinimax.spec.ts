@@ -5,7 +5,6 @@ import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
 import { TaflPawn } from '../TaflPawn';
-import { TaflPieceHeuristic } from '../TaflPieceHeuristic';
 import { TaflPieceMinimax } from '../TaflPieceMinimax';
 import { TaflState } from '../TaflState';
 import { TablutMove } from '../tablut/TablutMove';

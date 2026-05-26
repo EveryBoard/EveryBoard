@@ -5,6 +5,7 @@ import { MancalaConfig } from '../../../games/mancala/common/MancalaConfig';
 import { MancalaMove } from '../../../games/mancala/common/MancalaMove';
 import { MancalaNode } from '../../../games/mancala/common/MancalaRules';
 import { MancalaState } from '../../../games/mancala/common/MancalaState';
+import { P4Heuristic } from '../../../games/p4/P4Heuristic';
 import { P4Move } from '../../../games/p4/P4Move';
 import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
 import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
@@ -23,26 +24,6 @@ import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
 import { MCTS } from '../MCTS';
 import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
-import { HeuristicBounds, HeuristicWithBounds } from '../Minimax';
-
-class ConstantP4Heuristic extends HeuristicWithBounds<P4Move, P4State, BoardValue, P4Config> {
-
-    public constructor(private readonly value: number) {
-        super();
-    }
-
-    public override getBoardValue(_node: P4Node, _config: P4Config): BoardValue {
-        return BoardValue.of(this.value);
-    }
-
-    public override getBounds(_config: P4Config): HeuristicBounds<BoardValue> {
-        return {
-            player0Best: BoardValue.ofSingle(10, 0),
-            player1Best: BoardValue.ofSingle(0, 10),
-        };
-    }
-
-}
 
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
@@ -138,8 +119,10 @@ describe('MCTS', () => {
         // Given a heuristic board value that is best for Player.ONE
         const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const heuristic: P4Heuristic = new P4Heuristic();
+        spyOn(heuristic, 'getBoardValue').and.returnValue(heuristic.getBounds(p4Config).player1Best);
         const p4Mcts: TestMCTSWithHeuristic =
-            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(10));
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), heuristic);
 
         // When scoring this board for both players
         const playerZeroScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
@@ -154,8 +137,11 @@ describe('MCTS', () => {
         // Given a heuristic value below the declared lower bound
         const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const heuristic: P4Heuristic = new P4Heuristic();
+        const valueBelowLowerBound: number = heuristic.getBounds(p4Config).player0Best.metrics[0] - 1;
+        spyOn(heuristic, 'getBoardValue').and.returnValue(BoardValue.of(valueBelowLowerBound));
         const p4Mcts: TestMCTSWithHeuristic =
-            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(-20));
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), heuristic);
         spyOn(console, 'warn');
 
         // When scoring it
@@ -171,8 +157,10 @@ describe('MCTS', () => {
         // Given an MCTS with heuristic
         const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const heuristic: P4Heuristic = new P4Heuristic();
+        spyOn(heuristic, 'getBoardValue').and.returnValue(heuristic.getBounds(p4Config).player1Best);
         const p4Mcts: TestMCTSWithHeuristic =
-            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(10));
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), heuristic);
 
         // When scoring a terminal status
         const score: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ZERO_WON, Player.ZERO);

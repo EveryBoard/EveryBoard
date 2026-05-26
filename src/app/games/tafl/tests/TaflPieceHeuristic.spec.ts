@@ -20,8 +20,11 @@ describe('TaflPieceHeuristic', () => {
     it('should weight defender pieces as Player.ONE when invader starts', () => {
         // Given one invader and one defender in default Tablut, where Player.ZERO is the invader
         const board: Table<TaflPawn> = [
-            [O, X],
-            [_, _],
+            [_, _, _, _],
+            [_, O, X, _],
+            [_, _, _, _],
+            [_, _, _, _],
+            [_, _, _, _],
         ];
         const state: TaflState = new TaflState(board, 0);
         const node: TablutNode = new TablutNode(state);
