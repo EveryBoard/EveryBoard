@@ -125,10 +125,6 @@ export class GameNode<M extends Move, S extends GameState> {
             // This means we aren't at an end game, but at not fully-explored node
             onlyLosses = false;
         }
-        if (gameStatus === GameStatus.ONGOING && onlyLosses) {
-            winner = currentPlayer.getOpponent();
-        }
-
         let color: string = 'white';
         if (winner.isPlayer()) {
             color = this.getPlayerDotColor(winner);

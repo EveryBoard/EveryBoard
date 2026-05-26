@@ -15,6 +15,10 @@ export class MancalaScoreHeuristic extends PlayerMetricHeuristicWithBounds<Manca
     }
 
     public override getBounds(config: MancalaConfig): HeuristicBounds<BoardValue> {
+        // At most, we can get all seeds, which is:
+        // - the number of seeds per house (seedsByHouse)
+        // - for each house (width)
+        // - for each player (2 players)
         const maxScore: number = config.width * 2 * config.seedsByHouse;
         return {
             player0Best: BoardValue.ofSingle(maxScore, 0),

@@ -5,6 +5,8 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractAI, AI, AIOptions } from '../../../../jscaip/AI/AI';
 import { GameNode } from '../../../../jscaip/AI/GameNode';
+import { MCTS } from '../../../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../../../jscaip/Coord';
 import { Move } from '../../../../jscaip/Move';
 import { Player } from '../../../../jscaip/Player';
@@ -27,6 +29,9 @@ describe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
+    type KalahAIFactory = {
+        createAIs(moveGenerator: KalahMoveGenerator): AI<MancalaMove, MancalaState, AIOptions, MancalaConfig>[],
+    };
 
     function getAIReturningOnly(move: Move): AbstractAI {
         return new class extends AI<Move, GameState, AIOptions, RulesConfig> {
@@ -169,6 +174,23 @@ describe('KalahComponent', () => {
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
                 // Then 5 * TIMEOUT_BETWEEN_SEED ms to sow the final 5 seeds
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+            }));
+
+            it('should pause between received sub-distributions during animation', fakeAsync(async() => {
+                // Given a multi-distribution move played remotely
+                const gameComponent: KalahComponent = mancalaTestUtils.testUtils.getGameComponent();
+                const move: MancalaMove =
+                    MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
+                await gameComponent.chooseMove(move);
+
+                // When animating it
+                void gameComponent.updateBoard(true);
+                tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+                tick(6 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+
+                // Then the animation should complete
+                expect(gameComponent.animationOngoing).toBeFalse();
             }));
 
             it('should feed the original house during animation', fakeAsync(async() => {
@@ -360,6 +382,21 @@ describe('KalahComponent', () => {
             // Then that normally-illegal move should be accepted
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
         }));
+
+        it('should create score minimax and MCTS AIs', () => {
+            // Given a Kalah component
+            const gameComponent: KalahComponent = mancalaTestUtils.testUtils.getGameComponent();
+
+            // When creating its AIs
+            const aiFactory: KalahAIFactory = gameComponent as unknown as KalahAIFactory;
+            const createAIs: KalahAIFactory['createAIs'] = aiFactory.createAIs.bind(gameComponent);
+            const ais: AI<MancalaMove, MancalaState, AIOptions, MancalaConfig>[] = createAIs(new KalahMoveGenerator());
+
+            // Then it should include the regular MCTS and the heuristic MCTS
+            expect(ais.length).toBe(3);
+            expect(ais[1]).toEqual(jasmine.any(MCTS));
+            expect(ais[2]).toEqual(jasmine.any(MCTSWithHeuristic));
+        });
 
         it('should hide capture of previous turn in opponent store (move)', fakeAsync(async() => {
             // Given a state where there has been a point-won last turn

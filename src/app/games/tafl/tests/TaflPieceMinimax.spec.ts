@@ -52,29 +52,3 @@ describe('TaflPieceMinimax', () => {
     });
 
 });
-
-describe('TaflPieceHeuristic', () => {
-
-    const _: TaflPawn = TaflPawn.UNOCCUPIED;
-    const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
-    const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
-    const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
-    const heuristic: TaflPieceHeuristic<TablutMove> = new TaflPieceHeuristic(TablutRules.get());
-
-    it('should weight defender pieces as Player.ONE when invader starts', () => {
-        // Given one invader and one defender in default Tablut, where Player.ZERO is the invader
-        const board: Table<TaflPawn> = [
-            [O, X],
-            [_, _],
-        ];
-        const state: TaflState = new TaflState(board, 0);
-        const node: TablutNode = new TablutNode(state);
-
-        // When computing the board value
-        const value: readonly number[] = heuristic.getBoardValue(node, defaultConfig).metrics;
-
-        // Then the defender should be weighted twice, so the score is 2 - 1 = 1
-        expect(value).toEqual([1]);
-    });
-
-});

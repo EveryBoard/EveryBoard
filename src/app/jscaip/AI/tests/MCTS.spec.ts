@@ -167,6 +167,20 @@ describe('MCTS', () => {
         expect(playerOneScore).toBe(0);
     });
 
+    it('should score finished games without using the heuristic', () => {
+        // Given an MCTS with heuristic
+        const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
+        const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const p4Mcts: TestMCTSWithHeuristic =
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), new ConstantP4Heuristic(10));
+
+        // When scoring a terminal status
+        const score: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ZERO_WON, Player.ZERO);
+
+        // Then it should delegate to the regular MCTS win score
+        expect(score).toBe(1);
+    });
+
     it('should select opponent children that are bad for the searched player', () => {
         // Given a node where it is Player.ONE's turn, with two already explored replies
         const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();

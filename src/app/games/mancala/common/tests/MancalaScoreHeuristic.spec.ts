@@ -6,10 +6,12 @@ import { HeuristicBounds } from '../../../../jscaip/AI/Minimax';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../../../jscaip/PlayerNumberTable';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
 import { MancalaConfig } from '../MancalaConfig';
+import { MancalaNode } from '../MancalaRules';
 import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
 import { MancalaState } from '../MancalaState';
 
@@ -54,5 +56,21 @@ describe('MancalaScoreHeuristic', () => {
 
     }
 
+    it('should return the score metrics', () => {
+        // Given a state with scores
+        const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
+        const board: number[][] = [
+            [0, 0, 0, 3, 2, 1],
+            [1, 2, 3, 0, 0, 0],
+        ];
+        const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(7, 5));
+        const node: MancalaNode = new MancalaNode(state);
+
+        // When computing the metrics
+        const metrics: PlayerNumberTable = heuristic.getMetrics(node, defaultConfig);
+
+        // Then they should match the current scores
+        expect(metrics).toEqual(PlayerNumberTable.ofSingle(7, 5));
+    });
 
 });

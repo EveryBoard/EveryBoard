@@ -195,4 +195,23 @@ describe('GameNode', () => {
 
     });
 
+    it('should expose children and cache values', () => {
+        // Given a node with one child
+        const root: MockNode = new MockNode(new GameStateMock(0));
+        const move: MoveMock = new MoveMock(1);
+        const child: MockNode = new MockNode(new GameStateMock(1), MGPOptional.of(root), MGPOptional.of(move));
+
+        // When adding a child and replacing a cached value
+        root.addChild(child);
+        root.setCache('key', 'initial');
+        root.setCache('key', 'replacement');
+
+        // Then child lookup and cache replacement should be reflected
+        expect(root.hasChildren()).toBeTrue();
+        expect(root.getChildren()).toEqual([child]);
+        expect(root.getChild(move).get()).toBe(child);
+        expect(root.getCache<string>('key').get()).toBe('replacement');
+        expect(root.getChild(new MoveMock(2)).isAbsent()).toBeTrue();
+    });
+
 });
