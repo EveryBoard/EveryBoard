@@ -1,13 +1,26 @@
-package auth
+package tests
 
 import (
 	"context"
 	"testing"
+	auth "github.com/EveryBoard/EveryBoard/internal/auth"
 )
+
+type FirebaseMockLocal struct {
+	documentToFetch map[string]any
+}
+
+func (f *FirebaseMockLocal) Initialize() error { return nil }
+func (f *FirebaseMockLocal) Fetch(ctx context.Context, coll, path string) (map[string]any, error) {
+	return f.documentToFetch, nil
+}
+func (f *FirebaseMockLocal) VerifyToken(ctx context.Context, token string) (string, error) {
+	return "user-id", nil
+}
 
 func TestFirebaseInitializeFailures(t *testing.T) {
 	t.Run("EmulatorMissingProjectID", func(t *testing.T) {
-		f := &Firebase{
+		f := &auth.Firebase{
 			UseEmulator: true,
 			ProjectID:   "",
 		}
@@ -18,7 +31,7 @@ func TestFirebaseInitializeFailures(t *testing.T) {
 	})
 
 	t.Run("NoEmulatorMissingServiceAccount", func(t *testing.T) {
-		f := &Firebase{
+		f := &auth.Firebase{
 			UseEmulator:        false,
 			ServiceAccountFile: "",
 		}
@@ -29,7 +42,7 @@ func TestFirebaseInitializeFailures(t *testing.T) {
 	})
 
 	t.Run("NoEmulatorInvalidServiceAccount", func(t *testing.T) {
-		f := &Firebase{
+		f := &auth.Firebase{
 			UseEmulator:        false,
 			ServiceAccountFile: "non-existent-file.json",
 		}
@@ -41,20 +54,20 @@ func TestFirebaseInitializeFailures(t *testing.T) {
 }
 
 func TestVerifyTokenEdgeCases(t *testing.T) {
-	f := &Firebase{
+	f := &auth.Firebase{
 		UseEmulator: true,
 		ProjectID:   "test-project",
 	}
 
 	t.Run("InvalidTokenFormat", func(t *testing.T) {
-		_, err := f.VerifyToken(nil, "invalid-token")
+		_, err := f.VerifyToken(t.Context(), "invalid-token")
 		if err == nil {
 			t.Fatal("expected error for invalid token format")
 		}
 	})
 
 	t.Run("InvalidPayloadEncoding", func(t *testing.T) {
-		_, err := f.VerifyToken(nil, "header.invalid_base64!.signature")
+		_, err := f.VerifyToken(t.Context(), "header.invalid_base64!.signature")
 		if err == nil {
 			t.Fatal("expected error for invalid payload encoding")
 		}
@@ -62,7 +75,7 @@ func TestVerifyTokenEdgeCases(t *testing.T) {
 
 	t.Run("InvalidPayloadJSON", func(t *testing.T) {
 		// "bm90LWpzb24K" is "not-json\n" in base64
-		_, err := f.VerifyToken(nil, "header.bm90LWpzb24K.signature")
+		_, err := f.VerifyToken(t.Context(), "header.bm90LWpzb24K.signature")
 		if err == nil {
 			t.Fatal("expected error for invalid payload JSON")
 		}
@@ -70,7 +83,7 @@ func TestVerifyTokenEdgeCases(t *testing.T) {
 
 	t.Run("MissingSubClaim", func(t *testing.T) {
 		// "e30K" is "{}\n" in base64
-		_, err := f.VerifyToken(nil, "header.e30K.signature")
+		_, err := f.VerifyToken(t.Context(), "header.e30K.signature")
 		if err == nil {
 			t.Fatal("expected error for missing 'sub' claim")
 		}
@@ -79,38 +92,25 @@ func TestVerifyTokenEdgeCases(t *testing.T) {
 
 func TestFetchUserDocumentEdgeCases(t *testing.T) {
 	t.Run("MissingUsername", func(t *testing.T) {
-		mock := &FirebaseMockLocal{
-			documentToFetch: map[string]interface{}{},
-		}
-		SetFirebaseClient(mock)
-		_, err := fetchUserDocument(context.Background(), "user1")
+		InitializeFirebaseForTest(t, &FirebaseMockLocal{
+			documentToFetch: map[string]any{},
+		})
+		_, err := auth.FetchUserDocument(t.Context(), "user1")
 		if err == nil {
 			t.Fatal("expected error for missing username")
 		}
 	})
 
 	t.Run("InvalidUsernameType", func(t *testing.T) {
-		mock := &FirebaseMockLocal{
-			documentToFetch: map[string]interface{}{
+		InitializeFirebaseForTest(t, &FirebaseMockLocal{
+			documentToFetch: map[string]any{
 				"username": 123,
 			},
-		}
-		SetFirebaseClient(mock)
-		_, err := fetchUserDocument(context.Background(), "user1")
+		})
+		_, err := auth.FetchUserDocument(context.Background(), "user1")
 		if err == nil {
 			t.Fatal("expected error for non-string username")
 		}
 	})
 }
 
-type FirebaseMockLocal struct {
-	documentToFetch map[string]interface{}
-}
-
-func (f *FirebaseMockLocal) Initialize() error { return nil }
-func (f *FirebaseMockLocal) Fetch(ctx context.Context, coll, path string) (map[string]interface{}, error) {
-	return f.documentToFetch, nil
-}
-func (f *FirebaseMockLocal) VerifyToken(ctx context.Context, token string) (string, error) {
-	return "user-id", nil
-}

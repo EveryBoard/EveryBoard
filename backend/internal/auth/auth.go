@@ -12,7 +12,7 @@ type User struct {
 	// User may have other fields, but we don't care about them
 }
 
-func fetchUserDocument(context context.Context, uid string) (*User, error) {
+func FetchUserDocument(context context.Context, uid string) (*User, error) {
 	doc, err := firebaseClient.Fetch(context, "users", uid)
 	if err != nil {
 		return nil, err
@@ -41,6 +41,6 @@ func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {
 		return "", nil, err
 	}
 
-	user, err := fetchUserDocument(r.Context(), uid)
+	user, err := FetchUserDocument(r.Context(), uid)
 	return uid, user, err
 }

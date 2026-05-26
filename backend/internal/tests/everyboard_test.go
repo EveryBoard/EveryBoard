@@ -18,20 +18,13 @@ import (
 	everyboard "github.com/EveryBoard/EveryBoard/internal"
 )
 
-func setenv(t *testing.T, variable string, value string) {
-	err := os.Setenv(variable, value)
-	if err != nil {
-		t.Fatalf("cannot set environment variable: %v", err)
-	}
-}
-
 func TestReadConfigurationSqliteWithoutDsn(t *testing.T) {
 	// Given a configuration with sqlite but no DSN
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
-	setenv(t, "ALLOW_ORIGIN", "*")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("ALLOW_ORIGIN", "*")
 	// When reading the configuration
 	config, err := everyboard.ReadConfiguration()
 	if err != nil {
@@ -50,12 +43,12 @@ func TestReadConfigurationSqliteWithoutDsn(t *testing.T) {
 func TestReadConfigurationSqliteWithDsn(t *testing.T) {
 	// Given a configuration with sqlite but no DSN
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
 	databaseName := "foo.db"
-	setenv(t, "DATABASE_DSN", databaseName)
-	setenv(t, "ALLOW_ORIGIN", "*")
+	t.Setenv("DATABASE_DSN", databaseName)
+	t.Setenv("ALLOW_ORIGIN", "*")
 	// When reading the configuration
 	config, err := everyboard.ReadConfiguration()
 	if err != nil {
@@ -74,10 +67,10 @@ func TestReadConfigurationSqliteWithDsn(t *testing.T) {
 func TestReadConfiguarationPostgresWithoutDsn(t *testing.T) {
 	// Given a configuration with postgres but no DSN
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "postgres")
-	setenv(t, "ALLOW_ORIGIN", "*")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "postgres")
+	t.Setenv("ALLOW_ORIGIN", "*")
 
 	// When reading the configuration
 	_, err := everyboard.ReadConfiguration()
@@ -90,12 +83,12 @@ func TestReadConfiguarationPostgresWithoutDsn(t *testing.T) {
 func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 	// Given a configuration with postgres but no DSN
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "postgres")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "postgres")
 	dsn := "postgresql://postgres:secret@localhost:5432/testdb?sslmode=disable"
-	setenv(t, "DATABASE_DSN", dsn)
-	setenv(t, "ALLOW_ORIGIN", "*")
+	t.Setenv("DATABASE_DSN", dsn)
+	t.Setenv("ALLOW_ORIGIN", "*")
 
 	// When reading the configuration
 	config, err := everyboard.ReadConfiguration()
@@ -115,9 +108,9 @@ func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 func TestReadConfigurationWithoutOrigin(t *testing.T) {
 	// Given a configuration without AllowOrigin
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
 	// When reading the configuration
 	_, err := everyboard.ReadConfiguration()
 	// Then it should fail
@@ -129,10 +122,10 @@ func TestReadConfigurationWithoutOrigin(t *testing.T) {
 func TestReadConfigurationWithOrigin(t *testing.T) {
 	// Given a configuration with AllowOrigin
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
-	setenv(t, "ALLOW_ORIGIN", "everyboard.org")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("ALLOW_ORIGIN", "everyboard.org")
 	// When reading the configuration
 	config, err := everyboard.ReadConfiguration()
 	if err != nil {
@@ -147,10 +140,10 @@ func TestReadConfigurationWithOrigin(t *testing.T) {
 func TestReadConfigurationWithoutListenAddr(t *testing.T) {
 	// Given a configuration without ListenAddr
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
-	setenv(t, "ALLOW_ORIGIN", "*")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("ALLOW_ORIGIN", "*")
 	// When reading the configuration
 	config, err := everyboard.ReadConfiguration()
 	if err != nil {
@@ -165,11 +158,11 @@ func TestReadConfigurationWithoutListenAddr(t *testing.T) {
 func TestReadConfigurationWithListenAddr(t *testing.T) {
 	// Given a configuration with ListenAddr
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
-	setenv(t, "ALLOW_ORIGIN", "*")
-	setenv(t, "LISTEN_ADDR", "localhost:1234")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("ALLOW_ORIGIN", "*")
+	t.Setenv("LISTEN_ADDR", "localhost:1234")
 	// When reading the configuration
 	config, err := everyboard.ReadConfiguration()
 	if err != nil {
@@ -223,11 +216,11 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 
 func PrepareServer(t *testing.T) (func(), *FakeStore, *everyboard.Configuration) {
 	os.Clearenv()
-	setenv(t, "USE_EMULATOR", "yes")
-	setenv(t, "PROJECT_ID", "my-project")
-	setenv(t, "DATABASE_TYPE", "sqlite")
-	setenv(t, "DATABASE_DSN", "file::memory:")
-	setenv(t, "ALLOW_ORIGIN", "*")
+	t.Setenv("USE_EMULATOR", "yes")
+	t.Setenv("PROJECT_ID", "my-project")
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("DATABASE_DSN", "file::memory:")
+	t.Setenv("ALLOW_ORIGIN", "*")
 	config, err := everyboard.ReadConfiguration()
 	if err != nil {
 		t.Fatalf("error when reading the configuration: %v", err)

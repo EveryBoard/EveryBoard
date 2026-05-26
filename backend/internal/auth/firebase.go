@@ -83,7 +83,7 @@ func (f *Firebase) Initialize() error {
 			return fmt.Errorf("cannot initialize firebase with emulator: %v", err)
 		}
 	} else {
-		opts := option.WithCredentialsFile(f.ServiceAccountFile)
+		opts := option.WithAuthCredentialsFile(option.ServiceAccount, f.ServiceAccountFile)
 		app, err = firebase.NewApp(context.Background(), nil, opts)
 		if err != nil {
 			return fmt.Errorf("cannot connect to firebase: %v", err)

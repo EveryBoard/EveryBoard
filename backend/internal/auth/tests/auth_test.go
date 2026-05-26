@@ -1,4 +1,4 @@
-package auth
+package tests
 
 import (
 	"bytes"
@@ -14,7 +14,8 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/auth"
 )
 
-func InitializeFirebase(t *testing.T, f auth.FirebaseLike) {
+func InitializeFirebaseForTest(t *testing.T, f auth.FirebaseLike) {
+	t.Helper()
 	auth.SetFirebaseClient(f)
 	err := auth.InitFirebase()
 	if err != nil {
@@ -27,7 +28,7 @@ type FirebaseMock struct {
 	errorOnTokenVerification    bool
 	uidToReturnUponVerification string
 	errorOnFetch                bool
-	documentToFetch             map[string]interface{}
+	documentToFetch             map[string]any
 }
 
 func (f FirebaseMock) Initialize() error {
@@ -37,7 +38,7 @@ func (f FirebaseMock) Initialize() error {
 	return nil
 }
 
-func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]interface{}, error) {
+func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
 	if f.errorOnFetch {
 		return nil, fmt.Errorf("firebase fetch error")
 	}
@@ -52,7 +53,7 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 }
 
 func TestVerificationOfInvalidToken(t *testing.T) {
-	InitializeFirebase(t, &FirebaseMock{
+	InitializeFirebaseForTest(t, &FirebaseMock{
 		errorOnInitialization:    false,
 		errorOnTokenVerification: true,
 		errorOnFetch:             false,
@@ -84,7 +85,7 @@ func TestVerificationOfInvalidToken(t *testing.T) {
 
 func TestVerifiedTokenButNoUser(t *testing.T) {
 	// Given a user that can't be fetched
-	InitializeFirebase(t, &FirebaseMock{
+	InitializeFirebaseForTest(t, &FirebaseMock{
 		errorOnInitialization:       false,
 		errorOnTokenVerification:    false,
 		uidToReturnUponVerification: "foo",
@@ -105,12 +106,12 @@ func TestVerifiedTokenButNoUser(t *testing.T) {
 
 func TestTokenVerificationHappyFlow(t *testing.T) {
 	// Given a user that will be verified and fetched
-	InitializeFirebase(t, &FirebaseMock{
+	InitializeFirebaseForTest(t, &FirebaseMock{
 		errorOnInitialization:       false,
 		errorOnTokenVerification:    false,
 		uidToReturnUponVerification: "foo-uid",
 		errorOnFetch:                false,
-		documentToFetch: map[string]interface{}{
+		documentToFetch: map[string]any{
 			"username": "foo",
 		},
 	})
@@ -143,34 +144,46 @@ func waitForPort(address string, timeout time.Duration) error {
 	return &net.OpError{Op: "dial", Net: "tcp", Err: os.ErrDeadlineExceeded}
 }
 
-func startFirebaseEmulator(t *testing.T) *exec.Cmd {
+func startFirebaseEmulator(t *testing.T) {
 	cmd := exec.Command("npx", "firebase", "emulators:start", "--only", "firestore,auth", "--project", "my-project")
 	err := cmd.Start()
 	if err != nil {
 		t.Fatalf("failed to start Firebase emulator: %v", err)
 	}
 
+	t.Cleanup(func() {
+  		if cmd.Process == nil {
+  			return
+  		}
+
+  		_ = cmd.Process.Signal(os.Interrupt)
+
+  		done := make(chan error, 1)
+  		go func() {
+  			done <- cmd.Wait()
+  		}()
+
+  		select {
+  		case <-done:
+  		case <-time.After(5 * time.Second):
+  			_ = cmd.Process.Kill()
+  			<-done
+  		}
+  	})
+
 	err = waitForPort("127.0.0.1:9099", 30*time.Second)
 	if err != nil {
 		t.Fatalf("failed to wait for Firebase emulator to start: %v", err)
 	}
 
-	err = os.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
-	if err != nil {
-		t.Fatalf("Cannot set environment variable?! %v", err)
-	}
-	err = os.Setenv("FIREBASE_AUTH_EMULATOR_HOST", "localhost:9099")
-	if err != nil {
-		t.Fatalf("Cannot set environment variable?! %v", err)
-	}
-	return cmd
+	t.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
+	t.Setenv("FIREBASE_AUTH_EMULATOR_HOST", "localhost:9099")
 }
 
 func TestTokenVerificationWithEmulator(t *testing.T) {
 	// Given the emulator
-	cmd := startFirebaseEmulator(t)
-	defer cmd.Process.Signal(os.Interrupt) // close down the emulator at the end of this test
-	InitializeFirebase(t, &auth.Firebase{
+	startFirebaseEmulator(t)
+	InitializeFirebaseForTest(t, &auth.Firebase{
 		UseEmulator: true,
 		ProjectID:   "my-project",
 	})
@@ -271,7 +284,7 @@ func tokenVerificationShouldSucceedWithValidTokenAndUser(t *testing.T, req *http
 	// Token is well-formed and user exists in firestore
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJ1c2VyLWlkIn0K.")
 	addUser(t, "user-id", "foo")
-	// When verifying its token and retrieving the user, but there is no user in the db
+	// When verifying its token and retrieving the user
 	uid, user, err := auth.VerifyTokenAndGetUser(req)
 
 	if err != nil {
