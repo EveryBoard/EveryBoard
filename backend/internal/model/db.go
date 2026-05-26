@@ -6,6 +6,7 @@ import (
 
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 	"gorm.io/gorm/logger"
 )
 
@@ -148,14 +149,17 @@ func (s *GORMStore) DeleteConfigRoom(configRoom *ConfigRoom) error {
 }
 
 func (s *GORMStore) SelectOpponent(configRoom *ConfigRoom, opponent MinimalUser) error {
-	var candidateElo float64
-	result := s.db.Model(&Candidate{}).
-		Select("elo").
+	var candidate Candidate
+	result := s.db.
 		Where("game_id = ? AND user_id = ?", configRoom.ID, opponent.ID).
-		Scan(&candidateElo)
+		First(&candidate)
+	if errors.Is(result.Error, gorm.ErrRecordNotFound) {
+		return ErrorNotAllowed
+	}
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
 	}
+	candidateElo := candidate.Elo
 	result = s.db.Model(&ConfigRoom{}).Where("id = ?", configRoom.ID).Updates(ConfigRoom{ChosenOpponent: &opponent, ChosenOpponentElo: &candidateElo})
 	if result.Error != nil {
 		return wrapError("SelectOpponent", result.Error)
@@ -378,9 +382,16 @@ func (s *GORMStore) ApplyToGameEvents(gameId GameID, action func(*GameEvent) err
 }
 
 func (s *GORMStore) GetElo(gameName string, user MinimalUser) (*Elo, error) {
-	var entry Elo
-	result := s.db.Where("user_id = ? AND game_name = ?", user.ID, gameName).
-		FirstOrCreate(&entry, Elo{UserID: user.ID, UserName: user.Name, GameName: gameName})
+	entry := Elo{UserID: user.ID, UserName: user.Name, GameName: gameName}
+	result := s.db.Clauses(clause.OnConflict{
+		Columns:   []clause.Column{{Name: "user_id"}, {Name: "game_name"}},
+		DoNothing: true,
+	}).Create(&entry)
+	if result.Error != nil {
+		return nil, wrapError("GetElo", result.Error)
+	}
+
+	result = s.db.Where("user_id = ? AND game_name = ?", user.ID, gameName).First(&entry)
 	return &entry, wrapError("GetElo", result.Error)
 }
 
@@ -433,7 +444,22 @@ func (s *GORMStore) SetCurrentGame(currentGame *CurrentGame) error {
 // Update the current game of an user. Different from SetCurrentGame which sets
 // it initially, here we change e.g., the opponent displayed
 func (s *GORMStore) UpdateCurrentGame(user MinimalUser, currentGame *CurrentGame) error {
-	result := s.db.Model(&CurrentGame{}).Where("user_id = ?", user.ID).Updates(currentGame)
+	var opponentID any
+	var opponentName any
+	if currentGame.Opponent != nil {
+		opponentID = currentGame.Opponent.ID
+		opponentName = currentGame.Opponent.Name
+	}
+	result := s.db.Model(&CurrentGame{}).Where("user_id = ?", user.ID).Updates(map[string]any{
+		"user_name":     currentGame.UserName,
+		"game_id":       currentGame.GameID,
+		"game_name":     currentGame.GameName,
+		"creator_id":    currentGame.Creator.ID,
+		"creator_name":  currentGame.Creator.Name,
+		"opponent_id":   opponentID,
+		"opponent_name": opponentName,
+		"role":          currentGame.Role,
+	})
 	return wrapError("UpdateCurrentGame", result.Error)
 }
 

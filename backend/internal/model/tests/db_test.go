@@ -3,6 +3,7 @@ package model
 import (
 	"bytes"
 	"encoding/json"
+	"sync"
 	"testing"
 
 	"gorm.io/driver/sqlite"
@@ -170,6 +171,35 @@ func TestConfigRoomFlow(t *testing.T) {
 	}
 	if configRoom != nil {
 		t.Fatalf("config room still exists but should not, got %v", configRoom)
+	}
+}
+
+func TestSelectOpponentRequiresCandidate(t *testing.T) {
+	// Given a config room with no candidates
+	store, err := model.InitDatabase(sqlite.Open(":memory:"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
+	creator := model.MinimalUser{ID: "foo", Name: "foo"}
+	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
+	configRoom, err := store.CreateConfigRoom(creator, "Go")
+	if err != nil {
+		t.Fatalf("cannot create config room: %v", err)
+	}
+
+	// When selecting an opponent that never joined as a candidate
+	err = store.SelectOpponent(configRoom, opponent)
+
+	// Then it should fail and leave the config room without an opponent
+	if err == nil {
+		t.Fatalf("selecting a missing candidate should fail")
+	}
+	configRoom, err = store.GetConfigRoom(configRoom.ID)
+	if err != nil {
+		t.Fatalf("cannot re-get config room: %v", err)
+	}
+	if configRoom.ChosenOpponent != nil {
+		t.Fatalf("missing candidate was selected as opponent: %v", configRoom.ChosenOpponent)
 	}
 }
 
@@ -655,6 +685,50 @@ func TestGetEloEmptyDB(t *testing.T) {
 	}
 }
 
+func TestGetEloConcurrentFirstCreate(t *testing.T) {
+	// Given a db with no Elo for a user yet
+	store, err := model.InitDatabase(sqlite.Open("file:elo_concurrency?mode=memory&cache=shared&_busy_timeout=5000"))
+	if err != nil {
+		t.Fatalf("cannot initialize db: %v", err)
+	}
+	user := model.MinimalUser{ID: "foo", Name: "foo"}
+	gameName := "Go"
+
+	// When several goroutines create the same Elo concurrently
+	const numGoroutines = 50
+	var wg sync.WaitGroup
+	wg.Add(numGoroutines)
+	errs := make(chan error, numGoroutines)
+	start := make(chan struct{})
+	for i := 0; i < numGoroutines; i++ {
+		go func() {
+			defer wg.Done()
+			<-start
+			_, err := store.GetElo(gameName, user)
+			errs <- err
+		}()
+	}
+	close(start)
+	wg.Wait()
+	close(errs)
+
+	// Then every caller should succeed and exactly one row should exist
+	for err := range errs {
+		if err != nil {
+			t.Fatalf("concurrent GetElo failed: %v", err)
+		}
+	}
+	var count int64
+	if err := store.DB().Model(&model.Elo{}).
+		Where("user_id = ? AND game_name = ?", user.ID, gameName).
+		Count(&count).Error; err != nil {
+		t.Fatalf("cannot count Elo rows: %v", err)
+	}
+	if count != 1 {
+		t.Fatalf("expected exactly one Elo row, got %d", count)
+	}
+}
+
 func TestUpdateElos(t *testing.T) {
 	// Given a db with some Elo
 	store, err := model.InitDatabase(sqlite.Open(":memory:"))
@@ -812,6 +886,22 @@ func TestUpdateCurrentGame(t *testing.T) {
 		currentGame.Opponent.ID != opponent.ID ||
 		currentGame.Role != role {
 		t.Fatalf("invalid current game in db: %v", currentGame)
+	}
+
+	// When clearing the opponent again
+	currentGame.Opponent = nil
+	err = store.UpdateCurrentGame(user, currentGame)
+	if err != nil {
+		t.Fatalf("error when clearing current game opponent: %v", err)
+	}
+
+	// Then the nullable opponent columns should be cleared in the DB
+	currentGame, err = store.GetCurrentGame(user)
+	if err != nil {
+		t.Fatalf("error when getting current game: %v", err)
+	}
+	if currentGame == nil || currentGame.Opponent != nil {
+		t.Fatalf("current game opponent should have been cleared: %v", currentGame)
 	}
 }
 
