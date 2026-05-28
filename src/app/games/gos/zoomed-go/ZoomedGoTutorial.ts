@@ -29,9 +29,14 @@ export class ZoomedGoTutorial extends Tutorial {
             $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call "layer" or "zoom"`,
             ZoomedGoRules.get().getInitialState(defaultConfig),
         ),
+        TutorialStep.informational(
+            $localize`Why are there multiple boards?`,
+            $localize`In Zoomed Go, the different boards are only visual aids.<br/><br/>There is still only one game board and one move to play each turn.<br/><br/>The additional boards simply help visualize interactions at different distances:<ul><li>The biggest board: Zoom 1, shows the usual Go connections (distance 1).</li><li>The 4 next boards: Zoom 2, shows additional interactions at distance 2.</li><li>The next 9 nexts boards: Zoom 3, shows additional interactions at distance 3.</li><li>It can be configured to go further if you want more challenges, or you could start with a Zoom 2, it's already enough challenge</li></ul>Every move is played on the same intersection on all boards at once. The extra boards do not add new pieces or new decisions, they only help understand the extended liberties.`,
+            ZoomedGoRules.get().getInitialState(defaultConfig),
+        ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`The same way an isolated stone can be captured by its 4 neighboring intersections, with Zoomed Go you can capture it with its four "neighboring intersection" that are at a distance of two.<br/><br/> You're playing Dark. The light piece on the board only has one liberty left in Zoom 2, play there.`,
+            $localize`In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.<br/><br/>You are playing Dark. Do a capture.`,
             new GoState([
                 [_, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _],
@@ -46,17 +51,11 @@ export class ZoomedGoTutorial extends Tutorial {
             $localize`Failed, try again by playing on one of the intersections directly next to the light stone.`,
         ),
         TutorialStep.informational(
-            $localize`Extended liberties (zoom 2)`,
-            $localize`In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.`,
-            new GoState([
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, O, _, X, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-                [_, _, _, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
+            $localize`End of the game`,
+            $localize`The end of the game works exactly like in regular Go.<br/><br/>
+            When both players pass consecutively, the game ends and territory is counted normally.<br/><br/>
+            The only difference in Zoomed Go is how stones connect and how liberties are counted during play.`,
+            ZoomedGoRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.informational(
             $localize`Distance-2 capture`,
