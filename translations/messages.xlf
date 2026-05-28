@@ -332,6 +332,9 @@
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
+      <trans-unit id="5280175192994998668" datatype="html">
+        <source>A multi-layered remix of the Go Game!</source>
+      </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
       </trans-unit>
@@ -460,6 +463,9 @@
       </trans-unit>
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
+      </trans-unit>
+      <trans-unit id="9017157884114080234" datatype="html">
+        <source>Zoomed Go</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -869,14 +875,14 @@
       <trans-unit id="4053624367526659457" datatype="html">
         <source>Number of pieces rows</source>
       </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
       </trans-unit>
       <trans-unit id="4231579860680569680" datatype="html">
         <source>There is no such configuration element</source>
-      </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
@@ -1813,6 +1819,9 @@
       <trans-unit id="287623417167941506" datatype="html">
         <source>Handicap</source>
       </trans-unit>
+      <trans-unit id="6421460271971606186" datatype="html">
+        <source>Zoom</source>
+      </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
       </trans-unit>
@@ -1961,6 +1970,60 @@
       </trans-unit>
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
+      </trans-unit>
+      <trans-unit id="1857127553160075909" datatype="html">
+        <source>Zoom 3 (medium)</source>
+      </trans-unit>
+      <trans-unit id="4277978951212904875" datatype="html">
+        <source>Zoom 2 (small)</source>
+      </trans-unit>
+      <trans-unit id="7311423676604503997" datatype="html">
+        <source>Zoom 2 (medium)</source>
+      </trans-unit>
+      <trans-unit id="4295480671452895468" datatype="html">
+        <source>Zoom 2 (large)</source>
+      </trans-unit>
+      <trans-unit id="133468435047863204" datatype="html">
+        <source>Zoom 3 (small)</source>
+      </trans-unit>
+      <trans-unit id="4413953239414926035" datatype="html">
+        <source>Zoom 3 (large)</source>
+      </trans-unit>
+      <trans-unit id="8084014192904533918" datatype="html">
+        <source>Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call &quot;layer&quot; or &quot;zoom&quot;</source>
+      </trans-unit>
+      <trans-unit id="1156471984105960364" datatype="html">
+        <source>The same way an isolated stone can be captured by its 4 neighboring intersections, you with Zoomed Go you can capture it with its four &quot;neighboring intersection&quot; that are at a distance of two.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark. The light piece on the board only has one liberty left, play there.</source>
+      </trans-unit>
+      <trans-unit id="4216722774341232626" datatype="html">
+        <source>Extended liberties (zoom 2)</source>
+      </trans-unit>
+      <trans-unit id="5831803221635783715" datatype="html">
+        <source>In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.</source>
+      </trans-unit>
+      <trans-unit id="5769798792711453761" datatype="html">
+        <source>Distance-2 capture</source>
+      </trans-unit>
+      <trans-unit id="9060588445783861113" datatype="html">
+        <source>Here, the Light stones are not directly adjacent to the Dark stone. However, because the game is played with zoom level 2, the three Light stones still remove liberties from the Dark stone. The Dark stone only has one liberty left and is therefore capturable.</source>
+      </trans-unit>
+      <trans-unit id="261671265885677140" datatype="html">
+        <source>Capture at distance 2</source>
+      </trans-unit>
+      <trans-unit id="4532106069499119312" datatype="html">
+        <source>You&apos;re playing Light. In this variant, the Dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.</source>
+      </trans-unit>
+      <trans-unit id="4721508449983577172" datatype="html">
+        <source>Congratulations, the Dark stone has been captured from a distance.</source>
+      </trans-unit>
+      <trans-unit id="5050189966653599623" datatype="html">
+        <source>Failed, try again by playing on the last liberty of the Dark stone.</source>
+      </trans-unit>
+      <trans-unit id="6609145753194079647" datatype="html">
+        <source>Extended eyes</source>
+      </trans-unit>
+      <trans-unit id="8278092448434944265" datatype="html">
+        <source>Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable in this variant.</source>
       </trans-unit>
       <trans-unit id="69616505141416052" datatype="html">
         <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>

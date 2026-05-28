@@ -410,6 +410,10 @@
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
       </trans-unit>
+      <trans-unit id="5280175192994998668" datatype="html">
+        <source>A multi-layered remix of the Go Game!</source>
+        <target>Un remix du jeu de Go avec plusieurs couches !</target>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
         <target>Cette valeur est obligatoire</target>
@@ -485,6 +489,10 @@
       <trans-unit id="287623417167941506" datatype="html">
         <source>Handicap</source>
         <target>Handicap</target>
+      </trans-unit>
+      <trans-unit id="6421460271971606186" datatype="html">
+        <source>Zoom</source>
+        <target>Zoom</target>
       </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
@@ -660,6 +668,10 @@
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
         <target>Go Hexagonal</target>
+      </trans-unit>
+      <trans-unit id="9017157884114080234" datatype="html">
+        <source>Zoomed Go</source>
+        <target>Zoom Go</target>
       </trans-unit>
       <trans-unit id="1760292529513431093" datatype="html">
         <source>Trexo</source>
@@ -2679,6 +2691,34 @@
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
         <target>Étant donné que le plateau est trianguliare, les groupes de deux pièces n'ont qu'une liberté en plus (faisant d'un atari un shisho par défaut).</target>
+      </trans-unit>
+      <trans-unit id="1857127553160075909" datatype="html">
+        <source>Zoom 3 (medium)</source>
+        <target>Zoom 3 (moyen)</target>
+      </trans-unit>
+      <trans-unit id="4277978951212904875" datatype="html">
+        <source>Zoom 2 (small)</source>
+        <target>Zoom 2 (petit)</target>
+      </trans-unit>
+      <trans-unit id="7311423676604503997" datatype="html">
+        <source>Zoom 2 (medium)</source>
+        <target>Zoom 2 (moyen)</target>
+      </trans-unit>
+      <trans-unit id="4295480671452895468" datatype="html">
+        <source>Zoom 2 (large)</source>
+        <target>Zoom 2 (grand)</target>
+      </trans-unit>
+      <trans-unit id="133468435047863204" datatype="html">
+        <source>Zoom 3 (small)</source>
+        <target>Zoom 3 (petit)</target>
+      </trans-unit>
+      <trans-unit id="4413953239414926035" datatype="html">
+        <source>Zoom 3 (large)</source>
+        <target>Zoom 3 (grand)</target>
+      </trans-unit>
+      <trans-unit id="8084014192904533918" datatype="html">
+        <source>Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call &quot;layer&quot; or &quot;zoom&quot;</source>
+        <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Laissez nous vous expliquer ce qu'on veux dire par &quot;couche&quot; ou &quot;zoom&quot;</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
