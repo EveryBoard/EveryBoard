@@ -7,7 +7,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
-import { NoConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { KamisadoBoard } from './KamisadoBoard';
@@ -177,7 +177,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoState> {
     }
 
     // Apply the move by only relying on tryMove
-    public override applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: NoConfig, _info: void)
+    public override applyLegalMove(move: KamisadoMove, state: KamisadoState, _config: EmptyRulesConfig, _info: void)
     : KamisadoState
     {
         if (KamisadoMove.isPiece(move)) {

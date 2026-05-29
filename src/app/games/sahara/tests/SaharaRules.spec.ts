@@ -2,7 +2,7 @@
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -19,7 +19,7 @@ describe('SaharaRules', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
 
     let rules: SaharaRules;
-    const defaultConfig: NoConfig = SaharaRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = SaharaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = SaharaRules.get();

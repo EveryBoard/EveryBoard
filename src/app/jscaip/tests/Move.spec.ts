@@ -1,4 +1,4 @@
-import { Encoder, MGPOptional } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { MoveGenerator } from '../AI/AI';
@@ -17,10 +17,10 @@ export class MoveTestUtils {
         rules: SuperRules<M, S, C, L>,
         generator: MoveGenerator<M, S, C>,
         encoder: Encoder<M>,
-        nullableConfig?: MGPOptional<C>,
+        nullableConfig?: C,
     ): void
     {
-        let config: MGPOptional<C> = rules.getDefaultRulesConfig();
+        let config: C = rules.getDefaultRulesConfig();
         if (nullableConfig !== undefined) {
             config = nullableConfig;
         }

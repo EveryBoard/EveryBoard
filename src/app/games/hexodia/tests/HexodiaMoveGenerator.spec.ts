@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
@@ -16,7 +14,7 @@ describe('HexodiaMoveGenerator', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
 
-    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new HexodiaMoveGenerator();

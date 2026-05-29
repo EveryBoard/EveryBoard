@@ -5,7 +5,7 @@ import { Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
@@ -19,7 +19,7 @@ import { DvonnState } from '../DvonnState';
 describe('DvonnRules', () => {
 
     let rules: DvonnRules;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;

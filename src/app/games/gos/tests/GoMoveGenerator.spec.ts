@@ -25,11 +25,11 @@ describe('GoMoveGenerator', () => {
 
     let moveGenerator: AbstractGoMoveGenerator<RulesConfig>;
 
-    const config: MGPOptional<GoConfig> = MGPOptional.of({
+    const config: GoConfig = {
         width: 5,
         height: 5,
         handicap: 0,
-    });
+    };
 
     beforeEach(() => {
         moveGenerator = new GoMoveGenerator();

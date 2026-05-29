@@ -24,7 +24,7 @@ export abstract class SuperRules<M extends Move,
      * the remaining piece that you can put on the board...
      */
 
-    public choose(node: GameNode<M, S>, move: M, config: MGPOptional<C>) : MGPFallible<GameNode<M, S>> {
+    public choose(node: GameNode<M, S>, move: M, config: C) : MGPFallible<GameNode<M, S>> {
         /**
          * used by the rules to update board
          * return true if the move was legal, and the node updated
@@ -53,33 +53,29 @@ export abstract class SuperRules<M extends Move,
     /**
      * Applies a legal move, given the precomputed information `info`
      */
-    public abstract applyLegalMove(move: M, state: S, config: MGPOptional<C>, info: L): S;
+    public abstract applyLegalMove(move: M, state: S, config: C, info: L): S;
 
     /**
      * Returns success if the move is legal, with some potentially precomputed data.
      * If the move is illegal, returns a failure with information on why it is illegal
      */
-    public abstract isLegal(move: M, state: S, config: MGPOptional<C>): MGPFallible<L>;
+    public abstract isLegal(move: M, state: S, config: C): MGPFallible<L>;
 
-    public abstract getInitialState(config: MGPOptional<C>): S;
+    public abstract getInitialState(config: C): S;
 
-    public getInitialNode(config: MGPOptional<C>): GameNode<M, S> {
+    public getInitialNode(config: C): GameNode<M, S> {
         const initialState: S = this.getInitialState(config);
         return new GameNode(initialState);
     }
 
-    public abstract getRulesConfigDescription(): MGPOptional<RulesConfigDescription<C>>;
+    public abstract getRulesConfigDescription(): RulesConfigDescription<C>;
 
-    public getDefaultRulesConfig(): MGPOptional<C> {
-        const rulesConfigDescription: MGPOptional<RulesConfigDescription<C>> = this.getRulesConfigDescription();
-        if (rulesConfigDescription.isPresent()) {
-            return MGPOptional.of(rulesConfigDescription.get().getDefaultConfig().config);
-        } else {
-            return MGPOptional.empty();
-        }
+    public getDefaultRulesConfig(): C {
+        const rulesConfigDescription: RulesConfigDescription<C> = this.getRulesConfigDescription();
+        return rulesConfigDescription.getDefaultConfig().config;
     }
 
-    public abstract getGameStatus(node: GameNode<M, S>, config: MGPOptional<C>): GameStatus;
+    public abstract getGameStatus(node: GameNode<M, S>, config: C): GameStatus;
 }
 
 export abstract class ConfigurableRules<M extends Move,
@@ -96,8 +92,8 @@ export abstract class Rules<M extends Move,
     extends SuperRules<M, S, EmptyRulesConfig, L>
 {
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription> {
-        return MGPOptional.empty();
+    public override getRulesConfigDescription(): RulesConfigDescription {
+        return RulesConfigDescription.EMPTY;
     }
 
 }

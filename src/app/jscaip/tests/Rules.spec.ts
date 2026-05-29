@@ -1,14 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { JSONValue, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { P4Move } from '../../games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { GameStatus } from '../GameStatus';
 import { Rules } from '../Rules';
-import { NoConfig, RulesConfig } from '../RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameStateWithTable } from '../state/GameStateWithTable';
-
-import { RulesUtils } from './RulesUtils.spec';
 
 class AbstractState extends GameStateWithTable<number> {}
 
@@ -29,13 +27,13 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
         super();
     }
 
-    public override getInitialState(_config: MGPOptional<RulesConfig>): AbstractState {
+    public override getInitialState(_config: RulesConfig): AbstractState {
         return new AbstractState([[]], 0);
     }
 
     public override applyLegalMove(move: P4Move,
                                    state: AbstractState,
-                                   _config: MGPOptional<RulesConfig>,
+                                   _config: RulesConfig,
                                    _legality: void)
     : AbstractState
     {
@@ -56,7 +54,7 @@ class AbstractRules extends Rules<P4Move, AbstractState> {
 describe('Rules', () => {
 
     let rules: AbstractRules;
-    const defaultConfig: NoConfig = AbstractRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = AbstractRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = AbstractRules.get();
@@ -73,23 +71,6 @@ describe('Rules', () => {
         // Then the node should be created and chosen
         expect(resultingNode.isSuccess()).toBeTrue();
         expect(resultingNode.get().gameState.turn).toBe(1);
-    });
-
-    it('should allow dev to go back to specific starting board based on encodedMoveList', () => {
-        // Given an initial list of encoded moves and an initial state
-        const initialState: AbstractState = AbstractRules.get().getInitialState(MGPOptional.empty());
-        const moveValues: number[] = [0, 1, 2, 3];
-        const encodedMoveList: JSONValue[] = moveValues.map((n: number) => P4Move.encoder.encode(P4Move.of(n)));
-
-        // When calling applyMoves
-        const state: AbstractState = RulesUtils.applyMoves(rules,
-                                                           encodedMoveList,
-                                                           initialState,
-                                                           P4Move.encoder.decode);
-
-        // Then last move should be the last one encoded and state should be adapted
-        expect(state.board).toEqual([moveValues]);
-        expect(state.turn).toBe(4);
     });
 
     describe('choose', () => {

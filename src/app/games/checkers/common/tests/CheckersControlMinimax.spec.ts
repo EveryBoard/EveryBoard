@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
@@ -19,7 +17,7 @@ for (const rule of rules) {
 
         const minimax: CheckersControlMinimax = new CheckersControlMinimax(rule);
         const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-        const defaultConfig: MGPOptional<CheckersConfig> = rule.getDefaultRulesConfig();
+        const defaultConfig: CheckersConfig = rule.getDefaultRulesConfig();
 
         SlowTest.it('should be able play against itself', () => {
             minimaxTest({

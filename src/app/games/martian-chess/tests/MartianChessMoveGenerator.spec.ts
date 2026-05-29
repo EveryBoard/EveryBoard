@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
@@ -18,7 +18,7 @@ describe('MartianChessMoveGenerator', () => {
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
     let moveGenerator: MartianChessMoveGenerator;
-    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     function isPawnMove(move: MartianChessMove, state: MartianChessState): boolean {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.PAWN;

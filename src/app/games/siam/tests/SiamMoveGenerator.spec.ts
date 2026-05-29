@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { Table } from '../../../jscaip/TableUtils';
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
@@ -21,7 +19,7 @@ describe('SiamMoveGenerator', () => {
 
     let moveGenerator: SiamMoveGenerator;
     const rules: SiamRules = SiamRules.get();
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();

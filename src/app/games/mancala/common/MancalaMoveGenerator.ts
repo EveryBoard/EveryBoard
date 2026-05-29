@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 
@@ -13,7 +13,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         super();
     }
 
-    public override getListMoves(node: MancalaNode, config: MGPOptional<MancalaConfig>): MancalaMove[] {
+    public override getListMoves(node: MancalaNode, config: MancalaConfig): MancalaMove[] {
         const moves: MancalaMove[] = [];
         const state: MancalaState = node.gameState;
         const playerY: number = state.getCurrentPlayerY();
@@ -21,8 +21,8 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
             if (state.getPieceAtXY(x, playerY) > 0) {
                 // if the house is not empty
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(x));
-                if (config.get().mustContinueDistributionAfterStore) {
-                    moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config.get()));
+                if (config.mustContinueDistributionAfterStore) {
+                    moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config));
                 } else {
                     const legality: MGPValidation = this.rules.isLegal(move, state, config);
                     if (legality.isSuccess()) {

@@ -17,7 +17,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneScoreHeuristic', () => {
 
     let heuristic: AbaloneScoreHeuristic;
-    const defaultConfig: MGPOptional<AbaloneConfig> = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: AbaloneConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new AbaloneScoreHeuristic();

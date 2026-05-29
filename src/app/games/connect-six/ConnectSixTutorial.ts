@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
@@ -13,7 +11,7 @@ import { ConnectSixState } from './ConnectSixState';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
-const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
+const defaultConfig: GobanConfig = ConnectSixRules.get().getDefaultRulesConfig();
 
 export class ConnectSixTutorial extends Tutorial {
 

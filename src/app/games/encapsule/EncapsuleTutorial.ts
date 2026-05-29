@@ -1,4 +1,4 @@
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
@@ -25,7 +25,7 @@ const B: EncapsuleSpace = _.put(bigLight);
 
 const Sm: EncapsuleSpace = _.put(smallLight).put(mediumDark);
 const sm: EncapsuleSpace = _.put(smallDark).put(mediumDark);
-const defaultConfig: MGPOptional<EncapsuleConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();
 const noMorePieces: EncapsuleRemainingPieces =
     PlayerMap.ofValues(new EncapsuleSizeToNumberMap(), new EncapsuleSizeToNumberMap());
 

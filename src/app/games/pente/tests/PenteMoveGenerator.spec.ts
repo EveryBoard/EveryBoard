@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { PenteConfig } from '../PenteConfig';
 import { PenteMove } from '../PenteMove';
 import { PenteMoveGenerator } from '../PenteMoveGenerator';
@@ -9,7 +7,7 @@ import { PenteNode, PenteRules } from '../PenteRules';
 describe('PenteMoveGenerator', () => {
 
     let moveGenerator: PenteMoveGenerator;
-    const defaultConfig: MGPOptional<PenteConfig> = PenteRules.get().getDefaultRulesConfig();
+    const defaultConfig: PenteConfig = PenteRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new PenteMoveGenerator();

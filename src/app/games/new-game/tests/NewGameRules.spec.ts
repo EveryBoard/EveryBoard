@@ -1,4 +1,4 @@
-import { NoConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
@@ -10,7 +10,7 @@ import { NewGameState } from '../NewGameState';
 describe('NewGameRules', () => {
 
     let rules: NewGameRules;
-    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         // This is the rules instance that we will test

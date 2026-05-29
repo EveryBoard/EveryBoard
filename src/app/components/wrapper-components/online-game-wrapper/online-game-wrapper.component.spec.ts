@@ -3,8 +3,6 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick, discardPeriodicTasks } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { MGPOptional } from '@everyboard/lib';
-
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { GameMocks } from '../../../domain/GameMocks.spec';
@@ -77,12 +75,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         if (accepted) {
             await startGame();
         } else {
-            configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.getInitial(MGPOptional.of(config)));
+            configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.getInitial(config));
         }
     }
 
     async function startGame(): Promise<void> {
-        configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withAcceptedConfig(MGPOptional.of(config)));
+        configRoomService.mockConfigRoomUpdate(ConfigRoomMocks.withAcceptedConfig(config));
         testUtils.detectChanges();
         tick(2);
         testUtils.detectChanges();
@@ -102,7 +100,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     async function finishTest(): Promise<void> {
         testUtils.detectChanges();
-        tick(ConfigRoomMocks.getInitial(MGPOptional.empty()).moveDuration * 1000);
+        tick(ConfigRoomMocks.getInitial({}).moveDuration * 1000);
     }
 
     beforeEach(async() => {

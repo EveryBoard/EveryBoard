@@ -79,7 +79,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public override async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
         Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
         this.gameComponent.node = node.get();
@@ -173,8 +173,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.gameComponent.node = new GameNode(state,
                                                currentStep.parent,
                                                currentStep.previousMove);
-        const defaultConfig: MGPOptional<RulesConfig> = this.gameComponent.rules.getDefaultRulesConfig();
-        this.gameComponent.config = currentStep.config.orElse(defaultConfig);
+        const defaultConfig: RulesConfig = this.gameComponent.rules.getDefaultRulesConfig();
+        this.gameComponent.config = currentStep.config.getOrElse(defaultConfig);
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
@@ -226,7 +226,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
-        const config: MGPOptional<RulesConfig> = this.getConfig();
+        const config: RulesConfig = this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
             this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
@@ -251,14 +251,14 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         await this.router.navigate(['/play', urlName]);
     }
 
-    public override getConfig(): MGPOptional<RulesConfig> {
+    public override getConfig(): RulesConfig {
         if (this.steps.length === 0) {
             return super.getConfig();
         }
         const step: TutorialStep = this.steps[this.stepIndex];
         const config: MGPOptional<RulesConfig> = step.config;
         if (config.isPresent()) {
-            return config;
+            return config.get();
         } else {
             return super.getConfig();
         }

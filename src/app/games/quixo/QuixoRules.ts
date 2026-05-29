@@ -131,13 +131,13 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         return QuixoRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<QuixoConfig>> {
-        return MGPOptional.of(QuixoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {
+        return QuixoRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<QuixoConfig>): QuixoState {
-        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.get().width,
-                                                                 config.get().height,
+    public override getInitialState(config: QuixoConfig): QuixoState {
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                                 config.height,
                                                                  PlayerOrNone.NONE);
         return new QuixoState(initialBoard, 0);
     }
@@ -178,7 +178,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
                      `Invalid direction: piece on the top side can't be moved up.`);
     }
 
-    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: MGPOptional<QuixoConfig>, _info: void)
+    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: QuixoConfig, _info: void)
     : QuixoState
     {
         return state.applyLegalMove(move);

@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-
 import { RulesConfig } from '../jscaip/RulesConfigUtil';
 
 import { FirstPlayer, ConfigRoom, Status, GameType, GameDuration } from './ConfigRoom';
@@ -8,7 +6,7 @@ import { UserMocks } from './UserMocks.spec';
 
 export class ConfigRoomMocks {
 
-    public static getInitial(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
+    public static getInitial(rulesConfig: RulesConfig): ConfigRoom {
         return {
             creator: UserMocks.CREATOR_MINIMAL_USER,
             creatorElo: 0,
@@ -22,33 +20,33 @@ export class ConfigRoomMocks {
             gameType: GameType.STANDARD,
             moveDuration: GameDuration.STANDARD_MOVE_DURATION,
             gameDuration: GameDuration.STANDARD_GAME_DURATION,
-            rulesConfig: rulesConfig.getOrElse({}),
+            rulesConfig: rulesConfig,
             gameName: 'P4',
         };
     }
 
-    public static getInitialRandom(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
+    public static getInitialRandom(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             firstPlayer: FirstPlayer.RANDOM,
         };
     }
 
-    public static withChosenOpponent(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
+    public static withChosenOpponent(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
         };
     }
 
-    public static withAnotherChosenOpponent(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
+    public static withAnotherChosenOpponent(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: UserMocks.OTHER_OPPONENT_MINIMAL_USER,
         };
     }
 
-    public static withProposedConfig(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
+    public static withProposedConfig(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,
@@ -56,7 +54,7 @@ export class ConfigRoomMocks {
         };
     }
 
-    public static withAcceptedConfig(rulesConfig: MGPOptional<RulesConfig>): ConfigRoom {
+    public static withAcceptedConfig(rulesConfig: RulesConfig): ConfigRoom {
         return {
             ...ConfigRoomMocks.getInitial(rulesConfig),
             chosenOpponent: UserMocks.OPPONENT_MINIMAL_USER,

@@ -1,5 +1,3 @@
-import { MGPOptional } from '@everyboard/lib';
-
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../../jscaip/Coord';
@@ -17,7 +15,7 @@ const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
 const __: CheckersStack = CheckersStack.EMPTY;
-const defaultConfig: MGPOptional<CheckersConfig> = LascaRules.get().getDefaultRulesConfig();
+const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
 
 export class LascaTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

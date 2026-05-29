@@ -72,8 +72,8 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
     preparationOptions: PreparationOptions = PreparationOptions.defaultOptions)
 : Promise<PreparationResult<T>>
 {
-    const defaultConfig: MGPOptional<RulesConfig> = RulesConfigUtils.getGameDefaultConfig(game);
-    const rulesConfig: MGPOptional<RulesConfig> = preparationOptions.config.orElse(defaultConfig);
+    const defaultConfig: RulesConfig = RulesConfigUtils.getGameDefaultConfig(game);
+    const rulesConfig: RulesConfig = preparationOptions.config.getOrElse(defaultConfig);
     const testUtils: ComponentTestUtils<T, MinimalUser> = await ComponentTestUtils.basic(game);
     ConnectedUserServiceMock.setUser(user);
     testUtils.prepareFixture(OnlineGameWrapperComponent);
