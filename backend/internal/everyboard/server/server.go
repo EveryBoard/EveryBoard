@@ -67,7 +67,7 @@ func (config *Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		}
 		err = handlers.Handle(messageType, messageData)
 		if err != nil {
-			// Error already logged in handlers.handle if it's not a BackendError
+			// Error already logged in handlers.Handle if it's not a BackendError
 			// Continue loop to receive next message
 		}
 	}

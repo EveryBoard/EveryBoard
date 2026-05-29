@@ -175,7 +175,7 @@ def run():
     finally:
         print('[runner] Killing processes and exiting')
         # We can't just kill the processes as they have created detached children
-        killport.kill_ports(ports=[9000, 8080, 8081, 4200, 4000])
+        killport.kill_ports(ports = [9000, 8080, 8081, 4200, 4000])
 
         if docker_id != None:
             subprocess.run(["docker", "rm", "-f", docker_id])
