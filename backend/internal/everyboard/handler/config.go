@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
-	model "github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"

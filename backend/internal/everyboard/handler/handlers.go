@@ -2,54 +2,37 @@ package handler
 
 import (
 	"encoding/json"
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 )
+
+func withMessageArgument[T any](messageData map[string]json.RawMessage, key string, handle func(T) error) error {
+	value, err := getMessageArgument[T](messageData, key)
+	if err != nil {
+		return apperror.ErrorInvalidData
+	}
+	return handle(*value)
+}
 
 func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[string]json.RawMessage) error {
 	switch messageType {
 	case "SubscribeLobby":
 		return h.handleSubscribeLobby()
 	case "SubscribeConfigRoom":
-		gameId, err := getMessageArgument[model.GameID](messageData, "gameId")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleSubscribeConfigRoom(*gameId)
+		return withMessageArgument(messageData, "gameId", h.handleSubscribeConfigRoom)
 	case "SubscribeGame":
-		gameId, err := getMessageArgument[model.GameID](messageData, "gameId")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleSubscribeGame(*gameId)
+		return withMessageArgument(messageData, "gameId", h.handleSubscribeGame)
 	case "Unsubscribe":
 		return h.unsubscribe()
 	case "ChatSend":
-		content, err := getMessageArgument[string](messageData, "message")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleChatSend(*content)
+		return withMessageArgument(messageData, "message", h.handleChatSend)
 	case "Create":
-		gameName, err := getMessageArgument[string](messageData, "gameName")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleCreateGame(*gameName)
+		return withMessageArgument(messageData, "gameName", h.handleCreateGame)
 	case "SelectOpponent":
-		opponent, err := getMessageArgument[model.MinimalUser](messageData, "opponent")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleSelectOpponent(*opponent)
+		return withMessageArgument(messageData, "opponent", h.handleSelectOpponent)
 	case "ProposeConfig":
-		config, err := getMessageArgument[model.ConfigProposal](messageData, "config")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleProposeConfig(*config)
+		return withMessageArgument(messageData, "config", h.handleProposeConfig)
 	case "ReviewConfig":
 		return h.handleReviewConfig()
 	case "AcceptConfig":
@@ -57,47 +40,19 @@ func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[str
 	case "Resign":
 		return h.handleResign()
 	case "NotifyTimeout":
-		timeoutedPlayer, err := getMessageArgument[model.Player](messageData, "timeoutedPlayer")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleNotifyTimeout(*timeoutedPlayer)
+		return withMessageArgument(messageData, "timeoutedPlayer", h.handleNotifyTimeout)
 	case "EndGame":
-		winner, err := getMessageArgument[model.PlayerOrNone](messageData, "winner")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleGameEnd(*winner)
+		return withMessageArgument(messageData, "winner", h.handleGameEnd)
 	case "Propose":
-		proposition, err := getMessageArgument[model.Proposition](messageData, "proposition")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handlePropose(*proposition)
+		return withMessageArgument(messageData, "proposition", h.handlePropose)
 	case "Reject":
-		proposition, err := getMessageArgument[model.Proposition](messageData, "proposition")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleReject(*proposition)
+		return withMessageArgument(messageData, "proposition", h.handleReject)
 	case "Accept":
-		proposition, err := getMessageArgument[model.Proposition](messageData, "proposition")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleAccept(*proposition)
+		return withMessageArgument(messageData, "proposition", h.handleAccept)
 	case "AddTime":
-		kind, err := getMessageArgument[model.AddTimeKind](messageData, "kind")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleAddTime(*kind)
+		return withMessageArgument(messageData, "kind", h.handleAddTime)
 	case "Move":
-		move, err := getMessageArgument[json.RawMessage](messageData, "move")
-		if err != nil {
-			return apperror.ErrorInvalidData
-		}
-		return h.handleMove(*move)
+		return withMessageArgument(messageData, "move", h.handleMove)
 	default:
 		return apperror.ErrorUnknownMessage
 	}

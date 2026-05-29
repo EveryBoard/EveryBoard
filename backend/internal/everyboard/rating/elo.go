@@ -3,7 +3,7 @@ package rating
 import (
 	"math"
 
-	model "github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
 

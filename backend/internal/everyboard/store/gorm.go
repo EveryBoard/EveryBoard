@@ -22,6 +22,20 @@ type GORMStore struct {
 	db *gorm.DB
 }
 
+type migration struct {
+	name  string
+	model any
+}
+
+func autoMigrate(db *gorm.DB, migrations ...migration) error {
+	for _, migration := range migrations {
+		if err := db.AutoMigrate(migration.model); err != nil {
+			return fmt.Errorf("cannot initialize DB (AutoMigrate %s): %v", migration.name, err)
+		}
+	}
+	return nil
+}
+
 // Initialize the database given a dialector, which will either be in-memory
 // SQLite for testing (sqlite.Open(":memory:")) or another DB for production (e.g., postgres.Open("some-dsn").)
 func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
@@ -41,9 +55,9 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		sqlDB.SetMaxIdleConns(1)
 	}
 
-	err = db.AutoMigrate(&model.ConfigRoom{})
+	err = autoMigrate(db, migration{"model.ConfigRoom", &model.ConfigRoom{}})
 	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB (AutoMigrate model.ConfigRoom): %v", err)
+		return nil, err
 	}
 
 	// Create first config room, which is actually the lobby
@@ -67,34 +81,16 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		}
 	}
 
-	err = db.AutoMigrate(&model.Message{})
+	err = autoMigrate(db,
+		migration{"model.Message", &model.Message{}},
+		migration{"model.Elo", &model.Elo{}},
+		migration{"model.Candidate", &model.Candidate{}},
+		migration{"model.Game", &model.Game{}},
+		migration{"model.GameEvent", &model.GameEvent{}},
+		migration{"model.CurrentGame", &model.CurrentGame{}},
+	)
 	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB (AutoMigrate model.Message): %v", err)
-	}
-
-	err = db.AutoMigrate(&model.Elo{})
-	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB (AutoMigrate model.Elo): %v", err)
-	}
-
-	err = db.AutoMigrate(&model.Candidate{})
-	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB (AutoMigrate model.Candidate): %v", err)
-	}
-
-	err = db.AutoMigrate(&model.Game{})
-	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB (AutoMigrate model.Game): %v", err)
-	}
-
-	err = db.AutoMigrate(&model.GameEvent{})
-	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB (AutoMigrate model.GameEvent): %v", err)
-	}
-
-	err = db.AutoMigrate(&model.CurrentGame{})
-	if err != nil {
-		return nil, fmt.Errorf("cannot initialize DB: %v (AutoMigrate model.CurrentGame)", err)
+		return nil, err
 	}
 	return &GORMStore{db}, nil
 }
