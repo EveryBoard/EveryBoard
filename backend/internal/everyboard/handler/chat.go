@@ -4,7 +4,6 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
 
 const MAX_CHAT_MESSAGE_LENGTH = 128
@@ -20,25 +19,17 @@ func (h *Handler) handleChatSend(content string) error {
 		return apperror.ErrorNotAllowed
 	}
 
-	var buf MsgBuffer
-	err := h.store.Transaction(func(store store.Store) error {
-		message := model.Message{
-			Sender:    h.user,
-			Timestamp: Now(),
-			Content:   content,
-		}
-		err := store.AddChatMessage(gameId, &message)
-		if err != nil {
-			return err
-		}
-
-		h.bufferBroadcast(&buf, kind, gameId, protocol.ChatMessage{Message: message})
-		return nil
-	})
-	if err != nil {
+	message := model.Message{
+		Sender:    h.user,
+		Timestamp: Now(),
+		Content:   content,
+	}
+	if err := h.store.AddChatMessage(gameId, &message); err != nil {
 		return err
 	}
 
+	var buf MsgBuffer
+	h.bufferBroadcast(&buf, kind, gameId, protocol.ChatMessage{Message: message})
 	h.flush(&buf)
 	return nil
 }

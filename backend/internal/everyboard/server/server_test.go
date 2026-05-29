@@ -1,13 +1,71 @@
 package server
 
 import (
+	"fmt"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/auth"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 	"net/http"
+	"net/http/httptest"
 	"testing"
 
 	"github.com/gorilla/websocket"
+	"gorm.io/gorm"
 )
+
+type FailingFirebase struct {
+	auth.Firebase
+}
+
+func (f FailingFirebase) Initialize() error {
+	return fmt.Errorf("forced firebase failure")
+}
+
+type FailingDialector struct {
+	gorm.Dialector
+}
+
+func (d FailingDialector) Initialize(db *gorm.DB) error {
+	return fmt.Errorf("forced dialector failure")
+}
+
+func TestPrepareFailures(t *testing.T) {
+	t.Run("FirebaseFailure", func(t *testing.T) {
+		config := &Configuration{
+			Firebase: FailingFirebase{},
+		}
+		_, err := Prepare(config)
+		require.Error(t, err, "error when preparing the server")
+	})
+
+	t.Run("DatabaseFailure", func(t *testing.T) {
+		config := &Configuration{
+			Firebase: FirebaseMock{},
+			Database: FailingDialector{},
+		}
+		auth.SetFirebaseClient(FirebaseMock{})
+
+		_, err := Prepare(config)
+		require.Error(t, err, "error when preparing the server")
+	})
+}
+
+func TestServeHTTPUnauthorized(t *testing.T) {
+	// Given a configuration and a request without token
+	config := &Configuration{
+		Firebase: FirebaseMock{},
+	}
+	auth.SetFirebaseClient(FirebaseMock{})
+
+	req := httptest.NewRequest("GET", "/ws", nil)
+	rr := httptest.NewRecorder()
+
+	// When calling ServeHTTP
+	config.ServeHTTP(rr, req)
+
+	// Then it should return 401 Unauthorized
+	assert.Equal(t, http.StatusUnauthorized, rr.Code, "expected status 401")
+}
 
 func TestCors(t *testing.T) {
 	// Given a server

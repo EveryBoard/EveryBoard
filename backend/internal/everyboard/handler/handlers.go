@@ -68,7 +68,7 @@ func (h *Handler) Handle(messageType string, messageData map[string]json.RawMess
 	}
 	e, ok := err.(apperror.BackendError)
 	if ok {
-		h.sendError(e)
+		h.SendError(e)
 		return nil
 	}
 	printableData, _ := json.Marshal(messageData)
@@ -76,10 +76,6 @@ func (h *Handler) Handle(messageType string, messageData map[string]json.RawMess
 	return err
 }
 
-func (h *Handler) clientLeft() error {
-	return h.unsubscribe()
-}
-
 func (h *Handler) ClientLeft() error {
-	return h.clientLeft()
+	return h.unsubscribe()
 }

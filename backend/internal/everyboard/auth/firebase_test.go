@@ -6,18 +6,6 @@ import (
 	"testing"
 )
 
-type FirebaseMockLocal struct {
-	documentToFetch map[string]any
-}
-
-func (f *FirebaseMockLocal) Initialize() error { return nil }
-func (f *FirebaseMockLocal) Fetch(ctx context.Context, coll, path string) (map[string]any, error) {
-	return f.documentToFetch, nil
-}
-func (f *FirebaseMockLocal) VerifyToken(ctx context.Context, token string) (string, error) {
-	return "user-id", nil
-}
-
 func TestFirebaseInitializeFailures(t *testing.T) {
 	t.Run("EmulatorMissingProjectID", func(t *testing.T) {
 		f := &Firebase{
@@ -78,7 +66,7 @@ func TestVerifyTokenEdgeCases(t *testing.T) {
 
 func TestFetchUserDocumentEdgeCases(t *testing.T) {
 	t.Run("MissingUsername", func(t *testing.T) {
-		InitializeFirebaseForTest(t, &FirebaseMockLocal{
+		InitializeFirebaseForTest(t, &FirebaseMock{
 			documentToFetch: map[string]any{},
 		})
 		_, err := FetchUserDocument(t.Context(), "user1")
@@ -86,7 +74,7 @@ func TestFetchUserDocumentEdgeCases(t *testing.T) {
 	})
 
 	t.Run("InvalidUsernameType", func(t *testing.T) {
-		InitializeFirebaseForTest(t, &FirebaseMockLocal{
+		InitializeFirebaseForTest(t, &FirebaseMock{
 			documentToFetch: map[string]any{
 				"username": 123,
 			},

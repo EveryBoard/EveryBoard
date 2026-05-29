@@ -118,22 +118,14 @@ func (h *Handler) send(message protocol.OutgoingMessage) {
 	sendMessage(h.connections, h.connection, message)
 }
 
-func (h *Handler) sendError(err apperror.BackendError) {
+func (h *Handler) SendError(err apperror.BackendError) {
 	h.send(protocol.ErrorMessage{Reason: err.Msg})
 }
 
-func (h *Handler) SendError(err apperror.BackendError) {
-	h.sendError(err)
-}
-
-func (h *Handler) broadcastToUser(user model.MinimalUser, message protocol.OutgoingMessage) {
+func (h *Handler) BroadcastToUser(user model.MinimalUser, message protocol.OutgoingMessage) {
 	for connection := range h.connections.AllUserConnections(user) {
 		sendMessage(h.connections, connection, message)
 	}
-}
-
-func (h *Handler) BroadcastToUser(user model.MinimalUser, message protocol.OutgoingMessage) {
-	h.broadcastToUser(user, message)
 }
 
 func (h *Handler) unsubscribe() error {
