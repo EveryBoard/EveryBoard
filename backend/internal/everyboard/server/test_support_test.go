@@ -5,6 +5,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/stretchr/testify/require"
 	"net"
 	"net/http"
 	"os"
@@ -72,23 +73,17 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *Configuration) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 	t.Setenv("LISTEN_ADDR", "127.0.0.1:0")
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
+	require.NoError(t, err, "error when reading the configuration")
 
 	fakeStore := NewFakeStore()
 	config.Store = fakeStore
 	config.Firebase = FirebaseMock{}
 
 	server, err := Prepare(config)
-	if err != nil {
-		t.Fatalf("error when preparing the server: %v", err)
-	}
+	require.NoError(t, err, "error when preparing the server")
 
 	listener, err := net.Listen("tcp", config.ListenAddr)
-	if err != nil {
-		t.Fatalf("cannot listen on test server address: %v", err)
-	}
+	require.NoError(t, err, "cannot listen on test server address")
 	config.ListenAddr = listener.Addr().String()
 	server.Addr = config.ListenAddr
 	testServerAddr = config.ListenAddr
@@ -103,9 +98,7 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *Configuration) {
 	}()
 	select {
 	case err := <-serverErr:
-		if err != nil {
-			t.Fatalf("ListenAndServe error: %v", err)
-		}
+		require.NoError(t, err, "test server exited while starting")
 	case <-time.After(10 * time.Millisecond):
 	default:
 	}
@@ -113,12 +106,8 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *Configuration) {
 	stopServer := func() {
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
 		defer cancel()
-		if err := server.Shutdown(ctx); err != nil {
-			t.Fatalf("Shutdown failed: %v", err)
-		}
-		if err := <-serverErr; err != nil {
-			t.Fatalf("ListenAndServe error: %v", err)
-		}
+		require.NoError(t, server.Shutdown(ctx), "Shutdown failed")
+		require.NoError(t, <-serverErr, "ListenAndServe error")
 	}
 	return stopServer, fakeStore, config
 }

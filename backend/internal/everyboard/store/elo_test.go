@@ -5,6 +5,8 @@ import (
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/sqlite"
 )
 
@@ -18,18 +20,13 @@ func TestUpdateElosSuccess(t *testing.T) {
 
 	// Update should now work
 	err := store.UpdateElos("test", winner, model.Elo{UserID: "w", GameName: "test", CurrentElo: 100}, loser, model.Elo{UserID: "l", GameName: "test", CurrentElo: 50})
-	if err != nil {
-		t.Fatalf("UpdateElos failed: %v", err)
-	}
+	require.NoError(t, err, "cannot update elos")
 
 	// GetElos should retrieve them
 	ew, el, err := store.GetElos("test", winner, loser)
-	if err != nil {
-		t.Fatalf("GetElos failed: %v", err)
-	}
-	if ew.CurrentElo != 100 || el.CurrentElo != 50 {
-		t.Errorf("expected 100 and 50, got %f and %f", ew.CurrentElo, el.CurrentElo)
-	}
+	require.NoError(t, err, "error when getting elo")
+	assert.Equal(t, 100.0, ew.CurrentElo, "expected 100 and 50")
+	assert.Equal(t, 50.0, el.CurrentElo, "expected 100 and 50")
 }
 
 func TestGetElosMissingUser(t *testing.T) {
@@ -39,39 +36,30 @@ func TestGetElosMissingUser(t *testing.T) {
 
 	// Should work even if users don't exist (returns 0.0 elo)
 	ew, el, err := store.GetElos("test", u1, u2)
-	if err != nil {
-		t.Fatalf("GetElos failed for missing users: %v", err)
-	}
-	if ew.CurrentElo != 0.0 || el.CurrentElo != 0.0 {
-		t.Errorf("expected 0.0 elos, got %f and %f", ew.CurrentElo, el.CurrentElo)
-	}
+	require.NoError(t, err, "error when getting elo")
+	assert.Equal(t, 0.0, ew.CurrentElo, "expected 0.0 elos")
+	assert.Equal(t, 0.0, el.CurrentElo, "expected 0.0 elos")
 }
 
 func TestGetEloEmptyDB(t *testing.T) {
 	// Given a empty db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	// When retrieving an model.Elo which does not exists
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 	elo, err := store.GetElo(gameName, user)
 	// Then it should give an empty model.Elo
-	if err != nil {
-		t.Fatalf("error when getting elo: %v", err)
-	}
-	if elo == nil || elo.UserID != user.ID || elo.GameName != gameName {
-		t.Fatalf("invalid elo returned: %v", elo)
-	}
+	require.NoError(t, err, "cannot get missing elo")
+	require.NotNil(t, elo, "invalid elo returned")
+	assert.Equal(t, user.ID, elo.UserID, "invalid elo returned")
+	assert.Equal(t, gameName, elo.GameName, "invalid elo returned")
 }
 
 func TestGetEloConcurrentFirstCreate(t *testing.T) {
 	// Given a db with no model.Elo for a user yet
 	store, err := InitDatabase(sqlite.Open("file:elo_concurrency?mode=memory&cache=shared&_busy_timeout=5000"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 
@@ -95,40 +83,29 @@ func TestGetEloConcurrentFirstCreate(t *testing.T) {
 
 	// Then every caller should succeed and exactly one row should exist
 	for err := range errs {
-		if err != nil {
-			t.Fatalf("concurrent GetElo failed: %v", err)
-		}
+		require.NoError(t, err, "cannot get elo concurrently")
 	}
 	var count int64
-	if err := store.DB().Model(&model.Elo{}).
+	err = store.DB().Model(&model.Elo{}).
 		Where("user_id = ? AND game_name = ?", user.ID, gameName).
-		Count(&count).Error; err != nil {
-		t.Fatalf("cannot count model.Elo rows: %v", err)
-	}
-	if count != 1 {
-		t.Fatalf("expected exactly one model.Elo row, got %d", count)
-	}
+		Count(&count).Error
+	require.NoError(t, err, "cannot count model.Elo rows")
+	require.Equal(t, int64(1), count, "expected exactly one model.Elo row")
 }
 
 func TestUpdateElos(t *testing.T) {
 	// Given a db with some model.Elo
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	winner := model.MinimalUser{ID: "foo", Name: "foo"}
 	loser := model.MinimalUser{ID: "bar", Name: "bar"}
 
 	// Accessing the elos ensure that they are initialized (to 0)
 	gameName := "Go"
 	_, err = store.GetElo(gameName, winner)
-	if err != nil {
-		t.Fatalf("error when getting elo: %v", err)
-	}
+	require.NoError(t, err, "error when getting elo")
 	_, err = store.GetElo(gameName, loser)
-	if err != nil {
-		t.Fatalf("error when getting elo: %v", err)
-	}
+	require.NoError(t, err, "error when getting elo")
 
 	// When updating the elos
 	err = store.UpdateElos(gameName,
@@ -146,24 +123,18 @@ func TestUpdateElos(t *testing.T) {
 			CurrentElo:  1.0,
 			GamesPlayed: 1,
 		})
-	if err != nil {
-		t.Fatalf("cannot update elos: %v", err)
-	}
+	require.NoError(t, err, "cannot update elos")
 
 	// Then the elos should be updated
 	eloWinner, eloLoser, err := store.GetElos(gameName, winner, loser)
-	if err != nil {
-		t.Fatalf("error when getting elo: %v", err)
-	}
+	require.NoError(t, err, "error when getting elo")
 
-	if eloWinner.UserID != winner.ID ||
-		eloWinner.GameName != gameName ||
-		eloWinner.CurrentElo != 20.0 ||
-		eloWinner.GamesPlayed != 1 ||
-		eloLoser.UserID != loser.ID ||
-		eloLoser.GameName != gameName ||
-		eloLoser.CurrentElo != 1.0 ||
-		eloLoser.GamesPlayed != 1 {
-		t.Fatalf("incorrect elo in db after update: %v, %v", eloWinner, eloLoser)
-	}
+	assert.Equal(t, winner.ID, eloWinner.UserID, "incorrect elo in db after update")
+	assert.Equal(t, gameName, eloWinner.GameName, "incorrect elo in db after update")
+	assert.Equal(t, 20.0, eloWinner.CurrentElo, "incorrect elo in db after update")
+	assert.Equal(t, uint(1), eloWinner.GamesPlayed, "incorrect elo in db after update")
+	assert.Equal(t, loser.ID, eloLoser.UserID, "incorrect elo in db after update")
+	assert.Equal(t, gameName, eloLoser.GameName, "incorrect elo in db after update")
+	assert.Equal(t, 1.0, eloLoser.CurrentElo, "incorrect elo in db after update")
+	assert.Equal(t, uint(1), eloLoser.GamesPlayed, "incorrect elo in db after update")
 }

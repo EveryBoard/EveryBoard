@@ -1,22 +1,15 @@
 package model
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestIsUnstarted(t *testing.T) {
-	if !StatusCreated.IsUnstarted() {
-		t.Errorf("StatusCreated should be unstarted")
-	}
-	if !StatusConfigProposed.IsUnstarted() {
-		t.Errorf("StatusConfigProposed should be unstarted")
-	}
-	if StatusStarted.IsUnstarted() {
-		t.Errorf("StatusStarted should be started")
-	}
-	if StatusFinished.IsUnstarted() {
-		t.Errorf("StatusFinished should be started")
-	}
+	assert.True(t, StatusCreated.IsUnstarted(), "StatusCreated should be unstarted")
+	assert.True(t, StatusConfigProposed.IsUnstarted(), "StatusConfigProposed should be unstarted")
+	assert.False(t, StatusStarted.IsUnstarted(), "StatusStarted should be started")
+	assert.False(t, StatusFinished.IsUnstarted(), "StatusFinished should be started")
 }
 
 func TestMarshalFirstPlayer(t *testing.T) {

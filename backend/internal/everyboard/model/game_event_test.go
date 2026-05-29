@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -84,13 +85,9 @@ func TestEventInGameOrNot(t *testing.T) {
 	expectToBeAllowedOnlyIn := func(eventData EventPayload, allowedStatus Status) {
 		for _, status := range AllStatus {
 			if status == allowedStatus {
-				if !eventData.AllowedInConfigRoomStatus(status) {
-					t.Fatalf("event is not allowed in status %v but should be: %v", status, eventData)
-				}
+				require.True(t, eventData.AllowedInConfigRoomStatus(status), "event is not allowed in status %v but should be: %v", status, eventData)
 			} else {
-				if eventData.AllowedInConfigRoomStatus(status) {
-					t.Fatalf("event is allowed in status %v but should not be: %v", status, eventData)
-				}
+				require.False(t, eventData.AllowedInConfigRoomStatus(status), "event is allowed in status %v but should not be: %v", status, eventData)
 			}
 		}
 	}

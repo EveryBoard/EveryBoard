@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"reflect"
 	"testing"
 )
@@ -18,14 +19,10 @@ func ExpectMarshallingToWork[T any](t *testing.T, object T, expectedJSON string)
 
 	// When mashalling it
 	data, err := json.Marshal(object)
-	if err != nil {
-		t.Errorf("failed to marshal: %v", err)
-	}
+	assert.Nil(t, err, "failed to marshal")
 
 	// Then it should provide the expected JSON
-	if string(data) != expectedJSON {
-		t.Errorf("serializing does not provide the expected JSON: got %s", string(data))
-	}
+	assert.Equal(t, expectedJSON, string(data), "serializing does not provide the expected JSON")
 }
 
 func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) {
@@ -33,27 +30,19 @@ func ExpectUnmarshallingToWork[T any](t *testing.T, validJSON string, object T) 
 	// When unmarshalling it
 	var objectAgain T
 	err := json.Unmarshal([]byte(validJSON), &objectAgain)
-	if err != nil {
-		t.Errorf("deserialization failed: %v", err)
-	}
+	assert.Nil(t, err, "deserialization failed")
 
 	// Then it should match the expected object
 	// We need to check it with deep equality in case there are pointers due to nullable values
-	if !reflect.DeepEqual(objectAgain, object) {
-		t.Errorf("deserialized object does not match the expected one: got %v", objectAgain)
-	}
+	assert.True(t, reflect.DeepEqual(objectAgain, object), "deserialized object does not match the expected one: got %v", objectAgain)
 }
 
 func ExpectMarshallingToFail[T any](t *testing.T, object T) {
-	value, err := json.Marshal(object)
-	if err == nil {
-		t.Errorf("successfully marshaled while it should not, with %v, got %v", object, value)
-	}
+	_, err := json.Marshal(object)
+	assert.Error(t, err, "expected marshaling to fail")
 }
 
 func ExpectUnmarshallingToFail[T any](t *testing.T, object T, input string) {
 	err := json.Unmarshal([]byte(input), &object)
-	if err == nil {
-		t.Errorf("succesfully unmarshaled while it should not, with %v, got %v", input, object)
-	}
+	assert.Error(t, err, "expected unmarshaling to fail")
 }

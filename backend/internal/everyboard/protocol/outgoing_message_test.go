@@ -1,6 +1,7 @@
 package protocol
 
 import (
+	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -8,9 +9,7 @@ import (
 
 func ExpectMarshallingToWorkAndTagToBe(t *testing.T, original OutgoingMessage, expectedJSON string, expectedTag string) {
 	ExpectMarshallingToWork(t, original, expectedJSON)
-	if expectedTag != original.Tag() {
-		t.Fatalf("invalid tag: expected %s, got %s", expectedTag, original.Tag())
-	}
+	require.Equal(t, expectedTag, original.Tag(), "invalid tag")
 }
 
 func TestMarshalOutgoingMessages(t *testing.T) {

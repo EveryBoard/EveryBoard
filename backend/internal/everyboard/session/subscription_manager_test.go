@@ -2,6 +2,7 @@ package session
 
 import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/require"
 	"testing"
 	"time"
 )
@@ -30,42 +31,26 @@ func TestSubscriptionWorkflow(t *testing.T) {
 	subscriptionKind := SubscriptionToLobby
 	const gameID model.GameID = model.GameIDLobby
 
-	if len(manager.SubscriptionsTo(subscriptionKind, gameID)) != 0 {
-		t.Fatalf("New subscription manager should not have any subscription to start with")
-	}
-	if manager.IsSubscribed(user) {
-		t.Fatalf("Non-subscribed user should not have any subscription")
-	}
+	require.Equal(t, 0, len(manager.SubscriptionsTo(subscriptionKind, gameID)), "user should not have subscriptions before subscribing")
+	require.False(t, manager.IsSubscribed(user), "user should not be subscribed before subscribing")
 	_, _, subscribed := manager.SubscriptionOf(connection)
-	if subscribed {
-		t.Fatalf("Non-subscribed connection should not be subscribed")
-	}
+	require.False(t, subscribed, "connection should not have a subscription before subscribing")
 	// When we subscribe a client
 	manager.Subscribe(connection, user, gameID, subscriptionKind)
 	// Then it should be subscribed to the game
-	if !manager.SubscriptionsTo(subscriptionKind, gameID).Has(connection) {
-		t.Fatalf("Subscribed user should be subscribed")
-	}
-	if !manager.IsSubscribed(user) {
-		t.Fatalf("Subscribed user should be subscribed")
-	}
+	require.True(t, manager.SubscriptionsTo(subscriptionKind, gameID).Has(connection), "connection should be subscribed")
+	require.True(t, manager.IsSubscribed(user), "user should be subscribed")
 	actualSubscriptionKind, actualGameID, subscribed := manager.SubscriptionOf(connection)
-	if !subscribed || actualSubscriptionKind != subscriptionKind || actualGameID != gameID {
-		t.Fatalf("Subscription does not match what has been subscribed to")
-	}
+	require.True(t, subscribed, "connection should have a subscription")
+	require.Equal(t, subscriptionKind, actualSubscriptionKind, "invalid subscription kind")
+	require.Equal(t, gameID, actualGameID, "invalid subscribed game id")
 
 	// And when we unsubscribe it
 	manager.Unsubscribe(connection)
 
 	// Then the client should not be connected anymore
-	if len(manager.SubscriptionsTo(subscriptionKind, gameID)) != 0 {
-		t.Fatalf("There should be no subscriptions after unsubscribing ")
-	}
-	if manager.IsSubscribed(user) {
-		t.Fatalf("User should not be subscribed after unsubscribing")
-	}
+	require.Equal(t, 0, len(manager.SubscriptionsTo(subscriptionKind, gameID)), "user should not have subscriptions after unsubscribing")
+	require.False(t, manager.IsSubscribed(user), "user should not be subscribed after unsubscribing")
 	_, _, subscribed = manager.SubscriptionOf(connection)
-	if subscribed {
-		t.Fatalf("User should not be subscribed after unsubscribing")
-	}
+	require.False(t, subscribed, "connection should not have a subscription after unsubscribing")
 }

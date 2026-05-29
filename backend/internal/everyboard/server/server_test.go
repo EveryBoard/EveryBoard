@@ -1,6 +1,8 @@
 package server
 
 import (
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"testing"
 
@@ -14,23 +16,15 @@ func TestCors(t *testing.T) {
 
 	// When doing a Options request
 	req, err := http.NewRequest(http.MethodOptions, testHTTPURL("/ws"), nil)
-	if err != nil {
-		t.Fatalf("request creation failed: %v", err)
-	}
+	require.NoError(t, err, "cannot create request")
 	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		t.Fatalf("OPTIONS request failed: %v", err)
-	}
+	require.NoError(t, err, "cannot make http request")
 	defer resp.Body.Close()
 
 	// Then it should succeed and have the Allow-Origin header set
-	if resp.StatusCode != http.StatusOK && resp.StatusCode != http.StatusNoContent {
-		t.Errorf("Unexpected status: %d", resp.StatusCode)
-	}
+	assert.Contains(t, []int{http.StatusOK, http.StatusNoContent}, resp.StatusCode, "unexpected CORS status")
 
-	if origin := resp.Header.Get("Access-Control-Allow-Origin"); origin != "*" {
-		t.Errorf("Expected Access-Control-Allow-Origin '*', got %q", origin)
-	}
+	assert.Equal(t, "*", resp.Header.Get("Access-Control-Allow-Origin"), "invalid Access-Control-Allow-Origin")
 }
 
 func TestWebSocketRequest(t *testing.T) {
@@ -42,61 +36,37 @@ func TestWebSocketRequest(t *testing.T) {
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJmb28ifQo.")
 	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-	if err != nil {
-		t.Fatalf("Dial failed: %v (status %v)", err, resp.Status)
-	}
+	require.NoError(t, err, "Dial failed")
 	defer c.Close()
 
 	// Then it should upgrade to websocket
-	if resp.StatusCode != http.StatusSwitchingProtocols {
-		t.Errorf("Expected 101 Switching Protocols, got %d", resp.StatusCode)
-	}
+	assert.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
 
 	// And send a first message about current game
 	_, _, err = c.ReadMessage()
-	if err != nil {
-		t.Fatalf("cannot send message: %v", err)
-	}
+	require.NoError(t, err, "failed to read message")
 
 	// When we send a broken message
 	err = c.WriteMessage(websocket.TextMessage, []byte(`alq"`))
-	if err != nil {
-		t.Fatalf("cannot send message: %v", err)
-	}
+	require.NoError(t, err, "WriteMessage failed")
 	// Then we get an error reply
 	_, msg, err := c.ReadMessage()
-	if err != nil {
-		t.Fatalf("error when receiving response: %v", err)
-	}
-	if string(msg) != `["Error",{"reason":"unknown-message"}]` {
-		t.Fatalf("error response is not the expected one: %s", string(msg))
-	}
+	require.NoError(t, err, "failed to read message")
+	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
 
 	// When we send a not-understood message
 	err = c.WriteMessage(websocket.TextMessage, []byte(`["Unknown"]`))
-	if err != nil {
-		t.Fatalf("cannot send message: %v", err)
-	}
+	require.NoError(t, err, "WriteMessage failed")
 	// Then we get an error reply
 	_, msg, err = c.ReadMessage()
-	if err != nil {
-		t.Fatalf("error when receiving response: %v", err)
-	}
-	if string(msg) != `["Error",{"reason":"unknown-message"}]` {
-		t.Fatalf("error response is not the expected one: %s", string(msg))
-	}
+	require.NoError(t, err, "failed to read message")
+	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
 
 	// When we send an understood message
 	err = c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeToLobby"]`))
-	if err != nil {
-		t.Fatalf("cannot send message: %v", err)
-	}
+	require.NoError(t, err, "WriteMessage failed")
 	// Then it works
 	_, msg, err = c.ReadMessage()
-	if err != nil {
-		t.Fatalf("error when receiving response: %v", err)
-	}
-	if string(msg) != `["Error",{"reason":"unknown-message"}]` {
-		t.Fatalf("error response is not the expected one: %s", string(msg))
-	}
+	require.NoError(t, err, "failed to read message")
+	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
 }

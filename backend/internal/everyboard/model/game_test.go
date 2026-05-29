@@ -1,19 +1,16 @@
 package model
 
 import (
+	"github.com/stretchr/testify/assert"
 	"testing"
 )
 
 func TestResultIsDraw(t *testing.T) {
 	expectDraw := func(result Result) {
-		if !result.IsDraw() {
-			t.Errorf("should be a draw: %s", result)
-		}
+		assert.True(t, result.IsDraw(), "should be a draw: %s", result)
 	}
 	expectNotDraw := func(result Result) {
-		if result.IsDraw() {
-			t.Errorf("should not be draw: %s", result)
-		}
+		assert.False(t, result.IsDraw(), "should not be draw: %s", result)
 	}
 
 	expectNotDraw(ResultInProgress)
@@ -31,14 +28,10 @@ func TestResultIsDraw(t *testing.T) {
 
 func TestResultIsVictoryOfZero(t *testing.T) {
 	expectVictoryOfZero := func(result Result) {
-		if !result.IsVictoryOfZero() {
-			t.Errorf("should be a victory of zero: %s", result)
-		}
+		assert.True(t, result.IsVictoryOfZero(), "should be a victory of zero: %s", result)
 	}
 	expectNotVictoryOfZero := func(result Result) {
-		if result.IsVictoryOfZero() {
-			t.Errorf("should not be a victory of zero: %s", result)
-		}
+		assert.False(t, result.IsVictoryOfZero(), "should not be a victory of zero: %s", result)
 	}
 
 	expectVictoryOfZero(ResultVictoryOfZero)
@@ -56,14 +49,10 @@ func TestResultIsVictoryOfZero(t *testing.T) {
 
 func TestResultIsVictoryOfOne(t *testing.T) {
 	expectVictoryOfOne := func(result Result) {
-		if !result.IsVictoryOfOne() {
-			t.Errorf("should be a victory of one: %s", result)
-		}
+		assert.True(t, result.IsVictoryOfOne(), "should be a victory of one: %s", result)
 	}
 	expectNotVictoryOfOne := func(result Result) {
-		if result.IsVictoryOfOne() {
-			t.Errorf("should not be a victory of one: %s", result)
-		}
+		assert.False(t, result.IsVictoryOfOne(), "should not be a victory of one: %s", result)
 	}
 
 	expectVictoryOfOne(ResultVictoryOfOne)
@@ -81,14 +70,10 @@ func TestResultIsVictoryOfOne(t *testing.T) {
 
 func TestResultIsTimeout(t *testing.T) {
 	expectTimeout := func(result Result) {
-		if !result.IsTimeout() {
-			t.Errorf("should be a timeout: %s", result)
-		}
+		assert.True(t, result.IsTimeout(), "should be a timeout: %s", result)
 	}
 	expectNotTimeout := func(result Result) {
-		if result.IsTimeout() {
-			t.Errorf("should not be a timeout: %s", result)
-		}
+		assert.False(t, result.IsTimeout(), "should not be a timeout: %s", result)
 	}
 
 	expectTimeout(ResultTimeoutOfZero)

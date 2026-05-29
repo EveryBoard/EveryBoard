@@ -3,6 +3,8 @@ package server
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
@@ -19,9 +21,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c) // skip initial message
 		return c
 	}
@@ -39,20 +39,14 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 		// First subscription
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeLobby"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c)
 
 		// Second subscription should fail
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeLobby"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if string(msg) != `["Error",{"reason":"already-subscribed"}]` {
-			t.Errorf("expected already-subscribed error, got %s", string(msg))
-		}
+		assert.Equal(t, `["Error",{"reason":"already-subscribed"}]`, string(msg), "expected already-subscribed error")
 	})
 
 	t.Run("ConfigRoomDoesNotExist", func(t *testing.T) {
@@ -61,13 +55,9 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 
 		encodedID, _ := model.EncodeID(model.GameID(999))
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if string(msg) != `["Error",{"reason":"game-does-not-exist"}]` {
-			t.Errorf("expected game-does-not-exist error, got %s", string(msg))
-		}
+		assert.Equal(t, `["Error",{"reason":"game-does-not-exist"}]`, string(msg), "expected game-does-not-exist error")
 	})
 
 	t.Run("StatusStarted", func(t *testing.T) {
@@ -83,14 +73,10 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		// Should succeed but send minimal info
 		msg := readWithTimeout(t, c)
-		if msg == nil {
-			t.Error("expected message, got none")
-		}
+		assert.NotNil(t, msg, "expected message, got none")
 	})
 
 	t.Run("SubscribeAsCandidate", func(t *testing.T) {
@@ -107,13 +93,9 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if msg == nil {
-			t.Fatal("expected message")
-		}
+		require.NotNil(t, msg, "expected message")
 		found := false
 		for _, cand := range fakeStore.CandidatesForTest(configRoomID) {
 			if cand.User.ID == "user_candidate" {
@@ -121,9 +103,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 				break
 			}
 		}
-		if !found {
-			t.Error("user should have been added as candidate")
-		}
+		assert.True(t, found, "user should have been added as candidate")
 	})
 
 	t.Run("StatusFinished", func(t *testing.T) {
@@ -139,13 +119,9 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if msg == nil {
-			t.Fatal("expected message")
-		}
+		require.NotNil(t, msg, "expected message")
 	})
 }
 
@@ -157,9 +133,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -177,13 +151,9 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		defer c.Close()
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if msg == nil {
-			t.Fatal("expected message")
-		}
+		require.NotNil(t, msg, "expected message")
 	})
 
 	t.Run("MultipleCandidates", func(t *testing.T) {
@@ -202,14 +172,10 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		defer c.Close()
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c)
 		msg := readWithTimeout(t, c)
-		if msg == nil {
-			t.Fatal("expected message for other candidate")
-		}
+		require.NotNil(t, msg, "expected message for other candidate")
 	})
 }
 
@@ -221,9 +187,7 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -242,9 +206,7 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 
 		found := false
 		for i := 0; i < 5; i++ {
@@ -254,28 +216,20 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 				break
 			}
 		}
-		if !found {
-			t.Fatal("could not subscribe")
-		}
+		require.True(t, found, "could not subscribe")
 
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["AcceptConfig"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		found = false
 		for i := 0; i < 5; i++ {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"Error"`) {
 				found = true
-				if string(msg) != `["Error",{"reason":"not-allowed"}]` {
-					t.Errorf("expected not-allowed error, got %s", string(msg))
-				}
+				assert.Equal(t, `["Error",{"reason":"not-allowed"}]`, string(msg), "expected not-allowed error")
 				break
 			}
 		}
-		if !found {
-			t.Fatal("expected not-allowed error")
-		}
+		require.True(t, found, "expected not-allowed error")
 	})
 }
 
@@ -287,9 +241,7 @@ func TestHandleSelectOpponentEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -316,18 +268,12 @@ func TestHandleSelectOpponentEdgeCases(t *testing.T) {
 				break
 			}
 		}
-		if !found {
-			t.Fatal("could not subscribe")
-		}
+		require.True(t, found, "could not subscribe")
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["SelectOpponent",{"opponent":{"id":"other","name":"other"}}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if string(msg) != `["Error",{"reason":"not-allowed"}]` {
-			t.Errorf("expected not-allowed error, got %s", string(msg))
-		}
+		assert.Equal(t, `["Error",{"reason":"not-allowed"}]`, string(msg), "expected not-allowed error")
 	})
 }
 

@@ -2,6 +2,7 @@ package handler
 
 import (
 	"encoding/json"
+	"github.com/stretchr/testify/assert"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
@@ -34,9 +35,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When calling unsubscribe
 		err := h.unsubscribe()
 		// Then it should not result in an error
-		if err != nil {
-			t.Errorf("unexpected error: %v", err)
-		}
+		assert.Nil(t, err, "unexpected error")
 	})
 
 	t.Run("HandleSubscribeGameDoesNotExist", func(t *testing.T) {
@@ -45,9 +44,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When we subscribe to a non existing game
 		err := h.handleSubscribeGame(model.GameID(999))
 		// Then it should fail
-		if err != apperror.ErrorGameDoesNotExist {
-			t.Errorf("expected ErrorGameDoesNotExist, got %v", err)
-		}
+		assert.Equal(t, apperror.ErrorGameDoesNotExist, err, "expected ErrorGameDoesNotExist")
 	})
 
 	t.Run("HandleSubscribeLobby", func(t *testing.T) {
@@ -56,26 +53,20 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 		// When we subscribe to the lobby
 		err := h.handleSubscribeLobby()
 		// Then it should succeed
-		if err != nil {
-			t.Errorf("unexpected error: %v", err)
-		}
+		assert.Nil(t, err, "unexpected error")
 	})
 
 	t.Run("HandleCreateAlreadyInGame", func(t *testing.T) {
 		h := newH()
 		store.SetCurrentGame(&model.CurrentGame{UserID: user.ID, UserName: user.Name, GameID: 1})
 		err := h.handleWithoutErrorSend("Create", map[string]json.RawMessage{"gameName": json.RawMessage(`"test"`)})
-		if err != apperror.ErrorAlreadySubscribed {
-			t.Errorf("expected ErrorAlreadySubscribed, got %v", err)
-		}
+		assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 	})
 
 	t.Run("HandleSelectOpponentNotSubscribed", func(t *testing.T) {
 		h := newH()
 		err := h.handleWithoutErrorSend("SelectOpponent", map[string]json.RawMessage{"opponent": json.RawMessage(`{"id":"other"}`)})
-		if err != apperror.ErrorNotSubscribed {
-			t.Errorf("expected ErrorNotSubscribed, got %v", err)
-		}
+		assert.Equal(t, apperror.ErrorNotSubscribed, err, "expected ErrorNotSubscribed")
 	})
 }
 
@@ -95,8 +86,6 @@ func TestUnsubscribeDirect(t *testing.T) {
 	t.Run("Lobby", func(t *testing.T) {
 		subs.Subscribe(h.connection, user.ID, model.GameIDLobby, session.SubscriptionToLobby)
 		err := h.unsubscribe()
-		if err != nil {
-			t.Errorf("unexpected error: %v", err)
-		}
+		assert.Nil(t, err, "unexpected error")
 	})
 }

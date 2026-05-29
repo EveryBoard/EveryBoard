@@ -1,6 +1,9 @@
 package rating
 
-import "testing"
+import (
+	"github.com/stretchr/testify/assert"
+	"testing"
+)
 
 func TestNewEloValue(t *testing.T) {
 	tests := []struct {
@@ -15,27 +18,17 @@ func TestNewEloValue(t *testing.T) {
 
 	for _, tt := range tests {
 		got := newEloValue(tt.oldElo, tt.difference)
-		if got != tt.expected {
-			t.Errorf("newEloValue(%f, %f) = %f; want %f", tt.oldElo, tt.difference, got, tt.expected)
-		}
+		assert.Equal(t, tt.expected, got, "newEloValue(%f, %f)", tt.oldElo, tt.difference)
 	}
 }
 
 func TestWinWeight(t *testing.T) {
-	if w(Victory) != 1.0 {
-		t.Errorf("expected 1.0, got %f", w(Victory))
-	}
-	if w(Draw) != 0.5 {
-		t.Errorf("expected 0.5, got %f", w(Draw))
-	}
-	if w(Loss) != 0.0 {
-		t.Errorf("expected 0.0, got %f", w(Loss))
-	}
+	assert.Equal(t, 1.0, w(Victory), "unexpected victory weight")
+	assert.Equal(t, 0.5, w(Draw), "unexpected draw weight")
+	assert.Equal(t, 0.0, w(Loss), "unexpected loss weight")
 }
 
 func TestWinProbability(t *testing.T) {
 	p := winProbability(1000, 1000)
-	if p != 0.5 {
-		t.Errorf("expected 0.5, got %f", p)
-	}
+	assert.Equal(t, 0.5, p, "unexpected win probability")
 }

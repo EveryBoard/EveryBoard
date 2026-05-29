@@ -1,6 +1,7 @@
 package model
 
 import (
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -10,18 +11,12 @@ func TestEncodeAndDecodeIdWithSqids(t *testing.T) {
 
 	// When encoding the id and decoding it
 	encoded, err := EncodeID(gameId)
-	if err != nil {
-		t.Fatalf("cannot encode: %v", err)
-	}
+	require.NoError(t, err, "cannot encode id")
 	decoded, err := DecodeID(encoded)
-	if err != nil {
-		t.Fatalf("cannot decode: %v", err)
-	}
+	require.NoError(t, err, "cannot decode id")
 
 	// Then we should retrieve the same id
-	if decoded != gameId {
-		t.Fatalf("got different decoded id, got %d instead of %d", decoded, gameId)
-	}
+	require.Equal(t, gameId, decoded, "got different decoded id")
 }
 
 func TestEncodeAndDecodeLobbyIdWithSqids(t *testing.T) {
@@ -29,30 +24,22 @@ func TestEncodeAndDecodeLobbyIdWithSqids(t *testing.T) {
 
 	// When encoding and decoding the lobby id
 	encoded, err := EncodeID(GameIDLobby)
-	if err != nil {
-		t.Fatalf("cannot encode: %v", err)
-	}
+	require.NoError(t, err, "cannot encode id")
 	decoded, err := DecodeID(encoded)
-	if err != nil {
-		t.Fatalf("cannot decode: %v", err)
-	}
+	require.NoError(t, err, "cannot decode id")
 
 	// Then we should retrieve the same id
-	if decoded != GameIDLobby {
-		t.Fatalf("got different decoded id, got %d instead of %d", decoded, GameIDLobby)
-	}
+	require.Equal(t, GameIDLobby, decoded, "got different decoded id")
 }
 
 func TestDecodeInvalidIdWithSqids(t *testing.T) {
 	// Given the default sqids encoder
 
 	// When trying to decode an invalid id (one that would decode to multiple uint64 for example, here to [42, 43])
-	decoded, err := DecodeID("5cQlZ")
+	_, err := DecodeID("5cQlZ")
 
 	// Then it should fail
-	if err == nil {
-		t.Fatalf("expected to fail but did not, decoded id as %v", decoded)
-	}
+	require.Error(t, err, "expected invalid id to fail decoding")
 }
 
 func TestMarshalIdWithSqids(t *testing.T) {
@@ -75,18 +62,12 @@ func TestMarshalInvalidIdWithSqids(t *testing.T) {
 func TestNewSqidsEncoder(t *testing.T) {
 	// Given a standalone sqids encoder
 	encoder, err := NewSqidsEncoder()
-	if err != nil {
-		t.Fatalf("cannot initialize encoder: %v", err)
-	}
+	require.NoError(t, err, "cannot create sqids encoder")
 
 	// When encoding an id directly with it
 	encoded, err := encoder.EncodeID(42)
-	if err != nil {
-		t.Fatalf("cannot encode: %v", err)
-	}
+	require.NoError(t, err, "cannot encode id")
 
 	// Then it should use the same wire format as the default encoder
-	if encoded != "JgaEB" {
-		t.Fatalf("unexpected encoded id: %s", encoded)
-	}
+	require.Equal(t, "JgaEB", encoded, "unexpected encoded id")
 }

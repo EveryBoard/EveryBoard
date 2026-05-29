@@ -1,20 +1,20 @@
 package handler
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestDefaultClockAndRandomFunctions(t *testing.T) {
 	t.Run("Now", func(t *testing.T) {
 		n := Now()
-		if n <= 0 {
-			t.Errorf("unexpected value from Now: %d", n)
-		}
+		assert.Positive(t, n)
 	})
 
 	t.Run("NowFloat", func(t *testing.T) {
 		nf := NowFloat()
-		if nf <= 0 {
-			t.Errorf("unexpected value from NowFloat: %f", nf)
-		}
+		assert.Positive(t, nf)
 	})
 
 	t.Run("RandBool", func(t *testing.T) {

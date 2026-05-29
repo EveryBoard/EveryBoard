@@ -2,6 +2,7 @@ package rating
 
 import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -24,12 +25,8 @@ func TestEloComputationFirstGame(t *testing.T) {
 		CurrentElo:  1.0,
 		GamesPlayed: 1,
 	}
-	if winnerElo != expectedWinnerElo {
-		t.Fatalf("unexpected winner elo: expected %v, got %v", expectedWinnerElo, winnerElo)
-	}
-	if loserElo != expectedLoserElo {
-		t.Fatalf("unexpected loser elo: expected %v, got %v", expectedLoserElo, loserElo)
-	}
+	require.Equal(t, expectedWinnerElo, winnerElo, "unexpected winner elo")
+	require.Equal(t, expectedLoserElo, loserElo, "unexpected loser elo")
 }
 
 func TestEloComputationSecondGame(t *testing.T) {
@@ -55,12 +52,8 @@ func TestEloComputationSecondGame(t *testing.T) {
 		CurrentElo:  1.0,
 		GamesPlayed: 2,
 	}
-	if winnerElo != expectedWinnerElo {
-		t.Fatalf("unexpected winner elo: expected %v, got %v", expectedWinnerElo, winnerElo)
-	}
-	if loserElo != expectedLoserElo {
-		t.Fatalf("unexpected loser elo: expected %v, got %v", expectedLoserElo, loserElo)
-	}
+	require.Equal(t, expectedWinnerElo, winnerElo, "unexpected winner elo")
+	require.Equal(t, expectedLoserElo, loserElo, "unexpected loser elo")
 }
 
 func TestEloComputation20thGameTo39th(t *testing.T) {
@@ -86,12 +79,8 @@ func TestEloComputation20thGameTo39th(t *testing.T) {
 		CurrentElo:  180.0,
 		GamesPlayed: 40,
 	}
-	if winnerElo != expectedWinnerElo {
-		t.Fatalf("unexpected winner elo: expected %v, got %v", expectedWinnerElo, winnerElo)
-	}
-	if loserElo != expectedLoserElo {
-		t.Fatalf("unexpected loser elo: expected %v, got %v", expectedLoserElo, loserElo)
-	}
+	require.Equal(t, expectedWinnerElo, winnerElo, "unexpected winner elo")
+	require.Equal(t, expectedLoserElo, loserElo, "unexpected loser elo")
 }
 
 func TestEloComputationAfter40thGame(t *testing.T) {
@@ -117,12 +106,8 @@ func TestEloComputationAfter40thGame(t *testing.T) {
 		CurrentElo:  190.0,
 		GamesPlayed: 41,
 	}
-	if winnerElo != expectedWinnerElo {
-		t.Fatalf("unexpected winner elo: expected %v, got %v", expectedWinnerElo, winnerElo)
-	}
-	if loserElo != expectedLoserElo {
-		t.Fatalf("unexpected loser elo: expected %v, got %v", expectedLoserElo, loserElo)
-	}
+	require.Equal(t, expectedWinnerElo, winnerElo, "unexpected winner elo")
+	require.Equal(t, expectedLoserElo, loserElo, "unexpected loser elo")
 }
 
 func TestEloComputationDoesNotDecreaseBelow100(t *testing.T) {
@@ -148,12 +133,8 @@ func TestEloComputationDoesNotDecreaseBelow100(t *testing.T) {
 		CurrentElo:  100.0,
 		GamesPlayed: 16,
 	}
-	if winnerElo != expectedWinnerElo {
-		t.Fatalf("unexpected winner elo: expected %v, got %v", expectedWinnerElo, winnerElo)
-	}
-	if loserElo != expectedLoserElo {
-		t.Fatalf("unexpected loser elo: expected %v, got %v", expectedLoserElo, loserElo)
-	}
+	require.Equal(t, expectedWinnerElo, winnerElo, "unexpected winner elo")
+	require.Equal(t, expectedLoserElo, loserElo, "unexpected loser elo")
 }
 
 func TestEloComputationDrawFirstGame(t *testing.T) {
@@ -175,10 +156,6 @@ func TestEloComputationDrawFirstGame(t *testing.T) {
 		CurrentElo:  1.0,
 		GamesPlayed: 1,
 	}
-	if winnerElo != expectedWinnerElo {
-		t.Fatalf("unexpected winner elo: expected %v, got %v", expectedWinnerElo, winnerElo)
-	}
-	if loserElo != expectedLoserElo {
-		t.Fatalf("unexpected loser elo: expected %v, got %v", expectedLoserElo, loserElo)
-	}
+	require.Equal(t, expectedWinnerElo, winnerElo, "unexpected winner elo")
+	require.Equal(t, expectedLoserElo, loserElo, "unexpected loser elo")
 }

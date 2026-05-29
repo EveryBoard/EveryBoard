@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/stretchr/testify/require"
 	"os"
 	"testing"
 
@@ -16,16 +17,10 @@ func TestReadConfigurationSqliteWithoutDsn(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
+	require.NoError(t, err, "error when reading the configuration")
 	sqliteDialector, ok := config.Database.(*sqlite.Dialector)
-	if !ok {
-		t.Fatalf("not a sqlite database")
-	}
-	if sqliteDialector.DSN != "everyboard.db" {
-		t.Fatalf("database name should be everyboard.db but is %s", sqliteDialector.DSN)
-	}
+	require.True(t, ok, "not a sqlite database")
+	require.Equal(t, "everyboard.db", sqliteDialector.DSN, "database name should be everyboard.db")
 }
 
 func TestReadConfigurationSqliteWithDsn(t *testing.T) {
@@ -38,16 +33,10 @@ func TestReadConfigurationSqliteWithDsn(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
+	require.NoError(t, err, "error when reading the configuration")
 	sqliteDialector, ok := config.Database.(*sqlite.Dialector)
-	if !ok {
-		t.Fatalf("not a sqlite database")
-	}
-	if sqliteDialector.DSN != databaseName {
-		t.Fatalf("database name should be %s but is %s", databaseName, sqliteDialector.DSN)
-	}
+	require.True(t, ok, "not a sqlite database")
+	require.Equal(t, databaseName, sqliteDialector.DSN, "database name should be %s", databaseName)
 }
 
 func TestReadConfiguarationPostgresWithoutDsn(t *testing.T) {
@@ -58,9 +47,7 @@ func TestReadConfiguarationPostgresWithoutDsn(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 
 	_, err := ReadConfiguration()
-	if err == nil {
-		t.Fatalf("configuration with postgres and no dsn should be invalid")
-	}
+	require.Error(t, err, "error when reading the configuration")
 }
 
 func TestReadConfigurationPostgresWithDsn(t *testing.T) {
@@ -73,16 +60,10 @@ func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
+	require.NoError(t, err, "error when reading the configuration")
 	postgresDialector, ok := config.Database.(*postgres.Dialector)
-	if !ok {
-		t.Fatalf("not a postgres database")
-	}
-	if postgresDialector.DSN != dsn {
-		t.Fatalf("database name should be %s but is %s", dsn, postgresDialector.DSN)
-	}
+	require.True(t, ok, "not a postgres database")
+	require.Equal(t, dsn, postgresDialector.DSN, "database name should be %s", dsn)
 }
 
 func TestReadConfigurationWithoutOrigin(t *testing.T) {
@@ -92,9 +73,7 @@ func TestReadConfigurationWithoutOrigin(t *testing.T) {
 	t.Setenv("DATABASE_TYPE", "sqlite")
 
 	_, err := ReadConfiguration()
-	if err == nil {
-		t.Fatalf("configuration without AllowOrigin should be incorrect but is not")
-	}
+	require.Error(t, err, "error when reading the configuration")
 }
 
 func TestReadConfigurationWithOrigin(t *testing.T) {
@@ -105,12 +84,8 @@ func TestReadConfigurationWithOrigin(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "everyboard.org")
 
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
-	if config.Origin != "everyboard.org" {
-		t.Fatalf("origin improperly set")
-	}
+	require.NoError(t, err, "error when reading the configuration")
+	require.Equal(t, "everyboard.org", config.Origin, "origin improperly set")
 }
 
 func TestReadConfigurationWithoutListenAddr(t *testing.T) {
@@ -121,12 +96,8 @@ func TestReadConfigurationWithoutListenAddr(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
-	if config.ListenAddr != ":8081" {
-		t.Fatalf("listen address improperly set")
-	}
+	require.NoError(t, err, "error when reading the configuration")
+	require.Equal(t, ":8081", config.ListenAddr, "listen address improperly set")
 }
 
 func TestReadConfigurationWithListenAddr(t *testing.T) {
@@ -138,10 +109,6 @@ func TestReadConfigurationWithListenAddr(t *testing.T) {
 	t.Setenv("LISTEN_ADDR", "localhost:1234")
 
 	config, err := ReadConfiguration()
-	if err != nil {
-		t.Fatalf("error when reading the configuration: %v", err)
-	}
-	if config.ListenAddr != "localhost:1234" {
-		t.Fatalf("listen address improperly set")
-	}
+	require.NoError(t, err, "error when reading the configuration")
+	require.Equal(t, "localhost:1234", config.ListenAddr, "listen address improperly set")
 }

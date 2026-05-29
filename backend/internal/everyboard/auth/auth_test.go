@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"fmt"
+	"github.com/stretchr/testify/require"
 	"net"
 	"net/http"
 	"os"
@@ -16,9 +17,7 @@ func InitializeFirebaseForTest(t *testing.T, f FirebaseLike) {
 	t.Helper()
 	SetFirebaseClient(f)
 	err := InitFirebase()
-	if err != nil {
-		t.Fatalf("cannot initialize firebase: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize firebase")
 }
 
 type FirebaseMock struct {
@@ -58,27 +57,19 @@ func TestVerificationOfInvalidToken(t *testing.T) {
 	})
 	// Token invalid because it is not given in the Sec-WebSocket-Protocol field (which is absent)
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)
-	if err != nil {
-		t.Fatalf("cannot create request: %v", err)
-	}
+	require.NoError(t, err, "cannot create request")
 	_, _, err = VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("should not verify token if it is not given, but it does")
-	}
+	require.Error(t, err, "expected token verification to fail")
 
 	// Token invalid because it is ill-formatted
 	req.Header.Set("Sec-WebSocket-Protocol", "lol")
 	_, _, err = VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("should not verify token if is ill-formatted, but it does")
-	}
+	require.Error(t, err, "expected token verification to fail")
 
 	// Token invalid because firebase says so
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
 	_, _, err = VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("should not verify token if it is ill-formatted, but it does")
-	}
+	require.Error(t, err, "expected token verification to fail")
 }
 
 func TestVerifiedTokenButNoUser(t *testing.T) {
@@ -90,16 +81,12 @@ func TestVerifiedTokenButNoUser(t *testing.T) {
 		errorOnFetch:                true,
 	})
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)
-	if err != nil {
-		t.Fatalf("cannot create request: %v", err)
-	}
+	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
 	// When verifying its token and retrieving the user
 	_, _, err = VerifyTokenAndGetUser(req)
 	// Then it should fail
-	if err == nil {
-		t.Fatalf("should fail to verify token")
-	}
+	require.Error(t, err, "expected authentication error")
 }
 
 func TestTokenVerificationHappyFlow(t *testing.T) {
@@ -114,19 +101,14 @@ func TestTokenVerificationHappyFlow(t *testing.T) {
 		},
 	})
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)
-	if err != nil {
-		t.Fatalf("cannot create request: %v", err)
-	}
+	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
 	// When verifying its token and retrieving the user
 	uid, user, err := VerifyTokenAndGetUser(req)
-	if err != nil {
-		t.Fatalf("failed to verify token")
-	}
+	require.NoError(t, err, "failed to verify token")
 	// Then it should return the uid and user
-	if uid != "foo-uid" || user.Username != "foo" {
-		t.Fatalf("did not retrieve the correct user")
-	}
+	require.Equal(t, "foo-uid", uid, "did not retrieve the correct user")
+	require.Equal(t, "foo", user.Username, "did not retrieve the correct user")
 }
 
 func waitForPort(address string, timeout time.Duration) error {
@@ -144,9 +126,7 @@ func waitForPort(address string, timeout time.Duration) error {
 func startFirebaseEmulator(t *testing.T) {
 	cmd := exec.Command("npx", "firebase", "emulators:start", "--only", "firestore,auth", "--project", "my-project")
 	err := cmd.Start()
-	if err != nil {
-		t.Fatalf("failed to start Firebase emulator: %v", err)
-	}
+	require.NoError(t, err, "failed to start Firebase emulator")
 
 	t.Cleanup(func() {
 		if cmd.Process == nil {
@@ -169,9 +149,7 @@ func startFirebaseEmulator(t *testing.T) {
 	})
 
 	err = waitForPort("127.0.0.1:9099", 30*time.Second)
-	if err != nil {
-		t.Fatalf("failed to wait for Firebase emulator to start: %v", err)
-	}
+	require.NoError(t, err, "failed to wait for Firebase emulator to start")
 
 	t.Setenv("FIRESTORE_EMULATOR_HOST", "localhost:8080")
 	t.Setenv("FIREBASE_AUTH_EMULATOR_HOST", "localhost:9099")
@@ -186,9 +164,7 @@ func TestTokenVerificationWithEmulator(t *testing.T) {
 	})
 
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)
-	if err != nil {
-		t.Fatalf("cannot create request: %v", err)
-	}
+	require.NoError(t, err, "cannot create request")
 
 	// When verifying the token
 	// Then it should fail if any of the conditions are not satisfied
@@ -207,9 +183,7 @@ func tokenVerificationShouldFailWithIllFormedToken(t *testing.T, req *http.Reque
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, notajwt")
 
 	_, _, err := VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("verified token while it should not")
-	}
+	require.Error(t, err, "expected token verification to fail")
 }
 
 func tokenVerificationShouldFailWithIllegalB64Payload(t *testing.T, req *http.Request) {
@@ -217,42 +191,34 @@ func tokenVerificationShouldFailWithIllegalB64Payload(t *testing.T, req *http.Re
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, not.a.jwt")
 
 	_, _, err := VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("verified token while it should not")
-	}
+	require.Error(t, err, "expected token verification to fail")
 }
 
 func tokenVerificationShouldFailWithIllegalJsonPayload(t *testing.T, req *http.Request) {
 	// Token is ill-formed because it is not a JWT (not b64-encoded json, in particular the second part)
-	// Generated with echo 'not-json' | base64, appended to a valid JWT b64-encoded header
+	// Generated with echo "not-json" | base64, appended to a valid JWT b64-encoded header
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.bm90LWpzb24K.")
 
 	_, _, err := VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("verified token while it should not")
-	}
+	require.Error(t, err, "expected token verification to fail")
 }
 
 func tokenVerificationShouldFailWithPayloadWithoutSub(t *testing.T, req *http.Request) {
-	// Token is ill-formed because it is missing the 'sub' part
-	// Generated with echo '{}' | base64, appended to a valid JWT b64-encoded header
+	// Token is ill-formed because it is missing the "sub" part
+	// Generated with echo "{}" | base64, appended to a valid JWT b64-encoded header
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.e30K.")
 
 	_, _, err := VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("verified token while it should not")
-	}
+	require.Error(t, err, "expected token verification to fail")
 }
 
 func tokenVerificationShouldFailWithMissingUser(t *testing.T, req *http.Request) {
 	// Token is well-formed, but the user doesn't exist in firestore
-	// Generated with echo '{"sub":"foo"}' | base64, appended to a valid JWT b64-encoded header
+	// Generated with echo "{\"sub\":\"foo\"}" | base64, appended to a valid JWT b64-encoded header
 	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJmb28ifQo.")
 
 	_, _, err := VerifyTokenAndGetUser(req)
-	if err == nil {
-		t.Fatalf("verified token while it should not")
-	}
+	require.Error(t, err, "expected token verification to fail")
 }
 
 func addUser(t *testing.T, uid string, username string) {
@@ -260,21 +226,15 @@ func addUser(t *testing.T, uid string, username string) {
 	body := fmt.Sprintf(`{"fields":{"username":{"stringValue":"%s"}}}`, username)
 
 	req, err := http.NewRequest("PATCH", url, bytes.NewBuffer([]byte(body)))
-	if err != nil {
-		t.Fatalf("cannot create request: %v", err)
-	}
+	require.NoError(t, err, "cannot create request")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer owner")
 
 	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		t.Fatalf("cannot make http request to emulator: %v", err)
-	}
+	require.NoError(t, err, "cannot make http request")
 	defer resp.Body.Close()
 
-	if resp.StatusCode != http.StatusOK {
-		t.Fatalf("user creation in firestore failed: %v", resp.StatusCode)
-	}
+	require.Equal(t, http.StatusOK, resp.StatusCode, "user creation in firestore failed")
 }
 
 func tokenVerificationShouldSucceedWithValidTokenAndUser(t *testing.T, req *http.Request) {
@@ -284,11 +244,8 @@ func tokenVerificationShouldSucceedWithValidTokenAndUser(t *testing.T, req *http
 	// When verifying its token and retrieving the user
 	uid, user, err := VerifyTokenAndGetUser(req)
 
-	if err != nil {
-		t.Fatalf("failed to verify token: %v", err)
-	}
+	require.NoError(t, err, "failed to verify token")
 	// Then it should return the uid and user
-	if uid != "user-id" || user.Username != "foo" {
-		t.Fatalf("did not retrieve the correct user")
-	}
+	require.Equal(t, "user-id", uid, "did not retrieve the correct user")
+	require.Equal(t, "foo", user.Username, "did not retrieve the correct user")
 }

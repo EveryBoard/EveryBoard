@@ -2,6 +2,7 @@ package auth
 
 import (
 	"context"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
@@ -24,9 +25,7 @@ func TestFirebaseInitializeFailures(t *testing.T) {
 			ProjectID:   "",
 		}
 		err := f.Initialize()
-		if err == nil {
-			t.Fatal("expected error when ProjectID is missing in emulator mode")
-		}
+		require.Error(t, err, "expected Firebase initialization to fail without project id in emulator mode")
 	})
 
 	t.Run("NoEmulatorMissingServiceAccount", func(t *testing.T) {
@@ -35,9 +34,7 @@ func TestFirebaseInitializeFailures(t *testing.T) {
 			ServiceAccountFile: "",
 		}
 		err := f.Initialize()
-		if err == nil {
-			t.Fatal("expected error when ServiceAccountFile is missing in non-emulator mode")
-		}
+		require.Error(t, err, "expected Firebase initialization to fail without service account file")
 	})
 
 	t.Run("NoEmulatorInvalidServiceAccount", func(t *testing.T) {
@@ -46,9 +43,7 @@ func TestFirebaseInitializeFailures(t *testing.T) {
 			ServiceAccountFile: "non-existent-file.json",
 		}
 		err := f.Initialize()
-		if err == nil {
-			t.Fatal("expected error when ServiceAccountFile does not exist")
-		}
+		require.Error(t, err, "expected Firebase initialization to fail with missing service account file")
 	})
 }
 
@@ -60,32 +55,24 @@ func TestVerifyTokenEdgeCases(t *testing.T) {
 
 	t.Run("InvalidTokenFormat", func(t *testing.T) {
 		_, err := f.VerifyToken(t.Context(), "invalid-token")
-		if err == nil {
-			t.Fatal("expected error for invalid token format")
-		}
+		require.Error(t, err, "expected invalid token format to fail verification")
 	})
 
 	t.Run("InvalidPayloadEncoding", func(t *testing.T) {
 		_, err := f.VerifyToken(t.Context(), "header.invalid_base64!.signature")
-		if err == nil {
-			t.Fatal("expected error for invalid payload encoding")
-		}
+		require.Error(t, err, "expected invalid token payload encoding to fail verification")
 	})
 
 	t.Run("InvalidPayloadJSON", func(t *testing.T) {
 		// "bm90LWpzb24K" is "not-json\n" in base64
 		_, err := f.VerifyToken(t.Context(), "header.bm90LWpzb24K.signature")
-		if err == nil {
-			t.Fatal("expected error for invalid payload JSON")
-		}
+		require.Error(t, err, "expected invalid token payload JSON to fail verification")
 	})
 
 	t.Run("MissingSubClaim", func(t *testing.T) {
 		// "e30K" is "{}\n" in base64
 		_, err := f.VerifyToken(t.Context(), "header.e30K.signature")
-		if err == nil {
-			t.Fatal("expected error for missing 'sub' claim")
-		}
+		require.Error(t, err, "expected token without sub claim to fail verification")
 	})
 }
 
@@ -95,9 +82,7 @@ func TestFetchUserDocumentEdgeCases(t *testing.T) {
 			documentToFetch: map[string]any{},
 		})
 		_, err := FetchUserDocument(t.Context(), "user1")
-		if err == nil {
-			t.Fatal("expected error for missing username")
-		}
+		require.Error(t, err, "expected user document without username to fail")
 	})
 
 	t.Run("InvalidUsernameType", func(t *testing.T) {
@@ -107,8 +92,6 @@ func TestFetchUserDocumentEdgeCases(t *testing.T) {
 			},
 		})
 		_, err := FetchUserDocument(context.Background(), "user1")
-		if err == nil {
-			t.Fatal("expected error for non-string username")
-		}
+		require.Error(t, err, "expected user document with non-string username to fail")
 	})
 }

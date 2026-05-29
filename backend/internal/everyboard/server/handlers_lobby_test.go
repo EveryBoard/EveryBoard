@@ -9,6 +9,8 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/handler"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/gorilla/websocket"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
@@ -24,9 +26,7 @@ func TestSubscribeToLobbyShouldSubscribe(t *testing.T) {
 	time.Sleep(100 * time.Millisecond)
 
 	// Then we should should be subscribed
-	if !config.Subscriptions.IsSubscribed("foo") {
-		t.Fatalf("user should be subscribed")
-	}
+	require.True(t, config.Subscriptions.IsSubscribed("foo"), "user should be subscribed to lobby")
 }
 
 func TestSubscribeToLobbyWithMessagesAndConfigRooms(t *testing.T) {
@@ -83,9 +83,7 @@ func TestHandleCreateGameEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -101,13 +99,9 @@ func TestHandleCreateGameEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Create",{"gameName":"test"}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if string(msg) != `["Error",{"reason":"already-subscribed"}]` {
-			t.Errorf("expected already-subscribed error, got %s", string(msg))
-		}
+		assert.Equal(t, `["Error",{"reason":"already-subscribed"}]`, string(msg), "expected already-subscribed error")
 	})
 }
 

@@ -5,35 +5,27 @@ import (
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/sqlite"
 )
 
 func TestDBGameFlow(t *testing.T) {
 	// Given a db with a game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	configRoom, err := store.CreateConfigRoom(creator, gameName)
-	if err != nil {
-		t.Fatalf("cannot create config room: %v", err)
-	}
+	require.NoError(t, err, "cannot create config room")
 	err = store.AddCandidate(configRoom, opponent, 0)
-	if err != nil {
-		t.Fatalf("cannot add candidate: %v", err)
-	}
+	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
-	if err != nil {
-		t.Fatalf("cannnot select opponent: %v", err)
-	}
+	require.NoError(t, err, "cannot select opponent")
 	game, err := store.CreateGame(configRoom, 42, true)
-	if err != nil {
-		t.Fatalf("cannot create game: %v", err)
-	}
+	require.NoError(t, err, "cannot create game")
 
 	// When doing a regular flow for a game
 	// Then it should work as expected
@@ -44,9 +36,7 @@ func TestDBGameFlow(t *testing.T) {
 		User:      creator,
 		Data:      model.EventDataRequest(model.PropositionDraw),
 	})
-	if err != nil {
-		t.Fatalf("cannot add event: %v", err)
-	}
+	require.NoError(t, err, "cannot add game event")
 
 	// Retrieving the events
 	expectEvents := func(count int) {
@@ -55,12 +45,8 @@ func TestDBGameFlow(t *testing.T) {
 			seen = seen + 1
 			return nil
 		})
-		if err != nil {
-			t.Fatalf("cannot apply to game events: %v", err)
-		}
-		if seen != count {
-			t.Fatalf("there are missing or too many game events, I've seen %d instead of %d", seen, count)
-		}
+		require.NoError(t, err, "cannot iterate game events")
+		require.Equal(t, count, seen, "there are missing or too many game events")
 	}
 	expectEvents(1)
 
@@ -70,53 +56,35 @@ func TestDBGameFlow(t *testing.T) {
 		User:      opponent,
 		Data:      model.EventDataRequest(model.PropositionDraw),
 	})
-	if err != nil {
-		t.Fatalf("cannot add event: %v", err)
-	}
+	require.NoError(t, err, "cannot add game event")
 	expectEvents(2)
 
 	// Changing the game result
 	err = store.SetGameResult(game, model.ResultAgreedDrawByOne)
-	if err != nil {
-		t.Fatalf("cannot change game result: %v", err)
-	}
+	require.NoError(t, err, "cannot change game result")
 
 	game, err = store.GetGame(game.GameID)
-	if err != nil {
-		t.Fatalf("cannot retrieve game: %v", err)
-	}
-	if game.Result != model.ResultAgreedDrawByOne {
-		t.Fatalf("game result has not changed, it is %v", game.Result)
-	}
+	require.NoError(t, err, "cannot retrieve game")
+	require.Equal(t, model.ResultAgreedDrawByOne, game.Result, "game result has not changed")
 
 }
 
 func TestManyGameEvents(t *testing.T) {
 	// Given a db with a game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	configRoom, err := store.CreateConfigRoom(creator, gameName)
-	if err != nil {
-		t.Fatalf("cannot create config room: %v", err)
-	}
+	require.NoError(t, err, "cannot create config room")
 	err = store.AddCandidate(configRoom, opponent, 0)
-	if err != nil {
-		t.Fatalf("cannot add candidate: %v", err)
-	}
+	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
-	if err != nil {
-		t.Fatalf("cannnot select opponent: %v", err)
-	}
+	require.NoError(t, err, "cannot select opponent")
 	game, err := store.CreateGame(configRoom, 42, true)
-	if err != nil {
-		t.Fatalf("cannot create game: %v", err)
-	}
+	require.NoError(t, err, "cannot create game")
 
 	// When doing a regular flow for a game
 	// Then it should work as expected
@@ -128,9 +96,7 @@ func TestManyGameEvents(t *testing.T) {
 			User:      creator,
 			Data:      model.EventDataAddTime(model.AddTimeGame),
 		})
-		if err != nil {
-			t.Fatalf("cannot add event: %v", err)
-		}
+		require.NoError(t, err, "cannot add game event")
 	}
 
 	// Retrieving the events
@@ -140,12 +106,8 @@ func TestManyGameEvents(t *testing.T) {
 			seen = seen + 1
 			return nil
 		})
-		if err != nil {
-			t.Fatalf("cannot apply to game events: %v", err)
-		}
-		if seen != count {
-			t.Fatalf("there are missing or too many game events, I've seen %d instead of %d", seen, count)
-		}
+		require.NoError(t, err, "cannot iterate game events")
+		require.Equal(t, count, seen, "there are missing or too many game events")
 	}
 	expectEvents(42)
 }
@@ -153,24 +115,16 @@ func TestManyGameEvents(t *testing.T) {
 func TestGameCreationWithOpponentStarting(t *testing.T) {
 	// Given a db with a config room where opponent will start
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	configRoom, err := store.CreateConfigRoom(creator, gameName)
-	if err != nil {
-		t.Fatalf("cannot create config room: %v", err)
-	}
+	require.NoError(t, err, "cannot create config room")
 	err = store.AddCandidate(configRoom, opponent, 0)
-	if err != nil {
-		t.Fatalf("cannot add candidate: %v", err)
-	}
+	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
-	if err != nil {
-		t.Fatalf("cannnot select opponent: %v", err)
-	}
+	require.NoError(t, err, "cannot select opponent")
 	configProposal := model.ConfigProposal{
 		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
@@ -179,43 +133,30 @@ func TestGameCreationWithOpponentStarting(t *testing.T) {
 		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = store.ProposeConfig(configRoom, configProposal)
-	if err != nil {
-		t.Fatalf("cannot propose config room: %v", err)
-	}
+	require.NoError(t, err, "cannot propose config")
 
 	// When starting the game
 	game, err := store.CreateGame(configRoom, 42, true)
-	if err != nil {
-		t.Fatalf("cannot create game: %v", err)
-	}
+	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	if game.PlayerZero.ID != opponent.ID || game.PlayerOne.ID != creator.ID {
-		t.Fatalf("invalid players in game: %v", game)
-	}
+	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
 }
 
 func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 	// Given a db with a config room where a random player (set to false) will start
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	configRoom, err := store.CreateConfigRoom(creator, gameName)
-	if err != nil {
-		t.Fatalf("cannot create config room: %v", err)
-	}
+	require.NoError(t, err, "cannot create config room")
 	err = store.AddCandidate(configRoom, opponent, 0)
-	if err != nil {
-		t.Fatalf("cannot add candidate: %v", err)
-	}
+	require.NoError(t, err, "cannot add candidate")
 	err = store.SelectOpponent(configRoom, opponent)
-	if err != nil {
-		t.Fatalf("cannnot select opponent: %v", err)
-	}
+	require.NoError(t, err, "cannot select opponent")
 	configProposal := model.ConfigProposal{
 		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
@@ -224,34 +165,25 @@ func TestGameCreationWithRandomFalseBoolean(t *testing.T) {
 		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = store.ProposeConfig(configRoom, configProposal)
-	if err != nil {
-		t.Fatalf("cannot propose config room: %v", err)
-	}
+	require.NoError(t, err, "cannot propose config")
 
 	// When starting the game with a false boolean
 	game, err := store.CreateGame(configRoom, 42, false)
-	if err != nil {
-		t.Fatalf("cannot create game: %v", err)
-	}
+	require.NoError(t, err, "cannot create game")
 
 	// Then the game should be created with opponent as player zero and creator as player one
-	if game.PlayerZero.ID != opponent.ID || game.PlayerOne.ID != creator.ID {
-		t.Fatalf("invalid players in game: %v", game)
-	}
+	assert.Equal(t, opponent.ID, game.PlayerZero.ID, "invalid players in game")
+	assert.Equal(t, creator.ID, game.PlayerOne.ID, "invalid players in game")
 }
 
 func TestGameCreationWithoutOpponentFails(t *testing.T) {
 	// Given a db with a config room without opponent
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	gameName := "Go"
 	creator := model.MinimalUser{ID: "foo", Name: "foo"}
 	configRoom, err := store.CreateConfigRoom(creator, gameName)
-	if err != nil {
-		t.Fatalf("cannot create config room: %v", err)
-	}
+	require.NoError(t, err, "cannot create config room")
 	configProposal := model.ConfigProposal{
 		GameType:     model.GameTypeCustom,
 		MoveDuration: 42,
@@ -260,31 +192,21 @@ func TestGameCreationWithoutOpponentFails(t *testing.T) {
 		RulesConfig:  json.RawMessage(`{}`),
 	}
 	err = store.ProposeConfig(configRoom, configProposal)
-	if err != nil {
-		t.Fatalf("cannot propose config room: %v", err)
-	}
+	require.NoError(t, err, "cannot propose config")
 
 	// When starting the game
 	_, err = store.CreateGame(configRoom, 42, true)
 	// Then it should fail
-	if err == nil {
-		t.Fatalf("created a game succesfully although there is no opponent")
-	}
+	require.Error(t, err, "expected game creation without opponent to fail")
 }
 
 func TestUnexistingGame(t *testing.T) {
 	// Given a db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	// When retrieving an unexisting game
 	game, err := store.GetGame(42)
 	// Then should return nil but no error
-	if err != nil {
-		t.Fatalf("error when getting unexisting game: %v", err)
-	}
-	if game != nil {
-		t.Fatalf("getting unexisting game has retrieved something: %v", game)
-	}
+	require.NoError(t, err, "cannot get missing game")
+	require.Nil(t, game, "getting unexisting game has retrieved something")
 }

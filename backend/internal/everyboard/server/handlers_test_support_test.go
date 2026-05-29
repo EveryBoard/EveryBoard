@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"github.com/stretchr/testify/require"
 	"log"
 	"net/http"
 	"sync"
@@ -17,9 +18,7 @@ import (
 
 func encodeID(t *testing.T, id model.GameID) string {
 	encodedId, err := model.EncodeID(id)
-	if err != nil {
-		t.Fatalf("cannot encode id: %v", err)
-	}
+	require.NoError(t, err, "cannot encode id")
 	return encodedId
 }
 func b64(s string) string {
@@ -34,28 +33,20 @@ func EstablishWebSocketConnection(t *testing.T, uid string) *websocket.Conn {
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-	if err != nil {
-		t.Fatalf("Dial failed: %v (status %v)", err, resp.Status)
-	}
+	require.NoError(t, err, "Dial failed")
 
-	if resp.StatusCode != http.StatusSwitchingProtocols {
-		t.Fatalf("Expected 101 Switching Protocols, got %d", resp.StatusCode)
-	}
+	require.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
 
 	// We should always receive a first message (about our current game)
 	_, _, err = c.ReadMessage()
-	if err != nil {
-		t.Fatalf("cannot read message: %v", err)
-	}
+	require.NoError(t, err, "failed to read message")
 
 	return c
 }
 
 func sendRawMessage(t *testing.T, c *websocket.Conn, message string) {
 	err := c.WriteMessage(websocket.TextMessage, []byte(message))
-	if err != nil {
-		t.Fatalf("cannot send message: %v", err)
-	}
+	require.NoError(t, err, "WriteMessage failed")
 	// Wait a bit to make sure the message was correctly sent and processed
 	time.Sleep(100 * time.Millisecond)
 }
@@ -72,43 +63,32 @@ func readMessage[T any](t *testing.T, c *websocket.Conn, tag string, name string
 	}()
 	select {
 	case <-time.After(1 * time.Second):
-		t.Fatalf("timeout: no message received within 1 second while waiting for message with tag %s", tag)
-		panic("failed")
+		require.FailNowf(t, "timeout", "no message received within 1 second while waiting for message with tag %s", tag)
 	case <-done:
-		if err != nil {
-			t.Fatalf("failed to read message: %v", err)
-		}
+		require.NoError(t, err, "failed to read message with tag %s", tag)
 
-		if msgType == -1 {
-			t.Fatal("invalid message type")
-		}
+		require.NotEqual(t, -1, msgType, "invalid message type")
 
 		var data []any
 		err = json.Unmarshal(msg, &data)
-		if err != nil {
-			t.Fatalf("failed to unmarshall: %v", err)
-		}
+		require.NoError(t, err, "failed to unmarshal")
 
-		if len(data) < 2 {
-			t.Fatalf("not enough elements")
-		}
+		require.GreaterOrEqual(t, len(data), 2, "message should include tag and payload")
 
-		if gotTag, ok := data[0].(string); !ok || gotTag != tag {
-			t.Fatalf("unexpected tag: %v", data[0])
-		}
+		gotTag, ok := data[0].(string)
+		require.True(t, ok, "message tag should be a string")
+		require.Equal(t, tag, gotTag, "invalid message tag")
 
 		obj, ok := data[1].(map[string]any)
-		if !ok {
-			t.Fatalf("invalid payload")
-		}
+		require.True(t, ok, "message payload should be an object")
 
 		val, ok := obj[name].(T)
-		if !ok {
-			t.Fatalf("field %q missing or not string", name)
-		}
+		require.True(t, ok, "message payload should contain %s", name)
 
 		return val
 	}
+	var zero T
+	return zero
 }
 
 // Wait one second for a message, fail the test if nothing is received
@@ -127,26 +107,18 @@ func expectMessage(t *testing.T, c *websocket.Conn, expected string) {
 
 	select {
 	case <-time.After(1 * time.Second):
-		t.Fatalf("timeout: no message received within 1 second while waiting for %s", expected)
+		require.FailNowf(t, "timeout", "no message received within 1 second while waiting for %s", expected)
 	case <-done:
-		if err != nil {
-			t.Fatalf("error when receiving response: %v", err)
-		}
-		if string(msg) != expected {
-			t.Fatalf("response is not the expected one:\nexpected: `%s`\ngot     : `%s`", expected, string(msg))
-		}
-		if msgType == -1 {
-			t.Fatal("invalid message type")
-		}
+		require.NoError(t, err, "failed to read expected message %s", expected)
+		require.Equal(t, expected, string(msg), "invalid message")
+		require.NotEqual(t, -1, msgType, "invalid message type")
 		log.Printf("GOT:      %s", expected)
 	}
 }
 
 func toJSON(t *testing.T, v any) string {
 	b, err := json.Marshal(v)
-	if err != nil {
-		t.Fatalf("cannot convert to JSON: %v", err)
-	}
+	require.NoError(t, err, "failed to marshal")
 	return string(b)
 }
 
@@ -211,7 +183,7 @@ func (sb ScenarioBuilder) EstablishConnection(userId string) string {
 func (sb ScenarioBuilder) getUser(userId string) model.MinimalUser {
 	user, ok := sb.users[userId]
 	if !ok {
-		sb.t.Fatalf("no user: %s", userId)
+		require.FailNowf(sb.t, "missing user", "no user: %s", userId)
 	}
 	return user
 }
@@ -219,7 +191,7 @@ func (sb ScenarioBuilder) getUser(userId string) model.MinimalUser {
 func (sb ScenarioBuilder) getConnection(userId string) *websocket.Conn {
 	conn, ok := sb.connections[userId]
 	if !ok {
-		sb.t.Fatalf("no connection for: %s", userId)
+		require.FailNowf(sb.t, "missing connection", "no connection for: %s", userId)
 	}
 	return conn
 }
@@ -236,8 +208,7 @@ func find(arr []string, value string) *int {
 func (sb *ScenarioBuilder) removeLobbySubscription(userId string) {
 	idx := find(sb.lobbySubscribers, userId)
 	if idx == nil {
-		sb.t.Fatalf("cannot find subscriber: %s", userId)
-		return
+		require.FailNowf(sb.t, "missing subscriber", "cannot find subscriber: %s", userId)
 	}
 	sb.lobbySubscribers = append(sb.lobbySubscribers[0:*idx], sb.lobbySubscribers[*idx+1:]...)
 }
@@ -250,8 +221,7 @@ func (sb ScenarioBuilder) isSubscribedToConfigRoom(userId string, gameId model.G
 func (sb ScenarioBuilder) removeConfigRoomSubscription(userId string, gameId model.GameID) {
 	idx := find(sb.configRoomSubscribers[gameId], userId)
 	if idx == nil {
-		sb.t.Fatalf("cannot find subscriber: %s", userId)
-		return
+		require.FailNowf(sb.t, "missing subscriber", "cannot find subscriber: %s", userId)
 	}
 	sb.configRoomSubscribers[gameId] = append(sb.configRoomSubscribers[gameId][0:*idx], sb.configRoomSubscribers[gameId][*idx+1:]...)
 }
@@ -259,8 +229,7 @@ func (sb ScenarioBuilder) removeConfigRoomSubscription(userId string, gameId mod
 func (sb ScenarioBuilder) removeGameSubscription(userId string, gameId model.GameID) {
 	idx := find(sb.gameSubscribers[gameId], userId)
 	if idx == nil {
-		sb.t.Fatalf("cannot find subscriber: %s", userId)
-		return
+		require.FailNowf(sb.t, "missing subscriber", "cannot find subscriber: %s", userId)
 	}
 	sb.gameSubscribers[gameId] = append(sb.gameSubscribers[gameId][0:*idx], sb.gameSubscribers[gameId][*idx+1:]...)
 }
@@ -286,7 +255,7 @@ func (sb ScenarioBuilder) getGameSubscribers(gameId model.GameID) []string {
 func (sb ScenarioBuilder) getSubscribedGameId(userId string) model.GameID {
 	subscription, ok := sb.subscriptions[userId]
 	if !ok {
-		sb.t.Fatalf("no subscription for %s", userId)
+		require.FailNowf(sb.t, "missing subscription", "no subscription for %s", userId)
 	}
 	return subscription
 }
@@ -306,7 +275,7 @@ func (sb ScenarioBuilder) subscribeGame(userId string, gameId model.GameID) {
 func (sb ScenarioBuilder) getGame(gameId model.GameID) *model.Game {
 	game := sb.fakeStore.GameForTest(gameId)
 	if game == nil {
-		sb.t.Fatalf("game does not exist: %d", gameId)
+		require.FailNowf(sb.t, "missing game", "game does not exist: %d", gameId)
 	}
 	return game
 }
@@ -325,9 +294,7 @@ func (sb ScenarioBuilder) Create(userId string, gameName string) model.GameID {
 
 	gameIdStr := readMessage[string](sb.t, conn, "GameCreated", "gameId")
 	gameId, err := model.DecodeID(gameIdStr)
-	if err != nil {
-		sb.t.Fatalf("cannot decode game id: %v", err)
-	}
+	require.NoError(sb.t, err, "cannot decode id")
 
 	currentGame := sb.fakeStore.CurrentGameForTest(userId)
 	expectMessage(sb.t, conn, fmt.Sprintf(`["CurrentGameUpdate",{"currentGame":%s}]`, toJSON(sb.t, currentGame)))
@@ -404,7 +371,7 @@ func (sb ScenarioBuilder) Unsubscribe(userId string) {
 
 	subscription, ok := sb.subscriptions[userId]
 	if !ok {
-		sb.t.Fatalf("cannot unsubscribe not subscribed user")
+		require.FailNow(sb.t, "cannot unsubscribe not subscribed user")
 	}
 
 	delete(sb.subscriptions, userId)
@@ -510,7 +477,7 @@ func (sb ScenarioBuilder) doEvent(userId string, eventStr string) {
 
 	events := sb.fakeStore.EventsForTest(gameId)
 	if len(events) == eventsBefore {
-		sb.t.Fatalf("doEvent did not result in a new event when doing event %s", eventStr)
+		require.FailNowf(sb.t, "missing event", "doEvent did not result in a new event when doing event %s", eventStr)
 	}
 	event := events[eventsBefore]
 	eventJSON := toJSON(sb.t, &event)

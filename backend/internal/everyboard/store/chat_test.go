@@ -4,15 +4,14 @@ import (
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/sqlite"
 )
 
 func TestChatMessageFlow(t *testing.T) {
 	// Given a db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	message1 := model.Message{
 		Sender:    user,
@@ -26,14 +25,10 @@ func TestChatMessageFlow(t *testing.T) {
 	}
 	// When adding messages
 	err = store.AddChatMessage(42, &message1)
-	if err != nil {
-		t.Fatalf("cannot add chat message: %v", err)
-	}
+	require.NoError(t, err, "cannot add chat message")
 
 	err = store.AddChatMessage(42, &message2)
-	if err != nil {
-		t.Fatalf("cannot add chat message: %v", err)
-	}
+	require.NoError(t, err, "cannot add chat message")
 
 	// Then they should be added and can be retrieved in timestamp order
 	seenMessages := []model.Message{}
@@ -41,13 +36,7 @@ func TestChatMessageFlow(t *testing.T) {
 		seenMessages = append(seenMessages, *m)
 		return nil
 	})
-	if err != nil {
-		t.Fatalf("cannot apply to messages: %v", err)
-	}
-	if len(seenMessages) != 2 {
-		t.Fatalf("should have seen 2 messages, but I've seen %d instead", len(seenMessages))
-	}
-	if seenMessages[0].Timestamp >= seenMessages[1].Timestamp {
-		t.Fatalf("messages should be ordered by timestamp but are not")
-	}
+	require.NoError(t, err, "cannot iterate chat messages")
+	require.Equal(t, 2, len(seenMessages), "there are missing or too many chat messages")
+	require.Less(t, seenMessages[0].Timestamp, seenMessages[1].Timestamp, "chat messages should be ordered by timestamp")
 }

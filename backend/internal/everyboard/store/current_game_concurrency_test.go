@@ -14,7 +14,7 @@ import (
 
 func TestCreateGame_RaceCondition(t *testing.T) {
 	dbStore, err := InitDatabase(sqlite.Open(":memory:"))
-	require.NoError(t, err)
+	require.NoError(t, err, "cannot initialize db")
 
 	user := model.MinimalUser{ID: "user1", Name: "User 1"}
 	gameName := "p4"
@@ -68,7 +68,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 	errCount := 0
 	for err := range errors {
 		t.Logf("Request failed with error: %v", err)
-		assert.Equal(t, apperror.ErrorAlreadySubscribed, err)
+		assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 		errCount++
 	}
 
@@ -80,7 +80,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 		}
 		return nil
 	})
-	require.NoError(t, err)
+	require.NoError(t, err, "cannot iterate config rooms after concurrent game creation")
 
 	numSuccess := numRequests - errCount
 

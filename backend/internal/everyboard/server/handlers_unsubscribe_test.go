@@ -3,6 +3,8 @@ package server
 import (
 	"encoding/base64"
 	"fmt"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
@@ -24,9 +26,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", token)
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		// Skip the initial message
 		readWithTimeout(t, c)
 		return c
@@ -36,23 +36,17 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		c := dial("user_not_sub")
 		defer c.Close()
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 	})
 
 	t.Run("Lobby", func(t *testing.T) {
 		c := dial("user_lobby")
 		defer c.Close()
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeLobby"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c) // skip lobby update
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 	})
 
 	t.Run("GameObserver", func(t *testing.T) {
@@ -72,14 +66,10 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 			Status:  model.StatusStarted,
 		})
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedGameID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c) // skip subscription messages
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 	})
 
 	t.Run("ConfigRoomCreator", func(t *testing.T) {
@@ -94,14 +84,10 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 			Status:  model.StatusCreated,
 		})
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c) // skip subscription messages
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		for i := 0; i < 5; i++ {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
@@ -109,9 +95,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 			}
 		}
 		// Config room should be deleted
-		if fakeStore.ConfigRoomForTest(configRoomID) != nil {
-			t.Errorf("Config room should have been deleted")
-		}
+		assert.Nil(t, fakeStore.ConfigRoomForTest(configRoomID), "config room should have been deleted")
 	})
 
 	t.Run("ConfigRoomCandidate", func(t *testing.T) {
@@ -128,15 +112,11 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c)
 
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		for i := 0; i < 5; i++ {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
@@ -145,9 +125,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		}
 		// User should no longer be a candidate
 		for _, cand := range fakeStore.CandidatesForTest(configRoomID) {
-			if cand.User.ID == uid {
-				t.Errorf("user should have been removed from candidates")
-			}
+			assert.NotEqual(t, uid, cand.User.ID, "unsubscribed candidate should have been removed")
 		}
 	})
 
@@ -165,15 +143,11 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		})
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID)))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c)
 
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		for i := 0; i < 5; i++ {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
@@ -182,9 +156,7 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		}
 		// Chosen opponent should be cleared
 		configRoom := fakeStore.ConfigRoomForTest(configRoomID)
-		if configRoom.ChosenOpponent != nil {
-			t.Errorf("chosen opponent should have been cleared")
-		}
+		assert.Nil(t, configRoom.ChosenOpponent, "chosen opponent should have been removed")
 	})
 }
 
@@ -196,9 +168,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -222,9 +192,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 		fakeStore.DeleteConfigRoomForTest(configRoomID)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 	})
 
@@ -245,9 +213,7 @@ func TestUnsubscribeMissingConfigRoom(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 	})
 }
@@ -260,9 +226,7 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -299,17 +263,11 @@ func TestUnsubscribeAsPlayer(t *testing.T) {
 				break
 			}
 		}
-		if !found {
-			t.Fatal("could not subscribe")
-		}
+		require.True(t, found, "expected config room deletion message")
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(200 * time.Millisecond)
-		if fakeStore.CurrentGameForTest(uid) == nil {
-			t.Errorf("player current game should NOT have been removed")
-		}
+		assert.NotNil(t, fakeStore.CurrentGameForTest(uid), "player should remain in current game")
 	})
 }

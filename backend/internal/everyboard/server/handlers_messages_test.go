@@ -1,6 +1,7 @@
 package server
 
 import (
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"testing"
 
@@ -83,9 +84,7 @@ func TestMessageArgumentErrors(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -115,13 +114,9 @@ func TestMessageArgumentErrors(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			err := c.WriteMessage(websocket.TextMessage, []byte(tt.msg))
-			if err != nil {
-				t.Fatalf("WriteMessage failed: %v", err)
-			}
+			require.NoError(t, err, "WriteMessage failed")
 			msg := readWithTimeout(t, c)
-			if msg == nil {
-				t.Fatal("expected error message")
-			}
+			require.NotNil(t, msg, "expected message")
 		})
 	}
 }

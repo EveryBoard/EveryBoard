@@ -2,10 +2,11 @@ package protocol
 
 import (
 	"encoding/json"
-	"reflect"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 )
 
 func TestMarshalConfigProposal(t *testing.T) {
@@ -28,17 +29,11 @@ func TestDecodeIncomingMessageWithoutArguments(t *testing.T) {
 
 	// When decoding it
 	tag, arguments, err := DecodeIncomingMessage(message)
-	if err != nil {
-		t.Errorf("failed to decode message: %v", err)
-	}
+	require.NoError(t, err, "failed to decode message")
 
 	// Then it should have extracted the tag, and have no argument
-	if tag != "Resign" {
-		t.Errorf("invalid tag: %s", tag)
-	}
-	if arguments != nil {
-		t.Errorf("invalid arguments: %s", arguments)
-	}
+	assert.Equal(t, "Resign", tag, "invalid tag")
+	assert.Nil(t, arguments, "invalid arguments")
 }
 
 func TestDecodeIncomingMessageWithParameters(t *testing.T) {
@@ -47,20 +42,12 @@ func TestDecodeIncomingMessageWithParameters(t *testing.T) {
 
 	// When decoding it
 	tag, arguments, err := DecodeIncomingMessage(message)
-	if err != nil {
-		t.Errorf("failed to decode message: %v", err)
-	}
+	require.NoError(t, err, "failed to decode message")
 
 	// Then it should have the expected tag and arguments
-	if tag != "SelectOpponent" {
-		t.Errorf("invalid tag: %s", tag)
-	}
-	expectedArguments := map[string]json.RawMessage{
-		"opponent": json.RawMessage(`{"id": "foo", "name": "bar"}`),
-	}
-	if reflect.DeepEqual(arguments, expectedArguments) {
-		t.Errorf("invalid arguments: %v", arguments)
-	}
+	assert.Equal(t, "SelectOpponent", tag, "invalid tag")
+	expectedOpponent := `{"id": "foo", "name": "bar"}`
+	assert.JSONEq(t, expectedOpponent, string(arguments["opponent"]), "invalid arguments")
 }
 
 func ExpectDecodeInvalidIncomingMessage(t *testing.T, message []byte) {
@@ -68,12 +55,10 @@ func ExpectDecodeInvalidIncomingMessage(t *testing.T, message []byte) {
 	// Given an invalid message
 
 	// When decoding it
-	tag, arguments, err := DecodeIncomingMessage(message)
+	_, _, err := DecodeIncomingMessage(message)
 
 	// Then it should fail
-	if err == nil {
-		t.Errorf("succesfully decoded a message that should fail: %s, %v", tag, arguments)
-	}
+	assert.Error(t, err, "expected invalid incoming message to fail decoding")
 }
 
 func TestDecodeInvalidIncomingMessageDueToNotAnArray(t *testing.T) {

@@ -2,6 +2,8 @@ package server
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"strings"
 	"testing"
@@ -19,9 +21,7 @@ func TestHandleSubscribeGameDoesNotExist(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -31,13 +31,9 @@ func TestHandleSubscribeGameDoesNotExist(t *testing.T) {
 
 	encodedID, _ := model.EncodeID(model.GameID(9999))
 	err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
-	if err != nil {
-		t.Fatalf("WriteMessage failed: %v", err)
-	}
+	require.NoError(t, err, "WriteMessage failed")
 	msg := readWithTimeout(t, c)
-	if string(msg) != `["Error",{"reason":"game-does-not-exist"}]` {
-		t.Errorf("expected game-does-not-exist error, got %s", string(msg))
-	}
+	assert.Equal(t, `["Error",{"reason":"game-does-not-exist"}]`, string(msg), "expected game-does-not-exist error")
 }
 
 func TestSubscribeGameRollback(t *testing.T) {
@@ -50,17 +46,13 @@ func TestSubscribeGameRollback(t *testing.T) {
 
 	// Encode a game ID that decodes successfully but does not exist in the store.
 	missingID, err := model.EncodeID(model.GameID(999999))
-	if err != nil {
-		t.Fatalf("cannot encode id: %v", err)
-	}
+	require.NoError(t, err, "cannot encode id")
 	sendRawMessage(t, c, fmt.Sprintf(`["SubscribeGame", {"gameId":"%s"}]`, missingID))
 
 	// Wait for processing
 	time.Sleep(200 * time.Millisecond)
 
-	if config.Subscriptions.IsSubscribed(uid) {
-		t.Errorf("User should not be subscribed after failed SubscribeGame (rollback failed)")
-	}
+	assert.False(t, config.Subscriptions.IsSubscribed(uid), "User should not be subscribed after failed SubscribeGame (rollback failed)")
 }
 
 func TestHandleAcceptEdgeCases(t *testing.T) {
@@ -71,9 +63,7 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -100,9 +90,7 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"TakeBack"}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 	})
 
@@ -130,14 +118,10 @@ func TestHandleAcceptEdgeCases(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Draw"}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 		game := fakeStore.GameForTest(gameID)
-		if !game.Result.IsDraw() {
-			t.Errorf("expected draw, got %s", game.Result)
-		}
+		assert.True(t, game.Result.IsDraw(), "expected draw")
 	})
 }
 
@@ -149,9 +133,7 @@ func TestHandleGameEnd(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -180,14 +162,10 @@ func TestHandleGameEnd(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":0}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 		game := fakeStore.GameForTest(gameID)
-		if game.Result != model.ResultVictoryOfZero {
-			t.Errorf("expected VictoryOfZero, got %s", game.Result)
-		}
+		assert.Equal(t, model.ResultVictoryOfZero, game.Result, "expected VictoryOfZero")
 	})
 
 	t.Run("WinnerOne", func(t *testing.T) {
@@ -214,14 +192,10 @@ func TestHandleGameEnd(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":1}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 		game := fakeStore.GameForTest(gameID)
-		if game.Result != model.ResultVictoryOfOne {
-			t.Errorf("expected VictoryOfOne, got %s", game.Result)
-		}
+		assert.Equal(t, model.ResultVictoryOfOne, game.Result, "expected VictoryOfOne")
 	})
 
 	t.Run("WinnerNone", func(t *testing.T) {
@@ -248,14 +222,10 @@ func TestHandleGameEnd(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["EndGame",{"winner":2}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		time.Sleep(100 * time.Millisecond)
 		game := fakeStore.GameForTest(gameID)
-		if game.Result != model.ResultHardDraw {
-			t.Errorf("expected HardDraw, got %s", game.Result)
-		}
+		assert.Equal(t, model.ResultHardDraw, game.Result, "expected HardDraw")
 	})
 }
 
@@ -267,9 +237,7 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -279,13 +247,9 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 		defer c.Close()
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if string(msg) != `["Error",{"reason":"not-subscribed"}]` {
-			t.Errorf("expected not-subscribed error, got %s", string(msg))
-		}
+		assert.Equal(t, `["Error",{"reason":"not-subscribed"}]`, string(msg), "expected not-subscribed error")
 	})
 
 	t.Run("GameNotFinished", func(t *testing.T) {
@@ -305,13 +269,9 @@ func TestHandleAcceptRematchEdgeCases(t *testing.T) {
 		readWithTimeout(t, c)
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["Accept",{"proposition":"Rematch"}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
-		if string(msg) != `["Error",{"reason":"not-allowed"}]` {
-			t.Errorf("expected not-allowed error, got %s", string(msg))
-		}
+		assert.Equal(t, `["Error",{"reason":"not-allowed"}]`, string(msg), "expected not-allowed error")
 	})
 }
 
@@ -323,9 +283,7 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 		headers := http.Header{}
 		headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
 		c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-		if err != nil {
-			t.Fatalf("Dial failed: %v", err)
-		}
+		require.NoError(t, err, "Dial failed")
 		readWithTimeout(t, c)
 		return c
 	}
@@ -368,28 +326,16 @@ func TestHandleNotifyTimeoutEdgeCases(t *testing.T) {
 				break
 			}
 		}
-		if !foundGameUpdate {
-			t.Fatal("could not subscribe")
-		}
-		if !foundSyncEvent {
-			t.Fatal("did not receive sync event")
-		}
+		require.True(t, foundGameUpdate, "expected GameUpdate message")
+		require.True(t, foundSyncEvent, "expected SyncEvent message")
 
 		err := c.WriteMessage(websocket.TextMessage, []byte(`["NotifyTimeout",{"timeoutedPlayer":1}]`))
-		if err != nil {
-			t.Fatalf("WriteMessage failed: %v", err)
-		}
+		require.NoError(t, err, "WriteMessage failed")
 		game := fakeStore.GameForTest(gameID)
-		if game.Result != model.ResultTimeoutOfOne {
-			t.Errorf("expected result to remain TimeoutOfOne, got %s", game.Result)
-		}
-		if err := c.SetReadDeadline(time.Now().Add(200 * time.Millisecond)); err != nil {
-			t.Fatalf("SetReadDeadline failed: %v", err)
-		}
-		_, msg, err := c.ReadMessage()
-		if err == nil {
-			t.Fatalf("expected duplicate timeout notification to be ignored, got %s", string(msg))
-		}
+		assert.Equal(t, model.ResultTimeoutOfOne, game.Result, "expected TimeoutOfOne")
+		require.NoError(t, c.SetReadDeadline(time.Now().Add(200*time.Millisecond)), "SetReadDeadline failed")
+		_, _, err = c.ReadMessage()
+		require.Error(t, err, "failed to read message")
 	})
 }
 

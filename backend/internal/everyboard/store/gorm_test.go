@@ -1,6 +1,8 @@
 package store
 
 import (
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
@@ -10,16 +12,12 @@ import (
 func TestInitializeDB(t *testing.T) {
 	// When initializing the DB
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 
 	// We should have a config room for the lobby
 	lobby, err := store.GetConfigRoom(model.GameIDLobby)
-	if err != nil {
-		t.Errorf("error when accessing lobby: %v", err)
-	}
-	if lobby == nil || lobby.ID != model.GameIDLobby || lobby.GameName != "lobby" {
-		t.Errorf("lobby doesn't exist upon db initialization")
-	}
+	require.NoError(t, err, "cannot get config room")
+	require.NotNil(t, lobby, "lobby doesn't exist upon db initialization")
+	assert.Equal(t, model.GameIDLobby, lobby.ID, "lobby doesn't exist upon db initialization")
+	assert.Equal(t, "lobby", lobby.GameName, "lobby doesn't exist upon db initialization")
 }

@@ -2,6 +2,8 @@ package server
 
 import (
 	"fmt"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -37,9 +39,7 @@ func TestPrepareFailures(t *testing.T) {
 			Firebase: FailingFirebase{},
 		}
 		_, err := Prepare(config)
-		if err == nil {
-			t.Fatal("expected error on failing firebase initialization")
-		}
+		require.Error(t, err, "error when preparing the server")
 	})
 
 	t.Run("DatabaseFailure", func(t *testing.T) {
@@ -50,9 +50,7 @@ func TestPrepareFailures(t *testing.T) {
 		auth.SetFirebaseClient(FirebaseMock{})
 
 		_, err := Prepare(config)
-		if err == nil {
-			t.Fatal("expected error on failing database initialization")
-		}
+		require.Error(t, err, "error when preparing the server")
 	})
 }
 
@@ -70,9 +68,7 @@ func TestServeHTTPUnauthorized(t *testing.T) {
 	config.ServeHTTP(rr, req)
 
 	// Then it should return 401 Unauthorized
-	if rr.Code != http.StatusUnauthorized {
-		t.Errorf("expected status 401, got %d", rr.Code)
-	}
+	assert.Equal(t, http.StatusUnauthorized, rr.Code, "expected status 401")
 }
 
 func TestSendMessageToClosedConnection(t *testing.T) {
@@ -83,9 +79,7 @@ func TestSendMessageToClosedConnection(t *testing.T) {
 	headers := http.Header{}
 	headers.Set("Sec-WebSocket-Protocol", tokenForUser("user1"))
 	c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
-	if err != nil {
-		t.Fatalf("Dial failed: %v", err)
-	}
+	require.NoError(t, err, "Dial failed")
 	// Give it time to register
 	time.Sleep(100 * time.Millisecond)
 

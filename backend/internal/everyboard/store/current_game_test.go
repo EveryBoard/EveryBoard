@@ -4,33 +4,27 @@ import (
 	"testing"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"gorm.io/driver/sqlite"
 )
 
 func TestGetCurrentGameWhenNone(t *testing.T) {
 	// Given an empty db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	// When getting the current game of a user who doesn't have one
 	currentGame, err := store.GetCurrentGame(user)
 	// Then it should return nil without error
-	if err != nil {
-		t.Fatalf("error when getting current game: %v", err)
-	}
-	if currentGame != nil {
-		t.Fatalf("retrieved a current game even though it shouldn't: %v", currentGame)
-	}
+	require.NoError(t, err, "cannot get missing current game")
+	require.Nil(t, currentGame, "retrieved a current game even though it shouldn't")
 }
 
 func TestSetCurrentGame(t *testing.T) {
 	// Given an empty db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	// When setting the current game of the user
 	gameName := "Go"
@@ -45,30 +39,22 @@ func TestSetCurrentGame(t *testing.T) {
 		Role:     role,
 	}
 	err = store.SetCurrentGame(currentGame)
-	if err != nil {
-		t.Fatalf("error when setting current game: %v", err)
-	}
+	require.NoError(t, err, "error when setting current game")
 	// Then it should be set
 	currentGame, err = store.GetCurrentGame(user)
-	if err != nil {
-		t.Fatalf("error when getting current game: %v", err)
-	}
-	if currentGame == nil ||
-		currentGame.GameID != 42 ||
-		currentGame.GameName != gameName ||
-		currentGame.Opponent != nil ||
-		currentGame.Role != role {
-		t.Fatalf("invalid current game in db: %v", currentGame)
-	}
+	require.NoError(t, err, "error when getting current game")
+	require.NotNil(t, currentGame, "invalid current game in db")
+	assert.Equal(t, model.GameID(42), currentGame.GameID, "invalid current game in db")
+	assert.Equal(t, gameName, currentGame.GameName, "invalid current game in db")
+	assert.Nil(t, currentGame.Opponent, "invalid current game in db")
+	assert.Equal(t, role, currentGame.Role, "invalid current game in db")
 
 }
 
 func TestUpdateCurrentGame(t *testing.T) {
 	// Given a db with a current game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 	role := model.UserRoleCreator
@@ -82,55 +68,40 @@ func TestUpdateCurrentGame(t *testing.T) {
 		Role:     role,
 	}
 	err = store.SetCurrentGame(currentGame)
-	if err != nil {
-		t.Fatalf("error when setting current game: %v", err)
-	}
+	require.NoError(t, err, "error when setting current game")
 
 	// When updating the current game
 	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame.Opponent = &opponent
 	err = store.UpdateCurrentGame(user, currentGame)
-	if err != nil {
-		t.Fatalf("error when updating current game: %v", err)
-	}
+	require.NoError(t, err, "error when updating current game")
 
 	// Then it should be properly updated
 	currentGame, err = store.GetCurrentGame(user)
-	if err != nil {
-		t.Fatalf("error when getting current game: %v", err)
-	}
-	if currentGame == nil ||
-		currentGame.GameID != 42 ||
-		currentGame.GameName != gameName ||
-		currentGame.Opponent == nil ||
-		currentGame.Opponent.ID != opponent.ID ||
-		currentGame.Role != role {
-		t.Fatalf("invalid current game in db: %v", currentGame)
-	}
+	require.NoError(t, err, "error when getting current game")
+	require.NotNil(t, currentGame, "invalid current game in db")
+	assert.Equal(t, model.GameID(42), currentGame.GameID, "invalid current game in db")
+	assert.Equal(t, gameName, currentGame.GameName, "invalid current game in db")
+	require.NotNil(t, currentGame.Opponent, "invalid current game in db")
+	assert.Equal(t, opponent.ID, currentGame.Opponent.ID, "invalid current game in db")
+	assert.Equal(t, role, currentGame.Role, "invalid current game in db")
 
 	// When clearing the opponent again
 	currentGame.Opponent = nil
 	err = store.UpdateCurrentGame(user, currentGame)
-	if err != nil {
-		t.Fatalf("error when clearing current game opponent: %v", err)
-	}
+	require.NoError(t, err, "error when updating current game")
 
 	// Then the nullable opponent columns should be cleared in the DB
 	currentGame, err = store.GetCurrentGame(user)
-	if err != nil {
-		t.Fatalf("error when getting current game: %v", err)
-	}
-	if currentGame == nil || currentGame.Opponent != nil {
-		t.Fatalf("current game opponent should have been cleared: %v", currentGame)
-	}
+	require.NoError(t, err, "error when getting current game")
+	require.NotNil(t, currentGame, "current game opponent should have been cleared")
+	assert.Nil(t, currentGame.Opponent, "current game opponent should have been cleared")
 }
 
 func TestRemoveCurrentGame(t *testing.T) {
 	// Given a db with a current game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 	role := model.UserRoleCreator
@@ -144,32 +115,22 @@ func TestRemoveCurrentGame(t *testing.T) {
 		Role:     role,
 	}
 	err = store.SetCurrentGame(currentGame)
-	if err != nil {
-		t.Fatalf("error when setting current game: %v", err)
-	}
+	require.NoError(t, err, "error when setting current game")
 
 	// When removing the current game of the user
 	err = store.RemoveCurrentGame(user)
-	if err != nil {
-		t.Fatalf("error when removing current game")
-	}
+	require.NoError(t, err, "error when removing current game")
 
 	// Then it should be removed
 	currentGame, err = store.GetCurrentGame(user)
-	if err != nil {
-		t.Fatalf("error when getting current game: %v", err)
-	}
-	if currentGame != nil {
-		t.Fatalf("current game not properly removed")
-	}
+	require.NoError(t, err, "error when getting current game")
+	require.Nil(t, currentGame, "current game not properly removed")
 }
 
 func TestApplyToObservers(t *testing.T) {
 	// Given a db with two users observing the same game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
-	if err != nil {
-		t.Fatalf("cannot initialize db: %v", err)
-	}
+	require.NoError(t, err, "cannot initialize db")
 	user1 := model.MinimalUser{ID: "foo", Name: "foo"}
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
@@ -182,9 +143,7 @@ func TestApplyToObservers(t *testing.T) {
 		Role:     model.UserRoleObserver,
 	}
 	err = store.SetCurrentGame(currentGame)
-	if err != nil {
-		t.Fatalf("error when setting current game: %v", err)
-	}
+	require.NoError(t, err, "error when setting current game")
 
 	currentGame2 := &model.CurrentGame{
 		GameID:   42,
@@ -196,9 +155,7 @@ func TestApplyToObservers(t *testing.T) {
 		Role:     model.UserRoleObserver,
 	}
 	err = store.SetCurrentGame(currentGame2)
-	if err != nil {
-		t.Fatalf("error when setting current game: %v", err)
-	}
+	require.NoError(t, err, "error when setting current game")
 	// When applying to observers
 	// Then we should see exactly two observers
 	expectObservers := func(count int) {
@@ -207,12 +164,8 @@ func TestApplyToObservers(t *testing.T) {
 			seen = seen + 1
 			return nil
 		})
-		if err != nil {
-			t.Fatalf("cannot apply to observers: %v", err)
-		}
-		if seen != count {
-			t.Fatalf("there are missing or too many observers, I've seen %d instead of %d", seen, count)
-		}
+		require.NoError(t, err, "cannot iterate observers")
+		require.Equal(t, count, seen, "there are missing or too many observers")
 	}
 	expectObservers(2)
 }
