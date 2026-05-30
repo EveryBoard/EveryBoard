@@ -30,10 +30,7 @@ export class ReversiTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Captures` + ' (1/2)',
-            $localize`At the beginning of the game, pieces are placed as shown here.
-        For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>
-        Do any move by clicking to put your piece
-        Dark plays first.`,
+            $localize`At the beginning of the game, pieces are placed as shown here. For a move to be legal, it must sandwich at least one piece of the opponent between the piece you're putting and another of your pieces.<br/><br/>Do any move by clicking to put your piece. Dark plays first.`,
             ReversiRules.get().getInitialState(defaultConfig),
             new ReversiMove(2, 4),
             TutorialStepMessage.CONGRATULATIONS(),
@@ -57,8 +54,7 @@ export class ReversiTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Passing a turn`,
-            $localize`If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
-        Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.`,
+            $localize`If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass. Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.`,
             new ReversiState([
                 [X, O, O, O, O, O, X, O],
                 [O, X, X, X, X, X, X, O],

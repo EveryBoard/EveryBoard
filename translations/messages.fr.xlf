@@ -4118,14 +4118,9 @@
         <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.</source>
         <target>Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième. Quand une pièce est retournée, elle change de propriétaire. Le joueur possédant le plus de pièces en fin de partie gagne. Ici, Foncé a 28 points et Clair en a 36, le joueur clair a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="5285597397338861824" datatype="html">
-        <source>At the beginning of the game, pieces are placed as shown here.
-        For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
-        Do any move by clicking to put your piece
-        Dark plays first.</source>
-        <target>Au début de la partie, les pièces sont placées comme ceci.
-        Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;
-        Foncé joue en premier, faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.</target>
+      <trans-unit id="4322708137610040654" datatype="html">
+        <source>At the beginning of the game, pieces are placed as shown here. For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;Do any move by clicking to put your piece. Dark plays first.</source>
+        <target>Au début de la partie, les pièces sont placées comme ceci. Pour qu&apos;un coup soit légal il faut qu&apos;il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.&lt;br/&gt;&lt;br/&gt;Foncé joue en premier, faites n&apos;importe quel mouvement en cliquant pour déposer votre pièce.</target>
       </trans-unit>
       <trans-unit id="7280078972566788741" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
@@ -4139,11 +4134,9 @@
         <source>Passing a turn</source>
         <target>Passer son tour</target>
       </trans-unit>
-      <trans-unit id="3839030392804080169" datatype="html">
-        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
-        Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
-        <target>Si, à son tour de jeu, un joueur n&apos;a aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
-        Si d&apos;aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.</target>
+      <trans-unit id="450833244866003504" datatype="html">
+        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass. Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
+        <target>Si, à son tour de jeu, un joueur n&apos;a aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour. Si d&apos;aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.</target>
       </trans-unit>
       <trans-unit id="7531322064121954356" datatype="html">
         <source>Toric Reversi is a variant of Reversi played on a toric board. If you are not familiar with the base rules of Reversi, check them out &lt;a href=&quot;/tutorial/Reversi&quot;&gt;here&lt;/a&gt; before continuing. This tutorial only covers what changes with the toric board.</source>
@@ -4153,9 +4146,9 @@
         <source>Left-right connectivity</source>
         <target>Connexion gauche-droite</target>
       </trans-unit>
-      <trans-unit id="3675970570388007793" datatype="html">
-        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.</source>
-        <target>Sur un plateau torique, le bord gauche est connecté au bord droit. Cela signifie qu'une ligne de pièces peut se prolonger horizontalement en bouclant. Ici, vous pouvez capturer les trois pièces claires en jouant dans la colonne la plus à gauche, car le plateau boucle pour continuer la ligne.</target>
+      <trans-unit id="5219741148542864373" datatype="html">
+        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
+        <target>Sur un plateau torique, le bord gauche est connecté au bord droit. Cela signifie qu'une ligne de pièces peut se prolonger horizontalement en bouclant. Ici, vous pouvez capturer les trois pièces claires en jouant dans la colonne la plus à gauche, car le plateau boucle pour continuer la ligne.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites une capture.</target>
       </trans-unit>
       <trans-unit id="447603454412761814" datatype="html">
         <source>Look at the fourth row: there is a line of dark pieces that wraps around the left edge.</source>

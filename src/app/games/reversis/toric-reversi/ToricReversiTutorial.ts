@@ -21,7 +21,7 @@ export class ToricReversiTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Left-right connectivity`,
-            $localize`On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.`,
+            $localize`On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.<br/><br/>You are playing Dark. Do a capture.`,
             new ReversiState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
@@ -65,7 +65,7 @@ export class ToricReversiTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _],
-            ], 1),
+            ], 2),
             [new ReversiMove(0, 7)],
             TutorialStepMessage.CONGRATULATIONS(),
             $localize`Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.`,
