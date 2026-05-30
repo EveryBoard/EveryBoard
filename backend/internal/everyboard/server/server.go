@@ -65,11 +65,7 @@ func (config *Configuration) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 			handlers.SendError(apperror.ErrorUnknownMessage)
 			continue
 		}
-		err = handlers.Handle(messageType, messageData)
-		if err != nil {
-			// Error already logged in handlers.Handle if it's not a BackendError
-			// Continue loop to receive next message
-		}
+		handlers.Handle(messageType, messageData)
 	}
 }
 

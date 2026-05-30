@@ -99,7 +99,6 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *Configuration) {
 	select {
 	case err := <-serverErr:
 		require.NoError(t, err, "test server exited while starting")
-	case <-time.After(10 * time.Millisecond):
 	default:
 	}
 

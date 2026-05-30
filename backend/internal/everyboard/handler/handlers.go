@@ -58,22 +58,21 @@ func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[str
 	}
 }
 
-func (h *Handler) Handle(messageType string, messageData map[string]json.RawMessage) error {
+func (h *Handler) Handle(messageType string, messageData map[string]json.RawMessage) {
 	err := RecoverMiddleware(h.user.Name, func() error {
 		return h.handleWithoutErrorSend(messageType, messageData)
 	})
 
 	if err == nil {
-		return nil
+		return
 	}
 	e, ok := err.(apperror.BackendError)
 	if ok {
 		h.SendError(e)
-		return nil
+		return
 	}
 	printableData, _ := json.Marshal(messageData)
 	logger.Error.Printf("Error when handling %v (%s) message: %v", messageType, printableData, err)
-	return err
 }
 
 func (h *Handler) ClientLeft() error {
