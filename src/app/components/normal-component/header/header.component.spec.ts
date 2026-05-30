@@ -108,7 +108,7 @@ describe('HeaderComponent', () => {
     }));
 
     describe('currentGame', () => {
-        it('should display "<TypeGame> (waiting for opponent)" when creator without chosenOpponent', fakeAsync(async() => {
+        it('should display "<GameName> (waiting for opponent)" when creator without chosenOpponent', fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -127,7 +127,7 @@ describe('HeaderComponent', () => {
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' (waiting for opponent)');
         }));
 
-        it('should display "<TypeGame> against <Opponent>" when creator with chosenOpponent', fakeAsync(async() => {
+        it('should display "<GameName> against <Opponent>" when creator with chosenOpponent', fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -147,7 +147,7 @@ describe('HeaderComponent', () => {
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' against ' + opponentName);
         }));
 
-        it(`should display '<TypeGame> by <Creator>' when watching as observer`, fakeAsync(async() => {
+        it(`should display '<GameName> by <Creator>' when watching as observer`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -160,14 +160,13 @@ describe('HeaderComponent', () => {
             testUtils.detectChanges();
             tick(0);
 
-            // Then "<TypeGame> by <Opponent, that should contain the creator>" should be displayed
+            // Then "<GameName> by <Creator>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
             const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
-            const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
-            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + currentGame.creator.name);
         }));
 
-        it(`should display '<TypeGame> by <Creator>' when watching as candidate`, fakeAsync(async() => {
+        it(`should display '<GameName> by <Creator>' when watching as candidate without opponent`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
             testUtils.detectChanges();
@@ -180,11 +179,11 @@ describe('HeaderComponent', () => {
             testUtils.detectChanges();
             tick(0);
 
-            // Then "Epaminondas by El Creatoro" should be displayed
+            // Then "<GameName> a Row by creator" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
             const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
-            const opponent: string = Utils.getNonNullable(currentGame.opponent?.name);
-            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + opponent);
+            expect(currentGame.opponent).toBeNull();
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' by ' + currentGame.creator.name);
         }));
 
     });

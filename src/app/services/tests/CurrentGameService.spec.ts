@@ -26,8 +26,19 @@ describe('CurrentGameService', () => {
 
     let backendService: BackendServiceMock;
 
-    function updateCurrentGame(currentGame: CurrentGame | null): void {
-        backendService.mockReceivedMessage('CurrentGameUpdate', { currentGame });
+    type CurrentGameUpdate = Pick<CurrentGame, 'id' | 'gameName' | 'role'> & Partial<CurrentGame>;
+
+    function withDefaultCreator(currentGame: CurrentGameUpdate): CurrentGame {
+        return {
+            creator: UserMocks.CREATOR_MINIMAL_USER,
+            ...currentGame,
+        };
+    }
+
+    function updateCurrentGame(currentGame: CurrentGameUpdate | null): void {
+        backendService.mockReceivedMessage('CurrentGameUpdate', {
+            currentGame: currentGame == null ? null : withDefaultCreator(currentGame),
+        });
         tick(1);
     }
 
@@ -131,7 +142,7 @@ describe('CurrentGameService', () => {
             await userHasUpdated;
 
             // Then the observable should have updated its value
-            expect(lastValue).toEqual(MGPOptional.of({ id: '1234', gameName: 'P4', role: 'Player' }));
+            expect(lastValue).toEqual(MGPOptional.of(withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Player' })));
             subscription.unsubscribe();
         }));
 
@@ -303,13 +314,13 @@ describe('CurrentGameService', () => {
         it('should not allow user to join twice the same game', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             // When asking if you can join that specific part again
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'Player' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Player' });
             await shouldAllowToJoinGame(currentGame, '1234', true);
         }));
 
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user plays a part
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'Player' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Player' });
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
 
             // When asking if you can join some started part
@@ -321,7 +332,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already creator', fakeAsync(async() => {
             // Given a ConnectedUserService where user is creating a part
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'Creator' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Creator' });
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
 
             // When asking if you can join some started part
@@ -333,7 +344,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already candidate', fakeAsync(async() => { // Instable: last failed 2022-08-18
             // Given a ConnectedUserService where user is candidate of a part
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'Candidate' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Candidate' });
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
 
             // When asking if you can join some started part
@@ -345,7 +356,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
             // Given a ConnectedUserService where user is chosen opponent in a part
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'ChosenOpponent' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'ChosenOpponent' });
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
 
             // When asking if you can join some started part
@@ -357,7 +368,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already Observer to join non-started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'Observer' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Observer' });
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_OBSERVING();
 
             // When asking if you can join some unstarted part
@@ -366,7 +377,7 @@ describe('CurrentGameService', () => {
 
         it('should allow for a player already Observer to join a started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const currentGame: CurrentGame = { id: '1234', gameName: 'P4', role: 'Observer' };
+            const currentGame: CurrentGame = withDefaultCreator({ id: '1234', gameName: 'P4', role: 'Observer' });
 
             // When asking if you can join some started part
             await shouldAllowToJoinGame(currentGame, 'some-id', true);
