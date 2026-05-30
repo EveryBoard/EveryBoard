@@ -53,6 +53,20 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
 
+    public constructor(urlName: string) {
+        super();
+        super.setRulesAndNode(urlName);
+        this.moveGenerator = new CheckersMoveGenerator(this.rules);
+        this.availableAIs = [
+            new CheckersScoreMinimax(this.rules, this.moveGenerator),
+            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
+            new CheckersControlPlusDominationMinimax(this.rules),
+            new CheckersControlMinimax(this.rules),
+        ];
+        this.encoder = CheckersMove.encoder;
+        this.hasAsymmetricBoard = true;
+    }
+
     public override getViewBox(): ViewBox {
         const abstractWidth: number = this.getState().getWidth();
         const abstractHeight: number = this.getState().getHeight();
@@ -66,19 +80,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.CX = this.WIDTH / 2;
         this.CY = (this.HEIGHT + this.UP) / 2;
         return new ViewBox(this.LEFT, this.UP, this.WIDTH, this.HEIGHT);
-    }
-
-    public override setRulesAndNode(urlName: string): void {
-        super.setRulesAndNode(urlName);
-        this.moveGenerator = new CheckersMoveGenerator(this.rules);
-        this.availableAIs = [
-            new CheckersScoreMinimax(this.rules, this.moveGenerator),
-            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
-            new CheckersControlPlusDominationMinimax(this.rules),
-            new CheckersControlMinimax(this.rules),
-        ];
-        this.encoder = CheckersMove.encoder;
-        this.hasAsymmetricBoard = true;
     }
 
     protected override getScoreName(): ScoreName {

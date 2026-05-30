@@ -126,7 +126,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
                 return [];
             } // we found a switched/captured
             sandwichedsCoord.push(testedCoord); // we add it
-            // next loop will observe the next // next loop will observe the next
+            // next loop will observe the next
             testedCoord = this.getNextCoord(testedCoord, direction, state, config.toric);
         }
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'

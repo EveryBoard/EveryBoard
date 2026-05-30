@@ -2,12 +2,16 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../../jscaip/Coord';
+import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
 import { ReversiConfig, ReversiLegalityInformation, AbstractReversiRules } from './AbstractReversiRules';
+import { ReversiMinimax } from './ReversiMinimax';
 import { ReversiMove } from './ReversiMove';
 import { ReversiState } from './ReversiState';
+import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 
 export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     extends RectangularGameComponent<R,
@@ -20,6 +24,21 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
     private capturedCoords: Coord[] = [];
+
+    public constructor(urlName: string) {
+        super();
+        this.setRulesAndNode(urlName);
+        this.availableAIs = [
+            new ReversiMinimax(this.rules),
+            new MCTS(
+                $localize`MCTS`,
+                new ReversiMoveGenerator(this.rules),
+                this.rules,
+            ),
+        ];
+        this.encoder = ReversiMove.encoder;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
+    }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);

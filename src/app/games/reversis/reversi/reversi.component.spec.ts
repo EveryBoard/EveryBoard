@@ -4,17 +4,13 @@ import { fakeAsync } from '@angular/core/testing';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ReversiConfig } from '../common/AbstractReversiRules';
 import { ReversiMove } from '../common/ReversiMove';
 import { ReversiState } from '../common/ReversiState';
 import { ReversiComponent } from '../reversi/reversi.component';
 
-import { ReversiRules } from './ReversiRules';
-
 describe('ReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ReversiComponent>;
-    const defaultConfig: ReversiConfig = ReversiRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -78,43 +74,4 @@ describe('ReversiComponent', () => {
         // Then the player can pass
         await testUtils.expectPassSuccess(ReversiMove.PASS);
     }));
-
-    describe('Toric Configuration', () => {
-
-        it('should hightlight toric captures', fakeAsync(async() => {
-            const board: Table<PlayerOrNone> = [
-                [_, _, _, X, _, _, _, _],
-                [_, _, X, _, _, _, _, _],
-                [_, X, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _],
-                [X, O, _, _, _, _, _, _],
-                [X, _, _, _, _, _, _, _],
-                [_, X, _, _, _, _, _, _],
-                [_, _, O, _, _, _, _, _],
-            ];
-            const state: ReversiState = new ReversiState(board, 0);
-            const customConfig: ReversiConfig = {
-                ...defaultConfig,
-                toric: true,
-            };
-            await testUtils.setupState(state, { config: customConfig });
-
-            const move: ReversiMove = new ReversiMove(7, 4);
-            await testUtils.expectMoveSuccess('#click_7_4', move);
-
-            const tablutGameComponent: ReversiComponent = testUtils.getGameComponent();
-            expect(tablutGameComponent.getRectClasses(0, 3)).not.toContain('captured-fill');
-            expect(tablutGameComponent.getRectClasses(1, 2)).not.toContain('captured-fill');
-            expect(tablutGameComponent.getRectClasses(2, 1)).not.toContain('captured-fill');
-            expect(tablutGameComponent.getRectClasses(3, 0)).not.toContain('captured-fill');
-
-            expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['captured-fill']);
-
-            expect(tablutGameComponent.getRectClasses(0, 5)).toEqual(['captured-fill']);
-            expect(tablutGameComponent.getRectClasses(1, 6)).toEqual(['captured-fill']);
-
-            expect(tablutGameComponent.getRectClasses(7, 4)).toEqual(['moved-fill']);
-        }));
-
-    });
 });

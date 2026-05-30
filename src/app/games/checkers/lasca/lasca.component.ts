@@ -14,8 +14,7 @@ import { LascaRules } from './LascaRules';
 export class LascaComponent extends CheckersComponent<LascaRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Lasca');
+        super('Lasca');
     }
 
 }
