@@ -84,7 +84,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),
-            $localize`When a tower reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a tower reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             CheckersState.of([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
@@ -103,7 +103,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Officer move`,
-            $localize`Officers can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officier!`,
+            $localize`Officers can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officer!`,
             CheckersState.of([
                 [__, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __],
