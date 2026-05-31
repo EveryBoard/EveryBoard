@@ -682,6 +682,24 @@ describe('GoRules', () => {
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, config);
         });
 
+        it('should recognize Player.ONE victory', () => {
+            // Given a board where Player.ONE win
+            const board: Table<GoPiece> = [
+                [w, X, _, O, b],
+                [w, X, _, O, b],
+                [w, X, _, O, k],
+                [w, X, _, O, b],
+                [w, X, _, O, b],
+            ];
+            const state: GoState =
+                new GoState(board, PlayerNumberMap.of(5, 6), 2, MGPOptional.empty(), GoPhase.FINISHED);
+            const node: GoNode = new GoNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, config);
+        });
+
     });
 
     it('should recognize draw on a board with dead stones', () => {

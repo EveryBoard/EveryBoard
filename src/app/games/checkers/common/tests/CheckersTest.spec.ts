@@ -2,7 +2,7 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Encoder } from '@everyboard/lib';
+import { Encoder, MGPValidation } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../../jscaip/Coord';
@@ -76,6 +76,12 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 {
 
     let testUtils: ComponentTestUtils<C>;
+
+    type CheckersComponentPrivate = {
+        currentMoveClicks: Coord[];
+        getClickFailureReason(clicked: Coord): string;
+        getMoveAttemptEndingAt(clicked: Coord): CheckersMove;
+    };
 
     const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
@@ -478,6 +484,66 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
                 // Then the last move should be shown at the expected place
                 expectBoardToBeSwitched();
+            }));
+
+        });
+
+        describe('design', () => {
+
+            it('should adapt square translation to point of view', fakeAsync(async() => {
+                // Given the default point of view
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                const state: CheckersState = gameComponent.getState();
+                const maxX: number = state.getWidth() - 1;
+                const maxY: number = state.getHeight() - 1;
+                const expectedTranslation: string = gameComponent.getTranslationAtXYZ(maxX, maxY, 0);
+
+                // When viewing the board as player one
+                gameComponent.setPointOfView(Player.ONE);
+
+                // Then coordinates should be adapted before translation
+                expect(gameComponent.getTranslationAtXYZ(0, 0, 0)).toBe(expectedTranslation);
+            }));
+
+            it('should compute piece translation from stack depth', fakeAsync(async() => {
+                // Given any checkers component
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+
+                // When computing piece translations
+                // Then each piece should be drawn 15px above the previous one
+                expect(gameComponent.getPieceTranslation(0)).toBe('translate(0, 17.5)');
+                expect(gameComponent.getPieceTranslation(1)).toBe('translate(0, 2.5)');
+            }));
+
+            it('should build capture attempt when the attempted move jumps over a piece', fakeAsync(async() => {
+                // Given a board with a selected piece and an occupied square to jump over
+                await testUtils.setupState(entries.stateWithSimpleCapture);
+                const gameComponent: CheckersComponentPrivate =
+                    testUtils.getGameComponent() as unknown as CheckersComponentPrivate;
+                gameComponent.currentMoveClicks = [entries.simpleCapture.getStartingCoord()];
+
+                // When building the move attempt
+                const attemptedMove: CheckersMove =
+                    gameComponent.getMoveAttemptEndingAt(entries.simpleCapture.getEndingCoord());
+
+                // Then the attempt should be a capture
+                expect(attemptedMove).toEqual(entries.simpleCapture);
+            }));
+
+            it('should fall back to unmovable piece failure when a legal click is not a possible click', fakeAsync(async() => {
+                // Given a selected piece whose attempted move is valid but not currently possible
+                const gameComponent: CheckersComponentPrivate =
+                    testUtils.getGameComponent() as unknown as CheckersComponentPrivate;
+                const publicGameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                gameComponent.currentMoveClicks = [entries.firstPlayerCoords[0]];
+                spyOn(publicGameComponent.rules, 'getSubMoveValidity').and.returnValue(MGPValidation.SUCCESS);
+                spyOn(publicGameComponent.rules, 'isLegal').and.returnValue(MGPValidation.SUCCESS);
+
+                // When computing the failure reason
+                const reason: string = gameComponent.getClickFailureReason(entries.firstPlayerSecondClicks[0]);
+
+                // Then it should explain that this piece cannot move
+                expect(reason).toBe(CheckersFailure.THIS_PIECE_CANNOT_MOVE());
             }));
 
         });
