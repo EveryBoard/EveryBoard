@@ -515,6 +515,36 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 expect(gameComponent.getPieceTranslation(1)).toBe('translate(0, 2.5)');
             }));
 
+            it('should update board geometry when displaying a custom-sized state', fakeAsync(async() => {
+                // Given a custom config with non-default board dimensions
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                const customConfig: CheckersConfig = {
+                    ...defaultConfig,
+                    width: defaultConfig.width + 1,
+                    playerRows: defaultConfig.playerRows + 1,
+                    emptyRows: defaultConfig.emptyRows + 1,
+                };
+                const state: CheckersState = gameComponent.rules.getInitialState(customConfig);
+
+                // When displaying that state
+                await testUtils.setupState(state, { config: customConfig });
+
+                // Then SVG geometry should be derived from the displayed state
+                const expectedWidth: number = state.getWidth() * gameComponent.mode.parallelogramHeight;
+                const expectedHeight: number = state.getHeight() * gameComponent.mode.parallelogramHeight;
+                const expectedViewBoxWidth: number =
+                    (expectedWidth * gameComponent.mode.horizontalWidthRatio) +
+                    (expectedHeight * gameComponent.mode.offsetRatio) +
+                    gameComponent.STROKE_WIDTH;
+                const expectedViewBoxHeight: number =
+                    expectedHeight + gameComponent.THICKNESS + gameComponent.STROKE_WIDTH + gameComponent.SPACE_SIZE;
+
+                expect(gameComponent.basicWidth()).toBe(expectedWidth);
+                expect(gameComponent.basicHeight()).toBe(expectedHeight);
+                expect(gameComponent.getViewBox().width).toBe(expectedViewBoxWidth);
+                expect(gameComponent.getViewBox().height).toBe(expectedViewBoxHeight);
+            }));
+
             it('should build capture attempt when the attempted move jumps over a piece', fakeAsync(async() => {
                 // Given a board with a selected piece and an occupied square to jump over
                 await testUtils.setupState(entries.stateWithSimpleCapture);
