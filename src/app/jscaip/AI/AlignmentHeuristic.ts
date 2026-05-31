@@ -7,7 +7,7 @@ import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { BoardValue } from './BoardValue';
-import { Heuristic } from './Minimax';
+import { Heuristic } from './Heuristic';
 
 /**
  * Represents possible alignment configurations

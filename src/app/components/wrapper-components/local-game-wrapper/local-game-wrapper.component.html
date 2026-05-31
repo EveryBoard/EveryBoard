@@ -24,7 +24,7 @@
                             }
                         </div>
                     }
-                    @for (player of Player.PLAYERS; track player) {
+                    @for (player of Player.PLAYERS; track player.getValue()) {
                         <div class="px-2 py-4 mb-4"
                              [ngClass]="player.getHTMLClass('-bg')">
                             <p class="mb-2 subtitle"
@@ -37,13 +37,28 @@
                                     <option selected
                                             value="human"
                                             i18n>Human</option>
-                                    @for (ai of gameComponent.availableAIs; track ai.name) {
-                                        <option id="player-{{ player.getValue() }}-ai-{{ ai.name }}"
-                                                [value]="ai.name">{{ ai.name }}</option>
+                                    @for (strategy of availableAIStrategies(); track strategy.id) {
+                                        <option id="player-{{ player.getValue() }}-ai-{{ strategy.name }}"
+                                                [value]="strategy.id">{{ strategy.name }}</option>
                                     }
                                 </select>
                             </div>
-                            @if (players[player.getValue()].equalsValue('human') === false) {
+                            @if (mustSelectAIProfile(player.getValue())) {
+                                <div class="select is-fullwidth">
+                                    <select id="ai-profile-select-{{ player.getValue() }}"
+                                            [(ngModel)]="aiProfiles[player.getValue()]"
+                                            (change)="updatePlayer(player)">
+                                        <option selected
+                                                value="none"
+                                                i18n>Pick the profile</option>
+                                        @for (profile of availableAIProfiles(player.getValue()); track profile.id) {
+                                            <option id="player-{{ player.getValue() }}-profile-{{ profile.name }}"
+                                                    [value]="profile.id">{{ profile.name }}</option>
+                                        }
+                                    </select>
+                                </div>
+                            }
+                            @if (players[player.getValue()].equalsValue('human') === false && isAIProfileSelected(player.getValue())) {
                                 <div class="select is-fullwidth">
                                     <select id="ai-option-select-{{ player.getValue() }}"
                                             [(ngModel)]="aiOptions[player.getValue()]"
@@ -82,8 +97,8 @@
                             i18n>Start a new game</button>
                     @if (gameComponent.node.previousMove.isPresent() && displayAIInfo()) {
                         <div id="ai-info">
-                            @for (ai of gameComponent.availableAIs; track ai.name) {
-                                {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
+                            @for (info of getAIInfoLines(); track $index) {
+                                {{ info }} <br/>
                             }
                             Created {{ getCreatedNodes() }} nodes.<br/>
                             Minimax times: {{ getMinimaxTimes() }}<br/>

@@ -4,15 +4,14 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 
-import { SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax, IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax';
+import { SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic';
 import { SaharaFailure } from './SaharaFailure';
-import { SaharaFreedomMinimax } from './SaharaMinimax';
-import { SaharaMobilityMinimax } from './SaharaMobilityMinimax';
+import { SaharaFreedomHeuristic } from './SaharaFreedomHeuristic';
+import { SaharaMobilityHeuristic } from './SaharaMobilityHeuristic';
 import { SaharaMove } from './SaharaMove';
 import { SaharaMoveGenerator } from './SaharaMoveGenerator';
 import { SaharaRules } from './SaharaRules';
@@ -40,13 +39,31 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     public constructor() {
         super();
         this.setRulesAndNode('Sahara');
-        this.availableAIs = [
-            new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
-            new IDSaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax(),
-            new SaharaFreedomMinimax(),
-            new SaharaMobilityMinimax(),
-            new MCTS($localize`MCTS`, new SaharaMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'capture-freedom',
+                name: $localize`Capture > Captured Freedom > All Freedoms`,
+                heuristic: (): SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic =>
+                    new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
+                moveGenerator: (): SaharaMoveGenerator => new SaharaMoveGenerator(),
+                useRandomness: true,
+            }, {
+                id: 'freedom',
+                name: $localize`Freedom`,
+                heuristic: (): SaharaFreedomHeuristic => new SaharaFreedomHeuristic(),
+                moveGenerator: (): SaharaMoveGenerator => new SaharaMoveGenerator(),
+            }, {
+                id: 'mobility',
+                name: $localize`Mobility`,
+                heuristic: (): SaharaMobilityHeuristic => new SaharaMobilityHeuristic(SaharaRules.get()),
+                moveGenerator: (): SaharaMoveGenerator => new SaharaMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): SaharaMoveGenerator => new SaharaMoveGenerator(),
+            }],
+        };
         this.encoder = SaharaMove.encoder;
     }
 

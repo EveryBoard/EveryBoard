@@ -5,7 +5,6 @@ import { MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { HexaLayout } from '../../jscaip/HexaLayout';
@@ -13,7 +12,7 @@ import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
+import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
@@ -40,12 +39,19 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     public constructor() {
         super();
         this.setRulesAndNode('Hexodia');
-        this.availableAIs = [
-            new HexodiaAlignmentMinimax(),
-            new MCTS($localize`MCTS`,
-                     new HexodiaMoveGenerator(),
-                     this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): HexodiaAlignmentHeuristic => new HexodiaAlignmentHeuristic(),
+                moveGenerator: (): HexodiaMoveGenerator => new HexodiaMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): HexodiaMoveGenerator => new HexodiaMoveGenerator(),
+            }],
+        };
         this.encoder = HexodiaMove.encoder;
         this.SPACE_SIZE = 30;
         this.setHexaLayout();

@@ -6,7 +6,7 @@ import { EmptyRulesConfig, RulesConfig } from '../../RulesConfigUtil';
 import { GameState } from '../../state/GameState';
 import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
-import { Heuristic } from '../Minimax';
+import { Heuristic } from '../Heuristic';
 
 export class HeuristicUtils {
 

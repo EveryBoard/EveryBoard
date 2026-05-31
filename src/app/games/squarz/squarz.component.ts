@@ -4,14 +4,13 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { SquarzMinimax } from './SquarzMinimax';
+import { SquarzHeuristic } from './SquarzHeuristic';
 import { SquarzMove as SquarzMove } from './SquarzMove';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
@@ -42,10 +41,19 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     public constructor() {
         super();
         this.setRulesAndNode('Squarz');
-        this.availableAIs = [
-            new SquarzMinimax(),
-            new MCTS($localize`MCTS`, new SquarzMoveGenerator(this.rules), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: 'Score',
+                heuristic: (): SquarzHeuristic => new SquarzHeuristic(),
+                moveGenerator: (): SquarzMoveGenerator => new SquarzMoveGenerator(this.rules),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): SquarzMoveGenerator => new SquarzMoveGenerator(this.rules),
+            }],
+        };
         this.encoder = SquarzMove.encoder;
 
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));

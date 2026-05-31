@@ -7,10 +7,12 @@ import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
 import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
 import { PlayerOrNone } from '../../Player';
-import { AIDepthLimitOptions } from '../AI';
+import { AIDepthLimitOptions, AITimeLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
+import { DummyHeuristic } from '../DummyHeuristic';
+import { IterativeDeepeningMinimax } from '../IterativeDeepeningMinimax';
 import { MCTS } from '../MCTS';
-import { DummyHeuristic, Minimax } from '../Minimax';
+import { Minimax } from '../Minimax';
 
 const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
@@ -72,7 +74,7 @@ describe('Minimax', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
-        minimax['random'] = true;
+        minimax['useRandomness'] = true;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         // Then it should have selected it randomly among all the best
@@ -83,42 +85,78 @@ describe('Minimax', () => {
         spyOn(ArrayUtils, 'getRandomElement').and.callThrough();
         // Given a minimax that selects the best move randomly among all best children
         const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
-        minimax['random'] = false;
+        minimax['useRandomness'] = false;
         // When computing the best children
         minimax.chooseNextMove(node, minimaxOptions, defaultConfig);
         // Then it should have selected it randomly among all the best
         expect(ArrayUtils.getRandomElement).not.toHaveBeenCalled();
     });
 
-    it('should have getBestMove return all moves when all have the same value', () => {
-        // Given any node with equivalent moves
-        const _: PlayerOrNone = PlayerOrNone.NONE;
-        const O: PlayerOrNone = PlayerOrNone.ZERO;
-        const X: PlayerOrNone = PlayerOrNone.ONE;
-        const symetricState: P4State = new P4State([
-            [_, _, _, X, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, O, _, _, _],
-            [_, _, _, X, _, _, _],
-            [_, _, _, O, _, _, _],
-        ], 6);
-        const node: P4Node = new P4Node(symetricState);
-        const possibleMoves: Set<P4Move> = new Set([P4Move.of(0), P4Move.of(6)]);
-        const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
+    it('should run iterative deepening minimax', () => {
+        spyOn(console, 'log');
+        // Given an iterative deepening minimax
+        const iterativeDeepening: IterativeDeepeningMinimax<P4Move, P4State, P4Config> =
+            new IterativeDeepeningMinimax('ID Dummy', P4Rules.get(), heuristic, moveGenerator);
+        iterativeDeepening['useRandomness'] = true;
+        iterativeDeepening['prune'] = false;
+        iterativeDeepening['useTranspositionTables'] = false;
+        const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
+        const options: AITimeLimitOptions = { name: '50ms', maxSeconds: 0.05 };
 
-        // When calling getBestMove on it
-        const bestMoves: { move: P4Move, score: BoardValue }[] = minimax['getBestMoves'](
-            node,
-            possibleMoves,
-            1,
-            boardValue.toMinimum(),
-            boardValue.toMaximum(),
-            defaultConfig,
-        );
+        // When selecting a move through iterative deepening
+        const move: P4Move = iterativeDeepening.chooseNextMove(node, options, defaultConfig);
 
-        // Then all the choice should be best choices
-        expect(bestMoves.length).toBe(2);
+        // Then it should select a legal move and expose time-based options
+        expect(move).toBeDefined();
+        expect(iterativeDeepening.name).toBe('ID Dummy');
+        expect(iterativeDeepening.availableOptions[0]).toEqual({ name: '1 seconds', maxSeconds: 1 });
+    });
+
+    it('should support a custom hash function', () => {
+        // Given a minimax with a custom hash
+        const customHash: Minimax<P4Move, P4State, P4Config> =
+            new Minimax('Custom Hash', P4Rules.get(), heuristic, moveGenerator, (_state: P4State) => 'custom');
+
+        // When hashing a state
+        const hash: string = customHash['hash'](P4Rules.get().getInitialState(defaultConfig));
+
+        // Then it should use the injected hash function
+        expect(hash).toBe('custom');
+    });
+
+
+    describe('getBestMove', () => {
+        it('should have return all moves when all have the same value', () => {
+            // Given any node with equivalent moves
+            const _: PlayerOrNone = PlayerOrNone.NONE;
+            const O: PlayerOrNone = PlayerOrNone.ZERO;
+            const X: PlayerOrNone = PlayerOrNone.ONE;
+            const symetricState: P4State = new P4State([
+                [_, _, _, X, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, O, _, _, _],
+                [_, _, _, X, _, _, _],
+                [_, _, _, O, _, _, _],
+            ], 6);
+            const node: P4Node = new P4Node(symetricState);
+            const possibleMoves: Set<P4Move> = new Set([P4Move.of(0), P4Move.of(6)]);
+            const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
+
+            // When calling getBestMove on it
+            const result: { bestMoves: { move: P4Move, score: BoardValue }[], complete: boolean } = minimax['getBestMoves'](
+                node,
+                possibleMoves,
+                1,
+                boardValue.toMinimum(),
+                boardValue.toMaximum(),
+                defaultConfig,
+            );
+
+            // Then all the choice should be best choices
+            expect(result.bestMoves.length).toBe(2);
+            expect(result.complete).toBeTrue();
+        });
     });
 
 });

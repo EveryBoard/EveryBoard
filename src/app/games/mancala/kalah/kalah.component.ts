@@ -18,7 +18,7 @@ export class KalahComponent extends MancalaComponent<KalahRules> {
     public constructor() {
         super();
         this.setRulesAndNode('Kalah');
-        this.availableAIs = this.createAIs(new KalahMoveGenerator());
+        this.aiConfig = this.createAIConfig(new KalahMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }
 

@@ -5,8 +5,14 @@ import { ParamMap } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
-import { AIOptions, AIStats, AbstractAI } from '../../../jscaip/AI/AI';
+import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI, MoveGenerator } from '../../../jscaip/AI/AI';
+import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
+import { Heuristic } from '../../../jscaip/AI/Heuristic';
+import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
+import { MCTS } from '../../../jscaip/AI/MCTS';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
 import { Player } from '../../../jscaip/Player';
@@ -18,6 +24,13 @@ import { AbstractGameComponent } from '../../game-components/game-component/Game
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+
+type AIStrategyId = 'human' | 'minimax' | 'iterative-deepening' | 'mcts';
+
+type AIChoice = {
+    id: string,
+    name: string,
+}
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -32,9 +45,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public static readonly AI_TIMEOUT: number = 1500;
 
+    public aiProfiles: [string, string] = ['none', 'none'];
+
     public aiOptions: [string, string] = ['none', 'none'];
 
-    public playerSelection: [string, string] = ['human', 'human'];
+    public playerSelection: [AIStrategyId, AIStrategyId] = ['human', 'human'];
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
@@ -53,8 +68,22 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public getMinimaxTimes(): string {
         return Array.from(AIStats.aiTime.entries())
-            .map(([key, value]: [string, number]) => `${key}: ${value.toFixed(2)} ms`)
+            .map(([key, value]: [string, number]) => `${key}: ${value.toFixed(0)}ms`)
             .join(',');
+    }
+
+    public getAIInfoLines(): string[] {
+        const config: RulesConfig = this.getConfig();
+        return [
+            ...this.getMinimaxConfigs().map((minimaxConfig: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                const ai: Minimax<Move, GameState, RulesConfig, unknown> = this.createMinimax(minimaxConfig);
+                return `${ai.name}: ${ai.getInfo(this.gameComponent.node, config)}`;
+            }),
+            ...this.getMCTSConfigs().map((mctsConfig: MCTSConfig<Move, GameState, RulesConfig>) => {
+                const ai: MCTS<Move, GameState, RulesConfig, unknown> = this.createMCTS(mctsConfig);
+                return `${ai.name}: ${ai.getInfo(this.gameComponent.node)}`;
+            }),
+        ];
     }
 
     public async ngAfterViewInit(): Promise<void> {
@@ -147,6 +176,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public async updatePlayer(player: Player): Promise<void> {
         this.players[player.getValue()] = MGPOptional.of(this.playerSelection[player.getValue()]);
+        this.resetInvalidAISelection(player.getValue());
         if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
             await this.setInteractive(false);
             await this.setRole(Player.ONE);
@@ -155,6 +185,37 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             await this.setRole(Player.ZERO);
         }
         await this.proposeAIToPlay();
+    }
+
+    private resetInvalidAISelection(playerIndex: number): void {
+        if (this.playerSelection[playerIndex] === 'human') {
+            this.aiProfiles[playerIndex] = 'none';
+            this.aiOptions[playerIndex] = 'none';
+            return;
+        }
+        if (this.mustSelectAIProfile(playerIndex) === false) {
+            this.aiProfiles[playerIndex] = this.availableAIProfiles(playerIndex)[0]?.id ?? 'none';
+        }
+        const profileExists: boolean = this.availableAIProfiles(playerIndex).some((profile: AIChoice) => {
+            return profile.id === this.aiProfiles[playerIndex];
+        });
+        if (profileExists === false) {
+            this.aiProfiles[playerIndex] = 'none';
+            this.aiOptions[playerIndex] = 'none';
+        } else if (this.availableAIOptions(playerIndex).some((option: AIOptions) => {
+            return option.name === this.aiOptions[playerIndex];
+        }) === false) {
+            this.aiOptions[playerIndex] = 'none';
+        }
+    }
+
+    public mustSelectAIProfile(playerIndex: number): boolean {
+        return this.playerSelection[playerIndex] !== 'human' &&
+               (this.playerSelection[playerIndex] !== 'mcts' || this.availableAIProfiles(playerIndex).length > 1);
+    }
+
+    public isAIProfileSelected(playerIndex: number): boolean {
+        return this.mustSelectAIProfile(playerIndex) === false || this.aiProfiles[playerIndex] !== 'none';
     }
 
     public async onLegalUserMove(move: Move): Promise<void> {
@@ -184,12 +245,21 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players[gameStatus.winner.getValue()].get()} (Player ${gameStatus.winner.getValue() + 1}) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.getSelectedPlayerName(gameStatus.winner.getValue())} (Player ${gameStatus.winner.getValue() + 1}) won`);
                     }
                 }
             }
         }
         this.cdr.detectChanges();
+    }
+
+    private getSelectedPlayerName(playerIndex: number): string {
+        if (this.playerSelection[playerIndex] === 'human') {
+            return $localize`Human`;
+        }
+        return this.availableAIProfiles(playerIndex).find((profile: AIChoice) => {
+            return profile.id === this.aiProfiles[playerIndex];
+        })?.name ?? this.playerSelection[playerIndex];
     }
 
     public async proposeAIToPlay(): Promise<void> {
@@ -236,35 +306,110 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
         const playerIndex: number = this.gameComponent.getTurn() % 2;
-        const aiOpt: MGPOptional<AbstractAI> = this.getAI(playerIndex);
-        if (aiOpt.isPresent()) {
-            const ai: AbstractAI = aiOpt.get();
-            const optionsName: string = this.aiOptions[playerIndex];
-            const matchingOptions: MGPOptional<AIOptions> =
-                MGPOptional.ofNullable(ai.availableOptions.find((options: AIOptions) => {
-                    return options.name === optionsName;
-                }));
-            // If the option is not selected
-            // then it is not a PLAYING AI yet, just a selected AI
-            // and user must still select the AI's options
-            return matchingOptions.map((options: AIOptions) => {
-                return { ai, options };
-            });
-        } else {
+        const strategy: AIStrategyId = this.playerSelection[playerIndex];
+        if (strategy === 'human') {
             return MGPOptional.empty();
+        }
+        const profileId: string = this.aiProfiles[playerIndex];
+        const optionName: string = this.aiOptions[playerIndex];
+        const options: MGPOptional<AIOptions> = MGPOptional.ofNullable(
+            this.availableAIOptions(playerIndex).find((option: AIOptions) => option.name === optionName));
+        if (options.isAbsent()) {
+            return MGPOptional.empty();
+        }
+        switch (strategy) {
+            case 'minimax':
+                return this.getMinimaxConfig(profileId).map((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                    const minimax: Minimax<Move, GameState, RulesConfig, unknown> = this.createMinimax(config);
+                    return { ai: minimax, options: options.get() };
+                });
+            case 'iterative-deepening':
+                return this.getMinimaxConfig(profileId).map((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                    return { ai: this.createIterativeMinimax(config), options: options.get() };
+                });
+            case 'mcts':
+                return this.getMCTSConfig(profileId).map((config: MCTSConfig<Move, GameState, RulesConfig>) => {
+                    const mcts: MCTS<Move, GameState, RulesConfig, unknown> = this.createMCTS(config);
+                    return { ai: mcts, options: options.get() };
+                });
         }
     }
 
-    /**
-     * @param playerIndex 0 or 1 (the index of the current player)
-     * @returns MGPOptional.empty() if no AI is selected
-     *          MGPOptional.of(some AI) if an AI is selected, even if AI has its options unchosen
-     */
-    private getAI(playerIndex: number): MGPOptional<AbstractAI> {
+    private getMinimaxConfig(id: string): MGPOptional<MinimaxConfig<Move, GameState, RulesConfig>> {
         return MGPOptional.ofNullable(
-            this.gameComponent.availableAIs.find((a: AbstractAI) => {
-                return this.players[playerIndex].equalsValue(a.name);
+            this.getMinimaxConfigs().find((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                return config.id === id;
             }));
+    }
+
+    private getMCTSConfig(id: string): MGPOptional<MCTSConfig<Move, GameState, RulesConfig>> {
+        return MGPOptional.ofNullable(this.getMCTSConfigs().find((config: MCTSConfig<Move, GameState, RulesConfig>) => {
+            return config.id === id;
+        }));
+    }
+
+    private getMinimaxConfigs(): MinimaxConfig<Move, GameState, RulesConfig>[] {
+        return this.gameComponent.aiConfig.minimax as MinimaxConfig<Move, GameState, RulesConfig>[];
+    }
+
+    private getConfigDependencies(config: MinimaxConfig<Move, GameState, RulesConfig>)
+    : {
+        heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig>,
+        moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
+    }
+    {
+        const heuristic: (() => Heuristic<Move, GameState, BoardValue, RulesConfig>) | undefined = config.heuristic;
+        const moveGenerator: (() => MoveGenerator<Move, GameState, RulesConfig>) | undefined = config.moveGenerator;
+        Utils.assert(heuristic != null, 'Minimax config should provide a heuristic');
+        Utils.assert(moveGenerator != null, 'Minimax config should provide a moveGenerator');
+        return {
+            heuristic: heuristic!(),
+            moveGenerator: moveGenerator!(),
+        };
+    }
+
+    private createMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
+    : Minimax<Move, GameState, RulesConfig, unknown>
+    {
+        const dependencies: {
+            heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig>,
+            moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
+        } = this.getConfigDependencies(config);
+        const minimax: Minimax<Move, GameState, RulesConfig, unknown> =
+            new Minimax(config.name,
+                        this.gameComponent.rules,
+                        dependencies.heuristic,
+                        dependencies.moveGenerator,
+                        config.hash);
+        minimax.configureFromConfig(config);
+        return minimax;
+    }
+
+    private createIterativeMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
+    : IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown>
+    {
+        const dependencies: {
+            heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig>,
+            moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
+        } = this.getConfigDependencies(config);
+        const minimax: IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> =
+            new IterativeDeepeningMinimax($localize`ID ${config.name}`,
+                                          this.gameComponent.rules,
+                                          dependencies.heuristic,
+                                          dependencies.moveGenerator,
+                                          config.hash);
+        minimax.configureFromConfig(config);
+        return minimax;
+    }
+
+    private getMCTSConfigs(): MCTSConfig<Move, GameState, RulesConfig>[] {
+        return this.gameComponent.aiConfig.mcts as MCTSConfig<Move, GameState, RulesConfig>[];
+    }
+
+    private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>)
+    : MCTS<Move, GameState, RulesConfig, unknown>
+    {
+        return new MCTS(config.name, config.moveGenerator(), this.gameComponent.rules);
     }
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
@@ -304,7 +449,55 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public availableAIOptions(player: number): AIOptions[] {
-        return this.getAI(player).get().availableOptions;
+        switch (this.playerSelection[player]) {
+            case 'minimax':
+                return this.depthOptions();
+            case 'iterative-deepening':
+            case 'mcts':
+                return this.timeOptions();
+            case 'human':
+                return [];
+        }
+    }
+
+    public availableAIStrategies(): AIChoice[] {
+        const strategies: AIChoice[] = [];
+        if (this.getMinimaxConfigs().length > 0) {
+            strategies.push({ id: 'minimax', name: $localize`Minimax` });
+            strategies.push({ id: 'iterative-deepening', name: $localize`Iterative deepening` });
+        }
+        if (this.getMCTSConfigs().length > 0) {
+            strategies.push({ id: 'mcts', name: $localize`MCTS` });
+        }
+        return strategies;
+    }
+
+    public availableAIProfiles(player: number): AIChoice[] {
+        switch (this.playerSelection[player]) {
+            case 'minimax':
+            case 'iterative-deepening':
+                return this.getMinimaxConfigs();
+            case 'mcts':
+                return this.getMCTSConfigs();
+            case 'human':
+                return [];
+        }
+    }
+
+    private depthOptions(): AIDepthLimitOptions[] {
+        const options: AIDepthLimitOptions[] = [];
+        for (let i: number = 1; i < 10; i++) {
+            options.push({ name: `Level ${i}`, maxDepth: i });
+        }
+        return options;
+    }
+
+    private timeOptions(): AITimeLimitOptions[] {
+        const options: AITimeLimitOptions[] = [];
+        for (let i: number = 1; i < 10; i++) {
+            options.push({ name: `${i*i} seconds`, maxSeconds: i*i });
+        }
+        return options;
     }
 
     public canTakeBack(): boolean {
