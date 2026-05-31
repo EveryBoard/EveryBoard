@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPFallible, MGPOptional, MGPUniqueList, MGPValidation, Utils } from '@everyboard/lib';
+import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
@@ -106,7 +106,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     private getPieceCaptures(state: CheckersState,
                              coord: Coord,
                              config: CheckersConfig,
-                             flownOvers: Coord[],
+                             capturedCoords: Coord[],
     ): CheckersMove[] {
         let pieceMoves: CheckersMove[] = [];
         const piece: CheckersStack = state.getPieceAt(coord);
@@ -115,7 +115,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         const directions: Vector[] = this.getPieceDirections(state, coord, true, config);
         for (const direction of directions) {
             const captured: MGPOptional<Coord> =
-                this.getFirstCapturableCoord(state, coord, direction, opponent, flownOvers, config);
+                this.getFirstCapturableCoord(state, coord, direction, opponent, capturedCoords, config);
             if (captured.isPresent()) {
                 const landings: Coord[] =
                     this.getLandableCoords(state, coord, captured.get(), direction, config);
@@ -124,12 +124,12 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                         this.applyCapture(state, coord, captured.get(), landing, config);
 
                     const startOfMove: CheckersMove = CheckersMove.fromCapture([coord, landing]);
-                    const newFlownOvers: Coord[] = flownOvers.concat(captured.get());
+                    const newCapturedCoords: Coord[] = capturedCoords.concat(captured.get());
 
                     const endsOfMoves: CheckersMove[] = this.getPieceCaptures(postCapture.state,
                                                                               landing,
                                                                               config,
-                                                                              newFlownOvers);
+                                                                              newCapturedCoords);
                     if (endsOfMoves.length === 0) {
                         pieceMoves = pieceMoves.concat(startOfMove);
                     } else {
@@ -171,16 +171,16 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                                     coord: Coord,
                                     direction: Vector,
                                     opponent: Player,
-                                    flownOvers: Coord[],
+                                    capturedCoords: Coord[],
                                     config: CheckersConfig,
     ): MGPOptional<Coord> {
         const isPromotedPiece: boolean = state.getPieceAt(coord).getCommander().isPromoted;
         if (config.promotedPiecesCanFly && isPromotedPiece) {
-            return this.getFirstCapturableCoordForFlyingCapture(state, coord, direction, flownOvers, config);
+            return this.getFirstCapturableCoordForFlyingCapture(state, coord, direction, capturedCoords, config);
         } else {
             const nextCoord: Coord = coord.getNext(direction, 1);
             if (state.coordIsCommandedBy(nextCoord, opponent) &&
-                this.isPresentIn(nextCoord, flownOvers) === false)
+                this.isPresentIn(nextCoord, capturedCoords) === false)
             {
                 return MGPOptional.of(nextCoord);
             } else {
@@ -241,7 +241,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     private getFirstCapturableCoordForFlyingCapture(state: CheckersState,
                                                     coord: Coord,
                                                     direction: Vector,
-                                                    flownOvers: Coord[],
+                                                    capturedCoords: Coord[],
                                                     config: CheckersConfig,
     ): MGPOptional<Coord> {
         const minimalisedDirection: Vector = direction.toMinimalVector();
@@ -252,17 +252,14 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         {
             return MGPOptional.empty();
         }
-        if (this.isPresentIn(nextCoord, flownOvers)) {
-            if (state.getPieceAt(nextCoord).isOccupied()) {
-                return MGPOptional.empty();
-            }
-            // If it's empty, we can pass through it
+        if (this.isPresentIn(nextCoord, capturedCoords)) {
+            return MGPOptional.empty();
         }
         if (state.getPieceAt(nextCoord).isEmpty()) {
             return this.getFirstCapturableCoordForFlyingCapture(state,
                                                                 nextCoord,
                                                                 minimalisedDirection,
-                                                                flownOvers,
+                                                                capturedCoords,
                                                                 config);
         } else {
             return MGPOptional.of(nextCoord);
@@ -361,16 +358,28 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         let movingStack: CheckersStack = state.getPieceAt(moveStart);
         let resultingState: CheckersState = state.remove(moveStart);
         if (move.isStep === false) {
-            for (const capturedCoord of this.getCapturedCoords(move, state)) {
-                if (config.canStackPieces) {
-                    const capturedSpace: CheckersStack = state.getPieceAt(capturedCoord);
+            const capturedCoords: Coord[] = [moveStart];
+            for (let i: number = 1; i < move.coords.length; i++) {
+                const previousCoord: Coord = move.coords[i - 1];
+                const landingCoord: Coord = move.coords[i];
+                Utils.assert(this.crossesCapturedCoord(previousCoord, landingCoord, capturedCoords) === false,
+                             'A legal checkers move cannot cross a previously captured coordinate.');
+                const capturedCoord: MGPOptional<Coord> =
+                    this.getCapturedCoord(previousCoord, landingCoord, resultingState);
+                if (capturedCoord.isPresent()) {
+                    capturedCoords.push(capturedCoord.get());
+                    const capturedSpace: CheckersStack = resultingState.getPieceAt(capturedCoord.get());
                     const capturedCommander: CheckersPiece = capturedSpace.getCommander();
-                    movingStack = movingStack.capturePiece(capturedCommander);
-
-                    const remainingStack: CheckersStack = capturedSpace.getPiecesUnderCommander();
-                    resultingState = resultingState.set(capturedCoord, remainingStack);
-                } else {
-                    resultingState = resultingState.set(capturedCoord, CheckersStack.EMPTY);
+                    if (config.canStackPieces) {
+                        movingStack = movingStack.capturePiece(capturedCommander);
+                        const remainingStack: CheckersStack = capturedSpace.getPiecesUnderCommander();
+                        resultingState = resultingState.set(capturedCoord.get(), remainingStack);
+                    } else {
+                        resultingState = resultingState.set(capturedCoord.get(), CheckersStack.EMPTY);
+                    }
+                }
+                if (config.canPromoteMidCapture && landingCoord.y === state.getFinishLineOf(state.getCurrentPlayer())) {
+                    movingStack = movingStack.promoteCommander();
                 }
             }
         }
@@ -385,19 +394,21 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
         return resultingState;
     }
 
-    private getCapturedCoords(move: CheckersMove, state: CheckersState): MGPUniqueList<Coord> {
-        const steppedOverCoords: MGPUniqueList<Coord> = move.getSteppedOverCoords();
-        return steppedOverCoords.filter((coord: Coord) =>
-            state.getPieceAt(coord).isOccupied() &&
-            coord.equals(move.getStartingCoord()) === false);
+    private getCapturedCoord(start: Coord, end: Coord, state: CheckersState): MGPOptional<Coord> {
+        const capturedCoords: Coord[] =
+            start.getCoordsToward(end).filter((coord: Coord) => state.getPieceAt(coord).isOccupied());
+        Utils.assert(capturedCoords.length <= 1,
+                     'getCapturedCoord should only be called after single-capture validation.');
+        if (capturedCoords.length === 1) {
+            return MGPOptional.of(capturedCoords[0]);
+        } else {
+            return MGPOptional.empty();
+        }
     }
 
-    private hasDuplicateCaptures(move: CheckersMove, state: CheckersState): boolean {
-        const capturesWithDuplicates: Coord[] =
-            move.getSteppedOverCoordsWithDuplicates().filter((coord: Coord) =>
-                state.getPieceAt(coord).isOccupied() &&
-                coord.equals(move.getStartingCoord()) === false);
-        return capturesWithDuplicates.length > this.getCapturedCoords(move, state).size();
+    private crossesCapturedCoord(start: Coord, end: Coord, capturedCoords: Coord[]): boolean {
+        const crossedCoords: Coord[] = start.getCoordsToward(end);
+        return crossedCoords.some((crossedCoord: Coord) => this.isPresentIn(crossedCoord, capturedCoords));
     }
 
     public override isLegal(move: CheckersMove, state: CheckersState, config: CheckersConfig): MGPValidation {
@@ -447,18 +458,33 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
     private isLegalSubMoveList(move: CheckersMove, state: CheckersState, config: CheckersConfig): MGPValidation {
         let stack: CheckersStack = state.getPieceAt(move.coords[0]);
         const isSimpleJump: boolean = move.coords.length === 2;
-        const stateWithoutStarting: CheckersState = state.remove(move.coords[0]);
+        let validationState: CheckersState = state.remove(move.coords[0]);
+        const capturedCoords: Coord[] = [move.coords[0]];
         const finishLine: number = state.getFinishLineOf(state.getCurrentPlayer());
         for (let i: number = 1; i < move.coords.length; i++) {
             const previousCoord: Coord = move.coords[i - 1];
             const landingCoord: Coord = move.coords[i];
-            if (config.canPromoteMidCapture && previousCoord.y === finishLine) {
-                stack = stack.promoteCommander();
+            if (this.crossesCapturedCoord(previousCoord, landingCoord, capturedCoords)) {
+                return MGPValidation.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
             }
             const subMoveValidity: MGPValidation =
-                this.getSubMoveValidity(stack, isSimpleJump, previousCoord, landingCoord, stateWithoutStarting, config);
+                this.getSubMoveValidity(stack, isSimpleJump, previousCoord, landingCoord, validationState, config);
             if (subMoveValidity.isFailure()) {
                 return subMoveValidity;
+            }
+            const capturedCoord: MGPOptional<Coord> =
+                this.getCapturedCoord(previousCoord, landingCoord, validationState);
+            if (capturedCoord.isPresent()) {
+                capturedCoords.push(capturedCoord.get());
+                if (config.canStackPieces) {
+                    const capturedStack: CheckersStack = validationState.getPieceAt(capturedCoord.get());
+                    stack = stack.capturePiece(capturedStack.getCommander());
+                    validationState =
+                        validationState.set(capturedCoord.get(), capturedStack.getPiecesUnderCommander());
+                }
+            }
+            if (config.canPromoteMidCapture && landingCoord.y === finishLine) {
+                stack = stack.promoteCommander();
             }
         }
         return MGPValidation.SUCCESS;
@@ -614,9 +640,6 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                                  possibleCaptures: CheckersMove[],
                                  config: CheckersConfig,
     ): MGPValidation {
-        if (this.hasDuplicateCaptures(move, state)) {
-            return MGPValidation.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
-        }
         if (move.isStep) {
             return MGPValidation.failure(CheckersFailure.CANNOT_SKIP_CAPTURE());
         }

@@ -381,6 +381,34 @@ describe('BashniRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
+        it('should forbid flying through a square captured earlier in the same move', () => {
+            // Given a board where a man promotes during a capture and then could fly through an earlier capture
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, __V, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, __V, ___, __V, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, __V, ___, ___, ___, ___, ___],
+                [___, __U, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When trying to fly through (4, 1), already captured earlier in the same move
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(1, 6),
+                new Coord(3, 4),
+                new Coord(5, 2),
+                new Coord(3, 0),
+                new Coord(7, 4),
+            ]);
+
+            // Then it should fail and it should not be generated
+            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+            expect(rules.getCompleteCaptures(state, defaultConfig)).not.toContain(move);
+        });
+
         it('should allow jumping further after a capture', () => {
             // Given a board where a king can capture and continue further for a second capture
             const state: CheckersState = CheckersState.of([

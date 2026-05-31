@@ -179,3 +179,37 @@ describe('CheckersMoveGenerator for Lasca', () => {
     });
 
 });
+
+describe('CheckersMoveGenerator for Bashni', () => {
+
+    let moveGenerator: CheckersMoveGenerator;
+    const bashniRules: BashniRules = BashniRules.get();
+    const defaultConfig: CheckersConfig = bashniRules.getDefaultRulesConfig();
+
+    beforeEach(() => {
+        moveGenerator = new CheckersMoveGenerator(bashniRules);
+    });
+
+    it('should not generate captures that are illegal after mid-capture promotion', () => {
+        // Given a board where a man promotes during a capture
+        const state: CheckersState = CheckersState.of([
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, V, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, V, _, V, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, V, _, _, _, _, _],
+            [_, U, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ], 0);
+        const node: CheckersNode = new CheckersNode(state);
+
+        // When listing the generated moves
+        const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
+        // Then every generated move should be legal
+        expect(moves.every((move: CheckersMove) => bashniRules.isLegal(move, state, defaultConfig).isSuccess()))
+            .toBeTrue();
+    });
+
+});
