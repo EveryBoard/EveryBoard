@@ -118,7 +118,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                 this.getFirstCapturableCoord(state, coord, direction, opponent, capturedCoords, config);
             if (captured.isPresent()) {
                 const landings: Coord[] =
-                    this.getLandableCoords(state, coord, captured.get(), direction, config);
+                    this.getLandableCoords(state, coord, captured.get(), direction, capturedCoords, config);
                 for (const landing of landings) {
                     const postCapture: { state: CheckersState, piece: CheckersStack } =
                         this.applyCapture(state, coord, captured.get(), landing, config);
@@ -193,19 +193,24 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                               coord: Coord,
                               captured: Coord,
                               direction: Vector,
+                              capturedCoords: Coord[],
                               config: CheckersConfig,
     ): Coord[] {
         let possibleLanding: MGPOptional<Coord> =
             this.getNextPossibleLanding(state, captured, direction);
         const possibleLandings: Coord[] = [];
         if (possibleLanding.isPresent()) {
-            possibleLandings.push(possibleLanding.get());
+            if (this.crossesCapturedCoord(captured, possibleLanding.get(), capturedCoords) === false) {
+                possibleLandings.push(possibleLanding.get());
+            }
             const isPromotedPiece: boolean = state.getPieceAt(coord).getCommander().isPromoted;
             if (config.promotedPiecesCanFly && isPromotedPiece) {
                 possibleLanding =
                     this.getNextPossibleLanding(state, possibleLanding.get(), direction);
                 while (possibleLanding.isPresent()) {
-                    possibleLandings.push(possibleLanding.get());
+                    if (this.crossesCapturedCoord(captured, possibleLanding.get(), capturedCoords) === false) {
+                        possibleLandings.push(possibleLanding.get());
+                    }
                     possibleLanding =
                         this.getNextPossibleLanding(state, possibleLanding.get(), direction);
                 }
