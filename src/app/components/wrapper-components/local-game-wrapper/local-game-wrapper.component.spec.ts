@@ -351,7 +351,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should preserve profile hash functions when creating minimaxes', fakeAsync(async() => {
             // Given P4's profile, which defines a custom hash for transposition tables
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            const config: MinimaxConfig<P4Move, P4State, P4Config> = wrapper['getMinimaxConfig']('alignment').get();
+            const config: MinimaxConfig<P4Move, P4State, P4Config> =
+                wrapper['getMinimaxConfig']('alignment').get() as MinimaxConfig<P4Move, P4State, P4Config>;
             const minimax: Minimax<P4Move, P4State, P4Config, unknown> =
                 wrapper['createMinimax'](config) as Minimax<P4Move, P4State, P4Config, unknown>;
             const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
