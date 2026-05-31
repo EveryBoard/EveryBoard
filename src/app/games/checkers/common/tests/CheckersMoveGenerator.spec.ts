@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
 import { BashniRules } from '../../bashni/BashniRules';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
@@ -11,6 +12,7 @@ import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
+const X: CheckersStack = new CheckersStack([CheckersPiece.ONE_PROMOTED]);
 const _: CheckersStack = CheckersStack.EMPTY;
 
 const rules: AbstractCheckersRules[] = [
@@ -210,6 +212,47 @@ describe('CheckersMoveGenerator for Bashni', () => {
         // Then every generated move should be legal
         expect(moves.every((move: CheckersMove) => bashniRules.isLegal(move, state, defaultConfig).isSuccess()))
             .toBeTrue();
+    });
+
+    it('should generate flying captures for a non-current player based on the moving piece owner', () => {
+        // Given a board where Player.ONE is not the current player but has a flying capture
+        const state: CheckersState = CheckersState.of([
+            [X, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, U, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ], 0);
+
+        // When listing Player.ONE's captures for heuristic evaluation
+        const captures: CheckersMove[] = bashniRules.getCapturesOf(state, Player.ONE, defaultConfig);
+
+        // Then the capture should be generated even though Player.ZERO is the current player
+        const expectedMove: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(3, 3)]);
+        expect(captures.some((move: CheckersMove) => move.equals(expectedMove))).toBeTrue();
+    });
+
+    it('should not generate flying captures over a non-current player own piece', () => {
+        // Given a board where Player.ONE's flying king is blocked by another Player.ONE piece
+        const state: CheckersState = CheckersState.of([
+            [X, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, V, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ], 0);
+
+        // When listing Player.ONE's captures for heuristic evaluation
+        const captures: CheckersMove[] = bashniRules.getCapturesOf(state, Player.ONE, defaultConfig);
+
+        // Then no self-capture should be generated
+        expect(captures).toEqual([]);
     });
 
 });
