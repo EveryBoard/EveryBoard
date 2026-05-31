@@ -3,6 +3,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { CheckersFailure } from '../../common/CheckersFailure';
 import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
@@ -181,6 +182,27 @@ describe('BashniComponent', () => {
 
         // Then it should be a success (it should NOT force continuation)
         await testUtils.expectMoveSuccess('#coord-1-4', move);
+    }));
+
+    it('should forbid skipping capture after selecting a piece that must capture', fakeAsync(async() => {
+        // Given a board with a possible capture
+        const state: CheckersState = CheckersState.of([
+            [__, _V, __, _V, __, _V, __, _V],
+            [_V, __, _V, __, _V, __, _V, __],
+            [__, _V, __, _V, __, _V, __, _V],
+            [__, __, _U, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, _U, __, _U, __, _U, __],
+            [__, _U, __, _U, __, _U, __, _U],
+            [_U, __, _U, __, _U, __, _U, __],
+        ], 1);
+        await testUtils.setupState(state);
+
+        // When selecting the capturer and clicking a legal non-capturing step
+        await testUtils.expectClickSuccess('#coord-1-2');
+
+        // Then it should report the rule-level failure instead of crashing
+        await testUtils.expectClickFailure('#coord-0-3', CheckersFailure.CANNOT_SKIP_CAPTURE());
     }));
 
 });

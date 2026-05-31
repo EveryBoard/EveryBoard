@@ -394,7 +394,6 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
-
             // When capturing both pieces
             const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(5, 0), new Coord(0, 5), new Coord(2, 7),
@@ -415,7 +414,7 @@ describe('BashniRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should allow choosing shorter capture', () => {
+        it('should forbid ignoring second jump', () => {
             // Given a board where a king can capture and continue further for a second capture
             const state: CheckersState = CheckersState.of([
                 [___, ___, ___, ___, ___, __O, ___, ___],
@@ -428,6 +427,26 @@ describe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
+            // When capturing the first piece but not the second one
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(5, 0), new Coord(0, 5),
+            ]);
+
+            RulesUtils.expectMoveFailure(rules, state, move, CheckersFailure.MUST_FINISH_CAPTURING(), defaultConfig);
+        });
+
+        it('should allow choosing shorter capture', () => {
+            // Given a board where a king can capture and continue further for a second capture
+            const state: CheckersState = CheckersState.of([
+                [___, ___, ___, ___, ___, __O, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, __V, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, __V, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 0);
 
             // When choosing not to go for the longest capture
             const move: CheckersMove = CheckersMove.fromCapture([

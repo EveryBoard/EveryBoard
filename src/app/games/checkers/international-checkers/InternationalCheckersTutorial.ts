@@ -151,7 +151,7 @@ export class InternationalCheckersTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Capture rule`,
-            $localize`When you do multiple jumps, you cannot jump twice over the same piece.The captured pieces are actually removed after your full moves.<br/>Here you have to apply all the different capturing rules: backward, maximal, flying, and not jumping twice over the same piece.<br/><br/>You are playing Dark, go ahead.`,
+            $localize`When you do multiple jumps, you cannot jump twice over the same piece. The captured pieces are actually removed after your full moves.<br/>Here you have to apply all the different capturing rules: backward, maximal, flying, and not jumping twice over the same piece.<br/><br/>You are playing Dark, go ahead.`,
             new CheckersState([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],

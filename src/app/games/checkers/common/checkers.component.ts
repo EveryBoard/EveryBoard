@@ -1,6 +1,6 @@
 import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
-import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
@@ -34,16 +34,16 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         parallelogramHeight: 100,
     };
 
-    private readonly boardSize: WritableSignal<{w: number, h: number}> = signal({ w: 0, h: 0 });
+    private readonly boardSize: WritableSignal<Coord> = signal(new Coord(0, 0));
 
     public readonly basicWidth: Signal<number> = computed(() =>
-        this.boardSize().w * this.mode.parallelogramHeight);
+        this.boardSize().x * this.mode.parallelogramHeight);
 
     public readonly basicHeight: Signal<number> = computed(() =>
-        this.boardSize().h * this.mode.parallelogramHeight);
+        this.boardSize().y * this.mode.parallelogramHeight);
 
     public readonly viewBox: Signal<ViewBox> = computed(() => {
-        const h: number = this.boardSize().h;
+        const h: number = this.boardSize().y;
         const boardOffset: number = h * this.mode.offsetRatio * this.mode.parallelogramHeight;
         const width: number = (this.basicWidth() * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
         const height: number = this.basicHeight() + this.THICKNESS + this.STROKE_WIDTH + this.SPACE_SIZE;
@@ -71,10 +71,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override setRulesAndNode(urlName: string): void {
         super.setRulesAndNode(urlName);
-        this.boardSize.set({
-            w: this.getState().getWidth(),
-            h: this.getState().getHeight(),
-        });
+        this.boardSize.set(new Coord(this.getState().getWidth(), this.getState().getHeight()));
         this.moveGenerator = new CheckersMoveGenerator(this.rules);
         this.availableAIs = [
             new CheckersScoreMinimax(this.rules, this.moveGenerator),
@@ -244,8 +241,30 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
         const validation: MGPValidation =
             this.rules.getSubMoveValidity(stack, isSimpleJump, start, clicked, stateWithoutStarting, this.getConfig());
-        Utils.assert(validation.isFailure(), `Invalid click should be an invalid move, but it is valid: ${clicked}`);
-        return validation.getReason();
+        if (validation.isFailure()) {
+            return validation.getReason();
+        }
+        const attemptedMove: CheckersMove = this.getMoveAttemptEndingAt(clicked);
+        const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.getConfig());
+        if (moveValidity.isFailure()) {
+            return moveValidity.getReason();
+        }
+        return CheckersFailure.THIS_PIECE_CANNOT_MOVE();
+    }
+
+    private getMoveAttemptEndingAt(clicked: Coord): CheckersMove {
+        const clickedCoords: Coord[] = this.currentMoveClicks.concat(clicked);
+        if (clickedCoords.length === 2 && this.doesMoveAttemptCapture(clicked) === false) {
+            return CheckersMove.fromStep(clickedCoords[0], clickedCoords[1]);
+        } else {
+            return CheckersMove.fromCapture(clickedCoords);
+        }
+    }
+
+    private doesMoveAttemptCapture(clicked: Coord): boolean {
+        const start: Coord = this.currentMoveClicks[0];
+        const steppedOver: Coord[] = start.getCoordsToward(clicked);
+        return steppedOver.some((coord: Coord) => this.getState().getPieceAt(coord).isOccupied());
     }
 
     private getMatchingLegalMove(): MGPOptional<CheckersMove> {

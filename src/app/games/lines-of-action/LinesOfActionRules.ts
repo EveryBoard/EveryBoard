@@ -89,8 +89,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         state: LinesOfActionState,
         _config: EmptyRulesConfig,
         _info: void,
-    ): LinesOfActionState
-    {
+    ): LinesOfActionState {
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         board[move.getStart().y][move.getStart().x] = PlayerOrNone.NONE;
         board[move.getEnd().y][move.getEnd().x] = state.getCurrentPlayer();

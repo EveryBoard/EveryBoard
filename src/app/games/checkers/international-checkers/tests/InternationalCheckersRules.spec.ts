@@ -740,7 +740,7 @@ describe('InternationalCheckersRules', () => {
                 // Given a board where a king could capture with a longer jump
                 const state: CheckersState = CheckersState.of([
                     [_, _, _, _, _, _, _, _, _, _],
-                    [_, _, _, U, _, _, _, _, _, _],
+                    [_, _, _, V, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, V, _, _, _, _],
                     [_, _, V, _, _, _, _, _, _, _],

@@ -68,8 +68,7 @@ export abstract class Encoder<T> {
      */
     public static disjunction<U>(typePredicates: ((value: unknown) => boolean)[],
                                  encoders: Encoder<unknown>[],
-    ): Encoder<U>
-    {
+    ): Encoder<U> {
         Utils.assert(typePredicates.length === encoders.length, 'typePredicates and encoders should have same length');
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
