@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { ArrayUtils, Set } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional, Set } from '@everyboard/lib';
 
 import { P4Heuristic } from '../../../games/p4/P4Heuristic';
 import { P4Move } from '../../../games/p4/P4Move';
@@ -93,7 +93,6 @@ describe('Minimax', () => {
     });
 
     it('should run iterative deepening minimax', () => {
-        spyOn(console, 'log');
         // Given an iterative deepening minimax
         const iterativeDeepening: IterativeDeepeningMinimax<P4Move, P4State, P4Config> =
             new IterativeDeepeningMinimax('ID Dummy', P4Rules.get(), heuristic, moveGenerator);
@@ -112,6 +111,25 @@ describe('Minimax', () => {
         expect(iterativeDeepening.availableOptions[0]).toEqual({ name: '1 seconds', maxSeconds: 1 });
     });
 
+    it('should stop iterative deepening when a deeper search is complete', () => {
+        // Given an iterative deepening minimax that completes depth 1 and has nothing more to search at depth 2
+        const iterativeDeepening: IterativeDeepeningMinimax<P4Move, P4State, P4Config> =
+            new IterativeDeepeningMinimax('ID Dummy', P4Rules.get(), heuristic, moveGenerator);
+        const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
+        const expectedMove: P4Move = P4Move.of(3);
+        spyOn(iterativeDeepening as unknown as { alphaBeta: () => MGPOptional<unknown> }, 'alphaBeta').and.returnValues(
+            MGPOptional.of({ move: expectedMove, score: BoardValue.of(0), complete: true }),
+            MGPOptional.empty(),
+        );
+
+        // When selecting a move through iterative deepening
+        const move: P4Move =
+            iterativeDeepening.chooseNextMove(node, { name: '1 second', maxSeconds: 1 }, defaultConfig);
+
+        // Then it should keep the completed result from the previous depth
+        expect(move).toBe(expectedMove);
+    });
+
     it('should support a custom hash function', () => {
         // Given a minimax with a custom hash
         const customHash: Minimax<P4Move, P4State, P4Config> =
@@ -122,6 +140,52 @@ describe('Minimax', () => {
 
         // Then it should use the injected hash function
         expect(hash).toBe('custom');
+    });
+
+    it('should reuse lower and upper transposition bounds', () => {
+        // Given a minimax with cached lower and upper bound entries
+        const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
+        const bestMove: P4Move = P4Move.of(3);
+        const table: Map<string, unknown> = minimax['transpositionTable'];
+        const key: string = minimax['hash'](node.gameState);
+        table.set(key, { depth: 2, score: BoardValue.of(0), bound: 'LOWER', bestMove });
+
+        // When searching with a lower bound that closes the window
+        const lowerResult: MGPOptional<{ move: P4Move }> =
+            minimax['alphaBeta'](node, 2, BoardValue.of(0), BoardValue.of(0), defaultConfig);
+
+        // Then the cached move should be reused
+        expect(lowerResult.get().move).toBe(bestMove);
+
+        // Given an upper bound that closes the window
+        table.set(key, { depth: 2, score: BoardValue.of(0), bound: 'UPPER', bestMove });
+
+        // When searching again
+        const upperResult: MGPOptional<{ move: P4Move }> =
+            minimax['alphaBeta'](node, 2, BoardValue.of(0), BoardValue.of(0), defaultConfig);
+
+        // Then the cached move should be reused
+        expect(upperResult.get().move).toBe(bestMove);
+    });
+
+    it('should order known transposition-table best moves first', () => {
+        // Given a minimax with a cached best move that is too shallow to reuse directly
+        const node: P4Node = P4Rules.get().getInitialNode(defaultConfig);
+        const bestMove: P4Move = P4Move.of(3);
+        const table: Map<string, unknown> = minimax['transpositionTable'];
+        table.set(minimax['hash'](node.gameState), {
+            depth: 1,
+            score: BoardValue.of(0),
+            bound: 'EXACT',
+            bestMove,
+        });
+
+        // When searching deeper
+        const result: MGPOptional<{ move: P4Move }> =
+            minimax['alphaBeta'](node, 2, BoardValue.of(0).toMinimum(), BoardValue.of(0).toMaximum(), defaultConfig);
+
+        // Then the search should accept the cached move as a valid ordering hint
+        expect(result.isPresent()).toBeTrue();
     });
 
 

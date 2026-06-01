@@ -175,6 +175,51 @@ describe('TaflRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
+    it('should consider defender winner when king reaches an external throne', () => {
+        // Given a board where the king escaped to a corner throne
+        const board: Table<TaflPawn> = [
+            [A, _, _, _, _, _, _, _, O],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, O],
+        ];
+        const state: TaflState = new TaflState(board, 3);
+
+        // When checking the winner
+        const winner: MGPOptional<Player> = rules.getWinner(state, defaultConfig);
+
+        // Then the defender should win
+        expect(winner.get()).toBe(rules.getDefender(defaultConfig));
+    });
+
+    it('should not capture a pawn backed by another opponent', () => {
+        // Given a moved invader threatening a defender backed by another defender
+        const board: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _, _, _],
+            [O, X, X, _, A, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+        ];
+        const state: TaflState = new TaflState(board, 2);
+
+        // When checking capture to the right
+        const captured: MGPOptional<Coord> =
+            rules.tryCapture(Player.ZERO, new Coord(0, 1), Orthogonal.RIGHT, state, defaultConfig);
+
+        // Then no pawn should be captured
+        expect(captured.isAbsent()).toBeTrue();
+    });
+
     describe('getInvader', () => {
 
         it('should return Player.ZERO when invader starts', () => {

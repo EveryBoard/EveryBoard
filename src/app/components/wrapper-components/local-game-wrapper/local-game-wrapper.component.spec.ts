@@ -285,6 +285,36 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementToExist('#ai-option-select-0');
         }));
 
+        it('should require profile selection for MCTS when multiple configs exist', fakeAsync(async() => {
+            // Given a local wrapper with several MCTS profiles
+            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            wrapper.playerSelection[0] = 'mcts';
+            spyOn(wrapper as unknown as { getMCTSConfigs: () => unknown[] }, 'getMCTSConfigs').and.returnValue([
+                { id: 'first', name: 'First' },
+                { id: 'second', name: 'Second' },
+            ]);
+
+            // When checking if an AI profile must be selected
+            const mustSelect: boolean = wrapper.mustSelectAIProfile(0);
+
+            // Then the wrapper should require an explicit profile choice
+            expect(mustSelect).toBeTrue();
+        }));
+
+        it('should reset AI profile to none when no profile is available', fakeAsync(async() => {
+            // Given a local wrapper whose selected strategy has no available profile
+            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            wrapper.playerSelection[0] = 'mcts';
+            wrapper.aiProfiles[0] = 'stale-profile';
+            spyOn(wrapper, 'availableAIProfiles').and.returnValue([]);
+
+            // When the player selection is applied
+            await wrapper.updatePlayer(Player.ZERO);
+
+            // Then the stale profile should fall back to no profile
+            expect(wrapper.aiProfiles[0]).toBe('none');
+        }));
+
         it('should allow iterative deepening selection for minimax configs', fakeAsync(async() => {
             // Given a board where humans are playing humans
             testUtils.expectElementNotToExist('#ai-profile-select-0');
