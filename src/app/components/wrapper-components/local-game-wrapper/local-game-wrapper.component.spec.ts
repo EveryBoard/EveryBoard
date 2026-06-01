@@ -300,31 +300,40 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
         it('should resolve the selected minimax, iterative deepening, and MCTS players', fakeAsync(async() => {
+            // Given a local wrapper
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
+            // When selecting minimax
             wrapper.playerSelection[0] = 'minimax';
             wrapper.aiProfiles[0] = 'alignment';
             wrapper.aiOptions[0] = 'Level 1';
+            // Then it should have selected the minimax AI
             let playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(Minimax));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: 'Level 1' }));
             expect(playingAI.get().options['maxDepth']).toBe(1);
 
+            // When selecting iterative deepening minimax
             wrapper.playerSelection[0] = 'iterative-deepening';
             wrapper.aiOptions[0] = '1 seconds';
+            // Then it should have selected the iterative deepening minimax AI
             playingAI = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(IterativeDeepeningMinimax));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds' }));
             expect(playingAI.get().options['maxSeconds']).toBe(1);
 
+            // When selecting MCTS
             wrapper.playerSelection[0] = 'mcts';
             wrapper.aiProfiles[0] = 'default';
+            // Then it should have selected MCTS
             playingAI = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(MCTS));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds' }));
             expect(playingAI.get().options['maxSeconds']).toBe(1);
 
+            // When selecting human
             wrapper.playerSelection[0] = 'human';
+            // Then it should not have selected an AI
             expect(wrapper.availableAIOptions(0)).toEqual([]);
             expect(wrapper.availableAIProfiles(0)).toEqual([]);
             expect(wrapper['getPlayingAI']().isAbsent()).toBeTrue();
