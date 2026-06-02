@@ -1,4 +1,4 @@
-package server
+package ws
 
 import (
 	"fmt"
@@ -116,6 +116,6 @@ func TestLobbyUserCannotSendMove(t *testing.T) {
 	sendRawMessage(t, c, `["SubscribeLobby"]`)
 	// When they send a move
 	sendRawMessage(t, c, `["Move",{"move":{"x":42}}]`)
-	// Then it should not be alowed
-	expectMessage(t, c, `["Error",{"reason":"unknown-game"}]`)
+	// Then it should not be allowed
+	expectMessage(t, c, `["Error",{"reason":"not-subscribed"}]`)
 }

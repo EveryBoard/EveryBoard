@@ -13,7 +13,11 @@ type User struct {
 }
 
 func FetchUserDocument(context context.Context, uid string) (*User, error) {
-	doc, err := firebaseClient.Fetch(context, "users", uid)
+	return FetchUserDocumentWithClient(firebaseClient, context, uid)
+}
+
+func FetchUserDocumentWithClient(client FirebaseLike, context context.Context, uid string) (*User, error) {
+	doc, err := client.Fetch(context, "users", uid)
 	if err != nil {
 		return nil, err
 	}
@@ -25,6 +29,10 @@ func FetchUserDocument(context context.Context, uid string) (*User, error) {
 }
 
 func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {
+	return VerifyTokenAndGetUserWithClient(firebaseClient, r)
+}
+
+func VerifyTokenAndGetUserWithClient(client FirebaseLike, r *http.Request) (string, *User, error) {
 	authorizationHeader := r.Header.Get("Sec-WebSocket-Protocol")
 	if authorizationHeader == "" {
 		return "", nil, fmt.Errorf("no authorization header")
@@ -36,11 +44,11 @@ func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {
 	}
 	token := strings.TrimSpace(parts[1])
 
-	uid, err := firebaseClient.VerifyToken(r.Context(), token)
+	uid, err := client.VerifyToken(r.Context(), token)
 	if err != nil {
 		return "", nil, err
 	}
 
-	user, err := FetchUserDocument(r.Context(), uid)
+	user, err := FetchUserDocumentWithClient(client, r.Context(), uid)
 	return uid, user, err
 }

@@ -1,4 +1,4 @@
-package server
+package ws
 
 import (
 	"encoding/base64"
@@ -125,7 +125,7 @@ func toJSON(t *testing.T, v any) string {
 type ScenarioBuilder struct {
 	t                *testing.T
 	fakeStore        *FakeStore
-	config           *Configuration
+	server           *TestServer
 	cleanupFunctions []func()
 	cleanupOnce      *sync.Once
 
@@ -142,11 +142,11 @@ func NewScenarioBuilder(t *testing.T) ScenarioBuilder {
 	handler.NowFloat = func() float64 { return 42 }
 	handler.RandBool = func() bool { return true }
 
-	stopServer, fakeStore, config := PrepareServer(t)
+	stopServer, fakeStore, server := PrepareServer(t)
 	sb := ScenarioBuilder{
 		t:                     t,
 		fakeStore:             fakeStore,
-		config:                config,
+		server:                server,
 		cleanupFunctions:      []func(){stopServer},
 		cleanupOnce:           &sync.Once{},
 		connections:           make(map[string]*websocket.Conn),

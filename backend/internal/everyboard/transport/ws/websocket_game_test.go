@@ -1,4 +1,4 @@
-package server
+package ws
 
 import (
 	"fmt"
@@ -383,6 +383,61 @@ func TestSendMoveFromObserverOnStartedGame(t *testing.T) {
 	sendRawMessage(t, sb.getConnection(observer), `["Move",{"move":{"lol":true}}]`)
 	// Then it should be disallowed
 	expectMessage(t, sb.getConnection(observer), `["Error",{"reason":"not-allowed"}]`)
+}
+
+func TestSendMoveFromConfigRoomSubscription(t *testing.T) {
+	sb, player, _, gameId := setupTwoPlayersGame(t)
+	defer sb.Cleanup()
+
+	sb.Unsubscribe(player)
+	sb.SubscribeConfigRoom(player, gameId)
+
+	sendRawMessage(t, sb.getConnection(player), `["Move",{"move":{"lol":true}}]`)
+
+	expectMessage(t, sb.getConnection(player), `["Error",{"reason":"not-subscribed"}]`)
+}
+
+func TestSendMoveFromConfigRoomCreatorWhoIsNotGamePlayer(t *testing.T) {
+	stopServer, fakeStore, _ := PrepareServer(t)
+	defer stopServer()
+
+	uid := "creator"
+	opponent := "opponent"
+	gameID := model.GameID(9000)
+	encodedID, err := model.EncodeID(gameID)
+	require.NoError(t, err, "cannot encode id")
+
+	fakeStore.SetGameForTest(gameID, &model.Game{
+		GameID:     gameID,
+		GameName:   "test-game",
+		PlayerZero: model.MinimalUser{ID: "player0", Name: "player0"},
+		PlayerOne:  model.MinimalUser{ID: "player1", Name: "player1"},
+		Result:     model.ResultInProgress,
+	})
+	fakeStore.SetConfigRoomForTest(gameID, &model.ConfigRoom{
+		ID:             gameID,
+		Creator:        model.MinimalUser{ID: uid, Name: uid},
+		ChosenOpponent: &model.MinimalUser{ID: opponent, Name: opponent},
+		Status:         model.StatusStarted,
+		GameName:       "test-game",
+	})
+
+	headers := http.Header{}
+	headers.Set("Sec-WebSocket-Protocol", tokenForUser(uid))
+	c, _, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
+	require.NoError(t, err, "Dial failed")
+	defer c.Close()
+	readWithTimeout(t, c)
+
+	err = c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeGame",{"gameId":"%s"}]`, encodedID)))
+	require.NoError(t, err, "WriteMessage failed")
+	readWithTimeout(t, c)
+	readWithTimeout(t, c)
+	readWithTimeout(t, c)
+
+	sendRawMessage(t, c, `["Move",{"move":{"lol":true}}]`)
+
+	expectMessage(t, c, `["Error",{"reason":"not-allowed"}]`)
 }
 
 func TestSendMoveOnFinishedGame(t *testing.T) {

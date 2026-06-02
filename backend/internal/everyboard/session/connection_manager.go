@@ -41,13 +41,19 @@ func (q *queue) pop() (protocol.OutgoingMessage, bool) {
 	return m, true
 }
 
+// The type of connection we want to deal with.
+// In practice, this is a WebSocket connection, but we abstract over it for better testing.
 type ConnectionLike interface {
 	comparable
+	// Send a message over the connection
 	WriteMessage(messageType int, data []byte) error
-	SetWriteDeadline(t time.Time) error
+	// Close the connection
 	Close() error
+	// Set a timeout for sending a message, for better robustness
+	SetWriteDeadline(t time.Time) error
 }
 
+// The informations of a connection
 type infos struct {
 	user   model.MinimalUser // the user
 	queue  queue             // the queue of messages to send to the user

@@ -1,24 +1,22 @@
-package server
+package ws
 
 import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/require"
 	"net"
-	"net/http"
-	"os"
+	"net/http/httptest"
 	"strings"
 	"testing"
-	"time"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/server"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
+	"github.com/gorilla/websocket"
+	"github.com/stretchr/testify/require"
 )
 
 var testServerAddr string
-
-func testHTTPURL(path string) string {
-	return "http://" + testServerAddr + path
-}
 
 func testWebSocketURL(path string) string {
 	return "ws://" + testServerAddr + path
@@ -64,49 +62,37 @@ func (f FirebaseMock) VerifyToken(context context.Context, token string) (string
 	return sub, nil
 }
 
-func PrepareServer(t *testing.T) (func(), *FakeStore, *Configuration) {
-	os.Clearenv()
-	t.Setenv("USE_EMULATOR", "yes")
-	t.Setenv("PROJECT_ID", "my-project")
-	t.Setenv("DATABASE_TYPE", "sqlite")
-	t.Setenv("DATABASE_DSN", "file::memory:")
-	t.Setenv("ALLOW_ORIGIN", "*")
-	t.Setenv("LISTEN_ADDR", "127.0.0.1:0")
-	config, err := ReadConfiguration()
-	require.NoError(t, err, "error when reading the configuration")
+type TestServer struct {
+	Subscriptions *session.SubscriptionManager[*websocket.Conn]
+	Connections   *session.ConnectionManager[*websocket.Conn]
+}
 
+func PrepareServer(t *testing.T) (func(), *FakeStore, *TestServer) {
 	fakeStore := NewFakeStore()
-	config.Store = fakeStore
-	config.Firebase = FirebaseMock{}
-
-	server, err := Prepare(config)
-	require.NoError(t, err, "error when preparing the server")
-
-	listener, err := net.Listen("tcp", config.ListenAddr)
-	require.NoError(t, err, "cannot listen on test server address")
-	config.ListenAddr = listener.Addr().String()
-	server.Addr = config.ListenAddr
-	testServerAddr = config.ListenAddr
-
-	serverErr := make(chan error, 1)
-	go func() {
-		err := server.Serve(listener)
-		if err != nil && err != http.ErrServerClosed {
-			serverErr <- err
-		}
-		close(serverErr)
-	}()
-	select {
-	case err := <-serverErr:
-		require.NoError(t, err, "test server exited while starting")
-	default:
+	subscriptions := session.NewSubscriptionManager[*websocket.Conn]()
+	connections := session.NewConnectionManager[*websocket.Conn]()
+	testServer := &TestServer{
+		Subscriptions: &subscriptions,
+		Connections:   &connections,
 	}
+
+	websocketHandler := New(Dependencies{
+		Firebase:      FirebaseMock{},
+		Store:         fakeStore,
+		Subscriptions: testServer.Subscriptions,
+		Connections:   testServer.Connections,
+		Origin:        "*",
+	})
+	listener, err := net.Listen("tcp", "127.0.0.1:0")
+	require.NoError(t, err, "cannot listen on test server address")
+
+	httpServer := httptest.NewUnstartedServer(server.New("127.0.0.1:0", "*", websocketHandler).Handler)
+	httpServer.Listener = listener
+	httpServer.Start()
+	testServerAddr = strings.TrimPrefix(httpServer.URL, "http://")
 
 	stopServer := func() {
-		ctx, cancel := context.WithTimeout(context.Background(), time.Second)
-		defer cancel()
-		require.NoError(t, server.Shutdown(ctx), "Shutdown failed")
-		require.NoError(t, <-serverErr, "ListenAndServe error")
+		httpServer.Close()
 	}
-	return stopServer, fakeStore, config
+	return stopServer, fakeStore, testServer
 }

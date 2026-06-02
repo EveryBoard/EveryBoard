@@ -14,6 +14,7 @@ import (
 	"google.golang.org/api/option"
 )
 
+// A minimal interface to Firebase
 type FirebaseLike interface {
 	// We need to be able to initialize it
 	Initialize() error
@@ -28,7 +29,7 @@ type FirebaseLike interface {
 	VerifyToken(context context.Context, token string) (string, error)
 }
 
-// This is the interface to firebase
+// This is the singleton object that acts as interface to firebase
 var firebaseClient FirebaseLike
 
 // Change the interface to firebase, for testing purposes
@@ -41,6 +42,7 @@ func InitFirebase() error {
 	return firebaseClient.Initialize()
 }
 
+// Firebase configuration
 type Firebase struct {
 	UseEmulator        bool
 	ProjectID          string

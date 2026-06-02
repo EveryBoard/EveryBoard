@@ -235,8 +235,8 @@ func (h *Handler) handleGameEnd(winner model.PlayerOrNone) error {
 }
 
 func (h *Handler) addEvent(eventData model.EventPayload) error {
-	_, gameId, subscribed := h.subscriptions.SubscriptionOf(h.connection)
-	if !subscribed {
+	subscriptionKind, gameId, subscribed := h.subscriptions.SubscriptionOf(h.connection)
+	if !subscribed || subscriptionKind != session.SubscriptionToGame {
 		return apperror.ErrorNotSubscribed
 	}
 
@@ -256,12 +256,9 @@ func (h *Handler) addEvent(eventData model.EventPayload) error {
 		if game == nil {
 			return apperror.ErrorUnknownGame
 		}
-		if configRoom.Creator.ID != h.user.ID &&
-			(configRoom.ChosenOpponent == nil || configRoom.ChosenOpponent.ID != h.user.ID) {
-			// Only a player can add events
+		if game.PlayerZero.ID != h.user.ID && game.PlayerOne.ID != h.user.ID {
 			return apperror.ErrorNotAllowed
 		}
-		// TODO: user must be in game, game must be started but not finished
 		if !eventData.AllowedInConfigRoomStatus(configRoom.Status) {
 			return apperror.ErrorNotAllowed
 		}

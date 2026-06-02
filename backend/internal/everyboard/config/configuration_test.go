@@ -1,4 +1,4 @@
-package server
+package config
 
 import (
 	"github.com/stretchr/testify/require"
@@ -16,7 +16,7 @@ func TestReadConfigurationSqliteWithoutDsn(t *testing.T) {
 	t.Setenv("DATABASE_TYPE", "sqlite")
 	t.Setenv("ALLOW_ORIGIN", "*")
 
-	config, err := ReadConfiguration()
+	config, err := Read()
 	require.NoError(t, err, "error when reading the configuration")
 	sqliteDialector, ok := config.Database.(*sqlite.Dialector)
 	require.True(t, ok, "not a sqlite database")
@@ -32,7 +32,7 @@ func TestReadConfigurationSqliteWithDsn(t *testing.T) {
 	t.Setenv("DATABASE_DSN", databaseName)
 	t.Setenv("ALLOW_ORIGIN", "*")
 
-	config, err := ReadConfiguration()
+	config, err := Read()
 	require.NoError(t, err, "error when reading the configuration")
 	sqliteDialector, ok := config.Database.(*sqlite.Dialector)
 	require.True(t, ok, "not a sqlite database")
@@ -46,7 +46,7 @@ func TestReadConfiguarationPostgresWithoutDsn(t *testing.T) {
 	t.Setenv("DATABASE_TYPE", "postgres")
 	t.Setenv("ALLOW_ORIGIN", "*")
 
-	_, err := ReadConfiguration()
+	_, err := Read()
 	require.Error(t, err, "error when reading the configuration")
 }
 
@@ -59,7 +59,7 @@ func TestReadConfigurationPostgresWithDsn(t *testing.T) {
 	t.Setenv("DATABASE_DSN", dsn)
 	t.Setenv("ALLOW_ORIGIN", "*")
 
-	config, err := ReadConfiguration()
+	config, err := Read()
 	require.NoError(t, err, "error when reading the configuration")
 	postgresDialector, ok := config.Database.(*postgres.Dialector)
 	require.True(t, ok, "not a postgres database")
@@ -72,7 +72,7 @@ func TestReadConfigurationWithoutOrigin(t *testing.T) {
 	t.Setenv("PROJECT_ID", "my-project")
 	t.Setenv("DATABASE_TYPE", "sqlite")
 
-	_, err := ReadConfiguration()
+	_, err := Read()
 	require.Error(t, err, "error when reading the configuration")
 }
 
@@ -83,7 +83,7 @@ func TestReadConfigurationWithOrigin(t *testing.T) {
 	t.Setenv("DATABASE_TYPE", "sqlite")
 	t.Setenv("ALLOW_ORIGIN", "everyboard.org")
 
-	config, err := ReadConfiguration()
+	config, err := Read()
 	require.NoError(t, err, "error when reading the configuration")
 	require.Equal(t, "everyboard.org", config.Origin, "origin improperly set")
 }
@@ -95,7 +95,7 @@ func TestReadConfigurationWithoutListenAddr(t *testing.T) {
 	t.Setenv("DATABASE_TYPE", "sqlite")
 	t.Setenv("ALLOW_ORIGIN", "*")
 
-	config, err := ReadConfiguration()
+	config, err := Read()
 	require.NoError(t, err, "error when reading the configuration")
 	require.Equal(t, ":8081", config.ListenAddr, "listen address improperly set")
 }
@@ -108,7 +108,7 @@ func TestReadConfigurationWithListenAddr(t *testing.T) {
 	t.Setenv("ALLOW_ORIGIN", "*")
 	t.Setenv("LISTEN_ADDR", "localhost:1234")
 
-	config, err := ReadConfiguration()
+	config, err := Read()
 	require.NoError(t, err, "error when reading the configuration")
 	require.Equal(t, "localhost:1234", config.ListenAddr, "listen address improperly set")
 }
