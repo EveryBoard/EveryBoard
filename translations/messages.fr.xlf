@@ -853,6 +853,10 @@
         <source>Human</source>
         <target>Humain</target>
       </trans-unit>
+      <trans-unit id="3307352846832849992" datatype="html">
+        <source>Pick the profile</source>
+        <target>Choisissez le profil</target>
+      </trans-unit>
       <trans-unit id="3795472118461355324" datatype="html">
         <source>Pick the options</source>
         <target>Choisissez les options</target>
@@ -1917,9 +1921,17 @@
         <source>MCTS (3, no dups)</source>
         <target>MCTS (3, pas de duplication)</target>
       </trans-unit>
-      <trans-unit id="1337900792840930042" datatype="html">
-        <source>Distance (<x id="PH" equiv-text="i"/>)</source>
-        <target>Distance (<x id="PH" equiv-text="i"/>)</target>
+      <trans-unit id="4770227794604983198" datatype="html">
+        <source>Distance (1)</source>
+        <target>Distance (1)</target>
+      </trans-unit>
+      <trans-unit id="8648592362460976351" datatype="html">
+        <source>Distance (2)</source>
+        <target>Distance (2)</target>
+      </trans-unit>
+      <trans-unit id="32621127018559651" datatype="html">
+        <source>Distance (3)</source>
+        <target>Distance (3)</target>
       </trans-unit>
       <trans-unit id="514608014907395319" datatype="html">
         <source>Chaining jumps in a single move</source>
@@ -5012,6 +5024,38 @@
       <trans-unit id="1802530168433258138" datatype="html">
         <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
         <target>Votre requête (<x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/>) a été envoyée.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></target>
+      </trans-unit>
+      <trans-unit id="2520878109295407247" datatype="html">
+        <source>Iterative deepening</source>
+        <target>Approfondissement itératif</target>
+      </trans-unit>
+      <trans-unit id="4586260971442685870" datatype="html">
+        <source>Territory</source>
+        <target>Territoire</target>
+      </trans-unit>
+      <trans-unit id="5504136696096277083" datatype="html">
+        <source>Advancement</source>
+        <target>Avancement</target>
+      </trans-unit>
+      <trans-unit id="5944812089887969249" datatype="html">
+        <source>Groups</source>
+        <target>Groupes</target>
+      </trans-unit>
+      <trans-unit id="2874924373232293084" datatype="html">
+        <source>Reserve</source>
+        <target>Réserve</target>
+      </trans-unit>
+      <trans-unit id="9017523517963235509" datatype="html">
+        <source>Piece Count</source>
+        <target>Nombre de pièces</target>
+      </trans-unit>
+      <trans-unit id="1779552786277618671" datatype="html">
+        <source>Distance</source>
+        <target>Distance</target>
+      </trans-unit>
+      <trans-unit id="4427129289566046309" datatype="html">
+        <source>Shape</source>
+        <target>Forme</target>
       </trans-unit>
     </body>
   </file>

@@ -393,7 +393,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
         } = this.getConfigDependencies(config);
         const minimax: IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> =
-            new IterativeDeepeningMinimax($localize`ID ${config.name}`,
+            new IterativeDeepeningMinimax(config.name,
                                           this.gameComponent.rules,
                                           dependencies.heuristic,
                                           dependencies.moveGenerator,
