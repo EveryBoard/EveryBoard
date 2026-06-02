@@ -2,8 +2,8 @@ package rating
 
 import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
-	"github.com/stretchr/testify/require"
 	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
 	"testing"
 )
 
