@@ -187,7 +187,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const y: number = coord.y;
         const opponent: Player = this.getState().getCurrentOpponent();
         if (this.hexaBoard[y][x].is(opponent)) {
-            return this.opponentClick(coord);
+            return this.tryChoosingDirection(coord)
         }
         if (this.selecteds.length === 0) {
             return this.firstClick(coord);
@@ -196,11 +196,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         } else {
             return this.thirdClick(coord);
         }
-    }
-
-    private async opponentClick(coord: Coord): Promise<MGPValidation> {
-        // tryChoosingDirection is called somewhere else where no click handling check need to be done
-        return this.tryChoosingDirection(coord);
     }
 
     private async firstClick(coord: Coord): Promise<MGPValidation> {
