@@ -40,6 +40,10 @@ describe('RulesConfigurationComponent', () => {
         tick(1);
     }
 
+    function setCreatorMode(creatorMode: boolean): void {
+        testUtils.setInput('creatorMode', creatorMode);
+    }
+
     function expectErrorToBe(expectedError: string): void {
         testUtils.expectElementToExist('#form-error');
         const errorElement: DebugElement = testUtils.findElement('#form-error > div');
@@ -112,6 +116,7 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(fakeAsync(async() => {
             // Given an editable component
+            setCreatorMode(true);
             testUtils.setInput('editable', true);
         }));
 
@@ -461,6 +466,7 @@ describe('RulesConfigurationComponent', () => {
 
         beforeEach(() => {
             // Given a component in non-editable mode
+            setCreatorMode(false);
             component.setEditable(false);
             // rulesConfigToDisplay is mandatory even if it's a configless game
             testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
@@ -610,6 +616,7 @@ describe('RulesConfigurationComponent', () => {
 
     it('should be able switch from editable to non-editable', fakeAsync(async() => {
         // Given an editable component with some custom config
+        setCreatorMode(true);
         component.setEditable(true);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
         testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
@@ -624,10 +631,14 @@ describe('RulesConfigurationComponent', () => {
 
     it('should be able to switch from non-editable to editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
+        setCreatorMode(true);
         component.setEditable(false);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
-        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
-        await testUtils.chooseConfig('Custom');
+        testUtils.setInput('rulesConfigToDisplay', {
+            nombre: 1,
+            canailleDeBoule: 99,
+        });
+        testUtils.detectChanges();
 
         // When switching to editable
         setEditable(true);
@@ -638,16 +649,57 @@ describe('RulesConfigurationComponent', () => {
 
     it('should do nothing when switching from non-editable to non-editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
+        setCreatorMode(true);
         component.setEditable(false);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
-        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
-        await testUtils.chooseConfig('Custom');
+        testUtils.setInput('rulesConfigToDisplay', {
+            nombre: 1,
+            canailleDeBoule: 99,
+        });
+        testUtils.detectChanges();
 
         // When switching to non-editable
         setEditable(false);
 
         // Then the fields remain disabled
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
+    }));
+
+    it('should throw when trying to select a config outside creator mode', fakeAsync(async() => {
+        // Given a read-only component
+        setCreatorMode(false);
+        testUtils.setInput('editable', false);
+        testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
+        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
+        testUtils.detectChanges();
+
+        TestUtils.expectToThrowAndLog(() => {
+            component.onChange({ target: { value: 'Custom' } } as unknown as Event);
+        }, 'RulesConfigurationComponent should only allow creator to choose config');
+    }));
+
+    it('should throw when trying to select a config while not editable', fakeAsync(async() => {
+        // Given a creator component currently in review mode
+        setCreatorMode(true);
+        testUtils.setInput('editable', false);
+        testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
+        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
+        testUtils.detectChanges();
+
+        TestUtils.expectToThrowAndLog(() => {
+            component.onChange({ target: { value: 'Custom' } } as unknown as Event);
+        }, 'RulesConfigurationComponent should only allow choosing config while editable');
+    }));
+
+    it('should throw when configured as editable outside creator mode', fakeAsync(async() => {
+        // Given an invalid input combination
+        setCreatorMode(false);
+        testUtils.setInput('editable', true);
+        testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
+
+        TestUtils.expectToThrowAndLog(() => {
+            testUtils.detectChanges();
+        }, 'RulesConfigurationComponent should not be editable when not in creator mode');
     }));
 
 });

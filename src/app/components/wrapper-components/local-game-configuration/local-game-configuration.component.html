@@ -5,6 +5,7 @@
             <p class="title">{{ getGameName().getOrElse('') }}</p>
             <app-rules-configuration id="rules-config-component"
                                      [rulesConfigDescription]="getRulesConfigDescription()"
+                                     [creatorMode]="true"
                                      [editable]="true"
                                      (updateCallback)="updateConfig($event)">
             </app-rules-configuration>

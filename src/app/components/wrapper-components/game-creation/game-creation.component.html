@@ -188,6 +188,8 @@
                                 <app-rules-configuration #rulesConfigurationComponent
                                                          id="rulesConfigurationComponent"
                                                          [rulesConfigDescription]="rulesConfigDescription()"
+                                                         [creatorMode]="true"
+                                                         [rulesConfigToDisplay]="getRulesConfigToDisplay()"
                                                          [editable]="viewInfo.canEditConfig || false"
                                                          (updateCallback)="onRulesConfigUpdate($event)">
                                 </app-rules-configuration>
@@ -264,6 +266,7 @@
                                     </ul>
                                     <app-rules-configuration #rulesConfigurationComponent
                                                              [rulesConfigDescription]="rulesConfigDescription()"
+                                                             [creatorMode]="false"
                                                              [editable]="false"
                                                              [rulesConfigToDisplay]="getRulesConfigToDisplay()">
                                     </app-rules-configuration>

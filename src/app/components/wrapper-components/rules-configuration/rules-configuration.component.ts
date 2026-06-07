@@ -25,7 +25,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public readonly rulesConfigDescription: InputSignal<RulesConfigDescription<RulesConfig>> =
         input.required<RulesConfigDescription<RulesConfig>>();
 
-    // Only needed for the non-creator
+    public readonly creatorMode: InputSignal<boolean> = input.required<boolean>();
+
+    // Only needed for the non-creator/read-only mode
     public readonly rulesConfigToDisplay: InputSignal<RulesConfig | undefined> = input<RulesConfig>();
 
     // Whether this config can be edited or not
@@ -48,6 +50,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public errorMessages: string[] = [];
 
     private checkInputs(): void {
+        if (this.creatorMode() === false && this.editable()) {
+            Utils.assert(false, 'RulesConfigurationComponent should not be editable when not in creator mode');
+        }
         if (this.editable() === false) {
             Utils.assert(this.rulesConfigToDisplay() !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
         }
@@ -61,11 +66,21 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         this.checkInputs();
         this.urlName = this.getGameUrlName();
         if (this.isCustomizable()) {
-            const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
-            this.setChosenConfig(defaultConfig.name());
+            if (this.creatorMode() && this.editable()) {
+                const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
+                this.setChosenConfig(defaultConfig.name());
+            } else {
+                this.initializeReadOnlyConfig();
+            }
         } else {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
+    }
+
+    private initializeReadOnlyConfig(): void {
+        const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
+        this.chosenConfigName = this.getDefactoConfigName();
+        this.generateForm(configToDisplay, false);
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {
@@ -183,6 +198,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private setChosenConfig(configName: string): void {
+        Utils.assert(this.creatorMode(), 'RulesConfigurationComponent should only allow creator to choose config');
+        Utils.assert(this.editable(), 'RulesConfigurationComponent should only allow choosing config while editable');
         this.chosenConfigName = configName;
         if (this.chosenConfigName === 'Custom') {
             const defaultConfig: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
@@ -200,6 +217,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public setEditable(editable: boolean): void {
+        Utils.assert(this.creatorMode() || editable === false,
+                     'RulesConfigurationComponent should not be editable when not in creator mode');
         this.editable.set(editable);
         if (this.editable() && this.chosenConfigName === 'Custom') {
             this.rulesConfigForm.enable();
