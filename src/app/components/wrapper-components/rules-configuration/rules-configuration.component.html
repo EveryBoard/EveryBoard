@@ -9,23 +9,20 @@
                 <div class="control">
                     <div class="select is-primary is-fullwidth">
                         <select id="ruleSelect"
-                                [disabled]="editable() === false"
+                                [formControl]="selectedConfigControl"
                                 (change)="onChange($event)">
                             <option id="config-dropdown-{{ rulesConfigDescription().getDefaultConfig().name() }}"
-                                    [value]="rulesConfigDescription().getDefaultConfig().name()"
-                                    [selected]="isSelectedConfig(rulesConfigDescription().getDefaultConfig().name())">
+                                    [value]="rulesConfigDescription().getDefaultConfig().name()">
                                 {{ rulesConfigDescription().getDefaultConfig().name() }}
                             </option>
                             @for (standardConfig of rulesConfigDescription().getNonDefaultStandardConfigs(); track standardConfig.name()) {
                                 <option id="config-dropdown-{{ standardConfig.name() }}"
-                                        [value]="standardConfig.name()"
-                                        [selected]="isSelectedConfig(standardConfig.name())">
+                                        [value]="standardConfig.name()">
                                     {{ standardConfig.name() }}
                                 </option>
                             }
                             <option [value]="CUSTOM_CONFIG_NAME"
                                     id="config-dropdown-custom"
-                                    [selected]="isSelectedConfig(CUSTOM_CONFIG_NAME)"
                                     i18n>Custom</option>
                         </select>
                     </div>

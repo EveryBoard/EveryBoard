@@ -46,6 +46,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
      */
     public readonly updateCallback: OutputEmitterRef<MGPOptional<RulesConfig>> = output<MGPOptional<RulesConfig>>();
 
+    public readonly selectedConfigControl: FormControl<string> = new FormControl('', { nonNullable: true });
+
     public rulesConfigForm: FormGroup = new FormGroup({});
 
     public urlName: string; // set in onInit
@@ -91,7 +93,17 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private initializeReadOnlyConfig(): void {
         const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
         this.chosenConfigName = this.getDisplayedConfigName();
+        this.updateSelectedConfigControl();
         this.generateForm(configToDisplay, false);
+    }
+
+    private updateSelectedConfigControl(): void {
+        this.selectedConfigControl.setValue(this.chosenConfigName, { emitEvent: false });
+        if (this.editable()) {
+            this.selectedConfigControl.enable({ emitEvent: false });
+        } else {
+            this.selectedConfigControl.disable({ emitEvent: false });
+        }
     }
 
     private generateForm(config: RulesConfig, configurable: boolean): void {
@@ -201,6 +213,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         Utils.assert(this.creatorMode(), 'RulesConfigurationComponent should only allow creator to choose config');
         Utils.assert(this.editable(), 'RulesConfigurationComponent should only allow choosing config while editable');
         this.chosenConfigName = configName;
+        this.updateSelectedConfigControl();
         if (this.chosenConfigName === CUSTOM_CONFIG_NAME) {
             const defaultConfig: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
             this.generateForm(defaultConfig, this.editable());
@@ -220,19 +233,11 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         Utils.assert(this.creatorMode() || editable === false,
                      'RulesConfigurationComponent should not be editable when not in creator mode');
         this.editable.set(editable);
+        this.updateSelectedConfigControl();
         if (this.editable() && this.chosenConfigName === CUSTOM_CONFIG_NAME) {
             this.rulesConfigForm.enable();
         } else {
             this.rulesConfigForm.disable();
-        }
-    }
-
-    public isSelectedConfig(configName: string): boolean {
-        if (this.rulesConfigToDisplay() == null) { // For creator, who knows the config name
-            return this.chosenConfigName === configName;
-        } else {
-            const displayedConfigName: string = this.getDisplayedConfigName();
-            return displayedConfigName === configName;
         }
     }
 
