@@ -208,10 +208,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         return formControl;
     }
 
-    public isEditableAndCustom(): boolean {
-        return this.editable() && this.getChosenConfigName() === CUSTOM_CONFIG_NAME;
-    }
-
     private onUpdate(): void {
         const rulesConfig: RulesConfig = {};
         for (const field of this.configFields) {
