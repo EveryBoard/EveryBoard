@@ -23,9 +23,9 @@
                                     {{ standardConfig.name() }}
                                 </option>
                             }
-                            <option value="Custom"
+                            <option [value]="CUSTOM_CONFIG_NAME"
                                     id="config-dropdown-custom"
-                                    [selected]="isSelectedConfig('Custom')"
+                                    [selected]="isSelectedConfig(CUSTOM_CONFIG_NAME)"
                                     i18n>Custom</option>
                         </select>
                     </div>

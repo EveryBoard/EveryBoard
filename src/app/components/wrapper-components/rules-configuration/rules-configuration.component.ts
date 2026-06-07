@@ -8,7 +8,9 @@ import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, Rule
 import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
-import { EnumConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
+import { EnumConfig, RulesConfigDescription } from './RulesConfigDescription';
+
+const CUSTOM_CONFIG_NAME: string = '__custom__';
 
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
@@ -21,6 +23,8 @@ type ConfigFormJSON = {
     imports: [ReactiveFormsModule, NgClass],
 })
 export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
+
+    public readonly CUSTOM_CONFIG_NAME: string = CUSTOM_CONFIG_NAME;
 
     public readonly rulesConfigDescription: InputSignal<RulesConfigDescription<RulesConfig>> =
         input.required<RulesConfigDescription<RulesConfig>>();
@@ -79,7 +83,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private initializeReadOnlyConfig(): void {
         const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
-        this.chosenConfigName = this.getDefactoConfigName();
+        this.chosenConfigName = this.getDisplayedConfigName();
         this.generateForm(configToDisplay, false);
     }
 
@@ -116,7 +120,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isEditableAndCustom(): boolean {
-        return this.editable() && this.chosenConfigName === 'Custom';
+        return this.editable() && this.chosenConfigName === CUSTOM_CONFIG_NAME;
     }
 
     private onUpdate(): void {
@@ -201,7 +205,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         Utils.assert(this.creatorMode(), 'RulesConfigurationComponent should only allow creator to choose config');
         Utils.assert(this.editable(), 'RulesConfigurationComponent should only allow choosing config while editable');
         this.chosenConfigName = configName;
-        if (this.chosenConfigName === 'Custom') {
+        if (this.chosenConfigName === CUSTOM_CONFIG_NAME) {
             const defaultConfig: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
             this.generateForm(defaultConfig, this.editable());
         } else {
@@ -220,7 +224,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         Utils.assert(this.creatorMode() || editable === false,
                      'RulesConfigurationComponent should not be editable when not in creator mode');
         this.editable.set(editable);
-        if (this.editable() && this.chosenConfigName === 'Custom') {
+        if (this.editable() && this.chosenConfigName === CUSTOM_CONFIG_NAME) {
             this.rulesConfigForm.enable();
         } else {
             this.rulesConfigForm.disable();
@@ -231,17 +235,17 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (this.rulesConfigToDisplay() == null) { // For creator, who knows the config name
             return this.chosenConfigName === configName;
         } else {
-            const defactoConfigName: string = this.getDefactoConfigName();
-            return defactoConfigName === configName;
+            const displayedConfigName: string = this.getDisplayedConfigName();
+            return displayedConfigName === configName;
         }
     }
 
     /*
      * Checks the config parameter values.
      * If it matches an existing configuration, returns its name.
-     * Otherwise, returns the custom config name ("Custom")
+     * Otherwise, returns the internal custom config name
      */
-    private getDefactoConfigName(): string {
+    private getDisplayedConfigName(): string {
         const currentConfig: RulesConfig = this.rulesConfigToDisplay() as RulesConfig;
         const defaultConfigs: NamedRulesConfig<RulesConfig>[] = this.rulesConfigDescription().getStandardConfigs();
         const matchingConfigs: NamedRulesConfig<RulesConfig>[] = defaultConfigs.filter(
@@ -251,7 +255,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (matchingConfigs.length === 1) {
             return matchingConfigs[0].name();
         } else {
-            return RulesConfigDescriptionLocalizable.CUSTOM();
+            return CUSTOM_CONFIG_NAME;
         }
     }
 

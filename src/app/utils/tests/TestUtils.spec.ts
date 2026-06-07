@@ -337,7 +337,7 @@ export class SimpleComponentTestUtils<T> {
         const selectAI: HTMLSelectElement = this.findElement('#ruleSelect').nativeElement;
         const option: HTMLOptionElement | undefined = Array.from(selectAI.options)
             .find((opt: HTMLOptionElement) => {
-                return opt.value === configName;
+                return opt.value === configName || opt.textContent?.trim() === configName;
             });
         expect(option).withContext('No config found with name "' + configName + '"').toBeDefined();
         selectAI.value = option?.value as string;
