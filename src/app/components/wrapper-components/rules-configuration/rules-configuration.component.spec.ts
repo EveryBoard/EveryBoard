@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
+import { AbstractControl } from '@angular/forms';
 
 import { MGPOptional, Utils, MGPValidation } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
@@ -153,6 +154,22 @@ describe('RulesConfigurationComponent', () => {
             await testUtils.chooseConfig('the_other_config_name');
             expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
             expectConfigToBeSelected('the_other_config_name');
+        }));
+
+        it('should not emit from controls that belonged to a previously selected config', fakeAsync(async() => {
+            // Given a custom config form that is about to be replaced
+            testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
+            await testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
+            const previousControl: AbstractControl = component.rulesConfigForm.controls['nombre'];
+            spyOn(component.updateCallback, 'emit').and.callThrough();
+
+            // When replacing the form with a standard config, then modifying the stale control
+            await testUtils.chooseConfig('the_other_config_name');
+            previousControl.setValue(80);
+            tick(1);
+
+            // Then only the standard config selection should have emitted
+            expect(component.updateCallback.emit).toHaveBeenCalledOnceWith(MGPOptional.of(secondConfig));
         }));
 
         it('should immediately emit on initialization when there is no config to fill', fakeAsync(async() => {

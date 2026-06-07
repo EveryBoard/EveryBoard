@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnInit, input, model, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnDestroy, OnInit, input, model, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { Subscription } from 'rxjs';
 
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -22,7 +23,7 @@ type ConfigFormJSON = {
     changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [ReactiveFormsModule, NgClass],
 })
-export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit {
+export class RulesConfigurationComponent extends BaseWrapperComponent implements OnInit, OnDestroy {
 
     public readonly CUSTOM_CONFIG_NAME: string = CUSTOM_CONFIG_NAME;
 
@@ -50,6 +51,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public urlName: string; // set in onInit
 
     private chosenConfigName: string = '';
+
+    private formSubscription: Subscription = new Subscription();
 
     public errorMessages: string[] = [];
 
@@ -81,6 +84,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
     }
 
+    public ngOnDestroy(): void {
+        this.formSubscription.unsubscribe();
+    }
+
     private initializeReadOnlyConfig(): void {
         const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
         this.chosenConfigName = this.getDisplayedConfigName();
@@ -93,7 +100,11 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         Object.keys(config).forEach((parameterName: string) => {
             group[parameterName] = this.getFormControl(config[parameterName], configurable);
         });
+        this.formSubscription.unsubscribe();
         this.rulesConfigForm = new FormGroup(group);
+        this.formSubscription = this.rulesConfigForm.valueChanges.subscribe(() => {
+            this.onUpdate();
+        });
     }
 
     private getFormControl(value: ConfigDescriptionType, configurable: boolean): FormControl {
@@ -101,9 +112,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         if (configurable === false) {
             formControl.disable();
         }
-        formControl.valueChanges.subscribe(() => {
-            this.onUpdate();
-        });
         return formControl;
     }
 
