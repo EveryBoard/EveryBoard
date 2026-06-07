@@ -11,11 +11,11 @@
                         <select id="ruleSelect"
                                 [formControl]="selectedConfigControl"
                                 (change)="onChange($event)">
-                            <option id="config-dropdown-{{ rulesConfigDescription().getDefaultConfig().name() }}"
-                                    [value]="rulesConfigDescription().getDefaultConfig().name()">
-                                {{ rulesConfigDescription().getDefaultConfig().name() }}
+                            <option id="config-dropdown-{{ defaultConfigName }}"
+                                    [value]="defaultConfigName">
+                                {{ defaultConfigName }}
                             </option>
-                            @for (standardConfig of rulesConfigDescription().getNonDefaultStandardConfigs(); track standardConfig.name()) {
+                            @for (standardConfig of nonDefaultStandardConfigs; track standardConfig.name()) {
                                 <option id="config-dropdown-{{ standardConfig.name() }}"
                                         [value]="standardConfig.name()">
                                     {{ standardConfig.name() }}
@@ -42,7 +42,7 @@
                         }
                     </div>
                 }
-                @for (configParameter of getFields(); track configParameter) {
+                @for (configParameter of configFields; track configParameter) {
                     <div id="{{ configParameter }}_config"
                          class="mb-2">
                         <div class="field is-horizontal columns is-gapless">
@@ -75,11 +75,9 @@
                                                 <label class="checkbox">
                                                     <div class="select is-primary is-fullwidth">
                                                         <select id="{{ configParameter }}_enum_config_input"
-                                                                [disabled]="isEditableAndCustom() === false"
-                                                                (change)="onEnumChange(configParameter, $event)">
-                                                            @for (value of getEnumValues(configParameter); track value.enumValue) {
+                                                                [formControlName]="configParameter">
+                                                            @for (value of enumOptionsByField[configParameter]; track value.enumValue) {
                                                                 <option id="{{ configParameter }}_value_{{ value.enumValue }}"
-                                                                        [selected]="isSelectedEnum(configParameter, value.enumValue)"
                                                                         [value]="value.enumValue">
                                                                     {{ value.localized() }}
                                                                 </option>

@@ -13,6 +13,11 @@ import { EnumConfig, RulesConfigDescription } from './RulesConfigDescription';
 
 const CUSTOM_CONFIG_NAME: string = '__custom__';
 
+type EnumOption = {
+    enumValue: string;
+    localized: Localized;
+}
+
 type ConfigFormJSON = {
     [member: string]: FormControl<ConfigDescriptionType>;
 }
@@ -52,6 +57,16 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public urlName: string; // set in onInit
 
+    public defaultConfigName: string; // set in onInit
+
+    public nonDefaultStandardConfigs: NamedRulesConfig<RulesConfig>[] = [];
+
+    public configFields: string[] = [];
+
+    public enumOptionsByField: { [field: string]: EnumOption[] } = {};
+
+    private defaultConfig: RulesConfig = {};
+
     private formSubscription: Subscription = new Subscription();
 
     private initialized: boolean = false;
@@ -84,6 +99,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public ngOnInit(): void {
         this.checkInputs();
         this.urlName = this.getGameUrlName();
+        this.initializeConfigDescriptionViewState();
         if (this.isCustomizable()) {
             if (this.creatorMode() && this.editable()) {
                 const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
@@ -95,6 +111,25 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             return this.updateCallback.emit(MGPOptional.of({}));
         }
         this.initialized = true;
+    }
+
+    private initializeConfigDescriptionViewState(): void {
+        const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
+        this.defaultConfig = defaultConfig.config;
+        this.defaultConfigName = defaultConfig.name();
+        this.nonDefaultStandardConfigs = this.rulesConfigDescription().getNonDefaultStandardConfigs();
+        this.configFields = this.rulesConfigDescription().getFields();
+        this.enumOptionsByField = this.getEnumOptionsByField();
+    }
+
+    private getEnumOptionsByField(): { [field: string]: EnumOption[] } {
+        const enumOptionsByField: { [field: string]: EnumOption[] } = {};
+        for (const field of this.configFields) {
+            if (this.typeOfConfig(field) === 'string') {
+                enumOptionsByField[field] = this.getEnumValues(field);
+            }
+        }
+        return enumOptionsByField;
     }
 
     public ngOnDestroy(): void {
@@ -168,8 +203,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private onUpdate(): void {
         const rulesConfig: RulesConfig = {};
-        const fieldNames: string[] = this.rulesConfigDescription().getFields();
-        for (const field of fieldNames) {
+        for (const field of this.configFields) {
             if (this.isValid(field)) {
                 rulesConfig[field] = this.rulesConfigForm.controls[field].value;
             } else {
@@ -199,8 +233,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public typeOfConfig(field: string): string {
-        const config: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
-        const value: ConfigDescriptionType = config[field];
+        const value: ConfigDescriptionType = this.defaultConfig[field];
         return typeof value;
     }
 
@@ -211,10 +244,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public getErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
         return this.rulesConfigDescription().getValidityError(field, fieldValue);
-    }
-
-    public getFields(): string[] {
-        return this.rulesConfigDescription().getFields();
     }
 
     public onChange(event: Event): void {
@@ -233,22 +262,12 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         });
     }
 
-    public isSelectedEnum(configParameter: string, enumValue: string): boolean {
-        return enumValue === this.rulesConfigForm.controls[configParameter].getRawValue();
-    }
-
-    public onEnumChange(field: string, event: Event): void {
-        const select: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.rulesConfigForm.controls[field].setValue(select.value);
-    }
-
     private setChosenConfig(configName: string): void {
         Utils.assert(this.creatorMode(), 'RulesConfigurationComponent should only allow creator to choose config');
         Utils.assert(this.editable(), 'RulesConfigurationComponent should only allow choosing config while editable');
         this.setSelectedConfigName(configName);
         if (configName === CUSTOM_CONFIG_NAME) {
-            const defaultConfig: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
-            this.generateForm(defaultConfig, this.editable());
+            this.generateForm(this.defaultConfig, this.editable());
         } else {
             const chosenConfig: RulesConfig = this.rulesConfigDescription().getConfig(configName);
             this.generateForm(chosenConfig, false);
