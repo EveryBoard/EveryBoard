@@ -52,8 +52,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public urlName: string; // set in onInit
 
-    private chosenConfigName: string = '';
-
     private formSubscription: Subscription = new Subscription();
 
     public errorMessages: string[] = [];
@@ -68,7 +66,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public getChosenConfigName(): string {
-        return this.chosenConfigName;
+        return this.selectedConfigControl.getRawValue();
     }
 
     public ngOnInit(): void {
@@ -92,13 +90,16 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private initializeReadOnlyConfig(): void {
         const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
-        this.chosenConfigName = this.getDisplayedConfigName();
-        this.updateSelectedConfigControl();
+        this.setSelectedConfigName(this.getDisplayedConfigName());
         this.generateForm(configToDisplay, false);
     }
 
-    private updateSelectedConfigControl(): void {
-        this.selectedConfigControl.setValue(this.chosenConfigName, { emitEvent: false });
+    private setSelectedConfigName(configName: string): void {
+        this.selectedConfigControl.setValue(configName, { emitEvent: false });
+        this.updateSelectedConfigControlAvailability();
+    }
+
+    private updateSelectedConfigControlAvailability(): void {
         if (this.editable()) {
             this.selectedConfigControl.enable({ emitEvent: false });
         } else {
@@ -128,7 +129,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     public isEditableAndCustom(): boolean {
-        return this.editable() && this.chosenConfigName === CUSTOM_CONFIG_NAME;
+        return this.editable() && this.getChosenConfigName() === CUSTOM_CONFIG_NAME;
     }
 
     private onUpdate(): void {
@@ -212,13 +213,12 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private setChosenConfig(configName: string): void {
         Utils.assert(this.creatorMode(), 'RulesConfigurationComponent should only allow creator to choose config');
         Utils.assert(this.editable(), 'RulesConfigurationComponent should only allow choosing config while editable');
-        this.chosenConfigName = configName;
-        this.updateSelectedConfigControl();
-        if (this.chosenConfigName === CUSTOM_CONFIG_NAME) {
+        this.setSelectedConfigName(configName);
+        if (configName === CUSTOM_CONFIG_NAME) {
             const defaultConfig: RulesConfig = this.rulesConfigDescription().getDefaultConfig().config;
             this.generateForm(defaultConfig, this.editable());
         } else {
-            const chosenConfig: RulesConfig = this.rulesConfigDescription().getConfig(this.chosenConfigName);
+            const chosenConfig: RulesConfig = this.rulesConfigDescription().getConfig(configName);
             this.generateForm(chosenConfig, false);
             // Emit the config directly because standard config are always legal
             this.updateCallback.emit(MGPOptional.of(chosenConfig));
@@ -233,8 +233,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         Utils.assert(this.creatorMode() || editable === false,
                      'RulesConfigurationComponent should not be editable when not in creator mode');
         this.editable.set(editable);
-        this.updateSelectedConfigControl();
-        if (this.editable() && this.chosenConfigName === CUSTOM_CONFIG_NAME) {
+        this.updateSelectedConfigControlAvailability();
+        if (this.editable() && this.getChosenConfigName() === CUSTOM_CONFIG_NAME) {
             this.rulesConfigForm.enable();
         } else {
             this.rulesConfigForm.disable();
