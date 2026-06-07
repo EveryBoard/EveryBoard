@@ -46,6 +46,10 @@ describe('RulesConfigurationComponent', () => {
         testUtils.setInput('creatorMode', creatorMode);
     }
 
+    function callSetChosenConfig(configName: string): void {
+        (component as unknown as { setChosenConfig: (configName: string) => void }).setChosenConfig(configName);
+    }
+
     function expectErrorToBe(expectedError: string): void {
         testUtils.expectElementToExist('#form-error');
         const errorElement: DebugElement = testUtils.findElement('#form-error > div');
@@ -714,7 +718,7 @@ describe('RulesConfigurationComponent', () => {
         testUtils.detectChanges();
 
         TestUtils.expectToThrowAndLog(() => {
-            component.onChange({ target: { value: component.CUSTOM_CONFIG_NAME } } as unknown as Event);
+            callSetChosenConfig(component.CUSTOM_CONFIG_NAME);
         }, 'RulesConfigurationComponent should only allow creator to choose config');
     }));
 
@@ -727,7 +731,7 @@ describe('RulesConfigurationComponent', () => {
         testUtils.detectChanges();
 
         TestUtils.expectToThrowAndLog(() => {
-            component.onChange({ target: { value: component.CUSTOM_CONFIG_NAME } } as unknown as Event);
+            callSetChosenConfig(component.CUSTOM_CONFIG_NAME);
         }, 'RulesConfigurationComponent should only allow choosing config while editable');
     }));
 

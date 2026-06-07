@@ -69,6 +69,8 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private formSubscription: Subscription = new Subscription();
 
+    private selectedConfigSubscription: Subscription = new Subscription();
+
     private initialized: boolean = false;
 
     public errorMessages: string[] = [];
@@ -101,6 +103,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         this.urlName = this.getGameUrlName();
         this.initializeConfigDescriptionViewState();
         if (this.isCustomizable()) {
+            this.subscribeToSelectedConfigControl();
             if (this.creatorMode() && this.editable()) {
                 const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
                 this.setChosenConfig(defaultConfig.name());
@@ -134,6 +137,14 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public ngOnDestroy(): void {
         this.formSubscription.unsubscribe();
+        this.selectedConfigSubscription.unsubscribe();
+    }
+
+    private subscribeToSelectedConfigControl(): void {
+        this.selectedConfigSubscription.unsubscribe();
+        this.selectedConfigSubscription = this.selectedConfigControl.valueChanges.subscribe((configName: string) => {
+            this.setChosenConfig(configName);
+        });
     }
 
     private initializeReadOnlyConfig(): void {
@@ -244,11 +255,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public getErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
         return this.rulesConfigDescription().getValidityError(field, fieldValue);
-    }
-
-    public onChange(event: Event): void {
-        const select: HTMLSelectElement = event.target as HTMLSelectElement;
-        this.setChosenConfig(select.value);
     }
 
     public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
