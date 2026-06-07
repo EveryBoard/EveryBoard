@@ -32,7 +32,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public readonly creatorMode: InputSignal<boolean> = input.required<boolean>();
 
-    // Only needed for the non-creator/read-only mode
+    // Required whenever the component is not editable, including creator review mode.
     public readonly rulesConfigToDisplay: InputSignal<RulesConfig | undefined> = input<RulesConfig>();
 
     // Whether this config can be edited or not
@@ -54,12 +54,17 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     private formSubscription: Subscription = new Subscription();
 
+    private initialized: boolean = false;
+
     public errorMessages: string[] = [];
 
     public constructor() {
         super();
         effect(() => {
             this.syncEditableState();
+        });
+        effect(() => {
+            this.syncDisplayedConfig();
         });
     }
 
@@ -89,6 +94,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         } else {
             return this.updateCallback.emit(MGPOptional.of({}));
         }
+        this.initialized = true;
     }
 
     public ngOnDestroy(): void {
@@ -123,6 +129,18 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
     }
 
+    private syncDisplayedConfig(): void {
+        const editable: boolean = this.editable();
+        const rulesConfigToDisplay: RulesConfig | undefined = this.rulesConfigToDisplay();
+        if (this.initialized === false || editable) {
+            return;
+        }
+        Utils.assert(rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
+        if (this.isCustomizable()) {
+            this.initializeReadOnlyConfig();
+        }
+    }
+
     private generateForm(config: RulesConfig, configurable: boolean): void {
         const group: ConfigFormJSON = {};
 
@@ -149,8 +167,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     }
 
     private onUpdate(): void {
-        // Note: we may receive updates just because the form has changed from "editable" to "non editable"
-        // (e.g., due to proposing to the opponent or clicking on "changing configuration").
         const rulesConfig: RulesConfig = {};
         const fieldNames: string[] = this.rulesConfigDescription().getFields();
         for (const field of fieldNames) {

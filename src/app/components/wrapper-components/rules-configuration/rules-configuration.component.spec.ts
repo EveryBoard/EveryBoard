@@ -486,7 +486,7 @@ describe('RulesConfigurationComponent', () => {
             // Given a component in non-editable mode
             setCreatorMode(false);
             testUtils.setInput('editable', false);
-            // rulesConfigToDisplay is mandatory even if it's a configless game
+            // rulesConfigToDisplay is mandatory whenever the component is not editable
             testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         });
 
@@ -682,6 +682,26 @@ describe('RulesConfigurationComponent', () => {
         setEditableInput(false);
 
         // Then the fields remain disabled
+        testUtils.expectElementToBeDisabled('#nombre_number_config_input');
+    }));
+
+    it('should update displayed config when creator review config changes while mounted', fakeAsync(async() => {
+        // Given a mounted creator component in non-editable review mode
+        setCreatorMode(true);
+        testUtils.setInput('editable', false);
+        testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
+        testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
+        testUtils.detectChanges();
+
+        // When the config to display changes
+        testUtils.setInput('rulesConfigToDisplay', secondConfig);
+        testUtils.detectChanges();
+        tick(1);
+
+        // Then the displayed read-only form is refreshed
+        expectConfigToBeSelected('the_other_config_name');
+        expect(component.rulesConfigForm.controls['nombre'].value).toEqual(42);
+        expect(component.rulesConfigForm.controls['canailleDeBoule'].value).toEqual(42);
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
     }));
 
