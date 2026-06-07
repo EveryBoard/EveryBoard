@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, InputSignal, ModelSignal, OnDestroy, OnInit, input, model, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectionStrategy, Component, InputSignal, OnDestroy, OnInit, effect, input, output, OutputEmitterRef } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
@@ -36,7 +36,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public readonly rulesConfigToDisplay: InputSignal<RulesConfig | undefined> = input<RulesConfig>();
 
     // Whether this config can be edited or not
-    public readonly editable: ModelSignal<boolean> = model<boolean>(false);
+    public readonly editable: InputSignal<boolean> = input<boolean>(false);
 
     /**
      * notify that the config has been updated
@@ -55,6 +55,13 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private formSubscription: Subscription = new Subscription();
 
     public errorMessages: string[] = [];
+
+    public constructor() {
+        super();
+        effect(() => {
+            this.syncEditableState();
+        });
+    }
 
     private checkInputs(): void {
         if (this.creatorMode() === false && this.editable()) {
@@ -104,6 +111,15 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
             this.selectedConfigControl.enable({ emitEvent: false });
         } else {
             this.selectedConfigControl.disable({ emitEvent: false });
+        }
+    }
+
+    private syncEditableState(): void {
+        this.updateSelectedConfigControlAvailability();
+        if (this.editable() && this.getChosenConfigName() === CUSTOM_CONFIG_NAME) {
+            this.rulesConfigForm.enable({ emitEvent: false });
+        } else {
+            this.rulesConfigForm.disable({ emitEvent: false });
         }
     }
 
@@ -227,18 +243,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public isCustomizable(): boolean {
         return this.rulesConfigDescription().isCustomizable();
-    }
-
-    public setEditable(editable: boolean): void {
-        Utils.assert(this.creatorMode() || editable === false,
-                     'RulesConfigurationComponent should not be editable when not in creator mode');
-        this.editable.set(editable);
-        this.updateSelectedConfigControlAvailability();
-        if (this.editable() && this.getChosenConfigName() === CUSTOM_CONFIG_NAME) {
-            this.rulesConfigForm.enable();
-        } else {
-            this.rulesConfigForm.disable();
-        }
     }
 
     /*

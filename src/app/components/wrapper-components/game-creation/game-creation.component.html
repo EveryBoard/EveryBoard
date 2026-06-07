@@ -185,8 +185,7 @@
                                 }
                             </fieldset>
                             <div class="mt-2">
-                                <app-rules-configuration #rulesConfigurationComponent
-                                                         id="rulesConfigurationComponent"
+                                <app-rules-configuration id="rulesConfigurationComponent"
                                                          [rulesConfigDescription]="rulesConfigDescription()"
                                                          [creatorMode]="true"
                                                          [rulesConfigToDisplay]="getRulesConfigToDisplay()"
@@ -264,8 +263,7 @@
                                         <li i18n>a turn lasts at most <strong>{{ (viewInfo.moveDuration || 0) | humanDuration }} </strong></li>
                                         <li i18n>the game lasts at most <strong>{{ (viewInfo.gameDuration || 0) | humanDuration }} per player</strong></li>
                                     </ul>
-                                    <app-rules-configuration #rulesConfigurationComponent
-                                                             [rulesConfigDescription]="rulesConfigDescription()"
+                                    <app-rules-configuration [rulesConfigDescription]="rulesConfigDescription()"
                                                              [creatorMode]="false"
                                                              [editable]="false"
                                                              [rulesConfigToDisplay]="getRulesConfigToDisplay()">

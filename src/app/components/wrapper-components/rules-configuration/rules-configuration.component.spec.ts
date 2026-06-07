@@ -36,8 +36,9 @@ describe('RulesConfigurationComponent', () => {
         tick(1);
     }
 
-    function setEditable(editable: boolean): void {
-        component.setEditable(editable);
+    function setEditableInput(editable: boolean): void {
+        testUtils.setInput('editable', editable);
+        testUtils.detectChanges();
         tick(1);
     }
 
@@ -484,7 +485,7 @@ describe('RulesConfigurationComponent', () => {
         beforeEach(() => {
             // Given a component in non-editable mode
             setCreatorMode(false);
-            component.setEditable(false);
+            testUtils.setInput('editable', false);
             // rulesConfigToDisplay is mandatory even if it's a configless game
             testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         });
@@ -636,13 +637,13 @@ describe('RulesConfigurationComponent', () => {
     it('should be able switch from editable to non-editable', fakeAsync(async() => {
         // Given an editable component with some custom config
         setCreatorMode(true);
-        component.setEditable(true);
+        testUtils.setInput('editable', true);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
         testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         await testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
 
         // When switching to non-editable
-        setEditable(false);
+        setEditableInput(false);
 
         // Then it should disable the fields
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
@@ -651,7 +652,7 @@ describe('RulesConfigurationComponent', () => {
     it('should be able to switch from non-editable to editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
         setCreatorMode(true);
-        component.setEditable(false);
+        testUtils.setInput('editable', false);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
         testUtils.setInput('rulesConfigToDisplay', {
             nombre: 1,
@@ -660,7 +661,7 @@ describe('RulesConfigurationComponent', () => {
         testUtils.detectChanges();
 
         // When switching to editable
-        setEditable(true);
+        setEditableInput(true);
 
         // Then it should enable the fields
         testUtils.expectElementToBeEnabled('#nombre_number_config_input');
@@ -669,7 +670,7 @@ describe('RulesConfigurationComponent', () => {
     it('should do nothing when switching from non-editable to non-editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
         setCreatorMode(true);
-        component.setEditable(false);
+        testUtils.setInput('editable', false);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
         testUtils.setInput('rulesConfigToDisplay', {
             nombre: 1,
@@ -678,7 +679,7 @@ describe('RulesConfigurationComponent', () => {
         testUtils.detectChanges();
 
         // When switching to non-editable
-        setEditable(false);
+        setEditableInput(false);
 
         // Then the fields remain disabled
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
