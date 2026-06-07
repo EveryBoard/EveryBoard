@@ -91,21 +91,9 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         const group: ConfigFormJSON = {};
 
         Object.keys(config).forEach((parameterName: string) => {
-            const value: ConfigDescriptionType =
-                this.getRulesConfigDescriptionValue(parameterName,
-                                                    config[parameterName]);
-            group[parameterName] = this.getFormControl(value, configurable);
+            group[parameterName] = this.getFormControl(config[parameterName], configurable);
         });
         this.rulesConfigForm = new FormGroup(group);
-    }
-
-    private getRulesConfigDescriptionValue(name: string, defaultValue: ConfigDescriptionType): ConfigDescriptionType {
-        if (this.editable()) {
-            return defaultValue;
-        } else {
-            const configuration: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
-            return configuration[name];
-        }
     }
 
     private getFormControl(value: ConfigDescriptionType, configurable: boolean): FormControl {
