@@ -10,7 +10,7 @@ import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
-import { RulesConfigDescription, NumberConfig, BooleanConfig, EnumConfig, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
+import { RulesConfigDescription, NumberConfig, BooleanConfig, EnumConfig } from './RulesConfigDescription';
 import { RulesConfigurationComponent } from './rules-configuration.component';
 
 describe('RulesConfigurationComponent', () => {
@@ -548,9 +548,8 @@ describe('RulesConfigurationComponent', () => {
                 expectConfigToBeSelected('the_other_config_name');
             });
 
-            it('should recognize real custom config when the localized custom label is translated', () => {
+            it('should recognize real custom config by its internal custom name', () => {
                 // Given a displayed config that match no other config
-                spyOn(RulesConfigDescriptionLocalizable, 'CUSTOM').and.returnValue('Personnalisé');
                 testUtils.setInput('rulesConfigToDisplay', {
                     nombre: 1,
                     canailleDeBoule: 99,
@@ -560,7 +559,7 @@ describe('RulesConfigurationComponent', () => {
                 // When rendering component
                 testUtils.detectChanges();
 
-                // Then the name of the config should be 'Custom'
+                // Then the selected config should use the internal custom name, not the visible label
                 expectConfigToBeSelected(component.CUSTOM_CONFIG_NAME);
                 expect(testUtils.findElement('#config-dropdown-custom').nativeElement.innerText).toEqual('Custom');
             });
