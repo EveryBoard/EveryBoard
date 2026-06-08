@@ -13,12 +13,7 @@ import { EnumConfig, RulesConfigDescription } from './RulesConfigDescription';
 
 const CUSTOM_CONFIG_NAME: string = '__custom__';
 
-type EnumOption = {
-    enumValue: string;
-    localized: Localized;
-}
-
-type ConfigFormJSON = {
+type RulesConfigFormControls = {
     [member: string]: FormControl<ConfigDescriptionType>;
 }
 
@@ -63,8 +58,6 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public configFields: string[] = [];
 
-    public enumOptionsByField: { [field: string]: EnumOption[] } = {};
-
     private defaultConfig: RulesConfig = {};
 
     private formSubscription: Subscription = new Subscription();
@@ -77,11 +70,19 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
 
     public constructor() {
         super();
+        this.watchEditableState();
+        this.watchReadOnlyConfigToDisplay();
+    }
+
+    private watchEditableState(): void {
         effect(() => {
-            this.syncEditableState();
+            this.applyEditableState();
         });
+    }
+
+    private watchReadOnlyConfigToDisplay(): void {
         effect(() => {
-            this.syncDisplayedConfig();
+            this.refreshReadOnlyConfigToDisplay();
         });
     }
 
@@ -101,38 +102,26 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     public ngOnInit(): void {
         this.checkInputs();
         this.urlName = this.getGameUrlName();
-        this.initializeConfigDescriptionViewState();
-        if (this.isCustomizable()) {
-            this.subscribeToSelectedConfigControl();
-            if (this.creatorMode() && this.editable()) {
-                const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
-                this.setChosenConfig(defaultConfig.name());
-            } else {
-                this.initializeReadOnlyConfig();
-            }
+        this.cacheConfigDescriptionValues();
+        if (this.isCustomizable() === false) {
+            this.updateCallback.emit(MGPOptional.of({}));
+            return;
+        }
+        this.subscribeToSelectedConfigControl();
+        if (this.creatorMode() && this.editable()) {
+            this.chooseConfig(this.defaultConfigName);
         } else {
-            return this.updateCallback.emit(MGPOptional.of({}));
+            this.displayReadOnlyConfig();
         }
         this.initialized = true;
     }
 
-    private initializeConfigDescriptionViewState(): void {
+    private cacheConfigDescriptionValues(): void {
         const defaultConfig: NamedRulesConfig<RulesConfig> = this.rulesConfigDescription().getDefaultConfig();
         this.defaultConfig = defaultConfig.config;
         this.defaultConfigName = defaultConfig.name();
         this.nonDefaultStandardConfigs = this.rulesConfigDescription().getNonDefaultStandardConfigs();
         this.configFields = this.rulesConfigDescription().getFields();
-        this.enumOptionsByField = this.getEnumOptionsByField();
-    }
-
-    private getEnumOptionsByField(): { [field: string]: EnumOption[] } {
-        const enumOptionsByField: { [field: string]: EnumOption[] } = {};
-        for (const field of this.configFields) {
-            if (this.typeOfConfig(field) === 'string') {
-                enumOptionsByField[field] = this.getEnumValues(field);
-            }
-        }
-        return enumOptionsByField;
     }
 
     public ngOnDestroy(): void {
@@ -143,14 +132,14 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
     private subscribeToSelectedConfigControl(): void {
         this.selectedConfigSubscription.unsubscribe();
         this.selectedConfigSubscription = this.selectedConfigControl.valueChanges.subscribe((configName: string) => {
-            this.setChosenConfig(configName);
+            this.chooseConfig(configName);
         });
     }
 
-    private initializeReadOnlyConfig(): void {
+    private displayReadOnlyConfig(): void {
         const configToDisplay: RulesConfig = Utils.getNonNullable(this.rulesConfigToDisplay());
         this.setSelectedConfigName(this.getDisplayedConfigName());
-        this.generateForm(configToDisplay, false);
+        this.buildRulesConfigForm(configToDisplay, false);
     }
 
     private setSelectedConfigName(configName: string): void {
@@ -166,7 +155,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
     }
 
-    private syncEditableState(): void {
+    private applyEditableState(): void {
         this.updateSelectedConfigControlAvailability();
         if (this.editable() && this.getChosenConfigName() === CUSTOM_CONFIG_NAME) {
             this.rulesConfigForm.enable({ emitEvent: false });
@@ -175,7 +164,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
     }
 
-    private syncDisplayedConfig(): void {
+    private refreshReadOnlyConfigToDisplay(): void {
         const editable: boolean = this.editable();
         const rulesConfigToDisplay: RulesConfig | undefined = this.rulesConfigToDisplay();
         if (this.initialized === false || editable) {
@@ -183,35 +172,35 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
         Utils.assert(rulesConfigToDisplay !== undefined, 'Config should be provided if RulesConfigurationComponent is not editable');
         if (this.isCustomizable()) {
-            this.initializeReadOnlyConfig();
+            this.displayReadOnlyConfig();
         }
     }
 
-    private generateForm(config: RulesConfig, configurable: boolean): void {
-        const group: ConfigFormJSON = {};
+    private buildRulesConfigForm(config: RulesConfig, fieldsEditable: boolean): void {
+        const group: RulesConfigFormControls = {};
 
         Object.keys(config).forEach((parameterName: string) => {
-            group[parameterName] = this.getFormControl(config[parameterName], configurable);
+            group[parameterName] = this.createFormControl(config[parameterName], fieldsEditable);
         });
         this.formSubscription.unsubscribe();
         this.rulesConfigForm = new FormGroup(group);
         this.formSubscription = this.rulesConfigForm.valueChanges.subscribe(() => {
-            this.onUpdate();
+            this.emitFormUpdate();
         });
     }
 
-    private getFormControl(value: ConfigDescriptionType, configurable: boolean): FormControl {
+    private createFormControl(value: ConfigDescriptionType, enabled: boolean): FormControl {
         const formControl: FormControl = new FormControl(value);
-        if (configurable === false) {
+        if (enabled === false) {
             formControl.disable();
         }
         return formControl;
     }
 
-    private onUpdate(): void {
+    private emitFormUpdate(): void {
         const rulesConfig: RulesConfig = {};
         for (const field of this.configFields) {
-            if (this.isValid(field)) {
+            if (this.isFieldValid(field)) {
                 rulesConfig[field] = this.rulesConfigForm.controls[field].value;
             } else {
                 // This informs the parent component that an invalid update has been done
@@ -219,10 +208,10 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
                 return; // In order not to send update when form is invalid
             }
         }
-        return this.checkForValidators(rulesConfig);
+        return this.emitValidatedConfig(rulesConfig);
     }
 
-    private checkForValidators(rulesConfig: RulesConfig): void {
+    private emitValidatedConfig(rulesConfig: RulesConfig): void {
         const validators: ((config: RulesConfig) => MGPValidation)[] =
             this.rulesConfigDescription().defaultConfigDescription.validators ?? [];
         this.errorMessages = [];
@@ -239,21 +228,21 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         }
     }
 
-    public typeOfConfig(field: string): string {
+    public getFieldType(field: string): string {
         const value: ConfigDescriptionType = this.defaultConfig[field];
         return typeof value;
     }
 
-    public isValid(field: string): boolean {
+    public isFieldValid(field: string): boolean {
         return this.rulesConfigDescription().isValid(field, this.rulesConfigForm.controls[field].value);
     }
 
-    public getErrorMessage(field: string): string {
+    public getFieldErrorMessage(field: string): string {
         const fieldValue: number | null = this.rulesConfigForm.controls[field].value;
         return this.rulesConfigDescription().getValidityError(field, fieldValue);
     }
 
-    public getEnumValues(field: string): { enumValue: string, localized: Localized }[] {
+    public getEnumOptions(field: string): { enumValue: string, localized: Localized }[] {
         const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription().defaultConfigDescription;
         const config: EnumConfig = defaultConfig.config[field] as EnumConfig;
         return Object.keys(config.possibleValues).map((key: string) => {
@@ -264,15 +253,15 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         });
     }
 
-    private setChosenConfig(configName: string): void {
+    private chooseConfig(configName: string): void {
         Utils.assert(this.creatorMode(), 'RulesConfigurationComponent should only allow creator to choose config');
         Utils.assert(this.editable(), 'RulesConfigurationComponent should only allow choosing config while editable');
         this.setSelectedConfigName(configName);
         if (configName === CUSTOM_CONFIG_NAME) {
-            this.generateForm(this.defaultConfig, this.editable());
+            this.buildRulesConfigForm(this.defaultConfig, this.editable());
         } else {
             const chosenConfig: RulesConfig = this.rulesConfigDescription().getConfig(configName);
-            this.generateForm(chosenConfig, false);
+            this.buildRulesConfigForm(chosenConfig, false);
             // Emit the config directly because standard config are always legal
             this.updateCallback.emit(MGPOptional.of(chosenConfig));
         }

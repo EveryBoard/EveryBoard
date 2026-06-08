@@ -51,7 +51,7 @@
                             <div class="field-body column has-text-right">
                                 <div class="field is-narrow">
                                     <div class="control">
-                                        @switch (typeOfConfig(configParameter)) {
+                                        @switch (getFieldType(configParameter)) {
                                             @case ('boolean') {
                                                 <label class="checkbox">
                                                     <input id="{{ configParameter }}_boolean_config_input"
@@ -66,7 +66,7 @@
                                                        [formControlName]="configParameter"
                                                        type="number"
                                                        class="input is-small"
-                                                       [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                                       [ngClass]="isFieldValid(configParameter) === false ? 'is-danger' : ''"
                                                        required
                                                        placeholder="{{ rulesConfigDescription().getFieldLocalizedName(configParameter) }}"/>
                                             }
@@ -75,7 +75,7 @@
                                                     <div class="select is-primary is-fullwidth">
                                                         <select id="{{ configParameter }}_enum_config_input"
                                                                 [formControlName]="configParameter">
-                                                            @for (value of enumOptionsByField[configParameter]; track value.enumValue) {
+                                                            @for (value of getEnumOptions(configParameter); track value.enumValue) {
                                                                 <option id="{{ configParameter }}_value_{{ value.enumValue }}"
                                                                         [value]="value.enumValue">
                                                                     {{ value.localized() }}
@@ -87,10 +87,10 @@
                                             }
                                         }
                                     </div>
-                                    @if (isValid(configParameter) === false) {
+                                    @if (isFieldValid(configParameter) === false) {
                                         <div id="{{configParameter}}-error"
                                              class="help is-danger"
-                                             role="alert">{{ getErrorMessage(configParameter) }}</div>
+                                             role="alert">{{ getFieldErrorMessage(configParameter) }}</div>
                                     }
                                 </div>
                             </div>
