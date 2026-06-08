@@ -406,7 +406,7 @@ describe('GameCreationComponent', () => {
                 testUtils.detectChanges();
                 tick(0);
 
-                // Then the mounted rules configuration displays the proposed config and cannot be edited anymore
+                // Then the displayed rules configuration shows the proposed config and cannot be edited anymore
                 const widthInputAfterProposal: HTMLInputElement = findElement('#width_number_config_input').nativeElement;
                 const heightInputAfterProposal: HTMLInputElement = findElement('#height_number_config_input').nativeElement;
                 expect(widthInputAfterProposal.value).toEqual(proposedRulesConfig.width.toString());

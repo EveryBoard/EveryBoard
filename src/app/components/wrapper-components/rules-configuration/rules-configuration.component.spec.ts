@@ -688,8 +688,8 @@ describe('RulesConfigurationComponent', () => {
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
     }));
 
-    it('should update displayed config when creator review config changes while mounted', fakeAsync(async() => {
-        // Given a mounted creator component in non-editable review mode
+    it('should refresh read-only form when displayed creator review config changes', fakeAsync(async() => {
+        // Given a displayed creator component in non-editable review mode
         setCreatorMode(true);
         testUtils.setInput('editable', false);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
@@ -716,6 +716,8 @@ describe('RulesConfigurationComponent', () => {
         testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         testUtils.detectChanges();
 
+        // When trying to select a config
+        // Then it should throw
         TestUtils.expectToThrowAndLog(() => {
             callChooseConfig(component.CUSTOM_CONFIG_NAME);
         }, 'RulesConfigurationComponent should only allow creator to choose config');
@@ -729,6 +731,8 @@ describe('RulesConfigurationComponent', () => {
         testUtils.setInput('rulesConfigToDisplay', rulesConfigDescriptionWithNumber.getDefaultConfig().config);
         testUtils.detectChanges();
 
+        // When trying to select a config
+        // Then it should throw
         TestUtils.expectToThrowAndLog(() => {
             callChooseConfig(component.CUSTOM_CONFIG_NAME);
         }, 'RulesConfigurationComponent should only allow choosing config while editable');
@@ -740,6 +744,8 @@ describe('RulesConfigurationComponent', () => {
         testUtils.setInput('editable', true);
         testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
 
+        // When rendering the component
+        // Then it should throw
         TestUtils.expectToThrowAndLog(() => {
             testUtils.detectChanges();
         }, 'RulesConfigurationComponent should not be editable when not in creator mode');
