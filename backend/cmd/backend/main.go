@@ -9,17 +9,17 @@ import (
 )
 
 func main() {
-	cfg, err := config.Read()
+	configuration, err := config.Read()
 	if err != nil {
 		log.Fatalf("Error upon reading configuration: %v", err)
 	}
 	log.Println("Preparing EveryBoard...")
-	srv, err := app.Prepare(cfg, app.NewDependencies())
+	server, err := app.Prepare(configuration, app.NewDependencies())
 	if err != nil {
 		log.Fatalf("Error when preparing server: %v", err)
 	}
 	log.Println("All good, ready to play games?")
-	err = srv.ListenAndServe()
+	err = server.ListenAndServe()
 	if err != nil && err != http.ErrServerClosed {
 		log.Fatalf("Error when running server: %v", err)
 	}

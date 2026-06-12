@@ -10,27 +10,27 @@ import (
 )
 
 func TestCors(t *testing.T) {
-	srv := New("127.0.0.1:0", "*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	server := New("127.0.0.1:0", "*", http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}))
 
-	req := httptest.NewRequest(http.MethodOptions, "/ws", nil)
-	rr := httptest.NewRecorder()
+	request := httptest.NewRequest(http.MethodOptions, "/ws", nil)
+	recorder := httptest.NewRecorder()
 
-	srv.Handler.ServeHTTP(rr, req)
+	server.Handler.ServeHTTP(recorder, request)
 
-	assert.Contains(t, []int{http.StatusOK, http.StatusNoContent}, rr.Code, "unexpected CORS status")
-	assert.Equal(t, "*", rr.Header().Get("Access-Control-Allow-Origin"), "invalid Access-Control-Allow-Origin")
-	assert.Empty(t, rr.Header().Get("Access-Control-Allow-Credentials"), "wildcard CORS must not allow credentials")
+	assert.Contains(t, []int{http.StatusOK, http.StatusNoContent}, recorder.Code, "unexpected CORS status")
+	assert.Equal(t, "*", recorder.Header().Get("Access-Control-Allow-Origin"), "invalid Access-Control-Allow-Origin")
+	assert.Empty(t, recorder.Header().Get("Access-Control-Allow-Credentials"), "wildcard CORS must not allow credentials")
 }
 
 func TestVersion(t *testing.T) {
-	srv := New("127.0.0.1:0", "*", http.NotFoundHandler())
-	req := httptest.NewRequest(http.MethodGet, "/version", nil)
-	rr := httptest.NewRecorder()
+	server := New("127.0.0.1:0", "*", http.NotFoundHandler())
+	request := httptest.NewRequest(http.MethodGet, "/version", nil)
+	recorder := httptest.NewRecorder()
 
-	srv.Handler.ServeHTTP(rr, req)
+	server.Handler.ServeHTTP(recorder, request)
 
-	require.Equal(t, http.StatusOK, rr.Code)
-	require.Equal(t, Version, rr.Body.String())
+	require.Equal(t, http.StatusOK, recorder.Code)
+	require.Equal(t, Version, recorder.Body.String())
 }

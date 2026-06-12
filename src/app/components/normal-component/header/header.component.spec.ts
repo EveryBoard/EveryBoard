@@ -179,7 +179,7 @@ describe('HeaderComponent', () => {
             testUtils.detectChanges();
             tick(0);
 
-            // Then "<GameName> a Row by creator" should be displayed
+            // Then "<GameName> by <Creator>" should be displayed
             const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
             const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
             expect(currentGame.opponent).toBeNull();
