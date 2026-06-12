@@ -38,7 +38,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public gameComponent: AbstractGameComponent;
 
-    public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    protected players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
+
+    public getPlayerAt(player: Player): MGPOptional<P> {
+        return this.players[player.getValue()];
+    }
 
     /**
      * The role of the player, i.e., ZERO if we are the first player, ONE if we are the second player,
