@@ -1137,7 +1137,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 // Then a request to add global time to player one should be sent
                 expect(gameService.addGameTime).toHaveBeenCalledOnceWith();
                 const secondsUntilTimeout: number = wrapper.configRoom.moveDuration;
-                expect(wrapper.moveTimerComponents()[1].remainingSeconds).toBe(secondsUntilTimeout); // initial 2 minutes
+                // initial 2 minutes
+                expect(wrapper.moveTimerComponents()[1].remainingSeconds).toBe(secondsUntilTimeout);
 
                 await receiveEndGame();
             }));
