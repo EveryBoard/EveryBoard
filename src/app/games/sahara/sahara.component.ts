@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';

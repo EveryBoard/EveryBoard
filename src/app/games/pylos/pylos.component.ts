@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
-import { ClickHandler, GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';

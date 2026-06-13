@@ -6,8 +6,9 @@ import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
-import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
@@ -187,7 +188,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const y: number = coord.y;
         const opponent: Player = this.getState().getCurrentOpponent();
         if (this.hexaBoard[y][x].is(opponent)) {
-            return this.tryChoosingDirection(coord)
+            return this.tryChoosingDirection(coord);
         }
         if (this.selecteds.length === 0) {
             return this.firstClick(coord);

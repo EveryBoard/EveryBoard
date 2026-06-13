@@ -1,7 +1,8 @@
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ClickHandler, ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { ModeConfig, ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';

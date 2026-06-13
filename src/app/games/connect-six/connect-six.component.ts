@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ClickHandler } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { MCTS } from '../../jscaip/AI/MCTS';

@@ -4,7 +4,8 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';

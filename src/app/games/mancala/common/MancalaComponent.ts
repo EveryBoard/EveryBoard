@@ -1,6 +1,7 @@
 import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
-import { ClickHandler, ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AI, AIOptions, MoveGenerator } from '../../../jscaip/AI/AI';
 import { MCTS } from '../../../jscaip/AI/MCTS';

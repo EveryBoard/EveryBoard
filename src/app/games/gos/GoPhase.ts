@@ -1,4 +1,4 @@
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 
 export class GoPhase {
     public static PLAYING: GoPhase = new GoPhase();

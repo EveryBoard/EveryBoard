@@ -8,7 +8,8 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
-import { AbstractGameComponent, AnyFunction, ClickNamer } from '../game-components/game-component/GameComponent';
+import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
+import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';

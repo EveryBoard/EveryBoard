@@ -15,124 +15,13 @@ import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
-import { Localized } from '../../../utils/LocaleUtils';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
-export class ScoreName {
+import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './ClickHandler';
+import { ScoreName } from './ScoreName';
 
-    public static readonly POINTS: ScoreName =
-        new ScoreName(() => $localize`0 points`,
-                      () => $localize`1 point`,
-                      (n: number) => $localize`${n} points`);
-
-    public static readonly CAPTURES: ScoreName =
-        new ScoreName(() => $localize`0 captures`,
-                      () => $localize`1 capture`,
-                      (n: number) => $localize`${n} captures`);
-
-    public static readonly REMAINING_PIECES: ScoreName =
-        new ScoreName(() => $localize`0 remaining pieces`,
-                      () => $localize`1 remaining piece`,
-                      (n: number) => $localize`${n} remaining pieces`);
-
-    public static readonly PIECES_TO_DROP: ScoreName =
-        new ScoreName(() => $localize`0 pieces to drop`,
-                      () => $localize`1 piece to drop`,
-                      (n: number) => $localize`${n} pieces to drop`);
-
-    public static readonly PROTECTED_PIECES: ScoreName =
-        new ScoreName(() => $localize`0 protected pieces`,
-                      () => $localize`1 protected piece`,
-                      (n: number) => $localize`${n} protected pieces`);
-
-    public static readonly PIECES_UNDER_CONTROL: ScoreName =
-        new ScoreName(() => $localize`0 pieces under control`,
-                      () => $localize`1 piece under control`,
-                      (n: number) => $localize`${n} pieces under control`);
-
-    public static readonly STACKS_UNDER_CONTROL: ScoreName =
-        new ScoreName(() => $localize`0 stacks under control`,
-                      () => $localize`1 stack under control`,
-                      (n: number) => $localize`${n} stacks under control`);
-
-    /**
-     * A score name might be differently written for zero, one, or more than one "points".
-     * Zero might be plural like in english, but different in another language, like french where it is singular.
-     */
-    private constructor(public readonly zero: Localized,
-                        public readonly singular: Localized,
-                        public readonly plural: (n: number) => string) {
-    }
-
-    public getString(count: number): string {
-        switch (count) {
-            case 0:
-                return this.zero();
-            case 1:
-                return this.singular();
-            default:
-                return this.plural(count);
-        }
-    }
-}
-
-export type AnyFunction = (...args: unknown[]) => Promise<MGPValidation>;
-
-type MoveInterceptor = (fn: AnyFunction, clickNamer: ClickNamer) => AnyFunction;
-
-export type ClickNamer = (...args: unknown[]) => string;
-
-const CLICK_HANDLERS: symbol = Symbol('clickHandlers');
-
-/**
- * Method decorator used to register a click handler
- * inside a metadata map attached to the class prototype.
- *
- * Each decorated method is associated with a `ClickNamer`
- * stored in `target[CLICK_HANDLERS]`.
- *
- * Example:
- * ```ts
- * class MyComponent {
- *
- *   @ClickHandler(() => "save-button")
- *   onSaveClick(): void {
- *     console.log("Saved");
- *   }
- * }
- * ```
- *
- * Behavior:
- * - Initializes `target[CLICK_HANDLERS]` if it does not exist.
- * - Registers the decorated method (`key`) with its `clickNamer`.
- * - Returns the original property descriptor unchanged.
- *
- * @param clickNamer Function used to generate or resolve
- * the logical click name associated with the decorated method.
- *
- * @returns A TypeScript method decorator.
- */
-export function ClickHandler(clickNamer: ClickNamer)
-: (target: unknown, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor {
-    /**
-     * Decorator applied to the target method.
-     *
-     * @param target Prototype of the class containing the method.
-     * @param key Name of the decorated method.
-     * @param descriptor Property descriptor of the method.
-     *
-     * @returns The original property descriptor.
-     */
-    return function(target: object, key: string, descriptor: PropertyDescriptor): PropertyDescriptor {
-        // Initialize the click handlers collection if missing.
-        target[CLICK_HANDLERS] ??= new Map<string, ClickNamer>();
-        // Associate the method name with its ClickNamer.
-        target[CLICK_HANDLERS].set(key, clickNamer);
-        return descriptor;
-    };
-}
 
 /**
  * All method are to be implemented by the "final" GameComponent classes

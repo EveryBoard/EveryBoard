@@ -5,7 +5,8 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
-import { ClickHandler, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';

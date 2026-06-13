@@ -7,7 +7,8 @@ import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ClickHandler, ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
