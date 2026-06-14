@@ -6,8 +6,8 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everybo
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';

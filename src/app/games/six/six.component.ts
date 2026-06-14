@@ -5,8 +5,8 @@ import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
