@@ -9,7 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
-import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
 import { initializeFirebase, routes } from '../../app.routes';
@@ -24,7 +24,7 @@ import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { AIDepthLimitOptions } from '../../jscaip/AI/AI';
-import { AbstractNode, GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
+import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
 import { Player } from '../../jscaip/Player';
@@ -589,7 +589,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     : Promise<void>
     {
         await this.clickElement(nameInHtml);
-        tick(clickAnimationDuration ?? 0);
+        if (clickAnimationDuration === undefined) {
+            tick(0);
+        } else {
+            tick(clickAnimationDuration);
+        }
         expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(nameInFunction);
         this.canUserPlaySpy.calls.reset();
         expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move);
