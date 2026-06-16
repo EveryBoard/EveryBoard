@@ -172,12 +172,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (this.endGame) {
             return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
         }
-        // if (this.isMoveAttemptOngoing === false) {
-        //     // It is the first click
-        //     console.log('it is the first click > hideLastMove')
-        //     this.gameComponent.hideLastMove();
-        //     this.isMoveAttemptOngoing = true;
-        // }
+        if (this.isMoveAttemptOngoing === false) {
+            // It is the first click
+            this.gameComponent.hideLastMove();
+            this.isMoveAttemptOngoing = true;
+        }
         return MGPValidation.SUCCESS;
     }
 
@@ -220,7 +219,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      */
     protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
-        console.log('showCurrentState > hideLastMove')
         this.gameComponent.hideLastMove();
         if (this.gameComponent.node.previousMove.isPresent()) {
             await this.showNewMove(triggerAnimation);
@@ -238,7 +236,6 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
      * @param triggerAnimation a boolean set to true if there is a need to trigger the animation of the last move
      */
     protected async showNewMove(triggerAnimation: boolean): Promise<void> {
-        console.log('show new move (updateBoard > showLastMoveAndRedraw)')
         await this.gameComponent.updateBoard(triggerAnimation);
         await this.gameComponent.showLastMoveAndRedraw();
     }
