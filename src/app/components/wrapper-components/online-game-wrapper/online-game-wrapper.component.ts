@@ -42,9 +42,20 @@ export class OnlineGameWrapperMessages {
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [OGWCTimeManagerService, OGWCRequestManagerService],
-    imports: [GameCreationComponent, ViewConfigComponent, TimerComponent,
-        FaIconComponent, RouterLink, NgClass, ChatComponent, EloComponent],
+    providers: [
+        OGWCTimeManagerService,
+        OGWCRequestManagerService,
+    ],
+    imports: [
+        ChatComponent,
+        EloComponent,
+        FaIconComponent,
+        GameCreationComponent,
+        NgClass,
+        RouterLink,
+        TimerComponent,
+        ViewConfigComponent,
+    ],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {

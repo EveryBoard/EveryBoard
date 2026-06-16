@@ -172,12 +172,12 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         if (this.endGame) {
             return MGPValidation.failure(GameWrapperMessages.GAME_HAS_ENDED());
         }
-        if (this.isMoveAttemptOngoing === false) {
-            // It is the first click
-            console.log('it is the first click > hideLastMove')
-            this.gameComponent.hideLastMove();
-            this.isMoveAttemptOngoing = true;
-        }
+        // if (this.isMoveAttemptOngoing === false) {
+        //     // It is the first click
+        //     console.log('it is the first click > hideLastMove')
+        //     this.gameComponent.hideLastMove();
+        //     this.isMoveAttemptOngoing = true;
+        // }
         return MGPValidation.SUCCESS;
     }
 

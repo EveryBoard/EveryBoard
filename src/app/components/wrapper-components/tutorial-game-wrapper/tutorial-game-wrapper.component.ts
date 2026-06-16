@@ -46,7 +46,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
 
-    public override async canUserPlay(elementName: string): Promise<MGPValidation> {
+    public override async canUserPlay(elementName: string): Promise<MGPValidation> { // TODO: split "canUserPlay" question and "onUserPlay" actions
         this.currentReason = MGPOptional.empty();
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
             return MGPValidation.failure(TutorialFailure.STEP_FINISHED());
@@ -109,10 +109,10 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                 this.currentReason = MGPOptional.of(currentStepMove.getFailureMessage());
             }
         } else {
-            // No need to do anything there, canUserPlay did it
+            // No need to do anything there, canUserPlay did it // TODO: or do we ???
             Utils.assert(currentStep.isClick(), 'Here, we should have a click');
         }
-        // We don't cover the click case here, it is covered in canUserPlay
+        // We don't cover the click case here, it is covered in canUserPlay // TODO: or is it ???
         await this.setInteractive(false);
         this.cdr.detectChanges();
     }

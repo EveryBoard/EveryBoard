@@ -74,7 +74,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     /**
      * Reads the URL to get the config from query parameters (e.g., /P4?width=5&height=5)
      * If the config is invalid, redirect to page that lets the user select the config.
-     * public override for being able to trigger it from tests.
+     * Public for being able to trigger it from tests.
      */
     public async setConfigFromParams(): Promise<void> {
         const params: ParamMap = this.activatedRoute.snapshot.queryParamMap;
