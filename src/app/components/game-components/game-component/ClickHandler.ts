@@ -1,13 +1,33 @@
 import { MGPValidation } from '@everyboard/lib';
 
-export type AnyFunction = (...args: unknown[]) => Promise<MGPValidation>;
 
-export type MoveInterceptor = (fn: AnyFunction, clickNamer: ClickNamer) => AnyFunction;
+export type AnyFunction = (...args: unknown[]) => Promise<MGPValidation>;
 
 export type ClickNamer = (...args: unknown[]) => string;
 
+export type MoveInterceptor = (fn: AnyFunction, clickNamer: ClickNamer) => AnyFunction;
+
 export const CLICK_HANDLERS: symbol = Symbol('clickHandlers');
 
+function hasOwnClickHandlers(target: object): boolean {
+    return Object.prototype.hasOwnProperty.call(target, CLICK_HANDLERS);
+}
+
+function getOrCreateOwnClickHandlers(target: object): Map<string, ClickNamer> {
+    const existing: unknown = Reflect.get(target, CLICK_HANDLERS);
+
+    if (hasOwnClickHandlers(target) && existing instanceof Map) {
+        return existing;
+    }
+
+    const handlers: Map<string, ClickNamer> = new Map<string, ClickNamer>(
+        existing instanceof Map ? existing : undefined,
+    );
+
+    Reflect.set(target, CLICK_HANDLERS, handlers);
+
+    return handlers;
+}
 /**
  * Method decorator used to register a click handler
  * inside a metadata map attached to the class prototype.
@@ -36,8 +56,9 @@ export const CLICK_HANDLERS: symbol = Symbol('clickHandlers');
  *
  * @returns A TypeScript method decorator.
  */
-export function ClickHandler(clickNamer: ClickNamer)
-: (target: unknown, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor {
+export function ClickHandler(
+    clickNamer: ClickNamer,
+): (target: object, key: string, descriptor: PropertyDescriptor) => PropertyDescriptor {
     /**
      * Decorator applied to the target method.
      *
@@ -48,10 +69,8 @@ export function ClickHandler(clickNamer: ClickNamer)
      * @returns The original property descriptor.
      */
     return function(target: object, key: string, descriptor: PropertyDescriptor): PropertyDescriptor {
-        // Initialize the click handlers collection if missing.
-        target[CLICK_HANDLERS] ??= new Map<string, ClickNamer>();
-        // Associate the method name with its ClickNamer.
-        target[CLICK_HANDLERS].set(key, clickNamer);
+        const handlers: Map<string, ClickNamer> = getOrCreateOwnClickHandlers(target);
+        handlers.set(key, clickNamer);
         return descriptor;
     };
 }
