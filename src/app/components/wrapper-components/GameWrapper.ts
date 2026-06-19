@@ -5,6 +5,7 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 
 import { Move } from '../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
@@ -38,10 +39,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public gameComponent: AbstractGameComponent;
 
-    protected players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    protected players: PlayerMap<MGPOptional<P>> = PlayerMap.ofValues(MGPOptional.empty(), MGPOptional.empty());
 
     public getPlayerAt(player: Player): MGPOptional<P> {
-        return this.players[player.getValue()];
+        return this.players.get(player);
     }
 
     /**

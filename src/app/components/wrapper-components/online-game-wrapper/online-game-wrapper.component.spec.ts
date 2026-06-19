@@ -210,9 +210,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     it('should register timers only once', fakeAsync(async() => {
         // Given a started game
-        const timeManager: OGWCTimeManagerService =
-            (testUtils as unknown as { fixture: { debugElement: DebugElement } })
-                .fixture.debugElement.injector.get(OGWCTimeManagerService);
+        const timeManager: OGWCTimeManagerService = testUtils['fixture'].debugElement.injector.get(OGWCTimeManagerService);
         spyOn(timeManager, 'setTimers').and.callThrough();
         await prepareComponent(true);
 
