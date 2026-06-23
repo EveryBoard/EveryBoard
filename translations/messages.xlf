@@ -3036,8 +3036,8 @@
       <trans-unit id="424008605734944795" datatype="html">
         <source>Strategic implications</source>
       </trans-unit>
-      <trans-unit id="2403809755896571919" datatype="html">
-        <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges — every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
+      <trans-unit id="8991600964307142646" datatype="html">
+        <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges, every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
       </trans-unit>
       <trans-unit id="3293657922924170725" datatype="html">
         <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>

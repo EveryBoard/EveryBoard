@@ -1,16 +1,30 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Coord } from '../../../jscaip/Coord';
+import { Ordinal } from '../../../jscaip/Ordinal';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractReversiRules, ReversiConfig } from '../common/AbstractReversiRules';
+import { AbstractReversiRules, BoardMode, ReversiConfig } from '../common/AbstractReversiRules';
+import { ReversiState } from '../common/ReversiState';
 
+class ToricBoard implements BoardMode {
+
+    public getNextCoord(coord: Coord, direction: Ordinal, state: ReversiState): Coord {
+        return coord.getNextToric(direction, state.getWidth(), state.getHeight());
+    }
+
+}
 export class ToricReversiRules extends AbstractReversiRules {
 
     private static singleton: MGPOptional<ToricReversiRules> = MGPOptional.empty();
 
     public static get(): ToricReversiRules {
         if (ToricReversiRules.singleton.isAbsent()) {
-            ToricReversiRules.singleton = MGPOptional.of(new ToricReversiRules());
+            ToricReversiRules.singleton = MGPOptional.of(
+                new ToricReversiRules(
+                    new ToricBoard(),
+                ),
+            );
         }
         return ToricReversiRules.singleton.get();
     }

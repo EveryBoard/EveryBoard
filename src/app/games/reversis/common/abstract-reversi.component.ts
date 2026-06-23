@@ -55,7 +55,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
         this.board = state.getCopiedBoard();
 
         this.scores = MGPOptional.of(state.countScore());
-        this.canPass = this.rules.playerCanOnlyPass(state, this.config);
+        this.canPass = this.rules.playerCanOnlyPass(state);
     }
 
     public override async showLastMove(move: ReversiMove): Promise<void> {

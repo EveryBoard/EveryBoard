@@ -72,7 +72,7 @@ export class ToricReversiTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Strategic implications`,
-            $localize`On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges — every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.`,
+            $localize`On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges, every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.`,
             ToricReversiRules.get().getInitialState(defaultConfig),
         ),
     ];

@@ -41,18 +41,18 @@ describe('ReversiComponent', () => {
         const move: ReversiMove = new ReversiMove(0, 4);
         await testUtils.expectMoveSuccess('#click_0_4', move);
 
-        const component: ReversiComponent = testUtils.getGameComponent();
-        expect(component.getRectClasses(1, 3)).not.toContain('captured-fill');
-        expect(component.getRectClasses(2, 2)).not.toContain('captured-fill');
-        expect(component.getRectClasses(3, 1)).not.toContain('captured-fill');
-        expect(component.getRectClasses(4, 0)).not.toContain('captured-fill');
+        const tablutGameComponent: ReversiComponent = testUtils.getGameComponent();
+        expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured-fill');
+        expect(tablutGameComponent.getRectClasses(4, 0)).not.toContain('captured-fill');
 
-        expect(component.getRectClasses(1, 4)).toEqual(['captured-fill']);
+        expect(tablutGameComponent.getRectClasses(1, 4)).toEqual(['captured-fill']);
 
-        expect(component.getRectClasses(1, 5)).toEqual(['captured-fill']);
-        expect(component.getRectClasses(2, 6)).toEqual(['captured-fill']);
+        expect(tablutGameComponent.getRectClasses(1, 5)).toEqual(['captured-fill']);
+        expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured-fill']);
 
-        expect(component.getRectClasses(0, 4)).toEqual(['moved-fill']);
+        expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved-fill']);
     }));
 
     it('should fake a click on ReversiMove.PASS.coord to pass', fakeAsync(async() => {
