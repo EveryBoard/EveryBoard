@@ -1,6 +1,6 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable, BooleanConfig } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractRectangularGoRules, RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
@@ -16,6 +16,7 @@ export class GoRules extends AbstractRectangularGoRules {
                 height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                 handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
                 zoom: new NumberConfig(1, () => $localize`Zoom`, MGPValidators.range(1, 5)),
+                showZooms: new BooleanConfig(false, () => $localize`Show zooms`),
             },
         }, [{
             name: (): string => $localize`13 x 13`,
@@ -24,6 +25,7 @@ export class GoRules extends AbstractRectangularGoRules {
                 height: 13,
                 handicap: 0,
                 zoom: 1,
+                showZooms: false,
             },
         }, {
             name: (): string => $localize`9 x 9`,
@@ -32,6 +34,7 @@ export class GoRules extends AbstractRectangularGoRules {
                 height: 9,
                 handicap: 0,
                 zoom: 1,
+                showZooms: false,
             },
         }]);
 

@@ -43,7 +43,7 @@ export class EpaminondasTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             TutorialStepMessage.OBJECT_OF_THE_GAME() + ' (2/2)',
-            $localize`Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.`,
+            $localize`Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark has only one on Light's starting line.`,
             new EpaminondasState([
                 [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
                 [_, _, _, _, _, O, _, _, _, _, _, _, _, _],

@@ -10,12 +10,17 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
+type ZoomConfig = {
+    zoom: number;
+    showZooms: boolean;
+}
+
 export type RectangularGoConfig =
     AbstractGoConfig &
     GobanConfig &
+    ZoomConfig &
     {
         handicap: number;
-        zoom: number;
     };
 
 export abstract class AbstractRectangularGoRules extends AbstractGoRules<RectangularGoConfig> {

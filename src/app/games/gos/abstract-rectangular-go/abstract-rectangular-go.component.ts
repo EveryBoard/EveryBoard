@@ -1,4 +1,4 @@
-import { ModelSignal } from '@angular/core';
+import { computed, ModelSignal, signal, Signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -32,9 +32,11 @@ export abstract class AbstractRectangularGoComponent
 
     public captures: Coord[] = [];
 
+    public displayedZooms: WritableSignal<number> = signal(1);
+
     public abstract hover: ModelSignal<MGPOptional<Coord>>;
 
-    public zooms: ReadonlyArray<Table<GoState>> = [];
+    public zooms: WritableSignal<ReadonlyArray<Table<GoState>>> = signal([]);
 
     private readonly SUB_BOARD_SEPARATOR: number = 0.5 * this.SPACE_SIZE;
 
@@ -47,8 +49,8 @@ export abstract class AbstractRectangularGoComponent
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public override getViewBox(): ViewBox {
-        const zooms: number = this.zooms.length;
+    public viewBox: Signal<ViewBox> = computed(() => {
+        const zooms: number = this.zooms().length;
         const zoomSeparatorCount: number = zooms - 1;
         const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
         const normalWidth: number = this.getState().getWidth() * this.SPACE_SIZE;
@@ -58,7 +60,7 @@ export abstract class AbstractRectangularGoComponent
         height += this.SUB_BOARD_SEPARATOR * verticalSubBoardSeparatorCount;
         height += this.ZOOM_SEPARATOR * zoomSeparatorCount;
         return ViewBox.fromLimits(0, width, 0, height);
-    }
+    });
 
     public override async showLastMove(move: GoMove): Promise<void> {
         this.last = MGPOptional.of(move.coord);
@@ -90,18 +92,22 @@ export abstract class AbstractRectangularGoComponent
             this.board,
             this.getConfig().zoom,
         );
-        this.zooms = subBoards.map(
-            (table: Table<Table<GoPiece>>) => {
-                return TableUtils.map(table, (board: Table<GoPiece>) => {
-                    return state.withBoard(board);
-                });
-            },
+        this.displayedZooms.set(this.getConfig().showZooms ? this.getConfig().zoom : 1);
+        this.zooms.set(
+            subBoards.map(
+                (table: Table<Table<GoPiece>>) => {
+                    return TableUtils.map(table, (board: Table<GoPiece>) => {
+                        return state.withBoard(board);
+                    });
+                },
+            ),
         );
         this.updateScores();
 
         this.ko = state.koCoord;
         this.canPass = phase.allowsPass();
         this.createHoshis();
+        this.cdr.detectChanges();
     }
 
     private updateScores(): void {
@@ -145,7 +151,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     private xZoomTranslate(zoom: number): number {
-        const totalZooms: number = this.zooms.length;
+        const totalZooms: number = this.zooms().length;
         return (totalZooms - zoom - 1) * 0.5 * this.SUB_BOARD_SEPARATOR;
     }
 
@@ -160,7 +166,7 @@ export abstract class AbstractRectangularGoComponent
     private getTranslateXZoomBoard(zoom: number, subZoomX: number, subZoomY: number): number {
         let squareLeftCount: number = 0;
         for (let previousZoomX: number = 0; previousZoomX < subZoomX; previousZoomX++) {
-            const previousState: GoState = this.zooms[zoom][subZoomY][previousZoomX];
+            const previousState: GoState = this.zooms()[zoom][subZoomY][previousZoomX];
             const abstractWidth: number = previousState.getWidth();
             squareLeftCount += abstractWidth;
         }
@@ -172,7 +178,7 @@ export abstract class AbstractRectangularGoComponent
     private getTranslateYZoomBoard(zoom: number, subZoomX: number, subZoomY: number): number {
         let squareTopCount: number = 0;
         for (let previousZoomY: number = 0; previousZoomY < subZoomY; previousZoomY++) {
-            const previousState: GoState = this.zooms[zoom][previousZoomY][subZoomX];
+            const previousState: GoState = this.zooms()[zoom][previousZoomY][subZoomX];
             const abstractHeight: number = previousState.getHeight();
             squareTopCount += abstractHeight;
         }

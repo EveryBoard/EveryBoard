@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.viewBox]="viewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (zoom of ArrayUtils.range(config.zoom); track $index) {
+    @for (zoom of ArrayUtils.range(displayedZooms()); track $index) {
         <g [id]="'zoom-' + zoom"
            [attr.transform]="translateZoom(zoom)">
             @for (subZoomX of ArrayUtils.range(zoom + 1); track $index) {
@@ -16,7 +16,7 @@
                        [captures]="captures"
                        [ko]="ko"
                        [last]="last"
-                       [state]="zooms[zoom][subZoomY][subZoomX]"
+                       [state]="zooms()[zoom][subZoomY][subZoomX]"
                        [hover]="hover()"
                        (clicked)="onClick($event)"
                        (takeHover)="onTakeHover(zoom, subZoomX, subZoomY, $event)"

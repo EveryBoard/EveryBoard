@@ -494,6 +494,10 @@
         <source>Zoom</source>
         <target>Zoom</target>
       </trans-unit>
+      <trans-unit id="8484396493346861583" datatype="html">
+        <source>Show zooms</source>
+        <target>Montrer les zooms</target>
+      </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
         <target>13 x 13</target>
@@ -2261,7 +2265,7 @@
         <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l&apos;adversaire que l&apos;adversaire n&apos;en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c&apos;est au tour de Foncé de jouer, il a donc gagné.</target>
       </trans-unit>
       <trans-unit id="2623510393491755816" datatype="html">
-        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c&apos;est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n&apos;en a qu&apos;une sur la ligne de départ de Clair.</target>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
@@ -2507,7 +2511,7 @@
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light piece on the board only has one liberty left, play there.</source>
+        You&apos;re playing Dark. The light piece on the board has only one liberty left, play there.</source>
         <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
         Il est dit d'un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés.
         Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
@@ -2527,7 +2531,7 @@
       </trans-unit>
       <trans-unit id="3197348089105327020" datatype="html">
         <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light group here only has one liberty left, capture it.</source>
+        You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
         <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
         Vous jouez Foncé. Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
@@ -2719,6 +2723,46 @@
       <trans-unit id="8084014192904533918" datatype="html">
         <source>Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call &quot;layer&quot; or &quot;zoom&quot;</source>
         <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Laissez nous vous expliquer ce qu'on veux dire par &quot;couche&quot; ou &quot;zoom&quot;</target>
+      </trans-unit>
+      <trans-unit id="7432770342060030351" datatype="html">
+        <source>Why are there multiple boards?</source>
+        <target>Pourquoi y a t'il plusieurs plateauxINSECABLE_ESPACE?</target>
+      </trans-unit>
+      <trans-unit id="1261295226077086547" datatype="html">
+        <source>In Zoomed Go, the different boards are only visual aids.&lt;br/&gt;&lt;br/&gt;There is only one real game board and one move to play each turn.&lt;br/&gt;&lt;br/&gt;The additional boards simply help visualize interactions at different distances.&lt;br/&gt;The largest board (zoom 1) shows the real board.&lt;br/&gt;The other boards show the different layers.&lt;br/&gt;For example, the middle boards show interactions at a distance of 2, and the small boards show interactions at a distance of 3. The zoom level can be configured for extra challenges. A level of 2 is already challenging.&lt;br/&gt;Every move is played on the same intersection on all boards at once. The extra boards do not add new pieces or new decisions, they only help understand the extended liberties.</source>
+        <target>Au Zoomed Go, les différents plateaux sont seulement des aides visuelles.&lt;br/&gt;&lt;br/&gt;Il n'y a que un vrai plateau et un coup à faire par tour.&lt;br/&gt;&lt;br/&gt;Les plateaux additionnels aident à visualiser les interactions à différentes distances.&lt;br/&gt;Le plus grand plateau (zoom 1) montre le vrai plateau.&lt;br/&gt;Les autres plateaux montrent les différentes couches.&lt;br/&gt;Par exemple, le plateau du milieu montre les interactions à une distance de 2, et les petits plateaux montrent les interactions à une distance de 3. Le niveau de zoom peut être configuré pour plus de difficultés. Un niveau de 2 est déjà un défi.&lt;br/&gt;Chaque coup est joué sur la même intersection sur tout les plateaux en même temps.
+      </trans-unit>
+      <trans-unit id="8122837695661234238" datatype="html">
+        <source>In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
+      </trans-unit>
+      <trans-unit id="8023345927754693797" datatype="html">
+        <source>The end of the game works exactly like in regular Go.&lt;br/&gt;&lt;br/&gt;
+            When both players pass consecutively, the game ends and territory is counted normally.&lt;br/&gt;&lt;br/&gt;
+            The only difference in Zoomed Go is how stones connect and how liberties are counted during play.</source>
+      </trans-unit>
+      <trans-unit id="5769798792711453761" datatype="html">
+        <source>Distance-2 capture</source>
+      </trans-unit>
+      <trans-unit id="5030374832295292182" datatype="html">
+        <source>Here, the Light stones are not directly adjacent to the Dark stone. However, because the game is played with zoom level 2, the three Dark stones can still remove liberties from the Light stone. The Light stone has only one liberty left and is therefore capturable.</source>
+      </trans-unit>
+      <trans-unit id="261671265885677140" datatype="html">
+        <source>Capture at distance 2</source>
+      </trans-unit>
+      <trans-unit id="4532106069499119312" datatype="html">
+        <source>You&apos;re playing Light. In this variant, the Dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.</source>
+      </trans-unit>
+      <trans-unit id="4721508449983577172" datatype="html">
+        <source>Congratulations, the Dark stone has been captured from a distance.</source>
+      </trans-unit>
+      <trans-unit id="5050189966653599623" datatype="html">
+        <source>Failed, try again by playing on the last liberty of the Dark stone.</source>
+      </trans-unit>
+      <trans-unit id="6609145753194079647" datatype="html">
+        <source>Extended eyes</source>
+      </trans-unit>
+      <trans-unit id="8278092448434944265" datatype="html">
+        <source>Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable in this variant.</source>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>

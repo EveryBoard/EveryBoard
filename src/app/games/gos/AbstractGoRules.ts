@@ -173,8 +173,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
     }
 
     private isLegalDrop(move: GoMove, state: GoState, config: C)
-    : MGPFallible<GoLegalityInformation>
-    {
+    : MGPFallible<GoLegalityInformation> {
         if (this.isKo(move, state)) {
             return MGPFallible.failure(GoFailure.ILLEGAL_KO());
         }
@@ -295,10 +294,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     private applyPass(state: GoState): GoState {
         const originalPhase: GoPhase = state.phase;
-        Utils.assert(
-            originalPhase.isPlaying() || originalPhase.isPassed(),
-            'Cannot pass in counting phase!',
-        );
+        Utils.assert(originalPhase.isPlaying() || originalPhase.isPassed(), 'Cannot pass in counting phase!');
         const newPhase: GoPhase = originalPhase.isPassed() ? GoPhase.COUNTING : GoPhase.PASSED;
         state = state
             .incrementTurn()

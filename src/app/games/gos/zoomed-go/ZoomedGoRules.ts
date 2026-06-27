@@ -1,6 +1,6 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable, BooleanConfig } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractRectangularGoRules, RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
@@ -17,6 +17,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                     height: new NumberConfig(12, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                     handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
                     zoom: new NumberConfig(3, () => $localize`Zoom`, MGPValidators.range(1, 5)),
+                    showZooms: new BooleanConfig(true, () => $localize`Show Zooms`),
                 },
             },
             [
@@ -27,6 +28,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         height: 6,
                         handicap: 0,
                         zoom: 2,
+                        showZooms: true,
                     },
                 }, {
                     name: (): string => $localize`Zoom 2 (medium)`,
@@ -35,6 +37,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         height: 10,
                         handicap: 0,
                         zoom: 2,
+                        showZooms: true,
                     },
                 }, {
                     name: (): string => $localize`Zoom 2 (large)`,
@@ -43,6 +46,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         height: 14,
                         handicap: 0,
                         zoom: 2,
+                        showZooms: true,
                     },
                 }, {
                     name: (): string => $localize`Zoom 3 (small)`,
@@ -51,6 +55,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         height: 6,
                         handicap: 0,
                         zoom: 3,
+                        showZooms: true,
                     },
                 }, {
                     name: (): string => $localize`Zoom 3 (large)`,
@@ -59,6 +64,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         height: 18,
                         handicap: 0,
                         zoom: 3,
+                        showZooms: true,
                     },
                 },
             ],
