@@ -9,7 +9,8 @@ import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { GoHeuristic } from '../../go/GoHeuristic';
-import { RectangularGoConfig, AbstractRectangularGoRules } from '../AbstractRectangularGoRules';
+import { GoRules } from '../../go/GoRules';
+import { RectangularGoConfig } from '../AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -18,7 +19,7 @@ const _: GoPiece = GoPiece.EMPTY;
 describe('GoHeuristic', () => {
 
     let heuristic: GoHeuristic;
-    const defaultConfig: RectangularGoConfig = AbstractRectangularGoRules.get().getDefaultRulesConfig();
+    const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new GoHeuristic();

@@ -6,7 +6,8 @@ import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
-import { RectangularGoConfig, GoRules } from '../go/GoRules';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
+import { GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
@@ -49,6 +50,7 @@ describe('GoState for Go', () => {
                 height: 19,
                 handicap: 2,
                 zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it
@@ -91,6 +93,7 @@ describe('GoState for Go', () => {
                 height: 19,
                 handicap: 4,
                 zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it
@@ -133,6 +136,7 @@ describe('GoState for Go', () => {
                 height: 19,
                 handicap: 5,
                 zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it
@@ -175,6 +179,7 @@ describe('GoState for Go', () => {
                 height: 19,
                 handicap: 9,
                 zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it

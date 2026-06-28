@@ -12,11 +12,12 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { RectangularGoConfig, AbstractRectangularGoRules } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
+import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
+import { GoRules } from '../GoRules';
 
 describe('GoRules', () => {
 
-    let rules: AbstractRectangularGoRules;
+    let rules: GoRules;
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
@@ -37,7 +38,7 @@ describe('GoRules', () => {
     const noCaptures: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
     beforeEach(() => {
-        rules = AbstractRectangularGoRules.get();
+        rules = GoRules.get();
     });
 
     it('should be created', () => {
@@ -48,7 +49,7 @@ describe('GoRules', () => {
 
         it('should always be GameStatus.ONGOING', () => {
             // Given starting board
-            const state: GoState = AbstractRectangularGoRules.get().getInitialState(config);
+            const state: GoState = rules.getInitialState(config);
             const node: GoNode = new GoNode(state);
 
             // When evaluating it
@@ -228,7 +229,7 @@ describe('GoRules', () => {
 
         it('GoPhase.PLAYING + GoMove.PASS = GoPhase.PASSED', () => {
             // Given initial board (so, playing phase)
-            const state: GoState = AbstractRectangularGoRules.get().getInitialState(config);
+            const state: GoState = rules.getInitialState(config);
             expect(state.phase).toBe(GoPhase.PLAYING);
 
             // When passing

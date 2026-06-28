@@ -10,7 +10,7 @@ import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
 import { GoMoveGenerator } from '../../go/GoMoveGenerator';
 import { GoRules } from '../../go/GoRules';
-import { RectangularGoConfig, AbstractRectangularGoRules } from '../AbstractRectangularGoRules';
+import { RectangularGoConfig } from '../AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -29,6 +29,7 @@ describe('GoMoveGenerator', () => {
         height: 5,
         handicap: 0,
         zoom: 1,
+        showZooms: true,
     };
 
     beforeEach(() => {
@@ -63,7 +64,7 @@ describe('GoMoveGenerator', () => {
         });
 
         it('should only have GoMove.ACCEPT in COUNTNG GoPhase when agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = AbstractRectangularGoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState = new GoState(initialBoard,
                                                PlayerNumberMap.of(0, 0),
                                                0,
@@ -76,7 +77,7 @@ describe('GoMoveGenerator', () => {
         });
 
         it('should only have counting moves in GoPhase.COUNTING when not agreeing on the result', () => {
-            const initialBoard: GoPiece[][] = AbstractRectangularGoRules.get().getInitialState(config).getCopiedBoard();
+            const initialBoard: GoPiece[][] = GoRules.get().getInitialState(config).getCopiedBoard();
             const state: GoState =
                 new GoState(initialBoard, PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.ACCEPT);
             const initialNode: GoNode = new GoNode(state);

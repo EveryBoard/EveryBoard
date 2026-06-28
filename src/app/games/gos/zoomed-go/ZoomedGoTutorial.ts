@@ -125,7 +125,7 @@ export class ZoomedGoTutorial extends Tutorial {
             ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             MGPOptional.of(defaultConfig),
         ),
-        ///////
+        // The other proposal
         TutorialStep.informational(
             $localize`Example Tutorial: Zoomed Go`,
             $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain by the example the difference with normal Go.`,
