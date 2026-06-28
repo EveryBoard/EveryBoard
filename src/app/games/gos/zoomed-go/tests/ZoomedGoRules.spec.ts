@@ -21,10 +21,6 @@ describe('ZoomedGoRules', () => {
 
     const X: GoPiece = GoPiece.LIGHT;
     const O: GoPiece = GoPiece.DARK;
-    const k: GoPiece = GoPiece.DEAD_LIGHT;
-    const u: GoPiece = GoPiece.DEAD_DARK;
-    const w: GoPiece = GoPiece.LIGHT_TERRITORY;
-    const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
     const config: RectangularGoConfig = {
