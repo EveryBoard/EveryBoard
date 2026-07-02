@@ -18,7 +18,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { KalahRules } from '../KalahRules';
 import { KalahComponent } from '../kalah.component';
 
-describe('KalahComponent', () => {
+fdescribe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
@@ -30,7 +30,7 @@ describe('KalahComponent', () => {
 
         distribution: {
             state: KalahRules.get().getInitialState(defaultConfig),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -42,7 +42,7 @@ describe('KalahComponent', () => {
                 [5, 5, 5, 4, 4, 4],
                 [0, 4, 4, 4, 4, 4],
             ], 1, PlayerNumberMap.of(1, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -56,7 +56,7 @@ describe('KalahComponent', () => {
                 [0, 0, 0, 0, 2, 0],
                 [1, 0, 0, 0, 0, 1],
             ], 100, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5)),
+            move: MancalaMove.of(MancalaDistribution.of(5, 1)),
             result: [
                 { x: 4, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } },
                 { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
@@ -68,7 +68,7 @@ describe('KalahComponent', () => {
                 [0, 6, 6, 5, 5, 5],
                 [6, 0, 5, 0, 4, 4],
             ], 2, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5)),
+            move: MancalaMove.of(MancalaDistribution.of(5, 1)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
                 { x: 1, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
@@ -79,7 +79,7 @@ describe('KalahComponent', () => {
                 [1, 0, 0, 0, 0, 0],
                 [8, 1, 0, 0, 0, 0],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
                 { x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -1 ' } },
@@ -168,7 +168,7 @@ describe('KalahComponent', () => {
 
             it('should hide capture of previous turn in opponent store (animation)', fakeAsync(async() => {
                 // Given a state where there has been a point-won last turn
-                const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0);
+                const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
                 await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveZero, defaultConfig);
                 mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
@@ -204,7 +204,7 @@ describe('KalahComponent', () => {
             // Given any board where first distribution has been done
             await mancalaTestUtils.expectClickSuccess('#click-3-1');
             // When doing double distribution move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(0, 1)]);
             // Then it should be a success
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
         }));
@@ -242,8 +242,8 @@ describe('KalahComponent', () => {
             // When doing the complex move
             await mancalaTestUtils.expectClickSuccess('#click-0-0');
             await mancalaTestUtils.expectClickSuccess('#click-4-0');
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0),
-                                                     [MancalaDistribution.of(4), MancalaDistribution.of(1)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0),
+                                                     [MancalaDistribution.of(4, 0), MancalaDistribution.of(1, 0)]);
 
             // Then the move should succeed
             await mancalaTestUtils.expectMoveSuccess('#click-1-0', move, defaultConfig);
@@ -260,8 +260,8 @@ describe('KalahComponent', () => {
             // When doing the complex move
             await mancalaTestUtils.expectClickSuccess('#click-4-1');
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4),
-                                                     [MancalaDistribution.of(0), MancalaDistribution.of(5)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1),
+                                                     [MancalaDistribution.of(0, 1), MancalaDistribution.of(5, 1)]);
 
             // Then the move should succeed
             await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
@@ -279,7 +279,7 @@ describe('KalahComponent', () => {
                 [0, 0, 1, 0, 0, 0],
             ];
             const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(5, 0));
-            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const previousMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 0));
             await mancalaTestUtils.testUtils.setupState(state,
                                                         { previousState, previousMove, config: defaultConfig });
 
@@ -293,7 +293,7 @@ describe('KalahComponent', () => {
 
         it('should get back to original board when taking back move', fakeAsync(async() => {
             // Given a board where a first move has been done
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
 
             // When taking back
@@ -329,7 +329,7 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When doing the only move possible for the remaining sub-move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
 
             // Then that normally-illegal move should be accepted
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, defaultConfig);
@@ -337,12 +337,13 @@ describe('KalahComponent', () => {
 
         it('should hide capture of previous turn in opponent store (move)', fakeAsync(async() => {
             // Given a state where there has been a point-won last turn
-            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0);
+            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveZero, defaultConfig);
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 ', ' +1 ');
 
             // When doing second turn
-            await mancalaTestUtils.expectMoveSuccess('#click-0-0', moveZero, defaultConfig);
+            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 0);
+            await mancalaTestUtils.expectMoveSuccess('#click-0-0', moveOne, defaultConfig);
 
             // Then the capture of last turn should be hidden
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1

@@ -13,7 +13,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 
-describe('AwaleScoreMinimax', () => {
+fdescribe('AwaleScoreMinimax', () => {
 
     let rules: AwaleRules;
     let minimax: Minimax<MancalaMove, MancalaState, MancalaConfig>;
@@ -46,7 +46,7 @@ describe('AwaleScoreMinimax', () => {
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
         // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(2)));
+        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(2, 0)));
     });
 
     it('should choose capture when possible (at depth 2)', () => {
@@ -60,7 +60,7 @@ describe('AwaleScoreMinimax', () => {
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level2, defaultConfig);
         // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(4)));
+        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(4, 0)));
     });
 
     it('should prioritize moves in the same territory when no captures are possible', () => {
@@ -74,7 +74,7 @@ describe('AwaleScoreMinimax', () => {
         // When getting the best move
         const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
         // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(0)));
+        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(0, 0)));
     });
 
 });

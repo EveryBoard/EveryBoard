@@ -8,7 +8,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 
-describe('AwaleOrderedMoveGenerator', () => {
+fdescribe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
@@ -31,7 +31,7 @@ describe('AwaleOrderedMoveGenerator', () => {
 
         // Then the first move should be the capture
         expect(moves.length).toBe(2);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
     });
 
 });

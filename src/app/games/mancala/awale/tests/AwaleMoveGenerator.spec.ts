@@ -9,7 +9,7 @@ import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 
-describe('AwaleMoveGenerator', () => {
+fdescribe('AwaleMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
@@ -32,7 +32,7 @@ describe('AwaleMoveGenerator', () => {
 
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
     });
 
     describe('Custom Config', () => {

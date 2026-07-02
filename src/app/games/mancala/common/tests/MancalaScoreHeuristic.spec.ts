@@ -11,7 +11,7 @@ import { MancalaConfig } from '../MancalaConfig';
 import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
 import { MancalaState } from '../MancalaState';
 
-describe('MancalaScoreHeuristic', () => {
+fdescribe('MancalaScoreHeuristic', () => {
 
     for (const mancalaRules of [AwaleRules, KalahRules, BaAwaRules]) {
 

@@ -5,21 +5,26 @@ import { Move } from '../../../jscaip/Move';
 export class MancalaDistribution {
 
     public static encoder: Encoder<MancalaDistribution> = Encoder.tuple(
-        [Encoder.identity<number>()],
-        (distribution: MancalaDistribution) => [distribution.x],
-        (value: [number]) => MancalaDistribution.of(value[0]),
+        [Encoder.identity<number>(), Encoder.identity<number>()],
+        (distribution: MancalaDistribution) => [distribution.x, distribution.y],
+        (value: [number, number]) => MancalaDistribution.of(value[0], value[1]),
     );
 
-    public static of(x: number): MancalaDistribution {
-        Utils.assert(0 <= x, 'MancalaDistribution should be a positive integer!');
-        return new MancalaDistribution(x);
+    public static of(x: number, y: number): MancalaDistribution {
+        Utils.assert(0 <= x, 'MancalaDistribution.x should be a positive integer!');
+        Utils.assert(0 <= y, 'MancalaDistribution.y should be a positive integer!');
+        return new MancalaDistribution(x, y);
     }
-    protected constructor(public readonly x: number) {
+
+    protected constructor(public readonly x: number, public readonly y: number) {
     }
+
     public equals(other: MancalaDistribution): boolean {
         if (other === this) return true;
-        return other.x === this.x;
+        if (other.x !== this.x) return false;
+        return other.y === this.y; // TODO: test different y is different row
     }
+
 }
 
 export class MancalaMove extends Move {
@@ -49,7 +54,7 @@ export class MancalaMove extends Move {
     }
 
     public override toString(): string {
-        const distributions: number[] = this.distributions.map((move: MancalaDistribution) => move.x);
+        const distributions: string[] = this.distributions.map((move: MancalaDistribution) => '(' + move.x + ', ' + move.y + ')');
         return 'MancalaMove([' + distributions.join(', ') + '])';
     }
 

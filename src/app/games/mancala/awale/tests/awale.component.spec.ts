@@ -15,7 +15,7 @@ import { AwaleComponent } from '../awale.component';
 
 const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
-describe('AwaleComponent', () => {
+fdescribe('AwaleComponent', () => {
 
     doMancalaComponentTests({
         component: AwaleComponent,
@@ -23,7 +23,7 @@ describe('AwaleComponent', () => {
         moveGenerator: new AwaleMoveGenerator(),
         distribution: {
             state: AwaleRules.get().getInitialState(defaultConfig),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
@@ -36,7 +36,7 @@ describe('AwaleComponent', () => {
                 [5, 5, 5, 5, 4, 4],
                 [0, 4, 4, 4, 4, 4],
             ], 1, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(1)),
+            move: MancalaMove.of(MancalaDistribution.of(1, 0)),
             result: [
                 { x: 2, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
                 { x: 3, y: 0, content: { mainContent: ' 6 ', secondaryContent: ' +1 ' } },
@@ -50,7 +50,7 @@ describe('AwaleComponent', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 0, 0, 4],
             ], 121, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5)),
+            move: MancalaMove.of(MancalaDistribution.of(5, 0)),
             result: [{ x: 5, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } }],
         },
         capture: {
@@ -58,7 +58,7 @@ describe('AwaleComponent', () => {
                 [4, 1, 4, 4, 4, 4],
                 [2, 4, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [{ x: 1, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
         },
         fillThenCapture: {
@@ -66,7 +66,7 @@ describe('AwaleComponent', () => {
                 [11, 4, 4, 4, 4, 0],
                 [17, 4, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [{ x: 5, y: 0, content: { mainContent: ' 0 ', secondaryContent: ' -2 ' } }],
         },
     });
@@ -91,7 +91,7 @@ describe('AwaleComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then this should trigger a single distribution move
             await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig);
@@ -109,7 +109,7 @@ describe('AwaleComponent', () => {
             await mancalaTestUtils.expectClickSuccess('#click-3-1');
 
             // When doing the second distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(0, 1)]);
 
             // Then this should trigger a single distribution move
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', move, customConfig);

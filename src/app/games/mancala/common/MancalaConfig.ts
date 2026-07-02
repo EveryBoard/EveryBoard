@@ -16,4 +16,5 @@ export type MancalaConfig = RulesConfig & {
 
     readonly continueLapUntilCaptureOrEmptyHouse: boolean;
 
+    readonly numberOfRows: number;
 };

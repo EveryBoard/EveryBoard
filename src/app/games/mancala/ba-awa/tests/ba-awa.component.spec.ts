@@ -13,7 +13,7 @@ import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
 import { BaAwaRules } from '../BaAwaRules';
 import { BaAwaComponent } from '../ba-awa.component';
 
-describe('BaAwaComponent', () => {
+fdescribe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
@@ -24,7 +24,7 @@ describe('BaAwaComponent', () => {
         moveGenerator: new BaAwaMoveGenerator(),
         distribution: {
             state: BaAwaRules.get().getInitialState(defaultConfig),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +3 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 1 ', secondaryContent: ' -3 ' } },
@@ -45,7 +45,7 @@ describe('BaAwaComponent', () => {
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
             ], 1, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 2 ', secondaryContent: ' +1 ' } },
                 { x: 2, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
@@ -61,7 +61,7 @@ describe('BaAwaComponent', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 5, 6, 0],
             ], 121, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5)),
+            move: MancalaMove.of(MancalaDistribution.of(5, 0)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } },
                 { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
@@ -73,7 +73,7 @@ describe('BaAwaComponent', () => {
                 [3, 1, 4, 4, 4, 4],
                 [3, 1, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(1)),
+            move: MancalaMove.of(MancalaDistribution.of(1, 1)),
             result: [{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }],
         },
         fillThenCapture: {
@@ -81,7 +81,7 @@ describe('BaAwaComponent', () => {
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } },
             ],
@@ -138,7 +138,7 @@ describe('BaAwaComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then this should trigger a single distribution move
             await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig);
@@ -159,7 +159,7 @@ describe('BaAwaComponent', () => {
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
 
             // When doing the second distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1), [MancalaDistribution.of(2, 1)]);
 
             // Then this should trigger a single distribution move
             await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig);

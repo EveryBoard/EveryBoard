@@ -24,6 +24,7 @@ export class AwaleRules extends MancalaRules {
                 continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                numberOfRows: new NumberConfig(1, MancalaRules.NUMBER_OF_ROWS, MGPValidators.range(1, 99)),
             },
         });
 
@@ -57,8 +58,8 @@ export class AwaleRules extends MancalaRules {
         let resultingState: MancalaState = state;
         let target: MGPOptional<number> = resultingState.getOptionalPieceAtXY(x, y);
         let capturedSum: number = 0;
-        const captureMap: number[][] = TableUtils.create(config.width, 2, 0);
-        if ((target.get() < 2) || (target.get() > 3)) {
+        const captureMap: number[][] = TableUtils.create(config.width, 2 * config.numberOfRows, 0);
+        if ((target.get() < 2) || (target.get() > 3)) { // TODO NOT HARDCORE, use capturableValues
             // first space not capturable, we apply no change
             return { capturedSum: 0, captureMap, resultingState: state };
         }
@@ -80,6 +81,7 @@ export class AwaleRules extends MancalaRules {
             resultingState = resultingState.capture(player, new Coord(x, y));
             x += direction;
             target = resultingState.getOptionalPieceAtXY(x, y);
+        // TODO: not 2 or 3, capturableValues
         } while ((x !== limit) && (target.equalsValue(2) || target.equalsValue(3)));
 
         return { capturedSum, captureMap, resultingState };
@@ -90,12 +92,19 @@ export class AwaleRules extends MancalaRules {
         const captureLessResult: MancalaCaptureResult = {
             capturedSum: 0,
             resultingState: state, // Apply no capture
-            captureMap: TableUtils.create(state.getWidth(), 2, 0),
+            captureMap: TableUtils.create(
+                state.getWidth(),
+                state.getHeight(),
+                0,
+            ),
         };
         if (y === player.getValue()) {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state, config);
-            const isStarving: boolean = MancalaRules.isStarving(player.getOpponent(),
-                                                                captureResult.resultingState.board);
+            const isStarving: boolean = MancalaRules.isStarving(
+                player.getOpponent(),
+                captureResult.resultingState.board,
+                config,
+            );
             if (captureResult.capturedSum > 0 && isStarving) {
                 /* if the distribution would capture all seeds
                  * the capture is forbidden and cancelled

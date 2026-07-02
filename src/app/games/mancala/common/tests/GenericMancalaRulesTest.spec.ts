@@ -23,7 +23,23 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
     const rules: MancalaRules = entries.rules;
     const defaultConfig: MancalaConfig = rules.getDefaultRulesConfig();
 
-    describe(entries.gameName + 'Rules generic tests', () => {
+    fdescribe(entries.gameName + 'Rules generic tests', () => {
+
+        it('should generate initial board according to config', () => {
+            // Given an initial board with unusual width and height
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                width: 4,
+                numberOfRows: 2, // LOL, that's a Quarto board
+            };
+
+            // When rendering it
+            const initialState: MancalaState = rules.getInitialState(customConfig);
+
+            // Then it should have according dimension
+            expect(initialState.getWidth()).toBe(customConfig.width);
+            expect(initialState.getHeight()).toBe(customConfig.numberOfRows * 2);
+        });
 
         it('should refuse distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
@@ -51,7 +67,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             ], 10, PlayerNumberMap.of(0, 0));
 
             // When attempting starving move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
 
             // Then it should be refused
             const reason: string = MancalaFailure.SHOULD_DISTRIBUTE();
@@ -71,7 +87,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             ], 10, PlayerNumberMap.of(22, 22));
 
             // When attempting starving move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
@@ -95,7 +111,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             ], 11, PlayerNumberMap.of(22, 22));
 
             // When doing the last move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
@@ -116,7 +132,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = rules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then the move should succeed and the store should contain one (so, the score)
             const reason: string = 'Must continue playing after kalah move';
@@ -124,6 +140,65 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 () => RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig),
                 reason,
             );
+        });
+
+        fdescribe('multi row', () => {
+
+            fit('should sow correctly inner row', () => {
+                console.clear();
+                console.log('let us try')
+                // Given
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 1, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 10, PlayerNumberMap.of(22, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+                console.log('=================')
+            });
+
+            it('should sow correctly outer row', () => {
+                // Given
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [1, 1, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                ], 10, PlayerNumberMap.of(22, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
         });
 
         describe('getGameStatus', () => {

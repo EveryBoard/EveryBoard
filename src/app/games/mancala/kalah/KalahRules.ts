@@ -24,6 +24,7 @@ export class KalahRules extends MancalaRules {
                 continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                numberOfRows: new NumberConfig(1, MancalaRules.NUMBER_OF_ROWS, MGPValidators.range(1, 99)),
             },
         });
 
@@ -42,7 +43,11 @@ export class KalahRules extends MancalaRules {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
             capturedSum: 0,
-            captureMap: TableUtils.create(distributedState.getWidth(), 2, 0),
+            captureMap: TableUtils.create(
+                distributedState.getWidth(),
+                distributedState.getHeight(),
+                0,
+            ),
             resultingState: distributedState,
         };
         if (distributionResult.endsUpInStore) {
@@ -57,12 +62,16 @@ export class KalahRules extends MancalaRules {
                 // We can capture
                 const board: number[][] = distributedState.getCopiedBoard();
                 const capturedSum: number = board[0][landingSpace.x] + board[1][landingSpace.x];
-                const captureMap: number[][] = TableUtils.create(distributedState.getWidth(), 2, 0);
+                const captureMap: number[][] = TableUtils.create(
+                    distributedState.getWidth(),
+                    distributedState.getHeight(),
+                    0,
+                );
                 captureMap[0][landingSpace.x] = board[0][landingSpace.x];
                 captureMap[1][landingSpace.x] = board[1][landingSpace.x];
                 const capturer: Player = distributedState.getCurrentPlayer();
                 let postCaptureState: MancalaState = distributedState.capture(capturer, landingSpace);
-                const oppositeY: number = (landingSpace.y + 1) % 2;
+                const oppositeY: number = (landingSpace.y + 1) % 2; // TODO: forchore this will go verongue
                 const oppositeSpace: Coord = new Coord(landingSpace.x, oppositeY);
                 postCaptureState = postCaptureState.capture(capturer, oppositeSpace);
                 return {

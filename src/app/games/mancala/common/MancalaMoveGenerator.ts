@@ -20,7 +20,7 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         for (let x: number = 0; x < state.getWidth(); x++) {
             if (state.getPieceAtXY(x, playerY) > 0) {
                 // if the house is not empty
-                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(x));
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(x, playerY));
                 if (config.mustContinueDistributionAfterStore) {
                     moves.push(...this.getPossibleMoveContinuations(state, x, playerY, move, config));
                 } else {
@@ -45,16 +45,18 @@ export class MancalaMoveGenerator extends MoveGenerator<MancalaMove, MancalaStat
         const previousDistributionResult: MancalaDistributionResult =
             MancalaRules.getEmptyDistributionResult(state);
         const distributionResult: MancalaDistributionResult =
-            this.rules.distributeHouse(x, y, previousDistributionResult, config);
+            this.rules.distributeHouse(MancalaDistribution.of(x, y), previousDistributionResult, config);
         const stateAfterDistribution: MancalaState = distributionResult.resultingState;
-        const isStarving: boolean =
-            MancalaRules.isStarving(stateAfterDistribution.getCurrentPlayer(),
-                                    stateAfterDistribution.board);
+        const isStarving: boolean = MancalaRules.isStarving(
+            stateAfterDistribution.getCurrentPlayer(),
+            stateAfterDistribution.board,
+            config,
+        );
         const playerHasPieces: boolean = isStarving === false;
         if (distributionResult.endsUpInStore && playerHasPieces) {
             for (let i: number = 0; i < stateAfterDistribution.getWidth(); i++) {
                 if (stateAfterDistribution.getPieceAtXY(i, y) > 0) {
-                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(i));
+                    const move: MancalaMove = currentMove.add(MancalaDistribution.of(i, y));
                     moves.push(...this.getPossibleMoveContinuations(stateAfterDistribution, i, y, move, config));
                 }
             }
