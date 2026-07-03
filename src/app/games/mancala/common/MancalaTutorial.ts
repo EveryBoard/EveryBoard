@@ -23,7 +23,7 @@ export class MancalaTutorial {
             $localize`Sowing`,
             $localize`The main move in Mancala games is sowing, let's see how seeds are sown. As you are playing Dark, the 6 houses on the bottom are yours.<br/><br/>When you sow a house, the seeds it contains are sown clockwise, one seed per house.<br/><br/>Click on the rightmost house!`,
             state,
-            [MancalaMove.of(MancalaDistribution.of(5, 0))],
+            [MancalaMove.of(MancalaDistribution.of(5, 1))],
             $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain one more seed. This is how seeds are sown: one by one from the house next to the one they come from, clockwise.`,
             $localize`Failed. Choose the rightmost house on the bottom.`,
         );
