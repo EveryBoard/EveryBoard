@@ -384,10 +384,17 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         if (config.passByPlayerStore && isPlayerStore && previousDropWasStore === false) {
             return MGPOptional.empty(); // This seed is dropped in the store
         }
+        // const newCoord: Coord = coord.getNext(verticalDirection, verticalFactor);
+        const newY: number = this.getOppositeY(coord, config);
+        const newCoord: Coord = new Coord(coord.x, newY);
+        return MGPOptional.of(newCoord); // switched sid
+    }
+
+    public getOppositeY(coord: Coord, config: MancalaConfig): number {
+        const coordOwner: Player = this.getSpaceOwner(coord, config);
         const verticalDirection: Orthogonal = coordOwner === Player.ONE ? Orthogonal.DOWN : Orthogonal.UP;
         const verticalFactor: number = 2 * Math.abs((config.numberOfRows - 0.5) - coord.y);
-        const newCoord: Coord = coord.getNext(verticalDirection, verticalFactor);
-        return MGPOptional.of(newCoord); // switched sid
+        return coord.y + (verticalFactor * verticalDirection.y);
     }
 
     public getStoreOwner(coord: Coord): MGPOptional<Set<Player>> {

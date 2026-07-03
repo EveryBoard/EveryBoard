@@ -448,6 +448,93 @@ describe('KalahRules', () => {
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             });
 
+            it(`should capture inner row`, () => {
+                // Given a multi-row config
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                // and board with an opponent's house full of seeds and your paralel house being empty
+                const board: Table<number> = [
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [0, 0, 0, 0, 2, 0],
+                    [4, 4, 4, 4, 4, 4],
+                ];
+                const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
+
+                // When doing a move that end up in this house of your
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 2));
+
+                // Then you should capture both houses
+                const expectedBoard: Table<number> = [
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 0, 4, 4, 4],
+                    [0, 0, 0, 1, 0, 0],
+                    [4, 4, 4, 4, 4, 4],
+                ];
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 5, PlayerNumberMap.of(5, 0));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it(`should capture outer row`, () => {
+                // Given a multi-row config
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                // and board with an opponent's house full of seeds and your paralel house being empty
+                const board: Table<number> = [
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [0, 0, 0, 0, 2, 0],
+                ];
+                const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
+
+                // When doing a move that end up in this house of your
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 3));
+
+                // Then you should capture both houses
+                const expectedBoard: Table<number> = [
+                    [4, 4, 0, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [0, 0, 0, 1, 0, 0],
+                ];
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 5, PlayerNumberMap.of(5, 0));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it(`should not capture itself`, () => {
+                // Given a multi-row config
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                // and board where you outer row could capture your inner row
+                const board: Table<number> = [
+                    [0, 0, 2, 0, 0, 0],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 0],
+                ];
+                const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
+
+                // When doing a move that end up in this house of your
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2, 0));
+
+                // Then you should not capture your own stones
+                const expectedBoard: Table<number> = [
+                    [0, 0, 0, 1, 1, 0],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 0],
+                ];
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 5, PlayerNumberMap.of(0, 0));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
         });
 
     });

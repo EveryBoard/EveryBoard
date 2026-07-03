@@ -63,6 +63,23 @@ describe('AwaleMoveGenerator', () => {
             expect(moves.length).toBe(10);
         });
 
+        it('should provide move from all rows', () => {
+            // Given a state with a config with several rows
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                numberOfRows: 2,
+            };
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
+
+            const node: MancalaNode = new MancalaNode(state);
+
+            // When listing the moves
+            const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
+
+            // Then there should be the 12 moves
+            expect(moves.length).toBe(12);
+        });
+
     });
 
 });

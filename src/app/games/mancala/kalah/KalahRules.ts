@@ -39,7 +39,9 @@ export class KalahRules extends MancalaRules {
         return KalahRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
+    public applyCapture(distributionResult: MancalaDistributionResult,
+                        config: MancalaConfig,
+    ): MancalaCaptureResult {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
             capturedSum: 0,
@@ -54,11 +56,12 @@ export class KalahRules extends MancalaRules {
             return capturelessResult;
         } else {
             const landingSpace: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
-            const playerY: number = distributionResult.resultingState.getCurrentPlayerY();
-            const opponentY: number = distributionResult.resultingState.getOpponentY();
+            const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
+            // TODO: kill getCurrentPlayerY, playerY
+            const oppositeY: number = this.getOppositeY(landingSpace, config);
             const landingSeeds: number = distributionResult.resultingState.getPieceAt(landingSpace);
-            const parallelSeeds: number = distributionResult.resultingState.getPieceAtXY(landingSpace.x, opponentY);
-            if (landingSpace.y === playerY && landingSeeds === 1 && parallelSeeds > 0) {
+            const parallelSeeds: number = distributionResult.resultingState.getPieceAtXY(landingSpace.x, oppositeY);
+            if (this.getSpaceOwner(landingSpace, config) === currentPlayer && landingSeeds === 1 && parallelSeeds > 0) {
                 // We can capture
                 const board: number[][] = distributedState.getCopiedBoard();
                 const capturedSum: number = board[0][landingSpace.x] + board[1][landingSpace.x];
@@ -67,11 +70,11 @@ export class KalahRules extends MancalaRules {
                     distributedState.getHeight(),
                     0,
                 );
-                captureMap[0][landingSpace.x] = board[0][landingSpace.x];
-                captureMap[1][landingSpace.x] = board[1][landingSpace.x];
+                captureMap[landingSpace.y][landingSpace.x] = board[landingSpace.y][landingSpace.x];
+                captureMap[oppositeY][landingSpace.x] = board[oppositeY][landingSpace.x];
                 const capturer: Player = distributedState.getCurrentPlayer();
                 let postCaptureState: MancalaState = distributedState.capture(capturer, landingSpace);
-                const oppositeY: number = (landingSpace.y + 1) % 2; // TODO: forchore this will go verongue
+                // const oppositeY: number = (landingSpace.y + 1) % 2; // TODO: forchore this will go verongue
                 const oppositeSpace: Coord = new Coord(landingSpace.x, oppositeY);
                 postCaptureState = postCaptureState.capture(capturer, oppositeSpace);
                 return {

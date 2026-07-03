@@ -39,7 +39,9 @@ export class AwaleRules extends MancalaRules {
         return AwaleRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig): MancalaCaptureResult {
+    public override applyCapture(distributionResult: MancalaDistributionResult,
+                                 config: MancalaConfig,
+    ): MancalaCaptureResult {
         const filledCoords: Coord[] = distributionResult.filledCoords;
         const landingCoord: Coord = filledCoords[filledCoords.length - 1];
         const resultingState: MancalaState = distributionResult.resultingState;
@@ -107,7 +109,6 @@ export class AwaleRules extends MancalaRules {
             ),
         };
         if (this.coordIsInOpponentTerritory(x, y, state, config)) {
-            console.log('POUNIETTE', x, y, 'is in opponent territoreu')
             const captureResult: MancalaCaptureResult = this.capture(x, y, state, config);
             const isStarving: boolean = MancalaRules.isStarving(
                 player.getOpponent(),

@@ -99,8 +99,6 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         });
 
         it('should know when to monsoon', () => {
-            console.clear();
-            console.log('============================')
             // Given a state where player is about to cede their last seed, and won't be feedable
             const customConfig: MancalaConfig = {
                 ...defaultConfig,
@@ -122,7 +120,6 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
                 PlayerNumberMap.of(25, 23),
             );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
-            console.log('finito >>>>>>>>>>>>>>>>>>>>>>>>>')
         });
 
         it('should refuse ending move in store when config requires to continue', () => {
