@@ -7,7 +7,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { KalahRules } from '../KalahRules';
 
-fdescribe('KalahMoveGenerator', () => {
+describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
@@ -41,6 +41,27 @@ fdescribe('KalahMoveGenerator', () => {
 
         // Then there should be those moves
         expect(moves.length).toBe(1);
+    });
+
+    it('should include several rows when present', () => {
+        // Given a config with several rows ans state with possible moves in each
+        const customConfig: MancalaConfig = {
+            ...defaultConfig,
+            numberOfRows: 2,
+        };
+        const state: MancalaState = new MancalaState([
+            [5, 2, 3, 2, 1, 2],
+            [5, 2, 3, 2, 1, 2],
+            [0, 1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+        ], 24, PlayerNumberMap.of(13, 20));
+        const node: MancalaNode = new MancalaNode(state);
+
+        // When listing the moves
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
+
+        // Then there should be those moves
+        expect(moves.length).toBe(2);
     });
 
 });

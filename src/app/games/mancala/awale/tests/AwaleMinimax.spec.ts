@@ -13,7 +13,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 
-fdescribe('AwaleScoreMinimax', () => {
+describe('AwaleScoreMinimax', () => {
 
     let rules: AwaleRules;
     let minimax: Minimax<MancalaMove, MancalaState, MancalaConfig>;

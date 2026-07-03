@@ -10,7 +10,7 @@ import { MancalaScoreHeuristic } from '../common/MancalaScoreHeuristic';
 import { MancalaState } from '../common/MancalaState';
 import { KalahRules } from '../kalah/KalahRules';
 
-fdescribe('MancalaScoreHeuristic', () => {
+describe('MancalaScoreHeuristic', () => {
 
     let heuristic: MancalaScoreHeuristic;
 

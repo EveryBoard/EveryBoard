@@ -2,13 +2,14 @@
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaState } from '../../common/MancalaState';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { BaAwaConfig } from '../BaAwaConfig';
 import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 
-fdescribe('BaAwaRules', () => {
+describe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
@@ -113,7 +114,7 @@ fdescribe('BaAwaRules', () => {
             const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1)); // TODO:why was 0,0 was a legal distribution ??
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [
@@ -331,6 +332,62 @@ fdescribe('BaAwaRules', () => {
             ], 11, PlayerNumberMap.of(15, 9));
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        describe('multi row', () => {
+
+            it('should sow correctly inner row', () => {
+                // Given
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 1, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 11, PlayerNumberMap.of(22, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it('should sow correctly outer row', () => {
+                // Given
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [1, 1, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                ], 11, PlayerNumberMap.of(22, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
         });
 
     });

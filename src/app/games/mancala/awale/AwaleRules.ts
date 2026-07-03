@@ -47,14 +47,13 @@ export class AwaleRules extends MancalaRules {
     }
 
     /**
-     * Only called if y and player are not equal.
+     * Only called if piece is opponent's territory
      * If the condition to make a capture into the opponent's side are met
      * Captures and return the number of captured
      * Captures even if this could mean doing an illegal starvation
      */
     private capture(x: number, y: number, state: MancalaState, config: MancalaConfig): MancalaCaptureResult {
-        const playerY: number = state.getCurrentPlayerY();
-        Utils.assert(y !== playerY, 'AwaleRules.capture cannot capture the players house');
+        Utils.assert(this.coordIsInOpponentTerritory(x, y, state, config), 'AwaleRules.capture cannot capture the players house');
         let resultingState: MancalaState = state;
         let target: MGPOptional<number> = resultingState.getOptionalPieceAtXY(x, y);
         let capturedSum: number = 0;
@@ -86,6 +85,15 @@ export class AwaleRules extends MancalaRules {
 
         return { capturedSum, captureMap, resultingState };
     }
+    private coordIsInOpponentTerritory(x: number, y: number, state: MancalaState, config: MancalaConfig): boolean {
+        if (state.isOnBoard(new Coord(x, y))) {
+            return state.getCurrentPlayer() === Player.ZERO ?
+                y < config.numberOfRows :
+                config.numberOfRows <= y;
+        } else {
+            return false;
+        }
+    }
 
     public captureIfLegal(x: number, y: number, state: MancalaState, config: MancalaConfig): MancalaCaptureResult {
         const player: Player = state.getCurrentPlayer();
@@ -98,7 +106,8 @@ export class AwaleRules extends MancalaRules {
                 0,
             ),
         };
-        if (y === player.getValue()) {
+        if (this.coordIsInOpponentTerritory(x, y, state, config)) {
+            console.log('POUNIETTE', x, y, 'is in opponent territoreu')
             const captureResult: MancalaCaptureResult = this.capture(x, y, state, config);
             const isStarving: boolean = MancalaRules.isStarving(
                 player.getOpponent(),

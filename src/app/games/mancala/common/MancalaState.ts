@@ -72,7 +72,7 @@ export class MancalaState extends GameStateWithTable<number> {
         return this.turn === other.turn;
     }
 
-    public getCurrentPlayerY(): number {
+    public getCurrentPlayerY(): number { // TODO: kil or make return a list
         return this.getCurrentOpponent().getValue();
     }
 

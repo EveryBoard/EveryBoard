@@ -3,6 +3,7 @@ import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils, Set } fr
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
 import { GameStatus } from '../../../jscaip/GameStatus';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../../jscaip/Rules';
@@ -192,11 +193,11 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
                 const captures: PlayerNumberMap = distributionResult.resultingState.getScoresCopy();
                 captures.add(player, distributionResult.passedByStoreNTimes);
                 filledCoords.push(...distributionResult.filledCoords);
-                distributionResult.passedByStoreNTimes += distributionResult.passedByStoreNTimes;
+                // distributionResult.passedByStoreNTimes += distributionResult.passedByStoreNTimes;
                 houseToDistribute = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
                 if (config.continueLapUntilCaptureOrEmptyHouse &&
-                    distributionResult.endsUpInStore === false)
-                {
+                    distributionResult.endsUpInStore === false
+                ) {
                     mustDoOneMoreLap = this.isHouseCapturableOrEmpty(houseToDistribute,
                                                                      distributionResult.resultingState) === false;
                 } else {
@@ -232,8 +233,8 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const player: Player = postCaptureState.getCurrentPlayer();
         if (config.mustFeed) {
             if (MancalaRules.isStarving(player, postCaptureBoard, config) &&
-                this.canDistribute(opponent, postCaptureState, config) === false)
-            {
+                this.canDistribute(opponent, postCaptureState, config) === false
+            ) {
                 // We are starving, and opponent can't feed us.
                 // Opponent takes all their last piece for themselves
                 return [opponent];
@@ -368,50 +369,25 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     public getNextCoord(coord: Coord,
                         previousDropWasStore: boolean,
                         state: MancalaState,
-                        config: MancalaConfig)
-    : MGPOptional<Coord>
-    {
-        const player: Player = state.getCurrentPlayer();
-        if (coord.y === 0) {
-            if (coord.x === (state.getWidth() - 1)) {
-                if (config.passByPlayerStore && player === Player.ONE && previousDropWasStore === false) {
-                    return MGPOptional.empty(); // This seed is dropped in the store
-                } else {
-                    return MGPOptional.of(new Coord(coord.x, 1)); // go from the bottom row to the top row
-                }
-            } else {
-                return MGPOptional.of(new Coord(coord.x + 1, 0)); // clockwise order on the top = left to right
-            }
-        } else {
-            if (coord.x === 0) {
-                if (config.passByPlayerStore && player === Player.ZERO && previousDropWasStore === false) {
-                    return MGPOptional.empty(); // This seed is dropped in the store
-                } else {
-                    return MGPOptional.of(new Coord(0, 0)); // go from the bottom row to the top
-                }
-            } else {
-                return MGPOptional.of(new Coord(coord.x - 1, 1)); // clockwise order on the bottom = right to left
-            }
+                        config: MancalaConfig,
+    ): MGPOptional<Coord> {
+        const coordOwner: Player = this.getSpaceOwner(coord, config);
+        const horizontalDirection: Orthogonal = coordOwner === Player.ONE ? Orthogonal.RIGHT : Orthogonal.LEFT;
+        const nextCoord: Coord = coord.getNext(horizontalDirection);
+        if (state.isOnBoard(nextCoord)) {
+            return MGPOptional.of(nextCoord); // normal next
         }
-    //     public getNextCoord(coord: Coord,
-    //                     previousDropWasStore: boolean,
-    //                     state: MancalaState,
-    //                     config: MancalaConfig,
-    // ): MGPOptional<Coord> {
-    //     const coordOwner: Player = this.getSpaceOwner(coord, config);
-    //     const horizontalDirection: Orthogonal = coordOwner === Player.ONE ? Orthogonal.RIGHT : Orthogonal.LEFT;
-    //     const nextCoord: Coord = coord.getNext(horizontalDirection);
-    //     if (state.isOnBoard(nextCoord)) {
-    //         return MGPOptional.of(nextCoord);
-    //     }
-    //     if (config.passByPlayerStore && previousDropWasStore === false) {
-    //         return MGPOptional.empty(); // This seed is dropped in the store
-    //     } else {
-    //         const verticalDirection: Orthogonal = coordOwner === Player.ONE ? Orthogonal.DOWN : Orthogonal.UP;
-    //         const verticalFactor: number = 2 * Math.abs(0.5 - coord.y);
-    //         return MGPOptional.of(nextCoord.getNext(verticalDirection, verticalFactor));
-    //     }
-    // }
+        const isPlayerStore: boolean = state.getCurrentPlayer() === Player.ZERO ?
+            nextCoord.x === -1 :
+            nextCoord.x === config.width
+        ;
+        if (config.passByPlayerStore && isPlayerStore && previousDropWasStore === false) {
+            return MGPOptional.empty(); // This seed is dropped in the store
+        }
+        const verticalDirection: Orthogonal = coordOwner === Player.ONE ? Orthogonal.DOWN : Orthogonal.UP;
+        const verticalFactor: number = 2 * Math.abs((config.numberOfRows - 0.5) - coord.y);
+        const newCoord: Coord = coord.getNext(verticalDirection, verticalFactor);
+        return MGPOptional.of(newCoord); // switched sid
     }
 
     public getStoreOwner(coord: Coord): MGPOptional<Set<Player>> {
@@ -441,8 +417,8 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     }
 
     public canDistribute(player: Player, state: MancalaState, config: MancalaConfig): boolean {
-        for (let x: number = 0; x < state.getWidth(); x++) {
-            if (this.doesDistribute(x, player.getOpponent().getValue(), state, config)) {
+        for (const coord of MancalaRules.getAllCoordOf(player, config)) {
+            if (this.doesDistribute(coord.x, coord.y, state, config)) {
                 return true;
             }
         }

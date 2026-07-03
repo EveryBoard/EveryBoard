@@ -13,7 +13,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { AwaleRules } from '../AwaleRules';
 
-fdescribe('AwaleRules', () => {
+describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
@@ -367,6 +367,62 @@ fdescribe('AwaleRules', () => {
                 [1, 0, 0, 4, 0, 0],
             ], 11, PlayerNumberMap.of(3, 0));
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        describe('multi row', () => {
+
+            it('should sow correctly inner row', () => {
+                // Given
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 1, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 11, PlayerNumberMap.of(22, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it('should sow correctly outer row', () => {
+                // Given
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [1, 1, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                ], 11, PlayerNumberMap.of(22, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
         });
 
     });
