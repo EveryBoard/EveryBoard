@@ -10,6 +10,7 @@ import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
 import { Player } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
@@ -43,7 +44,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public constructor()
     {
         super();
-        this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
+        this.players = PlayerMap.ofValues(MGPOptional.of(this.playerSelection[0]),
+                                          MGPOptional.of(this.playerSelection[1]));
         this.role = Player.ZERO; // The user is playing, not observing
     }
 

@@ -14,6 +14,7 @@ import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
@@ -361,10 +362,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async initializePlayersData(): Promise<void> {
         const game: Game = Utils.getNonNullable(this.game);
-        this.players = [
+        this.players = PlayerMap.ofValues(
             MGPOptional.of(game.playerZero),
             MGPOptional.ofNullable(game.playerOne),
-        ];
+        );
         await this.setCurrentPlayerAccordingToCurrentTurn();
         await this.setRealObserverRole();
     }
