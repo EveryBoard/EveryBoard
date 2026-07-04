@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, ProviderToken, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -123,9 +123,8 @@ export class SimpleComponentTestUtils<T> {
         this.component = this.fixture.debugElement.componentInstance;
     }
 
-    // Returns the fixture. Prefer using the methods defined below when
-    public getFixture(): ComponentFixture<T> {
-        return this.getFixture();
+    public getFromInjector<U>(token: ProviderToken<U>): U {
+        return this.fixture.debugElement.injector.get(token);
     }
 
     public getComponent(): T {
