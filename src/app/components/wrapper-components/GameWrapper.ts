@@ -193,11 +193,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             // This can happen if called before the component has been set up
             return false;
         }
-        const turn: number = this.gameComponent.getTurn();
-        const indexPlayer: number = turn % 2;
+        const currentPlayer: Player = this.gameComponent.getCurrentPlayer();
         const player: P = this.getPlayer();
-        if (this.players[indexPlayer].isPresent()) {
-            return this.players[indexPlayer].equalsValue(player);
+        if (this.players.get(currentPlayer).isPresent()) {
+            return this.players.get(currentPlayer).equalsValue(player);
         } else {
             return true;
         }

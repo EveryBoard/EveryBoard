@@ -123,6 +123,11 @@ export class SimpleComponentTestUtils<T> {
         this.component = this.fixture.debugElement.componentInstance;
     }
 
+    // Returns the fixture. Prefer using the methods defined below when
+    public getFixture(): ComponentFixture<T> {
+        return this.getFixture();
+    }
+
     public getComponent(): T {
         return this.component;
     }

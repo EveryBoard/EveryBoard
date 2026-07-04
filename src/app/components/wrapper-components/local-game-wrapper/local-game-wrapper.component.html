@@ -32,8 +32,8 @@
                                i18n>Player {{ player.getValue()+1 }}</p>
                             <div class="select is-fullwidth">
                                 <select id="player-select-{{ player.getValue() }}"
-                                        (change)="updatePlayer(player)"
-                                        [(ngModel)]="playerSelection[player.getValue()]">
+                                        [ngModel]="getPlayerSelection(player)"
+                                        (ngModelChange)="onPlayerSelectionChange(player, $event)">
                                     <option selected
                                             value="human"
                                             i18n>Human</option>
@@ -43,15 +43,15 @@
                                     }
                                 </select>
                             </div>
-                            @if (players[player.getValue()].equalsValue('human') === false) {
+                            @if (players.get(player).equalsValue('human') === false) {
                                 <div class="select is-fullwidth">
                                     <select id="ai-option-select-{{ player.getValue() }}"
-                                            [(ngModel)]="aiOptions[player.getValue()]"
-                                            (change)="updatePlayer(player)">
+                                            [ngModel]="getAIOption(player)"
+                                            (ngModelChange)="onAIOptionChange(player, $event)">
                                         <option selected
                                                 value="none"
                                                 i18n>Pick the options</option>
-                                        @for (option of availableAIOptions(player.getValue()); track option.name) {
+                                        @for (option of availableAIOptions(player); track option.name) {
                                             <option id="player-{{ player.getValue() }}-option-{{ option.name }}"
                                                     [value]="option.name">{{ option.name }}</option>
                                         }
