@@ -4,8 +4,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../games/abalone/abalone.component';
-import { MoveGenerator } from '../../../jscaip/AI/AI';
-import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
+import { AIDepthLimitOptions, MoveGenerator } from '../../../jscaip/AI/AI';
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../../jscaip/AI/Heuristic';
 import { Minimax } from '../../../jscaip/AI/Minimax';
@@ -14,7 +13,7 @@ import { Player } from '../../../jscaip/Player';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
-import { ActivatedRouteStub, ComponentTestUtils, ConfigureTestingModuleUtils } from '../../../utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, boundedSelfPlayTest, ComponentTestUtils, ConfigureTestingModuleUtils, createConfiguredMinimaxForTest, getShallowestMinimaxOptions, SlowTest, UNIVERSAL_SELF_PLAY_PLIES } from '../../../utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 import { AbstractGameComponent } from './GameComponent';
@@ -80,7 +79,7 @@ describe('GameComponent', () => {
             tick(0);
 
             // Then minimax configs should be complete and directly instantiable
-            for (const config of component.aiConfig.minimax as MinimaxConfig<Move, GameState, RulesConfig>[]) {
+            for (const config of component.aiConfig.minimax) {
                 expect(config.id).withContext('minimax config id missing for ' + gameInfo.urlName).toBeTruthy();
                 expect(config.name).withContext('minimax config name missing for ' + gameInfo.urlName).toBeTruthy();
                 expect(config.id).withContext('minimax config id should name the heuristic for ' + gameInfo.urlName)
@@ -100,15 +99,14 @@ describe('GameComponent', () => {
                     .withContext('heuristic returned no metric for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
                 const minimax: Minimax<Move, GameState, RulesConfig, unknown> =
-                    new Minimax(config.name, component.rules, heuristic, moveGenerator);
-                minimax.configureFromConfig(config);
+                    createConfiguredMinimaxForTest(component.rules, config);
                 expect(minimax.availableOptions.length)
                     .withContext('minimax options missing for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
             }
 
             // And MCTS configs should be complete and directly instantiable
-            for (const config of component.aiConfig.mcts as MCTSConfig<Move, GameState, RulesConfig>[]) {
+            for (const config of component.aiConfig.mcts) {
                 expect(config.id).withContext('MCTS config id missing for ' + gameInfo.urlName).toBeTruthy();
                 expect(config.name).withContext('MCTS config name missing for ' + gameInfo.urlName).toBeTruthy();
                 const moveGenerator: MoveGenerator<Move, GameState, RulesConfig> = config.moveGenerator();
@@ -117,6 +115,29 @@ describe('GameComponent', () => {
                 expect(moves.length)
                     .withContext('MCTS moveGenerator returned no move for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
+            }
+        }));
+
+        SlowTest.it(`should support bounded self-play for all minimax profiles of ${ gameInfo.name }`, fakeAsync(async() => {
+            activatedRouteStub.setRoute('game', gameInfo.urlName);
+            const testUtils: ComponentTestUtils<AbstractGameComponent> =
+                await ComponentTestUtils.forGame(gameInfo.urlName);
+            const component: AbstractGameComponent = testUtils.getGameComponent();
+            testUtils.detectChanges();
+            tick(0);
+
+            for (const config of component.aiConfig.minimax) {
+                const minimax: Minimax<Move, GameState, RulesConfig, unknown> =
+                    createConfiguredMinimaxForTest(component.rules, config);
+                const options: AIDepthLimitOptions = getShallowestMinimaxOptions(minimax);
+
+                boundedSelfPlayTest({
+                    rules: component.rules,
+                    playerZeroMinimax: minimax,
+                    playerZeroOptions: options,
+                    config: component.config,
+                    maxPlies: UNIVERSAL_SELF_PLAY_PLIES,
+                });
             }
         }));
     }

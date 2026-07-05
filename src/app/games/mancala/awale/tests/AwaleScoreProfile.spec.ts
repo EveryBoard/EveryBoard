@@ -17,7 +17,6 @@ describe('Awale score profile', () => {
 
     let rules: AwaleRules;
     let minimax: Minimax<MancalaMove, MancalaState, MancalaConfig>;
-    const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
@@ -39,20 +38,6 @@ describe('Awale score profile', () => {
         expect(legality.isSuccess()).toBeTrue();
     });
 
-    it('should choose capture when possible (at depth 1)', () => {
-        // Given a state with a possible capture
-        const board: Table<number> = [
-            [4, 4, 4, 4, 4, 4],
-            [4, 4, 4, 4, 4, 1],
-        ];
-        const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
-        const node: MancalaNode = new MancalaNode(state);
-        // When getting the best move
-        const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
-        // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(2)));
-    });
-
     it('should choose capture when possible (at depth 2)', () => {
         // Given a state with a possible capture
         const board: Table<number> = [
@@ -68,17 +53,14 @@ describe('Awale score profile', () => {
     });
 
     it('should prioritize moves in the same territory when no captures are possible', () => {
-        // Given a state with only one move that distributes only in the player's territory
-        const board: Table<number> = [
+        const state: MancalaState = new MancalaState([
             [1, 0, 0, 0, 0, 7],
             [0, 1, 0, 0, 0, 0],
-        ];
-        const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
+        ], 1, PlayerNumberMap.of(0, 0));
         const node: MancalaNode = new MancalaNode(state);
-        // When getting the best move
-        const bestMove: MancalaMove = minimax.chooseNextMove(node, level1, defaultConfig);
-        // Then the best move should be the capture
-        expect(bestMove).toEqual(MancalaMove.of(MancalaDistribution.of(0)));
+
+        expect(minimax.chooseNextMove(node, { name: 'Level 1', maxDepth: 1 }, defaultConfig))
+            .toEqual(MancalaMove.of(MancalaDistribution.of(0)));
     });
 
 });

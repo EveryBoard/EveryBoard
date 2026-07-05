@@ -275,7 +275,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#ai-profile-select-0');
             testUtils.expectElementNotToExist('#ai-option-select-0');
 
-            // When selecting MCTS for player ZERO
+            // When selecting MCTS for Player.ZERO
             await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-MCTS');
 
             // Then the config is selected implicitly and only the time bound is shown

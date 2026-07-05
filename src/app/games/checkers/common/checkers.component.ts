@@ -84,13 +84,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
                     heuristic: (): CheckersControlPlusDominationHeuristic => {
                         return new CheckersControlPlusDominationHeuristic(this.rules);
                     },
-                    moveGenerator: (): CheckersMoveGenerator => new CheckersMoveGenerator(this.rules),
+                    moveGenerator: (): CheckersMoveGenerator => this.moveGenerator,
                 },
                 {
                     id: 'Control',
                     name: $localize`Control`,
                     heuristic: (): CheckersControlHeuristic => new CheckersControlHeuristic(this.rules),
-                    moveGenerator: (): CheckersMoveGenerator => new CheckersMoveGenerator(this.rules),
+                    moveGenerator: (): CheckersMoveGenerator => this.moveGenerator,
                 },
             ],
             mcts: [{

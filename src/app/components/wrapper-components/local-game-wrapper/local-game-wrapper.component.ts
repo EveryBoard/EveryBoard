@@ -5,11 +5,10 @@ import { ParamMap } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
-import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI, MoveGenerator } from '../../../jscaip/AI/AI';
+import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
 import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { createIterativeDeepeningMinimaxFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
 import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
-import { Heuristic } from '../../../jscaip/AI/Heuristic';
 import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../jscaip/AI/Minimax';
@@ -349,61 +348,23 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private getMinimaxConfigs(): MinimaxConfig<Move, GameState, RulesConfig>[] {
-        return this.gameComponent.aiConfig.minimax as MinimaxConfig<Move, GameState, RulesConfig>[];
-    }
-
-    private getConfigDependencies(config: MinimaxConfig<Move, GameState, RulesConfig>)
-    : {
-        heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig>,
-        moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
-    }
-    {
-        const heuristic: (() => Heuristic<Move, GameState, BoardValue, RulesConfig>) | undefined = config.heuristic;
-        const moveGenerator: (() => MoveGenerator<Move, GameState, RulesConfig>) | undefined = config.moveGenerator;
-        Utils.assert(heuristic != null, 'Minimax config should provide a heuristic');
-        Utils.assert(moveGenerator != null, 'Minimax config should provide a moveGenerator');
-        return {
-            heuristic: heuristic!(),
-            moveGenerator: moveGenerator!(),
-        };
+        return this.gameComponent.aiConfig.minimax;
     }
 
     private createMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
     : Minimax<Move, GameState, RulesConfig, unknown>
     {
-        const dependencies: {
-            heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig>,
-            moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
-        } = this.getConfigDependencies(config);
-        const minimax: Minimax<Move, GameState, RulesConfig, unknown> =
-            new Minimax(config.name,
-                        this.gameComponent.rules,
-                        dependencies.heuristic,
-                        dependencies.moveGenerator,
-                        config.hash);
-        minimax.configureFromConfig(config);
-        return minimax;
+        return createMinimaxFromConfig(this.gameComponent.rules, config);
     }
 
     private createIterativeMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
     : IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown>
     {
-        const dependencies: {
-            heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig>,
-            moveGenerator: MoveGenerator<Move, GameState, RulesConfig>,
-        } = this.getConfigDependencies(config);
-        const minimax: IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> =
-            new IterativeDeepeningMinimax(config.name,
-                                          this.gameComponent.rules,
-                                          dependencies.heuristic,
-                                          dependencies.moveGenerator,
-                                          config.hash);
-        minimax.configureFromConfig(config);
-        return minimax;
+        return createIterativeDeepeningMinimaxFromConfig(this.gameComponent.rules, config);
     }
 
     private getMCTSConfigs(): MCTSConfig<Move, GameState, RulesConfig>[] {
-        return this.gameComponent.aiConfig.mcts as MCTSConfig<Move, GameState, RulesConfig>[];
+        return this.gameComponent.aiConfig.mcts;
     }
 
     private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>)

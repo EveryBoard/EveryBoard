@@ -9,7 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
 import { initializeFirebase, routes } from '../../app.routes';
@@ -24,6 +24,8 @@ import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
 import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
+import { MinimaxConfig } from '../../jscaip/AI/AIConfig';
+import { createMinimaxFromConfig } from '../../jscaip/AI/AIConfigUtils';
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
@@ -884,6 +886,8 @@ export namespace SlowTest {
 
 }
 
+export const UNIVERSAL_SELF_PLAY_PLIES: number = 24;
+
 export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
                                M extends Move,
                                S extends GameState,
@@ -895,6 +899,21 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
     options: O,
     config: C,
     shouldFinish: boolean
+}
+
+export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+                                      M extends Move,
+                                      S extends GameState,
+                                      O extends AIDepthLimitOptions,
+                                      C extends RulesConfig,
+                                      L> = {
+    rules: R,
+    playerZeroMinimax: Minimax<M, S, C, L>,
+    playerZeroOptions: O,
+    playerOneMinimax?: Minimax<M, S, C, L>,
+    playerOneOptions?: O,
+    config: C,
+    maxPlies: number,
 }
 
 /* Run a minimax test by battling it against itself for a number of turns */
@@ -927,4 +946,57 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     if (options.shouldFinish) {
         expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
     }
+}
+
+export function boundedSelfPlayTest<R extends SuperRules<M, S, C, L>,
+                                    M extends Move,
+                                    S extends GameState,
+                                    O extends AIDepthLimitOptions,
+                                    C extends RulesConfig,
+                                    L>(options: BoundedMinimaxTestOptions<R, M, S, O, C, L>): void
+{
+    let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
+    const playerOneMinimax: Minimax<M, S, C, L> = options.playerOneMinimax ?? options.playerZeroMinimax;
+    const playerOneOptions: O = options.playerOneOptions ?? options.playerZeroOptions;
+
+    for (let ply: number = 0; ply < options.maxPlies; ply++) {
+        if (options.rules.getGameStatus(node, options.config).isEndGame) {
+            return;
+        }
+        const currentPlayer: Player = node.gameState.getCurrentPlayer();
+        const minimax: Minimax<M, S, C, L> =
+            currentPlayer === Player.ZERO ? options.playerZeroMinimax : playerOneMinimax;
+        const aiOptions: O = currentPlayer === Player.ZERO ? options.playerZeroOptions : playerOneOptions;
+        const move: M = minimax.chooseNextMove(node, aiOptions, options.config);
+        expect(move).withContext(`${minimax.name} should choose a move at ply ${ply}`).toBeDefined();
+        const nextNode: MGPFallible<GameNode<M, S>> = options.rules.choose(node, move, options.config);
+        expect(nextNode.isSuccess()).withContext(`${minimax.name} should choose a legal move at ply ${ply}`).toBeTrue();
+        node = nextNode.get();
+    }
+}
+
+export function getShallowestMinimaxOptions<M extends Move,
+                                            S extends GameState,
+                                            C extends RulesConfig,
+                                            L>(minimax: Minimax<M, S, C, L>): AIDepthLimitOptions
+{
+    const options: AIOptions[] = minimax.availableOptions as AIOptions[];
+    const depthOptions: AIDepthLimitOptions[] = options.filter((option: AIOptions): option is AIDepthLimitOptions => {
+        return 'maxDepth' in option;
+    });
+    Utils.assert(depthOptions.length > 0, `Minimax ${minimax.name} should expose at least one depth-limited option`);
+    return depthOptions.reduce((best: AIDepthLimitOptions, option: AIDepthLimitOptions) => {
+        return option.maxDepth < best.maxDepth ? option : best;
+    });
+}
+
+export function createConfiguredMinimaxForTest<R extends SuperRules<M, S, C, L>,
+                                               M extends Move,
+                                               S extends GameState,
+                                               C extends RulesConfig,
+                                               L>(rules: R,
+                                                  config: MinimaxConfig<M, S, C>)
+: Minimax<M, S, C, L>
+{
+    return createMinimaxFromConfig(rules, config);
 }

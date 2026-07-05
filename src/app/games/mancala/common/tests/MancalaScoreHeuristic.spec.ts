@@ -8,6 +8,9 @@ import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
 import { MancalaConfig } from '../MancalaConfig';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaMoveGenerator } from '../MancalaMoveGenerator';
+import { MancalaNode } from '../MancalaRules';
 import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
 import { MancalaState } from '../MancalaState';
 
@@ -37,5 +40,39 @@ describe('MancalaScoreHeuristic', () => {
         });
 
     }
+
+    describe('Awale-specific preferences', () => {
+
+        const rules: AwaleRules = AwaleRules.get();
+        const defaultConfig: MancalaConfig = rules.getDefaultRulesConfig();
+        let heuristic: MancalaScoreHeuristic;
+        let moveGenerator: MancalaMoveGenerator;
+
+        beforeEach(() => {
+            heuristic = new MancalaScoreHeuristic();
+            moveGenerator = new MancalaMoveGenerator(rules);
+        });
+
+        it('should prefer capture opportunities immediately', () => {
+            const state: MancalaState = new MancalaState([
+                [4, 4, 4, 4, 4, 4],
+                [4, 4, 4, 4, 4, 1],
+            ], 1, PlayerNumberMap.of(0, 0));
+            const node: MancalaNode = new MancalaNode(state);
+            const strongMove: MancalaMove = MancalaMove.of(MancalaDistribution.of(2));
+            const weakMove: MancalaMove = moveGenerator.getListMoves(node, defaultConfig).find((move: MancalaMove) => {
+                return move.equals(strongMove) === false;
+            })!;
+            const weakState: MancalaState = rules.choose(node, weakMove, defaultConfig).get().gameState;
+            const strongState: MancalaState = rules.choose(node, strongMove, defaultConfig).get().gameState;
+
+            HeuristicUtils.expectSecondStateToBeBetterThanFirstFor(heuristic,
+                                                                   weakState, MGPOptional.of(weakMove),
+                                                                   strongState, MGPOptional.of(strongMove),
+                                                                   state.getCurrentPlayer(),
+                                                                   defaultConfig);
+        });
+
+    });
 
 });

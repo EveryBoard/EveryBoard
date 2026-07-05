@@ -105,7 +105,7 @@ describe('Minimax', () => {
         // When selecting a move through iterative deepening
         const move: P4Move = iterativeDeepening.chooseNextMove(node, options, defaultConfig);
 
-        // Then it should select a legal move and expose time-based options
+        // Then it should select a move and expose time-based options
         expect(move).toBeDefined();
         expect(iterativeDeepening.name).toBe('ID Dummy');
         expect(iterativeDeepening.availableOptions[0]).toEqual({ name: '1 seconds', maxSeconds: 1 });
