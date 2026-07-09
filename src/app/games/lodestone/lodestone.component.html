@@ -67,7 +67,7 @@
             @for (lodestone of viewInfo.availableLodestones; track $index; let x = $index) {
                 <g id="lodestone-{{ lodestone.direction }}-{{ lodestone.orientation }}-{{ lodestone.owner.toString() }}"
                    [attr.transform]="getAvailableLodestoneTransform(x)"
-                   (click)="selectLodestone(lodestone, getCurrentPlayer().toString())"
+                   (click)="selectLodestone(lodestone)"
                    app-lodestone-lodestone
                    [lodestoneInfo]="lodestone"/>
             }

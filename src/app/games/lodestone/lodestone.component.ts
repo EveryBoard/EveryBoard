@@ -182,8 +182,8 @@ export class LodestoneComponent
         }
     }
 
-    @ClickHandler((lodestone: LodestoneDescription, owner: string) => `#lodestone-${ lodestone.direction }-${ lodestone.orientation }-${ owner }`)
-    public async selectLodestone(lodestone: LodestoneDescription, _: string): Promise<MGPValidation> {
+    @ClickHandler((lodestone: LodestoneInfo) => `#lodestone-${ lodestone.direction }-${ lodestone.orientation }-${ lodestone.owner }`)
+    public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
         Utils.assert(this.capturesToPlace === 0,
                      'should not be able to click on a lodestone when captures need to be placed');
         const player: Player = this.getCurrentPlayer();
