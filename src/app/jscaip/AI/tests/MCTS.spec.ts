@@ -27,13 +27,13 @@ import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
 
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
-    public getWinScore(node: P4Node,
-                       config: P4Config,
-                       gameStatus: GameStatus,
-                       player: Player)
+    public getScore(node: P4Node,
+                    config: P4Config,
+                    gameStatus: GameStatus,
+                    player: Player)
     : number
     {
-        return this.winScore(node, config, gameStatus, player);
+        return this.score(node, config, gameStatus, player);
     }
 
 }
@@ -125,8 +125,8 @@ describe('MCTS', () => {
             new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), heuristic);
 
         // When scoring this board for both players
-        const playerZeroScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
-        const playerOneScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
+        const playerZeroScore: number = p4Mcts.getScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
+        const playerOneScore: number = p4Mcts.getScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
 
         // Then it should be good for Player.ONE and bad for Player.ZERO
         expect(playerZeroScore).toBe(0);
@@ -145,8 +145,8 @@ describe('MCTS', () => {
         spyOn(console, 'warn');
 
         // When scoring it
-        const playerZeroScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
-        const playerOneScore: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
+        const playerZeroScore: number = p4Mcts.getScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
+        const playerOneScore: number = p4Mcts.getScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
 
         // Then it should be capped to the lower bound and remain a valid win score
         expect(playerZeroScore).toBe(1);
@@ -163,7 +163,7 @@ describe('MCTS', () => {
             new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), heuristic);
 
         // When scoring a terminal status
-        const score: number = p4Mcts.getWinScore(node, p4Config, GameStatus.ZERO_WON, Player.ZERO);
+        const score: number = p4Mcts.getScore(node, p4Config, GameStatus.ZERO_WON, Player.ZERO);
 
         // Then it should delegate to the regular MCTS win score
         expect(score).toBe(1);

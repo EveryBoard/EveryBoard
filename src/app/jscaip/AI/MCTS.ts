@@ -66,7 +66,7 @@ implements AI<M, S, AITimeLimitOptions, C>
             const expansionResult: NodeAndPath<M, S> = this.expand(
                 this.select({ node: root, path: [root] }, player), config);
             const gameStatus: GameStatus = this.simulate(expansionResult.node, endTime, config);
-            this.backpropagate(expansionResult.path, this.winScore(expansionResult.node, config, gameStatus, player));
+            this.backpropagate(expansionResult.path, this.score(expansionResult.node, config, gameStatus, player));
             iterations++;
         }
         Debug.display('MCTS', 'chooseNextMove', 'root winRatio: ' + this.winRatio(root));
@@ -84,10 +84,10 @@ implements AI<M, S, AITimeLimitOptions, C>
     /**
      * Returns 1 for win, 0 for losses. Must return a result between 0 and 1 otherwise.
      */
-    protected winScore(_node: GameNode<M, S>,
-                       _config: RulesConfig,
-                       gameStatus: GameStatus,
-                       player: Player): number {
+    protected score(_node: GameNode<M, S>,
+                    _config: RulesConfig,
+                    gameStatus: GameStatus,
+                    player: Player): number {
         switch (gameStatus) {
             case GameStatus.DRAW:
             case GameStatus.ONGOING:
@@ -242,16 +242,16 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Backpropagates the result of a simulation in a path from the simulated node to the root of the tree.
      * @returns nothing, as it modifies the nodes directly
      */
-    private backpropagate(path: GameNode<M, S>[], winScore: number): void {
+    private backpropagate(path: GameNode<M, S>[], score: number): void {
         for (const node of path) {
-            this.addSimulationResult(node, winScore);
+            this.addSimulationResult(node, score);
             Debug.display('MCTS', 'backpropagate', `backpropagate to node which now has ${this.wins(node)/this.simulations(node)}`);
         }
     }
 
-    private addSimulationResult(node: GameNode<M, S>, winScore: number): void {
+    private addSimulationResult(node: GameNode<M, S>, score: number): void {
         const simulations: number = this.simulations(node) + 1;
-        const wins: number = this.wins(node) + winScore;
+        const wins: number = this.wins(node) + score;
         node.setCache(this.uniqueId + 'wins', wins);
         node.setCache(this.uniqueId + 'simulations', simulations);
     }

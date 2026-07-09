@@ -33,12 +33,12 @@ export class MCTSWithHeuristic<M extends Move,
     }
 
     /**
-     * Return a win score which is the average of all metrics
+     * Return a score which is the average of all metrics
      */
-    protected override winScore(node: GameNode<M, S>,
-                                config: C,
-                                gameStatus: GameStatus,
-                                player: Player)
+    protected override score(node: GameNode<M, S>,
+                             config: C,
+                             gameStatus: GameStatus,
+                             player: Player)
     : number
     {
         if (gameStatus === GameStatus.ONGOING) {
@@ -72,7 +72,7 @@ export class MCTSWithHeuristic<M extends Move,
                 return 1 - value;
             }
         } else {
-            return super.winScore(node, config, gameStatus, player);
+            return super.score(node, config, gameStatus, player);
         }
     }
 }

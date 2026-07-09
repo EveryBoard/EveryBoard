@@ -39,7 +39,7 @@ export abstract class HeuristicWithBounds<M extends Move,
                                           C extends RulesConfig = EmptyRulesConfig>
     extends Heuristic<M, S, B, C>
 {
-    public abstract getBounds(config: C): HeuristicBounds<B>
+    public abstract getBounds(config: C): HeuristicBounds<B>;
 }
 
 export abstract class PlayerMetricHeuristic<M extends Move,
