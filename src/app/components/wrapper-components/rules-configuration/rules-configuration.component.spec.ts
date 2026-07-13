@@ -46,8 +46,9 @@ describe('RulesConfigurationComponent', () => {
         testUtils.setInput('creatorMode', creatorMode);
     }
 
-    function callChooseConfig(configName: string): void {
-        (component as unknown as { chooseConfig: (configName: string) => void }).chooseConfig(configName);
+    function selectConfig(configName: string): void {
+        component.selectedConfigControl.setValue(configName);
+        tick(1);
     }
 
     function expectErrorToBe(expectedError: string): void {
@@ -162,13 +163,13 @@ describe('RulesConfigurationComponent', () => {
         }));
 
         it('should not emit from controls that belonged to a previously selected config', fakeAsync(async() => {
-            // Given a custom config form that is about to be replaced
+            // Given a custom config that has been selected
             testUtils.setInput('rulesConfigDescription', rulesConfigDescriptionWithNumber);
             await testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
             const previousControl: AbstractControl = component.rulesConfigForm.controls['nombre'];
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
-            // When replacing the form with a standard config, then modifying the stale control
+            // When changing to the standard config, then modifying the stale control
             await testUtils.chooseConfig('the_other_config_name');
             previousControl.setValue(80);
             tick(1);
@@ -719,7 +720,7 @@ describe('RulesConfigurationComponent', () => {
         // When trying to select a config
         // Then it should throw
         TestUtils.expectToThrowAndLog(() => {
-            callChooseConfig(component.CUSTOM_CONFIG_NAME);
+            selectConfig(component.CUSTOM_CONFIG_NAME);
         }, 'RulesConfigurationComponent should only allow creator to choose config');
     }));
 
@@ -734,7 +735,7 @@ describe('RulesConfigurationComponent', () => {
         // When trying to select a config
         // Then it should throw
         TestUtils.expectToThrowAndLog(() => {
-            callChooseConfig(component.CUSTOM_CONFIG_NAME);
+            selectConfig(component.CUSTOM_CONFIG_NAME);
         }, 'RulesConfigurationComponent should only allow choosing config while editable');
     }));
 
