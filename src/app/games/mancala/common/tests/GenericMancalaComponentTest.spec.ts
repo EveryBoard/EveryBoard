@@ -481,14 +481,14 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 }));
             }
 
-            const receivedMultiDistributionAnimation: ReceivedMultiDistributionAnimationTestEntry | undefined =
+            const multiDistributionAnimation: ReceivedMultiDistributionAnimationTestEntry | undefined =
                 entries.receivedMultiDistributionAnimation;
-            if (receivedMultiDistributionAnimation != null) {
+            if (multiDistributionAnimation != null) {
                 it('should wait TIMEOUT_BETWEEN_LAPS before continuing a received multi-distribution move', fakeAsync(async() => {
                     // Given a received move with several distributions
-                    await mancalaTestUtils.testUtils.setupState(receivedMultiDistributionAnimation.state, {
-                        previousState: receivedMultiDistributionAnimation.previousState,
-                        previousMove: receivedMultiDistributionAnimation.move,
+                    await mancalaTestUtils.testUtils.setupState(multiDistributionAnimation.state, {
+                        previousState: multiDistributionAnimation.previousState,
+                        previousMove: multiDistributionAnimation.move,
                     });
                     const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
                     const sleepSpy: jasmine.Spy<(ms: number) => Promise<void>> =
@@ -500,12 +500,12 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                     // Then the per-seed sleeps should include the inter-lap pause at the right point
                     const actualSleeps: number[] = sleepSpy.calls.allArgs().map((args: unknown[]) => args[0] as number);
                     const expectedSleeps: number[] = [];
-                    for (let i: number = 0; i < receivedMultiDistributionAnimation.distributedSeedCountsByLap.length; i++) {
-                        const seedCount: number = receivedMultiDistributionAnimation.distributedSeedCountsByLap[i];
+                    for (let i: number = 0; i < multiDistributionAnimation.distributedSeedCountsByLap.length; i++) {
+                        const seedCount: number = multiDistributionAnimation.distributedSeedCountsByLap[i];
                         for (let j: number = 0; j < seedCount; j++) {
                             expectedSleeps.push(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
                         }
-                        if (i + 1 < receivedMultiDistributionAnimation.distributedSeedCountsByLap.length) {
+                        if (i + 1 < multiDistributionAnimation.distributedSeedCountsByLap.length) {
                             expectedSleeps.push(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                         }
                     }
