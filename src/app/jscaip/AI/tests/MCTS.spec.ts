@@ -24,11 +24,28 @@ import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
 import { MCTS } from '../MCTS';
 import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
+import { HeuristicBounds } from '../Minimax';
 
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
     public getScore(node: P4Node, config: P4Config, gameStatus: GameStatus, player: Player) : number {
         return this.score(node, config, gameStatus, player);
+    }
+
+}
+
+class NeutralMetricP4Heuristic extends P4Heuristic {
+
+    public override getBoardValue(_node: P4Node, config: P4Config): BoardValue {
+        return this.getBounds(config).player0Best;
+    }
+
+    public override getBounds(config: P4Config): HeuristicBounds<BoardValue> {
+        const neutralValue: number = super.getBounds(config).player0Best.metrics[0];
+        return {
+            player0Best: BoardValue.of(neutralValue),
+            player1Best: BoardValue.of(neutralValue),
+        };
     }
 
 }
@@ -162,6 +179,23 @@ describe('MCTS', () => {
 
         // Then it should delegate to the regular MCTS win score
         expect(score).toBe(1);
+    });
+
+    it('should score equal heuristic bounds as neutral', () => {
+        // Given a heuristic whose lower and upper bounds are identical
+        const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
+        const node: P4Node = P4Rules.get().getInitialNode(p4Config);
+        const heuristic: NeutralMetricP4Heuristic = new NeutralMetricP4Heuristic();
+        const p4Mcts: TestMCTSWithHeuristic =
+            new TestMCTSWithHeuristic('MCTS', new P4MoveGenerator(), P4Rules.get(), heuristic);
+
+        // When scoring an ongoing board
+        const playerZeroScore: number = p4Mcts.getScore(node, p4Config, GameStatus.ONGOING, Player.ZERO);
+        const playerOneScore: number = p4Mcts.getScore(node, p4Config, GameStatus.ONGOING, Player.ONE);
+
+        // Then both players should get a neutral score
+        expect(playerZeroScore).toBe(0.5);
+        expect(playerOneScore).toBe(0.5);
     });
 
     it('should select opponent children that are bad for the searched player', () => {
