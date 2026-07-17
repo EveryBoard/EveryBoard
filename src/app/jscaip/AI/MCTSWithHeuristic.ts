@@ -62,7 +62,12 @@ export class MCTSWithHeuristic<M extends Move,
                     console.warn(`MCTSWithHeuristic ${this.name} got a value outside its bounds: ${metric} is outside of [${player0Best}, ${player1Best}]`);
                 }
                 const boundedMetric: number = Math.max(player0Best, Math.min(metric, player1Best));
-                value += (boundedMetric - player0Best) / (player1Best - player0Best);
+                const denom: number = player1Best - player0Best;
+                if (denom === 0) {
+                    value += 0.5; // neutral for this metric
+                } else {
+                    value += (boundedMetric - player0Best) / denom;
+                }
             }
             value = value / boardValue.metrics.length;
             Utils.assert(0 <= value && value <= 1, `MCTSWithHeuristic ${this.name} got a value outside of [0,1]`);

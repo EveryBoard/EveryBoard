@@ -39,7 +39,7 @@ implements AI<M, S, AITimeLimitOptions, C>
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
 
-    // A id unique to this MCTS, used to store/retrieve cached value in nodes without clashing with other AIs
+    // An id unique to this MCTS, used to store/retrieve cached value in nodes without clashing with other AIs
     private readonly uniqueId: string;
 
     public constructor(public readonly name: string,

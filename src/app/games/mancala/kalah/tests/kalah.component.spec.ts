@@ -75,6 +75,15 @@ describe('KalahComponent', () => {
                 { x: 5, y: 0, content: { mainContent: ' 5 ', secondaryContent: ' +1 ' } },
             ],
         },
+        receivedMultiDistributionAnimation: {
+            previousState: KalahRules.get().getInitialState(defaultConfig),
+            state: new MancalaState([
+                [5, 5, 5, 5, 4, 4],
+                [0, 5, 5, 0, 4, 4],
+            ], 1, PlayerNumberMap.of(2, 0)),
+            move: MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]),
+            distributedSeedCountsByLap: [4, 5],
+        },
         monsoon: {
             state: new MancalaState([
                 [0, 0, 0, 0, 2, 0],
@@ -171,23 +180,6 @@ describe('KalahComponent', () => {
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
                 // Then 5 * TIMEOUT_BETWEEN_SEED ms to sow the final 5 seeds
                 tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
-            }));
-
-            it('should pause between received sub-distributions during animation', fakeAsync(async() => {
-                // Given a multi-distribution move played remotely
-                const gameComponent: KalahComponent = mancalaTestUtils.testUtils.getGameComponent();
-                const move: MancalaMove =
-                    MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]);
-                await gameComponent.chooseMove(move);
-
-                // When animating it
-                void gameComponent.updateBoard(true);
-                tick(5 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
-                tick(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
-                tick(6 * MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
-
-                // Then the animation should complete
-                expect(gameComponent.animationOngoing).toBeFalse();
             }));
 
             it('should feed the original house during animation', fakeAsync(async() => {

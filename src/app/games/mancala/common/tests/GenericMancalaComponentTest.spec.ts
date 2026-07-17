@@ -2,7 +2,7 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
+import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../../jscaip/AI/AI';
 import { Coord } from '../../../../jscaip/Coord';
@@ -219,6 +219,13 @@ export type MancalaActionAndResult = {
     result: MancalaHouseContents[];
 };
 
+export type ReceivedMultiDistributionAnimationTestEntry = {
+    previousState: MancalaState;
+    state: MancalaState;
+    move: MancalaMove;
+    distributedSeedCountsByLap: number[];
+};
+
 export type MancalaTestEntries<C extends MancalaComponent<R>, R extends MancalaRules> = {
     component: Type<C>; // KalahComponent, AwaleComponent, etc
     gameName: string; // 'Kalah', 'Awale', etc
@@ -229,6 +236,7 @@ export type MancalaTestEntries<C extends MancalaComponent<R>, R extends MancalaR
     monsoon: MancalaActionAndResult;
     capture: MancalaActionAndResult;
     fillThenCapture: MancalaActionAndResult;
+    receivedMultiDistributionAnimation?: ReceivedMultiDistributionAnimationTestEntry;
 }
 export function doMancalaComponentTests<C extends MancalaComponent<R>,
                                         R extends MancalaRules>(entries: MancalaTestEntries<C, R>)
@@ -470,6 +478,38 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                     // Then it should take TIMEOUT_BETWEEN_SEED ms to empty the initial house
                     // then TIMEOUT_BETWEEN_SEED ms by seed to distribute it
                     awaitEndOfMove();
+                }));
+            }
+
+            const receivedMultiDistributionAnimation: ReceivedMultiDistributionAnimationTestEntry | undefined =
+                entries.receivedMultiDistributionAnimation;
+            if (receivedMultiDistributionAnimation != null) {
+                it('should wait TIMEOUT_BETWEEN_LAPS before continuing a received multi-distribution move', fakeAsync(async() => {
+                    // Given a received move with several distributions
+                    await mancalaTestUtils.testUtils.setupState(receivedMultiDistributionAnimation.state, {
+                        previousState: receivedMultiDistributionAnimation.previousState,
+                        previousMove: receivedMultiDistributionAnimation.move,
+                    });
+                    const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
+                    const sleepSpy: jasmine.Spy<(ms: number) => Promise<void>> =
+                        spyOn(TimeUtils, 'sleep').and.callFake(async(_ms: number) => Promise.resolve());
+
+                    // When animating the received move
+                    await gameComponent.updateBoard(true);
+
+                    // Then the per-seed sleeps should include the inter-lap pause at the right point
+                    const actualSleeps: number[] = sleepSpy.calls.allArgs().map((args: unknown[]) => args[0] as number);
+                    const expectedSleeps: number[] = [];
+                    for (let i: number = 0; i < receivedMultiDistributionAnimation.distributedSeedCountsByLap.length; i++) {
+                        const seedCount: number = receivedMultiDistributionAnimation.distributedSeedCountsByLap[i];
+                        for (let j: number = 0; j < seedCount; j++) {
+                            expectedSleeps.push(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);
+                        }
+                        if (i + 1 < receivedMultiDistributionAnimation.distributedSeedCountsByLap.length) {
+                            expectedSleeps.push(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
+                        }
+                    }
+                    expect(actualSleeps).toEqual(expectedSleeps);
                 }));
             }
 

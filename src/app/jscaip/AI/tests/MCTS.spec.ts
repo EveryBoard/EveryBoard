@@ -27,12 +27,7 @@ import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
 
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
-    public getScore(node: P4Node,
-                    config: P4Config,
-                    gameStatus: GameStatus,
-                    player: Player)
-    : number
-    {
+    public getScore(node: P4Node, config: P4Config, gameStatus: GameStatus, player: Player) : number {
         return this.score(node, config, gameStatus, player);
     }
 
