@@ -1,9 +1,9 @@
-import { Coord } from './Coord';
-import { Vector } from './Vector';
+import { Coord } from '../Coord';
+import { Vector } from '../Vector';
 
-import { SquareTopology } from './SquareTopology';
+import { RectangularShape } from './RectangularShape';
 
-export class ToroidalSquareTopology extends SquareTopology {
+export class ToroidalShape extends RectangularShape {
 
     public override getNextCoord(coord: Coord, direction: Vector): Coord {
         const naiveNext: Coord = coord.getNext(direction);

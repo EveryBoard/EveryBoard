@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="board"
+     [attr.viewBox]="getViewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+
+    <g app-blank-goban
+       [width]="getViewBox().width / 100"
+       [height]="getViewBox().height / 100"
+       (clickCallBack)="onClick($event)"/>
+
+    <g id="pieces">
+        @for (coordAndContent of coordsAndContents; track $index) {
+            <g>
+                @if (coordAndContent.content.isPlayer()) {
+                    <circle id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                            [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"
+                            [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.y)"
+                            [attr.r]="SPACE_SIZE * 0.44"
+                            [ngClass]="getSpaceClass(coordAndContent.coord.x, coordAndContent.coord.y)"
+                            class="base"/>
+                }
+            </g>
+        }
+    </g>
+    @if (droppedCoord.isPresent()) {
+        <circle id="dropped"
+                (click)="onClick(droppedCoord.get())"
+                [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().x)"
+                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().y)"
+                [attr.r]="SPACE_SIZE * 0.44"
+                [ngClass]="getSpaceClass(droppedCoord.get().x, droppedCoord.get().y)"
+                class="base moved-stroke"/>
+    }
+</svg>

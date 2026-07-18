@@ -6,13 +6,16 @@ import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { SquareTopology } from '../../../jscaip/SquareTopology';
 import { TopologicGameState } from '../../../jscaip/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/TopologicGameStateWithTable';
-import { ToroidalSquareTopology } from '../../../jscaip/ToroidalSquareTopology';
-import { TriangularTopology } from '../../../jscaip/TriangularTopology';
+import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
+import { ToroidalShape } from '../../../jscaip/shape/ToroidalShape';
+import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
+import { Topology } from '../../../jscaip/topology/Topology';
+import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../../connect-six/ConnectSixMove';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
 
@@ -31,6 +34,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
 
     let rules: ConnectNRules;
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
+    const topology: Topology = new SquareTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -81,7 +85,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 expectedGameState,
             );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -129,7 +134,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -165,7 +171,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -201,7 +208,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -238,7 +246,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -274,7 +283,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -303,7 +313,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 2);
             const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 expectedGameState,
             );
 
@@ -335,7 +346,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -372,7 +384,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
             const move: ConnectSixMove =
@@ -410,7 +423,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, _, _],
             ], 180);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 gameState,
             );
 
@@ -440,7 +454,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                     [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
                 ], 181);
             const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                new SquareTopology(19, 19),
+                topology,
+                new RectangularShape(19, 19, topology),
                 expectedGameState,
             );
 
@@ -461,6 +476,7 @@ fdescribe('ConnectNRules (TOROIDAL SQUARE)', () => {
 
     let rules: ConnectNRules;
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
+    const topology: Topology = new SquareTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -494,7 +510,8 @@ fdescribe('ConnectNRules (TOROIDAL SQUARE)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new ToroidalSquareTopology(19, 19),
+            topology,
+            new ToroidalShape(19, 19, topology),
             gameState,
         );
         const move: ConnectSixMove =
@@ -547,7 +564,8 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new TriangularTopology(19, 19),
+            new TriangularTopology(),
+            new TriangularShape(19),
             gameState,
         );
         const move: ConnectSixMove =
@@ -589,7 +607,8 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new TriangularTopology(19, 19),
+            new TriangularTopology(),
+            new TriangularShape(19),
             gameState,
         );
         const move: ConnectSixMove =
@@ -631,7 +650,8 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new TriangularTopology(19, 19),
+            new TriangularTopology(),
+            new TriangularShape(19),
             gameState,
         );
         const move: ConnectSixMove =

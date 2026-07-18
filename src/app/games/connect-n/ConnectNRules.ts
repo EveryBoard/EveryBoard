@@ -7,16 +7,20 @@ import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 // import { Move } from '../../jscaip/Move';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { SquareTopology } from '../../jscaip/SquareTopology';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicGameState } from '../../jscaip/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/TopologicGameStateWithTable';
-import { ToroidalSquareTopology } from '../../jscaip/ToroidalSquareTopology';
-import { TriangularTopology } from '../../jscaip/TriangularTopology';
+import { RectangularShape } from '../../jscaip/shape/RectangularShape';
+import { ToroidalShape } from '../../jscaip/shape/ToroidalShape';
+import { TriangularShape } from '../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
+import { SquareTopology } from '../../jscaip/topology/SquareTopology';
+import { Topology } from '../../jscaip/topology/Topology';
+import { TriangularTopology } from '../../jscaip/topology/TriangularTopology';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 import { ConnectSixDrops, ConnectSixMove } from '../connect-six/ConnectSixMove';
@@ -35,9 +39,9 @@ export class ConnectNNode extends GameNode<ConnectSixMove, TopologicGameState<Fo
 
 // }
 
-export type Topology = 'SQUARE' | 'TOROIDAL_SQUARE' | 'TRIANGULAR';
+export type TopologyEnum = 'SQUARE' | 'TOROIDAL_SQUARE' | 'TRIANGULAR';
 
-export const Topologies: Record<Topology, Localized> = {
+export const Topologies: Record<TopologyEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
     'TOROIDAL_SQUARE': () => $localize`Toroidal Square`,
     'TRIANGULAR': () => $localize`Triangular`,
@@ -47,7 +51,7 @@ export type ConnectNConfig = {
 
     n: number;
 
-    topology: Topology;
+    topology: TopologyEnum;
 
 }
 
@@ -73,8 +77,11 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
         return ConnectNRules.singleton.get();
     }
 
-    public constructor() {
-        super();
+    public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
+        return new NInARowHelper(
+            (piece: FourStatePiece) => piece.getPlayer(),
+            config.n,
+        ).getVictoriousCoordWithTopology(state);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<ConnectNConfig> {
@@ -133,31 +140,38 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
 
     public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece> {
         switch (config.topology) {
-            case 'SQUARE':
+            case 'SQUARE': {
+                const topology: Topology = new SquareTopology();
                 return new TopologicGameStateWithTable<FourStatePiece>(
-                    new SquareTopology(19, 19),
+                    topology,
+                    new RectangularShape(19, 19, topology),
                     new SimpleGameStateWithTable<FourStatePiece>(
                         TableUtils.create(19, 19, FourStatePiece.EMPTY),
                         0,
                     ),
                 );
-            case 'TOROIDAL_SQUARE':
+            } case 'TOROIDAL_SQUARE': {
+                const topology: Topology = new SquareTopology();
                 return new TopologicGameStateWithTable<FourStatePiece>(
-                    new ToroidalSquareTopology(19, 19),
+                    topology,
+                    new ToroidalShape(19, 19, topology),
                     new SimpleGameStateWithTable<FourStatePiece>(
                         TableUtils.create(19, 19, FourStatePiece.EMPTY),
                         0,
                     ),
                 );
-            default:
+            } default: {
                 Utils.expectToBe(config.topology, 'TRIANGULAR');
+                const topology: Topology = new TriangularTopology();
                 return new TopologicGameStateWithTable<FourStatePiece>(
-                    new TriangularTopology(19, 19),
+                    topology,
+                    new TriangularShape(19),
                     new SimpleGameStateWithTable<FourStatePiece>(
                         TableUtils.create(19, 19, FourStatePiece.EMPTY),
                         0,
                     ),
                 );
+            }
         }
     }
 
@@ -198,7 +212,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
     }
 
     private isBoardFull(state: TopologicGameState<FourStatePiece>): boolean {
-        return state.getTopology()
+        return state
             .getAllCoords()
             .filter((coord: Coord) => {
                 return state.getPieceAt(coord).isPlayer() === false;

@@ -1,11 +1,12 @@
 import { Coord } from './Coord';
 import { GameState } from './state/GameState';
-
-import { Topology } from './Topology';
+import { Topology } from './topology/Topology';
 
 export abstract class TopologicGameState<P extends NonNullable<unknown>> extends GameState {
-    public constructor(turn: number,
-                       public readonly topology: Topology,
+
+    public constructor(
+        turn: number,
+        public readonly topology: Topology,
     ) {
         super(turn);
     }
@@ -13,6 +14,8 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
     public getTopology(): Topology {
         return this.topology;
     }
+
+    public abstract getCoordsAndContents(): { coord: Coord, content: P }[];
 
     public abstract getPieceAt(coord: Coord): P;
 
@@ -24,4 +27,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
 
     public abstract incrementTurn(): this;
 
+    public abstract getCenters(): Coord[];
+
+    public abstract getAllCoords(): Coord[];
 }

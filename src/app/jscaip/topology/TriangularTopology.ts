@@ -1,16 +1,11 @@
-import { Coord } from './Coord';
-import { Direction } from './Direction';
-import { Ordinal } from './Ordinal';
-import { Vector } from './Vector';
+import { Coord } from '../Coord';
+import { Direction } from '../Direction';
+import { Ordinal } from '../Ordinal';
+import { Vector } from '../Vector';
 
 import { Topology } from './Topology';
 
 export class TriangularTopology implements Topology {
-
-    public constructor(public readonly width: number,
-                       public readonly height: number,
-    ) {
-    }
 
     public getDirections(): Direction[] {
         return [
@@ -40,14 +35,12 @@ export class TriangularTopology implements Topology {
         return (c.x + c.y) % 2 === 1;
     }
 
-    public getAllCoords(): Coord[] { // TODO: remove UNREACHABLE within or without the board ?
-        const coords: Coord[] = [];
-        for (let x: number = 0; x < this.width; x++) {
-            for (let y: number = 0; y < this.height; y++) {
-                coords.push(new Coord(x, y));
-            }
-        }
-        return coords;
+    public getNeighbors(coord: Coord): Coord[] {
+        return [
+            coord.getNext(Ordinal.LEFT),
+            coord.getNext(Ordinal.RIGHT),
+            this.canGoUp(coord) ? coord.getNext(Ordinal.UP) : coord.getNext(Ordinal.DOWN),
+        ];
     }
 
 }
