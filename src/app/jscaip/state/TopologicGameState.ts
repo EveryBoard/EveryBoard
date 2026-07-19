@@ -1,6 +1,7 @@
-import { Coord } from './Coord';
-import { GameState } from './state/GameState';
-import { Topology } from './topology/Topology';
+import { Coord } from '../Coord';
+import { Topology } from '../topology/Topology';
+
+import { GameState } from './GameState';
 
 export abstract class TopologicGameState<P extends NonNullable<unknown>> extends GameState {
 

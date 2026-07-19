@@ -12,11 +12,11 @@ import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
@@ -81,7 +81,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         const size: number = this.SPACE_SIZE * 1.50;
         const origineX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
         const origineY: number = - this.hexagonWidth;
-        const origine: Coord = new Coord(origineX, origineY);
+        const origine: Coord = new Coord(origineX, origineY); // TODO: no we are not the la fronce
         this.hexaLayout = new HexaLayout(size, origine, FlatHexaOrientation.INSTANCE);
     }
 

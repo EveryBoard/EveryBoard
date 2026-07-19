@@ -3,15 +3,13 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
+import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TopologicGameState } from '../../jscaip/TopologicGameState';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../connect-six/ConnectSixMove';
 
 import { ConnectNAlignmentMinimax } from './ConnectNAlignmentMinimax';
@@ -22,12 +20,13 @@ import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
     selector: 'app-connect-n',
     templateUrl: './connect-n.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [BlankGobanComponent, NgClass],
+    imports: [NgClass],
 })
-export class ConnectNComponent extends GameComponent<ConnectNRules,
-                                                     ConnectSixMove,
-                                                     TopologicGameState<FourStatePiece>,
-                                                     ConnectNConfig>
+export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
+                                                              ConnectSixMove,
+                                                              TopologicGameState<FourStatePiece>,
+                                                              FourStatePiece,
+                                                              ConnectNConfig>
 {
     protected coordsAndContents: { coord: Coord, content: FourStatePiece }[] = [];
 
@@ -47,31 +46,10 @@ export class ConnectNComponent extends GameComponent<ConnectNRules,
         this.encoder = ConnectSixMove.encoder;
     }
 
-    public getViewBox(): ViewBox {
-        let minX: number = Number.MAX_VALUE;
-        let minY: number = Number.MAX_VALUE;
-        let maxX: number = Number.MIN_VALUE;
-        let maxY: number = Number.MIN_VALUE;
-        for (const coord of this.getState().getAllCoords()) {
-            minX = Math.min(minX, coord.x);
-            minY = Math.min(minY, coord.y);
-            maxX = Math.max(maxX, coord.x);
-            maxY = Math.max(maxY, coord.y);
-        }
-        return ViewBox.fromLimits(
-            minX * this.SPACE_SIZE,
-            maxX * this.SPACE_SIZE,
-            minY * this.SPACE_SIZE,
-            maxY * this.SPACE_SIZE,
-        );
-    }
-
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece> = this.getState();
-        // this.board = state.getCopiedBoard();
         this.coordsAndContents = state.getCoordsAndContents();
         this.victoryCoords = ConnectNRules.getVictoriousCoords(state, this.getConfig());
-        // this.createHoshis();
     }
 
     public override async showLastMove(move: ConnectSixMove): Promise<void> {

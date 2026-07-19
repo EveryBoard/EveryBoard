@@ -8,10 +8,10 @@ import { HexagonalGameComponent } from '../../components/game-components/game-co
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
 import { HexodiaMove } from './HexodiaMove';

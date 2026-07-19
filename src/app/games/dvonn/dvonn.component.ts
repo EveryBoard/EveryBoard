@@ -6,8 +6,8 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
 import { DvonnMove } from './DvonnMove';

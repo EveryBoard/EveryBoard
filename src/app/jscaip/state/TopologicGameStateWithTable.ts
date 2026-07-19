@@ -1,8 +1,9 @@
-import { Coord } from './Coord';
+import { Coord } from '../Coord';
+import { Shape } from '../shape/Shape';
+import { Topology } from '../topology/Topology';
+
+import { SimpleGameStateWithTable } from './SimpleGameStateWithTable';
 import { TopologicGameState } from './TopologicGameState';
-import { Shape } from './shape/Shape';
-import { SimpleGameStateWithTable } from './state/SimpleGameStateWithTable';
-import { Topology } from './topology/Topology';
 
 export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends TopologicGameState<P> {
 

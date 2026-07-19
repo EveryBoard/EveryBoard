@@ -1,6 +1,6 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { TopologicGameState } from '../../jscaip/TopologicGameState';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectSixMove } from '../connect-six/ConnectSixMove';
 
 import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';

@@ -1,13 +1,24 @@
 import { Utils } from '@everyboard/lib';
 
-import { Coord } from './Coord';
-import { FlatHexaOrientation, HexaOrientation } from './HexaOrientation';
+import { Coord } from '../Coord';
+import { FlatHexaOrientation, HexaOrientation } from '../HexaOrientation';
 
-export class HexaLayout {
+import { Layout } from './Layout';
+
+export class HexaLayout implements Layout {
 
     public constructor(public readonly size: number,
                        public readonly origin: Coord,
                        public readonly orientation: HexaOrientation) {
+    }
+
+    public getTranslationAt(coord: Coord): string {
+        const center: Coord = this.getCenterAt(coord); // TODO: get them with (0, 0) not (center, center);
+        return `translate(${ center.x }, ${ center.y })`;
+    }
+
+    public getPolygonAt(): string {
+        return this.getHexaPoints();
     }
 
     public getCenterAt(coord: Coord): Coord {

@@ -3,10 +3,10 @@ import { Heuristic } from '../../jscaip/AI/Minimax';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
-import { TopologicGameState } from '../../jscaip/TopologicGameState';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectSixMove } from '../connect-six/ConnectSixMove';
 
-import { ConnectNConfig, ConnectNNode, ConnectNRules } from './ConnectNRules';
+import { ConnectNConfig, ConnectNNode } from './ConnectNRules';
 
 export class ConnectNAlignmentHeuristic
     extends Heuristic<ConnectSixMove, TopologicGameState<FourStatePiece>, BoardValue, ConnectNConfig>

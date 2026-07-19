@@ -9,11 +9,11 @@ import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { HiveFailure } from './HiveFailure';
 import { HiveMinimax } from './HiveMinimax';

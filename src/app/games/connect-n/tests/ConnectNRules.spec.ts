@@ -6,12 +6,12 @@ import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { TopologicGameState } from '../../../jscaip/TopologicGameState';
-import { TopologicGameStateWithTable } from '../../../jscaip/TopologicGameStateWithTable';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { ToroidalShape } from '../../../jscaip/shape/ToroidalShape';
 import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
+import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
+import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
@@ -471,7 +471,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
 
 });
 
-fdescribe('ConnectNRules (TOROIDAL SQUARE)', () => {
+fdescribe('ConnectNRules (HEXAGONAL)', () => {
 
 
     let rules: ConnectNRules;
@@ -485,7 +485,7 @@ fdescribe('ConnectNRules (TOROIDAL SQUARE)', () => {
     it('should notify victory when aligning 6 stones of your color', () => {
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
-            topology: 'TOROIDAL_SQUARE',
+            topology: 'HEXAGONAL',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([

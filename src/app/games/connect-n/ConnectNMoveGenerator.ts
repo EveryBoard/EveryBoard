@@ -3,7 +3,7 @@ import { Set } from '@everyboard/lib';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { TopologicGameState } from '../../jscaip/TopologicGameState';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectSixMove, ConnectSixFirstMove, ConnectSixDrops } from '../connect-six/ConnectSixMove';
 
 import { ConnectNConfig, ConnectNNode } from './ConnectNRules';

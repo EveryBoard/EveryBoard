@@ -6,18 +6,17 @@ import { Coord, CoordFailure } from '../../jscaip/Coord'; // TODO: remove as Coo
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-// import { Move } from '../../jscaip/Move';
 import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
-import { TopologicGameState } from '../../jscaip/TopologicGameState';
-import { TopologicGameStateWithTable } from '../../jscaip/TopologicGameStateWithTable';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
-import { ToroidalShape } from '../../jscaip/shape/ToroidalShape';
 import { TriangularShape } from '../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
+import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
+import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
+import { HexagonalTopology } from '../../jscaip/topology/HexagonalTopology';
 import { SquareTopology } from '../../jscaip/topology/SquareTopology';
 import { Topology } from '../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../jscaip/topology/TriangularTopology';
@@ -39,11 +38,11 @@ export class ConnectNNode extends GameNode<ConnectSixMove, TopologicGameState<Fo
 
 // }
 
-export type TopologyEnum = 'SQUARE' | 'TOROIDAL_SQUARE' | 'TRIANGULAR';
+export type TopologyEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
 
 export const Topologies: Record<TopologyEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
-    'TOROIDAL_SQUARE': () => $localize`Toroidal Square`,
+    'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
 };
 
@@ -150,11 +149,20 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
                         0,
                     ),
                 );
-            } case 'TOROIDAL_SQUARE': {
-                const topology: Topology = new SquareTopology();
+            } case 'HEXAGONAL': {
+                // const topology: Topology = new SquareTopology();
+                // return new TopologicGameStateWithTable<FourStatePiece>(
+                //     topology,
+                //     new ToroidalShape(19, 19, topology),
+                //     new SimpleGameStateWithTable<FourStatePiece>(
+                //         TableUtils.create(19, 19, FourStatePiece.EMPTY),
+                //         0,
+                //     ),
+                // );
+                const topology: HexagonalTopology = new HexagonalTopology();
                 return new TopologicGameStateWithTable<FourStatePiece>(
                     topology,
-                    new ToroidalShape(19, 19, topology),
+                    new RectangularShape(19, 19, topology),
                     new SimpleGameStateWithTable<FourStatePiece>(
                         TableUtils.create(19, 19, FourStatePiece.EMPTY),
                         0,
@@ -179,7 +187,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
                                   config: ConnectNConfig,
     ): GameStatus {
         const state: TopologicGameState<FourStatePiece> = node.gameState;
-        if (state.turn === 0) {
+        if (state.turn < 2) {
             return GameStatus.ONGOING;
         }
         // take the last move

@@ -5,8 +5,8 @@ import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { Ordinal } from './Ordinal';
 import { Player, PlayerOrNone } from './Player';
-import { TopologicGameState } from './TopologicGameState';
 import { GameStateWithTable } from './state/GameStateWithTable';
+import { TopologicGameState } from './state/TopologicGameState';
 
 export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
 
