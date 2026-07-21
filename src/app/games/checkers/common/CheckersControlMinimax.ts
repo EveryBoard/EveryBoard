@@ -1,0 +1,19 @@
+import { Minimax } from '../../../jscaip/AI/Minimax';
+
+import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
+import { CheckersControlHeuristic } from './CheckersControlHeuristic';
+import { CheckersMove } from './CheckersMove';
+import { CheckersMoveGenerator } from './CheckersMoveGenerator';
+import { CheckersState } from './CheckersState';
+
+export class CheckersControlMinimax extends Minimax<CheckersMove, CheckersState, CheckersConfig> {
+
+    public constructor(rules: AbstractCheckersRules) {
+        super($localize`Control`,
+              rules,
+              new CheckersControlHeuristic(rules),
+              new CheckersMoveGenerator(rules),
+        );
+    }
+
+}

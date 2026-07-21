@@ -1,0 +1,23 @@
+import { Minimax } from '../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
+import { NewGameHeuristic } from './NewGameHeuristic';
+import { NewGameMove } from './NewGameMove';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
+import { NewGameState } from './NewGameState';
+
+/**
+ * This is the minimax AI.
+ * You can plug in the heuristic and move generator.
+ */
+export class NewGameMinimax extends Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
+
+    public constructor() {
+        super('Dummy',
+              NewGameRules.get(),
+              new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
+              new NewGameMoveGenerator(),
+        );
+    }
+}
