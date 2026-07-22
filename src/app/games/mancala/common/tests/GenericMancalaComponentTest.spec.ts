@@ -32,9 +32,8 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     public async expectMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
-        const playerY: number = state.getCurrentPlayerY();
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
-        const coord: Coord = new Coord(lastDistribution.x, playerY);
+        const coord: Coord = new Coord(lastDistribution.x, lastDistribution.y);
         const moveDuration: number = this.showSeedBySeed(coord, state, config);
         await this.testUtils.expectMoveSuccess(click, move, moveDuration);
     }
@@ -159,8 +158,8 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                     const classes: string[] = ['base', 'moved-stroke', playerFill];
                     this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
                 } else {
-                    const playerY: number = actionAndResult.state.getCurrentPlayerY();
-                    const startingCoord: Coord = new Coord(actionAndResult.move.getFirstDistribution().x, playerY);
+                    const firstDistribution: MancalaDistribution = actionAndResult.move.getFirstDistribution();
+                    const startingCoord: Coord = new Coord(firstDistribution.x, firstDistribution.y);
                     if (startingCoord.equals(coord)) { // Initial house
                         const classes: string[] = ['base', 'last-move-stroke', playerFill];
                         this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);

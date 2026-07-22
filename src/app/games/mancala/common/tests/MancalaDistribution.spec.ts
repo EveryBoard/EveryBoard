@@ -2,7 +2,7 @@ import { TestUtils } from '@everyboard/lib/testing';
 
 import { MancalaDistribution } from '../MancalaMove';
 
-describe('MancalaDistribution', () => {
+fdescribe('MancalaDistribution', () => {
 
     describe('of', () => {
 

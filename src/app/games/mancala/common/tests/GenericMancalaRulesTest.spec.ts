@@ -145,16 +145,17 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         describe('getGameStatus', () => {
             const smallerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 2 };
             const biggerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 6 };
-            for (const config of [smallerConfig, defaultConfig, biggerConfig]) {
-                const halfOfTotalSeeds: number = config.width * config.seedsByHouse;
+            const multiRowConfig: MancalaConfig = { ...defaultConfig, numberOfRows: 2 };
+            for (const config of [smallerConfig, defaultConfig, biggerConfig, multiRowConfig]) {
+                const halfOfTotalSeeds: number = config.width * config.seedsByHouse * config.numberOfRows;
 
                 describe(`Config with ${ config.seedsByHouse } seeds by house`, () => {
 
                     it(`should identify victory for player 0`, () => {
                         // Given a state with no more seeds and where player 0 has captured more seeds
-                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, config.numberOfRows * 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
+                            new MancalaState(board, 0, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
                         const node: MancalaNode = new GameNode(state);
                         // When checking the game status
                         // Then it should be a victory for Player.ZERO
@@ -163,9 +164,9 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
                     it('should identify victory for player 1', () => {
                         // Given a state with no more seeds and where player 1 has captured more seeds
-                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, config.numberOfRows * 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
+                            new MancalaState(board, 0, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
                         const node: MancalaNode = new GameNode(state);
 
                         // When checking the game status
@@ -175,7 +176,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
                     it('should identify draw', () => {
                         // Given a state with no more seeds and both players have captured the same number of seeds
-                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, config.numberOfRows * 2, 0);
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds, halfOfTotalSeeds));
                         const node: MancalaNode = new GameNode(state);

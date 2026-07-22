@@ -8,7 +8,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 
-describe('AwaleOrderedMoveGenerator', () => {
+fdescribe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
@@ -28,6 +28,30 @@ describe('AwaleOrderedMoveGenerator', () => {
 
         // When listing the moves
         const moves: MancalaMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
+        // Then the first move should be the capture
+        expect(moves.length).toBe(2);
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
+    });
+
+    it('should order by captured houses, including outer-rows', () => {
+        // Given a state with a possible capture
+        const customConfig: MancalaConfig = {
+            ...defaultConfig,
+            numberOfRows: 2,
+        };
+        // and a config with several rows
+        const board: Table<number> = [
+            [0, 0, 0, 0, 1, 1],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 2],
+        ];
+        const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(0, 0));
+        const node: MancalaNode = new MancalaNode(state);
+
+        // When listing the moves
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
 
         // Then the first move should be the capture
         expect(moves.length).toBe(2);

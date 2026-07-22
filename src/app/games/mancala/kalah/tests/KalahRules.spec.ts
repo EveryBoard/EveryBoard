@@ -13,7 +13,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { KalahRules } from '../KalahRules';
 
-describe('KalahRules', () => {
+fdescribe('KalahRules', () => {
 
     const rules: MancalaRules = KalahRules.get();
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();

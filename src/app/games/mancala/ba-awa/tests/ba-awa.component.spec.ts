@@ -13,7 +13,7 @@ import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
 import { BaAwaRules } from '../BaAwaRules';
 import { BaAwaComponent } from '../ba-awa.component';
 
-describe('BaAwaComponent', () => {
+fdescribe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();

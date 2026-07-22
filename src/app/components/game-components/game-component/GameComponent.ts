@@ -112,7 +112,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public node: GameNode<M, S>;
 
-    public config: C;
+    public config: C; // TODO: make private ((or kill getter))
 
     public availableAIs: AI<M, S, AIOptions, C>[];
 

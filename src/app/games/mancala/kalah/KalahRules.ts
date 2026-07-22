@@ -57,7 +57,6 @@ export class KalahRules extends MancalaRules {
         } else {
             const landingSpace: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
             const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
-            // TODO: kill getCurrentPlayerY, playerY
             const oppositeY: number = this.getOppositeY(landingSpace, config);
             const landingSeeds: number = distributionResult.resultingState.getPieceAt(landingSpace);
             const parallelSeeds: number = distributionResult.resultingState.getPieceAtXY(landingSpace.x, oppositeY);
@@ -74,7 +73,6 @@ export class KalahRules extends MancalaRules {
                 captureMap[oppositeY][landingSpace.x] = board[oppositeY][landingSpace.x];
                 const capturer: Player = distributedState.getCurrentPlayer();
                 let postCaptureState: MancalaState = distributedState.capture(capturer, landingSpace);
-                // const oppositeY: number = (landingSpace.y + 1) % 2; // TODO: forchore this will go verongue
                 const oppositeSpace: Coord = new Coord(landingSpace.x, oppositeY);
                 postCaptureState = postCaptureState.capture(capturer, oppositeSpace);
                 return {

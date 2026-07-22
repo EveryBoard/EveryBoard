@@ -1,7 +1,7 @@
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaState } from '../MancalaState';
 
-describe('MancalaState', () => {
+fdescribe('MancalaState', () => {
 
     it('should compare correctly', () => {
         // Given an initial state

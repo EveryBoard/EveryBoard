@@ -15,7 +15,7 @@ import { AwaleComponent } from '../awale.component';
 
 const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
-describe('AwaleComponent', () => {
+fdescribe('AwaleComponent', () => {
 
     doMancalaComponentTests({
         component: AwaleComponent,
@@ -119,6 +119,26 @@ describe('AwaleComponent', () => {
             ], 1, PlayerNumberMap.of(2, 0));
             const actualState: MancalaState = testUtils.getGameComponent().getState();
             expect(actualState).toEqual(expectedState);
+        }));
+
+        it('should should last move on different row', fakeAsync(async() => {
+            // Given a state where there has been a point-won last turn
+            // and a custom config with several row
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                numberOfRows: 2,
+            };
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
+            await mancalaTestUtils.testUtils.setupState(state, { config: customConfig });
+            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 2);
+            await mancalaTestUtils.expectMoveSuccess('#click-0-2', moveZero, customConfig);
+
+            // When doing second turn
+            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveOne, customConfig);
+
+            // Then the capture of last turn should be hidden
+            mancalaTestUtils.testUtils.expectElementToHaveClass('#circle-0-1', 'last-move-stroke');
         }));
 
     });

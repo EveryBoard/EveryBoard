@@ -253,7 +253,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         const state: MancalaState = node.gameState;
         const width: number = node.gameState.getWidth();
         const seedsByHouse: number = config.seedsByHouse;
-        const halfOfTotalSeeds: number = width * seedsByHouse;
+        const halfOfTotalSeeds: number = width * seedsByHouse * config.numberOfRows;
         if (state.scores.get(Player.ZERO) > halfOfTotalSeeds) {
             return GameStatus.ZERO_WON;
         }

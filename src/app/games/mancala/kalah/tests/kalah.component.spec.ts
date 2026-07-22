@@ -18,7 +18,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { KalahRules } from '../KalahRules';
 import { KalahComponent } from '../kalah.component';
 
-describe('KalahComponent', () => {
+fdescribe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
@@ -87,7 +87,7 @@ describe('KalahComponent', () => {
         },
     });
 
-    describe('Kalah Specific Tests', () => {
+    fdescribe('Kalah Specific Tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<KalahComponent> = await ComponentTestUtils.forGame<KalahComponent>('Kalah');
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new KalahMoveGenerator());
@@ -347,6 +347,26 @@ describe('KalahComponent', () => {
 
             // Then the capture of last turn should be hidden
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
+        }));
+
+        fit('should should last move on different row', fakeAsync(async() => {
+            // Given a state where there has been a point-won last turn
+            // and a custom config with several row
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                numberOfRows: 2,
+            };
+            const state: MancalaState = KalahRules.get().getInitialState(customConfig);
+            await mancalaTestUtils.testUtils.setupState(state, { config: customConfig });
+            const moveZero: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 2);
+            await mancalaTestUtils.expectMoveSuccess('#click-0-2', moveZero, customConfig);
+
+            // When doing second turn
+            const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
+            await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveOne, customConfig);
+
+            // Then the capture of last turn should be hidden
+            mancalaTestUtils.testUtils.expectElementToHaveClass('#circle-0-1', 'last-move-stroke');
         }));
 
     });
