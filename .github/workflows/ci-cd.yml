@@ -326,6 +326,35 @@ jobs:
     needs: [build-front]
     environment: netlify
     steps:
+    - name: Diagnose Netlify authentication
+      shell: bash
+      env:
+        NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+        NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+      run: |
+        set -u
+        echo "Node: $(node --version)"
+        echo "Netlify CLI: $(npx netlify-cli --version)"
+        if [ -z "${NETLIFY_AUTH_TOKEN:-}" ]; then
+          echo "NETLIFY_AUTH_TOKEN is missing or empty"
+          exit 1
+        fi
+        if [ -z "${NETLIFY_SITE_ID:-}" ]; then
+          echo "NETLIFY_SITE_ID is missing or empty"
+          exit 1
+        fi
+        echo "Token is present; length: ${#NETLIFY_AUTH_TOKEN}"
+        echo "Site ID is present; length: ${#NETLIFY_SITE_ID}"
+        echo "Testing token..."
+        curl --silent --show-error --output /tmp/user.json \
+          --write-out "User API status: %{http_code}\n" \
+          -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
+          https://api.netlify.com/api/v1/user
+        echo "Testing project access..."
+        curl --silent --show-error --output /tmp/site.json \
+          --write-out "Site API status: %{http_code}\n" \
+          -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
+          "https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}"
       - name: Checkout the repository
         uses: actions/checkout@v4
       - name: Setup dependencies (setup node)
@@ -362,6 +391,7 @@ jobs:
           if [ "$result" == true ]; then
             npm run build:netlify
             npm install netlify-cli
+            echo "deploying"
             npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
             # deploy backend
             if ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then
