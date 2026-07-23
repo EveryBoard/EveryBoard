@@ -323,37 +323,9 @@ jobs:
 
   deployment-netlify:
     runs-on: ubuntu-24.04
+    needs: [build-front]
     environment: netlify
     steps:
-      - name: Diagnose Netlify authentication
-        shell: bash
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-        run: |
-          set -u
-          echo "Node: $(node --version)"
-          echo "Netlify CLI: $(npx netlify-cli --version)"
-          if [ -z "${NETLIFY_AUTH_TOKEN:-}" ]; then
-            echo "NETLIFY_AUTH_TOKEN is missing or empty"
-            exit 1
-          fi
-          if [ -z "${NETLIFY_SITE_ID:-}" ]; then
-            echo "NETLIFY_SITE_ID is missing or empty"
-            exit 1
-          fi
-          echo "Token is present; length: ${#NETLIFY_AUTH_TOKEN}"
-          echo "Site ID is present; length: ${#NETLIFY_SITE_ID}"
-          echo "Testing token..."
-          curl --silent --show-error --output /tmp/user.json \
-            --write-out "User API status: %{http_code}\n" \
-            -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
-            https://api.netlify.com/api/v1/user
-          echo "Testing project access..."
-          curl --silent --show-error --output /tmp/site.json \
-            --write-out "Site API status: %{http_code}\n" \
-            -H "Authorization: Bearer ${NETLIFY_AUTH_TOKEN}" \
-            "https://api.netlify.com/api/v1/sites/${NETLIFY_SITE_ID}"
       - name: Checkout the repository
         uses: actions/checkout@v4
       - name: Setup dependencies (setup node)
@@ -388,6 +360,8 @@ jobs:
         run: |
           result="${{ steps.is_organization_member.outputs.result }}"
           if [ "$result" == true ]; then
+            status=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" https://api.netlify.com/api/v1/user)
+            [ "$status" = 200 ] || { echo "Netlify token rejected (HTTP $status)"; exit 1; }
             npm run build:netlify
             npm install netlify-cli
             echo "deploying"
