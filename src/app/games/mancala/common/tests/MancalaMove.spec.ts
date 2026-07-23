@@ -4,7 +4,7 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 
-fdescribe('MancalaMove', () => {
+describe('MancalaMove', () => {
 
     describe('toString', () => {
 

@@ -8,7 +8,7 @@ import { MancalaMoveGenerator } from '../MancalaMoveGenerator';
 import { MancalaRules } from '../MancalaRules';
 import { MancalaScoreMinimax } from '../MancalaScoreMinimax';
 
-fdescribe('MancalaScoreMinimax', () => {
+describe('MancalaScoreMinimax', () => {
 
     for (const mancalaRules of [AwaleRules, KalahRules, BaAwaRules]) {
         const minimaxOptions: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };

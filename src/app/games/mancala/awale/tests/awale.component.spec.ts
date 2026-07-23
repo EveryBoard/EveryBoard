@@ -15,7 +15,7 @@ import { AwaleComponent } from '../awale.component';
 
 const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
-fdescribe('AwaleComponent', () => {
+describe('AwaleComponent', () => {
 
     doMancalaComponentTests({
         component: AwaleComponent,

@@ -438,6 +438,10 @@
         <source>Seeds by house</source>
         <target>Graines par maison</target>
       </trans-unit>
+      <trans-unit id="3686980350710017232" datatype="html">
+        <source>Number of rows</source>
+        <target>Nombre de rangées</target>
+      </trans-unit>
       <trans-unit id="1086558575410854374" datatype="html">
         <source>Feed original house</source>
         <target>Nourrir la maison d'origine</target>

@@ -18,7 +18,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { KalahRules } from '../KalahRules';
 import { KalahComponent } from '../kalah.component';
 
-fdescribe('KalahComponent', () => {
+describe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
@@ -87,7 +87,7 @@ fdescribe('KalahComponent', () => {
         },
     });
 
-    fdescribe('Kalah Specific Tests', () => {
+    describe('Kalah Specific Tests', () => {
         beforeEach(fakeAsync(async() => {
             const testUtils: ComponentTestUtils<KalahComponent> = await ComponentTestUtils.forGame<KalahComponent>('Kalah');
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new KalahMoveGenerator());
@@ -349,7 +349,7 @@ fdescribe('KalahComponent', () => {
             mancalaTestUtils.expectStoreContentToBe(Player.ZERO, ' 1 '); // no longer +1
         }));
 
-        fit('should should last move on different row', fakeAsync(async() => {
+        it('should should last move on different row', fakeAsync(async() => {
             // Given a state where there has been a point-won last turn
             // and a custom config with several row
             const customConfig: MancalaConfig = {

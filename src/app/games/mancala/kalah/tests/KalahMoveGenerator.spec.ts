@@ -7,7 +7,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { KalahRules } from '../KalahRules';
 
-fdescribe('KalahMoveGenerator', () => {
+describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();

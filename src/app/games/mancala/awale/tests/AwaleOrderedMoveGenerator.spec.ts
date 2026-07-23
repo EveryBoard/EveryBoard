@@ -8,7 +8,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { AwaleOrderedMoveGenerator } from '../AwaleOrderedMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 
-fdescribe('AwaleOrderedMoveGenerator', () => {
+describe('AwaleOrderedMoveGenerator', () => {
 
     let moveGenerator: AwaleOrderedMoveGenerator;
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();

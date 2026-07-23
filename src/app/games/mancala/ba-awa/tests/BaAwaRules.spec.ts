@@ -9,7 +9,7 @@ import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.
 import { BaAwaConfig } from '../BaAwaConfig';
 import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 
-fdescribe('BaAwaRules', () => {
+describe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
@@ -114,7 +114,8 @@ fdescribe('BaAwaRules', () => {
             const state: MancalaState = new MancalaState(board, 2, PlayerNumberMap.of(0, 0));
 
             // When performing a move that will capture
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1)); // TODO: why was 0,0 was a legal distribution ??
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            // TODO: why was 0,0 was a legal distribution ??
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [

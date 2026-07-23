@@ -13,7 +13,7 @@ import { MancalaState } from '../../common/MancalaState';
 import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
 import { AwaleRules } from '../AwaleRules';
 
-fdescribe('AwaleRules', () => {
+describe('AwaleRules', () => {
 
     const rules: MancalaRules = AwaleRules.get();
     const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();

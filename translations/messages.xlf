@@ -869,14 +869,14 @@
       <trans-unit id="4053624367526659457" datatype="html">
         <source>Number of pieces rows</source>
       </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
       </trans-unit>
       <trans-unit id="4231579860680569680" datatype="html">
         <source>There is no such configuration element</source>
-      </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
@@ -2445,6 +2445,9 @@
       </trans-unit>
       <trans-unit id="7080802734755670775" datatype="html">
         <source>Seeds by house</source>
+      </trans-unit>
+      <trans-unit id="3686980350710017232" datatype="html">
+        <source>Number of rows</source>
       </trans-unit>
       <trans-unit id="4012808273739972279" datatype="html">
         <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player captured. As you are playing Dark, the 6 houses on the bottom are yours.</source>

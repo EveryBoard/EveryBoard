@@ -449,11 +449,10 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
             Object.entries(config).forEach(
                 (configElement: [string, ConfigDescriptionType]) => {
-                    console.log(configElement[0], '=', configElement[1])
                     TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
                 },
             );
-            // TODO: the config should fucking be put in the URL alrehdeeeeeeeh
+            // TODO: config should be in URL already (rules-config-param-in-the-url-in-test)
             await wrapper.setConfigFromParams();
             this.gameComponent.config = config;
             tick(0);
