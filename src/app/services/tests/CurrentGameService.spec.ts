@@ -26,8 +26,12 @@ describe('CurrentGameService', () => {
 
     let backendService: BackendServiceMock;
 
-    function someCurrentGame(role: UserRoleInPart): CurrentGame {
-        return { creator: UserMocks.CREATOR_MINIMAL_USER, id: '1234', gameName: 'P4', role };
+    function buildCurrentGame(currentGame: Partial<CurrentGame>): CurrentGame {
+        return { creator: UserMocks.CREATOR_MINIMAL_USER, id: '1234', gameName: 'P4', role: 'Player', ...currentGame };
+    }
+
+    function withRole(role: UserRoleInPart): CurrentGame {
+        return buildCurrentGame({ role });
     }
 
     function updateCurrentGame(currentGame: CurrentGame | null): void {
@@ -68,7 +72,7 @@ describe('CurrentGameService', () => {
                 currentGameService.subscribeToCurrentGame((newValue: MGPOptional<CurrentGame>) => {
                     currentGame = newValue;
                 });
-            updateCurrentGame(someCurrentGame('Player'));
+            updateCurrentGame(withRole('Player'));
             expect(currentGame.isPresent()).toBeTrue();
 
             // When connected user logs out
@@ -91,7 +95,7 @@ describe('CurrentGameService', () => {
 
             // When disconnected user logs in and receives the current game
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            updateCurrentGame(someCurrentGame('Player'));
+            updateCurrentGame(withRole('Player'));
             tick(0);
 
             // Then the service now has current game
@@ -105,7 +109,7 @@ describe('CurrentGameService', () => {
 
             // When disconnected user logs in and receives their current game
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            updateCurrentGame(someCurrentGame('Player'));
+            updateCurrentGame(withRole('Player'));
             tick(0);
 
             // Then the service now has a current game
@@ -131,11 +135,11 @@ describe('CurrentGameService', () => {
                     resolvePromise();
                 });
             // When a currentGame update is received
-            updateCurrentGame(someCurrentGame('Player'));
+            updateCurrentGame(withRole('Player'));
             await userHasUpdated;
 
             // Then the observable should have updated its value
-            expect(lastValue).toEqual(MGPOptional.of(someCurrentGame('Player')));
+            expect(lastValue).toEqual(MGPOptional.of(withRole('Player')));
             subscription.unsubscribe();
         }));
 
@@ -167,7 +171,7 @@ describe('CurrentGameService', () => {
         it('should update currentGame when it is removed', fakeAsync(async() => {
             // Given a connected user with a current game
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
-            updateCurrentGame(someCurrentGame('Player'));
+            updateCurrentGame(withRole('Player'));
             tick(0);
             expect((await currentGameService.getCurrentGame()).isPresent()).toBeTrue();
 
@@ -199,7 +203,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user has a current game
-            updateCurrentGame(someCurrentGame('Player'));
+            updateCurrentGame(withRole('Player'));
 
             // When asking if you can create
             const validation: MGPValidation = currentGameService.canUserCreate();
@@ -210,7 +214,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already creator', fakeAsync(async() => {
             // Given a ConnectedUserService where user has a current game
-            updateCurrentGame(someCurrentGame('Creator'));
+            updateCurrentGame(withRole('Creator'));
 
             // When asking if you can create
             const validation: MGPValidation = currentGameService.canUserCreate();
@@ -221,7 +225,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already candidate', fakeAsync(async() => {
             // Given a ConnectedUserService where user has a current game
-            updateCurrentGame(someCurrentGame('Candidate'));
+            updateCurrentGame(withRole('Candidate'));
 
             // When asking if you can create
             const validation: MGPValidation = currentGameService.canUserCreate();
@@ -232,7 +236,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
             // Given a ConnectedUserService where user has a current game
-            updateCurrentGame(someCurrentGame('ChosenOpponent'));
+            updateCurrentGame(withRole('ChosenOpponent'));
 
             // When asking if you can create
             const validation: MGPValidation = currentGameService.canUserCreate();
@@ -243,7 +247,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already Observer', fakeAsync(async() => {
             // Given a ConnectedUserService where user has a current game
-            updateCurrentGame(someCurrentGame('Observer'));
+            updateCurrentGame(withRole('Observer'));
 
             // When asking if you can join some game
             const validation: MGPValidation = currentGameService.canUserCreate();
@@ -307,13 +311,13 @@ describe('CurrentGameService', () => {
         it('should not allow user to join twice the same game', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
             // When asking if you can join that specific part again
-            const currentGame: CurrentGame = someCurrentGame('Player');
+            const currentGame: CurrentGame = withRole('Player');
             await shouldAllowToJoinGame(currentGame, '1234', true);
         }));
 
         it('should refuse for a player already playing', fakeAsync(async() => {
             // Given a ConnectedUserService where user plays a part
-            const currentGame: CurrentGame = someCurrentGame('Player');
+            const currentGame: CurrentGame = withRole('Player');
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_PLAYING();
 
             // When asking if you can join some started part
@@ -325,7 +329,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already creator', fakeAsync(async() => {
             // Given a ConnectedUserService where user is creating a part
-            const currentGame: CurrentGame = someCurrentGame('Creator');
+            const currentGame: CurrentGame = withRole('Creator');
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CREATING();
 
             // When asking if you can join some started part
@@ -337,7 +341,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already candidate', fakeAsync(async() => { // Instable: last failed 2022-08-18
             // Given a ConnectedUserService where user is candidate of a part
-            const currentGame: CurrentGame = someCurrentGame('Candidate');
+            const currentGame: CurrentGame = withRole('Candidate');
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CANDIDATE();
 
             // When asking if you can join some started part
@@ -349,7 +353,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already Chosen Opponent', fakeAsync(async() => {
             // Given a ConnectedUserService where user is chosen opponent in a part
-            const currentGame: CurrentGame = someCurrentGame('ChosenOpponent');
+            const currentGame: CurrentGame = withRole('ChosenOpponent');
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_CHOSEN_OPPONENT();
 
             // When asking if you can join some started part
@@ -361,7 +365,7 @@ describe('CurrentGameService', () => {
 
         it('should refuse for a player already Observer to join non-started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const currentGame: CurrentGame = someCurrentGame('Observer');
+            const currentGame: CurrentGame = withRole('Observer');
             const reason: string = GameActionFailure.YOU_ARE_ALREADY_OBSERVING();
 
             // When asking if you can join some unstarted part
@@ -370,7 +374,7 @@ describe('CurrentGameService', () => {
 
         it('should allow for a player already Observer to join a started part', fakeAsync(async() => {
             // Given a ConnectedUserService where user observe a part
-            const currentGame: CurrentGame = someCurrentGame('Observer');
+            const currentGame: CurrentGame = withRole('Observer');
 
             // When asking if you can join some started part
             await shouldAllowToJoinGame(currentGame, 'some-id', true);
