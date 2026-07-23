@@ -323,7 +323,6 @@ jobs:
 
   deployment-netlify:
     runs-on: ubuntu-24.04
-    # needs: [build-front]
     environment: netlify
     steps:
     - name: Diagnose Netlify authentication
