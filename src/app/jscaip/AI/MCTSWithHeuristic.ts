@@ -66,6 +66,7 @@ export class MCTSWithHeuristic<M extends Move,
                 if (denom === 0) {
                     value += 0.5; // neutral for this metric
                 } else {
+                    // the fraction added will always be in [0,1]
                     value += (boundedMetric - player0Best) / denom;
                 }
             }
