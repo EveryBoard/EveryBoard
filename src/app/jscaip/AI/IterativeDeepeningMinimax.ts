@@ -17,13 +17,15 @@ export class IterativeDeepeningMinimax<M extends Move,
                                        L = void>
     extends AbstractMinimax<M, S, AITimeLimitOptions, C, L> {
 
+    private readonly MAX_MINIMAX_LEVEL: number = 10;
+
     public constructor(name: string,
                        rules: SuperRules<M, S, C, L>,
                        heuristic: Heuristic<M, S, BoardValue, C>,
                        moveGenerator: MoveGenerator<M, S, C>,
                        hash?: MinimaxHash<S>) {
         super(name, rules, heuristic, moveGenerator, hash);
-        for (let i: number = 1; i < 10; i++) {
+        for (let i: number = 1; i < this.MAX_MINIMAX_LEVEL; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
         }
     }

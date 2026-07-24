@@ -1,12 +1,22 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { AIDepthLimitOptions, MoveGenerator } from '../../../../jscaip/AI/AI';
+import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
+import { MancalaConfig } from '../MancalaConfig';
+import { MancalaMove } from '../MancalaMove';
 import { MancalaMoveGenerator } from '../MancalaMoveGenerator';
 import { MancalaRules } from '../MancalaRules';
-import { MancalaScoreMinimax } from '../MancalaScoreMinimax';
+import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
+import { MancalaState } from '../MancalaState';
+
+export class MancalaScoreMinimax extends Minimax<MancalaMove, MancalaState, MancalaConfig> {
+    public constructor(rules: MancalaRules, moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
+        super('Score', rules, new MancalaScoreHeuristic(), moveGenerator);
+    }
+}
 
 describe('MancalaScoreMinimax', () => {
 

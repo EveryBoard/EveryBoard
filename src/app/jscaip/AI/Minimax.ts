@@ -10,6 +10,10 @@ import { AbstractMinimax, MinimaxHash } from './AbstractMinimax';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic } from './Heuristic';
+export { Heuristic } from './Heuristic';
+export { DummyHeuristic } from './DummyHeuristic';
+export { PlayerMetricHeuristic } from './PlayerMetricHeuristic';
+export { IterativeDeepeningMinimax } from './IterativeDeepeningMinimax';
 
 export class Minimax<M extends Move,
                      S extends GameState,
