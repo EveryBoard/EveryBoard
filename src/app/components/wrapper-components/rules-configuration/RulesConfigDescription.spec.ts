@@ -14,13 +14,15 @@ describe(`RulesConfigDescriptions`, () => {
         const rulesConfigDescription: RulesConfigDescription<RulesConfig> =
             gameInfo.rules.getRulesConfigDescription();
 
-        it(`should have internationalized fields of ${ gameInfo.urlName }`, () => {
-            for (const field of rulesConfigDescription.getFields()) {
-                const defaultConfigDescription: DefaultConfigDescription =
-                    rulesConfigDescription.defaultConfigDescription;
-                expect(defaultConfigDescription.config[field].title().length).toBeGreaterThan(0);
-            }
-        });
+        if (rulesConfigDescription.getFields().length > 0) {
+            it(`should have internationalized fields of ${ gameInfo.urlName }`, () => {
+                for (const field of rulesConfigDescription.getFields()) {
+                    const defaultConfigDescription: DefaultConfigDescription =
+                        rulesConfigDescription.defaultConfigDescription;
+                    expect(defaultConfigDescription.config[field].title().length).toBeGreaterThan(0);
+                }
+            });
+        }
 
         it(`should have an internationalized name for each standard config of ${ gameInfo.urlName }`, () => {
             for (const standardConfig of rulesConfigDescription.getStandardConfigs()) {

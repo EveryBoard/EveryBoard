@@ -244,7 +244,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players[loserValue].equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.getSelectedPlayerName(gameStatus.winner.getValue())} (Player ${gameStatus.winner.getValue() + 1}) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.getPlayerName(gameStatus.winner.getValue())} (Player ${gameStatus.winner.getValue() + 1}) won`);
                     }
                 }
             }
@@ -252,7 +252,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.cdr.detectChanges();
     }
 
-    private getSelectedPlayerName(playerIndex: number): string {
+    private getPlayerName(playerIndex: number): string {
         if (this.playerSelection[playerIndex] === 'human') {
             return $localize`Human`;
         }

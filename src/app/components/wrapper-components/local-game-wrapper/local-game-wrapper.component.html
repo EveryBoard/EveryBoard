@@ -35,10 +35,11 @@
                                         (change)="updatePlayer(player)"
                                         [(ngModel)]="playerSelection[player.getValue()]">
                                     <option selected
+                                            id="player-{{ player.getValue() }}-human"
                                             value="human"
                                             i18n>Human</option>
                                     @for (strategy of availableAIStrategies(); track strategy.id) {
-                                        <option id="player-{{ player.getValue() }}-ai-{{ strategy.name }}"
+                                        <option id="player-{{ player.getValue() }}-ai-{{ strategy.id }}"
                                                 [value]="strategy.id">{{ strategy.name }}</option>
                                     }
                                 </select>
@@ -52,7 +53,7 @@
                                                 value="none"
                                                 i18n>Pick the profile</option>
                                         @for (profile of availableAIProfiles(player.getValue()); track profile.id) {
-                                            <option id="player-{{ player.getValue() }}-profile-{{ profile.name }}"
+                                            <option id="player-{{ player.getValue() }}-profile-{{ profile.id }}"
                                                     [value]="profile.id">{{ profile.name }}</option>
                                         }
                                     </select>

@@ -329,6 +329,12 @@ export class SimpleComponentTestUtils<T> {
 
     public async selectChildElementOfDropDown(dropDownName: string, childName: string): Promise<void> {
         const selectedDropDown: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        expect(selectedDropDown)
+            .withContext(`dropDown ${dropDownName} does not exist`)
+            .toBeDefined();
+        expect(selectedDropDown.options[childName])
+            .withContext(`option ${childName} of dropdown ${dropDownName} does not exist (keys are: ${Object.keys(selectedDropDown.options)})`)
+            .toBeDefined();
         selectedDropDown.value = selectedDropDown.options[childName].value;
         selectedDropDown.dispatchEvent(new Event('change'));
         this.detectChanges();
