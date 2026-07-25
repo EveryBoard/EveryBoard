@@ -1,20 +1,29 @@
 import { Coord } from '../Coord';
 
-import { Layout } from './Layout';
+import { BaseLayout } from './Layout';
 
-export class SquareLayout implements Layout {
+export class SquareLayout extends BaseLayout {
 
     public constructor(
         public readonly size: number,
     ) {
+        super();
     }
 
-    public getTranslationAt(coord: Coord): string {
-        return `translate(${ coord.x * this.size }, ${ coord.y * this.size})`;
+    public override getTranslationCoordAt(coord: Coord): Coord {
+        return new Coord(
+            coord.x * this.size,
+            coord.y * this.size,
+        );
     }
 
-    public getPolygonAt(_: Coord): string {
-        return `0 0 0 ${ this.size } ${ this.size } ${ this.size } ${ this.size } 0`;
+    public override getPolygonCoordsAt(_: Coord): Coord[] {
+        return [
+            new Coord(0, 0),
+            new Coord(0, this.size),
+            new Coord(this.size, this.size),
+            new Coord(this.size, 0),
+        ];
     }
 
 }

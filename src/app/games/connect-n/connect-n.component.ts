@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
 
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
@@ -10,9 +10,9 @@ import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../connect-six/ConnectSixMove';
 
 import { ConnectNAlignmentMinimax } from './ConnectNAlignmentMinimax';
+import { ConnectNMove } from './ConnectNMove';
 import { ConnectNMoveGenerator } from './ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
 
@@ -23,18 +23,20 @@ import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
     imports: [NgClass],
 })
 export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
-                                                              ConnectSixMove,
+                                                              ConnectNMove,
                                                               TopologicGameState<FourStatePiece>,
                                                               FourStatePiece,
                                                               ConnectNConfig>
 {
-    protected coordsAndContents: { coord: Coord, content: FourStatePiece }[] = [];
+    protected coordsAndContents: WritableSignal<{ coord: Coord, content: FourStatePiece }[]> = signal([]);
 
-    public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
+    public droppedCoords: WritableSignal<Coord[]> = signal([]);
 
-    public lastMoved: Coord[] = [];
+    public lastMoveds: WritableSignal<Coord[]> = signal([]);
 
-    public victoryCoords: Coord[] = [];
+    public victoryCoords: WritableSignal<Coord[]> = signal([]);
+
+    private readonly NUMBER_OF_AWAITED_DROPS: number = 2;
 
     public constructor() {
         super();
@@ -43,25 +45,21 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
             new ConnectNAlignmentMinimax(),
             new MCTS($localize`MCTS`, new ConnectNMoveGenerator(), this.rules),
         ];
-        this.encoder = ConnectSixMove.encoder;
+        this.encoder = ConnectNMove.encoder;
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece> = this.getState();
-        this.coordsAndContents = state.getCoordsAndContents();
-        this.victoryCoords = ConnectNRules.getVictoriousCoords(state, this.getConfig());
+        this.coordsAndContents.set(state.getCoordsAndContents());
+        this.victoryCoords.set(ConnectNRules.getVictoriousCoords(state, this.getConfig()));
     }
 
-    public override async showLastMove(move: ConnectSixMove): Promise<void> {
-        if (move instanceof ConnectSixFirstMove) {
-            this.lastMoved = [move.coord];
-        } else {
-            this.lastMoved = [move.getFirst(), move.getSecond()];
-        }
+    public override async showLastMove(move: ConnectNMove): Promise<void> {
+        this.lastMoveds.set(move.coords.toList());
     }
 
     public override hideLastMove(): void {
-        this.lastMoved = [];
+        this.lastMoveds.set([]);
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -73,21 +71,26 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         }
         const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            const move: ConnectSixMove = ConnectSixFirstMove.of(clickedCoord);
+            const move: ConnectNMove = ConnectNMove.of([clickedCoord]);
             return this.chooseMove(move);
         } else {
             if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (this.droppedCoord.isPresent()) {
-                if (this.droppedCoord.equalsValue(clickedCoord)) {
+            } else if (this.droppedCoords().length === 0) {
+                this.droppedCoords.set([clickedCoord]);
+                return MGPValidation.SUCCESS;
+            } else {
+                if (this.droppedCoords().some((c: Coord) => c.equals(clickedCoord))) {
                     return this.cancelMove();
                 } else {
-                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), clickedCoord);
-                    return this.chooseMove(move);
+                    this.droppedCoords().push(clickedCoord); // TODO: is this CLEAN ???
+                    if (this.droppedCoords().length === this.NUMBER_OF_AWAITED_DROPS) {
+                        const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());
+                        return this.chooseMove(move);
+                    } else {
+                        return MGPValidation.SUCCESS;
+                    }
                 }
-            } else {
-                this.droppedCoord = MGPOptional.of(clickedCoord);
-                return MGPValidation.SUCCESS;
             }
         }
     }
@@ -96,15 +99,15 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord).getPlayer();
         const classes: string[] = [];
-        if (this.droppedCoord.equalsValue(coord)) {
+        if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
             classes.push(this.getPlayerClass(this.getState().getCurrentPlayer()));
             classes.push('highlighted-stroke');
         } else {
             classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
+            if (this.victoryCoords().some((c: Coord) => c.equals(coord))) {
                 classes.push('victory-stroke');
             }
-            if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
+            if (this.lastMoveds().some((c: Coord) => c.equals(coord))) {
                 classes.push('last-move-stroke');
             }
         }
@@ -112,7 +115,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.droppedCoord = MGPOptional.empty();
+        this.droppedCoords.set([]);
     }
 
 }

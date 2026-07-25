@@ -1,13 +1,15 @@
 import { Coord } from '../Coord';
-import { Vector } from '../Vector';
+import { Topology } from '../topology/Topology';
 
-import { Shape } from './Shape';
+import { Shape, TopologicShape } from './Shape';
 
-export class TriangularShape implements Shape {
+export class TriangularShape extends TopologicShape implements Shape {
 
     public constructor(
         public readonly side: number,
+        topology: Topology,
     ) {
+        super(topology);
     }
 
     public getCenters(): Coord[] {
@@ -33,18 +35,19 @@ export class TriangularShape implements Shape {
         }
     }
 
-    public getAllCoords(): Coord[] { // TODO: remove UNREACHABLE within or without the board ?
+    public getAllCoords(): Coord[] {
+        const evenOffset: number = this.side % 2 === 0 ? 1 : 0;
         const coords: Coord[] = [];
-        for (let x: number = 0; x < this.side; x++) {
+        const minyx: number = this.side - 1;
+        const maxIndex: number = (this.side - 1) * 2;
+        for (let x: number = 0; x <= maxIndex; x++) {
             for (let y: number = 0; y < this.side; y++) {
-                coords.push(new Coord(x, y));
+                if (minyx <= x + y && x - y < this.side) {
+                    coords.push(new Coord(evenOffset + x, y));
+                }
             }
         }
         return coords;
-    }
-
-    public getNextCoord(coord: Coord, direction: Vector): Coord {
-        return new Coord(0, 0); // TODO
     }
 
 }

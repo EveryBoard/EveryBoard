@@ -27,6 +27,10 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends
         return this.gameStateWithTable.hasPieceAt(coord, value);
     }
 
+    public isOnBoard(coord: Coord): boolean {
+        return this.gameStateWithTable.isOnBoard(coord);
+    }
+
     public isNotOnBoard(coord: Coord): boolean {
         return this.gameStateWithTable.isNotOnBoard(coord);
     }

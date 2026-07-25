@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 
+import { Utils } from '@everyboard/lib';
+
 import { Coord } from '../../../jscaip/Coord';
-import { FlatHexaOrientation, HexaOrientation } from '../../../jscaip/HexaOrientation';
+import { FlatHexaOrientation } from '../../../jscaip/HexaOrientation';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
@@ -28,23 +30,47 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              L = void>
     extends GameComponent<R, M, S, C, L>
 {
+    private readonly squareLayout: SquareLayout = new SquareLayout(this.SPACE_SIZE);
+
+    private readonly triangularLayout: TriangularLayout = new TriangularLayout(this.SPACE_SIZE * 1.2);
+
+    private readonly hexagonalLayout: HexaLayout = new HexaLayout(
+        this.SPACE_SIZE * 0.6,
+        new Coord(0, 0),
+        FlatHexaOrientation.INSTANCE,
+    );
 
     public getViewBox(): ViewBox {
+        const globalViewBox: ViewBox = this.getViewBoxFrom(
+            this.getState()
+                .getAllCoords()
+                .map((coord: Coord) => this.getLayout().getTranslationCoordAt(coord)),
+        );
+        const localViewBox: ViewBox = this.getViewBoxFrom(
+            this.getLayout().getPolygonCoordsAt(new Coord(0, 0)),
+        );
+        return globalViewBox
+            .expandRight(localViewBox.width)
+            .expandBelow(localViewBox.height)
+            .expandAll(this.STROKE_WIDTH / 2);
+    }
+
+    private getViewBoxFrom(coords: Coord[]): ViewBox {
         let minX: number = Number.MAX_VALUE;
         let minY: number = Number.MAX_VALUE;
         let maxX: number = Number.MIN_VALUE;
         let maxY: number = Number.MIN_VALUE;
-        for (const coord of this.getState().getAllCoords()) {
+        for (const coord of coords) {
             minX = Math.min(minX, coord.x);
             minY = Math.min(minY, coord.y);
             maxX = Math.max(maxX, coord.x);
             maxY = Math.max(maxY, coord.y);
         }
         return ViewBox.fromLimits(
-            minX * this.SPACE_SIZE,
-            maxX * this.SPACE_SIZE,
-            minY * this.SPACE_SIZE,
-            maxY * this.SPACE_SIZE,
+            minX,
+            maxX,
+            minY,
+            maxY,
         );
     }
 
@@ -58,19 +84,20 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
         return layout.getPolygonAt(coord);
     }
 
-    private getLayout(): Layout { // TODO: don't instanciate every call
+    protected getTopologicCellId(coord: Coord): string {
+        return `${ coord.x }-${ coord.y }`;
+    }
+
+    private getLayout(): Layout {
         const state: TopologicGameState<P> = this.getState();
         const topology: Topology = state.getTopology();
         if (topology instanceof SquareTopology) {
-            return new SquareLayout(this.SPACE_SIZE);
+            return this.squareLayout;
         } else if (topology instanceof TriangularTopology) {
-            return new TriangularLayout(this.SPACE_SIZE * 1.2);
-        } else if (topology instanceof HexagonalTopology) {
-            const origin: Coord = new Coord(0, 0);
-            const orientation: HexaOrientation = FlatHexaOrientation.INSTANCE;
-            return new HexaLayout(this.SPACE_SIZE * 0.60, origin, orientation);
+            return this.triangularLayout;
         } else {
-            throw new Error('TODO FDC');
+            Utils.expectToBe(topology instanceof HexagonalTopology, true);
+            return this.hexagonalLayout;
         }
     }
 

@@ -26,6 +26,8 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
 
     public abstract isNotOnBoard(coord: Coord): boolean;
 
+    public abstract isOnBoard(coord: Coord): boolean;
+
     public abstract incrementTurn(): this;
 
     public abstract getCenters(): Coord[];

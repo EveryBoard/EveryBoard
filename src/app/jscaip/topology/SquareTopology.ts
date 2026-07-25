@@ -15,14 +15,19 @@ export class SquareTopology implements Topology {
         ];
     }
 
-    public getNextCoord(coord: Coord, direction: Direction): Coord {
-        return coord.getNext(direction);
+    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
+        return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Coord[] {
-        return this.getDirections().map(
-            (direction: Direction) => this.getNextCoord(coord, direction),
-        );
+        return [
+            ...this.getDirections().map(
+                (direction: Direction) => this.getNextCoord(coord, direction),
+            ),
+            ...this.getDirections().map(
+                (direction: Direction) => this.getNextCoord(coord, direction, -1),
+            ),
+        ];
     }
 
 }

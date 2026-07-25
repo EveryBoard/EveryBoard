@@ -37,7 +37,7 @@ export class RectangularShape extends TopologicShape {
         }
     }
 
-    public getAllCoords(): Coord[] { // TODO: remove UNREACHABLE within or without the board ?
+    public getAllCoords(): Coord[] {
         const coords: Coord[] = [];
         for (let x: number = 0; x < this.width; x++) {
             for (let y: number = 0; y < this.height; y++) {

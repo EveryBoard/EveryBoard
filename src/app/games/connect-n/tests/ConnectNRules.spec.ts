@@ -7,6 +7,7 @@ import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
+import { Shape } from '../../../jscaip/shape/Shape';
 import { ToroidalShape } from '../../../jscaip/shape/ToroidalShape';
 import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
@@ -16,12 +17,15 @@ import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../../connect-six/ConnectSixMove';
+import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
+import { HexagonalTopology } from 'src/app/jscaip/topology/HexagonalTopology';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
+
+const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
 fdescribe('ConnectNRules (SQUARE)', () => {
     /**
@@ -33,8 +37,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
      */
 
     let rules: ConnectNRules;
-    const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const topology: Topology = new SquareTopology();
+    const defaultTopology: Topology = new SquareTopology();
+    const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -47,7 +51,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
             const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
 
             // When dropping out of the board
-            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(-1, -1)) as ConnectSixMove;
+            const move: ConnectNMove = ConnectNMove.of([new Coord(-1, -1)]);
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
@@ -59,7 +63,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
             const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectNMove = ConnectNMove.of([new Coord(9, 9)]);
 
             // Then the move should succeed
             const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
@@ -85,8 +89,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 expectedGameState,
             );
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
@@ -97,13 +101,13 @@ fdescribe('ConnectNRules (SQUARE)', () => {
             const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
 
             // When dropping two pieces
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(11, 11), new Coord(10, 10));
+            const move: ConnectNMove = ConnectNMove.of([new Coord(11, 11), new Coord(10, 10)]);
 
             // Then the attempt should throw
             function tryDoubleDropOnFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'ConnectSixDrops should only be used after first move');
+            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'ConnectNMove should only be used after first move');
         });
 
     });
@@ -134,13 +138,13 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When doing a move who'se second coord is out of range
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(0, 0), new Coord(-1, -1)) as ConnectSixMove;
+            const move: ConnectNMove = ConnectNMove.of([new Coord(0, 0), new Coord(-1, -1)]);
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-1, -1));
@@ -171,13 +175,13 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When doing a move who'se second coord is out of range
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(-2, -2), new Coord(0, 0)) as ConnectSixMove;
+            const move: ConnectNMove = ConnectNMove.of([new Coord(-2, -2), new Coord(0, 0)]);
 
             // Then the move should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(new Coord(-2, -2));
@@ -208,14 +212,14 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When dropping piece on it with the first coord already occupied
-            const move: ConnectSixMove =
-                ConnectSixDrops.of(new Coord(9, 9), new Coord(10, 10)) as ConnectSixMove;
+            const move: ConnectNMove =
+                ConnectNMove.of([new Coord(9, 9), new Coord(10, 10)]);
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
@@ -246,13 +250,13 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When dropping piece on it with the second coord already occupied
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(9, 9)) as ConnectSixMove;
+            const move: ConnectNMove = ConnectNMove.of([new Coord(8, 8), new Coord(9, 9)]);
 
             // Then the move should be illegal
             const reason: string = RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE();
@@ -283,13 +287,13 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When dropping pieces on empty squares
-            const move: ConnectSixMove = ConnectSixDrops.of(new Coord(7, 7), new Coord(8, 8)) as ConnectSixMove;
+            const move: ConnectNMove = ConnectNMove.of([new Coord(7, 7), new Coord(8, 8)]);
             const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                 new SimpleGameStateWithTable<FourStatePiece>([
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -313,8 +317,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 2);
             const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 expectedGameState,
             );
 
@@ -346,19 +350,19 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When dropping only one piece
-            const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
+            const move: ConnectNMove = ConnectNMove.of([new Coord(9, 9)]);
 
             // Then the move should be illegal
             function trySingleDropAfterFirstTurn(): void {
                 rules.isLegal(move, state);
             }
-            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'ConnectSixFirstMove should only be used at first move');
+            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'ConnectNMove should only be used at first move');
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {
@@ -384,12 +388,12 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
-            const move: ConnectSixMove =
-                ConnectSixDrops.of(new Coord(8, 8), new Coord(8, 9)) as ConnectSixMove;
+            const move: ConnectNMove =
+                ConnectNMove.of([new Coord(8, 8), new Coord(8, 9)]);
             const previousNode: ConnectNNode = new ConnectNNode(state);
             const node: ConnectNNode =
                 new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
@@ -423,14 +427,14 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, _, _],
             ], 180);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 gameState,
             );
 
             // When playing the last 181st turn
-            const move: ConnectSixMove =
-                ConnectSixDrops.of(new Coord(17, 18), new Coord(18, 18)) as ConnectSixMove;
+            const move: ConnectNMove =
+                ConnectNMove.of([new Coord(17, 18), new Coord(18, 18)]);
             const expectedGameState: SimpleGameStateWithTable<FourStatePiece> =
                 new SimpleGameStateWithTable<FourStatePiece>([
                     [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -454,8 +458,8 @@ fdescribe('ConnectNRules (SQUARE)', () => {
                     [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
                 ], 181);
             const expectedState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-                topology,
-                new RectangularShape(19, 19, topology),
+                defaultTopology,
+                defaultShape,
                 expectedGameState,
             );
 
@@ -475,8 +479,7 @@ fdescribe('ConnectNRules (HEXAGONAL)', () => {
 
 
     let rules: ConnectNRules;
-    const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const topology: Topology = new SquareTopology();
+    const hexagonalTopology: Topology = new HexagonalTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -510,12 +513,12 @@ fdescribe('ConnectNRules (HEXAGONAL)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            topology,
-            new ToroidalShape(19, 19, topology),
+            hexagonalTopology,
+            new ToroidalShape(19, 19, hexagonalTopology),
             gameState,
         );
-        const move: ConnectSixMove =
-            ConnectSixDrops.of(new Coord(0, 8), new Coord(0, 9)) as ConnectSixMove;
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 8), new Coord(0, 9)]);
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
@@ -529,7 +532,6 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
 
 
     let rules: ConnectNRules;
-    const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -568,8 +570,8 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             new TriangularShape(19),
             gameState,
         );
-        const move: ConnectSixMove =
-            ConnectSixDrops.of(new Coord(0, 0), new Coord(3, 3)) as ConnectSixMove;
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 0), new Coord(3, 3)]);
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
@@ -611,8 +613,8 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             new TriangularShape(19),
             gameState,
         );
-        const move: ConnectSixMove =
-            ConnectSixDrops.of(new Coord(0, 0), new Coord(3, 3)) as ConnectSixMove;
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 0), new Coord(3, 3)]);
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
@@ -654,8 +656,8 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             new TriangularShape(19),
             gameState,
         );
-        const move: ConnectSixMove =
-            ConnectSixDrops.of(new Coord(0, 0), new Coord(3, 3)) as ConnectSixMove;
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 0), new Coord(3, 3)]);
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));

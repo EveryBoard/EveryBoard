@@ -79,10 +79,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.SPACE_SIZE = 40;
         this.constructedState = this.getState();
         const size: number = this.SPACE_SIZE * 1.50;
-        const origineX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
-        const origineY: number = - this.hexagonWidth;
-        const origine: Coord = new Coord(origineX, origineY); // TODO: no we are not the la fronce
-        this.hexaLayout = new HexaLayout(size, origine, FlatHexaOrientation.INSTANCE);
+        const originX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
+        const originY: number = - this.hexagonWidth;
+        const origin: Coord = new Coord(originX, originY);
+        this.hexaLayout = new HexaLayout(size, origin, FlatHexaOrientation.INSTANCE);
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {

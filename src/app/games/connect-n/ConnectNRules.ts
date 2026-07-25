@@ -1,8 +1,8 @@
-import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { EnumConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord, CoordFailure } from '../../jscaip/Coord'; // TODO: remove as Coord might be not applicable
+import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -11,7 +11,9 @@ import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { HexagonalShape } from '../../jscaip/shape/HexagonalShape';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
+import { Shape } from '../../jscaip/shape/Shape';
 import { TriangularShape } from '../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
@@ -22,25 +24,22 @@ import { Topology } from '../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../jscaip/topology/TriangularTopology';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
-import { ConnectSixDrops, ConnectSixMove } from '../connect-six/ConnectSixMove';
 
-export class ConnectNNode extends GameNode<ConnectSixMove, TopologicGameState<FourStatePiece>> {}
+import { ConnectNMove } from './ConnectNMove';
 
-// export class ConnectNMove extends Move {
-
-//     public override toString(): string {
-//         throw new Error('TODO 0');
-//     }
-
-//     public override equals(other: this): boolean {
-//         throw new Error('TODO 1');
-//     }
-
-// }
+export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
 
 export type TopologyEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
 
 export const Topologies: Record<TopologyEnum, Localized> = {
+    'SQUARE': () => $localize`Square`,
+    'HEXAGONAL': () => $localize`Hexagonal`,
+    'TRIANGULAR': () => $localize`Triangular`,
+};
+
+export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
+
+export const Shapes: Record<ShapeEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
@@ -52,9 +51,13 @@ export type ConnectNConfig = {
 
     topology: TopologyEnum;
 
+    shape: ShapeEnum;
+
+    boardSize: number;
+
 }
 
-export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no import from other games !!!
+export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                                                      TopologicGameState<FourStatePiece>,
                                                      ConnectNConfig>
 {
@@ -64,8 +67,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
         new RulesConfigDescription<ConnectNConfig>({
             name: (): string => $localize`Default`,
             config: {
-                n: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 10)),
-                topology: new EnumConfig('SQUARE', () => $localize`Drop mode`, Topologies),
+                n: new NumberConfig(6, () => $localize`N`, MGPValidators.range(3, 10)),
+                boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 100)),
+                topology: new EnumConfig('SQUARE', () => $localize`Space shape`, Topologies),
+                shape: new EnumConfig('SQUARE', () => $localize`Board shape`, Shapes),
             },
         });
 
@@ -87,48 +92,29 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
         return ConnectNRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override applyLegalMove(move: ConnectSixMove,
+    public override applyLegalMove(move: ConnectNMove,
                                    state: TopologicGameState<FourStatePiece>,
-    ): TopologicGameState<FourStatePiece> {
-        if (move instanceof ConnectSixDrops) {
-            return this.applyLegalDrops(move.getCoords(), state);
-        } else {
-            return this.applyLegalDrops([move.coord], state);
-        }
-    }
-
-    private applyLegalDrops(coords: Coord[],
-                            state: TopologicGameState<FourStatePiece>,
     ): TopologicGameState<FourStatePiece> {
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         let resultingState: TopologicGameState<FourStatePiece> = state;
-        for (const coord of coords) {
+        for (const coord of move.coords) {
             resultingState = resultingState.setPieceAt(coord, player);
         }
         return resultingState.incrementTurn();
     }
 
-    public override isLegal(move: ConnectSixMove,
+    public override isLegal(move: ConnectNMove,
                             state: TopologicGameState<FourStatePiece>,
     ): MGPFallible<void> {
-        if (move instanceof ConnectSixDrops) {
-            Utils.assert(state.turn > 0, 'ConnectSixDrops should only be used after first move');
-            for (const coord of move.getCoords()) {
-                if (state.isNotOnBoard(coord)) {
-                    return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
-                }
+        for (const coord of move.coords) {
+            if (state.isNotOnBoard(coord)) {
+                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
-            return this.isLegalDrops(move.getCoords(), state);
-        } else {
-            Utils.assert(state.turn === 0, 'ConnectSixFirstMove should only be used at first move');
-            if (state.isNotOnBoard(move.coord)) {
-                return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
-            }
-            return MGPValidation.SUCCESS;
         }
+        return this.isLegalDrops(move.coords, state);
     }
 
-    public isLegalDrops(coords: Coord[], state: TopologicGameState<FourStatePiece>): MGPValidation {
+    public isLegalDrops(coords: Set<Coord>, state: TopologicGameState<FourStatePiece>): MGPValidation {
         for (const coord of coords) {
             if (state.getPieceAt(coord).isPlayer()) {
                 return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
@@ -138,62 +124,62 @@ export class ConnectNRules extends ConfigurableRules<ConnectSixMove, // TODO: no
     }
 
     public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece> {
+        const topology: Topology = this.getTopology(config);
+        const shape: Shape = this.getShape(config, topology);
+        let maxX: number = 0;
+        let maxY: number = 0;
+        for (const coord of shape.getAllCoords()) {
+            maxX = Math.max(maxX, coord.x);
+            maxY = Math.max(maxY, coord.y);
+        }
+        const board: FourStatePiece[][] =
+            TableUtils.create(maxX + 1, maxY + 1, FourStatePiece.UNREACHABLE);
+        for (const coord of shape.getAllCoords()) {
+            board[coord.y][coord.x] = FourStatePiece.EMPTY;
+        }
+        const gameStateWithTable: SimpleGameStateWithTable<FourStatePiece> =
+            new SimpleGameStateWithTable(board, 0);
+        return new TopologicGameStateWithTable(topology, shape, gameStateWithTable);
+    }
+
+    private getTopology(config: ConnectNConfig): Topology {
         switch (config.topology) {
             case 'SQUARE': {
-                const topology: Topology = new SquareTopology();
-                return new TopologicGameStateWithTable<FourStatePiece>(
-                    topology,
-                    new RectangularShape(19, 19, topology),
-                    new SimpleGameStateWithTable<FourStatePiece>(
-                        TableUtils.create(19, 19, FourStatePiece.EMPTY),
-                        0,
-                    ),
-                );
+                return new SquareTopology();
             } case 'HEXAGONAL': {
-                // const topology: Topology = new SquareTopology();
-                // return new TopologicGameStateWithTable<FourStatePiece>(
-                //     topology,
-                //     new ToroidalShape(19, 19, topology),
-                //     new SimpleGameStateWithTable<FourStatePiece>(
-                //         TableUtils.create(19, 19, FourStatePiece.EMPTY),
-                //         0,
-                //     ),
-                // );
-                const topology: HexagonalTopology = new HexagonalTopology();
-                return new TopologicGameStateWithTable<FourStatePiece>(
-                    topology,
-                    new RectangularShape(19, 19, topology),
-                    new SimpleGameStateWithTable<FourStatePiece>(
-                        TableUtils.create(19, 19, FourStatePiece.EMPTY),
-                        0,
-                    ),
-                );
+                return new HexagonalTopology();
             } default: {
                 Utils.expectToBe(config.topology, 'TRIANGULAR');
-                const topology: Topology = new TriangularTopology();
-                return new TopologicGameStateWithTable<FourStatePiece>(
-                    topology,
-                    new TriangularShape(19),
-                    new SimpleGameStateWithTable<FourStatePiece>(
-                        TableUtils.create(19, 19, FourStatePiece.EMPTY),
-                        0,
-                    ),
-                );
+                return new TriangularTopology();
             }
         }
     }
 
-    public override getGameStatus(node: GameNode<ConnectSixMove, TopologicGameState<FourStatePiece>>,
-                                  config: ConnectNConfig,
+    private getShape(config: ConnectNConfig, topology: Topology): Shape {
+        switch (config.shape) {
+            case 'SQUARE': {
+                return new RectangularShape(config.boardSize, config.boardSize, topology);
+            } case 'HEXAGONAL': {
+                return new HexagonalShape(config.boardSize, topology);
+            } default: {
+                Utils.expectToBe(config.shape, 'TRIANGULAR');
+                return new TriangularShape(config.boardSize, topology);
+            }
+        }
+    }
+
+    public override getGameStatus(
+        node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece>>,
+        config: ConnectNConfig,
     ): GameStatus {
         const state: TopologicGameState<FourStatePiece> = node.gameState;
-        if (state.turn < 2) {
+        if (state.turn === 0) {
             return GameStatus.ONGOING;
         }
         // take the last move
-        const lastMove: ConnectSixDrops = node.previousMove.get() as ConnectSixDrops;
+        const lastMove: ConnectNMove = node.previousMove.get();
         const currentPlayer: Player = state.getCurrentOpponent();
-        for (const startCoord of lastMove.getCoords()) {
+        for (const startCoord of lastMove.coords) {
             for (const direction of state.topology.getDirections()) {
                 const directionCount: number = this.countAlignedPieceOf(
                     state,

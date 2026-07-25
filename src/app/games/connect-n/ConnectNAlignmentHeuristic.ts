@@ -2,17 +2,18 @@ import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Minimax';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player } from '../../jscaip/Player';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
-import { ConnectSixMove } from '../connect-six/ConnectSixMove';
+import { ConnectNMove } from '../connect-n/ConnectNMove';
 
 import { ConnectNConfig, ConnectNNode } from './ConnectNRules';
 
 export class ConnectNAlignmentHeuristic
-    extends Heuristic<ConnectSixMove, TopologicGameState<FourStatePiece>, BoardValue, ConnectNConfig>
+    extends Heuristic<ConnectNMove, TopologicGameState<FourStatePiece>, BoardValue, ConnectNConfig>
 {
 
-    public getBoardValue(node: ConnectNNode, _config: ConnectNConfig): BoardValue {
+    public getBoardValue(node: ConnectNNode, config: ConnectNConfig): BoardValue {
         const state: TopologicGameState<FourStatePiece> = node.gameState;
         let score: number = 0;
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -23,8 +24,10 @@ export class ConnectNAlignmentHeuristic
             })
             .map((coordAndContent: { coord: Coord, content: FourStatePiece }) => coordAndContent.coord);
         for (const coord of playerCoords) {
-            const squareScore: number = 0 // TODO
-                // ConnectNRules.CONNECT_SIX_HELPER.getSquareScore(state, coord);
+            const squareScore: number = new NInARowHelper(
+                (piece: FourStatePiece) => piece.getPlayer(),
+                config.n,
+            ).getSquareScoreWithTopology(state, coord);
             score += squareScore;
         }
         return BoardValue.of(score);
