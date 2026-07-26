@@ -16,7 +16,7 @@ export class HexaLayout extends BaseLayout {
     }
 
     public getTranslationCoordAt(coord: Coord): Coord {
-        return this.getCenterAt(coord); // TODO: get them with (0, 0) not (center, center);
+        return this.getCenterAt(coord);
     }
 
     public getPolygonCoordsAt(): Coord[] {

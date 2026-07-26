@@ -26,6 +26,16 @@ export class ViewBox {
         return new ViewBox(left, up, width, height);
     }
 
+    public static fromCoords(coords: Coord[]): ViewBox {
+        const limits: Limits = ViewBox.getLimits(coords);
+        return ViewBox.fromLimits(
+            limits.minX,
+            limits.maxX,
+            limits.minY,
+            limits.maxY,
+        );
+    }
+
     private static getLimits(coords: Coord[]): Limits {
         let maxX: number = Number.NEGATIVE_INFINITY;
         let maxY: number = Number.NEGATIVE_INFINITY;

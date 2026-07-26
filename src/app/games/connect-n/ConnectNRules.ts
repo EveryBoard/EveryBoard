@@ -68,7 +68,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
             name: (): string => $localize`Default`,
             config: {
                 n: new NumberConfig(6, () => $localize`N`, MGPValidators.range(3, 10)),
-                boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(3, 100)),
+                boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
                 topology: new EnumConfig('SQUARE', () => $localize`Space shape`, Topologies),
                 shape: new EnumConfig('SQUARE', () => $localize`Board shape`, Shapes),
             },

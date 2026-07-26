@@ -43,7 +43,7 @@ export class TriangularShape extends TopologicShape implements Shape {
         for (let x: number = 0; x <= maxIndex; x++) {
             for (let y: number = 0; y < this.side; y++) {
                 if (minyx <= x + y && x - y < this.side) {
-                    coords.push(new Coord(evenOffset + x, y));
+                    coords.push(new Coord(evenOffset +x, y));
                 }
             }
         }

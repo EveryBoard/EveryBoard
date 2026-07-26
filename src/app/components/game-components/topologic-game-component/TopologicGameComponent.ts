@@ -41,37 +41,16 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
     );
 
     public getViewBox(): ViewBox {
-        const globalViewBox: ViewBox = this.getViewBoxFrom(
+        const globalViewBox: ViewBox = ViewBox.fromCoords(
             this.getState()
                 .getAllCoords()
-                .map((coord: Coord) => this.getLayout().getTranslationCoordAt(coord)),
+                .flatMap((abstractCoord: Coord) => {
+                    const polygonCoords: Coord[] = this.getLayout().getPolygonCoordsAt(abstractCoord);
+                    const translationCoord: Coord = this.getLayout().getTranslationCoordAt(abstractCoord);
+                    return polygonCoords.map((polygonCoord: Coord) => polygonCoord.getNext(translationCoord));
+                }),
         );
-        const localViewBox: ViewBox = this.getViewBoxFrom(
-            this.getLayout().getPolygonCoordsAt(new Coord(0, 0)),
-        );
-        return globalViewBox
-            .expandRight(localViewBox.width)
-            .expandBelow(localViewBox.height)
-            .expandAll(this.STROKE_WIDTH / 2);
-    }
-
-    private getViewBoxFrom(coords: Coord[]): ViewBox {
-        let minX: number = Number.MAX_VALUE;
-        let minY: number = Number.MAX_VALUE;
-        let maxX: number = Number.MIN_VALUE;
-        let maxY: number = Number.MIN_VALUE;
-        for (const coord of coords) {
-            minX = Math.min(minX, coord.x);
-            minY = Math.min(minY, coord.y);
-            maxX = Math.max(maxX, coord.x);
-            maxY = Math.max(maxY, coord.y);
-        }
-        return ViewBox.fromLimits(
-            minX,
-            maxX,
-            minY,
-            maxY,
-        );
+        return globalViewBox.expandAll(this.STROKE_WIDTH / 2);
     }
 
     protected getTopologicTranslationAt(coord: Coord): string {
