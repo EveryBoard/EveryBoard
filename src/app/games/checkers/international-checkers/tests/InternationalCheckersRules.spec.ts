@@ -703,7 +703,7 @@ describe('InternationalCheckersRules', () => {
             });
 
             it('should allow king capture to land far after capture', () => {
-                // Given a board where a king can capture and pass twice at the same empty space
+                // Given a board where a king could capture with a longer jump
                 const state: CheckersState = OddCheckersState.of([
                     [_, _, _, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _, _, _],

@@ -414,6 +414,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 const state: CheckersState = entries.complexCaptureTest.state;
                 await testUtils.setupState(state);
                 const move: CheckersMove = entries.complexCaptureTest.move;
+                expect(move.coords.length).withContext('a "complex" capture should have more than 2 elements').toBeGreaterThan(2);
                 const first: Coord = move.coords[0];
                 await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
 

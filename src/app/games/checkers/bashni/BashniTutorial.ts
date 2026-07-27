@@ -3,7 +3,7 @@ import { TutorialStepMessage } from '../../../components/wrapper-components/tuto
 import { Coord } from '../../../jscaip/Coord';
 import { CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../common/CheckersState';
+import { CheckersPiece, CheckersStack, OddCheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
 
 import { BashniRules } from './BashniRules';
@@ -43,10 +43,10 @@ export class BashniTutorial extends Tutorial {
             OddCheckersState.of([
                 [__, _v, __, _v, __, _v, __, _v],
                 [_v, __, _v, __, _v, __, _v, __],
-                [__, _v, __, _v, __, _v, __, _v],
-                [_v, __, _v, __, __, __, _v, __],
+                [__, _v, __, _v, __, _v, __, __],
+                [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, _v, __, __],
-                [__, __, __, __, _u, __, _u, __],
+                [_u, __, _u, __, _u, __, _u, __],
                 [__, _u, __, _u, __, _u, __, _u],
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
@@ -60,7 +60,7 @@ export class BashniTutorial extends Tutorial {
                 [__, _v, __, _v, __, _v, __, _v],
                 [_v, __, _v, __, _v, __, _v, __],
                 [__, _v, __, _v, __, _v, __, __],
-                [_v, __, _v, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, _u, __, __],
                 [__, __, __, __, _u, __, _v, __],
                 [__, __, __, _u, __, __, __, __],
@@ -142,7 +142,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Promotion mid-capture`,
-            $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two Light pieces. Your piece will promote mid-sequence and continue as a king!`,
+            $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two light pieces. Your piece will promote mid-sequence and continue as a king!`,
             OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [_v, __, _v, __, _v, __, __, __],

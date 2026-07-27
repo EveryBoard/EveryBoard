@@ -14,7 +14,7 @@ export class CheckersTutorialStep {
 
     public static readonly MULTIPLE_CAPTURES_TITLE: Localized = () => $localize`Multiple captures`;
 
-    public static readonly MULTIPLE_CAPTURES: Localized = () => $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same square.<br/><br/>You are playing Dark, do a double capture.`;
+    public static readonly MULTIPLE_CAPTURES: Localized = () => $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot capture the same piece twice. Pieces are removed from the board only at the end of the capture.<br/><br/>You are playing Dark, do a double capture.`;
 
     public static readonly PROMOTION_TITLE: Localized = () => $localize`Promotion`;
 
