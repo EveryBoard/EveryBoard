@@ -22,51 +22,69 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
     component: Type<C>; // InternationalCheckersComponent, LascaComponent, etc
     gameName: string; // 'InternationalCheckers', 'Lasca', etc
 
-    // All the first possible clicks
+    // Informations about the first moves, needed by multiple tests
     // Put the lefter one first so that it.next(new Coord(2, -1)) is a empty coord
     firstPlayerCoords: Coord[];
     // after clicking on firstPlayerCoords[0], firstPlayerSecondClick are a valids second clicks
     firstPlayerSecondClicks: Coord[];
-
-    // a state on which the promoted piece can do many moves
-    promotedPieceOrientedState: CheckersState;
-    // The coordinates of the promoted piece on promotedPieceOrientedState
-    promotedPieceCoord: Coord;
-    // The coordinates on which the promoted piece can land
-    promotedLandings: Coord[];
-
-    stateWithForcedCapture: CheckersState;
-    forcedToMove: Coord;
-
-    // Coord of a piece that cannot move at first turn
-    unmovable: Coord;
-
     // Move that Player.ONE can do after firstPlayerCoord[0] then firstPlayerSecondClics[0] has been done
     secondMove: CheckersMove;
 
-    // A state on which a vertical step of 2 would be possible, if it was legal
-    stateWithInvalidVerticalMove: CheckersState;
-    // The coord of the piece able to move (0, 2), of Player.ONE on stateWithInvalidVerticalMove
-    invalidStepperCoord: Coord;
+    promotedPieceTest: {
+        // a state on which the promoted piece can do many moves
+        state: CheckersState;
+        // The coordinates of the promoted piece on promotedPieceOrientedState
+        coord: Coord;
+        // The coordinates on which the promoted piece can land
+        landings: Coord[];
+    };
 
-    // A state on which a simple capture is possible
-    stateWithSimpleCapture: CheckersState;
-    simpleCapture: CheckersMove;
+    forcedCaptureTest: {
+        state: CheckersState;
+        coord: Coord;
+    };
 
-    // A state on which a promotion is possible
-    stateWithPromotion: CheckersState;
-    promotion: CheckersMove;
+    unmovableTest: {
+        // Coord of a piece that cannot move at first turn
+        coord: Coord;
+    };
 
-    // A state on which a complex capture is possible
-    stateWithComplexCapture: CheckersState;
-    complexCapture: CheckersMove;
+    invalidVerticalMoveTest: {
+        // A state on which a vertical step of 2 would be possible, if it was legal
+        state: CheckersState;
+        // The coord of the piece able to move (0, 2), of Player.ONE on stateWithInvalidVerticalMove
+        coord: Coord;
+    };
 
-    // A state on which an invalid capture is possible
-    stateWithInvalidCapture: CheckersState;
-    invalidCapture: CheckersMove;
+    simpleCaptureTest: {
+        // A state on which a simple capture is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    promotionTest: {
+        // A state on which a promotion is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    complexCaptureTest: {
+        // A state on which a complex capture is possible
+        state: CheckersState;
+        move: CheckersMove;
+    }
+
+    invalidCaptureTest: {
+        // A state on which an invalid capture is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
 
     // A move that can be done after secondMove but that is not orthogonal (described as two coords)
-    invalidThirdMove: [Coord, Coord];
+    invalidThirdMoveTest: {
+        start: Coord;
+        end: Coord;
+    };
 }
 
 export function DoCheckersTests<C extends CheckersComponent<R>,
@@ -85,6 +103,10 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
     const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
+    // TODO FOR REVIEW: que penserais-tu de mettre ce describe HORS de la fonction? Ça obligerait à appeler comme suit:
+    // describe('InternationalCheckers generic tests', DoCheckersTests(entries); }
+    // Ça a le gros avantage que si tu veux activer que les tests d'un checkers, tu remplace le describe par un fdescribe
+    // également ça a l'avantage de pas construire des trucs de checkers lorsque ces tests sont désactivés, si je ne m'abuse ?
     describe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {
@@ -171,13 +193,13 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should highlight possible step-landing after selecting king', fakeAsync(async() => {
                 // Given any board where long steps are possible for a king
-                await testUtils.setupState(entries.promotedPieceOrientedState);
+                await testUtils.setupState(entries.promotedPieceTest.state);
 
                 // When selecting a piece
-                await testUtils.expectClickSuccess(`#coord-${ entries.promotedPieceCoord.x }-${ entries.promotedPieceCoord.y }`);
+                await testUtils.expectClickSuccess(`#coord-${ entries.promotedPieceTest.coord.x }-${ entries.promotedPieceTest.coord.y }`);
 
                 // Then its landing coord should be landable
-                for (const landing of entries.promotedLandings) {
+                for (const landing of entries.promotedPieceTest.landings) {
                     testUtils.expectElementToHaveClass(
                         `#clickable-highlight-${ landing.x }-${ landing.y }`,
                         'clickable-stroke',
@@ -188,12 +210,12 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
             it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
                 // Given a board where current player have 3 "mobile" pieces but one must capture
                 // When displaying the board
-                await testUtils.setupState(entries.stateWithForcedCapture);
+                await testUtils.setupState(entries.forcedCaptureTest.state);
 
                 // Then only the one that must capture must be "clickable-stroke"
-                for (const coordAndContent of entries.stateWithForcedCapture.getCoordsAndContents()) {
+                for (const coordAndContent of entries.forcedCaptureTest.state.getCoordsAndContents()) {
                     const coord: Coord = coordAndContent.coord;
-                    if (coord.equals(entries.forcedToMove)) {
+                    if (coord.equals(entries.forcedCaptureTest.coord)) {
                         testUtils.expectElementToHaveClass(`#clickable-highlight-${ coord.x }-${ coord.y }`, 'clickable-stroke');
                     } else {
                         testUtils.expectElementNotToExist(`#clickable-highlight-${ coord.x }-${ coord.y }`);
@@ -228,7 +250,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 // When clicking a piece that could not move
                 // Then it should fail
                 await testUtils.expectClickFailure(
-                    `#coord-${ entries.unmovable.x }-${ entries.unmovable.y }`,
+                    `#coord-${ entries.unmovableTest.coord.x }-${ entries.unmovableTest.coord.y }`,
                     CheckersFailure.THIS_PIECE_CANNOT_MOVE(),
                 );
             }));
@@ -275,8 +297,8 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
                 // Given any board with a selected piece
-                const state: CheckersState = entries.stateWithInvalidVerticalMove;
-                const coord: Coord = entries.invalidStepperCoord;
+                const state: CheckersState = entries.invalidVerticalMoveTest.state;
+                const coord: Coord = entries.invalidVerticalMoveTest.coord;
                 await testUtils.setupState(state);
                 await testUtils.expectClickSuccess(`#coord-${ coord.x }-${ coord.y }`);
 
@@ -358,29 +380,29 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should allow simple capture', fakeAsync(async() => {
                 // Given a board with a selected piece and a possible capture
-                const state: CheckersState = entries.stateWithSimpleCapture;
+                const state: CheckersState = entries.simpleCaptureTest.state;
                 await testUtils.setupState(state);
-                const start: Coord = entries.simpleCapture.getStartingCoord();
+                const start: Coord = entries.simpleCaptureTest.move.getStartingCoord();
                 await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
 
                 // When doing a capture
-                const move: CheckersMove = entries.simpleCapture;
+                const move: CheckersMove = entries.simpleCaptureTest.move;
 
                 // Then it should be a success
-                const end: Coord = entries.simpleCapture.getEndingCoord();
+                const end: Coord = entries.simpleCaptureTest.move.getEndingCoord();
                 await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, move);
             }));
 
             it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {
                 // Given any board with a selected soldier about to become promoted
-                const state: CheckersState = entries.stateWithPromotion;
+                const state: CheckersState = entries.promotionTest.state;
                 await testUtils.setupState(state);
-                const start: Coord = entries.promotion.getStartingCoord();
+                const start: Coord = entries.promotionTest.move.getStartingCoord();
                 await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
 
                 // When doing the promoting-move
-                const end: Coord = entries.promotion.getEndingCoord();
-                await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, entries.promotion);
+                const end: Coord = entries.promotionTest.move.getEndingCoord();
+                await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, entries.promotionTest.move);
 
                 // Then the officier-logo should be on the piece
                 testUtils.expectElementToExist(`#square-${ end.x }-${ end.y }-piece-0-promoted-symbol`);
@@ -388,9 +410,9 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
                 // Given any board with a selected piece that could do a multiple capture
-                const state: CheckersState = entries.stateWithComplexCapture;
+                const state: CheckersState = entries.complexCaptureTest.state;
                 await testUtils.setupState(state);
-                const move: CheckersMove = entries.complexCapture;
+                const move: CheckersMove = entries.complexCaptureTest.move;
                 const first: Coord = move.coords[0];
                 await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
 
@@ -409,14 +431,14 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {
                 // Given a board on which an illegal capture could be made
-                const state: CheckersState = entries.stateWithInvalidCapture;
+                const state: CheckersState = entries.invalidCaptureTest.state;
                 await testUtils.setupState(state);
-                const first: Coord = entries.invalidCapture.getStartingCoord();
+                const first: Coord = entries.invalidCaptureTest.move.getStartingCoord();
                 await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y}`);
 
                 // When doing that illegal capture
                 // Then it should fail
-                const second: Coord = entries.invalidCapture.getEndingCoord();
+                const second: Coord = entries.invalidCaptureTest.move.getEndingCoord();
                 await testUtils.expectClickFailure(`#coord-${ second.x }-${ second.y}`, RulesFailure.CANNOT_SELF_CAPTURE());
             }));
 
@@ -462,11 +484,11 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
                 await testUtils.expectMoveSuccess(`#coord-${ secondPlayerEnd.x }-${ secondPlayerEnd.y }`, move); // First move is set
                 await testUtils.getWrapper().setRole(Player.ONE); // changing role
-                const thirdMoveStart: Coord = entries.invalidThirdMove[0];
+                const thirdMoveStart: Coord = entries.invalidThirdMoveTest.start;
                 await testUtils.expectClickSuccess(`#coord-${ thirdMoveStart.x }-${ thirdMoveStart.y }`); // Making the first click
 
                 // When clicking on an invalid landing piece
-                const invalidThirdMoveEnd: Coord = entries.invalidThirdMove[1];
+                const invalidThirdMoveEnd: Coord = entries.invalidThirdMoveTest.end;
                 await testUtils.expectClickFailure(`#coord-${ invalidThirdMoveEnd.x }-${ invalidThirdMoveEnd.y }`, DirectionFailure.DIRECTION_MUST_BE_LINEAR());
 
                 // Then the highlight should be at the expected place only, not at their symmetric point
@@ -547,17 +569,17 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
             it('should build capture attempt when the attempted move jumps over a piece', fakeAsync(async() => {
                 // Given a board with a selected piece and an occupied square to jump over
-                await testUtils.setupState(entries.stateWithSimpleCapture);
+                await testUtils.setupState(entries.simpleCaptureTest.state);
                 const gameComponent: CheckersComponentPrivate =
                     testUtils.getGameComponent() as unknown as CheckersComponentPrivate;
-                gameComponent.currentMoveClicks = [entries.simpleCapture.getStartingCoord()];
+                gameComponent.currentMoveClicks = [entries.simpleCaptureTest.move.getStartingCoord()];
 
                 // When building the move attempt
                 const attemptedMove: CheckersMove =
-                    gameComponent.getMoveAttemptEndingAt(entries.simpleCapture.getEndingCoord());
+                    gameComponent.getMoveAttemptEndingAt(entries.simpleCaptureTest.move.getEndingCoord());
 
                 // Then the attempt should be a capture
-                expect(attemptedMove).toEqual(entries.simpleCapture);
+                expect(attemptedMove).toEqual(entries.simpleCaptureTest.move);
             }));
 
             it('should fall back to unmovable piece failure when a legal click is not a possible click', fakeAsync(async() => {
