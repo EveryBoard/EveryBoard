@@ -3,7 +3,7 @@ import { TutorialStepMessage } from '../../../components/wrapper-components/tuto
 import { Coord } from '../../../jscaip/Coord';
 import { CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
 
 import { BashniRules } from './BashniRules';
@@ -40,7 +40,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Captures`,
             $localize`A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.<br/><br/>You're playing Dark, do a capture.`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, _v, __, _v, __, _v, __, _v],
                 [_v, __, _v, __, _v, __, _v, __],
                 [__, _v, __, _v, __, _v, __, _v],
@@ -56,7 +56,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.anyMove(
             CheckersTutorialStep.BACKWARD_CAPTURES_TITLE(),
             CheckersTutorialStep.BACKWARD_CAPTURES(),
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, _v, __, _v, __, _v, __, _v],
                 [_v, __, _v, __, _v, __, _v, __],
                 [__, _v, __, _v, __, _v, __, __],
@@ -72,7 +72,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.anyMove(
             CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
             CheckersTutorialStep.MULTIPLE_CAPTURES(),
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, _v, __, _v],
@@ -88,7 +88,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Minority capture is allowed`,
             $localize`In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.<br/><br/>You're playing Dark, do a capture.`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, _v, __],
                 [__, __, __, __, __, __, __, __],
@@ -104,7 +104,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),
             $localize`When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, __, __, __, __, __, __, _v],
                 [__, __, uv, __, _v, __, __, __],
                 [__, __, __, __, __, __, __, __],
@@ -124,7 +124,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`King move`,
             $localize`Kings can move and capture backward as well as forward. They can also "fly": move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.<br/><br/>You're playing Dark, move your king to capture two pieces of the opponent!`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, __, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
@@ -143,7 +143,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Promotion mid-capture`,
             $localize`In Bashni, if a piece reaches the last line <strong>during a capture sequence</strong>, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).<br/><br/>You're playing Dark. Capture two Light pieces. Your piece will promote mid-sequence and continue as a king!`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [_v, __, _v, __, _v, __, __, __],
                 [__, __, __, __, __, _u, __, __],
@@ -159,7 +159,7 @@ export class BashniTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Tower capture`,
             $localize`In Bashni, when a tower is captured, only the top piece is removed. After the capture, the old tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, _u, __, __, __, __, __],
                 [__, __, __, vUv, __, _v, __, __],

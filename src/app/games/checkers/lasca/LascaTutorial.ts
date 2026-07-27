@@ -3,7 +3,7 @@ import { TutorialStepMessage } from '../../../components/wrapper-components/tuto
 import { Coord } from '../../../jscaip/Coord';
 import { CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
+import { CheckersPiece, CheckersStack, EvenCheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
 
 import { LascaRules } from './LascaRules';
@@ -40,7 +40,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Captures`,
             CheckersTutorialStep.CAPTURES(),
-            CheckersState.of([
+            EvenCheckersState.of([
                 [_v, __, __, __, _v, __, _v],
                 [__, __, __, _v, __, _v, __],
                 [__, __, _v, __, _v, __, _v],
@@ -55,7 +55,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.anyMove(
             CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
             CheckersTutorialStep.MULTIPLE_CAPTURES(),
-            CheckersState.of([
+            EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [_v, __, __, __, _v, __, _v],
@@ -70,7 +70,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Minority capture is allowed`,
             $localize`If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.`,
-            CheckersState.of([
+            EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _v, __],
                 [__, __, __, __, __, __, __],
@@ -85,7 +85,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),
             $localize`When a tower reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
-            CheckersState.of([
+            EvenCheckersState.of([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
                 [__, __, __, __, __, __, __],
@@ -104,7 +104,7 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Officer move`,
             $localize`Officers can move and capture backward as well as forward.<br/><br/>You're playing Dark, move your officer!`,
-            CheckersState.of([
+            EvenCheckersState.of([
                 [__, __, __, __, Uv, __, _v],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, _v, __, __],
@@ -123,16 +123,16 @@ export class LascaTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Tower capture`,
             $localize`In Lasca, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
-            CheckersState.of([
-                [__, __, __, __, __, __, __],
+            EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, vU, __, _v, __],
                 [__, __, __, __, _u, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __],
                 [__, __, __, __, __, _v, __],
+                [__, __, __, __, __, __, __],
             ], 0),
-            [CheckersMove.fromCapture([new Coord(4, 3), new Coord(2, 1)])],
+            [CheckersMove.fromCapture([new Coord(4, 2), new Coord(2, 0)])],
             TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
             $localize`You did not capture the right piece.`,
         ),

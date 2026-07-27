@@ -107,6 +107,7 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
     // describe('InternationalCheckers generic tests', DoCheckersTests(entries); }
     // Ça a le gros avantage que si tu veux activer que les tests d'un checkers, tu remplace le describe par un fdescribe
     // également ça a l'avantage de pas construire des trucs de checkers lorsque ces tests sont désactivés, si je ne m'abuse ?
+    // Ou mieux encore: DoCheckersTest prendrait un testUtils en paramètre et serait dans le describe du composant
     describe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {

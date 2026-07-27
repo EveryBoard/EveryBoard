@@ -10,7 +10,7 @@ import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { CheckersFailure } from '../../common/CheckersFailure';
 import { CheckersMove } from '../../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '../../common/CheckersState';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
 import { LascaRules } from '../LascaRules';
 import { LascaComponent } from '../lasca.component';
@@ -37,7 +37,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
     firstPlayerSecondClicks: [new Coord(1, 3)],
     secondMove: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     promotedPieceTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [__, __, __, __, __, __, __],
             [__, __, __, __, __, __, __],
             [__, __, _O, __, __, __, __],
@@ -55,7 +55,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         ],
     },
     forcedCaptureTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [_V, __, _V, __, _V, __, _V],
             [__, _V, __, _V, __, _V, __],
             [_V, __, _V, __, _V, __, _V],
@@ -70,7 +70,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         coord: new Coord(0, 6),
     },
     invalidVerticalMoveTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [_V, __, _V, __, _V, __, _V],
             [__, _V, __, _V, __, _V, __],
             [__, __, __, __, __, __, __],
@@ -82,7 +82,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         coord: new Coord(1, 1),
     },
     simpleCaptureTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [_V, __, _V, __, _V, __, _V],
             [__, _V, __, _V, __, _V, __],
             [_V, __, _V, __, _V, __, _V],
@@ -94,7 +94,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]),
     },
     promotionTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [__, __, __, __, _V, __, _V],
             [__, _U, __, __, __, __, __],
             [__, __, __, __, __, __, __],
@@ -106,7 +106,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         move: CheckersMove.fromStep(new Coord(1, 1), new Coord(0, 0)),
     },
     complexCaptureTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [__, __, __, __, __, __, __],
             [__, __, __, __, __, __, __],
             [__, __, _V, __, __, __, __],
@@ -118,7 +118,7 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]),
     },
     invalidCaptureTest: {
-        state: CheckersState.of([
+        state: EvenCheckersState.of([
             [__, __, __, __, __, __, __],
             [__, __, __, __, __, __, __],
             [__, __, _V, __, __, __, __],
@@ -155,7 +155,7 @@ describe('LascaComponent', () => {
 
         it('should forbid long step for normal piece (2 step)', fakeAsync(async() => {
             // Given any board where the selected piece could do a long jump
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [_V, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
@@ -179,7 +179,7 @@ describe('LascaComponent', () => {
 
         it('should perform capture when no more piece can be captured', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _V, __, __, __, __],
@@ -206,7 +206,7 @@ describe('LascaComponent', () => {
 
         it('should cancel move when trying non-ordinal move mid-capture', fakeAsync(async() => {
             // Given a board on which a piece is selected and already captured
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _V, __, __, __, __],
@@ -260,7 +260,7 @@ describe('LascaComponent', () => {
 
         it('should show score as the number of remaining piece', fakeAsync(async() => {
             // Given a board where there is a different number of remaining piece
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [_V, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [__, __, _V, __, __, __, _V],
@@ -288,7 +288,7 @@ describe('LascaComponent', () => {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
                 [_V, __, _U, __, __, __, __],

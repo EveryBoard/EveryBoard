@@ -42,6 +42,7 @@ export class CheckersPiece {
     }
 
 }
+
 export class CheckersStack {
 
     public static EMPTY: CheckersStack = new CheckersStack([]);
@@ -118,8 +119,9 @@ export class CheckersState extends GameStateWithTable<CheckersStack> {
 
     public static readonly SIZE: number = 7;
 
-    public static of(board: Table<CheckersStack>, turn: number): CheckersState {
-        return new CheckersState(board, turn);
+    protected constructor(board: Table<CheckersStack>, turn: number) {
+        // Constructor is protected so that we use Even/OddCheckersState instead to check the validity at construction
+        super(board, turn);
     }
 
     public getStacksOf(player: Player): Coord[] {
@@ -197,5 +199,37 @@ export class CheckersState extends GameStateWithTable<CheckersStack> {
             lines.push(squares.join(' '));
         }
         return lines.join('\n');
+    }
+}
+
+/*
+ * An "even" checkers state is a state where there stacks are on even-numbered squares.
+ * That is, in the starting position, square (0, 0) contain a stack while (1, 0) and (0, 1) are empty.
+ */
+export class EvenCheckersState extends CheckersState {
+    public static of(board: Table<CheckersStack>, turn: number): CheckersState {
+        const state: CheckersState = new CheckersState(board, turn);
+        state.forEachCoord((coord: Coord, content: CheckersStack): void => {
+            if ((coord.x + coord.y) % 2 === 1) {
+                Utils.assert(content.isEmpty(), `Invalid even checkers state contains a piece at (${coord.x}, ${coord.y})`);
+            }
+        });
+        return state;
+    }
+}
+
+/*
+ * An "odd" checkers state is a state where there stacks are on odd-numbered squares.
+ * That is, in the starting position, square (0, 0) is empty while (1, 0) and (0, 1) contain a stack.
+ */
+export class OddCheckersState extends CheckersState {
+    public static of(board: Table<CheckersStack>, turn: number): CheckersState {
+        const state: CheckersState = new CheckersState(board, turn);
+        state.forEachCoord((coord: Coord, content: CheckersStack): void => {
+            if ((coord.x + coord.y) % 2 === 0) {
+                Utils.assert(content.isEmpty(), `Invalid odd checkers state contains a piece at (${coord.x}, ${coord.y})`);
+            }
+        });
+        return state;
     }
 }

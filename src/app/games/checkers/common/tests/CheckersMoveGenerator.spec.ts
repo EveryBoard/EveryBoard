@@ -7,7 +7,7 @@ import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
 import { CheckersMove } from '../CheckersMove';
 import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState, OddCheckersState } from '../CheckersState';
 
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
@@ -59,13 +59,13 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
     it('should only include majoritary capture from list move', () => {
         // Given a state where current player should capture
-        const state: CheckersState = CheckersState.of([
-            [_, _, _, _, _, _, _],
+        const state: CheckersState = OddCheckersState.of([
             [_, _, _, _, _, _, _],
             [_, _, V, _, _, _, _],
             [_, U, _, U, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, U, _],
+            [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 1);
         const node: CheckersNode = new CheckersNode(state);
@@ -81,8 +81,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
         it('should forbid to pass over the same piece several times', () => {
             // Given a board with only one possible capture
-            const state: CheckersState = new CheckersState([
-                [_, _, _, _, _, _, _, _, _, _],
+            const state: CheckersState = OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
@@ -92,6 +91,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
                 [_, _, _, _, _, _, _, _, _, O],
                 [_, _, _, _, V, _, V, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
             ], 20);
 
             // When checking the legal list of captures
@@ -99,11 +99,11 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
             // Then it should be this one, the bigger not to fly over same coord twice
             const coords: Coord[] = [
-                new Coord(9, 7),
-                new Coord(6, 4),
-                new Coord(3, 7),
-                new Coord(5, 9),
-                new Coord(7, 7),
+                new Coord(9, 6),
+                new Coord(6, 3),
+                new Coord(3, 6),
+                new Coord(5, 8),
+                new Coord(7, 6),
             ];
             const move: CheckersMove = CheckersMove.fromCapture(coords);
             expect(legalCaptures).toEqual([move]);
@@ -123,7 +123,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
 
     it('should include minoritary capture from list move', () => {
         // Given a state where current player should capture
-        const state: CheckersState = CheckersState.of([
+        const state: CheckersState = EvenCheckersState.of([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, V, _, _, _, _],
@@ -145,7 +145,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
 
         it('should allow to pass over the same coord several times', () => {
             // Given a board with only one possible capture
-            const state: CheckersState = new CheckersState([
+            const state: CheckersState = EvenCheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -194,7 +194,7 @@ describe('CheckersMoveGenerator for Bashni', () => {
 
     it('should not generate captures that are illegal after mid-capture promotion', () => {
         // Given a board where a man promotes during a capture
-        const state: CheckersState = CheckersState.of([
+        const state: CheckersState = OddCheckersState.of([
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, V, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -216,10 +216,10 @@ describe('CheckersMoveGenerator for Bashni', () => {
 
     it('should generate flying captures for a non-current player based on the moving piece owner', () => {
         // Given a board where Player.ONE is not the current player but has a flying capture
-        const state: CheckersState = CheckersState.of([
-            [X, _, _, _, _, _, _, _],
+        const state: CheckersState = OddCheckersState.of([
+            [_, X, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, U, _, _, _, _, _],
+            [_, _, _, U, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -231,19 +231,19 @@ describe('CheckersMoveGenerator for Bashni', () => {
         const captures: CheckersMove[] = bashniRules.getCapturesOf(state, Player.ONE, defaultConfig);
 
         // Then the capture should be generated even though Player.ZERO is the current player
-        const expectedMove: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(3, 3)]);
+        const expectedMove: CheckersMove = CheckersMove.fromCapture([new Coord(1, 0), new Coord(4, 3)]);
         expect(captures.some((move: CheckersMove) => move.equals(expectedMove))).toBeTrue();
     });
 
     it('should not generate flying captures over a non-current player own piece', () => {
         // Given a board where Player.ONE's flying king is blocked by another Player.ONE piece
-        const state: CheckersState = CheckersState.of([
-            [X, _, _, _, _, _, _, _],
+        const state: CheckersState = OddCheckersState.of([
+            [_, X, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, V, _, _, _, _, _],
+            [_, _, _, V, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _],
+            [U, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
         ], 0);

@@ -14,7 +14,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 
 import { CheckersFailure } from './CheckersFailure';
 import { CheckersMove } from './CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState, OddCheckersState } from './CheckersState';
 
 export type CheckersConfig = RulesConfig & {
 
@@ -81,7 +81,11 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                 }
             }
         }
-        return new CheckersState(board, 0);
+        if (config.occupyEvenSquare) {
+            return EvenCheckersState.of(board, 0);
+        } else {
+            return OddCheckersState.of(board, 0);
+        }
     }
 
     /**
