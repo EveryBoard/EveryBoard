@@ -93,7 +93,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
     },
     promotionTest: {
         state: OddCheckersState.of([
-            [__, __, __, __, __, __, _V, __],
+            [__, __, __, __, __, _V, __, __],
             [__, __, _U, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
