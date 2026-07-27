@@ -51,7 +51,7 @@ export class BashniTutorial extends Tutorial {
                 [_u, __, _u, __, _u, __, _u, __],
             ], 0),
             CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3)]),
-            $localize`Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower.`,
+            $localize`Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower controlled the player at the top of the tower.`,
         ),
         TutorialStep.anyMove(
             CheckersTutorialStep.BACKWARD_CAPTURES_TITLE(),
@@ -158,7 +158,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Tower capture`,
-            $localize`In Bashni, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
+            $localize`In Bashni, when a tower is captured, only the top piece is removed. After the capture, the old tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
             CheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, _u, __, __, __, __, __],
