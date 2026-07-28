@@ -22,7 +22,7 @@ export class MancalaDistribution {
     public equals(other: MancalaDistribution): boolean {
         if (other === this) return true;
         if (other.x !== this.x) return false;
-        return other.y === this.y; // TODO: test different y is different row
+        return other.y === this.y;
     }
 
 }

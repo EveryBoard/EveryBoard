@@ -59,15 +59,15 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
     {
         const captureMap: number[][] = TableUtils.copy(distributionResult.captureMap);
         const lastDrop: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
-        const captureIsPossible: boolean =
-            distributionResult.endsUpInStore === false &&
-            distributionResult.resultingState.getPieceAt(lastDrop) === 4;
-        if (captureIsPossible) {
-            const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
-            distributionResult.capturedSum += 4;
-            captureMap[lastDrop.y][lastDrop.x] += 4;
-            distributionResult.resultingState =
-                distributionResult.resultingState.capture(currentPlayer, lastDrop);
+        if (distributionResult.endsUpInStore === false) {
+            const lastHouseContent: number = distributionResult.resultingState.getPieceAt(lastDrop);
+            if (this.isCapturableValue(lastHouseContent)) {
+                const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
+                distributionResult.capturedSum += lastHouseContent;
+                captureMap[lastDrop.y][lastDrop.x] += lastHouseContent;
+                distributionResult.resultingState =
+                    distributionResult.resultingState.capture(currentPlayer, lastDrop);
+            }
         }
         return {
             capturedSum: distributionResult.capturedSum,
@@ -82,11 +82,11 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         let resultingState: MancalaState = state.feed(coord);
         const previousValue: number = resultingState.getPieceAt(coord);
         const captureMap: number[][] = TableUtils.create(state.getWidth(), state.getHeight(), 0);
-        if (previousValue === 4 && seedsInHand > 1) {
-            captureMap[coord.y][coord.x] = 4;
+        if (this.isCapturableValue(previousValue) && seedsInHand > 1) {
+            captureMap[coord.y][coord.x] = previousValue;
             const houseOwner: Player = Player.of(coord.y).getOpponent();
             resultingState = resultingState.capture(houseOwner, coord);
-            return { capturedSum: 4, captureMap, resultingState };
+            return { capturedSum: previousValue, captureMap, resultingState };
         } else {
             return { capturedSum: 0, captureMap, resultingState };
         }

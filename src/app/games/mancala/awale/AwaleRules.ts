@@ -60,7 +60,7 @@ export class AwaleRules extends MancalaRules {
         let target: MGPOptional<number> = resultingState.getOptionalPieceAtXY(x, y);
         let capturedSum: number = 0;
         const captureMap: number[][] = TableUtils.create(config.width, 2 * config.numberOfRows, 0);
-        if ((target.get() < 2) || (target.get() > 3)) { // TODO NOT HARDCORE, use capturableValues
+        if (this.isCapturableValue(target.get()) === false) {
             // first space not capturable, we apply no change
             return { capturedSum: 0, captureMap, resultingState: state };
         }
@@ -82,11 +82,11 @@ export class AwaleRules extends MancalaRules {
             resultingState = resultingState.capture(player, new Coord(x, y));
             x += direction;
             target = resultingState.getOptionalPieceAtXY(x, y);
-        // TODO: not 2 or 3, capturableValues
-        } while ((x !== limit) && (target.equalsValue(2) || target.equalsValue(3)));
+        } while ((x !== limit) && target.isPresent() && this.isCapturableValue(target.get()));
 
         return { capturedSum, captureMap, resultingState };
     }
+
     private coordIsInOpponentTerritory(x: number, y: number, state: MancalaState, config: MancalaConfig): boolean {
         if (state.isOnBoard(new Coord(x, y))) {
             return state.getCurrentPlayer() === Player.ZERO ?

@@ -105,7 +105,7 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         return new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
     }
 
-    protected constructor(private readonly capturableValues: number[]) {
+    protected constructor(protected readonly capturableValues: number[]) {
         super();
     }
 
@@ -153,6 +153,10 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
     {
         if (state.getPieceAtXY(distribution.x, distribution.y) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
+        }
+        const spaceOwner: Player = this.getSpaceOwner(new Coord(distribution.x, distribution.y), config);
+        if (spaceOwner === state.getCurrentPlayer()) {
+            return MGPFallible.failure(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         const distributionResult: MancalaDistributionResult =
             this.distributeMove(MancalaMove.of(distribution), state, config);
@@ -465,6 +469,12 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
             captureMap,
             resultingState: new MancalaState(resultingBoard, state.turn, captured),
         };
+    }
+
+    public isCapturableValue(value: number): boolean {
+        return this.capturableValues.some(
+            (capturableValue: number) => capturableValue === value,
+        );
     }
 
 }

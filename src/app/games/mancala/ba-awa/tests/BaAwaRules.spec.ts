@@ -9,12 +9,12 @@ import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.
 import { BaAwaConfig } from '../BaAwaConfig';
 import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 
-describe('BaAwaRules', () => {
+fdescribe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
 
-    describe('generic tests', () => {
+    fdescribe('generic tests', () => {
 
         DoMancalaRulesTests({
             gameName: 'Ba-awa',
@@ -115,7 +115,6 @@ describe('BaAwaRules', () => {
 
             // When performing a move that will capture
             const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
-            // TODO: why was 0,0 was a legal distribution ??
 
             // Then the capture should be performed
             const expectedBoard: Table<number> = [

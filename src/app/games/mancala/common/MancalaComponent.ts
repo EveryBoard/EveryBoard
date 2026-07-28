@@ -168,8 +168,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
-        const player: Player = y < this.config.numberOfRows ? Player.ZERO : Player.ONE;
-        if (player === this.getState().getCurrentPlayer()) {
+        const config: MancalaConfig = this.getConfig();
+        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.getState().getCurrentPlayer()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         this.updateOrCreateCurrentMove(x, y);
@@ -275,7 +275,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
             } else {
                 const lastHouseContent: number =
                     seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
-                mustDoOneMoreLap = lastHouseContent !== 1 && lastHouseContent !== 4;
+                mustDoOneMoreLap = lastHouseContent !== 1 && this.rules.isCapturableValue(lastHouseContent) === false;
                 if (mustDoOneMoreLap) {
                     await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                 }
@@ -363,7 +363,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public getPieceRotation(): string {
         return 'rotate(' + this.getPointOfView().getValue() * 180 + ')';
     }
-
+// TODO: /local/Jajette donne un message d'erreur souhaité "ce jeu existe pas"
+// mais /local/jajette/config throw en console et n'affiche pas le message, let's have it behave identically
     public getHouseSecondaryContent(x: number, y: number): MGPOptional<string> {
         const previousContent: number = this.getPreviousStableState().getPieceAtXY(x, y);
         const currentContent: number = this.constructedState.getPieceAtXY(x, y);

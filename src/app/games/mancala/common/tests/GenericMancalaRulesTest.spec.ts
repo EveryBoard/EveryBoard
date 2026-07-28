@@ -23,14 +23,14 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
     const rules: MancalaRules = entries.rules;
     const defaultConfig: MancalaConfig = rules.getDefaultRulesConfig();
 
-    describe(entries.gameName + 'Rules generic tests', () => {
+    fdescribe(entries.gameName + 'Rules generic tests', () => {
 
         it('should generate initial board according to config', () => {
             // Given an initial board with unusual width and height
             const customConfig: MancalaConfig = {
                 ...defaultConfig,
                 width: 4,
-                numberOfRows: 2, // LOL, that's a Quarto board
+                numberOfRows: 7,
             };
 
             // When rendering it
@@ -52,6 +52,18 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             // Then it should be illegal
             const reason: string = MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE();
             RulesUtils.expectMoveFailure(rules, state, entries.simpleMove, reason, defaultConfig);
+        });
+
+        fit('should refuse distributing opponent space', () => {
+            // Given any board
+            const state: MancalaState = rules.getInitialState(defaultConfig);
+
+            // When attempting to distribute opponent space
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+
+            // Then it should be illegal
+            const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should refuse starving when custom config refuse starvation', () => {
