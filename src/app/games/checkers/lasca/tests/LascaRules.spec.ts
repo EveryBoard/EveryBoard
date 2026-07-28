@@ -19,6 +19,7 @@ describe('LascaRules', () => {
     const __U: CheckersStack = new CheckersStack([zero]);
     const __O: CheckersStack = new CheckersStack([zeroOfficer]);
     const __V: CheckersStack = new CheckersStack([one]);
+    const _VV: CheckersStack = new CheckersStack([one, one]);
     const _VU: CheckersStack = new CheckersStack([one, zero]);
     const _UV: CheckersStack = new CheckersStack([zero, one]);
     const _OV: CheckersStack = new CheckersStack([zeroOfficer, one]);
@@ -497,6 +498,30 @@ describe('LascaRules', () => {
                 [__U, ___, ___, ___, ___, ___, ___],
             ], 2);
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
+        });
+
+        it('should forbid capturing the same tower twice in one move', () => {
+            // Given an officer that can capture both commanders of the same tower
+            const state: CheckersState = EvenCheckersState.of([
+                [__O, ___, ___, ___, ___, ___, ___],
+                [___, _VV, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When capturing one commander, then jumping back over the newly exposed commander
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(0, 0),
+                new Coord(2, 2),
+                new Coord(0, 0),
+            ]);
+
+            // Then the second capture over the same tower coordinate should be illegal
+            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid capturing two ennemies in one jump', () => {

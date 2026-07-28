@@ -143,8 +143,8 @@ describe('CheckersMoveGenerator for Lasca', () => {
 
     describe('getLegalCaptures', () => {
 
-        it('should allow to pass over the same coord several times', () => {
-            // Given a board with only one possible capture
+        it('should allow returning to the starting coordinate during a multiple capture', () => {
+            // Given an officer surrounded by four capturable pieces
             const state: CheckersState = EvenCheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -155,10 +155,10 @@ describe('CheckersMoveGenerator for Lasca', () => {
                 [_, _, _, _, _, _, _],
             ], 20);
 
-            // When checking the legal list of captures
+            // When listing captures that jump over each piece once and return to the starting coordinate
             const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig);
 
-            // Then it should be this one
+            // Then both circular paths should be legal
             const coordsClockwise: Coord[] = [
                 new Coord(6, 4),
                 new Coord(4, 2),
