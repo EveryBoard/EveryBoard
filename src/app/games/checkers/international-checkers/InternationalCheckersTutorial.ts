@@ -68,7 +68,7 @@ export class InternationalCheckersTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
-            CheckersTutorialStep.MULTIPLE_CAPTURES(true),
+            CheckersTutorialStep.MULTIPLE_CAPTURES(),
             OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],

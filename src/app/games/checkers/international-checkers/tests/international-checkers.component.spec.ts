@@ -147,6 +147,27 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
         ], 1),
         move: CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)]),
     },
+    returnToStartCaptureTest: {
+        state: OddCheckersState.of([
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, V, _, V, _, _, _, _, _],
+            [_, _, _, _, _, O, _, _, _, _],
+            [_, _, V, _, V, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _],
+        ], 0),
+        move: CheckersMove.fromCapture([
+            new Coord(5, 4),
+            new Coord(3, 2),
+            new Coord(1, 4),
+            new Coord(3, 6),
+            new Coord(5, 4),
+        ]),
+    },
     invalidCaptureTest: {
         state: OddCheckersState.of([
             [_, _, _, _, _, _, _, _, _, _],

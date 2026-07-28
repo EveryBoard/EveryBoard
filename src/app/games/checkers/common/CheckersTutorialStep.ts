@@ -14,17 +14,7 @@ export class CheckersTutorialStep {
 
     public static readonly MULTIPLE_CAPTURES_TITLE: Localized = () => $localize`Multiple captures`;
 
-    public static readonly MULTIPLE_CAPTURES: (piecesRemovedAtEndOfCapture: boolean) => string =
-        (piecesRemovedAtEndOfCapture: boolean): string => {
-            let message: string = $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square.`;
-            if (piecesRemovedAtEndOfCapture) {
-                message += $localize`Note that you cannot capture the same piece twice. Pieces are removed from the board only at the end of the capture.`;
-            } else {
-                message += $localize`Note that pieces are removed during the capture, so if a square becomes empty, you can fly over it again. But you cannot fly twice over a square if it still contains pieces`;
-            }
-            message += $localize`<br/><br/>You are playing Dark, do a double capture.`;
-            return message;
-        };
+    public static readonly MULTIPLE_CAPTURES: Localized = () => $localize`If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square.<br/><br/>You are playing Dark, do a double capture.`;
 
     public static readonly PROMOTION_TITLE: Localized = () => $localize`Promotion`;
 

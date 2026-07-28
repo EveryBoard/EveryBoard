@@ -74,6 +74,12 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
         move: CheckersMove;
     }
 
+    returnToStartCaptureTest: {
+        // A state on which a multiple capture can end on its starting coordinate
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
     invalidCaptureTest: {
         // A state on which an invalid capture is possible
         state: CheckersState;
@@ -423,6 +429,23 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 // And the next possibles ones displayed
                 const third: Coord = move.coords[2];
                 testUtils.expectElementToHaveClass(`#clickable-highlight-${ third.x }-${ third.y }`, 'clickable-stroke');
+            }));
+
+            it('should allow a multiple capture to return to its starting coordinate', fakeAsync(async() => {
+                // Given an officer that can capture four distinct pieces and return to its starting coordinate
+                const state: CheckersState = entries.returnToStartCaptureTest.state;
+                const move: CheckersMove = entries.returnToStartCaptureTest.move;
+                await testUtils.setupState(state);
+                await testUtils.expectClickSuccess(`#coord-${ move.coords[0].x }-${ move.coords[0].y }`);
+
+                // When performing the circular capture
+                for (let i: number = 1; i < move.coords.length - 1; i++) {
+                    await testUtils.expectClickSuccess(`#coord-${ move.coords[i].x }-${ move.coords[i].y }`);
+                }
+
+                // Then landing on the starting coordinate should complete the move
+                const end: Coord = move.getEndingCoord();
+                await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, move);
             }));
 
             it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {

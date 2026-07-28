@@ -5,11 +5,11 @@ import { Move } from '../../../jscaip/Move';
 
 export class CheckersMove extends Move {
 
-    private static of(coords: Coord[], isStep: boolean): CheckersMove {
+    private static of(coords: ReadonlyArray<Coord>, isStep: boolean): CheckersMove {
         return new CheckersMove(coords, isStep);
     }
 
-    public static fromCapture(coords: Coord[]): CheckersMove {
+    public static fromCapture(coords: ReadonlyArray<Coord>): CheckersMove {
         return new CheckersMove(coords, false);
     }
 

@@ -117,6 +117,24 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
         ], 1),
         move: CheckersMove.fromCapture([new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)]),
     },
+    returnToStartCaptureTest: {
+        state: EvenCheckersState.of([
+            [__, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __],
+            [__, __, __, _V, __, _V, __],
+            [__, __, __, __, __, __, _O],
+            [__, __, __, _V, __, _V, __],
+            [__, __, __, __, __, __, __],
+        ], 0),
+        move: CheckersMove.fromCapture([
+            new Coord(6, 4),
+            new Coord(4, 2),
+            new Coord(2, 4),
+            new Coord(4, 6),
+            new Coord(6, 4),
+        ]),
+    },
     invalidCaptureTest: {
         state: EvenCheckersState.of([
             [__, __, __, __, __, __, __],

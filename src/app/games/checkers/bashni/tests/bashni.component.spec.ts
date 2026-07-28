@@ -117,6 +117,25 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
         ], 1),
         move: CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 5)]),
     },
+    returnToStartCaptureTest: {
+        state: OddCheckersState.of([
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, _V, __, _V, __, __, __],
+            [__, __, __, __, __, _O, __, __],
+            [__, __, _V, __, _V, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+        ], 0),
+        move: CheckersMove.fromCapture([
+            new Coord(5, 4),
+            new Coord(3, 2),
+            new Coord(1, 4),
+            new Coord(3, 6),
+            new Coord(5, 4),
+        ]),
+    },
     invalidCaptureTest: {
         state: OddCheckersState.of([
             [__, __, __, __, __, __, __, __],

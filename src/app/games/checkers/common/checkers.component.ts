@@ -212,7 +212,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private async moveClick(clicked: Coord): Promise<MGPValidation> {
         const start: Coord = this.currentMoveClicks[0];
-        if (clicked.equals(start)) {
+        if (clicked.equals(start) && this.possibleClicks.contains(clicked) === false) {
             return this.cancelMove();
         }
         const clickedSpace: CheckersStack = this.constructedState().getPieceAt(clicked);
