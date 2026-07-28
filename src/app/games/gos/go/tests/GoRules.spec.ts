@@ -685,11 +685,11 @@ describe('GoRules', () => {
         it('should recognize victory for Player.ONE', () => {
             // Given a board where Player.ONE wins
             const board: Table<GoPiece> = [
-                [w, X, _, O, b],
-                [w, X, _, O, b],
-                [w, X, _, O, k],
-                [w, X, _, O, b],
-                [w, X, _, O, b],
+                [b, O, _, X, w],
+                [b, O, _, X, w],
+                [b, O, _, X, u],
+                [b, O, _, X, w],
+                [b, O, _, X, w],
             ];
             const state: GoState =
                 new GoState(board, PlayerNumberMap.of(5, 6), 2, MGPOptional.empty(), GoPhase.FINISHED);
