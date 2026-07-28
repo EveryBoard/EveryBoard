@@ -27,7 +27,7 @@ export class CheckersFailure {
 
     public static readonly CANNOT_MOVE_ORTHOGONALLY: Localized = () => $localize`You cannot move orthogonally!`;
 
-    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot jump over the same square several times!`;
+    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot capture the same coordinate several times!`;
 
     public static readonly MUST_DO_LONGEST_CAPTURE: Localized = () => $localize`You must do the longest capture possible!`;
 

@@ -67,29 +67,29 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
     },
     invalidVerticalMoveTest: {
         state: OddCheckersState.of([
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
             [__, _U, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [_V, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __],
         ], 0),
-        coord: new Coord(1, 1),
+        coord: new Coord(1, 2),
     },
     simpleCaptureTest: {
         state: OddCheckersState.of([
-            [__, _U, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
             [_V, __, _V, __, __, __, __, __],
+            [__, _U, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __],
-        ], 1),
-        move: CheckersMove.fromCapture([new Coord(1, 0), new Coord(3, 2)]),
+        ], 0),
+        move: CheckersMove.fromCapture([new Coord(1, 4), new Coord(3, 2)]),
     },
     promotionTest: {
         state: OddCheckersState.of([

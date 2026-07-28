@@ -9,11 +9,12 @@ import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../../common/CheckersState';
 import { BashniRules } from '../BashniRules';
 
-fdescribe('BashniRules', () => {
+describe('BashniRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
     const zeroKing: CheckersPiece = CheckersPiece.ZERO_PROMOTED;
+    const oneKing: CheckersPiece = CheckersPiece.ONE_PROMOTED;
 
     const __U: CheckersStack = new CheckersStack([zero]);
     const __O: CheckersStack = new CheckersStack([zeroKing]);
@@ -381,8 +382,8 @@ fdescribe('BashniRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid flying through a square captured earlier in the same move', () => {
-            // Given a board where a man promotes during a capture and then could fly through an earlier capture
+        it('should allow flying through a coordinate captured earlier in the same move', () => {
+            // Given a board where a man promotes and can fly through coordinates emptied by earlier captures
             const state: CheckersState = OddCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, __V, ___, ___, ___],
@@ -394,7 +395,7 @@ fdescribe('BashniRules', () => {
                 [___, ___, ___, ___, ___, ___, ___, ___],
             ], 0);
 
-            // When trying to fly through (4, 1), already captured earlier in the same move
+            // When flying through (4, 1), whose piece was captured earlier in the move
             const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(1, 6),
                 new Coord(3, 4),
@@ -403,10 +404,19 @@ fdescribe('BashniRules', () => {
                 new Coord(7, 4),
             ]);
 
-            // Then it should fail and it should not be generated
-            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
-            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
-            expect(rules.getCompleteCaptures(state, defaultConfig)).not.toContain(move);
+            // Then it should succeed
+            const OV4: CheckersStack = new CheckersStack([zeroKing, one, one, one, one]);
+            const expectedState: CheckersState = OddCheckersState.of([
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, OV4],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___, ___],
+            ], 1);
+            RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should allow passing through the starting square during capture', () => {
@@ -432,11 +442,11 @@ fdescribe('BashniRules', () => {
             ]);
 
             // Then it should succeed
-            const VU4: CheckersStack = new CheckersStack([zero, one, one, one, one]);
+            const OU4: CheckersStack = new CheckersStack([oneKing, zero, zero, zero, zero]);
             const expectedState: CheckersState = OddCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
-                [___, VU4, ___, ___, ___, ___, ___, ___],
+                [___, OU4, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___, ___],
@@ -469,7 +479,7 @@ fdescribe('BashniRules', () => {
             ]);
 
             // Then it should succeed
-            const VU4: CheckersStack = new CheckersStack([zero, one, one, one, one]);
+            const VU4: CheckersStack = new CheckersStack([one, zero, zero, zero, zero]);
             const expectedState: CheckersState = OddCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___, ___],
                 [___, ___, VU4, ___, ___, ___, ___, ___],
