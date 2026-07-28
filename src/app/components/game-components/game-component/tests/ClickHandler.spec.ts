@@ -17,15 +17,15 @@ describe('getOrCreateOwnClickHandlers with inheritance', () => {
         }
 
         // When putting a click handler on the children
-        const handlers: unknown = Reflect.get(Child.prototype, CLICK_HANDLERS);
+        const childHandlers: unknown = Reflect.get(Child.prototype, CLICK_HANDLERS);
 
-        // Then it should ONLY belong to the parent
-        expect(handlers).toBeInstanceOf(Map);
+        // Then it should ONLY belong to the children
+        expect(childHandlers).toBeInstanceOf(Map);
 
-        const typedHandlers: Map<string, ClickNamer> = handlers as Map<string, ClickNamer>;
+        const typedChildHandlers: Map<string, ClickNamer> = childHandlers as Map<string, ClickNamer>;
 
-        expect(typedHandlers.has('onParentClick')).toBe(true);
-        expect(typedHandlers.has('onChildClick')).toBe(true);
+        expect(typedChildHandlers.has('onParentClick')).toBe(true);
+        expect(typedChildHandlers.has('onChildClick')).toBe(true);
 
         // Verifies that the map strictly belongs to the child and not its parent
         const parentHandlers: unknown = Reflect.get(Parent.prototype, CLICK_HANDLERS);
@@ -33,6 +33,6 @@ describe('getOrCreateOwnClickHandlers with inheritance', () => {
         expect(typedParentHandlers.has('onParentClick')).toBe(true);
         expect(typedParentHandlers.has('onChildClick')).toBe(false);
         // Verifies that the two maps are distinct instances
-        expect(typedHandlers).not.toBe(typedParentHandlers);
+        expect(typedChildHandlers).not.toBe(typedParentHandlers);
     });
 });
