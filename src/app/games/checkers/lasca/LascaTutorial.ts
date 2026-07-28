@@ -54,7 +54,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
-            CheckersTutorialStep.MULTIPLE_CAPTURES(),
+            CheckersTutorialStep.MULTIPLE_CAPTURES(false),
             EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],

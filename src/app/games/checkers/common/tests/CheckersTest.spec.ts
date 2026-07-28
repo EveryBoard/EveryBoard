@@ -95,12 +95,6 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
     let testUtils: ComponentTestUtils<C>;
 
-    type CheckersComponentPrivate = {
-        currentMoveClicks: Coord[];
-        getClickFailureReason(clicked: Coord): string;
-        getMoveAttemptEndingAt(clicked: Coord): CheckersMove;
-    };
-
     const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
     // TODO FOR REVIEW: que penserais-tu de mettre ce describe HORS de la fonction? Ça obligerait à appeler comme suit:
@@ -569,35 +563,47 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 expect(gameComponent.getViewBox().height).toBe(expectedViewBoxHeight);
             }));
 
-            it('should build capture attempt when the attempted move jumps over a piece', fakeAsync(async() => {
-                // Given a board with a selected piece and an occupied square to jump over
-                await testUtils.setupState(entries.simpleCaptureTest.state);
-                const gameComponent: CheckersComponentPrivate =
-                    testUtils.getGameComponent() as unknown as CheckersComponentPrivate;
-                gameComponent.currentMoveClicks = [entries.simpleCaptureTest.move.getStartingCoord()];
+        });
 
-                // When building the move attempt
-                const attemptedMove: CheckersMove =
-                    gameComponent.getMoveAttemptEndingAt(entries.simpleCaptureTest.move.getEndingCoord());
+        describe('Invalid move attempts', () => {
 
-                // Then the attempt should be a capture
-                expect(attemptedMove).toEqual(entries.simpleCaptureTest.move);
+            it('should validate an attempted jump as a capture', fakeAsync(async() => {
+                // Given a selected piece and an unavailable move that jumps over an occupied square
+                const state: CheckersState = entries.invalidCaptureTest.state;
+                const move: CheckersMove = entries.invalidCaptureTest.move;
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                await testUtils.setupState(state);
+                const start: Coord = move.getStartingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
+                spyOn(gameComponent.rules, 'getSubMoveValidity').and.returnValue(MGPValidation.SUCCESS);
+                const reason: string = 'expected capture validation failure';
+                const isLegalSpy: jasmine.Spy =
+                    spyOn(gameComponent.rules, 'isLegal').and.returnValue(MGPValidation.failure(reason));
+
+                // When clicking on the unavailable landing square
+                const end: Coord = move.getEndingCoord();
+                await testUtils.expectClickFailure(`#coord-${ end.x }-${ end.y }`, reason);
+
+                // Then the attempted move should have been validated as a capture
+                expect(isLegalSpy).toHaveBeenCalledOnceWith(move, state, defaultConfig);
             }));
 
             it('should fall back to unmovable piece failure when a legal click is not a possible click', fakeAsync(async() => {
                 // Given a selected piece whose attempted move is valid but not currently possible
-                const gameComponent: CheckersComponentPrivate =
-                    testUtils.getGameComponent() as unknown as CheckersComponentPrivate;
-                const publicGameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
-                gameComponent.currentMoveClicks = [entries.firstPlayerCoords[0]];
-                spyOn(publicGameComponent.rules, 'getSubMoveValidity').and.returnValue(MGPValidation.SUCCESS);
-                spyOn(publicGameComponent.rules, 'isLegal').and.returnValue(MGPValidation.SUCCESS);
+                const state: CheckersState = entries.invalidCaptureTest.state;
+                const move: CheckersMove = entries.invalidCaptureTest.move;
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                await testUtils.setupState(state);
+                const start: Coord = move.getStartingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
+                spyOn(gameComponent.rules, 'getSubMoveValidity').and.returnValue(MGPValidation.SUCCESS);
+                spyOn(gameComponent.rules, 'isLegal').and.returnValue(MGPValidation.SUCCESS);
+                const reason: string = CheckersFailure.THIS_PIECE_CANNOT_MOVE();
 
-                // When computing the failure reason
-                const reason: string = gameComponent.getClickFailureReason(entries.firstPlayerSecondClicks[0]);
-
+                // When clicking on the unavailable landing square
+                const end: Coord = move.getEndingCoord();
                 // Then it should explain that this piece cannot move
-                expect(reason).toBe(CheckersFailure.THIS_PIECE_CANNOT_MOVE());
+                await testUtils.expectClickFailure(`#coord-${ end.x }-${ end.y }`, reason);
             }));
 
         });

@@ -71,7 +71,7 @@ export class BashniTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
-            CheckersTutorialStep.MULTIPLE_CAPTURES(),
+            CheckersTutorialStep.MULTIPLE_CAPTURES(false),
             OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
