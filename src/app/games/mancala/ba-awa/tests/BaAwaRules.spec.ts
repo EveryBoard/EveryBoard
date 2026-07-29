@@ -9,12 +9,12 @@ import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.
 import { BaAwaConfig } from '../BaAwaConfig';
 import { BaAwaRules as BaAwaRules } from '../BaAwaRules';
 
-fdescribe('BaAwaRules', () => {
+describe('BaAwaRules', () => {
 
     const rules: BaAwaRules = BaAwaRules.get();
     const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
 
-    fdescribe('generic tests', () => {
+    describe('generic tests', () => {
 
         DoMancalaRulesTests({
             gameName: 'Ba-awa',

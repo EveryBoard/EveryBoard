@@ -23,7 +23,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
     const rules: MancalaRules = entries.rules;
     const defaultConfig: MancalaConfig = rules.getDefaultRulesConfig();
 
-    fdescribe(entries.gameName + 'Rules generic tests', () => {
+    describe(entries.gameName + 'Rules generic tests', () => {
 
         it('should generate initial board according to config', () => {
             // Given an initial board with unusual width and height
