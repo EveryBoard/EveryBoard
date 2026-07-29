@@ -342,8 +342,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const coord: Coord = new Coord(x, y);
         const homeOwner: Player = this.rules.getSpaceOwner(coord, this.getConfig());
         const homeColor: string = this.getPlayerClass(homeOwner);
-        // TODO: this.captured should not be called before we have the good variable, linked to having the rules-config-param-in-the-url-in-test
-        if (this.rules.getStoreOwner(coord).isAbsent() && y < this.captured.length && this.captured[y][x] > 0) {
+        if (this.rules.getStoreOwner(coord).isAbsent() && this.captured[y][x] > 0) {
             return ['captured-fill', 'moved-stroke'];
         } else if (this.lastDistributedHouses.some((c: Coord) => c.equals(coord))) {
             return ['last-move-stroke', homeColor];
@@ -363,14 +362,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public getPieceRotation(): string {
         return 'rotate(' + this.getPointOfView().getValue() * 180 + ')';
     }
-// TODO: /local/Jajette donne un message d'erreur souhaité "ce jeu existe pas"
-// mais /local/jajette/config throw en console et n'affiche pas le message, let's have it behave identically
+
     public getHouseSecondaryContent(x: number, y: number): MGPOptional<string> {
         const previousContent: number = this.getPreviousStableState().getPieceAtXY(x, y);
         const currentContent: number = this.constructedState.getPieceAtXY(x, y);
         const difference: number = currentContent - previousContent;
-        // TODO: remove condition when having the rules-config-param-in-the-url-in-test
-        if (y < this.captured.length && this.captured[y][x] > 0) {
+        if (this.captured[y][x] > 0) {
             return MGPOptional.of('-' + this.captured[y][x]);
         } else if (difference > 0) {
             return MGPOptional.of('+' + difference);

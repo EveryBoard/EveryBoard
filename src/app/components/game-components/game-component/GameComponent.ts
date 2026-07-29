@@ -112,7 +112,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public node: GameNode<M, S>;
 
-    public config: C; // TODO: make private ((or kill getter))
+    protected config: C;
 
     public availableAIs: AI<M, S, AIOptions, C>[];
 
@@ -267,8 +267,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         this.tutorial = gameInfo.tutorial.tutorial;
     }
 
-    protected getConfig(): C {
+    public getConfig(): C {
         return this.config;
+    }
+
+    public setConfig(config: C): void {
+        this.config = config;
     }
 
     /**

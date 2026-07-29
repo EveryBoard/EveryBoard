@@ -83,7 +83,7 @@
                     @if (gameComponent.node.previousMove.isPresent() && displayAIInfo()) {
                         <div id="ai-info">
                             @for (ai of gameComponent.availableAIs; track ai.name) {
-                                {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>
+                                {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.getConfig()) }} <br/>
                             }
                             Created {{ getCreatedNodes() }} nodes.<br/>
                             Minimax time: {{ getMinimaxTime() }}ms.<br/>

@@ -454,7 +454,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             );
             // TODO: config should be in URL already (rules-config-param-in-the-url-in-test)
             await wrapper.setConfigFromParams();
-            this.gameComponent.config = config;
+            this.gameComponent.setConfig(config);
             tick(0);
         }
         this.gameComponent.node = new GameNode(
