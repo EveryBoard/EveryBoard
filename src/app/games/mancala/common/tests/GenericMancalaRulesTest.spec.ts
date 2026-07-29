@@ -54,7 +54,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             RulesUtils.expectMoveFailure(rules, state, entries.simpleMove, reason, defaultConfig);
         });
 
-        fit('should refuse distributing opponent space', () => {
+        it('should refuse distributing opponent space', () => {
             // Given any board
             const state: MancalaState = rules.getInitialState(defaultConfig);
 
