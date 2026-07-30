@@ -66,7 +66,6 @@ export class KalahTutorial extends Tutorial {
                     return MGPValidation.SUCCESS;
                 } else {
                     return MGPValidation.failure($localize`You did not capture, try again!`);
-                    // TODO: fix this test, three clicks are legal
                 }
             },
             TutorialStepMessage.CONGRATULATIONS(),

@@ -102,7 +102,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         if (mustMonsoon.length > 0) {
             return mustMonsoon;
         } else {
-            if (postCaptureState.getTotalRemainingSeeds() <= 8) { // TODO: why the hardcoded numbar ?
+            if (postCaptureState.getTotalRemainingSeeds() <= 8) { // TODO FOR REVIEW: why the hardcoded numbar ?
                 if (config.splitFinalSeedsEvenly) {
                     return [Player.ZERO, Player.ONE];
                 } else {
