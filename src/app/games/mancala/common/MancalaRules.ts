@@ -154,10 +154,11 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         if (state.getPieceAtXY(distribution.x, distribution.y) === 0) {
             return MGPFallible.failure(MancalaFailure.MUST_CHOOSE_NON_EMPTY_HOUSE());
         }
+        // TODO: LA LAA LAAA LAAAA LAAAAA
         const spaceOwner: Player = this.getSpaceOwner(new Coord(distribution.x, distribution.y), config);
-        if (spaceOwner === state.getCurrentPlayer()) {
+        if (spaceOwner === state.getCurrentOpponent()) {
             return MGPFallible.failure(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
-        }
+        } // This removal fixes 167 - 92 tests
         const distributionResult: MancalaDistributionResult =
             this.distributeMove(MancalaMove.of(distribution), state, config);
         const isStarving: boolean = MancalaRules.isStarving(

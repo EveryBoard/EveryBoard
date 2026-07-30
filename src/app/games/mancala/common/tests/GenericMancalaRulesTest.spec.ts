@@ -59,7 +59,7 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             const state: MancalaState = rules.getInitialState(defaultConfig);
 
             // When attempting to distribute opponent space
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0));
 
             // Then it should be illegal
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();

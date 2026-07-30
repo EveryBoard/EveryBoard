@@ -169,7 +169,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
         const config: MancalaConfig = this.getConfig();
-        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.getState().getCurrentPlayer()) {
+        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.getState().getCurrentOpponent()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         this.updateOrCreateCurrentMove(x, y);
@@ -342,7 +342,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const coord: Coord = new Coord(x, y);
         const homeOwner: Player = this.rules.getSpaceOwner(coord, this.getConfig());
         const homeColor: string = this.getPlayerClass(homeOwner);
-        if (this.rules.getStoreOwner(coord).isAbsent() && this.captured[y][x] > 0) {
+        if (this.rules.getStoreOwner(coord).isAbsent() && y < this.captured.length && this.captured[y][x] > 0) {
             return ['captured-fill', 'moved-stroke'];
         } else if (this.lastDistributedHouses.some((c: Coord) => c.equals(coord))) {
             return ['last-move-stroke', homeColor];
@@ -367,7 +367,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const previousContent: number = this.getPreviousStableState().getPieceAtXY(x, y);
         const currentContent: number = this.constructedState.getPieceAtXY(x, y);
         const difference: number = currentContent - previousContent;
-        if (this.captured[y][x] > 0) {
+        if (y < this.captured.length && this.captured[y][x] > 0) {
             return MGPOptional.of('-' + this.captured[y][x]);
         } else if (difference > 0) {
             return MGPOptional.of('+' + difference);

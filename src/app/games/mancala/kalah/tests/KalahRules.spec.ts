@@ -517,9 +517,9 @@ describe('KalahRules', () => {
                     [0, 0, 2, 0, 0, 0],
                     [4, 4, 4, 4, 4, 4],
                     [4, 4, 4, 4, 4, 4],
-                    [4, 4, 4, 4, 4, 0],
+                    [4, 4, 4, 4, 0, 0],
                 ];
-                const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
+                const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(0, 0));
 
                 // When doing a move that end up in this house of your
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2, 0));
@@ -529,9 +529,9 @@ describe('KalahRules', () => {
                     [0, 0, 0, 1, 1, 0],
                     [4, 4, 4, 4, 4, 4],
                     [4, 4, 4, 4, 4, 4],
-                    [4, 4, 4, 4, 4, 0],
+                    [4, 4, 4, 4, 0, 0],
                 ];
-                const expectedState: MancalaState = new MancalaState(expectedBoard, 5, PlayerNumberMap.of(0, 0));
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 6, PlayerNumberMap.of(0, 0));
                 RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
             });
 
