@@ -1,12 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
-import { GoNode } from '../../AbstractGoRules';
 import { GoFailure } from '../../GoFailure';
 import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';

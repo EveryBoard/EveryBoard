@@ -54,7 +54,7 @@ describe('GoComponent', () => {
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccess('.data-click-0-1', move);
         const goComponent: GoComponent = testUtils.getGameComponent();
-        expect(goComponent.captures).toEqual([new Coord(0, 0)]);
+        expect(goComponent.captures()).toEqual([new Coord(0, 0)]);
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {
@@ -213,6 +213,40 @@ describe('GoComponent', () => {
 
     describe('Zoomed Go', () => {
 
+        it('should display zooms adequately', fakeAsync(async() => {
+            // Given a board with several zoom level
+            const customConfig: RectangularGoConfig = {
+                ...defaultConfig,
+                zoom: 3,
+                showZooms: true,
+            };
+            const state: GoState = GoRules.get().getInitialState(customConfig);
+
+            // When displaying that koCoord on board (1, 1) at z=2
+            await testUtils.setupState(state, { config: customConfig });
+
+            testUtils.expectElementToExist('#zoom-0');
+            testUtils.expectElementToExist('#zoom-1');
+            testUtils.expectElementToExist('#zoom-2');
+            // Then it should have 1 zoom 1
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0');
+            // Then it should have 4 zoom 1
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-1');
+            testUtils.expectElementToExist('#zoom-1-zx-1-zy-0');
+            testUtils.expectElementToExist('#zoom-1-zx-1-zy-1');
+            // Then it should have 9 zoom 1
+            testUtils.expectElementToExist('#zoom-2-zx-0-zy-0');
+            testUtils.expectElementToExist('#zoom-2-zx-0-zy-1');
+            testUtils.expectElementToExist('#zoom-2-zx-0-zy-2');
+            testUtils.expectElementToExist('#zoom-2-zx-1-zy-0');
+            testUtils.expectElementToExist('#zoom-2-zx-1-zy-1');
+            testUtils.expectElementToExist('#zoom-2-zx-1-zy-2');
+            testUtils.expectElementToExist('#zoom-2-zx-2-zy-0');
+            testUtils.expectElementToExist('#zoom-2-zx-2-zy-1');
+            testUtils.expectElementToExist('#zoom-2-zx-2-zy-2');
+        }));
+
         it('should display koCoord adequately', fakeAsync(async() => {
             // Given a provided ko coord in (1, 1) in board z=0
             const board: Table<GoPiece> = [
@@ -229,6 +263,7 @@ describe('GoComponent', () => {
                 width: 5,
                 height: 5,
                 zoom: 2,
+                showZooms: true,
             };
 
             // When displaying that koCoord on board (1, 1) at z=2
@@ -254,6 +289,7 @@ describe('GoComponent', () => {
                 width: 5,
                 height: 5,
                 zoom: 2,
+                showZooms: true,
             };
             await testUtils.setupState(state, { config });
 
@@ -289,6 +325,7 @@ describe('GoComponent', () => {
                 width: 5,
                 height: 5,
                 zoom: 3,
+                showZooms: true,
             };
             await testUtils.setupState(state, { config: customConfig });
 
@@ -304,21 +341,21 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-capture-0-0');
 
             // and the zoom = 1 too
-            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 .data-capture-0-0');
-            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-1 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-0 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 .data-capture');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 > .data-capture-0-0');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-1 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-0 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 > .data-capture');
 
             // and the zoom = 2 too
-            testUtils.expectElementToExist('#zoom-2-zx-0-zy-0 .data-capture-0-0');
-            testUtils.expectElementNotToExist('#zoom-2-zx-0-zy-1 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-0-zy-2 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-0 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-1 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-2-zy-0 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-2-zy-1 .data-capture');
-            testUtils.expectElementNotToExist('#zoom-2-zx-2-zy-2 .data-capture');
+            testUtils.expectElementToExist('#zoom-2-zx-0-zy-0 > .data-capture-0-0');
+            testUtils.expectElementNotToExist('#zoom-2-zx-0-zy-1 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-0-zy-2 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-0 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-1 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-2-zy-0 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-2-zy-1 > .data-capture');
+            testUtils.expectElementNotToExist('#zoom-2-zx-2-zy-2 > .data-capture');
 
         }));
 
@@ -343,19 +380,20 @@ describe('GoComponent', () => {
                 width: 5,
                 height: 5,
                 zoom: 2,
+                showZooms: true,
             };
 
             // When rendering state
             await testUtils.setupState(state, { config: customConfig });
 
             // Then the zoom = 0 ko should be correct
-            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-ko-3-0');
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 > .data-ko-3-0');
 
             // and the zoom = 1 too
-            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-0 .data-ko');
-            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-1 .data-ko');
-            testUtils.expectElementToExist('#zoom-1-zx-1-zy-0 .data-ko-1-0');
-            testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 .data-ko');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-0 > .data-ko');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-1 > .data-ko');
+            testUtils.expectElementToExist('#zoom-1-zx-1-zy-0 > .data-ko-1-0');
+            testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 > .data-ko');
         }));
 
     });

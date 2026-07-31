@@ -1,4 +1,4 @@
-import { computed, ModelSignal, signal, Signal, WritableSignal } from '@angular/core';
+import { computed, effect, ModelSignal, signal, Signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -26,11 +26,11 @@ export abstract class AbstractRectangularGoComponent
                                GoLegalityInformation>
 {
 
-    public ko: MGPOptional<Coord> = MGPOptional.empty();
+    protected ko: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public last: MGPOptional<Coord> = MGPOptional.empty();
+    public last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public captures: Coord[] = [];
+    public captures: WritableSignal<Coord[]> = signal([]);
 
     public displayedZooms: WritableSignal<number> = signal(1);
 
@@ -63,13 +63,13 @@ export abstract class AbstractRectangularGoComponent
     });
 
     public override async showLastMove(move: GoMove): Promise<void> {
-        this.last = MGPOptional.of(move.coord);
+        this.last.set(MGPOptional.of(move.coord));
         this.showCaptures();
     }
 
     public override hideLastMove(): void {
-        this.captures = [];
-        this.last = MGPOptional.empty();
+        this.captures.set([]);
+        this.last.set(MGPOptional.empty());
     }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -104,7 +104,7 @@ export abstract class AbstractRectangularGoComponent
         );
         this.updateScores();
 
-        this.ko = state.koCoord;
+        this.ko.set(state.koCoord);
         this.canPass = phase.allowsPass();
         this.createHoshis();
         this.cdr.detectChanges();
@@ -120,18 +120,19 @@ export abstract class AbstractRectangularGoComponent
 
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
-        this.captures = [];
+        const captures: Coord[] = [];
         for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
-                const isNotKo: boolean = this.ko.equalsValue(coord) === false;
+                const isNotKo: boolean = this.ko().equalsValue(coord) === false;
                 if (wasOccupied && isEmpty && isNotKo) {
-                    this.captures.push(coord);
+                    captures.push(coord);
                 }
             }
         }
+        this.captures.set(captures);
     }
 
     public override async pass(): Promise<MGPValidation> {
@@ -193,9 +194,13 @@ export abstract class AbstractRectangularGoComponent
         return `translate(${ translateX }, ${ translateY })`;
     }
 
-    public onTakeHover(zoom: number, zx: number, zy: number, zoomedCoord: Coord): void {
-        const normalCoord: Coord = GoSubBoardHelper.fromZoomedToNormalCoord(zoomedCoord, zx, zy, zoom);
-        this.hover.set(MGPOptional.of(normalCoord));
+    public onTakeHover(zoom: number, zx: number, zy: number, zoomedCoord: MGPOptional<Coord>): void {
+        if (zoomedCoord.isPresent()) {
+            const normalCoord: Coord = GoSubBoardHelper.fromZoomedToNormalCoord(zoomedCoord.get(), zx, zy, zoom);
+            this.hover.set(MGPOptional.of(normalCoord));
+        } else {
+            this.hover.set(MGPOptional.empty());
+        }
     }
 
 }

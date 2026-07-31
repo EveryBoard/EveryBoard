@@ -72,7 +72,7 @@ export class GoBoardComponent extends BaseGameComponent {
 
     public clicked: OutputEmitterRef<Coord> = output<Coord>();
 
-    public takeHover: OutputEmitterRef<Coord> = output<Coord>();
+    public takeHover: OutputEmitterRef<MGPOptional<Coord>> = output<MGPOptional<Coord>>();
 
     public GoPiece: typeof GoPiece = GoPiece;
 
@@ -109,6 +109,10 @@ export class GoBoardComponent extends BaseGameComponent {
     }
 
     public onMouseOver(coord: Coord): void {
+        return this.onOptionalMouseOver(MGPOptional.of(coord));
+    }
+
+    public onOptionalMouseOver(coord: MGPOptional<Coord>): void {
         this.takeHover.emit(coord);
     }
 

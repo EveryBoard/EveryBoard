@@ -2,7 +2,7 @@
        [width]="state().getWidth()"
        [height]="state().getHeight()"
        (clickCallBack)="onClick($event)"
-       (mouseEnterCallback)="onMouseOver($event)"
+       (mouseEnterCallback)="onOptionalMouseOver($event)"
 />
 <svg:g class="data-piece-ko-territory-markers-and-dead-stones">
     @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
