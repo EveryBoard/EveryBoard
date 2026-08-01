@@ -25,7 +25,7 @@ class PlayerNone implements ComparableObject {
         return this === other;
     }
 
-    public getValue() : number {
+    public getValue(): number {
         return this.value;
     }
 

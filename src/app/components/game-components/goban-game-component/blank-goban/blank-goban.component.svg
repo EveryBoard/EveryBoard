@@ -1,4 +1,4 @@
-<svg:g id="blank-board"
+<svg:g class="data-blank-board"
        (mouseout)="onSVGLeave()">
     <svg:rect x="0"
               y="0"

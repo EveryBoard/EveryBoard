@@ -108,7 +108,7 @@ export class GoBoardComponent extends BaseGameComponent {
         return this.state().isTerritory(coord);
     }
 
-    public onMouseOver(coord: Coord): void {
+    public onMouseEnter(coord: Coord): void {
         return this.onOptionalMouseOver(MGPOptional.of(coord));
     }
 

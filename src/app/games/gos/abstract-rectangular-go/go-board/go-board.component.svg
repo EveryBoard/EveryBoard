@@ -6,8 +6,9 @@
 />
 <svg:g class="data-piece-ko-territory-markers-and-dead-stones">
     @for (coordAndContent of state().getCoordsAndContents(); track coordAndContent.coord.toString()) {
-        <svg:g [attr.transform]="getTranslationAt(coordAndContent.coord)"
-               (mouseenter)="onMouseOver(coordAndContent.coord)"
+        <svg:g class="data-coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+               [attr.transform]="getTranslationAt(coordAndContent.coord)"
+               (mouseenter)="onMouseEnter(coordAndContent.coord)"
                (click)="onClick(coordAndContent.coord)"
         >
             @if (spaceIsFull(coordAndContent.coord)) {

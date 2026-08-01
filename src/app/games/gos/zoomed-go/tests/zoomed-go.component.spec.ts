@@ -399,5 +399,47 @@ describe('ZoomedGoComponent', () => {
         testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 > .data-ko');
     }));
 
+    describe('highlight on mouse hover', () => {
+
+        it('should show hovered coord on multiple zooms (go-board)', () => {
+            // given any board with a config that shows multiple zooms
+            // when hovering a coord
+            testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
+
+            // then its equivalents coords should be displayed on other zooms
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 .data-hover-2-1');
+            testUtils.expectElementToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
+        });
+
+        it('should show hovered coord on multiple zooms (blank goban)', () => {
+            // given any board with a config that shows multiple zooms
+            // when hovering a coord
+            testUtils.enterMouseEnterElement('#zoom-0 .data-click-4-2');
+
+            // then its equivalents coords should be displayed on other zooms
+            testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');
+            testUtils.expectElementToExist('#zoom-1-zx-0-zy-0 .data-hover-2-1');
+            testUtils.expectElementToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
+        });
+
+        it('should hide hovered coord on multiple zooms when leaving (go-board)', () => {
+            // given any board with a config that shows multiple zooms and an hover coord
+            testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
+
+            // when hovering a coord
+            testUtils.enterMouseOutElement('#zoom-0 .data-blank-board');
+
+            // then its equivalents coords should be displayed on other zooms
+            testUtils.expectElementNotToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');
+            testUtils.expectElementNotToExist('#zoom-0-zx-0-zy-0 .data-hover');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-0 .data-hover-2-1');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-0 .data-hover');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 .data-hover');
+        });
+
+    });
+
 });
 
