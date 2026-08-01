@@ -30,7 +30,6 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-
     public static readonly AI_TIMEOUT: number = 1500;
 
     public aiOptions: [string, string] = ['none', 'none'];
@@ -156,7 +155,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.proposeAIToPlay();
     }
 
-    public async onLegalUserMove(move: Move): Promise<void> {
+    public override async onLegalUserMove(move: Move): Promise<void> {
         const config: RulesConfig = this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
         await this.applyNewMove();
