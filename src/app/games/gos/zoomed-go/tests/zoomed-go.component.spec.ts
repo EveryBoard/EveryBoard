@@ -11,7 +11,7 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
-import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';;
+import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
 import { ZoomedGoRules } from '../ZoomedGoRules';
 import { ZoomedGoComponent } from '../zoomed-go.component';
 

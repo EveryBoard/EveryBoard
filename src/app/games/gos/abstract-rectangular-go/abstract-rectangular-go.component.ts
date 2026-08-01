@@ -1,4 +1,4 @@
-import { computed, effect, ModelSignal, signal, Signal, WritableSignal } from '@angular/core';
+import { computed, ModelSignal, signal, Signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 

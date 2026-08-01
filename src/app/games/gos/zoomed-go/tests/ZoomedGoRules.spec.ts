@@ -128,7 +128,7 @@ describe('ZoomedGoRules', () => {
     });
 
     it('should forbid suicide in one zoom even if it captures on another zoom', () => {
-         // Given:
+        // Given:
         // - a config with zoom = 2
         // - a board with a coord without freedom on zoom = 2 that could capture in zoom = 1
         const board: Table<GoPiece> = [
