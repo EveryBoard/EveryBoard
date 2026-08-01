@@ -327,7 +327,7 @@ export class SimpleComponentTestUtils<T> {
         element.nativeElement.dispatchEvent(new Event('input'));
     }
 
-    public async selectChildElementOfDropDown(dropDownName: string, childName: string): Promise<void> {
+    public selectChildElementOfDropDown(dropDownName: string, childName: string): void {
         const selectedDropDown: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
         expect(selectedDropDown)
             .withContext(`dropDown ${dropDownName} does not exist`)
@@ -341,7 +341,7 @@ export class SimpleComponentTestUtils<T> {
         tick();
     }
 
-    public async chooseConfig(configName: string): Promise<void> {
+    public chooseConfig(configName: string): void {
         const selectAI: HTMLSelectElement = this.findElement('#ruleSelect').nativeElement;
         const option: HTMLOptionElement | undefined = Array.from(selectAI.options)
             .find((opt: HTMLOptionElement) => {
@@ -635,12 +635,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy.calls.reset();
     }
 
-    public async selectAIPlayer(player: Player): Promise<void> {
-        this.choosingAIOrHuman(player, 'AI');
-        await this.choosingAILevel(player);
-    }
-
-    public choosingAIOrHuman(player: Player, aiOrHuman: 'AI' | 'human'): void {
+    public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {
         const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
         const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
         selectAI.value = aiOrHuman === 'AI' ? selectAI.options[1].value : selectAI.options[0].value;

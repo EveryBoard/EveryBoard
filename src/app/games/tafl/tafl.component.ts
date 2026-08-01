@@ -252,11 +252,19 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
                     moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
                 },
             ],
-            mcts: [{
-                id: 'default',
-                name: $localize`MCTS`,
-                moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
-            }],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`MCTS`,
+                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                },
+                {
+                    id: 'Pieces',
+                    name: $localize`Pieces`,
+                    heuristic: (): TaflPieceAndControlHeuristic<M> => new TaflPieceAndControlHeuristic(this.rules),
+                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                },
+            ],
         };
     }
 

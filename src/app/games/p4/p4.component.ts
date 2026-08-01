@@ -30,18 +30,28 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         super();
         this.setRulesAndNode('P4');
         this.aiConfig = {
-            minimax: [{
-                id: 'alignment',
-                name: $localize`Alignment`,
-                heuristic: (): P4Heuristic => new P4Heuristic(),
-                moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
-                hash: P4Component.hash,
-            }],
-            mcts: [{
-                id: 'default',
-                name: $localize`Default`,
-                moveGenerator: (): P4MoveGenerator => new P4MoveGenerator(),
-            }],
+            minimax: [
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                    hash: P4Component.hash,
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: (): P4MoveGenerator => new P4MoveGenerator(),
+                },
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                },
+            ],
         };
         this.encoder = P4Move.encoder;
     }

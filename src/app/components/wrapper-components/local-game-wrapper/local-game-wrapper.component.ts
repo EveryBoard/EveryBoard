@@ -8,13 +8,13 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, 
 import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
 import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
 import { createIterativeDeepeningMinimaxFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
-import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
+import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
 import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
-import { Player } from '../../../jscaip/Player';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
@@ -40,7 +40,6 @@ type AIChoice = {
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
-
 
     public static readonly AI_TIMEOUT: number = 1500;
 
@@ -217,7 +216,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.mustSelectAIProfile(playerIndex) === false || this.aiProfiles[playerIndex] !== 'none';
     }
 
-    public async onLegalUserMove(move: Move): Promise<void> {
+    public override async onLegalUserMove(move: Move): Promise<void> {
         const config: RulesConfig = this.getConfig();
         this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, move, config).get();
         await this.applyNewMove();
@@ -304,7 +303,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
-        const playerIndex: number = this.gameComponent.getTurn() % 2;
+        return this.getAI(this.gameComponent.getTurn());
+    }
+
+    private getOpponentAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+        return this.getAI(this.gameComponent.getTurn() + 1);
+    }
+
+    private getAI(turn: number): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+        const playerIndex: number = turn % 2;
         const strategy: AIStrategyId = this.playerSelection[playerIndex];
         if (strategy === 'human') {
             return MGPOptional.empty();
@@ -514,6 +521,37 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIInfo(): boolean {
         return localStorage.getItem('displayAIInfo') === 'true';
+    }
+
+    public viewTreeFromCurrentNode(): void {
+        this.viewTreeFrom(this.gameComponent.node);
+    }
+
+    public viewTreeFromPreviousNode(): void {
+        // Useful to explain why an AI has selected a particular node
+        this.viewTreeFrom(this.gameComponent.node.parent.get());
+    }
+
+    private viewTreeFrom(node: GameNode<Move, GameState>): void {
+        // We will use the data from the previous turn's AI
+        const opponentAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getOpponentAI();
+        // We will annotate the trees with data from MCTS
+        function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
+            if (opponentAI.isPresent() && opponentAI.get().ai instanceof MCTS) {
+                const mcts: MCTS<Move, GameState, RulesConfig, unknown> =
+                    opponentAI.get().ai as MCTS<Move, GameState, RulesConfig, unknown>;
+                const wins: number = mcts.getCounterFromCache(nodeToLabel, 'wins');
+                const simulations: number = mcts.getCounterFromCache(nodeToLabel, 'simulations');
+                return `${wins}/${simulations} = ${Math.round(wins/simulations * 100)}%`;
+            } else {
+                return '';
+            }
+        }
+        const maxDepth: number = Number(localStorage.getItem('tree-depth') ?? '2'); // Change it to a lower/higher value for more tree depth
+        const result: { dot: string, nextId: number, winner: PlayerOrNone } =
+            node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel, maxDepth);
+        // Shows the graph on an online tool by opening a new tab
+        window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));
     }
 
 }

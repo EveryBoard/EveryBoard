@@ -414,11 +414,19 @@ export abstract class MancalaComponent<R extends MancalaRules>
                 hash: (state: MancalaState) =>
                     `${state.turn % 2}-${JSON.stringify(state.board)}-${JSON.stringify(state.scores)}`,
             }],
-            mcts: [{
-                id: 'default',
-                name: $localize`Default`,
-                moveGenerator: () => moveGenerator,
-            }],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: () => moveGenerator,
+                },
+                {
+                    id: 'Score',
+                    name: $localize`Score`,
+                    moveGenerator: () => moveGenerator,
+                    heuristic: () => new MancalaScoreHeuristic(),
+                },
+            ],
         };
     }
 

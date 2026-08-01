@@ -47,11 +47,19 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
                     moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
                 },
             ],
-            mcts: [{
-                id: 'default',
-                name: $localize`Default`,
-                moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
-            }],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
+                },
+                {
+                    id: 'Score',
+                    name: $localize`Score`,
+                    heuristic: (): DvonnScoreHeuristic => new DvonnScoreHeuristic(),
+                    moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
+                },
+            ],
         };
         this.encoder = DvonnMove.encoder;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
@@ -191,7 +199,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public getTextTransform(spaceContent: DvonnPieceStack): string {
         const containsSource: boolean = spaceContent.containsSource();
         if (spaceContent.size <= 9) {
-            if (containsSource) { // X Z ou Z
+            if (containsSource) { // X Z or Z
                 return 'translate(-7, 0)';
             } else { // X or ""
                 return 'translate(0, 0)';

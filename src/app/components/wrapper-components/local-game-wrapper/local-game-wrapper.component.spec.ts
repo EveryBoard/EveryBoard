@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
-import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { ArrayUtils, JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { GipfComponent } from '../../../games/gipf/gipf.component';
@@ -15,6 +15,7 @@ import { P4State } from '../../../games/p4/P4State';
 import { P4Component } from '../../../games/p4/p4.component';
 import { AIDepthLimitOptions, AIOptions, AbstractAI } from '../../../jscaip/AI/AI';
 import { MinimaxConfig } from '../../../jscaip/AI/AIConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
 import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../jscaip/AI/Minimax';
@@ -77,9 +78,35 @@ describe('LocalGameWrapperComponent (game without config)', () => {
     }));
 });
 
+
 describe('LocalGameWrapperComponent (game phase)', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
+
+    function chooseAIOrHuman(player: Player, humanOrAIName: 'human' | string): void {
+        const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
+        const selectAI: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
+        selectAI.value = humanOrAIName === 'human' ? selectAI.options[0].value : humanOrAIName;
+        selectAI.dispatchEvent(new Event('change'));
+        testUtils.detectChanges();
+        tick(0);
+    }
+
+    function chooseFirstAILevel(player: Player): void {
+        const dropDownName: string = `#ai-option-select-${player.getValue()}`;
+        const selectLevel: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
+        // We select the first available level in a way that works for any level name.
+        // Element 0 of the option = 'Pick the level', element 1 = first actual level
+        selectLevel.value = selectLevel.options[1].value;
+        selectLevel.dispatchEvent(new Event('change'));
+        testUtils.detectChanges();
+        tick(0);
+    }
+
+    function selectAIPlayer(player: Player): void {
+        chooseAIOrHuman(player, 'Minimax');
+        chooseFirstAILevel(player);
+    }
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
@@ -244,7 +271,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementToHaveClass('#board-highlight', 'player0-bg');
 
             // When selecting only the AI without the depth for the current player
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
 
             // Then the game should not be interactive anymore
             expect(testUtils.getGameComponent().isInteractive())
@@ -260,7 +287,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When selecting an AI for player ZERO
             const aiName: string = '#player-select-0';
-            await testUtils.selectChildElementOfDropDown(aiName, 'player-0-ai-minimax');
+            testUtils.selectChildElementOfDropDown(aiName, 'player-0-ai-minimax');
 
             // Then AI name should be diplayed and the level selectable
             const selectedAI: HTMLSelectElement = testUtils.findElement(aiName).nativeElement;
@@ -276,7 +303,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#ai-option-select-0');
 
             // When selecting MCTS for Player.ZERO
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
 
             // Then the config is selected implicitly and only the time bound is shown
             testUtils.expectElementNotToExist('#ai-profile-select-0');
@@ -319,8 +346,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#ai-option-select-0');
 
             // When selecting iterative deepening for player ZERO
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-iterative-deepening');
-            await testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-iterative-deepening');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
 
             // Then the available bound is time-based
             const selectedOption: HTMLSelectElement = testUtils.findElement('#ai-option-select-0').nativeElement;
@@ -332,9 +359,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When selecting a minimax
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
-            await testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
-            await testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
+            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
 
             // Then it should have selected the corresponding minimax AI
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
@@ -347,10 +374,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When selecting an iterative deepening minimax
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-iterative-deepening');
-            await testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-iterative-deepening');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
             // TODO: for some reason this times out, to investigate further
-            await testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
+            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
 
             // Then it should have selected the corresponding iterative deepening minimax AI
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
@@ -363,9 +390,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When selecting a MCTS
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
             // TODO: same issue
-            await testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
+            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
 
             // Then it should have selected the corresponding MCTS
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
@@ -378,7 +405,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When selecting a human
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
 
             // Then it should not have selected an AI
             expect(wrapper['getPlayingAI']().isAbsent()).toBeTrue();
@@ -389,7 +416,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When setting player zero as human
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
 
             // Then human players should be named explicitly
             expect(wrapper['getPlayerName'](0)).toBe('Human');
@@ -400,8 +427,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // When setting player zero as minimax
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
-            await testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
 
             // Then human players should be named explicitly
             expect(wrapper['getPlayerName'](0)).toBe('Alignment');
@@ -439,9 +466,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When selecting player zero as AI and letting it play
             const component: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            testUtils.choosingAIOrHuman(Player.ZERO, 'AI');
+            chooseAIOrHuman(Player.ZERO, 'Minimax');
             spyOn(component, 'proposeAIToPlay').and.callThrough();
-            await testUtils.choosingAILevel(Player.ZERO);
+            chooseFirstAILevel(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then proposeAIToPlay should have been called, so that IA play
@@ -454,7 +481,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.getGameComponent().hasAsymmetricBoard = true;
 
             // When chosing the AI as player zero
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
 
             // Then the board should have been rotated so that player one, the human, stays below
             const rotation: string = testUtils.getGameComponent().rotation;
@@ -465,11 +492,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should de-rotate the board when selecting human as player zero again', fakeAsync(async() => {
             // Given a board of a reversible component, where AI is player zero
             testUtils.getGameComponent().hasAsymmetricBoard = true;
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When chosing the human as player zero again
-            testUtils.choosingAIOrHuman(Player.ZERO, 'human');
+            chooseAIOrHuman(Player.ZERO, 'human');
 
             // Then the board should have been rotated so that player zero is below again
             const rotation: string = testUtils.getGameComponent().rotation;
@@ -496,7 +523,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given wrapper on which a first move have been done
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
             // When clicking on AI then its level
-            await testUtils.selectChildElementOfDropDown('#player-select-1', 'player-1-ai-minimax');
+            testUtils.selectChildElementOfDropDown('#player-select-1', 'player-1-ai-minimax');
             const localGameWrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             spyOn(localGameWrapper, 'proposeAIToPlay').and.callThrough();
             const gameComponent: AbstractGameComponent = testUtils.getGameComponent();
@@ -504,8 +531,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(gameComponent.getState().turn)
                 .withContext('after we did one move')
                 .toEqual(1);
-            await testUtils.selectChildElementOfDropDown('#ai-profile-select-1', 'player-1-profile-alignment');
-            await testUtils.selectChildElementOfDropDown('#ai-option-select-1', 'player-1-option-Level 1');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-1', 'player-1-profile-alignment');
+            testUtils.selectChildElementOfDropDown('#ai-option-select-1', 'player-1-option-Level 1');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then it should have proposed AI to play
@@ -551,9 +578,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(testUtils.getGameComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
 
             // When selecting an AI for the current player
-            await testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
-            await testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
-            await testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
+            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
 
             // Then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
@@ -625,7 +652,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
 
             // When selecting AI, and AI then doing winning move
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then 'You lost' should be displayed
@@ -633,11 +660,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(winnerTag).toBe('You lost');
         }));
 
-        it(`should display 'You won' when human win again AI`, fakeAsync(async() => {
+        it(`should display 'You won' when human wins against AI`, fakeAsync(async() => {
             // Given a board where victory is imminent for human (against AI)
             const state: P4State = new P4State(preVictoryBoard, 39);
             await testUtils.setupState(state);
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
 
             // When user does the winning move
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
@@ -659,11 +686,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             ];
             const state: P4State = new P4State(board, 40);
             await testUtils.setupState(state);
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // When AI zero does the winning move
-            await testUtils.selectAIPlayer(Player.ONE);
+            selectAIPlayer(Player.ONE);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
             // Then 'AI (Player 0) won' should be displayed
@@ -719,11 +746,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledTimes(1);
         }));
 
-        it('should take back two turns when playing against IA', fakeAsync(async() => {
+        it('should take back two turns when playing against AI', fakeAsync(async() => {
             // Given a game component on which you play against IA, at turn N+2, and it's human turn
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
-            await testUtils.selectAIPlayer(Player.ONE);
+            selectAIPlayer(Player.ONE);
 
             // When user take back
             expect(testUtils.getGameComponent().getTurn()).toBe(2);
@@ -735,7 +762,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should not allow to take back when only AI move has been made', fakeAsync(async() => {
             // Given a board with the first move made by AI
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
             expect(testUtils.getGameComponent().getTurn()).toBe(1); // AI just played
 
@@ -768,7 +795,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should not allow to take back when AI vs. AI', fakeAsync(async() => {
             // Given a board on which AI plays against AI
-            await testUtils.selectAIPlayer(Player.ZERO);
+            selectAIPlayer(Player.ZERO);
             expect(testUtils.getGameComponent().getState().turn).toBe(0);
             testUtils.expectElementNotToExist('#take-back');
             tick( LocalGameWrapperComponent.AI_TIMEOUT);
@@ -777,11 +804,11 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When searching for takeBack button
             // Then it should not be visible
-            await testUtils.selectAIPlayer(Player.ONE);
+            selectAIPlayer(Player.ONE);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
             expect(testUtils.getGameComponent().getState().turn).toBe(2);
             testUtils.expectElementNotToExist('#take-back');
-            // disactivate AI to stop timeout generation
+            // deactivate AI to stop timeout generation
             tick(40 * LocalGameWrapperComponent.AI_TIMEOUT);
         }));
 
@@ -808,4 +835,73 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
     });
 
+    describe('game tree visualisation', () => {
+        beforeEach(() => {
+            GameNode.ID = 0; // To start counting at 0 for each test
+        });
+
+        it('should show game tree from current node when clicking on the corresponding button', fakeAsync(async() => {
+            spyOn(window, 'open').and.returnValue(null);
+            // Given the component with AI infos enabled and at least one turn played
+            localStorage.setItem('displayAIInfo', 'true');
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+            // When clicking on "view tree from current node"
+            await testUtils.clickElement('#viewTreeFromCurrentNode');
+            // Then it should open an external URL
+            const dot: string = `digraph G {
+    node_0 [label="#1: 0 - ", style=filled, fillcolor="white"];
+}`;
+            const expectedURL: string = 'https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot);
+            expect(window.open).toHaveBeenCalledOnceWith(expectedURL);
+        }));
+
+        it('should show MCTS info when playing against MCTS', fakeAsync(async() => {
+            // We need to mock time because MCTS relies on Date.now increasing
+            let time: number = Date.now();
+            function increaseAndReturnTime(): number {
+                time += 10; // increase time by 10ms each time
+                return time;
+            }
+            spyOn(Date, 'now').and.callFake(increaseAndReturnTime);
+            // We need to mock randomness because MCTS relies on randomness
+            function getFirstElement<T>(array: T[]): T {
+                return array[0];
+            }
+            spyOn(ArrayUtils, 'getRandomElement').and.callFake(getFirstElement);
+            spyOn(window, 'open').and.returnValue(null);
+            // Given the component with AI infos enabled and MCTS played
+            localStorage.setItem('displayAIInfo', 'true');
+            chooseAIOrHuman(Player.ZERO, 'MCTS');
+            chooseFirstAILevel(Player.ZERO);
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+            // When clicking on "view tree from current node"
+            await testUtils.clickElement('#viewTreeFromCurrentNode');
+            // Then it should open an external URL
+            const dot: string = `digraph G {
+    node_0 [label="#1: 0 - 1/1 = 100%", style=filled, fillcolor="white"];
+}`;
+            const expectedURL: string = 'https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot);
+            expect(window.open).toHaveBeenCalledOnceWith(expectedURL);
+        }));
+
+        it('should show game tree from previous node when clicking on the corresponding button', fakeAsync(async() => {
+            spyOn(window, 'open').and.returnValue(null);
+            // Given the component with AI infos enabled and at least one turn played
+            localStorage.setItem('displayAIInfo', 'true');
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+            await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
+            // When clicking on "view tree from previous node"
+            await testUtils.clickElement('#viewTreeFromPreviousNode');
+            // Then it should open an external URL
+            const dot: string = `digraph G {
+    node_0 [label="#1: 0 - ", style=filled, fillcolor="white"];
+}`;
+            const expectedURL: string = 'https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(dot);
+            expect(window.open).toHaveBeenCalledOnceWith(expectedURL);
+        }));
+
+        afterEach(() => {
+            localStorage.removeItem('displayAIInfo');
+        });
+    });
 });

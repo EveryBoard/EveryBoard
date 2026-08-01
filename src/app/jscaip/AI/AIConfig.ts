@@ -11,7 +11,9 @@ export type MinimaxConfig<M extends Move,
                           C extends RulesConfig> = {
     readonly id: string,
     readonly name: string,
+    // TODO: why is heuristic optional? dummy?
     readonly heuristic?: () => Heuristic<M, S, BoardValue, C>,
+    // TODO: why is move generator optional? what if it's not provided? And why is it not optional in MCTSConfig?
     readonly moveGenerator?: () => MoveGenerator<M, S, C>,
     readonly useRandomness?: boolean,
     readonly prune?: boolean,
@@ -23,6 +25,8 @@ export type MCTSConfig<M extends Move, S extends GameState, C extends RulesConfi
     readonly id: string,
     readonly name: string,
     readonly moveGenerator: () => MoveGenerator<M, S, C>,
+    // TODO: use it
+    readonly heuristic?: () => Heuristic<M, S, BoardValue, C>,
 }
 
 export type AIConfig<M extends Move, S extends GameState, C extends RulesConfig> = {
