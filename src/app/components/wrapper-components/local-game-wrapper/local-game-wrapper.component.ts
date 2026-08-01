@@ -6,10 +6,11 @@ import { ParamMap } from '@angular/router';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
 import { AIOptions, AIStats, AbstractAI } from '../../../jscaip/AI/AI';
-import { AbstractNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
+import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
+import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
-import { Player } from '../../../jscaip/Player';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
@@ -357,6 +358,37 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public displayAIInfo(): boolean {
         return localStorage.getItem('displayAIInfo') === 'true';
+    }
+
+    public viewTreeFromCurrentNode(): void {
+        this.viewTreeFrom(this.gameComponent.node);
+    }
+
+    public viewTreeFromPreviousNode(): void {
+        // Useful to explain why an AI has selected a particular node
+        this.viewTreeFrom(this.gameComponent.node.parent.get());
+    }
+
+    private viewTreeFrom(node: GameNode<Move, GameState>): void {
+        // We will use the data from the previous turn's AI
+        const opponentAI: MGPOptional<AbstractAI> = this.getAI((this.gameComponent.getTurn() + 1) % 2);
+        // We will annotate the trees with data from MCTS
+        function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
+            if (opponentAI.isPresent() && opponentAI.get() instanceof MCTS) {
+                const mcts: MCTS<Move, GameState, RulesConfig, unknown> =
+                    opponentAI.get() as MCTS<Move, GameState, RulesConfig, unknown>;
+                const wins: number = mcts.getCounterFromCache(nodeToLabel, 'wins');
+                const simulations: number = mcts.getCounterFromCache(nodeToLabel, 'simulations');
+                return `${wins}/${simulations} = ${Math.round(wins/simulations * 100)}%`;
+            } else {
+                return '';
+            }
+        }
+        const maxDepth: number = Number(localStorage.getItem('tree-depth') ?? '2'); // Change it to a lower/higher value for more tree depth
+        const result: { dot: string, nextId: number, winner: PlayerOrNone } =
+            node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel, maxDepth);
+        // Shows the graph on an online tool by opening a new tab
+        window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));
     }
 
 }

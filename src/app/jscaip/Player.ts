@@ -94,18 +94,6 @@ export class Player implements ComparableObject {
         return this.getScoreModifier();
     }
 
-    public getPreVictory(): number {
-        return this.getVictoryValue() - this.getScoreModifier();
-    }
-
-    public getVictoryValue(): number {
-        if (this === Player.ZERO) {
-            return Number.NEGATIVE_INFINITY;
-        } else {
-            return Number.POSITIVE_INFINITY;
-        }
-    }
-
     public getOpponent(): Player {
         switch (this) {
             case Player.ZERO: return Player.ONE;
