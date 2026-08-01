@@ -226,29 +226,25 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
                 {
                     id: 'Pieces',
                     name: $localize`Pieces`,
-                    heuristic: (): TaflPieceHeuristic<M> => new TaflPieceHeuristic(this.rules),
-                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                    heuristic: () => new TaflPieceHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
                 },
                 {
                     id: 'Pieces > Influence',
                     name: $localize`Pieces > Influence`,
-                    heuristic: (): TaflPieceAndInfluenceHeuristic<M> => {
-                        return new TaflPieceAndInfluenceHeuristic(this.rules);
-                    },
-                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                    heuristic: () => new TaflPieceAndInfluenceHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
                 },
                 {
                     id: 'Pieces > Control',
                     name: $localize`Pieces > Control`,
-                    heuristic: (): TaflPieceAndControlHeuristic<M> => new TaflPieceAndControlHeuristic(this.rules),
-                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                    heuristic: () => new TaflPieceAndControlHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
                 },
                 {
                     id: 'Escape > Pieces > Control',
                     name: $localize`Escape > Pieces > Control`,
-                    heuristic: (): TaflEscapeThenPieceThenControlHeuristic<M> => {
-                        return new TaflEscapeThenPieceThenControlHeuristic(this.rules);
-                    },
+                    heuristic: () => new TaflEscapeThenPieceThenControlHeuristic(this.rules),
                     moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
                 },
             ],
@@ -261,8 +257,8 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
                 {
                     id: 'Pieces',
                     name: $localize`Pieces`,
-                    heuristic: (): TaflPieceAndControlHeuristic<M> => new TaflPieceAndControlHeuristic(this.rules),
-                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                    heuristic: () => new TaflPieceHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
                 },
             ],
         };

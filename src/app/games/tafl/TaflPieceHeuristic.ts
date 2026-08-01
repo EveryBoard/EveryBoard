@@ -1,5 +1,5 @@
-import { HeuristicBounds } from '../../jscaip/AI/Heuristic';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { HeuristicBounds } from '../../jscaip/AI/Heuristic';
 import { PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
