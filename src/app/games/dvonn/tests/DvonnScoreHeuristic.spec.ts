@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicBounds } from '../../../jscaip/AI/Minimax';
 import { Player } from '../../../jscaip/Player';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
@@ -39,6 +41,15 @@ describe('DvonnScoreHeuristic', () => {
 
         // Then it should be 2 - 1 = 1
         expect(value).toEqual([1]);
+    });
+
+    it('should define heuristic bounds', () => {
+        // Given the heuristic
+        // When computing its bounds on the default config
+        const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+        // Then it should be the maximal score (49) for each player
+        expect(bounds.player0Best).toEqual(BoardValue.ofSingle(49, 0));
+        expect(bounds.player1Best).toEqual(BoardValue.ofSingle(0, 49));
     });
 
 });
