@@ -5,9 +5,11 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 
+import { P4Heuristic } from './P4Heuristic';
 import { P4Minimax } from './P4Minimax';
 import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
@@ -32,6 +34,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.availableAIs = [
             new P4Minimax(),
             new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
+            new MCTSWithHeuristic($localize`MCTS with heuristic`, new P4MoveGenerator(), this.rules, new P4Heuristic()),
         ];
         this.encoder = P4Move.encoder;
     }

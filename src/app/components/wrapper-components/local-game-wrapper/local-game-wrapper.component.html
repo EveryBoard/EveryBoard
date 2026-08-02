@@ -81,6 +81,14 @@
                             (click)="restartGame()"
                             i18n>Start a new game</button>
                     @if (gameComponent.node.previousMove.isPresent() && displayAIInfo()) {
+                        <button id="viewTreeFromCurrentNode"
+                                (click)="viewTreeFromCurrentNode()"
+                                class="button is-medium is-fullwidth is-primary mb-1">
+                            DOT from current node</button>
+                        <button id="viewTreeFromPreviousNode"
+                                (click)="viewTreeFromPreviousNode()"
+                                class="button is-medium is-fullwidth is-primary mb-1">
+                            DOT from previous node</button>
                         <div id="ai-info">
                             @for (ai of gameComponent.availableAIs; track ai.name) {
                                 {{ ai.name + ': ' + ai.getInfo(gameComponent.node, gameComponent.config) }} <br/>

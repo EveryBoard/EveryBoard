@@ -1404,6 +1404,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await expectValidRouting(router, ['/play', 'Quarto', 'nextPartId'], OnlineGameWrapperComponent, { otherRoutes: true });
         }));
 
+        it('should not redirect to new part when loading a game that already had an accepted rematch', fakeAsync(async() => {
+            // Given a game being replayed before Sync
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
+
+            // When the replay contains an accepted rematch
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate').and.resolveTo();
+            await receiveRequest(Player.ZERO, 'Rematch');
+            await receiveReply(Player.ONE, true, 'Rematch', 'nextPartId');
+
+            // Then the historical rematch should not redirect the observer to the next part
+            expect(router.navigate).not.toHaveBeenCalled();
+        }));
+
     });
 
     describe('Non Player Experience', () => {

@@ -32,7 +32,7 @@ export class GameStatus {
 
     public toBoardValue(): BoardValue {
         if (this.winner.isPlayer()) {
-            return BoardValue.of(this.winner.getVictoryValue());
+            return BoardValue.of(BoardValue.getVictoryValueOf(this.winner));
         } else {
             return BoardValue.of(0);
         }

@@ -4,16 +4,17 @@ import (
 	"log"
 	"net/http"
 
-	everyboard "github.com/EveryBoard/EveryBoard/internal"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/app"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/config"
 )
 
 func main() {
-	config, err := everyboard.ReadConfiguration()
+	configuration, err := config.Read()
 	if err != nil {
 		log.Fatalf("Error upon reading configuration: %v", err)
 	}
 	log.Println("Preparing EveryBoard...")
-	server, err := everyboard.Prepare(*config)
+	server, err := app.Prepare(configuration, app.NewDependencies())
 	if err != nil {
 		log.Fatalf("Error when preparing server: %v", err)
 	}
