@@ -48,8 +48,8 @@ export class HeuristicUtils {
         for (const heuristic of heuristics) {
             const node: GameNode<M, S> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
             for (const boardSubValue of heuristic.getBoardValue(node, config).metrics) {
-                const expectedValue: number = player.getPreVictory();
-                expect(BoardValue.isPreVictory(boardSubValue)).toBeTrue();
+                expect(BoardValue.isPreVictoryValue(boardSubValue)).toBeTrue();
+                const expectedValue: number = BoardValue.getPreVictoryValueOf(player);
                 expect(boardSubValue).toBe(expectedValue);
             }
         }

@@ -87,7 +87,7 @@ export class ArrayUtils {
      */
     public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
         let maximums: T[] = [];
-        let maxMetricValue: number = -Infinity;
+        let maxMetricValue: number = Number.NEGATIVE_INFINITY;
         for (const element of array) {
             const currentMetricValue: number = metric(element);
             if (currentMetricValue >= maxMetricValue) {

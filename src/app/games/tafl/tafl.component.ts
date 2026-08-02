@@ -4,6 +4,7 @@ import { ScoreName } from '../../components/game-components/game-component/GameC
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AI, AIOptions } from '../../jscaip/AI/AI';
 import { MCTS } from '../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -18,6 +19,7 @@ import { TaflMoveGenerator } from './TaflMoveGenerator';
 import { TaflPawn } from './TaflPawn';
 import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
 import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 import { TaflPieceMinimax } from './TaflPieceMinimax';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
@@ -229,6 +231,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
             new TaflPieceAndControlMinimax(this.rules),
             new TaflEscapeThenPieceThenControlMinimax(this.rules),
             new MCTS($localize`MCTS`, moveGenerator, this.rules),
+            new MCTSWithHeuristic($localize`MCTS with heuristic`, moveGenerator, this.rules, new TaflPieceHeuristic(this.rules)),
         ];
     }
 
