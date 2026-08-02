@@ -120,21 +120,21 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
             if (testedCoordContent === capturer) {
                 // we found a sandwicher, in range, in this direction
                 return sandwichedsCoord;
-            }
-            if (testedCoordContent.isNone()) {
+            } else if (testedCoordContent.isNone()) {
                 // we found the emptyness before a capturer, so there won't be a next space
                 return [];
-            } // we found a switched/captured
-            sandwichedsCoord.push(testedCoord); // we add it
-            // next loop will observe the next
-            testedCoord = this.boardMode.getNextCoord(testedCoord, direction, state);
+            } else {
+                // we found a switched/captured
+                sandwichedsCoord.push(testedCoord); // we add it
+                testedCoord = this.boardMode.getNextCoord(testedCoord, direction, state);
+            }
         }
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }
 
     public isGameEnded(state: ReversiState): boolean {
         return this.playerCanOnlyPass(state) &&
-               this.nextPlayerCantOnlyPass(state);
+               this.nextPlayerCanOnlyPass(state);
     }
 
     public override getGameStatus(node: ReversiNode, _: ReversiConfig): GameStatus {
@@ -161,7 +161,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
                 currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
 
-    public nextPlayerCantOnlyPass(reversiState: ReversiState): boolean {
+    public nextPlayerCanOnlyPass(reversiState: ReversiState): boolean {
         const nextBoard: PlayerOrNone[][] = reversiState.getCopiedBoard();
         const nextTurn: number = reversiState.turn + 1;
         const nextState: ReversiState = new ReversiState(nextBoard, nextTurn);

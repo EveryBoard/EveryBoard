@@ -215,7 +215,8 @@ describe('ReversiRules', () => {
             };
 
             it('should capture piece sandwiched from across the board horizontally', () => {
-                // Given a board where current player can capture torically
+                // Given a board where current player can capture on a toroidal board
+                // (but could not if it was a rectangular)
                 const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
@@ -228,7 +229,7 @@ describe('ReversiRules', () => {
                 ];
                 const state: ReversiState = new ReversiState(board, 1);
 
-                // When doing a move that could capture piece across the board
+                // When doing a move that capture piece across the board
                 const move: ReversiMove = new ReversiMove(0, 3);
 
                 // Then the move should succeed
@@ -247,7 +248,7 @@ describe('ReversiRules', () => {
             });
 
             it('should capture piece sandwiched from across the board vertically', () => {
-                // Given a board where current can capture torically
+                // Given a board where current can capture on a toroidal board (but could not if it was a rectangular)
                 const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, X, _, _, _],
@@ -260,7 +261,7 @@ describe('ReversiRules', () => {
                 ];
                 const state: ReversiState = new ReversiState(board, 2);
 
-                // When doing a move that could capture piece across the board
+                // When doing a move that capture piece across the board
                 const move: ReversiMove = new ReversiMove(4, 0);
 
                 // Then the move should succeed

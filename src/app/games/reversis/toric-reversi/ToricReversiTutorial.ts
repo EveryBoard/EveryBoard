@@ -55,7 +55,7 @@ export class ToricReversiTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Diagonal wrapping`,
-            $localize`Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move ?`,
+            $localize`Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?`,
             new ReversiState([
                 [_, _, _, _, _, _, _, X],
                 [_, _, _, _, _, _, X, _],

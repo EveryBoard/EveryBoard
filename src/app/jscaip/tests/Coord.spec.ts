@@ -163,15 +163,10 @@ describe('Coord', () => {
 
     describe('getNextToric', () => {
         type CoordPlusDirectionPlusStep = {
-
             title: string;
-
             coord: Coord;
-
             direction: Direction;
-
             step: number;
-
             result: Coord;
         };
         const coordPlusDirectionPlusSteps: CoordPlusDirectionPlusStep[] = [

@@ -3033,8 +3033,8 @@
       <trans-unit id="7079964026141010612" datatype="html">
         <source>Diagonal wrapping</source>
       </trans-unit>
-      <trans-unit id="8888657281645108734" datatype="html">
-        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
+      <trans-unit id="5238684930166477750" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?</source>
       </trans-unit>
       <trans-unit id="6380656983498638368" datatype="html">
         <source>Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.</source>
