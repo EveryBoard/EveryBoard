@@ -14,12 +14,12 @@ import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateW
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
-import { HexagonalTopology } from 'src/app/jscaip/topology/HexagonalTopology';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
@@ -565,9 +565,10 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
+        const topology: Topology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new TriangularTopology(),
-            new TriangularShape(19),
+            topology,
+            new TriangularShape(19, topology),
             gameState,
         );
         const move: ConnectNMove =
@@ -608,9 +609,10 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
+        const topology: Topology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new TriangularTopology(),
-            new TriangularShape(19),
+            topology,
+            new TriangularShape(19, topology),
             gameState,
         );
         const move: ConnectNMove =
@@ -651,9 +653,10 @@ fdescribe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
+        const topology: Topology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            new TriangularTopology(),
-            new TriangularShape(19),
+            topology,
+            new TriangularShape(19, topology),
             gameState,
         );
         const move: ConnectNMove =
