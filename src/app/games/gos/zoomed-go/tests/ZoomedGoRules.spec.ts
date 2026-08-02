@@ -1,9 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { GoNode } from '../../AbstractGoRules';
 import { GoFailure } from '../../GoFailure';
 import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
@@ -17,7 +19,10 @@ describe('ZoomedGoRules', () => {
     let rules: AbstractRectangularGoRules;
 
     const X: GoPiece = GoPiece.LIGHT;
+    const w: GoPiece = GoPiece.LIGHT_TERRITORY;
     const O: GoPiece = GoPiece.DARK;
+    const u: GoPiece = GoPiece.DEAD_DARK;
+    const b: GoPiece = GoPiece.DARK_TERRITORY;
     const _: GoPiece = GoPiece.EMPTY;
 
     const config: RectangularGoConfig = {
@@ -206,6 +211,24 @@ describe('ZoomedGoRules', () => {
         // Then the move should be illegal
         const reason: string = GoFailure.CANNOT_COMMIT_SUICIDE();
         RulesUtils.expectMoveFailure(rules, state, move, reason, customConfig);
+    });
+
+    it('should recognize victory', () => {
+        // Given a board where Player.ONE win
+        const board: Table<GoPiece> = [
+            [b, O, _, X, w],
+            [b, O, _, X, w],
+            [b, O, _, X, u],
+            [b, O, _, X, w],
+            [b, O, _, X, w],
+        ];
+        const state: GoState =
+            new GoState(board, PlayerNumberMap.of(5, 6), 2, MGPOptional.empty(), GoPhase.FINISHED);
+        const node: GoNode = new GoNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, config);
     });
 
 });
