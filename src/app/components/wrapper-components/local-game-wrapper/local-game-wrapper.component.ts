@@ -7,7 +7,7 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, 
 
 import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
 import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { AIInstanceRegistry, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
+import { AIInstanceRegistry, AIStrategyId, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
 import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
 import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
