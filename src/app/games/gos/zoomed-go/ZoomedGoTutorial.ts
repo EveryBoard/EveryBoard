@@ -43,7 +43,7 @@ export class ZoomedGoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             $localize`Preliminary information`,
-            $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call "layer" or "zoom"`,
+            $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call zoom`,
             ZoomedGoRules.get().getInitialState(defaultConfig),
             MGPOptional.of(defaultConfig),
         ),
@@ -218,7 +218,7 @@ export class ZoomedGoTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`End game`,
-            $localize`At end game, only what is marked as dead on the zoom 1 is counted.`,
+            $localize`At the end of the game, only what is marked as dead on the zoom 1 is counted.`,
             new GoState([
                 [O, O, _, O, O, _, _, O, O, _],
                 [X, _, _, X, X, X, X, _, _, _],

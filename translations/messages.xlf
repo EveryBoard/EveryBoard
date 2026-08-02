@@ -1665,7 +1665,7 @@
       <trans-unit id="6716022766676912093" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
       </trans-unit>
-      <trans-unit id="2623510393491755816" datatype="html">
+      <trans-unit id="1201123309681006244" datatype="html">
         <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
@@ -1849,7 +1849,7 @@
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
       </trans-unit>
-      <trans-unit id="2047079418793425161" datatype="html">
+      <trans-unit id="5503442899127352055" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
@@ -1864,7 +1864,7 @@
       <trans-unit id="8946006948417629723" datatype="html">
         <source>Capturing multiple stones</source>
       </trans-unit>
-      <trans-unit id="3197348089105327020" datatype="html">
+      <trans-unit id="9030216406782132195" datatype="html">
         <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
       </trans-unit>
@@ -1977,26 +1977,20 @@
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
       </trans-unit>
-      <trans-unit id="1857127553160075909" datatype="html">
-        <source>Zoom 3 (medium)</source>
+      <trans-unit id="6552934315157659079" datatype="html">
+        <source>Zoom <x id="PH" equiv-text="3"/></source>
       </trans-unit>
-      <trans-unit id="1493609182625565979" datatype="html">
-        <source>Show Zoom</source>
+      <trans-unit id="1733084177692338637" datatype="html">
+        <source>(medium)</source>
       </trans-unit>
-      <trans-unit id="4277978951212904875" datatype="html">
-        <source>Zoom 2 (small)</source>
+      <trans-unit id="4150591404644298753" datatype="html">
+        <source>Show Zooms</source>
       </trans-unit>
-      <trans-unit id="7311423676604503997" datatype="html">
-        <source>Zoom 2 (medium)</source>
+      <trans-unit id="4707463689820472290" datatype="html">
+        <source>(small)</source>
       </trans-unit>
-      <trans-unit id="4295480671452895468" datatype="html">
-        <source>Zoom 2 (large)</source>
-      </trans-unit>
-      <trans-unit id="133468435047863204" datatype="html">
-        <source>Zoom 3 (small)</source>
-      </trans-unit>
-      <trans-unit id="4413953239414926035" datatype="html">
-        <source>Zoom 3 (large)</source>
+      <trans-unit id="7789802452524788997" datatype="html">
+        <source>(large)</source>
       </trans-unit>
       <trans-unit id="8084014192904533918" datatype="html">
         <source>Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call &quot;layer&quot; or &quot;zoom&quot;</source>
@@ -2007,37 +2001,85 @@
       <trans-unit id="1261295226077086547" datatype="html">
         <source>In Zoomed Go, the different boards are only visual aids.&lt;br/&gt;&lt;br/&gt;There is only one real game board and one move to play each turn.&lt;br/&gt;&lt;br/&gt;The additional boards simply help visualize interactions at different distances.&lt;br/&gt;The largest board (zoom 1) shows the real board.&lt;br/&gt;The other boards show the different layers.&lt;br/&gt;For example, the middle boards show interactions at a distance of 2, and the small boards show interactions at a distance of 3. The zoom level can be configured for extra challenges. A level of 2 is already challenging.&lt;br/&gt;Every move is played on the same intersection on all boards at once. The extra boards do not add new pieces or new decisions, they only help understand the extended liberties.</source>
       </trans-unit>
-      <trans-unit id="8122837695661234238" datatype="html">
-        <source>In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
+      <trans-unit id="8982662674997716725" datatype="html">
+        <source>At zoomed go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
       </trans-unit>
-      <trans-unit id="8023345927754693797" datatype="html">
+      <trans-unit id="280705929361043575" datatype="html">
         <source>The end of the game works exactly like in regular Go.&lt;br/&gt;&lt;br/&gt;
-            When both players pass consecutively, the game ends and territory is counted normally.&lt;br/&gt;&lt;br/&gt;
+            When both players pass consecutively, the game ends and territory is counted as usual.&lt;br/&gt;&lt;br/&gt;
             The only difference in Zoomed Go is how stones connect and how liberties are counted during play.</source>
       </trans-unit>
       <trans-unit id="5769798792711453761" datatype="html">
         <source>Distance-2 capture</source>
       </trans-unit>
-      <trans-unit id="5030374832295292182" datatype="html">
-        <source>Here, the Light stones are not directly adjacent to the Dark stone. However, because the game is played with zoom level 2, the three Dark stones can still remove liberties from the Light stone. The Light stone has only one liberty left and is therefore capturable.</source>
+      <trans-unit id="1541900782931463359" datatype="html">
+        <source>Here, the light stones are not directly adjacent to the dark stone. However, because the game is played with zoom level 2, the three dark stones can still remove liberties from the light stone. The light stone has only one liberty left and is therefore capturable.</source>
       </trans-unit>
       <trans-unit id="261671265885677140" datatype="html">
         <source>Capture at distance 2</source>
       </trans-unit>
-      <trans-unit id="4532106069499119312" datatype="html">
-        <source>You&apos;re playing Light. In this variant, the Dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.</source>
+      <trans-unit id="2692207715008935445" datatype="html">
+        <source>You&apos;re playing Light. In this variant, the dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.</source>
       </trans-unit>
-      <trans-unit id="4721508449983577172" datatype="html">
-        <source>Congratulations, the Dark stone has been captured from a distance.</source>
+      <trans-unit id="7149597260773414889" datatype="html">
+        <source>Congratulations, the dark stone has been captured from a distance.</source>
       </trans-unit>
-      <trans-unit id="5050189966653599623" datatype="html">
-        <source>Failed, try again by playing on the last liberty of the Dark stone.</source>
+      <trans-unit id="6339182719852752524" datatype="html">
+        <source>Failed, try again by playing on the last liberty of the dark stone.</source>
       </trans-unit>
       <trans-unit id="6609145753194079647" datatype="html">
         <source>Extended eyes</source>
       </trans-unit>
-      <trans-unit id="8278092448434944265" datatype="html">
-        <source>Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable in this variant.</source>
+      <trans-unit id="7312927259233818996" datatype="html">
+        <source>Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable at zoomed go.</source>
+      </trans-unit>
+      <trans-unit id="7762790913980714583" datatype="html">
+        <source>Example Tutorial: Zoomed Go</source>
+      </trans-unit>
+      <trans-unit id="6638222984065770316" datatype="html">
+        <source>Zoomed Go is a layered version of Go, for extra challenge. Let us explain by the example the difference with normal Go.</source>
+      </trans-unit>
+      <trans-unit id="2568240130352561573" datatype="html">
+        <source>The main and almost only difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
+      </trans-unit>
+      <trans-unit id="224302019460905063" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. See how this one is captured by four stones at a distance of two, but the pattern of the atari is the exact same, it&apos;s called &quot;a capture at zoom 2&quot;, while the light stone on the right is a capture at zoom 1.</source>
+      </trans-unit>
+      <trans-unit id="5161717226000455851" datatype="html">
+        <source>What is a zoom</source>
+      </trans-unit>
+      <trans-unit id="8246221399018137291" datatype="html">
+        <source>In normal Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The highlighted mini-board shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in normal Go.</source>
+      </trans-unit>
+      <trans-unit id="6779631138176400609" datatype="html">
+        <source>Simple capture, with shown zoom</source>
+      </trans-unit>
+      <trans-unit id="4750583399802936372" datatype="html">
+        <source>In the previous step and this one, the same rules are applied, but in this one you get a visual help.&lt;br/&gt;&lt;br/&gt;Do it again</source>
+      </trans-unit>
+      <trans-unit id="3104202027774587409" datatype="html">
+        <source>See how the main board is split in 4 little boards ? On the zoom 2 lower-right board, you can see the capture as in a normal go board. Note that you can click on either a small board or the big board, piece are dropped in both, since the small boards are just a visual help.</source>
+      </trans-unit>
+      <trans-unit id="6386757882103410531" datatype="html">
+        <source>Suicide with zooms</source>
+      </trans-unit>
+      <trans-unit id="8047342585866115144" datatype="html">
+        <source>Now as you can see, in 4-4 you could play in the normal go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;And at 7-4, you have the opposite, a suicide at zoom 1 that would be legal at zoom 2, so it&apos;s a suicide too.</source>
+      </trans-unit>
+      <trans-unit id="6006075893165138386" datatype="html">
+        <source>Fake-suicide with zooms</source>
+      </trans-unit>
+      <trans-unit id="8487234085403750590" datatype="html">
+        <source>Here, the 1-1 corner is a suicide at zoom-2, and a capture at zoom-1, which is not enough to make it legal. But since that capture at zoom-1 would capture some of the piece that make it a suicide at zoom-2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
+      </trans-unit>
+      <trans-unit id="1652033508965326256" datatype="html">
+        <source>Congratulations. What make a move legal or not is then that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+      </trans-unit>
+      <trans-unit id="4031483934278136444" datatype="html">
+        <source>End game</source>
+      </trans-unit>
+      <trans-unit id="3208183583002805036" datatype="html">
+        <source>At end game, only what is marked as dead on the zoom 1 is counted.</source>
       </trans-unit>
       <trans-unit id="69616505141416052" datatype="html">
         <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>

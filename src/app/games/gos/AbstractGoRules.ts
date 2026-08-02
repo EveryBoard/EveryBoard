@@ -121,7 +121,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
             );
     }
 
-    public switchAliveness(groupCoord: Coord, switchedState: GoState, zoom: number): GoState {
+    public switchLiveness(groupCoord: Coord, switchedState: GoState, zoom: number): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
         Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
@@ -221,7 +221,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
      * will remove captured pieces
      * will add captured pieces count to captures
      * will return an optional coord if there is a coord that is the only capture
-     * (if zero capture, optional will be absent, if two or more it will be absent too)
+     * (if there is strictly one capture, optional will be present, else it'll be absent)
      */
     private applyCaptures(move: GoMove, state: GoState, config: C): GoLegalityInformation {
         const captureds: Coord[] = [];
@@ -340,7 +340,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.getWidth(); x++) {
                 if (state.getPieceAtXY(x, y).isDead()) {
-                    state = this.switchAliveness(new Coord(x, y), state, 1);
+                    state = this.switchLiveness(new Coord(x, y), state, 1);
                 }
             }
         }
@@ -349,7 +349,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     private applyDeadMarkingMove(legalMove: GoMove, state: GoState): GoState {
         const territorylessState: GoState = this.removeAndSubtractTerritory(state);
-        const switchedState: GoState = this.switchAliveness(legalMove.coord, territorylessState, 1);
+        const switchedState: GoState = this.switchLiveness(legalMove.coord, territorylessState, 1);
         const resultingState: GoState = switchedState
             .incrementTurn()
             .withKo(MGPOptional.empty())

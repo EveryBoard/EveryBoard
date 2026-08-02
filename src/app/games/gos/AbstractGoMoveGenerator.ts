@@ -119,7 +119,7 @@ export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGen
             aliveCoords = monoWrappedEmptyGroup.deadDarkCoords.concat(monoWrappedEmptyGroup.deadLightCoords);
             for (const aliveCoord of aliveCoords) {
                 if (resultingState.isDead(aliveCoord)) {
-                    resultingState = this.rules.switchAliveness(aliveCoord, resultingState, 1);
+                    resultingState = this.rules.switchLiveness(aliveCoord, resultingState, 1);
                 }
             }
         }
