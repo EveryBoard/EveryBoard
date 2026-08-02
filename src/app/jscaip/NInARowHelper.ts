@@ -186,12 +186,8 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
             const content: T = state.getPieceAt(coord);
             if (this.getOwner(content).isPlayer()) {
                 const squareScore: number = this.getSquareScoreWithTopology(state, coord);
-                if (BoardValue.isVictory(squareScore)) {
-                    if (squareScore === Player.ZERO.getVictoryValue() ||
-                        squareScore === Player.ONE.getVictoryValue()
-                    ) {
-                        coords.push(coord);
-                    }
+                if (BoardValue.isVictoryValue(squareScore)) {
+                    coords.push(coord);
                 }
             }
         }
