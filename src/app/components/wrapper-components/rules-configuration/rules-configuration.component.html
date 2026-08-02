@@ -9,23 +9,19 @@
                 <div class="control">
                     <div class="select is-primary is-fullwidth">
                         <select id="ruleSelect"
-                                [disabled]="editable() === false"
-                                (change)="onChange($event)">
-                            <option id="config-dropdown-{{ rulesConfigDescription().getDefaultConfig().name() }}"
-                                    [value]="rulesConfigDescription().getDefaultConfig().name()"
-                                    [selected]="isSelectedConfig(rulesConfigDescription().getDefaultConfig().name())">
-                                {{ rulesConfigDescription().getDefaultConfig().name() }}
+                                [formControl]="selectedConfigControl">
+                            <option id="config-dropdown-{{ defaultConfigName }}"
+                                    [value]="defaultConfigName">
+                                {{ defaultConfigName }}
                             </option>
-                            @for (standardConfig of rulesConfigDescription().getNonDefaultStandardConfigs(); track standardConfig.name()) {
+                            @for (standardConfig of nonDefaultStandardConfigs; track standardConfig.name()) {
                                 <option id="config-dropdown-{{ standardConfig.name() }}"
-                                        [value]="standardConfig.name()"
-                                        [selected]="isSelectedConfig(standardConfig.name())">
+                                        [value]="standardConfig.name()">
                                     {{ standardConfig.name() }}
                                 </option>
                             }
-                            <option value="Custom"
+                            <option [value]="CUSTOM_CONFIG_NAME"
                                     id="config-dropdown-custom"
-                                    [selected]="isSelectedConfig('Custom')"
                                     i18n>Custom</option>
                         </select>
                     </div>
@@ -45,7 +41,7 @@
                         }
                     </div>
                 }
-                @for (configParameter of getFields(); track configParameter) {
+                @for (configParameter of configFields; track configParameter) {
                     <div id="{{ configParameter }}_config"
                          class="mb-2">
                         <div class="field is-horizontal columns is-gapless">
@@ -55,7 +51,7 @@
                             <div class="field-body column has-text-right">
                                 <div class="field is-narrow">
                                     <div class="control">
-                                        @switch (typeOfConfig(configParameter)) {
+                                        @switch (getFieldType(configParameter)) {
                                             @case ('boolean') {
                                                 <label class="checkbox">
                                                     <input id="{{ configParameter }}_boolean_config_input"
@@ -70,7 +66,7 @@
                                                        [formControlName]="configParameter"
                                                        type="number"
                                                        class="input is-small"
-                                                       [ngClass]="isValid(configParameter) === false ? 'is-danger' : ''"
+                                                       [ngClass]="isFieldValid(configParameter) === false ? 'is-danger' : ''"
                                                        required
                                                        placeholder="{{ rulesConfigDescription().getFieldLocalizedName(configParameter) }}"/>
                                             }
@@ -78,11 +74,9 @@
                                                 <label class="checkbox">
                                                     <div class="select is-primary is-fullwidth">
                                                         <select id="{{ configParameter }}_enum_config_input"
-                                                                [disabled]="isEditableAndCustom() === false"
-                                                                (change)="onEnumChange(configParameter, $event)">
-                                                            @for (value of getEnumValues(configParameter); track value.enumValue) {
+                                                                [formControlName]="configParameter">
+                                                            @for (value of getEnumOptions(configParameter); track value.enumValue) {
                                                                 <option id="{{ configParameter }}_value_{{ value.enumValue }}"
-                                                                        [selected]="isSelectedEnum(configParameter, value.enumValue)"
                                                                         [value]="value.enumValue">
                                                                     {{ value.localized() }}
                                                                 </option>
@@ -93,10 +87,10 @@
                                             }
                                         }
                                     </div>
-                                    @if (isValid(configParameter) === false) {
+                                    @if (isFieldValid(configParameter) === false) {
                                         <div id="{{configParameter}}-error"
                                              class="help is-danger"
-                                             role="alert">{{ getErrorMessage(configParameter) }}</div>
+                                             role="alert">{{ getFieldErrorMessage(configParameter) }}</div>
                                     }
                                 </div>
                             </div>

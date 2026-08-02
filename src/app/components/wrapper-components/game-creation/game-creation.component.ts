@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChild, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import { ChangeDetectorRef, Component, OnDestroy, OnInit, inject, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
@@ -90,9 +90,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
     // notify that the game has started, a thing evaluated with the configRoom doc game status
     public readonly gameStartNotification: OutputEmitterRef<ConfigRoom> = output<ConfigRoom>();
-
-    public readonly rulesConfigurationComponent: Signal<RulesConfigurationComponent | undefined> =
-        viewChild(RulesConfigurationComponent);
 
     public gameStarted: boolean = false;
 
@@ -199,9 +196,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 const status: Status = Utils.getNonNullable(this.currentConfigRoom).status;
                 const configProposed: boolean = status === Status.CONFIG_PROPOSED;
                 this.viewInfo.canProposeConfig = configProposed === false && opponent !== '';
-                if (this.rulesConfigurationComponent() != null) {
-                    this.rulesConfigurationComponent()!.setEditable(configProposed === false);
-                }
             });
         this.getForm('gameType').valueChanges
             .pipe(takeUntil(this.ngUnsubscribe)).subscribe((gameType: GameType) => {
