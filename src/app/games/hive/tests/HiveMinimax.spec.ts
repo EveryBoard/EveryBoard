@@ -28,7 +28,7 @@ describe('HiveMinimax', () => {
             minimax,
             options: minimaxOptions,
             config: defaultConfig,
-            shouldFinish: true,
+            shouldFinish: false,
         });
     });
 

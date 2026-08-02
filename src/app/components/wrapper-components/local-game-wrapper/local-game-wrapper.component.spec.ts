@@ -83,16 +83,25 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
     let testUtils: ComponentTestUtils<P4Component>;
 
-    function chooseAIOrHuman(player: Player, humanOrAIName: 'human' | string): void {
+    function chooseAIOrHuman(player: Player, strategy: 'human' | 'minimax' | 'iterative-deepening' | 'mcts'): void {
         const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
         const selectAI: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
-        selectAI.value = humanOrAIName === 'human' ? selectAI.options[0].value : humanOrAIName;
+        selectAI.value = strategy;
         selectAI.dispatchEvent(new Event('change'));
         testUtils.detectChanges();
         tick(0);
     }
 
     function chooseFirstAILevel(player: Player): void {
+        const profileSelector: string = `#ai-profile-select-${player.getValue()}`;
+        const profileElements: DebugElement[] = testUtils.findElements(profileSelector);
+        if (profileElements.length === 1) {
+            const selectProfile: HTMLSelectElement = profileElements[0].nativeElement;
+            selectProfile.value = selectProfile.options[1].value;
+            selectProfile.dispatchEvent(new Event('change'));
+            testUtils.detectChanges();
+            tick(0);
+        }
         const dropDownName: string = `#ai-option-select-${player.getValue()}`;
         const selectLevel: HTMLSelectElement = testUtils.findElement(dropDownName).nativeElement;
         // We select the first available level in a way that works for any level name.
@@ -104,7 +113,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
     }
 
     function selectAIPlayer(player: Player): void {
-        chooseAIOrHuman(player, 'Minimax');
+        chooseAIOrHuman(player, 'minimax');
         chooseFirstAILevel(player);
     }
 
@@ -298,7 +307,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
         it('should skip profile selection for MCTS when there is a single config', fakeAsync(async() => {
-            // Given a board where humans are playing humans
+            // Given a board where humans are playing humans and only one MCTS profile exists
+            const component: P4Component = testUtils.getGameComponent();
+            component.aiConfig = {
+                ...component.aiConfig,
+                mcts: [component.aiConfig.mcts[0]],
+            };
             testUtils.expectElementNotToExist('#ai-profile-select-0');
             testUtils.expectElementNotToExist('#ai-option-select-0');
 
@@ -369,46 +383,58 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: 'Level 1', maxDepth: 1 }));
         }));
 
-        xit('should resolve the selected iterative deepening minimax player', fakeAsync(async() => {
+        it('should resolve the selected iterative deepening minimax player', fakeAsync(async() => {
             // Given a local wrapper
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            spyOn(wrapper, 'proposeAIToPlay').and.resolveTo();
 
             // When selecting an iterative deepening minimax
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-iterative-deepening');
             testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
-            // TODO: for some reason this times out, to investigate further
             testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
 
             // Then it should have selected the corresponding iterative deepening minimax AI
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(IterativeDeepeningMinimax));
-            expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: 'Level 1', maxSeconds: 1 }));
+            expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds', maxSeconds: 1 }));
         }));
 
-        xit('should resolve the selected MCTS player', fakeAsync(async() => {
+        it('should resolve the selected MCTS player', fakeAsync(async() => {
             // Given a local wrapper
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            spyOn(wrapper, 'proposeAIToPlay').and.resolveTo();
 
             // When selecting a MCTS
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
-            // TODO: same issue
-            testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
+            chooseFirstAILevel(Player.ZERO);
 
             // Then it should have selected the corresponding MCTS
             const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(MCTS));
-            expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: 'Level 1', maxSeconds: 1 }));
+            expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds', maxSeconds: 1 }));
         }));
 
-        it('should not select an AI when selecting a human player', fakeAsync(async() => {
-            // Given a local wrapper
-            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+        it('should hide AI configuration when selecting a human player', fakeAsync(async() => {
+            // Given a configured minimax player
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-minimax');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
+            testUtils.expectElementToExist('#ai-option-select-0');
 
             // When selecting a human
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
 
-            // Then it should not have selected an AI
-            expect(wrapper['getPlayingAI']().isAbsent()).toBeTrue();
+            // Then no AI configuration is displayed
+            testUtils.expectElementNotToExist('#ai-profile-select-0');
+            testUtils.expectElementNotToExist('#ai-option-select-0');
+        }));
+
+        it('should have no AI profiles or options for a human player', fakeAsync(async() => {
+            // Given a human player
+            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+
+            // Then the public template APIs provide no AI configuration
+            expect(wrapper.availableAIProfiles(Player.ZERO.getValue())).toEqual([]);
+            expect(wrapper.availableAIOptions(Player.ZERO.getValue())).toEqual([]);
         }));
 
         it('should name human player as Human', fakeAsync(async() => {
@@ -466,7 +492,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
             // When selecting player zero as AI and letting it play
             const component: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            chooseAIOrHuman(Player.ZERO, 'Minimax');
+            chooseAIOrHuman(Player.ZERO, 'minimax');
             spyOn(component, 'proposeAIToPlay').and.callThrough();
             chooseFirstAILevel(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
@@ -871,7 +897,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             spyOn(window, 'open').and.returnValue(null);
             // Given the component with AI infos enabled and MCTS played
             localStorage.setItem('displayAIInfo', 'true');
-            chooseAIOrHuman(Player.ZERO, 'MCTS');
+            chooseAIOrHuman(Player.ZERO, 'mcts');
             chooseFirstAILevel(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
             // When clicking on "view tree from current node"

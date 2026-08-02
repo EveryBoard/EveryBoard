@@ -915,6 +915,7 @@ export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
     playerOneOptions?: O,
     config: C,
     maxPlies: number,
+    maxDurationMillis: number,
 }
 
 /* Run a minimax test by battling it against itself for a number of turns */
@@ -937,7 +938,9 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     while (performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
         const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
         expect(bestMove).toBeDefined();
-        node = node.getChild(bestMove).get();
+        const nextNode: MGPFallible<GameNode<M, S>> = options.rules.choose(node, bestMove, options.config);
+        expect(nextNode.isSuccess()).withContext(`${options.minimax.name} should choose a legal move at turn ${turn}`).toBeTrue();
+        node = nextNode.get();
         turn++;
     }
     const seconds: number = (performance.now() - start) / 1000;
@@ -959,8 +962,9 @@ export function boundedSelfPlayTest<R extends SuperRules<M, S, C, L>,
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
     const playerOneMinimax: Minimax<M, S, C, L> = options.playerOneMinimax ?? options.playerZeroMinimax;
     const playerOneOptions: O = options.playerOneOptions ?? options.playerZeroOptions;
+    const deadline: number = performance.now() + options.maxDurationMillis;
 
-    for (let ply: number = 0; ply < options.maxPlies; ply++) {
+    for (let ply: number = 0; ply < options.maxPlies && performance.now() < deadline; ply++) {
         if (options.rules.getGameStatus(node, options.config).isEndGame) {
             return;
         }

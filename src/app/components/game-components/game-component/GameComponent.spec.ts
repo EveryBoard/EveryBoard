@@ -5,8 +5,10 @@ import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../games/abalone/abalone.component';
 import { AIDepthLimitOptions, MoveGenerator } from '../../../jscaip/AI/AI';
+import { createMCTSFromConfig } from '../../../jscaip/AI/AIConfigUtils';
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../../jscaip/AI/Heuristic';
+import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Move } from '../../../jscaip/Move';
 import { Player } from '../../../jscaip/Player';
@@ -115,6 +117,8 @@ describe('GameComponent', () => {
                 expect(moves.length)
                     .withContext('MCTS moveGenerator returned no move for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
+                const mcts: MCTS<Move, GameState, RulesConfig, unknown> = createMCTSFromConfig(component.rules, config);
+                expect(mcts).withContext('MCTS config could not be instantiated for ' + config.name).toBeDefined();
             }
         }));
 
@@ -137,6 +141,7 @@ describe('GameComponent', () => {
                     playerZeroOptions: options,
                     config: component.config,
                     maxPlies: UNIVERSAL_SELF_PLAY_PLIES,
+                    maxDurationMillis: 10000,
                 });
             }
         }));

@@ -7,7 +7,7 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, 
 
 import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
 import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { createIterativeDeepeningMinimaxFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
+import { AIInstanceRegistry, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
 import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
 import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
@@ -26,6 +26,10 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 
 type AIStrategyId = 'human' | 'minimax' | 'iterative-deepening' | 'mcts';
 
+type ComputerAIStrategyId = Exclude<AIStrategyId, 'human'>;
+
+type ConfiguredAI = MinimaxConfig<Move, GameState, RulesConfig> | MCTSConfig<Move, GameState, RulesConfig>;
+
 type AIChoice = {
     id: string,
     name: string,
@@ -40,6 +44,8 @@ type AIChoice = {
 @Debug.log
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
+    private readonly aiInstances: AIInstanceRegistry<ConfiguredAI, ComputerAIStrategyId> = new AIInstanceRegistry();
 
     public static readonly AI_TIMEOUT: number = 1500;
 
@@ -255,9 +261,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         if (this.playerSelection[playerIndex] === 'human') {
             return $localize`Human`;
         }
-        return this.availableAIProfiles(playerIndex).find((profile: AIChoice) => {
-            return profile.id === this.aiProfiles[playerIndex];
-        })?.name ?? this.playerSelection[playerIndex];
+        const profile: AIChoice | undefined = this.availableAIProfiles(playerIndex).find((candidate: AIChoice) => {
+            return candidate.id === this.aiProfiles[playerIndex];
+        });
+        return Utils.getNonNullable(profile).name;
     }
 
     public async proposeAIToPlay(): Promise<void> {
@@ -361,13 +368,21 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private createMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
     : Minimax<Move, GameState, RulesConfig, unknown>
     {
-        return createMinimaxFromConfig(this.gameComponent.rules, config);
+        return this.aiInstances.getOrCreate(config, 'minimax', (): Minimax<Move, GameState, RulesConfig, unknown> => {
+            return createMinimaxFromConfig(this.gameComponent.rules, config);
+        });
     }
 
     private createIterativeMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
     : IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown>
     {
-        return createIterativeDeepeningMinimaxFromConfig(this.gameComponent.rules, config);
+        return this.aiInstances.getOrCreate(
+            config,
+            'iterative-deepening',
+            (): IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> => {
+                return createIterativeDeepeningMinimaxFromConfig(this.gameComponent.rules, config);
+            },
+        );
     }
 
     private getMCTSConfigs(): MCTSConfig<Move, GameState, RulesConfig>[] {
@@ -377,7 +392,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>)
     : MCTS<Move, GameState, RulesConfig, unknown>
     {
-        return new MCTS(config.name, config.moveGenerator(), this.gameComponent.rules);
+        return this.aiInstances.getOrCreate(config, 'mcts', (): MCTS<Move, GameState, RulesConfig, unknown> => {
+            return createMCTSFromConfig(this.gameComponent.rules, config);
+        });
     }
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {

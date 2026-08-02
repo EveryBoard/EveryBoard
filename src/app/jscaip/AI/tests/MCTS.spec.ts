@@ -22,9 +22,9 @@ import { Table } from '../../TableUtils';
 import { AITimeLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
+import { HeuristicBounds } from '../Heuristic';
 import { MCTS } from '../MCTS';
 import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
-import { HeuristicBounds } from '../Minimax';
 
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
