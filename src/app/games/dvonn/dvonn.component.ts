@@ -7,8 +7,8 @@ import { HexagonalGameComponent } from '../../components/game-components/game-co
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
 import { DvonnMove } from './DvonnMove';
