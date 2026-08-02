@@ -952,13 +952,12 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     }
 }
 
-export function boundedSelfPlayTest<R extends SuperRules<M, S, C, L>,
-                                    M extends Move,
-                                    S extends GameState,
-                                    O extends AIDepthLimitOptions,
-                                    C extends RulesConfig,
-                                    L>(options: BoundedMinimaxTestOptions<R, M, S, O, C, L>): void
-{
+export function texpectToBeAbleToPlayAgainstItself<R extends SuperRules<M, S, C, L>,
+                                                  M extends Move,
+                                                  S extends GameState,
+                                                  O extends AIDepthLimitOptions,
+                                                  C extends RulesConfig,
+                                                  L>(options: BoundedMinimaxTestOptions<R, M, S, O, C, L>): void {
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
     const playerOneMinimax: Minimax<M, S, C, L> = options.playerOneMinimax ?? options.playerZeroMinimax;
     const playerOneOptions: O = options.playerOneOptions ?? options.playerZeroOptions;

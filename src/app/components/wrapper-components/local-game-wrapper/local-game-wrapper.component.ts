@@ -24,12 +24,6 @@ import { ViewConfigComponent } from '../../normal-component/view-config/view-con
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
-type AIStrategyId = 'human' | 'minimax' | 'iterative-deepening' | 'mcts';
-
-type ComputerAIStrategyId = Exclude<AIStrategyId, 'human'>;
-
-type ConfiguredAI = MinimaxConfig<Move, GameState, RulesConfig> | MCTSConfig<Move, GameState, RulesConfig>;
-
 type AIChoice = {
     id: string,
     name: string,
@@ -45,7 +39,7 @@ type AIChoice = {
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-    private readonly aiInstances: AIInstanceRegistry<ConfiguredAI, ComputerAIStrategyId> = new AIInstanceRegistry();
+    private readonly aiInstances: AIInstanceRegistry = new AIInstanceRegistry();
 
     public static readonly AI_TIMEOUT: number = 1500;
 

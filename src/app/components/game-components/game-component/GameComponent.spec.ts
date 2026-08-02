@@ -15,7 +15,7 @@ import { Player } from '../../../jscaip/Player';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
-import { ActivatedRouteStub, boundedSelfPlayTest, ComponentTestUtils, ConfigureTestingModuleUtils, createConfiguredMinimaxForTest, getShallowestMinimaxOptions, SlowTest, UNIVERSAL_SELF_PLAY_PLIES } from '../../../utils/tests/TestUtils.spec';
+import { ActivatedRouteStub, expectToBeAbleToPlayAgainstItself, ComponentTestUtils, ConfigureTestingModuleUtils, createConfiguredMinimaxForTest, getShallowestMinimaxOptions, SlowTest, UNIVERSAL_SELF_PLAY_PLIES } from '../../../utils/tests/TestUtils.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 import { AbstractGameComponent } from './GameComponent';
@@ -135,7 +135,7 @@ describe('GameComponent', () => {
                     createConfiguredMinimaxForTest(component.rules, config);
                 const options: AIDepthLimitOptions = getShallowestMinimaxOptions(minimax);
 
-                boundedSelfPlayTest({
+                expectToBeAbleToPlayAgainstItself({
                     rules: component.rules,
                     playerZeroMinimax: minimax,
                     playerZeroOptions: options,

@@ -8,7 +8,7 @@ import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { AIDepthLimitOptions, MoveGenerator } from './AI';
-import { AbstractMinimax, MinimaxHash } from './AbstractMinimax';
+import { AbstractMinimax, MinimaxHashFunction } from './AbstractMinimax';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic, HeuristicWithBounds } from './Heuristic';
@@ -73,7 +73,7 @@ export class Minimax<M extends Move,
                        rules: SuperRules<M, S, C, L>,
                        heuristic: Heuristic<M, S, BoardValue, C>,
                        moveGenerator: MoveGenerator<M, S, C>,
-                       hash?: MinimaxHash<S>) {
+                       hash?: MinimaxHashFunction<S>) {
         super(name, rules, heuristic, moveGenerator, hash);
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `Level ${i}`, maxDepth: i });

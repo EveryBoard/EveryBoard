@@ -6,7 +6,7 @@ import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { AITimeLimitOptions, MoveGenerator } from './AI';
-import { AbstractMinimax, MinimaxHash, SearchResult } from './AbstractMinimax';
+import { AbstractMinimax, MinimaxHashFunction, SearchResult } from './AbstractMinimax';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic } from './Heuristic';
@@ -23,7 +23,7 @@ export class IterativeDeepeningMinimax<M extends Move,
                        rules: SuperRules<M, S, C, L>,
                        heuristic: Heuristic<M, S, BoardValue, C>,
                        moveGenerator: MoveGenerator<M, S, C>,
-                       hash?: MinimaxHash<S>) {
+                       hash?: MinimaxHashFunction<S>) {
         super(name, rules, heuristic, moveGenerator, hash);
         for (let i: number = 1; i < this.MAX_MINIMAX_LEVEL; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });

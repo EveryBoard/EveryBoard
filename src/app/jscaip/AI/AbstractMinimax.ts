@@ -13,7 +13,7 @@ import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 import { Heuristic } from './Heuristic';
 
-export type MinimaxHash<S extends GameState> = (state: S) => string;
+export type MinimaxHashFunction<S extends GameState> = (state: S) => string;
 
 // Bound used by transposition tables
 type TTBound = 'EXACT' | 'LOWER' | 'UPPER';
@@ -62,7 +62,7 @@ implements AI<M, S, O, C>
                        protected readonly rules: SuperRules<M, S, C, L>,
                        protected readonly heuristic: Heuristic<M, S, BoardValue, C>,
                        protected readonly moveGenerator: MoveGenerator<M, S, C>,
-                       private readonly hashOverride?: MinimaxHash<S>)
+                       private readonly hashOverride?: MinimaxHashFunction<S>)
     {
     }
     public toString(): string {
