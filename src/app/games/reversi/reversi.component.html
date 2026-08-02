@@ -6,7 +6,7 @@
         <g>
             @for (c of line; track $index; let x = $index) {
                 <g>
-                    <rect id="click_{{ x }}_{{ y }}"
+                    <rect id="click-{{ x }}-{{ y }}"
                           (click)="onClick(x, y)"
                           [attr.x]="SPACE_SIZE * x"
                           [attr.y]="SPACE_SIZE * y"
