@@ -147,7 +147,7 @@ describe('CoerceoComponent', () => {
 
     });
 
-    describe('First click', () => {
+    describe('first click', () => {
 
         it('should refuse tiles exchange when player have no tiles', fakeAsync(async() => {
             // Given a board without tiles (the initial one here)

@@ -5,15 +5,17 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { MCTS } from '../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnRules } from './DvonnRules';
+import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnScoreMinimax } from './DvonnScoreMinimax';
 import { DvonnState } from './DvonnState';
 
@@ -37,6 +39,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             new DvonnMaxStacksMinimax(),
             new DvonnScoreMinimax(),
             new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
+            new MCTSWithHeuristic($localize`MCTS Score`, new DvonnMoveGenerator(), this.rules, new DvonnScoreHeuristic()),
         ];
         this.encoder = DvonnMove.encoder;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));

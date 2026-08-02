@@ -1,12 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicBounds } from '../../../jscaip/AI/Minimax';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { P4Heuristic } from '../P4Heuristic';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4State } from '../P4State';
+
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -125,6 +128,19 @@ describe('P4Heuristic', () => {
 
         // Then the value should be -7
         expect(boardValue).toEqual([-7]);
+    });
+
+    it('should compute the right bounds for the default config', () => {
+        // Given the default config
+        // When computing the bounds
+        const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+        // Then it should 2 * the number of squares
+        const expectedHeuristicValue: number = 2 * defaultConfig.width * defaultConfig.height;
+        const expectedBounds: HeuristicBounds<BoardValue> = {
+            player0Best: BoardValue.ofSingle(expectedHeuristicValue, 0),
+            player1Best: BoardValue.ofSingle(0, expectedHeuristicValue),
+        };
+        expect(bounds).toEqual(expectedBounds);
     });
 
 });

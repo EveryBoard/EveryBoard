@@ -4,17 +4,17 @@ import { Table } from '../../jscaip/TableUtils';
 import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
-export class HexodiaState extends FourStatePieceGameStateWithTable {
+export class HexodiaState extends FourStatePieceGameStateWithTable { // TODO: kill class, it adds nothing ?
 
-    public static of(oldState: HexodiaState, newBoard: Table<FourStatePiece>): HexodiaState {
+    public static override of(oldState: HexodiaState, newBoard: Table<FourStatePiece>): HexodiaState {
         return new HexodiaState(newBoard, oldState.turn);
     }
 
-    public incrementTurn(): HexodiaState {
-        return new HexodiaState(this.getCopiedBoard(), this.turn + 1);
+    public override incrementTurn(): this {
+        return new HexodiaState(this.getCopiedBoard(), this.turn + 1) as this;
     }
 
-    public setPieceAt(coord: Coord, value: FourStatePiece): HexodiaState {
+    public override setPieceAt(coord: Coord, value: FourStatePiece): HexodiaState {
         return GameStateWithTable.setPieceAt(this,
                                              coord,
                                              value,

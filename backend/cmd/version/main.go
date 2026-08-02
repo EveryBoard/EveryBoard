@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	everyboard "github.com/EveryBoard/EveryBoard/internal"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/server"
 )
 
 func main() {
-	fmt.Println(everyboard.Version)
+	fmt.Println(server.Version)
 }
