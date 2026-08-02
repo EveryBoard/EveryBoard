@@ -49,7 +49,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
                                                                      ReversiLegalityInformation>
 {
 
-    public constructor(public readonly board: BoardMode) {
+    public constructor(public readonly boardMode: BoardMode) {
         super();
     }
 
@@ -91,7 +91,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         const opponent: Player = player.getOpponent();
 
         for (const direction of Ordinal.ORDINALS) {
-            const firstSpace: Coord = this.board.getNextCoord(move.coord, direction, state);
+            const firstSpace: Coord = this.boardMode.getNextCoord(move.coord, direction, state);
             if (state.hasPieceAt(firstSpace, opponent)) {
                 // let's test this direction
                 const switchedInDir: Coord[] = this.getSandwicheds(player, direction, firstSpace, state);
@@ -114,7 +114,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
          */
 
         const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
-        let testedCoord: Coord = this.board.getNextCoord(start, direction, state);
+        let testedCoord: Coord = this.boardMode.getNextCoord(start, direction, state);
         while (state.isOnBoard(testedCoord) && testedCoord.equals(start) === false) {
             const testedCoordContent: PlayerOrNone = state.getPieceAt(testedCoord);
             if (testedCoordContent === capturer) {
@@ -127,7 +127,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
             } // we found a switched/captured
             sandwichedsCoord.push(testedCoord); // we add it
             // next loop will observe the next
-            testedCoord = this.board.getNextCoord(testedCoord, direction, state);
+            testedCoord = this.boardMode.getNextCoord(testedCoord, direction, state);
         }
         return []; // we found the end of the board before we found the new piece like 'searchedPawn'
     }

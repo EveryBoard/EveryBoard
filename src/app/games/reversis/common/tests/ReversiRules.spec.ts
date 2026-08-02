@@ -209,12 +209,13 @@ describe('ReversiRules', () => {
 
         describe('Toric Board', () => {
 
+            const toricConfig: ReversiConfig = {
+                ...defaultConfig,
+                toric: true,
+            };
+
             it('should capture piece sandwiched from across the board horizontally', () => {
-                const toricConfig: ReversiConfig = {
-                    ...defaultConfig,
-                    toric: true,
-                };
-                // Given a board where current can capture torically
+                // Given a board where current player can capture torically
                 const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _, _],
@@ -246,10 +247,6 @@ describe('ReversiRules', () => {
             });
 
             it('should capture piece sandwiched from across the board vertically', () => {
-                const toricConfig: ReversiConfig = {
-                    ...defaultConfig,
-                    toric: true,
-                };
                 // Given a board where current can capture torically
                 const board: Table<PlayerOrNone> = [
                     [_, _, _, _, _, _, _, _],

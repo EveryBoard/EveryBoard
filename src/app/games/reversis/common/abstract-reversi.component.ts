@@ -23,7 +23,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
 {
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
-    private capturedCoords: Coord[] = [];
+    private captured: Coord[] = [];
 
     public constructor(urlName: string) {
         super();
@@ -41,7 +41,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -69,20 +69,20 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
             while (this.getState().hasPieceAt(captured, opponent) &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {
-                this.capturedCoords.push(captured);
+                this.captured.push(captured);
                 captured = captured.getNextToric(dir, width, height, 1);
             }
         }
     }
 
     public override hideLastMove(): void {
-        this.capturedCoords = [];
+        this.captured = [];
         this.lastMove = MGPOptional.empty();
     }
 
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured-fill'];
         } else if (this.lastMove.equalsValue(coord)) {
             return ['moved-fill'];

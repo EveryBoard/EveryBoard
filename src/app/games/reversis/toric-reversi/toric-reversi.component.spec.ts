@@ -22,6 +22,7 @@ describe('ToricReversiComponent', () => {
     }));
 
     it('should hightlight toric captures', fakeAsync(async() => {
+        // Given a board where a toric capture could happend
         const board: Table<PlayerOrNone> = [
             [_, _, _, X, _, _, _, _],
             [_, _, X, _, _, _, _, _],
@@ -34,17 +35,20 @@ describe('ToricReversiComponent', () => {
         ];
         const state: ReversiState = new ReversiState(board, 0);
         await testUtils.setupState(state);
+
+        // When doing that capturing move
         const move: ReversiMove = new ReversiMove(7, 4);
+
+        // Then it should work and the captured coord be highlighted
         await testUtils.expectMoveSuccess('#click_7_4', move);
-        const gameComponent: ToricReversiComponent = testUtils.getGameComponent();
-        expect(gameComponent.getRectClasses(0, 3)).not.toContain('captured-fill');
-        expect(gameComponent.getRectClasses(1, 2)).not.toContain('captured-fill');
-        expect(gameComponent.getRectClasses(2, 1)).not.toContain('captured-fill');
-        expect(gameComponent.getRectClasses(3, 0)).not.toContain('captured-fill');
-        expect(gameComponent.getRectClasses(0, 4)).toEqual(['captured-fill']);
-        expect(gameComponent.getRectClasses(0, 5)).toEqual(['captured-fill']);
-        expect(gameComponent.getRectClasses(1, 6)).toEqual(['captured-fill']);
-        expect(gameComponent.getRectClasses(7, 4)).toEqual(['moved-fill']);
+        testUtils.expectElementNotToHaveClass('#click-0-3', 'captured-fill');
+        testUtils.expectElementNotToHaveClass('#click-1-2', 'captured-fill');
+        testUtils.expectElementNotToHaveClass('#click-2-1', 'captured-fill');
+        testUtils.expectElementNotToHaveClass('#click-3-0', 'captured-fill');
+        testUtils.expectElementToHaveClasses('#click-0-4', ['captured-fill']);
+        testUtils.expectElementToHaveClasses('#click-0-5', ['captured-fill']);
+        testUtils.expectElementToHaveClasses('#click-1-6', ['captured-fill']);
+        testUtils.expectElementToHaveClasses('#click-7-4', ['moved-fill']);
     }));
 
 });
