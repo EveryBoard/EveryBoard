@@ -220,6 +220,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
+                if (this.isSynced === false) {
+                    break;
+                }
                 await this.router.navigate(['/nextGameLoading']);
                 const urlName: string = this.getGameUrlName();
                 await this.router.navigate(['/play', urlName, reply.data]);
