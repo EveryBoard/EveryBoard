@@ -360,8 +360,11 @@ jobs:
         run: |
           result="${{ steps.is_organization_member.outputs.result }}"
           if [ "$result" == true ]; then
+            status=$(curl -s -o /dev/null -w '%{http_code}' -H "Authorization: Bearer $NETLIFY_AUTH_TOKEN" https://api.netlify.com/api/v1/user)
+            [ "$status" = 200 ] || { echo "Netlify token rejected (HTTP $status)"; exit 1; }
             npm run build:netlify
             npm install netlify-cli
+            echo "deploying"
             npx netlify deploy --dir=dist/everyboard --alias="$GITHUB_HEAD_REF" --message="Deployment from github ($GITHUB_HEAD_REF, commit $GITHUB_SHA)"
             # deploy backend
             if ./scripts/backend_needs_deployment.sh https://server-test.everyboard.org; then
