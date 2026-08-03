@@ -171,7 +171,8 @@ export class InternationalCheckersTutorial extends Tutorial {
                 new Coord(5, 8),
                 new Coord(7, 6),
             ]),
-            TutorialStepMessage.CONGRATULATIONS(),
+
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
         ),
     ];
 }

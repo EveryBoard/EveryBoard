@@ -11,6 +11,7 @@ import { BashniRules } from './BashniRules';
 const zero: CheckersPiece = CheckersPiece.ZERO;
 const one: CheckersPiece = CheckersPiece.ONE;
 const _u: CheckersStack = new CheckersStack([zero]);
+const _O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
 const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
@@ -170,7 +171,46 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
             ], 0),
             CheckersMove.fromCapture([new Coord(2, 1), new Coord(4, 3), new Coord(6, 1)]),
+            TutorialStepMessage.CONGRATULATIONS(),
+        ),
+        TutorialStep.fromMove(
+            $localize`Capture rule`,
+            $localize`When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.<br/>Here you must also use your king's backward and flying capture abilities.<br/><br/>You are playing Dark. Capture all remaining pieces.`,
+            OddCheckersState.of([
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, _v, __, __, __, __, __, __],
+                [__, __, __, __, _v, __, __, __],
+                [__, _v, __, __, __, _O, __, __],
+                [__, __, __, __, _v, __, __, __],
+                [__, __, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __, __],
+            ], 0),
+            [
+                CheckersMove.fromCapture([
+                    new Coord(5, 4),
+                    new Coord(2, 1),
+                    new Coord(0, 3),
+                    new Coord(3, 6),
+                    new Coord(5, 4),
+                ]),
+                CheckersMove.fromCapture([
+                    new Coord(5, 4),
+                    new Coord(2, 1),
+                    new Coord(0, 3),
+                    new Coord(3, 6),
+                    new Coord(6, 3),
+                ]),
+                CheckersMove.fromCapture([
+                    new Coord(5, 4),
+                    new Coord(2, 1),
+                    new Coord(0, 3),
+                    new Coord(3, 6),
+                    new Coord(7, 2),
+                ]),
+            ],
             TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
+            $localize`You did not capture everything!.`,
         ),
     ];
 }

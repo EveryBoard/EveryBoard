@@ -12,6 +12,7 @@ const zero: CheckersPiece = CheckersPiece.ZERO;
 const one: CheckersPiece = CheckersPiece.ONE;
 const _u: CheckersStack = new CheckersStack([zero]);
 const _v: CheckersStack = new CheckersStack([one]);
+const vv: CheckersStack = new CheckersStack([one, one]);
 const vU: CheckersStack = new CheckersStack([one, CheckersPiece.ZERO_PROMOTED]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
@@ -133,8 +134,29 @@ export class LascaTutorial extends Tutorial {
                 [__, __, __, __, __, __, __],
             ], 0),
             [CheckersMove.fromCapture([new Coord(4, 2), new Coord(2, 0)])],
-            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
+            TutorialStepMessage.CONGRATULATIONS(),
             $localize`You did not capture the right piece.`,
+        ),
+        TutorialStep.anyMove(
+            $localize`Capture rule`,
+            $localize`When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.<br/><br/>You are playing Dark. Capture as much pieces as possible.`,
+            EvenCheckersState.of([
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, _v, __, vv, __],
+                [__, __, __, __, __, __, Uv],
+                [__, __, __, _v, __, _v, __],
+                [__, __, __, __, __, __, __],
+            ], 0),
+            CheckersMove.fromCapture([
+                new Coord(9, 6),
+                new Coord(6, 3),
+                new Coord(3, 6),
+                new Coord(5, 8),
+                new Coord(7, 6),
+            ]),
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
         ),
     ];
 }
