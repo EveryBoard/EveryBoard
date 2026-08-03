@@ -7,7 +7,7 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, 
 
 import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
 import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { AIInstanceRegistry, AIStrategyId, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
+import { AIInstanceRegistry, PlayerSelection, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
 import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
 import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
@@ -47,7 +47,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public aiOptions: [string, string] = ['none', 'none'];
 
-    public playerSelection: [AIStrategyId, AIStrategyId] = ['human', 'human'];
+    public playerSelection: [PlayerSelection, PlayerSelection] = ['human', 'human'];
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
@@ -313,7 +313,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private getAI(turn: number): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
         const playerIndex: number = turn % 2;
-        const strategy: AIStrategyId = this.playerSelection[playerIndex];
+        const strategy: PlayerSelection = this.playerSelection[playerIndex];
         if (strategy === 'human') {
             return MGPOptional.empty();
         }

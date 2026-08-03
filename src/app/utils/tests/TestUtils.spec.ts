@@ -950,7 +950,7 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     }
 }
 
-export function texpectToBeAbleToPlayAgainstItself<R extends SuperRules<M, S, C, L>,
+export function expectToBeAbleToPlayAgainstItself<R extends SuperRules<M, S, C, L>,
                                                   M extends Move,
                                                   S extends GameState,
                                                   O extends AIDepthLimitOptions,

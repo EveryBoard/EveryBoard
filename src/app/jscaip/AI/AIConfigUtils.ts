@@ -10,22 +10,22 @@ import { MCTS } from './MCTS';
 import { MCTSWithHeuristic } from './MCTSWithHeuristic';
 import { Minimax } from './Minimax';
 
-export type AIStrategyId = 'human' | 'minimax' | 'iterative-deepening' | 'mcts';
+export type PlayerSelection = 'human' | 'minimax' | 'iterative-deepening' | 'mcts';
 
-type ComputerAIStrategyId = Exclude<AIStrategyId, 'human'>;
+type AISelection = Exclude<PlayerSelection, 'human'>;
 
 type ConfiguredAI = MinimaxConfig<Move, GameState, RulesConfig> | MCTSConfig<Move, GameState, RulesConfig>;
 
 export class AIInstanceRegistry {
 
-    private readonly instances: Map<ConfiguredAI, Map<ComputerAIStrategyId, AbstractAI>> = new Map();
+    private readonly instances: Map<ConfiguredAI, Map<AISelection, AbstractAI>> = new Map();
 
     public getOrCreate<A extends AbstractAI>(
         config: ConfiguredAI,
-        strategy: ComputerAIStrategyId,
+        strategy: AISelection,
         factory: () => A,
     ): A {
-        let instancesForConfig: Map<ComputerAIStrategyId, AbstractAI> | undefined = this.instances.get(config);
+        let instancesForConfig: Map<AISelection, AbstractAI> | undefined = this.instances.get(config);
         if (instancesForConfig == null) {
             instancesForConfig = new Map();
             this.instances.set(config, instancesForConfig);
