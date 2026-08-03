@@ -1,10 +1,17 @@
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { DiamDummyMinimax } from '../DiamDummyMinimax';
+import { DiamMove } from '../DiamMove';
+import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamRules } from '../DiamRules';
+import { DiamState } from '../DiamState';
 
-/* eslint-disable max-lines-per-function */
+class DiamDummyMinimax extends Minimax<DiamMove, DiamState> {
+    public constructor() {
+        super('Dummy', DiamRules.get(), new DummyHeuristic(), new DiamMoveGenerator());
+    }
+}
 
 describe('DiamDummyMinimax', () => {
 

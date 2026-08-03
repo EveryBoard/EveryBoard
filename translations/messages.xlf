@@ -719,6 +719,9 @@
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
       </trans-unit>
+      <trans-unit id="3307352846832849992" datatype="html">
+        <source>Pick the profile</source>
+      </trans-unit>
       <trans-unit id="3795472118461355324" datatype="html">
         <source>Pick the options</source>
       </trans-unit>
@@ -744,10 +747,19 @@
         <source>You lost</source>
       </trans-unit>
       <trans-unit id="1836885699974320953" datatype="html">
-        <source><x id="PH" equiv-text="this.players[gameStatus.winner.getValue()].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
+        <source><x id="PH" equiv-text="this.getPlayerName(gameStatus.winner.getValue())"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
+      </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
+      </trans-unit>
+      <trans-unit id="2520878109295407247" datatype="html">
+        <source>Iterative deepening</source>
+      </trans-unit>
+      <trans-unit id="7183112140529419891" datatype="html">
+        <source>MCTS</source>
       </trans-unit>
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
@@ -869,14 +881,14 @@
       <trans-unit id="4053624367526659457" datatype="html">
         <source>Number of pieces rows</source>
       </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
       </trans-unit>
       <trans-unit id="4231579860680569680" datatype="html">
         <source>There is no such configuration element</source>
-      </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
@@ -968,9 +980,6 @@
       <trans-unit id="1280308994802128299" datatype="html">
         <source>Deadly Abalone</source>
       </trans-unit>
-      <trans-unit id="7123653594948067002" datatype="html">
-        <source>Score</source>
-      </trans-unit>
       <trans-unit id="5878048397926852057" datatype="html">
         <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
       </trans-unit>
@@ -995,8 +1004,8 @@
       <trans-unit id="2565981183757255753" datatype="html">
         <source>You will see when creating a game that you can configure two things.&lt;br/&gt;&lt;ul&gt;&lt;li&gt;First, the number of captures needed to win. The default is 6, changing it will help changing the game&apos;s duration if wanted.&lt;/li&gt;&lt;li&gt;Last, the maximum size of a moved group. The default is 3 but if you want a more chaotic and fun game, you could increase that limit and play a more powerful alternative version of the game!&lt;/li&gt;&lt;/ul&gt;</source>
       </trans-unit>
-      <trans-unit id="7183112140529419891" datatype="html">
-        <source>MCTS</source>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
       </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
@@ -1012,12 +1021,6 @@
       </trans-unit>
       <trans-unit id="139135108801629927" datatype="html">
         <source>There is no possible transfer from that square!</source>
-      </trans-unit>
-      <trans-unit id="6180360850656792663" datatype="html">
-        <source>Full Board</source>
-      </trans-unit>
-      <trans-unit id="6434791622277704389" datatype="html">
-        <source>Rightmost Focus</source>
       </trans-unit>
       <trans-unit id="529510153551286303" datatype="html">
         <source>Increment</source>
@@ -1052,6 +1055,12 @@
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
+      <trans-unit id="6434791622277704389" datatype="html">
+        <source>Rightmost Focus</source>
+      </trans-unit>
+      <trans-unit id="6180360850656792663" datatype="html">
+        <source>Full Board</source>
+      </trans-unit>
       <trans-unit id="2406587628849019715" datatype="html">
         <source>Stack pieces instead of capturing them</source>
       </trans-unit>
@@ -1069,12 +1078,6 @@
       </trans-unit>
       <trans-unit id="3072414657519570345" datatype="html">
         <source>Can do frisian captures</source>
-      </trans-unit>
-      <trans-unit id="318262165361158083" datatype="html">
-        <source>Control</source>
-      </trans-unit>
-      <trans-unit id="7668804973365582935" datatype="html">
-        <source>Control and Domination</source>
       </trans-unit>
       <trans-unit id="3581037377692107358" datatype="html">
         <source>You cannot go backward with normal pieces!</source>
@@ -1138,6 +1141,12 @@
       </trans-unit>
       <trans-unit id="2693455583384082674" datatype="html">
         <source>Promotion</source>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
+      </trans-unit>
+      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
       </trans-unit>
       <trans-unit id="1163551794419030546" datatype="html">
         <source>The goal of checkers is to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
@@ -1208,9 +1217,6 @@
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
       </trans-unit>
-      <trans-unit id="7668715639068435496" datatype="html">
-        <source>Captures &gt; Freedom</source>
-      </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
       </trans-unit>
@@ -1222,12 +1228,6 @@
       </trans-unit>
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
-      </trans-unit>
-      <trans-unit id="8182472154276317003" datatype="html">
-        <source>Pieces &gt; Threats &gt; Tiles</source>
-      </trans-unit>
-      <trans-unit id="4996962520612005595" datatype="html">
-        <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="5853742640794164153" datatype="html">
         <source>Use small board</source>
@@ -1299,8 +1299,14 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
-      <trans-unit id="8560978883976627945" datatype="html">
-        <source>Alignment</source>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+      </trans-unit>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
+      </trans-unit>
+      <trans-unit id="4996962520612005595" datatype="html">
+        <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="1631778170068001983" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
@@ -1316,6 +1322,9 @@
       </trans-unit>
       <trans-unit id="4174912343371620775" datatype="html">
         <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -1337,9 +1346,6 @@
       </trans-unit>
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
-      </trans-unit>
-      <trans-unit id="4649711232397678200" datatype="html">
-        <source>Jump</source>
       </trans-unit>
       <trans-unit id="2678466693137107679" datatype="html">
         <source>Conspirateurs is played on a 17x17 board. The object of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
@@ -1379,6 +1385,9 @@
       </trans-unit>
       <trans-unit id="5361555826660205972" datatype="html">
         <source>You have not performed a triple jump. Try again!</source>
+      </trans-unit>
+      <trans-unit id="4649711232397678200" datatype="html">
+        <source>Jump</source>
       </trans-unit>
       <trans-unit id="2724052802065983013" datatype="html">
         <source>You cannot move the piece holding the ball.</source>
@@ -1422,6 +1431,15 @@
       <trans-unit id="6691085433163106876" datatype="html">
         <source>AllMoves</source>
       </trans-unit>
+      <trans-unit id="4770227794604983198" datatype="html">
+        <source>Distance (1)</source>
+      </trans-unit>
+      <trans-unit id="8648592362460976351" datatype="html">
+        <source>Distance (2)</source>
+      </trans-unit>
+      <trans-unit id="32621127018559651" datatype="html">
+        <source>Distance (3)</source>
+      </trans-unit>
       <trans-unit id="8328626778107972059" datatype="html">
         <source>MCTS (3 only)</source>
       </trans-unit>
@@ -1430,12 +1448,6 @@
       </trans-unit>
       <trans-unit id="5930186357813280917" datatype="html">
         <source>MCTS (3, no dups)</source>
-      </trans-unit>
-      <trans-unit id="1337900792840930042" datatype="html">
-        <source>Distance (<x id="PH" equiv-text="i"/>)</source>
-      </trans-unit>
-      <trans-unit id="7535479567631818273" datatype="html">
-        <source>Dummy</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -1482,6 +1494,9 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
       </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
+      </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
       </trans-unit>
@@ -1502,9 +1517,6 @@
       </trans-unit>
       <trans-unit id="9221962864929282978" datatype="html">
         <source>A stack must move in a straight line.</source>
-      </trans-unit>
-      <trans-unit id="5456673610183497320" datatype="html">
-        <source>Stacks</source>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
@@ -1570,8 +1582,8 @@
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
       </trans-unit>
-      <trans-unit id="7473544347962465121" datatype="html">
-        <source>MCTS Score</source>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
       </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
@@ -1617,9 +1629,6 @@
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
       </trans-unit>
-      <trans-unit id="360730166369316579" datatype="html">
-        <source>Attack</source>
-      </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
       </trans-unit>
@@ -1643,12 +1652,6 @@
       </trans-unit>
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
-      </trans-unit>
-      <trans-unit id="5986717000369124597" datatype="html">
-        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
-      </trans-unit>
-      <trans-unit id="4563771339790181195" datatype="html">
-        <source>Positional</source>
       </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
@@ -1691,6 +1694,15 @@
       </trans-unit>
       <trans-unit id="4418812710815829575" datatype="html">
         <source>Failed, you have not captured the phalanx.</source>
+      </trans-unit>
+      <trans-unit id="5986717000369124597" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
+      </trans-unit>
+      <trans-unit id="4563771339790181195" datatype="html">
+        <source>Positional</source>
+      </trans-unit>
+      <trans-unit id="360730166369316579" datatype="html">
+        <source>Attack</source>
       </trans-unit>
       <trans-unit id="7226802484619632640" datatype="html">
         <source>You can only capture when 4 or more of your pieces are aligned, and it is not the case.</source>
@@ -1788,9 +1800,6 @@
       </trans-unit>
       <trans-unit id="2182334345707735267" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
-      </trans-unit>
-      <trans-unit id="8400174784913655582" datatype="html">
-        <source>Minimax</source>
       </trans-unit>
       <trans-unit id="4172293183843503071" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
@@ -1925,6 +1934,9 @@
         The intersections where the prisoners are count as Dark&apos;s territory
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
+      </trans-unit>
+      <trans-unit id="4586260971442685870" datatype="html">
+        <source>Territory</source>
       </trans-unit>
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
@@ -2091,6 +2103,9 @@
       <trans-unit id="3226372248582035130" datatype="html">
         <source>Finally, it is possible that you are not able to do any move: when it is the case, you must pass your turn. Here, Dark must pass: the queen bee cannot move without disconnecting the hive, the beetle is stuck beneath another beetle, and a dropped piece would be in contact with an opponent&apos;s piece.</source>
       </trans-unit>
+      <trans-unit id="545011647716248042" datatype="html">
+        <source>Mobility</source>
+      </trans-unit>
       <trans-unit id="3643526530572280396" datatype="html">
         <source>This piece is not of the color you have to play.</source>
       </trans-unit>
@@ -2158,6 +2173,9 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
+      <trans-unit id="5504136696096277083" datatype="html">
+        <source>Advancement</source>
+      </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
       </trans-unit>
@@ -2220,6 +2238,9 @@
         <source>In the special case where a move ends up connecting all pieces of both player, simultaneously,
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
+      </trans-unit>
+      <trans-unit id="5944812089887969249" datatype="html">
+        <source>Groups</source>
       </trans-unit>
       <trans-unit id="7419338702295170530" datatype="html">
         <source>You must flip your lodestone before putting it back on the board.</source>
@@ -2421,9 +2442,6 @@
       </trans-unit>
       <trans-unit id="2821967115826330186" datatype="html">
         <source>There it is, you captured all remaining seeds.</source>
-      </trans-unit>
-      <trans-unit id="3479650175306903901" datatype="html">
-        <source>MCTS with heuristic</source>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -2784,6 +2802,9 @@
       <trans-unit id="3455768301736755830" datatype="html">
         <source>Congratulations, you have saved up two pieces.</source>
       </trans-unit>
+      <trans-unit id="2874924373232293084" datatype="html">
+        <source>Reserve</source>
+      </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>
       </trans-unit>
@@ -2979,6 +3000,9 @@
         You can win with this board, try it.
         You&apos;re playing Light.</source>
       </trans-unit>
+      <trans-unit id="9017523517963235509" datatype="html">
+        <source>Piece Count</source>
+      </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
       </trans-unit>
@@ -3007,9 +3031,6 @@
         <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
         Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
       </trans-unit>
-      <trans-unit id="3293657922924170725" datatype="html">
-        <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
-      </trans-unit>
       <trans-unit id="1982783281923413187" datatype="html">
         <source>You can only rebound on dark spaces.</source>
       </trans-unit>
@@ -3027,9 +3048,6 @@
       </trans-unit>
       <trans-unit id="5908478672900888285" datatype="html">
         <source>Those two spaces have no intermediary neighbor.</source>
-      </trans-unit>
-      <trans-unit id="545011647716248042" datatype="html">
-        <source>Mobility</source>
       </trans-unit>
       <trans-unit id="7194810718741841575" datatype="html">
         <source>You can move one or two spaces, not <x id="PH" equiv-text="distance"/>.</source>
@@ -3072,6 +3090,9 @@
       </trans-unit>
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
+      </trans-unit>
+      <trans-unit id="3293657922924170725" datatype="html">
+        <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
       </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
@@ -3147,6 +3168,9 @@
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>
+      </trans-unit>
+      <trans-unit id="1779552786277618671" datatype="html">
+        <source>Distance</source>
       </trans-unit>
       <trans-unit id="2035984245529775458" datatype="html">
         <source>You cannot move yet. Pick a space where you will put a new piece.</source>
@@ -3240,6 +3264,9 @@
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
       </trans-unit>
+      <trans-unit id="4427129289566046309" datatype="html">
+        <source>Shape</source>
+      </trans-unit>
       <trans-unit id="6387064828361949367" datatype="html">
         <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
       </trans-unit>
@@ -3273,9 +3300,6 @@
       <trans-unit id="3808135421251943457" datatype="html">
         <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
       </trans-unit>
-      <trans-unit id="2976149661707388406" datatype="html">
-        <source>Escape &gt; Pieces &gt; Control</source>
-      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
       </trans-unit>
@@ -3287,15 +3311,6 @@
       </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
-      </trans-unit>
-      <trans-unit id="7623537877233304257" datatype="html">
-        <source>Pieces &gt; Control</source>
-      </trans-unit>
-      <trans-unit id="1760148711911088235" datatype="html">
-        <source>Pieces &gt; Influence</source>
-      </trans-unit>
-      <trans-unit id="3372037160964274985" datatype="html">
-        <source>Pieces</source>
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
@@ -3380,6 +3395,18 @@
       </trans-unit>
       <trans-unit id="4169759104868172929" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      </trans-unit>
+      <trans-unit id="3372037160964274985" datatype="html">
+        <source>Pieces</source>
+      </trans-unit>
+      <trans-unit id="1760148711911088235" datatype="html">
+        <source>Pieces &gt; Influence</source>
+      </trans-unit>
+      <trans-unit id="7623537877233304257" datatype="html">
+        <source>Pieces &gt; Control</source>
+      </trans-unit>
+      <trans-unit id="2976149661707388406" datatype="html">
+        <source>Escape &gt; Pieces &gt; Control</source>
       </trans-unit>
       <trans-unit id="1347435830524797455" datatype="html">
         <source>Standard Teeko</source>

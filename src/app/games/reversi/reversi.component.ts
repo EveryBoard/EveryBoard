@@ -4,13 +4,12 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { ReversiMinimax } from './ReversiMinimax';
+import { ReversiHeuristic } from './ReversiHeuristic';
 import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
@@ -36,10 +35,19 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
     public constructor() {
         super();
         this.setRulesAndNode('Reversi');
-        this.availableAIs = [
-            new ReversiMinimax(),
-            new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Piece Count',
+                name: $localize`Piece Count`,
+                heuristic: (): ReversiHeuristic => new ReversiHeuristic(),
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(),
+            }],
+        };
         this.encoder = ReversiMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
     }

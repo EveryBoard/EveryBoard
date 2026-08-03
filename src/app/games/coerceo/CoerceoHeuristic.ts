@@ -1,6 +1,6 @@
 import { MGPMap } from '@everyboard/lib';
 
-import { PlayerMetricHeuristic } from '../../jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';

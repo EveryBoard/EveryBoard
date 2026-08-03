@@ -6,8 +6,9 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { SiamMinimax } from '../SiamMinimax';
+import { SiamHeuristic } from '../SiamHeuristic';
 import { SiamMove } from '../SiamMove';
+import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { SiamPiece } from '../SiamPiece';
 import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
 import { SiamState } from '../SiamState';
@@ -18,6 +19,13 @@ const U: SiamPiece = SiamPiece.LIGHT_UP;
 const L: SiamPiece = SiamPiece.LIGHT_LEFT;
 const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
+
+class SiamMinimax extends Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
+    public constructor() {
+        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator(),
+        );
+    }
+}
 
 describe('SiamMinimax', () => {
 
