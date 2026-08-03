@@ -16,7 +16,7 @@ import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNRules } from '../ConnectNRules';
 import { ConnectNComponent } from '../connect-n.component';
 
-fdescribe('ConnectNComponent', () => {
+describe('ConnectNComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
@@ -115,7 +115,7 @@ fdescribe('ConnectNComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // Then the dropped piece should be displayed
-            testUtils.expectElementToHaveClass('#dropped', 'moved-stroke');
+            testUtils.expectElementToHaveClass('#dropped-8-8', 'moved-stroke');
         }));
 
         it('should hide last move when doing first click', fakeAsync(async() => {
@@ -194,10 +194,10 @@ fdescribe('ConnectNComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // When clicking again on this piece
-            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped', '#click-8-8');
+            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped-8-8', '#click-8-8');
 
             // Then it should deselect it without toast
-            testUtils.expectElementNotToExist('#dropped');
+            testUtils.expectElementNotToExist('#dropped-8-8');
         }));
 
         it('should do move when clicking on a second empty square', fakeAsync(async() => {

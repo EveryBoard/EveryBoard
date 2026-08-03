@@ -4,7 +4,7 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 import { Coord } from '../../../jscaip/Coord';
 import { ConnectNMove } from '../ConnectNMove';
 
-fdescribe('ConnectNMove', () => {
+describe('ConnectNMove', () => {
 
     describe('ConnectNMove with one coord', () => {
 

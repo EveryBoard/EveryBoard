@@ -15,7 +15,7 @@ import { ConnectNAlignmentMinimax } from '../ConnectNAlignmentMinimax';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
 
-fdescribe('ConnectNAlignmentMinimax', () => {
+describe('ConnectNAlignmentMinimax', () => {
 
     let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };

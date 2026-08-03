@@ -106,6 +106,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     public override isLegal(move: ConnectNMove,
                             state: TopologicGameState<FourStatePiece>,
     ): MGPFallible<void> {
+        Utils.assert(state.turn === 0, 'ConnectSixFirstMove should only be used at first move');
         for (const coord of move.coords) {
             if (state.isNotOnBoard(coord)) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));

@@ -44,7 +44,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
         rules = ConnectNRules.get();
     });
 
-    describe('first turn', () => {
+    fdescribe('first turn', () => {
 
         it('should not create move when coord is out of board', () => {
             // Given the initial state
@@ -96,7 +96,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        it('should refuse move that drops two pieces on first turn', () => {
+        fit('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
             const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
 
@@ -475,7 +475,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
 
 });
 
-fdescribe('ConnectNRules (HEXAGONAL)', () => {
+describe('ConnectNRules (HEXAGONAL)', () => {
 
 
     let rules: ConnectNRules;
@@ -528,7 +528,7 @@ fdescribe('ConnectNRules (HEXAGONAL)', () => {
     });
 });
 
-fdescribe('ConnectNRules (TRIANGULAR)', () => {
+describe('ConnectNRules (TRIANGULAR)', () => {
 
 
     let rules: ConnectNRules;

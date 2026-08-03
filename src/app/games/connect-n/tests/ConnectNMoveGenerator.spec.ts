@@ -12,7 +12,7 @@ import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
 
-fdescribe('ConnectNMoveGenerator', () => {
+describe('ConnectNMoveGenerator', () => {
 
     let moveGenerator: ConnectNMoveGenerator;
 
