@@ -16,6 +16,7 @@ type Configuration struct {
 
 	ListenAddr string
 	Origin     string
+	WebhookURL string
 }
 
 // Read reads server configuration from environment variables. It validates the
@@ -46,6 +47,7 @@ func Read() (*Configuration, error) {
 		Origin:     os.Getenv("ALLOW_ORIGIN"),
 		ListenAddr: os.Getenv("LISTEN_ADDR"),
 		Database:   database,
+		WebhookURL: os.Getenv("DISCORD_WEBHOOK_URL"),
 	}
 	if config.ListenAddr == "" {
 		config.ListenAddr = ":8081"

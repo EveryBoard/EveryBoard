@@ -278,6 +278,7 @@ jobs:
                 cd backend && \
                     USE_EMULATOR=no PROJECT_ID=firestore-c9d47 ALLOW_ORIGIN='https://everyboard.org' \
                     DATABASE_HOST=db DATABASE_USERNAME=everyboard_master DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    DISCORD_WEBHOOK_URL="$DISCORD_WEBHOOK_URL" \
                     make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8003
               fi
           fi
@@ -290,6 +291,7 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_MASTER }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_MASTER }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
       - name: Deploy develop on push if org member
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/develop' }}
         run: |
@@ -308,6 +310,7 @@ jobs:
                 cd backend && \
                     USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='https://dev.everyboard.org' \
                     DATABASE_HOST=db DATABASE_USERNAME=everyboard_dev DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    DISCORD_WEBHOOK_URL="$DISCORD_WEBHOOK_URL" \
                     make deploy target=dev user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8002
             fi
           fi
@@ -320,6 +323,7 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_DEV }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_DEV }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
   deployment-netlify:
     runs-on: ubuntu-24.04
@@ -376,6 +380,7 @@ jobs:
                 cd backend && \
                   USE_EMULATOR=no PROJECT_ID=everyboard-test ALLOW_ORIGIN='*' \
                     DATABASE_HOST=db DATABASE_USERNAME=everyboard_test DATABASE_PASSWORD="$DATABASE_PASSWORD" \
+                    DISCORD_WEBHOOK_URL="$DISCORD_WEBHOOK_URL" \
                     make deploy target=test user="$SSH_USER" server="$SSH_SERVER" port="$SSH_PORT" listen-port=8001
             fi
           fi
@@ -389,3 +394,4 @@ jobs:
           SSH_KNOWN_HOSTS: ${{ secrets.EVERYBOARD_DEPLOY_KNOWN_HOST }}
           SERVICE_ACCOUNT: ${{ secrets.EVERYBOARD_DEPLOY_SERVICE_ACCOUNT_TEST }}
           DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD_TEST }}
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}

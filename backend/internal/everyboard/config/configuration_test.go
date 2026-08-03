@@ -112,3 +112,24 @@ func TestReadConfigurationWithListenAddr(t *testing.T) {
 	require.NoError(t, err, "error when reading the configuration")
 	require.Equal(t, "localhost:1234", config.ListenAddr, "listen address improperly set")
 }
+
+func TestReadConfigurationWebhookDisabledByDefault(t *testing.T) {
+	os.Clearenv()
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("ALLOW_ORIGIN", "*")
+
+	config, err := Read()
+	require.NoError(t, err)
+	require.Empty(t, config.WebhookURL)
+}
+
+func TestReadConfigurationWebhook(t *testing.T) {
+	os.Clearenv()
+	t.Setenv("DATABASE_TYPE", "sqlite")
+	t.Setenv("ALLOW_ORIGIN", "*")
+	t.Setenv("DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/id/token")
+
+	config, err := Read()
+	require.NoError(t, err)
+	require.Equal(t, "https://discord.com/api/webhooks/id/token", config.WebhookURL)
+}
