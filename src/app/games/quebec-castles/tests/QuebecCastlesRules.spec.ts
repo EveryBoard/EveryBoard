@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { DirectionFailure } from '../../../jscaip/Direction';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -31,6 +32,69 @@ describe('QuebecCastlesRules', () => {
     beforeEach(() => {
         // This is the rules instance that we will test
         rules = QuebecCastlesRules.get();
+    });
+
+    describe('Config validation', () => {
+
+        function expectConfigToFailWith(config: QuebecCastlesConfig, expectedError: string): void {
+            const rulesConfigDescription: RulesConfigDescription<QuebecCastlesConfig> =
+                rules.getRulesConfigDescription();
+            const validators: ((config: QuebecCastlesConfig) => MGPValidation)[] =
+                rulesConfigDescription.defaultConfigDescription.validators ?? [];
+            const errors: string[] = validators
+                .map((validator: (config: QuebecCastlesConfig) => MGPValidation) => validator(config))
+                .filter((validation: MGPValidation) => validation.isFailure())
+                .map((validation: MGPValidation) => validation.getReason());
+            expect(errors).toContain(expectedError);
+        }
+
+        it('should forbid config with too little room for invader pieces', () => {
+            // Given a config with too little room for invader pieces
+            const customConfig: QuebecCastlesConfig = {
+                ...defaultConfig,
+                invaders: 15,
+            };
+
+            // Then the global config validators should reject it
+            const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER(14, 5);
+            expectConfigToFailWith(customConfig, error);
+        });
+
+        it('should forbid config with too little room for defender pieces', () => {
+            // Given a config with too little room for defender pieces
+            const customConfig: QuebecCastlesConfig = {
+                ...defaultConfig,
+                defenders: 15,
+            };
+
+            // Then the global config validators should reject it
+            const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER(14, 5);
+            expectConfigToFailWith(customConfig, error);
+        });
+
+        it('should forbid rhombic config where territories cross the middle of the board', () => {
+            // Given a rhombic config with too many lines for territory
+            const customConfig: QuebecCastlesConfig = {
+                ...defaultConfig,
+                linesForTerritory: 8,
+            };
+
+            // Then the global config validators should reject it
+            expectConfigToFailWith(customConfig, QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY());
+        });
+
+        it('should forbid rectangular config where territories cross the middle of the board', () => {
+            // Given a rectangular config with too many lines for territory
+            const customConfig: QuebecCastlesConfig = {
+                ...defaultConfig,
+                linesForTerritory: 5,
+                isRhombic: false,
+            };
+
+            // Then the global config validators should reject it
+            expectConfigToFailWith(customConfig, QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY());
+        });
+
     });
 
     describe('Castle Placement', () => {

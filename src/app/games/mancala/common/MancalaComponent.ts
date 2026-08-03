@@ -4,6 +4,7 @@ import { ScoreName } from '../../../components/game-components/game-component/Ga
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AI, AIOptions, MoveGenerator } from '../../../jscaip/AI/AI';
 import { MCTS } from '../../../jscaip/AI/MCTS';
+import { MCTSWithHeuristic } from '../../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -13,6 +14,7 @@ import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
+import { MancalaScoreHeuristic } from './MancalaScoreHeuristic';
 import { MancalaScoreMinimax } from './MancalaScoreMinimax';
 import { MancalaState } from './MancalaState';
 
@@ -408,6 +410,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return [
             new MancalaScoreMinimax(this.rules, moveGenerator),
             new MCTS($localize`MCTS`, moveGenerator, this.rules),
+            new MCTSWithHeuristic($localize`MCTS with heuristic`, moveGenerator, this.rules, new MancalaScoreHeuristic()),
         ];
     }
 
