@@ -39,8 +39,8 @@ func TestWebhookPublishesGameLifecycle(t *testing.T) {
 	notifier.GameFinished(game)
 
 	for _, expected := range []string{
-		"🎮 **P4 game started** — Alice vs Bob (game 42)",
-		"🏁 **P4 game finished** — Alice vs Bob: ResignOfOne (game 42)",
+		"**P4 game started** — Alice vs Bob (game 42)",
+		"**P4 game finished** — Alice vs Bob: ResignOfOne (game 42)",
 	} {
 		select {
 		case req := <-requests:

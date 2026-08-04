@@ -4,7 +4,7 @@ import (
 	"net/http"
 )
 
-const Version = "1.0.3"
+const Version = "1.0.3.1"
 
 func cors(origin string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
