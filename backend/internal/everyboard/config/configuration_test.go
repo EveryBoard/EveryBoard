@@ -128,8 +128,10 @@ func TestReadConfigurationWebhook(t *testing.T) {
 	t.Setenv("DATABASE_TYPE", "sqlite")
 	t.Setenv("ALLOW_ORIGIN", "*")
 	t.Setenv("DISCORD_WEBHOOK_URL", "https://discord.com/api/webhooks/id/token")
+	t.Setenv("FRONTEND_URL", "https://everyboard.org")
 
 	config, err := Read()
 	require.NoError(t, err)
 	require.Equal(t, "https://discord.com/api/webhooks/id/token", config.WebhookURL)
+	require.Equal(t, "https://everyboard.org", config.FrontendURL)
 }

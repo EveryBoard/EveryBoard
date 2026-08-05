@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
@@ -16,7 +17,7 @@ import (
 const queueSize = 16
 
 type webhookPayload struct {
-	Content         string          `json:"content"`
+	Content string `json:"content"`
 	// Allowed mentions is a field required for discord's webhooks
 	AllowedMentions allowedMentions `json:"allowed_mentions"`
 }
@@ -26,24 +27,30 @@ type allowedMentions struct {
 }
 
 type Webhook struct {
-	client   *http.Client
-	endpoint string
-	queue    chan webhookPayload
+	client      *http.Client
+	endpoint    string
+	frontendURL string
+	queue       chan webhookPayload
 }
 
-func NewWebhook(endpoint string) (*Webhook, error) {
+func NewWebhook(endpoint string, frontendURL string) (*Webhook, error) {
 	parsed, err := url.Parse(endpoint)
 	if err != nil || (parsed.Scheme != "http" && parsed.Scheme != "https") || parsed.Host == "" {
 		return nil, fmt.Errorf("invalid webhook URL")
 	}
-	return newWebhook(&http.Client{Timeout: 5 * time.Second}, endpoint), nil
+	frontend, err := url.Parse(frontendURL)
+	if err != nil || (frontend.Scheme != "http" && frontend.Scheme != "https") || frontend.Host == "" {
+		return nil, fmt.Errorf("invalid frontend URL")
+	}
+	return newWebhook(&http.Client{Timeout: 5 * time.Second}, endpoint, frontendURL), nil
 }
 
-func newWebhook(client *http.Client, endpoint string) *Webhook {
+func newWebhook(client *http.Client, endpoint string, frontendURL string) *Webhook {
 	w := &Webhook{
-		client:   client,
-		endpoint: endpoint,
-		queue:    make(chan webhookPayload, queueSize),
+		client:      client,
+		endpoint:    endpoint,
+		frontendURL: strings.TrimRight(frontendURL, "/"),
+		queue:       make(chan webhookPayload, queueSize),
 	}
 	go w.run()
 	return w
@@ -51,16 +58,35 @@ func newWebhook(client *http.Client, endpoint string) *Webhook {
 
 func (w *Webhook) GameStarted(game model.Game) {
 	w.enqueue(webhookPayload{Content: fmt.Sprintf(
-		"**%s game started** — %s vs %s (game %d)",
-		game.GameName, game.PlayerZero.Name, game.PlayerOne.Name, game.GameID,
+		"Game started! %s vs. %s on %s. [Observe](%s)",
+		game.PlayerZero.Name, game.PlayerOne.Name, game.GameName, w.observeURL(game),
 	), AllowedMentions: allowedMentions{Parse: []string{}}})
 }
 
 func (w *Webhook) GameFinished(game model.Game) {
 	w.enqueue(webhookPayload{Content: fmt.Sprintf(
-		"**%s game finished** — %s vs %s: %s (game %d)",
-		game.GameName, game.PlayerZero.Name, game.PlayerOne.Name, game.Result, game.GameID,
+		"Game finished! %s on %s. [Observe](%s)",
+		resultSummary(game), game.GameName, w.observeURL(game),
 	), AllowedMentions: allowedMentions{Parse: []string{}}})
+}
+
+func (w *Webhook) observeURL(game model.Game) string {
+	gameID, err := model.EncodeID(game.GameID)
+	if err != nil {
+		logger.Error.Printf("cannot encode game ID for webhook notification: %v", err)
+		return w.frontendURL
+	}
+	return fmt.Sprintf("%s/play/%s/%s", w.frontendURL, url.PathEscape(game.GameName), gameID)
+}
+
+func resultSummary(game model.Game) string {
+	if game.Result.IsVictoryOfZero() {
+		return fmt.Sprintf("%s won against %s", game.PlayerZero.Name, game.PlayerOne.Name)
+	}
+	if game.Result.IsVictoryOfOne() {
+		return fmt.Sprintf("%s won against %s", game.PlayerOne.Name, game.PlayerZero.Name)
+	}
+	return fmt.Sprintf("%s and %s drew", game.PlayerZero.Name, game.PlayerOne.Name)
 }
 
 func (w *Webhook) enqueue(payload webhookPayload) {

@@ -22,6 +22,9 @@ type Handler struct {
 }
 
 func New(dependencies Dependencies) *Handler {
+	if dependencies.Notifier == nil {
+		dependencies.Notifier = notification.Noop{}
+	}
 	return &Handler{
 		firebase:      dependencies.Firebase,
 		store:         dependencies.Store,

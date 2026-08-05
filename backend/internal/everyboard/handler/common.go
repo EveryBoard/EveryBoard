@@ -33,12 +33,8 @@ func New(
 	store store.Store,
 	connections *session.ConnectionManager[*websocket.Conn],
 	subscriptions *session.SubscriptionManager[*websocket.Conn],
-	notifiers ...notification.Notifier,
+	notifier notification.Notifier,
 ) Handler {
-	notifier := notification.Notifier(notification.Noop{})
-	if len(notifiers) > 0 && notifiers[0] != nil {
-		notifier = notifiers[0]
-	}
 	return Handler{
 		connection:    connection,
 		user:          user,

@@ -27,7 +27,7 @@ func TestWebhookPublishesGameLifecycle(t *testing.T) {
 		}, nil
 	})}
 
-	notifier := newWebhook(client, "https://discord.com/api/webhooks/id/token")
+	notifier := newWebhook(client, "https://discord.com/api/webhooks/id/token", "https://everyboard.org")
 	game := model.Game{
 		GameID:     42,
 		GameName:   "P4",
@@ -39,8 +39,8 @@ func TestWebhookPublishesGameLifecycle(t *testing.T) {
 	notifier.GameFinished(game)
 
 	for _, expected := range []string{
-		"**P4 game started** — Alice vs Bob (game 42)",
-		"**P4 game finished** — Alice vs Bob: ResignOfOne (game 42)",
+		"Game started! Alice vs. Bob on P4. [Observe](https://everyboard.org/play/P4/JgaEB)",
+		"Game finished! Alice won against Bob on P4. [Observe](https://everyboard.org/play/P4/JgaEB)",
 	} {
 		select {
 		case req := <-requests:
@@ -62,6 +62,11 @@ func (f roundTripperFunc) RoundTrip(request *http.Request) (*http.Response, erro
 }
 
 func TestNewWebhookRejectsInvalidURL(t *testing.T) {
-	_, err := NewWebhook("not a URL")
+	_, err := NewWebhook("not a URL", "https://everyboard.org")
+	require.Error(t, err)
+}
+
+func TestNewWebhookRejectsInvalidFrontendURL(t *testing.T) {
+	_, err := NewWebhook("https://discord.com/api/webhooks/id/token", "not a URL")
 	require.Error(t, err)
 }

@@ -55,7 +55,7 @@ func Prepare(cfg *config.Configuration, dependencies Dependencies) (*http.Server
 		if cfg.WebhookURL == "" {
 			dependencies.Notifier = notification.Noop{}
 		} else {
-			notifier, err := notification.NewWebhook(cfg.WebhookURL)
+			notifier, err := notification.NewWebhook(cfg.WebhookURL, cfg.FrontendURL)
 			if err != nil {
 				return nil, fmt.Errorf("error initializing webhook: %v", err)
 			}

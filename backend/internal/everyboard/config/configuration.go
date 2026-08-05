@@ -14,9 +14,10 @@ type Configuration struct {
 	Firebase auth.FirebaseLike
 	Database gorm.Dialector
 
-	ListenAddr string
-	Origin     string
-	WebhookURL string
+	ListenAddr  string
+	Origin      string
+	WebhookURL  string
+	FrontendURL string
 }
 
 // Read reads server configuration from environment variables. It validates the
@@ -43,11 +44,12 @@ func Read() (*Configuration, error) {
 	}
 
 	config := &Configuration{
-		Firebase:   firebase,
-		Origin:     os.Getenv("ALLOW_ORIGIN"),
-		ListenAddr: os.Getenv("LISTEN_ADDR"),
-		Database:   database,
-		WebhookURL: os.Getenv("DISCORD_WEBHOOK_URL"),
+		Firebase:    firebase,
+		Origin:      os.Getenv("ALLOW_ORIGIN"),
+		ListenAddr:  os.Getenv("LISTEN_ADDR"),
+		Database:    database,
+		WebhookURL:  os.Getenv("DISCORD_WEBHOOK_URL"),
+		FrontendURL: os.Getenv("FRONTEND_URL"),
 	}
 	if config.ListenAddr == "" {
 		config.ListenAddr = ":8081"
