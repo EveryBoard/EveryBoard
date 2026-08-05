@@ -26,7 +26,7 @@ func postgresTestStore(t *testing.T) *GORMStore {
 	schema := fmt.Sprintf("everyboard_test_%d", time.Now().UnixNano())
 	adminDB, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	require.NoError(t, err, "cannot connect to postgres")
-	require.NoError(t, adminDB.Exec("CREATE SCHEMA " + schema).Error, "cannot create test schema")
+	require.NoError(t, adminDB.Exec("CREATE SCHEMA "+schema).Error, "cannot create test schema")
 	var database *GORMStore
 	t.Cleanup(func() {
 		if database != nil {
@@ -34,7 +34,7 @@ func postgresTestStore(t *testing.T) *GORMStore {
 			require.NoError(t, dbErr, "cannot access postgres test connection")
 			require.NoError(t, testSQLDB.Close(), "cannot close postgres test connection")
 		}
-		require.NoError(t, adminDB.Exec("DROP SCHEMA " + schema + " CASCADE").Error, "cannot drop test schema")
+		require.NoError(t, adminDB.Exec("DROP SCHEMA "+schema+" CASCADE").Error, "cannot drop test schema")
 		adminSQLDB, dbErr := adminDB.DB()
 		require.NoError(t, dbErr, "cannot access postgres admin connection")
 		require.NoError(t, adminSQLDB.Close(), "cannot close postgres admin connection")
