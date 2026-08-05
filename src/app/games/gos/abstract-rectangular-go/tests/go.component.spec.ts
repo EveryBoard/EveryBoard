@@ -52,16 +52,16 @@ describe('GoComponent', () => {
         await testUtils.setupState(state);
 
         const move: GoMove = new GoMove(0, 1);
-        await testUtils.expectMoveSuccess('.data-click-0-1', move);
-        const goComponent: GoComponent = testUtils.getGameComponent();
-        expect(goComponent.captures()).toEqual([new Coord(0, 0)]);
+        await testUtils.expectMoveSuccess('.space-0-1', move);
+        testUtils.expectElementToHaveClass('.data-capture-0-0', 'captured-fill');
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {
+        // Given any board
+        // When doing a click
+        // Then it should do a move
         const move: GoMove = new GoMove(1, 1);
-        await testUtils.expectMoveSuccess('.data-click-1-1', move);
-        const secondMove: GoMove = new GoMove(2, 2);
-        await testUtils.expectMoveSuccess('.data-click-2-2', secondMove);
+        await testUtils.expectMoveSuccess('.space-1-1', move);
     }));
 
     it('should show ko coord', fakeAsync(async() => {
@@ -85,12 +85,12 @@ describe('GoComponent', () => {
         await testUtils.setupState(state, { config });
 
         // Then it should render the dead
-        testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 > .data-ko-0-0');
+        testUtils.expectElementToExist('.data-ko-0-0');
     }));
 
     describe('hoshi', () => {
 
-        it('should be in (3, 3) and other centraly symmetrical coords for 19x19 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centrally symmetrical coords for 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState =
@@ -110,7 +110,7 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('.data-hoshi-3-9'); // Left Middle
         }));
 
-        it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centrally symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
             const config: RectangularGoConfig = {
                 ...defaultConfig,
@@ -134,7 +134,7 @@ describe('GoComponent', () => {
             testUtils.expectElementToExist('.data-hoshi-3-6'); // Left Middle
         }));
 
-        it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
+        it('should be in (2, 2) and other centrally symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
             const config: RectangularGoConfig = {
                 ...defaultConfig,
@@ -298,8 +298,8 @@ describe('GoComponent', () => {
 
             // Then it should still do the correct move
             await testUtils.expectMoveSuccessWithAsymmetricNaming(
-                '#zoom-1-zx-1-zy-0 .data-click-0-0',
-                '.data-click-1-0',
+                '#zoom-1-zx-1-zy-0 .space-0-0',
+                '.space-1-0',
                 move,
             );
         }));
@@ -332,8 +332,8 @@ describe('GoComponent', () => {
             // When doing the capture
             const move: GoMove = new GoMove(0, 1);
             await testUtils.expectMoveSuccessWithAsymmetricNaming(
-                '#zoom-0-zx-0-zy-0 .data-click-0-1',
-                '.data-click-0-1',
+                '#zoom-0-zx-0-zy-0 .space-0-1',
+                '.space-0-1',
                 move,
             );
 

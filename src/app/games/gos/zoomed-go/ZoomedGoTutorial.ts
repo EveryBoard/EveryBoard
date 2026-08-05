@@ -9,6 +9,7 @@ import { GoState } from '../GoState';
 import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
 import { ZoomedGoRules } from './ZoomedGoRules';
+import { TutorialStepMessage } from 'dist/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 
 const X: GoPiece = GoPiece.LIGHT;
@@ -31,103 +32,9 @@ const zoom2Hidden: RectangularGoConfig = {
 
 export class ZoomedGoTutorial extends Tutorial {
 
-    // 1. Le go en couche est une version du Go augmentée
-    // 2. voyez cet atari standard, toutes les pièces qui entourent Foncé sont à une distance de 1
-    // 3. voyez maintenant ce plateau,
-    //    c'est l'équivalent du précédent avec des pièces qui entourent Foncé à une distance de 2,
-    //    ceci est un atari sur la deuxième couche!
-    // 4. même pattern,
-    //    même si cette pièce n'est pas dans les coins,
-    //    elle n'as aucune case à une distance de 3 vers le haut ni à une distance de 3 vers la droite,
-    //    cette pièce est donc dans le coin en haut à droite dans la troisième couche
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
-            $localize`Preliminary information`,
-            $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call zoom`,
-            ZoomedGoRules.get().getInitialState(defaultConfig),
-            MGPOptional.of(defaultConfig),
-        ),
-        TutorialStep.informational(
-            $localize`Why are there multiple boards?`,
-            $localize`In Zoomed Go, the different boards are only visual aids.<br/><br/>There is only one real game board and one move to play each turn.<br/><br/>The additional boards simply help visualize interactions at different distances.<br/>The largest board (zoom 1) shows the real board.<br/>The other boards show the different layers.<br/>For example, the middle boards show interactions at a distance of 2, and the small boards show interactions at a distance of 3. The zoom level can be configured for extra challenges. A level of 2 is already challenging.<br/>Every move is played on the same intersection on all boards at once. The extra boards do not add new pieces or new decisions, they only help understand the extended liberties.`,
-            ZoomedGoRules.get().getInitialState(defaultConfig),
-            MGPOptional.of(defaultConfig),
-        ),
-        TutorialStep.fromMove(
-            $localize`Simple capture`,
-            $localize`At zoomed go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.<br/><br/>You are playing Dark. Do a capture.`,
-            new GoState([
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, O, _, X, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-                [_, _, _, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
-            [new GoMove(5, 3)],
-            $localize`Congratulations, you have earned one point.`,
-            $localize`Failed, try again by playing on one of the intersections directly next to the light stone.`,
-            MGPOptional.of(defaultConfig),
-        ),
-        TutorialStep.informational(
-            $localize`End of the game`,
-            $localize`The end of the game works exactly like in regular Go.<br/><br/>
-            When both players pass consecutively, the game ends and territory is counted as usual.<br/><br/>
-            The only difference in Zoomed Go is how stones connect and how liberties are counted during play.`,
-            ZoomedGoRules.get().getInitialState(defaultConfig),
-            MGPOptional.of(defaultConfig),
-        ),
-        TutorialStep.informational(
-            $localize`Distance-2 capture`,
-            $localize`Here, the light stones are not directly adjacent to the dark stone. However, because the game is played with zoom level 2, the three dark stones can still remove liberties from the light stone. The light stone has only one liberty left and is therefore capturable.`,
-            new GoState([
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, O, _, X, _, _, _],
-                [_, _, _, _, _, _, _],
-                [_, _, _, O, _, _, _],
-                [_, _, _, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
-            MGPOptional.of(defaultConfig),
-        ),
-        TutorialStep.fromMove(
-            $localize`Capture at distance 2`,
-            $localize`You're playing Light. In this variant, the dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.`,
-            new GoState([
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, X, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, X, _, O, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, X, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING),
-            [new GoMove(5, 3)],
-            $localize`Congratulations, the dark stone has been captured from a distance.`,
-            $localize`Failed, try again by playing on the last liberty of the dark stone.`,
-            MGPOptional.of(defaultConfig),
-        ),
-        TutorialStep.informational(
-            $localize`Extended eyes`,
-            $localize`Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable at zoomed go.`,
-            new GoState([
-                [_, _, X, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [X, _, X, _, X, _, X, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, X, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
-            MGPOptional.of(defaultConfig),
-        ),
-        // The other proposal
-        TutorialStep.informational(
-            $localize`Example Tutorial: Zoomed Go`,
+            TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
             $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain by the example the difference with normal Go.`,
             ZoomedGoRules.get().getInitialState(defaultConfig),
             MGPOptional.of(defaultConfig),

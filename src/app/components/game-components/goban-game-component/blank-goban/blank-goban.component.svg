@@ -24,7 +24,7 @@
     @for (line of ArrayUtils.range(height()); track $index; let y = $index) {
         <svg:g>
             @for (spaceContent of ArrayUtils.range(width()); track spaceContent; let x = $index) {
-                <svg:rect class="data-click-{{ x }}-{{ y }}"
+                <svg:rect class="space-{{ x }}-{{ y }}"
                           (mouseenter)="onMouseEnter(x, y)"
                           (click)="onClick(x, y)"
                           [attr.width]="SPACE_SIZE"

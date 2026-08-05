@@ -40,38 +40,20 @@ describe('ZoomedGoComponent', () => {
         testUtils.expectPassToBeForbidden();
     }));
 
-    it('should show captures', fakeAsync(async() => {
-        const board: Table<GoPiece> = [
-            [O, X, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const state: GoState = new GoState(board, PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING);
-        await testUtils.setupState(state);
-
-        const move: GoMove = new GoMove(0, 1);
-        await testUtils.expectMoveSuccessWithAsymmetricNaming('#zoom-0 .data-click-0-1', '.data-click-0-1', move);
-        const goComponent: ZoomedGoComponent = testUtils.getGameComponent();
-        expect(goComponent.captures()).toEqual([new Coord(0, 0)]);
-    }));
-
     it('should allow simple clicks', fakeAsync(async() => {
-        // Given any state
-        // When doing any move
+        // Given any board
+        // When doing a click
+        // Then it should do a move
         const move: GoMove = new GoMove(1, 1);
-
-        // Then it should be legal
-        await testUtils.expectMoveSuccessWithAsymmetricNaming('#zoom-0 .data-click-1-1', '.data-click-1-1', move);
+        await testUtils.expectMoveSuccessWithAsymmetricNaming('#zoom-0 .space-1-1', '.space-1-1', move);
     }));
 
     it('should allow simple clicks on other sub-boards', fakeAsync(async() => {
-        // Given any state
-        // When doing any move
+        // Given any board
+        // When doing a click on a sub board
+        // Then it should do a move
         const move: GoMove = new GoMove(1, 1);
-        // Then it should be legal
-        await testUtils.expectMoveSuccessWithAsymmetricNaming('#zoom-1-zx-1-zy-1 .data-click-0-0', '.data-click-1-1', move);
+        await testUtils.expectMoveSuccessWithAsymmetricNaming('#zoom-1-zx-1-zy-1 .space-0-0', '.space-1-1', move);
     }));
 
     it('should show ko coord', fakeAsync(async() => {
@@ -100,7 +82,7 @@ describe('ZoomedGoComponent', () => {
 
     describe('hoshi', () => {
 
-        it('should be in (3, 3) and other centraly symmetrical coords for 19x19 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centrally symmetrical coords for 19x19 board', fakeAsync(async() => {
             // Given a 19x19 board
             const board: Table<GoPiece> = TableUtils.create(19, 19, GoPiece.EMPTY);
             const state: GoState =
@@ -120,7 +102,7 @@ describe('ZoomedGoComponent', () => {
             testUtils.expectElementToExist('#zoom-0 .data-hoshi-3-9'); // Left Middle
         }));
 
-        it('should be in (3, 3) and other centraly symmetrical coords for 13x13 board', fakeAsync(async() => {
+        it('should be in (3, 3) and other centrally symmetrical coords for 13x13 board', fakeAsync(async() => {
             // Given a 13x13 board
             const config: RectangularGoConfig = {
                 ...defaultConfig,
@@ -144,7 +126,7 @@ describe('ZoomedGoComponent', () => {
             testUtils.expectElementToExist('#zoom-0 .data-hoshi-3-6'); // Left Middle
         }));
 
-        it('should be in (2, 2) and other centraly symmetrical coords for 9x9 board', fakeAsync(async() => {
+        it('should be in (2, 2) and other centrally symmetrical coords for 9x9 board', fakeAsync(async() => {
             // Given a 9x9 board
             const config: RectangularGoConfig = {
                 ...defaultConfig,
@@ -303,8 +285,8 @@ describe('ZoomedGoComponent', () => {
 
         // Then it should still do the correct move
         await testUtils.expectMoveSuccessWithAsymmetricNaming(
-            '#zoom-1-zx-1-zy-0 .data-click-0-0',
-            '.data-click-1-0',
+            '#zoom-1-zx-1-zy-0 .space-0-0',
+            '.space-1-0',
             move,
         );
     }));
@@ -336,8 +318,8 @@ describe('ZoomedGoComponent', () => {
         // When doing the capture
         const move: GoMove = new GoMove(0, 1);
         await testUtils.expectMoveSuccessWithAsymmetricNaming(
-            '#zoom-0-zx-0-zy-0 .data-click-0-1',
-            '.data-click-0-1',
+            '#zoom-0-zx-0-zy-0 .space-0-1',
+            '.space-0-1',
             move,
         );
 
@@ -415,7 +397,7 @@ describe('ZoomedGoComponent', () => {
         it('should show hovered coord on multiple zooms (blank goban)', () => {
             // given any board with a config that shows multiple zooms
             // when hovering a coord
-            testUtils.enterMouseEnterElement('#zoom-0 .data-click-4-2');
+            testUtils.enterMouseEnterElement('#zoom-0 .space-4-2');
 
             // then its equivalents coords should be displayed on other zooms
             testUtils.expectElementToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');

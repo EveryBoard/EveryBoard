@@ -75,7 +75,7 @@ export abstract class AbstractRectangularGoComponent
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('.data-click-' + x + '-' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('.space-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
