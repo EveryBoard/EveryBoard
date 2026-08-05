@@ -5,11 +5,24 @@ import { Coord } from '../../../jscaip/Coord';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
+import { TaflMove } from '../TaflMove';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflPawn } from '../TaflPawn';
-import { TaflPieceAndInfluenceMinimax } from '../TaflPieceAndInfluenceMinimax';
+import { TaflPieceAndInfluenceHeuristic } from '../TaflPieceAndInfluenceHeuristic';
+import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { TablutMove } from '../tablut/TablutMove';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
+
+class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
+    public constructor(rules: TaflRules<M>) {
+        super('Pieces > Influence',
+              rules,
+              new TaflPieceAndInfluenceHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
+    }
+}
 
 describe('TaflPieceAndInfluenceMinimax', () => {
 

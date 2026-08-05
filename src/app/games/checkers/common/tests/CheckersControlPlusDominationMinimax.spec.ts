@@ -1,10 +1,24 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
-import { CheckersControlPlusDominationMinimax } from '../CheckersControlPlusDominationMinimax';
+import { CheckersControlPlusDominationHeuristic } from '../CheckersControlPlusDominationHeuristic';
+import { CheckersMove } from '../CheckersMove';
+import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
+import { CheckersState } from '../CheckersState';
+
+class CheckersControlPlusDominationMinimax extends Minimax<CheckersMove, CheckersState, CheckersConfig> {
+    public constructor(rules: AbstractCheckersRules) {
+        super('Control and Domination',
+              rules,
+              new CheckersControlPlusDominationHeuristic(rules),
+              new CheckersMoveGenerator(rules),
+        );
+    }
+}
 
 const rules: AbstractCheckersRules[] = [
     InternationalCheckersRules.get(),

@@ -1,9 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { TrexoAlignmentMinimax } from '../TrexoAlignmentMinimax';
+import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
+import { TrexoMove } from '../TrexoMove';
+import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoRules } from '../TrexoRules';
+import { TrexoState } from '../TrexoState';
+
+class TrexoAlignmentMinimax extends Minimax<TrexoMove, TrexoState> {
+    public constructor() {
+        super('Alignment',
+              TrexoRules.get(),
+              new TrexoAlignmentHeuristic(),
+              new TrexoMoveGenerator());
+    }
+}
 
 describe('TrexoAlignmentMinimax', () => {
 

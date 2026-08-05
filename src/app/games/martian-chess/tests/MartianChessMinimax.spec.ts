@@ -1,9 +1,21 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { MartianChessMove } from '../MartianChessMove';
+import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
 import { MartianChessRules } from '../MartianChessRules';
-import { MartianChessScoreMinimax } from '../MartianChessScoreMinimax';
+import { MartianChessMoveResult } from '../MartianChessRules';
+import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
+import { MartianChessState } from '../MartianChessState';
+
+class MartianChessScoreMinimax
+    extends Minimax<MartianChessMove, MartianChessState, EmptyRulesConfig, MartianChessMoveResult> {
+    public constructor() {
+        super('Score', MartianChessRules.get(), new MartianChessScoreHeuristic(), new MartianChessMoveGenerator());
+    }
+}
 
 describe('MartianChessScoreMinimax', () => {
 

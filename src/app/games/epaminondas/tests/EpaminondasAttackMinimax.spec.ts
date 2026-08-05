@@ -5,14 +5,27 @@ import { Ordinal } from '../../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { EpaminondasAttackMinimax } from '../EpaminondasAttackMinimax';
+import { EpaminondasAttackHeuristic } from '../EpaminondasAttackHeuristic';
 import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasState } from '../EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+
+class EpaminondasAttackMinimax
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
+{
+    public constructor() {
+        super('Attack',
+              EpaminondasRules.get(),
+              new EpaminondasAttackHeuristic(),
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
+    }
+}
 
 describe('EpaminondasAttackMinimax', () => {
 

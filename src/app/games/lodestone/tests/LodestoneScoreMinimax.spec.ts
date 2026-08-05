@@ -1,9 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { LodestoneMove } from '../LodestoneMove';
+import { LodestoneMoveGenerator } from '../LodestoneMoveGenerator';
 import { LodestoneRules } from '../LodestoneRules';
-import { LodestoneScoreMinimax } from '../LodestoneScoreMinimax';
+import { LodestoneInfos } from '../LodestoneRules';
+import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
+import { LodestoneState } from '../LodestoneState';
+
+class LodestoneScoreMinimax extends Minimax<LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos> {
+    public constructor() {
+        super('Score', LodestoneRules.get(), new LodestoneScoreHeuristic(), new LodestoneMoveGenerator());
+    }
+}
 
 describe('LodestoneScoreMinimax', () => {
 

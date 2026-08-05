@@ -1,4 +1,4 @@
-import { PlayerMetricHeuristic } from '../../../jscaip/AI/Minimax';
+import { PlayerMetricHeuristic } from '../../../jscaip/AI/PlayerMetricHeuristic';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { Player } from '../../../jscaip/Player';

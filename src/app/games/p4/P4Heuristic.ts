@@ -1,5 +1,5 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { HeuristicBounds, HeuristicWithBounds } from '../../jscaip/AI/Minimax';
+import { HeuristicBounds, HeuristicWithBounds } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
 
 import { P4Move } from './P4Move';

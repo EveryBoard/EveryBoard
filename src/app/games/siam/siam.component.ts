@@ -5,7 +5,6 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { Orthogonal } from '../../jscaip/Orthogonal';
@@ -14,7 +13,7 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Debug } from '../../utils/Debug';
 
 import { SiamFailure } from './SiamFailure';
-import { SiamMinimax } from './SiamMinimax';
+import { SiamHeuristic } from './SiamHeuristic';
 import { SiamMove } from './SiamMove';
 import { SiamMoveGenerator } from './SiamMoveGenerator';
 import { SiamPiece } from './SiamPiece';
@@ -57,10 +56,19 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     public constructor() {
         super();
         this.setRulesAndNode('Siam');
-        this.availableAIs = [
-            new SiamMinimax(),
-            new MCTS($localize`MCTS`, new SiamMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Distance',
+                name: $localize`Distance`,
+                heuristic: (): SiamHeuristic => new SiamHeuristic(),
+                moveGenerator: (): SiamMoveGenerator => new SiamMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): SiamMoveGenerator => new SiamMoveGenerator(),
+            }],
+        };
         this.encoder = SiamMove.encoder;
     }
 
