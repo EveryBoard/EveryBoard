@@ -529,6 +529,18 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(rotation).toBe('rotate(0)');
         }));
 
+        it('should not let a previously selected AI play after changing it to human', fakeAsync(async() => {
+            // Given an AI whose move has been scheduled
+            selectAIPlayer(Player.ZERO);
+
+            // When changing that player to human before the AI timeout expires
+            chooseAIOrHuman(Player.ZERO, 'human');
+            tick(LocalGameWrapperComponent.AI_TIMEOUT);
+
+            // Then the stale AI callback should not play a move
+            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+        }));
+
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             wrapper.players[0] = MGPOptional.of('minimax');
