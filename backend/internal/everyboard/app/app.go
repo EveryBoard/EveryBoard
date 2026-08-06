@@ -57,5 +57,5 @@ func Prepare(cfg *config.Configuration, dependencies Dependencies) (*http.Server
 		Connections:   dependencies.Connections,
 		Origin:        cfg.Origin,
 	})
-	return server.New(cfg.ListenAddr, cfg.Origin, websocketHandler), nil
+	return server.New(cfg.ListenAddr, cfg.Origin, websocketHandler, dependencies.Store), nil
 }

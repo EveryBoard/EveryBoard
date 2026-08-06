@@ -86,7 +86,7 @@ func PrepareServer(t *testing.T) (func(), *FakeStore, *TestServer) {
 	listener, err := net.Listen("tcp", "127.0.0.1:0")
 	require.NoError(t, err, "cannot listen on test server address")
 
-	httpServer := httptest.NewUnstartedServer(server.New("127.0.0.1:0", "*", websocketHandler).Handler)
+	httpServer := httptest.NewUnstartedServer(server.New("127.0.0.1:0", "*", websocketHandler, fakeStore).Handler)
 	httpServer.Listener = listener
 	httpServer.Start()
 	testServerAddr = strings.TrimPrefix(httpServer.URL, "http://")

@@ -20,6 +20,7 @@ type ConfigRoomStore interface {
 }
 
 type GameStore interface {
+	ListGames() ([]model.Game, error)
 	GetGame(gameId model.GameID) (*model.Game, error)
 	CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error)
 	SetGameResult(game *model.Game, result model.Result) error
