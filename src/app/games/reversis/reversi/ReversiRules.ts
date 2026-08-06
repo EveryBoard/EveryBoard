@@ -20,11 +20,7 @@ export class ReversiRules extends AbstractReversiRules {
 
     public static get(): ReversiRules {
         if (ReversiRules.singleton.isAbsent()) {
-            ReversiRules.singleton = MGPOptional.of(
-                new ReversiRules(
-                    new RectangularBoard(),
-                ),
-            );
+            ReversiRules.singleton = MGPOptional.of(new ReversiRules(new RectangularBoard()));
         }
         return ReversiRules.singleton.get();
     }

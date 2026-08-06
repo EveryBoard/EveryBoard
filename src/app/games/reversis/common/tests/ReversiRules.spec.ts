@@ -229,7 +229,7 @@ describe('ReversiRules', () => {
                 ];
                 const state: ReversiState = new ReversiState(board, 1);
 
-                // When doing a move that capture piece across the board
+                // When doing a move that captures pieces across the board
                 const move: ReversiMove = new ReversiMove(0, 3);
 
                 // Then the move should succeed
@@ -261,7 +261,7 @@ describe('ReversiRules', () => {
                 ];
                 const state: ReversiState = new ReversiState(board, 2);
 
-                // When doing a move that capture piece across the board
+                // When doing a move that captures pieces across the board
                 const move: ReversiMove = new ReversiMove(4, 0);
 
                 // Then the move should succeed

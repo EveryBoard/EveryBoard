@@ -20,11 +20,7 @@ export class ToricReversiRules extends AbstractReversiRules {
 
     public static get(): ToricReversiRules {
         if (ToricReversiRules.singleton.isAbsent()) {
-            ToricReversiRules.singleton = MGPOptional.of(
-                new ToricReversiRules(
-                    new ToricBoard(),
-                ),
-            );
+            ToricReversiRules.singleton = MGPOptional.of(new ToricReversiRules(new ToricBoard()));
         }
         return ToricReversiRules.singleton.get();
     }
