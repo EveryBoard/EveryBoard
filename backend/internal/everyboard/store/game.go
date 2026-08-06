@@ -19,6 +19,14 @@ func (s *GORMStore) GetGame(gameId model.GameID) (*model.Game, error) {
 	return &game, wrapError("GetGame", result.Error)
 }
 
+// ListGames returns all persisted games, with the most recently started games
+// first. GameID provides a stable ordering for games started at the same time.
+func (s *GORMStore) ListGames() ([]model.Game, error) {
+	var games []model.Game
+	result := s.db.Order("beginning DESC").Order("game_id DESC").Find(&games)
+	return games, wrapError("ListGames", result.Error)
+}
+
 func (s *GORMStore) CreateGame(configRoom *model.ConfigRoom, now int64, randBool bool) (*model.Game, error) {
 	if configRoom.ChosenOpponent == nil {
 		return nil, fmt.Errorf("cannot create a game if a config room has no opponent")

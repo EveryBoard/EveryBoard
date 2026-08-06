@@ -210,3 +210,28 @@ func TestUnexistingGame(t *testing.T) {
 	require.NoError(t, err, "cannot get missing game")
 	require.Nil(t, game, "getting unexisting game has retrieved something")
 }
+
+func TestListGamesNewestFirst(t *testing.T) {
+	// Given a database with two games created at different times
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+
+	players := []model.MinimalUser{{ID: "foo", Name: "foo"}, {ID: "bar", Name: "bar"}}
+	for _, beginning := range []int64{10, 20} {
+		configRoom, createErr := store.CreateConfigRoom(players[0], "P4")
+		require.NoError(t, createErr, "cannot create config room")
+		require.NoError(t, store.AddCandidate(configRoom, players[1], 0), "cannot add candidate")
+		require.NoError(t, store.SelectOpponent(configRoom, players[1]), "cannot select opponent")
+		_, createErr = store.CreateGame(configRoom, beginning, true)
+		require.NoError(t, createErr, "cannot create game")
+	}
+
+	// When listing the games
+	games, err := store.ListGames()
+
+	// Then the newest game should be listed first
+	require.NoError(t, err, "cannot list games")
+	require.Len(t, games, 2, "invalid number of games")
+	assert.Equal(t, int64(20), games[0].Beginning, "newest game should be first")
+	assert.Equal(t, int64(10), games[1].Beginning, "oldest game should be last")
+}
