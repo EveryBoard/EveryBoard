@@ -13,7 +13,7 @@ import { BrandhubRules } from '../brandhub/BrandhubRules';
 import { HnefataflRules } from '../hnefatafl/HnefataflRules';
 import { TablutRules } from '../tablut/TablutRules';
 
-describe('TaflEscapeThenPieceThenControlMinimax', () => {
+describe('Tafl escape/piece/control heuristic', () => {
 
     let heuristic: TaflEscapeThenPieceThenControlHeuristic<BrandhubMove>;
     let defaultConfig: TaflConfig;

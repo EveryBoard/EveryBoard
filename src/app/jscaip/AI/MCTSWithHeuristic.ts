@@ -10,8 +10,8 @@ import { GameState } from '../state/GameState';
 import { MoveGenerator } from './AI';
 import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
+import { HeuristicBounds, HeuristicWithBounds } from './Heuristic';
 import { MCTS } from './MCTS';
-import { HeuristicWithBounds, HeuristicBounds } from './Minimax';
 
 /**
  * Like MCTS, but uses a heuristic function to evaluate non-terminated states.

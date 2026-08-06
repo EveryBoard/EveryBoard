@@ -17,7 +17,7 @@ export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflM
     public constructor() {
         super(HnefataflMove.from);
         this.setRulesAndNode('Hnefatafl');
-        this.availableAIs = this.createAIs();
+        this.aiConfig = this.createAIConfig();
         this.encoder = HnefataflMove.encoder;
     }
 }

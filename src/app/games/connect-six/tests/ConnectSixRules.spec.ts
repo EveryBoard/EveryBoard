@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from '@everyboard/lib/testing';
 
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
@@ -27,6 +29,22 @@ describe('ConnectSixRules', () => {
 
     beforeEach(() => {
         rules = ConnectSixRules.get();
+    });
+
+    it('should score occupied squares in alignment heuristic', () => {
+        // Given a state with pieces to evaluate
+        const state: ConnectSixState = new ConnectSixState([
+            [O, _, _],
+            [_, X, _],
+            [_, _, _],
+        ], 2);
+        const heuristic: ConnectSixAlignmentHeuristic = new ConnectSixAlignmentHeuristic();
+
+        // When evaluating it
+        const value: BoardValue = heuristic.getBoardValue(new ConnectSixNode(state), { width: 3, height: 3 });
+
+        // Then the heuristic should inspect occupied squares
+        expect(value.metrics.length).toBe(1);
     });
 
     describe('first turn', () => {

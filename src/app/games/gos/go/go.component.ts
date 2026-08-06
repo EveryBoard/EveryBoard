@@ -6,7 +6,6 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -17,7 +16,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { GoMinimax } from './GoMinimax';
+import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
 
@@ -49,13 +48,34 @@ export class GoComponent extends GobanGameComponent<GoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Go');
-        this.availableAIs = [
-            new GoMinimax(),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'territory',
+                name: $localize`Territory`,
+                heuristic: (): GoHeuristic => new GoHeuristic(),
+                moveGenerator: (): GoMoveGenerator => new GoMoveGenerator(),
+                hash: GoComponent.hash,
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): GoMoveGenerator => new GoMoveGenerator(),
+            }],
+        };
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    private static hash(state: GoState): string {
+        let board: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                board += cell.toString();
+            }
+            board += '\n';
+        }
+        return `${state.turn % 2}-${state.phase.toString()}-${board}-${JSON.stringify(state.koCoord)}-${JSON.stringify(state.captured)}`;
     }
 
     public override async showLastMove(move: GoMove): Promise<void> {

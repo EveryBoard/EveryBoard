@@ -10,6 +10,17 @@ export class GoPhase {
     private constructor() {
     }
 
+    public toString(): string {
+        switch (this) {
+            case GoPhase.PLAYING: return 'PLAYING';
+            case GoPhase.PASSED: return 'PASSED';
+            case GoPhase.COUNTING: return 'COUNTING';
+            case GoPhase.ACCEPT: return 'ACCEPT';
+            case GoPhase.FINISHED: return 'FINISHED';
+        }
+        return '';
+    }
+
     public isPlaying(): boolean {
         return this === GoPhase.PLAYING;
     }

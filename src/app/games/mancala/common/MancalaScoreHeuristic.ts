@@ -1,5 +1,6 @@
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { HeuristicBounds, PlayerMetricHeuristicWithBounds } from '../../../jscaip/AI/Minimax';
+import { HeuristicBounds } from '../../../jscaip/AI/Heuristic';
+import { PlayerMetricHeuristicWithBounds } from '../../../jscaip/AI/Minimax';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
 
 import { MancalaConfig } from './MancalaConfig';

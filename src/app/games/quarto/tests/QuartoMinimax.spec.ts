@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { QuartoMinimax } from '../QuartoMinimax';
+import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoMove } from '../QuartoMove';
+import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
@@ -14,6 +16,13 @@ const AAAA: QuartoPiece = QuartoPiece.AAAA;
 const AAAB: QuartoPiece = QuartoPiece.AAAB;
 const AABA: QuartoPiece = QuartoPiece.AABA;
 const ABBB: QuartoPiece = QuartoPiece.ABBB;
+
+class QuartoMinimax extends Minimax<QuartoMove, QuartoState, QuartoConfig> {
+    public constructor() {
+        super('Minimax', QuartoRules.get(), new QuartoHeuristic(), new QuartoMoveGenerator());
+    }
+
+}
 
 describe('QuartoMinimax', () => {
 

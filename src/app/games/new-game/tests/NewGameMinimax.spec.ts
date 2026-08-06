@@ -2,15 +2,29 @@ import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { NewGameMinimax } from '../NewGameMinimax';
+import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameMove } from '../NewGameMove';
+import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
 import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
 
 /**
  * These are the tests for the minimax.
  * We want to test that it selects a certain move on a specific board.
+ * Note that most minimax tests should actually be heuristic tests, so use these tests sparingly.
  */
+
+class NewGameMinimax extends Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
+
+    public constructor() {
+        super('Dummy',
+              NewGameRules.get(),
+              new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
+              new NewGameMoveGenerator(),
+        );
+    }
+}
+
 describe('NewGameMinimax', () => {
 
     let minimax: Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo>;

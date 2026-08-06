@@ -15,7 +15,7 @@
                       [attr.height]="SPACE_SIZE"
                       [ngClass]="getSquareClasses(coordAndContent.coord)"
                       class="base"/>
-                @for (player of Player.PLAYERS; track player) {
+                @for (player of Player.PLAYERS; track player.getValue()) {
                     <ng-container>
                         @if (isPlayerCastle(player, coordAndContent.coord)) {
                             <g id="castle-{{ player.toString() }}-{{ getState().castles.get(player).get().x }}-{{ getState().castles.get(player).get().y }}"

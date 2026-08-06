@@ -1,8 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { CoerceoPiecesTilesFreedomMinimax } from '../CoerceoPiecesTilesFreedomMinimax';
+import { CoerceoMove } from '../CoerceoMove';
+import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
+import { CoerceoPiecesTilesFreedomHeuristic } from '../CoerceoPiecesTilesFreedomHeuristic';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
+import { CoerceoState } from '../CoerceoState';
+
+class CoerceoPiecesTilesFreedomMinimax extends Minimax<CoerceoMove, CoerceoState, CoerceoConfig> {
+    public constructor() {
+        super('Pieces > Tiles > Freedom', CoerceoRules.get(), new CoerceoPiecesTilesFreedomHeuristic(), new CoerceoOrderedMoveGenerator());
+    }
+}
 
 describe('CoerceoPiecesTilesFreedomMinimax', () => {
 
