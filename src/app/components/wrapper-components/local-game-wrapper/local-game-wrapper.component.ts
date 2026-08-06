@@ -5,9 +5,13 @@ import { ParamMap } from '@angular/router';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
-import { AIOptions, AIStats, AbstractAI } from '../../../jscaip/AI/AI';
+import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
+import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
+import { AIInstanceRegistry, PlayerSelection, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
 import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
+import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
 import { MCTS } from '../../../jscaip/AI/MCTS';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -21,6 +25,11 @@ import { ViewConfigComponent } from '../../normal-component/view-config/view-con
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
+type AIChoice = {
+    id: string,
+    name: string,
+}
+
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
@@ -31,11 +40,15 @@ import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescri
 export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
+    private readonly aiInstances: AIInstanceRegistry = new AIInstanceRegistry();
+
     public static readonly AI_TIMEOUT: number = 1500;
+
+    public aiProfiles: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
 
     public aiOptions: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
 
-    public playerSelection: PlayerMap<string> = PlayerMap.ofValues('human', 'human');
+    public playerSelection: PlayerMap<PlayerSelection> = PlayerMap.ofValues('human', 'human');
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
@@ -53,8 +66,24 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return GameNodeStats.createdNodes;
     }
 
-    public getMinimaxTime(): number {
-        return AIStats.aiTime;
+    public getMinimaxTimes(): string {
+        return Array.from(AIStats.aiTime.entries())
+            .map(([key, value]: [string, number]) => `${key}: ${value.toFixed(0)}ms`)
+            .join(',');
+    }
+
+    public getAIInfoLines(): string[] {
+        const config: RulesConfig = this.getConfig();
+        return [
+            ...this.getMinimaxConfigs().map((minimaxConfig: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                const ai: Minimax<Move, GameState, RulesConfig, unknown> = this.createMinimax(minimaxConfig);
+                return `${ai.name}: ${ai.getInfo(this.gameComponent.node, config)}`;
+            }),
+            ...this.getMCTSConfigs().map((mctsConfig: MCTSConfig<Move, GameState, RulesConfig>) => {
+                const ai: MCTS<Move, GameState, RulesConfig, unknown> = this.createMCTS(mctsConfig);
+                return `${ai.name}: ${ai.getInfo(this.gameComponent.node)}`;
+            }),
+        ];
     }
 
     public async ngAfterViewInit(): Promise<void> {
@@ -149,8 +178,17 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.playerSelection.get(player);
     }
 
-    public async onPlayerSelectionChange(player: Player, value: string): Promise<void> {
+    public async onPlayerSelectionChange(player: Player, value: PlayerSelection): Promise<void> {
         this.playerSelection.put(player, value);
+        await this.updatePlayer(player);
+    }
+
+    public getAIProfile(player: Player): string {
+        return this.aiProfiles.get(player);
+    }
+
+    public async onAIProfileChange(player: Player, value: string): Promise<void> {
+        this.aiProfiles.put(player, value);
         await this.updatePlayer(player);
     }
 
@@ -164,6 +202,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async updatePlayer(player: Player): Promise<void> {
+        this.resetInvalidAISelection(player);
         this.players.put(player, MGPOptional.of(this.playerSelection.get(player)));
         const playerZeroIsHuman: boolean = this.playerSelection.get(Player.ZERO) === 'human';
         const playerOneIsHuman: boolean = this.playerSelection.get(Player.ONE) === 'human';
@@ -178,6 +217,37 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             await this.setRole(Player.ZERO);
         }
         await this.proposeAIToPlay();
+    }
+
+    private resetInvalidAISelection(player: Player): void {
+        if (this.playerSelection.get(player) === 'human') {
+            this.aiProfiles.put(player, 'none');
+            this.aiOptions.put(player, 'none');
+            return;
+        }
+        if (this.mustSelectAIProfile(player) === false) {
+            this.aiProfiles.put(player, this.availableAIProfiles(player)[0]?.id ?? 'none');
+        }
+        const profileExists: boolean = this.availableAIProfiles(player).some((profile: AIChoice) => {
+            return profile.id === this.aiProfiles.get(player);
+        });
+        if (profileExists === false) {
+            this.aiProfiles.put(player, 'none');
+            this.aiOptions.put(player, 'none');
+        } else if (this.availableAIOptions(player).some((option: AIOptions) => {
+            return option.name === this.aiOptions.get(player);
+        }) === false) {
+            this.aiOptions.put(player, 'none');
+        }
+    }
+
+    public mustSelectAIProfile(player: Player): boolean {
+        return this.playerSelection.get(player) !== 'human' &&
+               (this.playerSelection.get(player) !== 'mcts' || this.availableAIProfiles(player).length > 1);
+    }
+
+    public isAIProfileSelected(player: Player): boolean {
+        return this.mustSelectAIProfile(player) === false || this.aiProfiles.get(player) !== 'none';
     }
 
     public override async onLegalUserMove(move: Move): Promise<void> {
@@ -206,12 +276,22 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                     if (this.players.get(loser).equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.players.get(gameStatus.winner).get()} (Player ${gameStatus.winner.getValue() + 1}) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.getPlayerName(gameStatus.winner)} (Player ${gameStatus.winner.getValue() + 1}) won`);
                     }
                 }
             }
         }
         this.cdr.detectChanges();
+    }
+
+    private getPlayerName(player: Player): string {
+        if (this.playerSelection.get(player) === 'human') {
+            return $localize`Human`;
+        }
+        const profile: AIChoice | undefined = this.availableAIProfiles(player).find((candidate: AIChoice) => {
+            return candidate.id === this.aiProfiles.get(player);
+        });
+        return Utils.getNonNullable(profile).name;
     }
 
     public async proposeAIToPlay(): Promise<void> {
@@ -257,36 +337,90 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
-        const player: Player = this.gameComponent.getCurrentPlayer();
-        const aiOpt: MGPOptional<AbstractAI> = this.getAI(player);
-        if (aiOpt.isPresent()) {
-            const ai: AbstractAI = aiOpt.get();
-            const optionsName: string = this.aiOptions.get(player);
-            const matchingOptions: MGPOptional<AIOptions> =
-                MGPOptional.ofNullable(ai.availableOptions.find((options: AIOptions) => {
-                    return options.name === optionsName;
-                }));
-            // If the option is not selected
-            // then it is not a PLAYING AI yet, just a selected AI
-            // and user must still select the AI's options
-            return matchingOptions.map((options: AIOptions) => {
-                return { ai, options };
-            });
-        } else {
+        return this.getAI(this.gameComponent.getCurrentPlayer());
+    }
+
+    private getOpponentAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+        return this.getAI(this.gameComponent.getCurrentOpponent());
+    }
+
+    private getAI(player: Player): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+        const strategy: PlayerSelection = this.playerSelection.get(player);
+        if (strategy === 'human') {
             return MGPOptional.empty();
+        }
+        const profileId: string = this.aiProfiles.get(player);
+        const optionName: string = this.aiOptions.get(player);
+        const options: MGPOptional<AIOptions> = MGPOptional.ofNullable(
+            this.availableAIOptions(player).find((option: AIOptions) => option.name === optionName));
+        if (options.isAbsent()) {
+            return MGPOptional.empty();
+        }
+        switch (strategy) {
+            case 'minimax':
+                return this.getMinimaxConfig(profileId).map((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                    const minimax: Minimax<Move, GameState, RulesConfig, unknown> = this.createMinimax(config);
+                    return { ai: minimax, options: options.get() };
+                });
+            case 'iterative-deepening':
+                return this.getMinimaxConfig(profileId).map((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                    return { ai: this.createIterativeMinimax(config), options: options.get() };
+                });
+            case 'mcts':
+                return this.getMCTSConfig(profileId).map((config: MCTSConfig<Move, GameState, RulesConfig>) => {
+                    const mcts: MCTS<Move, GameState, RulesConfig, unknown> = this.createMCTS(config);
+                    return { ai: mcts, options: options.get() };
+                });
         }
     }
 
-    /**
-     * @param player the current player
-     * @returns MGPOptional.empty() if no AI is selected
-     *          MGPOptional.of(some AI) if an AI is selected, even if AI has its options unchosen
-     */
-    private getAI(player: Player): MGPOptional<AbstractAI> {
+    private getMinimaxConfig(id: string): MGPOptional<MinimaxConfig<Move, GameState, RulesConfig>> {
         return MGPOptional.ofNullable(
-            this.gameComponent.availableAIs.find((a: AbstractAI) => {
-                return this.players.get(player).equalsValue(a.name);
+            this.getMinimaxConfigs().find((config: MinimaxConfig<Move, GameState, RulesConfig>) => {
+                return config.id === id;
             }));
+    }
+
+    private getMCTSConfig(id: string): MGPOptional<MCTSConfig<Move, GameState, RulesConfig>> {
+        return MGPOptional.ofNullable(this.getMCTSConfigs().find((config: MCTSConfig<Move, GameState, RulesConfig>) => {
+            return config.id === id;
+        }));
+    }
+
+    private getMinimaxConfigs(): MinimaxConfig<Move, GameState, RulesConfig>[] {
+        return this.gameComponent.aiConfig.minimax;
+    }
+
+    private createMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
+    : Minimax<Move, GameState, RulesConfig, unknown>
+    {
+        return this.aiInstances.getOrCreate(config, 'minimax', (): Minimax<Move, GameState, RulesConfig, unknown> => {
+            return createMinimaxFromConfig(this.gameComponent.rules, config);
+        });
+    }
+
+    private createIterativeMinimax(config: MinimaxConfig<Move, GameState, RulesConfig>)
+    : IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown>
+    {
+        return this.aiInstances.getOrCreate(
+            config,
+            'iterative-deepening',
+            (): IterativeDeepeningMinimax<Move, GameState, RulesConfig, unknown> => {
+                return createIterativeDeepeningMinimaxFromConfig(this.gameComponent.rules, config);
+            },
+        );
+    }
+
+    private getMCTSConfigs(): MCTSConfig<Move, GameState, RulesConfig>[] {
+        return this.gameComponent.aiConfig.mcts;
+    }
+
+    private createMCTS(config: MCTSConfig<Move, GameState, RulesConfig>)
+    : MCTS<Move, GameState, RulesConfig, unknown>
+    {
+        return this.aiInstances.getOrCreate(config, 'mcts', (): MCTS<Move, GameState, RulesConfig, unknown> => {
+            return createMCTSFromConfig(this.gameComponent.rules, config);
+        });
     }
 
     public async doAIMove(playingAI: AbstractAI, options: AIOptions): Promise<MGPValidation> {
@@ -326,7 +460,55 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public availableAIOptions(player: Player): AIOptions[] {
-        return this.getAI(player).get().availableOptions;
+        switch (this.playerSelection.get(player)) {
+            case 'minimax':
+                return this.depthOptions();
+            case 'iterative-deepening':
+            case 'mcts':
+                return this.timeOptions();
+            case 'human':
+                return [];
+        }
+    }
+
+    public availableAIStrategies(): AIChoice[] {
+        const strategies: AIChoice[] = [];
+        if (this.getMinimaxConfigs().length > 0) {
+            strategies.push({ id: 'minimax', name: $localize`Minimax` });
+            strategies.push({ id: 'iterative-deepening', name: $localize`Iterative deepening` });
+        }
+        if (this.getMCTSConfigs().length > 0) {
+            strategies.push({ id: 'mcts', name: $localize`MCTS` });
+        }
+        return strategies;
+    }
+
+    public availableAIProfiles(player: Player): AIChoice[] {
+        switch (this.playerSelection.get(player)) {
+            case 'minimax':
+            case 'iterative-deepening':
+                return this.getMinimaxConfigs();
+            case 'mcts':
+                return this.getMCTSConfigs();
+            case 'human':
+                return [];
+        }
+    }
+
+    private depthOptions(): AIDepthLimitOptions[] {
+        const options: AIDepthLimitOptions[] = [];
+        for (let i: number = 1; i < 10; i++) {
+            options.push({ name: `Level ${i}`, maxDepth: i });
+        }
+        return options;
+    }
+
+    private timeOptions(): AITimeLimitOptions[] {
+        const options: AITimeLimitOptions[] = [];
+        for (let i: number = 1; i < 10; i++) {
+            options.push({ name: `${i*i} seconds`, maxSeconds: i*i });
+        }
+        return options;
     }
 
     public canTakeBack(): boolean {
@@ -395,13 +577,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private viewTreeFrom(node: GameNode<Move, GameState>): void {
         // We will use the data from the previous turn's AI
-        const opponent: Player = Player.ofTurn(this.gameComponent.getTurn() + 1);
-        const opponentAI: MGPOptional<AbstractAI> = this.getAI(opponent);
+        const opponentAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getOpponentAI();
         // We will annotate the trees with data from MCTS
         function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
-            if (opponentAI.isPresent() && opponentAI.get() instanceof MCTS) {
+            if (opponentAI.isPresent() && opponentAI.get().ai instanceof MCTS) {
                 const mcts: MCTS<Move, GameState, RulesConfig, unknown> =
-                    opponentAI.get() as MCTS<Move, GameState, RulesConfig, unknown>;
+                    opponentAI.get().ai as MCTS<Move, GameState, RulesConfig, unknown>;
                 const wins: number = mcts.getCounterFromCache(nodeToLabel, 'wins');
                 const simulations: number = mcts.getCounterFromCache(nodeToLabel, 'simulations');
                 return `${wins}/${simulations} = ${Math.round(wins/simulations * 100)}%`;

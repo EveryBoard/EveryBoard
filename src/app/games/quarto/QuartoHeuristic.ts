@@ -1,6 +1,6 @@
 import { AlignmentStatus } from '../../jscaip/AI/AlignmentHeuristic';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Minimax';
+import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { CoordSet } from '../../jscaip/CoordSet';
 
 import { QuartoMove } from './QuartoMove';

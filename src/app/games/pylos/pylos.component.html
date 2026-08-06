@@ -4,7 +4,7 @@
      preserveAspectRatio="xMidYMid meet">
 
     <g [attr.transform]="'rotate(' + (getPointOfView().getValue() * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">
-        @for (player of Player.PLAYERS; track player) {
+        @for (player of Player.PLAYERS; track player.getValue()) {
             <g>
                 @for (p of getPlayerSidePieces(player); track $index) {
                     <circle id="piece_{{ player.toString() }}_{{ p }}"

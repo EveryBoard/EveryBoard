@@ -74,3 +74,4 @@ games.txt
 .vscode/settings.json
 /backend/coverage.html
 /e2e/__pycache__/
+/backend/everyboard.db

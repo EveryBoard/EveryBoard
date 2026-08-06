@@ -6,13 +6,26 @@ import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { EpaminondasMove } from '../EpaminondasMove';
-import { EpaminondasPositionalMinimax } from '../EpaminondasPositionalMinimax';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
+import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasState } from '../EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+
+class EpaminondasPositionalMinimax
+    extends Minimax<EpaminondasMove, EpaminondasState, EpaminondasConfig, EpaminondasLegalityInformation>
+{
+    public constructor() {
+        super('Positional',
+              EpaminondasRules.get(),
+              new EpaminondasPositionalHeuristic(),
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
+    }
+}
 
 describe('EpaminondasPositionalMinimax', () => {
 

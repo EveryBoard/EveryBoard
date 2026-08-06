@@ -1,8 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { EncapsuleDummyMinimax } from '../EncapsuleDummyMinimax';
+import { EncapsuleMove } from '../EncapsuleMove';
+import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleLegalityInformation } from '../EncapsuleRules';
+import { EncapsuleState } from '../EncapsuleState';
+
+class EncapsuleDummyMinimax
+    extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleConfig, EncapsuleLegalityInformation> {
+    public constructor() {
+        super('Dummy', EncapsuleRules.get(), new DummyHeuristic(), new EncapsuleMoveGenerator());
+    }
+}
 
 describe('EncapsuleDummyMinimax', () => {
 

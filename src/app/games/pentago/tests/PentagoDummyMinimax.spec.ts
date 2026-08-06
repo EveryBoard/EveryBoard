@@ -1,9 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { PentagoDummyMinimax } from '../PentagoDummyMinimax';
+import { PentagoMove } from '../PentagoMove';
+import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoRules } from '../PentagoRules';
+import { PentagoState } from '../PentagoState';
+
+class PentagoDummyMinimax extends Minimax<PentagoMove, PentagoState> {
+    public constructor() {
+        super('Dummy', PentagoRules.get(), new DummyHeuristic(), new PentagoMoveGenerator());
+    }
+}
 
 describe('PentagoDummyMinimax', () => {
 
