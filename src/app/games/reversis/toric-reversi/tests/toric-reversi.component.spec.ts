@@ -1,15 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { ReversiMove } from '../common/ReversiMove';
-import { ReversiState } from '../common/ReversiState';
+import { PlayerOrNone } from '../../../../jscaip/Player';
+import { Table } from '../../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { ReversiMove } from '../../common/ReversiMove';
+import { ReversiState } from '../../common/ReversiState';
+import { ToricReversiComponent } from '../toric-reversi.component';
 
-import { ToricReversiComponent } from './toric-reversi.component';
-
-describe('ToricReversiComponent', () => {
+fdescribe('ToricReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ToricReversiComponent>;
 
@@ -40,15 +39,15 @@ describe('ToricReversiComponent', () => {
         const move: ReversiMove = new ReversiMove(7, 4);
 
         // Then it should work and the captured coord be highlighted
-        await testUtils.expectMoveSuccess('#click_7_4', move);
+        await testUtils.expectMoveSuccess('#click-7-4', move);
         testUtils.expectElementNotToHaveClass('#click-0-3', 'captured-fill');
         testUtils.expectElementNotToHaveClass('#click-1-2', 'captured-fill');
         testUtils.expectElementNotToHaveClass('#click-2-1', 'captured-fill');
         testUtils.expectElementNotToHaveClass('#click-3-0', 'captured-fill');
-        testUtils.expectElementToHaveClasses('#click-0-4', ['captured-fill']);
-        testUtils.expectElementToHaveClasses('#click-0-5', ['captured-fill']);
-        testUtils.expectElementToHaveClasses('#click-1-6', ['captured-fill']);
-        testUtils.expectElementToHaveClasses('#click-7-4', ['moved-fill']);
+        testUtils.expectElementToHaveClass('#click-0-4', 'captured-fill');
+        testUtils.expectElementToHaveClass('#click-0-5', 'captured-fill');
+        testUtils.expectElementToHaveClass('#click-1-6', 'captured-fill');
+        testUtils.expectElementToHaveClass('#click-7-4', 'moved-fill');
     }));
 
 });

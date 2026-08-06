@@ -120,7 +120,7 @@
         <source>Learn the rules</source>
       </trans-unit>
       <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().creator.name }}"/></source>
       </trans-unit>
       <trans-unit id="172167399786281724" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
@@ -863,9 +863,6 @@
       <trans-unit id="4506170566742059239" datatype="html">
         <source>00:30</source>
       </trans-unit>
-      <trans-unit id="7590013429208346303" datatype="html">
-        <source>Custom</source>
-      </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
       </trans-unit>
@@ -901,6 +898,9 @@
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
+      </trans-unit>
+      <trans-unit id="7590013429208346303" datatype="html">
+        <source>Custom</source>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>

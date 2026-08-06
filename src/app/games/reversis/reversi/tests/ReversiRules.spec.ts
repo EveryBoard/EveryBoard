@@ -6,11 +6,11 @@ import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
-import { ReversiRules } from '../../reversi/ReversiRules';
-import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
-import { ReversiFailure } from '../ReversiFailure';
-import { ReversiMove } from '../ReversiMove';
-import { ReversiState } from '../ReversiState';
+import { ReversiConfig, ReversiNode } from '../../common/AbstractReversiRules';
+import { ReversiFailure } from '../../common/ReversiFailure';
+import { ReversiMove } from '../../common/ReversiMove';
+import { ReversiState } from '../../common/ReversiState';
+import { ReversiRules } from '../ReversiRules';
 
 fdescribe('ReversiRules', () => {
 
