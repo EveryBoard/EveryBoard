@@ -1,26 +1,16 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { Coord } from '../../../jscaip/Coord';
-import { Ordinal } from '../../../jscaip/Ordinal';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractReversiRules, BoardMode, ReversiConfig } from '../common/AbstractReversiRules';
-import { ReversiState } from '../common/ReversiState';
+import { AbstractReversiRules, ReversiConfig } from '../common/AbstractReversiRules';
 
-class RectangularBoard implements BoardMode {
-
-    public getNextCoord(coord: Coord, direction: Ordinal, _: ReversiState): Coord {
-        return coord.getNext(direction);
-    }
-
-}
 export class ReversiRules extends AbstractReversiRules {
 
     private static singleton: MGPOptional<ReversiRules> = MGPOptional.empty();
 
     public static get(): ReversiRules {
         if (ReversiRules.singleton.isAbsent()) {
-            ReversiRules.singleton = MGPOptional.of(new ReversiRules(new RectangularBoard()));
+            ReversiRules.singleton = MGPOptional.of(new ReversiRules());
         }
         return ReversiRules.singleton.get();
     }

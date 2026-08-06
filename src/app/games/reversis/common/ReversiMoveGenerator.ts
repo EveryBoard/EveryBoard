@@ -10,8 +10,8 @@ export class ReversiMoveGenerator extends MoveGenerator<ReversiMove, ReversiStat
         super();
     }
 
-    public override getListMoves(node: ReversiNode, _: ReversiConfig): ReversiMove[] {
-        const moves: ReversiMoveWithSwitched[] = this.rules.getListMoves(node.gameState);
+    public override getListMoves(node: ReversiNode, config: ReversiConfig): ReversiMove[] {
+        const moves: ReversiMoveWithSwitched[] = this.rules.getListMoves(node.gameState, config);
         return moves.map((moveWithSwitched: ReversiMoveWithSwitched): ReversiMove => {
             return moveWithSwitched.move;
         });

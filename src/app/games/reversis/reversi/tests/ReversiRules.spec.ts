@@ -12,7 +12,7 @@ import { ReversiMove } from '../../common/ReversiMove';
 import { ReversiState } from '../../common/ReversiState';
 import { ReversiRules } from '../ReversiRules';
 
-fdescribe('ReversiRules', () => {
+describe('ReversiRules', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

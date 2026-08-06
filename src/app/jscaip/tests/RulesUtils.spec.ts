@@ -25,14 +25,22 @@ export class RulesUtils {
         const legality: MGPFallible<L> = rules.isLegal(move, state, config);
         if (legality.isSuccess()) {
             const resultingState: S = rules.applyLegalMove(move, state, config, legality.get());
-            if (isComparableObject(resultingState)) {
-                const equals: boolean = comparableEquals(resultingState, expectedState);
-                if (equals === false) {
-                    console.log(JSON.stringify(expectedState), JSON.stringify(resultingState));
+            try {
+                if (isComparableObject(resultingState)) {
+                    const equals: boolean = comparableEquals(resultingState, expectedState);
+                    if (equals === false) {
+                        console.log(JSON.stringify(expectedState), JSON.stringify(resultingState));
+                    }
+                    expect(equals).withContext('comparable states should be equal').toBeTrue();
+                } else {
+                    expect(resultingState).withContext('states should be equal').toEqual(expectedState);
                 }
-                expect(equals).withContext('comparable states should be equal').toBeTrue();
-            } else {
-                expect(resultingState).withContext('states should be equal').toEqual(expectedState);
+            } catch (e: unknown) {
+                console.log('expected');
+                console.log(JSON.stringify(expectedState));
+                console.log('got');
+                console.log(JSON.stringify(resultingState));
+                throw e;
             }
         } else {
             throw new Error('expected move to be valid but it is not: ' + legality.getReason());

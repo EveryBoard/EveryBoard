@@ -8,7 +8,7 @@ import { ReversiMove } from '../../common/ReversiMove';
 import { ReversiState } from '../../common/ReversiState';
 import { ToricReversiComponent } from '../toric-reversi.component';
 
-fdescribe('ToricReversiComponent', () => {
+describe('ToricReversiComponent', () => {
 
     let testUtils: ComponentTestUtils<ToricReversiComponent>;
 
