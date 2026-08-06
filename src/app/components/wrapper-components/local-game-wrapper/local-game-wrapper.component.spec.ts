@@ -327,14 +327,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should require profile selection for MCTS when multiple configs exist', fakeAsync(async() => {
             // Given a local wrapper with several MCTS profiles
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            wrapper.playerSelection[0] = 'mcts';
+            await wrapper.onPlayerSelectionChange(Player.ZERO, 'mcts');
             spyOn(wrapper as unknown as { getMCTSConfigs: () => unknown[] }, 'getMCTSConfigs').and.returnValue([
                 { id: 'first', name: 'First' },
                 { id: 'second', name: 'Second' },
             ]);
 
             // When checking if an AI profile must be selected
-            const mustSelect: boolean = wrapper.mustSelectAIProfile(0);
+            const mustSelect: boolean = wrapper.mustSelectAIProfile(Player.ZERO);
 
             // Then the wrapper should require an explicit profile choice
             expect(mustSelect).toBeTrue();
@@ -343,15 +343,15 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         it('should reset AI profile to none when no profile is available', fakeAsync(async() => {
             // Given a local wrapper whose selected strategy has no available profile
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            wrapper.playerSelection[0] = 'mcts';
-            wrapper.aiProfiles[0] = 'some-profile';
+            await wrapper.onPlayerSelectionChange(Player.ZERO, 'mcts');
+            await wrapper.onAIProfileChange(Player.ZERO, 'some-profile');
             spyOn(wrapper, 'availableAIProfiles').and.returnValue([]);
 
             // When the player selection is applied
             await wrapper.updatePlayer(Player.ZERO);
 
             // Then the old profile should fall back to no profile
-            expect(wrapper.aiProfiles[0]).toBe('none');
+            expect(wrapper.aiProfiles.get(Player.ZERO)).toBe('none');
         }));
 
         it('should allow iterative deepening selection for minimax configs', fakeAsync(async() => {
@@ -433,8 +433,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
 
             // Then the public template APIs provide no AI configuration
-            expect(wrapper.availableAIProfiles(Player.ZERO.getValue())).toEqual([]);
-            expect(wrapper.availableAIOptions(Player.ZERO.getValue())).toEqual([]);
+            expect(wrapper.availableAIProfiles(Player.ZERO)).toEqual([]);
+            expect(wrapper.availableAIOptions(Player.ZERO)).toEqual([]);
         }));
 
         it('should name human player as Human', fakeAsync(async() => {
@@ -445,7 +445,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
 
             // Then human players should be named explicitly
-            expect(wrapper['getPlayerName'](0)).toBe('Human');
+            expect(wrapper['getPlayerName'](Player.ZERO)).toBe('Human');
         }));
 
         it('should name minimax player by their profile', fakeAsync(async() => {
@@ -457,7 +457,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
 
             // Then human players should be named explicitly
-            expect(wrapper['getPlayerName'](0)).toBe('Alignment');
+            expect(wrapper['getPlayerName'](Player.ZERO)).toBe('Alignment');
         }));
 
         it('should preserve profile hash functions when creating minimaxes', fakeAsync(async() => {
@@ -531,12 +531,9 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should propose AI to play when restarting game', fakeAsync(async() => {
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            // await testUtils.selectAIPlayer(Player.ZERO);
-            //tick(LocalGameWrapperComponent.AI_TIMEOUT);
-            wrapper.players[0] = MGPOptional.of('minimax');
-            wrapper.playerSelection[0] = 'minimax';
-            wrapper.aiProfiles[0] = 'alignment';
-            wrapper.aiOptions[0] = 'Level 1';
+            await wrapper.onPlayerSelectionChange(Player.ZERO, 'minimax');
+            await wrapper.onAIProfileChange(Player.ZERO, 'alignment');
+            await wrapper.onAIOptionChange(Player.ZERO, 'Level 1');
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
@@ -616,12 +613,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
-            // await testUtils.selectAIPlayer(Player.ZERO);
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            wrapper.players[0] = MGPOptional.of('minimax');
-            wrapper.playerSelection[0] = 'minimax';
-            wrapper.aiProfiles[0] = 'alignment';
-            wrapper.aiOptions[0] = 'Level 1';
+            await wrapper.onPlayerSelectionChange(Player.ZERO, 'minimax');
+            await wrapper.onAIProfileChange(Player.ZERO, 'alignment');
+            await wrapper.onAIOptionChange(Player.ZERO, 'Level 1');
 
             // When trying to click
             // Then it should fail
