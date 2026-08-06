@@ -6,18 +6,17 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
+import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
 import { CoerceoFailure } from './CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
-import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
+import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
+import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { CoerceoState } from './CoerceoState';
 
@@ -48,14 +47,33 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Coerceo');
-        this.availableAIs = [
-            new CoerceoPiecesThreatsTilesMinimax(),
-            new CoerceoCapturesAndFreedomMinimax(),
-            new CoerceoPiecesTilesFreedomMinimax(),
-            new MCTS($localize`MCTS`,
-                     new CoerceoMoveGenerator(),
-                     this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'Pieces > Threats > Tiles',
+                    name: $localize`Pieces > Threats > Tiles`,
+                    heuristic: (): CoerceoPiecesThreatsTilesHeuristic => new CoerceoPiecesThreatsTilesHeuristic(),
+                    moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+                },
+                {
+                    id: 'Captures > Freedom',
+                    name: $localize`Captures > Freedom`,
+                    heuristic: (): CoerceoCapturesAndFreedomHeuristic => new CoerceoCapturesAndFreedomHeuristic(),
+                    moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+                },
+                {
+                    id: 'Pieces > Tiles > Freedom',
+                    name: $localize`Pieces > Tiles > Freedom`,
+                    heuristic: (): CoerceoPiecesTilesFreedomHeuristic => new CoerceoPiecesTilesFreedomHeuristic(),
+                    moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+                },
+            ],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+            }],
+        };
         this.encoder = CoerceoMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }

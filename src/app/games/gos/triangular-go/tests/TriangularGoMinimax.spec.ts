@@ -1,8 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
-import { TriangularGoMinimax } from '../../triangular-go/TriangularGoMinimax';
+import { AbstractGoMinimax } from '../../AbstractGoMinimax';
 import { TriangularGoConfig, TriangularGoRules } from '../../triangular-go/TriangularGoRules';
+import { TriangularGoHeuristic } from '../TriangularGoHeuristic';
+import { TriangularGoMoveGenerator } from '../TriangularGoMoveGenerator';
+
+class TriangularGoMinimax extends AbstractGoMinimax<TriangularGoConfig> {
+    public constructor() {
+        super( TriangularGoRules.get(), new TriangularGoMoveGenerator(), new TriangularGoHeuristic());
+    }
+}
 
 describe('TriangularGoMinimax', () => {
 

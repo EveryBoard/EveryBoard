@@ -57,7 +57,7 @@
                      class="base no-fill mid-stroke last-move-stroke"/>
         }
     }
-    @for (player of Player.PLAYERS; track player) {
+    @for (player of Player.PLAYERS; track player.getValue()) {
         <g>
             @if (mustShowTilesOf(player)) {
                 <g [id]="'tiles-count-' + player.toString()"

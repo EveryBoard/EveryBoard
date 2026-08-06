@@ -3,19 +3,18 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } fr
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { ModeConfig, ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Vector } from '../../../jscaip/Vector';
 
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
-import { CheckersControlMinimax } from './CheckersControlMinimax';
-import { CheckersControlPlusDominationMinimax } from './CheckersControlPlusDominationMinimax';
+import { CheckersControlHeuristic } from './CheckersControlHeuristic';
+import { CheckersControlPlusDominationHeuristic } from './CheckersControlPlusDominationHeuristic';
 import { CheckersFailure } from './CheckersFailure';
 import { CheckersMove } from './CheckersMove';
 import { CheckersMoveGenerator } from './CheckersMoveGenerator';
-import { CheckersScoreMinimax } from './CheckersScoreMinimax';
+import { CheckersScoreHeuristic } from './CheckersScoreHeuristic';
 import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
@@ -80,6 +79,42 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.CX = this.WIDTH / 2;
         this.CY = (this.HEIGHT + this.UP) / 2;
         return new ViewBox(this.LEFT, this.UP, this.WIDTH, this.HEIGHT);
+    }
+
+    public override setRulesAndNode(urlName: string): void {
+        super.setRulesAndNode(urlName);
+        this.moveGenerator = new CheckersMoveGenerator(this.rules);
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'Score',
+                    name: $localize`Score`,
+                    heuristic: (): CheckersScoreHeuristic => new CheckersScoreHeuristic(),
+                    moveGenerator: (): CheckersMoveGenerator => this.moveGenerator,
+                },
+                {
+                    id: 'Control and Domination',
+                    name: $localize`Control and Domination`,
+                    heuristic: (): CheckersControlPlusDominationHeuristic => {
+                        return new CheckersControlPlusDominationHeuristic(this.rules);
+                    },
+                    moveGenerator: (): CheckersMoveGenerator => this.moveGenerator,
+                },
+                {
+                    id: 'Control',
+                    name: $localize`Control`,
+                    heuristic: (): CheckersControlHeuristic => new CheckersControlHeuristic(this.rules),
+                    moveGenerator: (): CheckersMoveGenerator => this.moveGenerator,
+                },
+            ],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): CheckersMoveGenerator => this.moveGenerator,
+            }],
+        };
+        this.encoder = CheckersMove.encoder;
+        this.hasAsymmetricBoard = true;
     }
 
     protected override getScoreName(): ScoreName {

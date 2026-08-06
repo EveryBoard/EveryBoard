@@ -5,8 +5,9 @@ import { Ordinal } from '../../../jscaip/Ordinal';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
+import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '../EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasState } from '../EpaminondasState';
@@ -14,6 +15,20 @@ import { EpaminondasState } from '../EpaminondasState';
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
+
+class EpaminondasMinimax extends Minimax<EpaminondasMove,
+                                         EpaminondasState,
+                                         EpaminondasConfig,
+                                         EpaminondasLegalityInformation>
+{
+    public constructor() {
+        super('Piece > Row Domination > Alignment > Row Presence',
+              EpaminondasRules.get(),
+              new EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic(),
+              new EpaminondasPhalanxSizeAndFilterMoveGenerator(),
+        );
+    }
+}
 
 describe('EpaminondasMinimax', () => {
 

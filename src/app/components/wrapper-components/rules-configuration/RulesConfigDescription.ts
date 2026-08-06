@@ -7,8 +7,6 @@ import { MGPValidator, MGPValidators } from '../../../utils/MGPValidator';
 
 export class RulesConfigDescriptionLocalizable {
 
-    public static readonly CUSTOM: () => string = (): string => $localize`Custom`;
-
     public static readonly WIDTH: () => string = (): string => $localize`Width`;
 
     public static readonly HEIGHT: () => string = (): string => $localize`Height`;

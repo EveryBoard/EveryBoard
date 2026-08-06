@@ -8,8 +8,8 @@ import { Table } from '../../../../jscaip/TableUtils';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { MancalaScoreMinimax } from '../../common/MancalaScoreMinimax';
 import { MancalaState } from '../../common/MancalaState';
+import { MancalaScoreMinimax } from '../../common/tests/MancalaScoreMinimax.spec';
 import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
 import { AwaleRules } from '../AwaleRules';
 

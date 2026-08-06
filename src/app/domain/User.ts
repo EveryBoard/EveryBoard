@@ -10,6 +10,7 @@ export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent
 export type CurrentGame = {
     id: string,
     gameName: string,
+    creator: MinimalUser,
     opponent?: MinimalUser | null,
     role: UserRoleInPart,
 };

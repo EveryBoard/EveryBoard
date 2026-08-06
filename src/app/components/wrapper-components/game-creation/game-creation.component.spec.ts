@@ -382,6 +382,39 @@ describe('GameCreationComponent', () => {
                 expect(component.currentConfigRoom).toEqual(proposedConfig);
             }));
 
+            it('should display proposed rules config when creator receives config proposal update', fakeAsync(async() => {
+                // Given a component where creator selected a custom rules config and chose an opponent
+                await awaitComponentInitialization();
+                configRoomService.mockCandidateJoined(candidate, 0);
+                await chooseOpponent();
+                const proposedRulesConfig: P4Config = { width: 4, height: 2 };
+                component.onRulesConfigUpdate(MGPOptional.of(proposedRulesConfig));
+                testUtils.detectChanges();
+                const widthInputBeforeProposal: HTMLInputElement = findElement('#width_number_config_input').nativeElement;
+                const heightInputBeforeProposal: HTMLInputElement = findElement('#height_number_config_input').nativeElement;
+                expect(widthInputBeforeProposal.value).toEqual(defaultConfig.width.toString());
+                expect(heightInputBeforeProposal.value).toEqual(defaultConfig.height.toString());
+
+                // When the proposed config is confirmed by a configRoom update from the server
+                await proposeConfig();
+                configRoomService.mockConfigRoomUpdate({
+                    ...ConfigRoomMocks.getInitialRandom(defaultConfig),
+                    chosenOpponent: candidate,
+                    rulesConfig: proposedRulesConfig,
+                    status: Status.CONFIG_PROPOSED,
+                });
+                testUtils.detectChanges();
+                tick(0);
+
+                // Then the displayed rules configuration shows the proposed config and cannot be edited anymore
+                const widthInputAfterProposal: HTMLInputElement = findElement('#width_number_config_input').nativeElement;
+                const heightInputAfterProposal: HTMLInputElement = findElement('#height_number_config_input').nativeElement;
+                expect(widthInputAfterProposal.value).toEqual(proposedRulesConfig.width.toString());
+                expect(heightInputAfterProposal.value).toEqual(proposedRulesConfig.height.toString());
+                testUtils.expectElementToBeDisabled('#width_number_config_input');
+                testUtils.expectElementToBeDisabled('#height_number_config_input');
+            }));
+
             it('should not emit rules config when modifying field', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 await awaitComponentInitialization();

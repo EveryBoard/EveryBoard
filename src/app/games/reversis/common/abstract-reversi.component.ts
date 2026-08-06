@@ -1,14 +1,13 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Coord } from '../../../jscaip/Coord';
 import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
-import { ReversiConfig, ReversiLegalityInformation, AbstractReversiRules } from './AbstractReversiRules';
-import { ReversiMinimax } from './ReversiMinimax';
+import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
+import { ReversiHeuristic } from './ReversiHeuristic';
 import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiState } from './ReversiState';
@@ -28,14 +27,19 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     public constructor(urlName: string) {
         super();
         this.setRulesAndNode(urlName);
-        this.availableAIs = [
-            new ReversiMinimax(this.rules),
-            new MCTS(
-                $localize`MCTS`,
-                new ReversiMoveGenerator(this.rules),
-                this.rules,
-            ),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Piece Count',
+                name: $localize`Piece Count`,
+                heuristic: (): ReversiHeuristic => new ReversiHeuristic(),
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(this.rules),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(this.rules),
+            }],
+        };
         this.encoder = ReversiMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
     }
