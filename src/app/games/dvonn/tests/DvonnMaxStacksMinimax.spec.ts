@@ -1,9 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { DvonnMaxStacksMinimax } from '../DvonnMaxStacksMinimax';
+import { DvonnMaxStacksHeuristic } from '../DvonnMaxStacksHeuristic';
+import { DvonnMove } from '../DvonnMove';
+import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnRules } from '../DvonnRules';
+import { DvonnState } from '../DvonnState';
+
+class DvonnMaxStacksMinimax extends Minimax<DvonnMove, DvonnState> {
+    public constructor() {
+        super('Stacks', DvonnRules.get(), new DvonnMaxStacksHeuristic(), new DvonnMoveGenerator());
+    }
+}
 
 describe('DvonnMaxStacksMinimax', () => {
 

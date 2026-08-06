@@ -1,8 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
-import { HexagonalGoMinimax } from '../HexagonalGoMinimax';
+import { AbstractGoMinimax } from '../../AbstractGoMinimax';
+import { HexagonalGoHeuristic } from '../HexagonalGoHeuristic';
+import { HexagonalGoMoveGenerator } from '../HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';
+
+class HexagonalGoMinimax extends AbstractGoMinimax<HexagonalGoConfig> {
+    public constructor() {
+        super(HexagonalGoRules.get(), new HexagonalGoMoveGenerator(), new HexagonalGoHeuristic());
+    }
+}
 
 describe('HexagonalGoMinimax', () => {
 

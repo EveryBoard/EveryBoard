@@ -5,7 +5,6 @@ import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -18,7 +17,7 @@ import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
 import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
-import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
+import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
@@ -136,10 +135,19 @@ export class LodestoneComponent
     public constructor() {
         super();
         this.setRulesAndNode('Lodestone');
-        this.availableAIs = [
-            new LodestoneScoreMinimax(),
-            new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): LodestoneScoreHeuristic => new LodestoneScoreHeuristic(),
+                moveGenerator: (): LodestoneMoveGenerator => new LodestoneMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): LodestoneMoveGenerator => new LodestoneMoveGenerator(),
+            }],
+        };
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.getState();

@@ -1,9 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { KamisadoMinimax } from '../KamisadoMinimax';
+import { KamisadoHeuristic } from '../KamisadoHeuristic';
+import { KamisadoMove } from '../KamisadoMove';
+import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 import { KamisadoRules } from '../KamisadoRules';
+import { KamisadoState } from '../KamisadoState';
+
+class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoState> {
+    public constructor() {
+        super('Minimax', KamisadoRules.get(), new KamisadoHeuristic(), new KamisadoMoveGenerator());
+    }
+}
 
 describe('KamisadoMinimax', () => {
 

@@ -87,6 +87,29 @@ describe('GoComponent', () => {
         testUtils.expectElementToExist('#ko-0-0');
     }));
 
+    it('should hash AI states with phase, ko, captures, and board', () => {
+        // Given a Go state with non-default metadata
+        const board: Table<GoPiece> = [
+            [O, X, _],
+            [_, O, _],
+            [_, _, X],
+        ];
+        const state: GoState =
+            new GoState(board, PlayerNumberMap.of(2, 1), 3, MGPOptional.of(new Coord(0, 0)), GoPhase.ACCEPT);
+        const goComponent: GoComponent = testUtils.getGameComponent();
+
+        // When hashing it through the declared AI config
+        const hash: string = goComponent.aiConfig.minimax[0].hash!(state);
+
+        // Then all state fields relevant to minimax identity should be encoded
+        expect(hash).toContain('1-ACCEPT');
+        expect(hash).toContain(JSON.stringify(new Coord(0, 0)));
+        expect(hash).toContain(JSON.stringify(PlayerNumberMap.of(2, 1)));
+        expect(GoPhase.ACCEPT.toString()).toBe('ACCEPT');
+        expect(GoPhase.FINISHED.toString()).toBe('FINISHED');
+        expect(Object.create(GoPhase.prototype).toString()).toBe('');
+    });
+
 
     describe('hoshi', () => {
 

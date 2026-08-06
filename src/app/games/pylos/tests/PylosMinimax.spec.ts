@@ -1,9 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { PylosMinimax } from '../PylosMinimax';
+import { PylosHeuristic } from '../PylosHeuristic';
+import { PylosMove } from '../PylosMove';
+import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosRules } from '../PylosRules';
+import { PylosState } from '../PylosState';
+
+class PylosMinimax extends Minimax<PylosMove, PylosState> {
+    public constructor() {
+        super('Minimax', PylosRules.get(), new PylosHeuristic(), new PylosOrderedMoveGenerator());
+    }
+}
 
 describe('PylosMinimax', () => {
 

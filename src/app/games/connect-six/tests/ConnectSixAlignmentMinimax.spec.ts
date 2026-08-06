@@ -6,10 +6,17 @@ import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { ConnectSixAlignmentMinimax } from '../ConnectSixAlignmentMinimax';
+import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
 import { ConnectSixDrops, ConnectSixMove } from '../ConnectSixMove';
+import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
+
+class ConnectSixAlignmentMinimax extends Minimax<ConnectSixMove, ConnectSixState, GobanConfig> {
+    public constructor() {
+        super('Alignment', ConnectSixRules.get(), new ConnectSixAlignmentHeuristic(), new ConnectSixMoveGenerator());
+    }
+}
 
 describe('ConnectSixAlignmentMinimax', () => {
 

@@ -4,13 +4,12 @@ import { Component } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
 
-import { DiamDummyMinimax } from './DiamDummyMinimax';
 import { DiamFailure } from './DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
 import { DiamMoveGenerator } from './DiamMoveGenerator';
@@ -104,10 +103,19 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     public constructor() {
         super();
         this.setRulesAndNode('Diam');
-        this.availableAIs = [
-            new DiamDummyMinimax(),
-            new MCTS($localize`MCTS`, new DiamMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Dummy',
+                name: $localize`Dummy`,
+                heuristic: (): DummyHeuristic<DiamMove, DiamState> => new DummyHeuristic(),
+                moveGenerator: (): DiamMoveGenerator => new DiamMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): DiamMoveGenerator => new DiamMoveGenerator(),
+            }],
+        };
         this.encoder = DiamMoveEncoder;
     }
 
