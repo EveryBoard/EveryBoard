@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { HeuristicBounds } from '../../../jscaip/AI/Minimax';
+import { HeuristicBounds } from '../../../jscaip/AI/Heuristic';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';

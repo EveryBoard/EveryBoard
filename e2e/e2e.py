@@ -352,6 +352,7 @@ def can_play_local_vs_ai(user):
 
     # Select the AI as second player
     user.select('#player-select-1', 'Minimax')
+    user.select('#ai-profile-select-1', 'Alignment')
     user.select('#ai-option-select-1', 'Level 1')
 
     # I play a move

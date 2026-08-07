@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AI, AIOptions } from '../../../jscaip/AI/AI';
+import { AIConfig } from '../../../jscaip/AI/AIConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Coord } from '../../../jscaip/Coord';
 import { Coord3D } from '../../../jscaip/Coord3D';
@@ -114,7 +114,10 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public config: C;
 
-    public availableAIs: AI<M, S, AIOptions, C>[];
+    public aiConfig: AIConfig<M, S, C> = {
+        minimax: [],
+        mcts: [],
+    };
 
     public canPass: boolean = false;
 

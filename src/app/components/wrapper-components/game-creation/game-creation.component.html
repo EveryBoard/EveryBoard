@@ -48,7 +48,7 @@
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        @for (candidate of viewInfo.candidates; track candidate) {
+                                                        @for (candidate of viewInfo.candidates; track candidate.name) {
                                                             <tr id="presenceOf_{{ candidate.name }}"
                                                                 [ngClass]="viewInfo.candidateClasses[candidate.name]"
                                                                 (click)="selectOpponent(candidate.name)">

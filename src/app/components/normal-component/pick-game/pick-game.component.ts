@@ -304,7 +304,7 @@ export class GameInfo {
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
 
             new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
-            new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),                BashniRules.get(),                new Date('2025-03-01'), GameDescription.BASHNI()                ), // 43:                             * Quentin
+            new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),                BashniRules.get(),                new Date('2026-08-07'), GameDescription.BASHNI()                ), // 43:                             * Quentin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

@@ -1,9 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { GipfMove } from '../GipfMove';
+import { GipfMoveGenerator } from '../GipfMoveGenerator';
 import { GipfRules } from '../GipfRules';
-import { GipfScoreMinimax } from '../GipfScoreMinimax';
+import { GipfLegalityInformation } from '../GipfRules';
+import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
+import { GipfState } from '../GipfState';
+
+class GipfScoreMinimax extends Minimax<GipfMove, GipfState, EmptyRulesConfig, GipfLegalityInformation> {
+    public constructor() {
+        super('Score', GipfRules.get(), new GipfScoreHeuristic(), new GipfMoveGenerator());
+    }
+}
 
 describe('GipfScoreMinimax', () => {
 

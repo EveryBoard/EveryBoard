@@ -3,11 +3,10 @@ import { Component } from '@angular/core';
 import { MGPOptional } from '@everyboard/lib';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 
-import { NewGameMinimax } from './NewGameMinimax';
+import { NewGameHeuristic } from './NewGameHeuristic';
 import { NewGameMove } from './NewGameMove';
 import { NewGameMoveGenerator } from './NewGameMoveGenerator';
 import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
@@ -35,16 +34,25 @@ export class NewGameComponent extends GameComponent<NewGameRules,
 {
     /**
      * The component constructor always takes the same parameters.
-     * It must set up the `rules`, `encoder`, `node`, and `availableMinimaxes` fields.
-     * The minimax list can remain empty.
+     * It must set up the `rules`, `encoder`, `node`, and `aiConfig` fields.
+     * The AI config can remain empty.
      */
     public constructor() {
         super();
         this.setRulesAndNode('NewGame');
-        this.availableAIs = [
-            new NewGameMinimax(),
-            new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Dummy',
+                name: 'Dummy',
+                heuristic: (): NewGameHeuristic => new NewGameHeuristic(),
+                moveGenerator: (): NewGameMoveGenerator => new NewGameMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): NewGameMoveGenerator => new NewGameMoveGenerator(),
+            }],
+        };
         this.encoder = NewGameMove.encoder;
 
         // If the board you draw must not be rotated of 180° when you play the second player, disable the following:

@@ -653,10 +653,6 @@
         <source>International Checkers</source>
         <target>Dames Internationales</target>
       </trans-unit>
-      <trans-unit id="5468337301522272954" datatype="html">
-        <source>Bashni</source>
-        <target>Bashni</target>
-      </trans-unit>
       <trans-unit id="7549008463336671286" datatype="html">
         <source>Quebec Castles</source>
         <target>Châteaux Québecois</target>
@@ -856,6 +852,10 @@
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
         <target>Humain</target>
+      </trans-unit>
+      <trans-unit id="3307352846832849992" datatype="html">
+        <source>Pick the profile</source>
+        <target>Choisissez le profil</target>
       </trans-unit>
       <trans-unit id="3795472118461355324" datatype="html">
         <source>Pick the options</source>
@@ -1465,29 +1465,13 @@
         <source>If at some turn you have several capture choices, you have to capture the maximal number of pieces.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the maximal capture.</source>
         <target>Si à un tour donné, vous avez plusieurs choix de captures, vous devez capturer le nombre maximal de pièces.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites la capture maximum !</target>
       </trans-unit>
-      <trans-unit id="8886795079238941207" datatype="html">
-        <source>When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-        <target>Quand une pièce atteint la dernière ligne, elle est promue et devient une dame et gagne des capacités qui seront expliquées à l'étape suivante ! Une de vos pièces pourrait être promue maintenant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
+      <trans-unit id="6705237401508801272" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+        <target>Quand une pièce atteint la dernière ligne, elle est promue et devient une dame, et gagne des capacités qui seront expliquées à l'étape suivante ! Une de vos pièces pourrait être promue maintenant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
       </trans-unit>
       <trans-unit id="2350466795039227682" datatype="html">
         <source>You did not choose the correct piece, and got no promotion.</source>
         <target>Vous n'avez pas choisi la bonne pièce, et n'avez pas eu de promotion.</target>
-      </trans-unit>
-      <trans-unit id="8405108678014314848" datatype="html">
-        <source>Promotion mid-capture</source>
-        <target>Promotion mi-capture</target>
-      </trans-unit>
-      <trans-unit id="3594200783192611432" datatype="html">
-        <source>In Bashni, if a piece reaches the last line &lt;strong&gt;during a capture sequence&lt;/strong&gt;, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture two Light pieces. Your piece will promote mid-sequence and continue as a king!</source>
-        <target>À Bashni, si une pièce atteint la dernière ligne &lt;strong&gt;pendant une séquence de capture&lt;/strong&gt;, elle devient immédiatement une dame et peut continuer à capturer avec les capacités d'une dame (en arrière et à longue portée).&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez deux pièces claires. Votre pièce sera promue en cours de séquence et continuera comme une dame !</target>
-      </trans-unit>
-      <trans-unit id="2675066422650988607" datatype="html">
-        <source>Tower capture</source>
-        <target>Capture d'une tour</target>
-      </trans-unit>
-      <trans-unit id="5577302219649810200" datatype="html">
-        <source>In Bashni, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!</source>
-        <target>À Bashni, quand une tour est capturée, seule la pièce du sommet est retirée. Après la capture, la tour peut donc être contrôlée par l'adversaire, selon la nouvelle pièce au sommet de la tour. Mais vous pouvez aussi récupérer une dame capturée. C'est le cas ici, récupérez votre dame !</target>
       </trans-unit>
       <trans-unit id="4514452777310919130" datatype="html">
         <source>By sowing from your leftmost house, you will end in the opponent&apos;s second leftmost house, which now contains 2 seeds, so this will be a capture. But now, the house right before it contains 3 seeds, which is also capturable, so, that house will get captured as well!&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture!</source>
@@ -1625,10 +1609,6 @@
       <trans-unit id="2821967115826330186" datatype="html">
         <source>There it is, you captured all remaining seeds.</source>
         <target>Voilà, vous capturez toutes les graines restantes.</target>
-      </trans-unit>
-      <trans-unit id="3479650175306903901" datatype="html">
-        <source>MCTS with heuristic</source>
-        <target>MCTS avec heuristique</target>
       </trans-unit>
       <trans-unit id="8840015526202664476" datatype="html">
         <source>You must distribute one of your houses.</source>
@@ -1941,9 +1921,17 @@
         <source>MCTS (3, no dups)</source>
         <target>MCTS (3, pas de duplication)</target>
       </trans-unit>
-      <trans-unit id="1337900792840930042" datatype="html">
-        <source>Distance (<x id="PH" equiv-text="i"/>)</source>
-        <target>Distance (<x id="PH" equiv-text="i"/>)</target>
+      <trans-unit id="4770227794604983198" datatype="html">
+        <source>Distance (1)</source>
+        <target>Distance (1)</target>
+      </trans-unit>
+      <trans-unit id="8648592362460976351" datatype="html">
+        <source>Distance (2)</source>
+        <target>Distance (2)</target>
+      </trans-unit>
+      <trans-unit id="32621127018559651" datatype="html">
+        <source>Distance (3)</source>
+        <target>Distance (3)</target>
       </trans-unit>
       <trans-unit id="514608014907395319" datatype="html">
         <source>Chaining jumps in a single move</source>
@@ -2151,10 +2139,6 @@
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
         <target>Mauvaise idée, en déplaçant votre pile sur la source, vous auriez gagné votre pièce et gagné un point.</target>
-      </trans-unit>
-      <trans-unit id="7473544347962465121" datatype="html">
-        <source>MCTS Score</source>
-        <target>Score MCTS</target>
       </trans-unit>
       <trans-unit id="5456673610183497320" datatype="html">
         <source>Stacks</source>
@@ -3033,8 +3017,8 @@
         <source>Lasca: origins</source>
         <target>Lasca : les origines</target>
       </trans-unit>
-      <trans-unit id="4990290643353374393" datatype="html">
-        <source>Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, a chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+      <trans-unit id="3082102783316586508" datatype="html">
+        <source>Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
         <target>Lasca est un jeu basé sur le jeu de dames, créé en 1911 par Emanuel Lasker, champion du monde d'échecs. Lasca se joue sur un plateau de 7x7 cases, chaque joueur a 11 pièces.</target>
       </trans-unit>
       <trans-unit id="383124132464771052" datatype="html">
@@ -3045,81 +3029,65 @@
         <source>Steps</source>
         <target>Pas</target>
       </trans-unit>
-      <trans-unit id="3181357103919988717" datatype="html">
-        <source>A simple step is made by one diagonal move forward left or forward right. Click on a piece to choose it, then click on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="8375763259935871100" datatype="html">
+        <source>A simple step is made by one diagonal move forward left or forward right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
         <target>Un simple pas est un déplacement d'une case en diagonale, en avant, vers la gauche ou la droite. Pour faire un déplacement cliquez sur une pièce au choix, puis sur sa case d&apos;arrivée.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites le premier mouvement.</target>
       </trans-unit>
       <trans-unit id="5943278728548812168" datatype="html">
         <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
-        <target>Une capture arrive quand vous sautez diagonalement par dessus une pièce adverse et atterrissez immédiatement derrière. Vous devez capturer quand vous le pouvez. C'est le cas ici : cliquez sur la pièce qui doit capturer, et ensuite sur sa destination.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
+        <target>Une capture arrive quand vous sautez diagonalement par dessus une pièce adverse et atterrissez immédiatement derrière. Vous devez capturer quand vous le pouvez. C'est le cas ici : cliquez sur la pièce qui doit capturer, et ensuite sur sa destination&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture !</target>
       </trans-unit>
       <trans-unit id="7318689477424356735" datatype="html">
         <source>Backward captures</source>
         <target>Captures en arrière</target>
       </trans-unit>
-      <trans-unit id="1323130710227979862" datatype="html">
-        <source>A capture can also be done backward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a backward capture.</source>
-        <target>Une capture peut aussi être faite en arrière.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, vous devez faire une capture en arrière, Allez-y !</target>
+      <trans-unit id="3186677422672219927" datatype="html">
+        <source>A capture can also be done backward&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture backward.</source>
+        <target>Un capture peut aussi être faite en arrière.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, vous devez faire une capture en arrière, Allez-y !</target>
       </trans-unit>
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
-        <target>Félicitations, constatez que la pièce capturée n'a pas été enlevée du plateau, mais placée en dessous de la pièce qui l'a capturé.</target>
+        <target>Félicitations, constatez que la pièce capturée n'as pas été enlevée du plateau, mais placée en dessous de la pièce qui l'a capturé.</target>
       </trans-unit>
       <trans-unit id="2693455583384082674" datatype="html">
         <source>Promotion</source>
         <target>Promotion</target>
       </trans-unit>
-      <trans-unit id="5266628656093810427" datatype="html">
-        <source>When a tower reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-        <target>Quand une tour atteint la dernière ligne, la pièce du dessus devient officier et gagne la capacité de se déplacer en arrière, ce qui est interdit pour les autres pièces ! Une de vos pièces pourrait être promue maintenant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
-      </trans-unit>
-      <trans-unit id="7563543654670984873" datatype="html">
-        <source>You did not choose the correct tower, and got no promotion.</source>
-        <target>Vous n'avez pas choisi la bonne tour et n'avez pas eu de promotion.</target>
+      <trans-unit id="3052116389115675860" datatype="html">
+        <source>You did not choose the correct stack, and got no promotion.</source>
+        <target>Vous n'avez pas choisi la bonne pile, et vous n'avez pas causé de promotion.</target>
       </trans-unit>
       <trans-unit id="3494718669384677623" datatype="html">
         <source>King move</source>
-        <target>Déplacement d'une dame</target>
-      </trans-unit>
-      <trans-unit id="4704865038249414760" datatype="html">
-        <source>Kings can move and capture backward as well as forward. They can also &quot;fly&quot;: move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king to capture two pieces of the opponent!</source>
-        <target>Les dames peuvent se déplacer et capturer en arrière comme en avant. Elles peuvent aussi &quot;voler&quot; : se déplacer sur plusieurs cases ou sauter par-dessus une pièce adverse pour la capturer et atterrir n'importe où sur la même diagonale.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre dame pour capturer deux pièces adverses !</target>
-      </trans-unit>
-      <trans-unit id="7512547184362316069" datatype="html">
-        <source>You should capture twice!</source>
-        <target>Vous devez capturer deux fois !</target>
+        <target>Déplacement de la Reine</target>
       </trans-unit>
       <trans-unit id="7943272134877911783" datatype="html">
         <source>Kings can, like any other piece, move forward and capture backward. They have extra abilities. First, they can move backward without capturing. Second, they are able to &quot;fly&quot;: they can move over multiple squares without jumping over any piece, or by jumping over exactly one opponent piece to capture it, and finally landing wherever in the same line.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king!</source>
-        <target>Les dames peuvent, comme tout autre pièce, se déplacer en avant, et capturer en arrière. Elles ont une capacité supplémentaire. Premièrement, elles peuvent se déplacer en arrière sans capturer. Deuxièmement, elles peuvent &quot;voler&quot;: elles peuvent se déplacer de plusieurs cases sans sauter par dessus d'autres pièces, ou en sautant exactement sur une autre pièce adverse pour la capturer, et finalement atterrir où n'importe où sur cette même ligne.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre dame !</target>
+        <target>Les Reines peuvent, comme tout autre pièce, se déplacer en avant, et capturer en arrière. Elles ont une capacité supplémentaire. Premièrement, elles peuvent se déplacer en arrière sans capturer. Deuxièmement, elles peuvent &quot;voler&quot;: elles peuvent se déplacer de plusieurs cases sans sauter par dessus d'autres pièces, ou en sautant exactement sur une autre pièce adverse pour la capturer, et finalement atterrir où n'importe où sur cette même ligne.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre Roi !</target>
       </trans-unit>
       <trans-unit id="6253946314470341234" datatype="html">
         <source>You did not move your king.</source>
-        <target>Vous n'avez pas déplacé votre dame.</target>
+        <target>Vous n'avez pas déplacé votre reine.</target>
       </trans-unit>
       <trans-unit id="2755311753913057003" datatype="html">
         <source>Capture rule</source>
         <target>Règles de capture</target>
       </trans-unit>
-      <trans-unit id="5638867880438059400" datatype="html">
-        <source>When you do multiple jumps, you cannot jump twice over the same piece. The captured pieces are actually removed after your full move.&lt;br/&gt;Here you have to apply all the different capturing rules: backward, maximal, flying, and not jumping twice over the same piece.&lt;br/&gt;&lt;br/&gt;You are playing Dark, go ahead.</source>
-        <target>Quand vous faites plusieurs sauts, vous ne pouvez pas sauter deux fois au-dessus de la même pièce. Les pièces capturées ne sont retirées qu'après le mouvement complet.&lt;br/&gt;Ici vous devez appliquer toutes les différentes règles de capture : en arrière, maximale, volante, et ne pas sauter deux fois au-dessus de la même pièce.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
+      <trans-unit id="606169029000365891" datatype="html">
+        <source>When you do multiple jumps, you cannot jump twice over neither the same piece nor the same empty space.&lt;br/&gt;Here you have to apply all the different capturing rules: backward, maximal, flying, and of course not jumping twice over the same square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, go ahead.</source>
+        <target>Quand vous faites plusieurs sauts, vous ne pouvez pas sauter deux fois au dessus de la même pièce ni du même espace vide.&lt;br/&gt;Ici vous devez appliquer toutes les règles différentes de captures: en arrière, maximale, volante, et bien sur ne pas sauter deux fois au dessus de la même cases.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, allez-y.</target>
       </trans-unit>
       <trans-unit id="4252782057421264089" datatype="html">
         <source>Officer move</source>
-        <target>Déplacement des officiers</target>
+        <target>Déplacement des Officiers</target>
       </trans-unit>
-      <trans-unit id="2208486977407370994" datatype="html">
-        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officer!</source>
+      <trans-unit id="2042191715997917496" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+        <target>Quand une pile atteint la dernière ligne, son commandeur devient officier, et gagne la capacité de se déplacer en marche arrière, ce qui est illégal pour les autres pièces ! Une de vos pièces pourrait être promue ce tour-ci.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
+      </trans-unit>
+      <trans-unit id="8730503950999903830" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
         <target>Les officiers peuvent se déplacer et capturer en arrière ainsi qu'en avant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, déplacez votre officier !</target>
-      </trans-unit>
-      <trans-unit id="7209449067344673226" datatype="html">
-        <source>In Lasca, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!</source>
-        <target>À Lasca, quand une tour est capturée, seule la pièce du sommet est retirée. Après la capture, la tour peut donc être contrôlée par l'adversaire, selon la nouvelle pièce au sommet de la tour. Mais vous pouvez aussi récupérer une dame capturée. C'est le cas ici, récupérez votre dame !</target>
-      </trans-unit>
-      <trans-unit id="5396877629075826495" datatype="html">
-        <source>You did not capture the right piece.</source>
-        <target>Vous n'avez pas capturé la bonne pièce.</target>
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
@@ -3570,7 +3538,7 @@
       </trans-unit>
       <trans-unit id="5102353447213251496" datatype="html">
         <source>Promoted pieces can travel long distance</source>
-        <target>Les pièces promues peuvent se déplacer sur de longues distances</target>
+        <target>Les pièces promies peuvent de déplacer sur de longues distances</target>
       </trans-unit>
       <trans-unit id="2785965642347214758" datatype="html">
         <source>Occupy upper-left corner</source>
@@ -3579,10 +3547,6 @@
       <trans-unit id="3072414657519570345" datatype="html">
         <source>Can do frisian captures</source>
         <target>Peut-on faire des captures frisiennes</target>
-      </trans-unit>
-      <trans-unit id="8702370392264661270" datatype="html">
-        <source>Piece that reaches the last line during a capture continues capturing as king</source>
-        <target>Une pièce qui atteint la dernière ligne durant une capture continue à capturer en tant que dame</target>
       </trans-unit>
       <trans-unit id="6434791622277704389" datatype="html">
         <source>Rightmost Focus</source>
@@ -5061,37 +5025,37 @@
         <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
         <target>Votre requête (<x id="INTERPOLATION" equiv-text="{{ requestInfos[requestAwaitingReplyFromOpponent().get()].name() }}"/>) a été envoyée.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[requestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></target>
       </trans-unit>
-      <trans-unit id="7751928094372476864" datatype="html">
-        <source>Russian column checkers: captured pieces stack under the capturing piece, forming towers.</source>
-        <target>Dames à colonnes russes : les pièces capturées s'empilent sous la pièce capturante, formant des tours.</target>
+      <trans-unit id="2520878109295407247" datatype="html">
+        <source>Iterative deepening</source>
+        <target>Approfondissement itératif</target>
       </trans-unit>
-      <trans-unit id="6999105537978094771" datatype="html">
-        <source>Bashni: origins</source>
-        <target>Bashni : les origines</target>
+      <trans-unit id="4586260971442685870" datatype="html">
+        <source>Territory</source>
+        <target>Territoire</target>
       </trans-unit>
-      <trans-unit id="1795254043608057032" datatype="html">
-        <source>Bashni (Russian: башни, towers), also known as column draughts, is a Russian checkers variant. Captured pieces are not removed but stacked under the capturing piece, forming towers.</source>
-        <target>Bashni (russe : башни, tours), aussi connu sous le nom de dames à colonnes, est une variante russe du jeu de dames. Les pièces capturées ne sont pas retirées mais empilées sous la pièce capturante, formant des tours.</target>
+      <trans-unit id="5504136696096277083" datatype="html">
+        <source>Advancement</source>
+        <target>Avancement</target>
       </trans-unit>
-      <trans-unit id="8402752246011864012" datatype="html">
-        <source>The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
-        <target>Le but de Bashni, comme aux dames, est de rendre l'adversaire incapable de bouger, soit en capturant toutes ses pièces, soit en les bloquant.</target>
+      <trans-unit id="5944812089887969249" datatype="html">
+        <source>Groups</source>
+        <target>Groupes</target>
       </trans-unit>
-      <trans-unit id="3182705657358075075" datatype="html">
-        <source>A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
-        <target>Une capture se produit lorsque vous sautez en diagonale par-dessus une pièce adverse. À Bashni, la pièce capturée n'est pas retirée : elle va sous votre pièce, formant une tour. Vous devez capturer quand vous le pouvez.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+      <trans-unit id="2874924373232293084" datatype="html">
+        <source>Reserve</source>
+        <target>Réserve</target>
       </trans-unit>
-      <trans-unit id="6008450572424233746" datatype="html">
-        <source>Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower.</source>
-        <target>Félicitations ! Remarquez que la pièce capturée n'a pas été retirée du plateau, mais placée sous la pièce capturante, formant une tour.</target>
+      <trans-unit id="9017523517963235509" datatype="html">
+        <source>Piece Count</source>
+        <target>Nombre de pièces</target>
       </trans-unit>
-      <trans-unit id="4060948936151379193" datatype="html">
-        <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
-        <target>À Bashni, contrairement aux dames internationales, vous pouvez choisir n'importe quelle séquence de capture légale. Si un choix capture une pièce et un autre en capture deux, vous pouvez choisir l'un ou l'autre.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+      <trans-unit id="1779552786277618671" datatype="html">
+        <source>Distance</source>
+        <target>Distance</target>
       </trans-unit>
-      <trans-unit id="2170682009266275861" datatype="html">
-        <source>When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-        <target>Quand une pièce atteint la dernière ligne, elle est promue et devient une dame. Seule la pièce du sommet d'une tour est promue. Une de vos pièces pourrait être promue maintenant.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Faites-le.</target>
+      <trans-unit id="4427129289566046309" datatype="html">
+        <source>Shape</source>
+        <target>Forme</target>
       </trans-unit>
     </body>
   </file>

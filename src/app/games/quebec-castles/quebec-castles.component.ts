@@ -5,13 +5,12 @@ import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { QuebecCastlesMinimax } from './QuebecCastlesMinimax';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from './QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from './QuebecCastlesMoveGenerator';
 import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
@@ -55,10 +54,22 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     public constructor() {
         super();
         this.setRulesAndNode('QuebecCastles');
-        this.availableAIs = [
-            new QuebecCastlesMinimax(),
-            new MCTS($localize`MCTS`, new QuebecCastlesMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Dummy',
+                name: 'Dummy',
+                heuristic: (): DummyHeuristic<QuebecCastlesMove, QuebecCastlesState, QuebecCastlesConfig> => {
+                    return new DummyHeuristic();
+                },
+                moveGenerator: (): QuebecCastlesMoveGenerator => new QuebecCastlesMoveGenerator(),
+                useRandomness: true,
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): QuebecCastlesMoveGenerator => new QuebecCastlesMoveGenerator(),
+            }],
+        };
         this.encoder = QuebecCastlesMove.encoder;
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
