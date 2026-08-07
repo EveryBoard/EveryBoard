@@ -6,8 +6,8 @@ import { BoardValue } from './BoardValue';
 import { GameNode } from './GameNode';
 
 export type HeuristicBounds<B> = {
-    player0Best: B,
-    player1Best: B,
+    player0Best: B;
+    player1Best: B;
 }
 
 /**

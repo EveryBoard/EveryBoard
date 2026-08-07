@@ -19,7 +19,7 @@ import { MancalaDistribution, MancalaMove } from '../MancalaMove';
 import { MancalaDropResult, MancalaRules } from '../MancalaRules';
 import { MancalaState } from '../MancalaState';
 
-type MancalaHouseContents = Cell<{ mainContent: string, secondaryContent?: string }>;
+type MancalaHouseContents = Cell<{ mainContent: string; secondaryContent?: string }>;
 
 export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                                        R extends MancalaRules>
@@ -81,7 +81,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                          config: MancalaConfig,
                          initial: Coord,
                          awaitedTime: number)
-    : { seedDropResult: SeedDropResult, awaitedTime: number }
+    : { seedDropResult: SeedDropResult; awaitedTime: number }
     {
         const component: C = this.testUtils.getGameComponent();
         const player: Player = seedDropResult.resultingState.getCurrentPlayer();

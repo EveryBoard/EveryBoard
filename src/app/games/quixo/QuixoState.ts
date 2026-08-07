@@ -5,8 +5,8 @@ import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneG
 import { QuixoMove } from './QuixoMove';
 
 export type QuixoConfig = {
-    width: number,
-    height: number,
+    width: number;
+    height: number;
 };
 
 export class QuixoState extends PlayerOrNoneGameStateWithTable {

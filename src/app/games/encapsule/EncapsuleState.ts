@@ -113,7 +113,7 @@ export class EncapsuleSpace {
         }
     }
 
-    public removeBiggest(): {removedSpace: EncapsuleSpace, removedPiece: EncapsulePiece} {
+    public removeBiggest(): {removedSpace: EncapsuleSpace; removedPiece: EncapsulePiece} {
         const removedPiece: EncapsulePiece = this.getBiggest();
         if (removedPiece === EncapsulePiece.NONE) {
             throw new Error('Cannot remove piece from empty space');
