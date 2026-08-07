@@ -155,8 +155,6 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
     },
 };
 
-DoCheckersTests(bashniEntries);
-
 describe('BashniComponent', () => {
 
     let testUtils: ComponentTestUtils<BashniComponent>;
@@ -167,6 +165,10 @@ describe('BashniComponent', () => {
 
     it('should create', () => {
         testUtils.expectToBeCreated();
+    });
+
+    describe('generic tests', () => {
+        DoCheckersTests(bashniEntries);
     });
 
     it('should allow mid-capture promotion', fakeAsync(async() => {

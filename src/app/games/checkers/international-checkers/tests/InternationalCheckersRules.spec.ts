@@ -72,7 +72,7 @@ describe('InternationalCheckersRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 4), new Coord(2, 5));
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -758,7 +758,7 @@ describe('InternationalCheckersRules', () => {
                 ]);
 
                 // Then it should be illegal
-                const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+                const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_SQUARE();
                 RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
             });
 

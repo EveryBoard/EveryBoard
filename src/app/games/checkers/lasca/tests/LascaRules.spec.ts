@@ -75,7 +75,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 5), new Coord(2, 6));
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -303,7 +303,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]);
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -329,7 +329,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -520,7 +520,7 @@ describe('LascaRules', () => {
             ]);
 
             // Then the second capture over the same tower coordinate should be illegal
-            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD();
+            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_SQUARE();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 

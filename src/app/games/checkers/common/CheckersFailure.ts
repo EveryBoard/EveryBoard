@@ -2,10 +2,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 
 export class CheckersFailure {
 
-    public static CANNOT_GO_BACKWARD(pieceName: string): string {
-        return $localize`You cannot go backward with ${pieceName}!`
-    }
-    public static readonly CANNOT_GO_BACKWARD: Localized = () => $localize`You cannot go backward with normal pieces!`;
+    public static readonly ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD: Localized = () => $localize`Only promoted pieces can go backward.`;
 
     public static readonly CANNOT_SKIP_CAPTURE: Localized = () => $localize`You must capture when it is possible!`;
 
@@ -25,7 +22,7 @@ export class CheckersFailure {
 
     public static readonly CANNOT_MOVE_ORTHOGONALLY: Localized = () => $localize`You cannot move orthogonally!`;
 
-    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_COORD: Localized = () => $localize`You cannot capture the same coordinate several times!`;
+    public static readonly CANNOT_CAPTURE_TWICE_THE_SAME_SQUARE: Localized = () => $localize`You cannot capture the same square several times!`;
 
     public static readonly MUST_DO_LONGEST_CAPTURE: Localized = () => $localize`You must do the longest capture possible!`;
 

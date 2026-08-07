@@ -95,19 +95,13 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
 
 export function DoCheckersTests<C extends CheckersComponent<R>,
                                 R extends AbstractCheckersRules>(
-    entries: CheckersComponentTestEntries<C, R>)
-    : void
-{
+    entries: CheckersComponentTestEntries<C, R>,
+): void {
 
     let testUtils: ComponentTestUtils<C>;
 
     const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
 
-    // TODO FOR REVIEW: que penserais-tu de mettre ce describe HORS de la fonction? Ça obligerait à appeler comme suit:
-    // describe('InternationalCheckers generic tests', DoCheckersTests(entries); }
-    // Ça a le gros avantage que si tu veux activer que les tests d'un checkers, tu remplace le describe par un fdescribe
-    // également ça a l'avantage de pas construire des trucs de checkers lorsque ces tests sont désactivés, si je ne m'abuse ?
-    // Ou mieux encore: DoCheckersTest prendrait un testUtils en paramètre et serait dans le describe du composant
     describe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {

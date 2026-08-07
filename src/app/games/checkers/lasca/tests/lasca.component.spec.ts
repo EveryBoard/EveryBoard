@@ -153,7 +153,6 @@ const lascaEntries: CheckersComponentTestEntries<LascaComponent, LascaRules> = {
     },
 };
 
-DoCheckersTests(lascaEntries);
 
 describe('LascaComponent', () => {
 
@@ -164,6 +163,10 @@ describe('LascaComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<LascaComponent>('Lasca');
     }));
+
+    describe('generic tests', () => {
+        DoCheckersTests(lascaEntries);
+    });
 
     it('should create', () => {
         testUtils.expectToBeCreated();

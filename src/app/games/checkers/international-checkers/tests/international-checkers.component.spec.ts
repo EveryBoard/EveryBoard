@@ -189,8 +189,6 @@ const internationalCheckersEntries: InternationalCheckersComponentTestEntries = 
     },
 };
 
-DoCheckersTests(internationalCheckersEntries);
-
 describe('InternationalCheckersComponent', () => {
 
     const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
@@ -200,6 +198,10 @@ describe('InternationalCheckersComponent', () => {
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<InternationalCheckersComponent>('InternationalCheckers');
     }));
+
+    describe('generic tests', () => {
+        DoCheckersTests(internationalCheckersEntries);
+    });
 
     it('should create', () => {
         testUtils.expectToBeCreated();

@@ -144,7 +144,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
     describe('getLegalCaptures', () => {
 
         it('should allow returning to the starting coordinate during a multiple capture', () => {
-            // Given an officer surrounded by four capturable pieces
+            // Given an officer that could capture pieces so that it returns to its original position
             const state: CheckersState = EvenCheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],

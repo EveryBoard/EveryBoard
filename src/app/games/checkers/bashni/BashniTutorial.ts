@@ -15,7 +15,7 @@ const _O: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED]);
 const _v: CheckersStack = new CheckersStack([one]);
 const uv: CheckersStack = new CheckersStack([zero, one]);
 const Uv: CheckersStack = new CheckersStack([CheckersPiece.ZERO_PROMOTED, one]);
-const vUv: CheckersStack = new CheckersStack([one, CheckersPiece.ZERO_PROMOTED, one]);
+const vU: CheckersStack = new CheckersStack([one, CheckersPiece.ZERO_PROMOTED]);
 const __: CheckersStack = CheckersStack.EMPTY;
 const defaultConfig: CheckersConfig = BashniRules.get().getDefaultRulesConfig();
 
@@ -163,7 +163,7 @@ export class BashniTutorial extends Tutorial {
             OddCheckersState.of([
                 [__, __, __, __, __, __, __, __],
                 [__, __, _u, __, __, __, __, __],
-                [__, __, __, vUv, __, _v, __, __],
+                [__, __, __, vU, __, _v, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
                 [__, __, _v, __, __, __, __, __],

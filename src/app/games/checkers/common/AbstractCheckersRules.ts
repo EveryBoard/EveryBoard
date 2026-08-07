@@ -474,7 +474,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             if (capturedCoord.isPresent()) {
                 const captured: Coord = capturedCoord.get();
                 if (this.isPresentIn(captured, capturedCoords)) {
-                    return MGPValidation.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
+                    return MGPValidation.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_SQUARE());
                 }
                 capturedCoords.push(captured);
                 if (config.canStackPieces) {
@@ -525,7 +525,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
             isCapture = true;
         }
         if (this.isNormalPieceGoingBackwardIllegaly(stack, start, end, state, config)) {
-            return MGPValidation.failure(CheckersFailure.CANNOT_GO_BACKWARD());
+            return MGPValidation.failure(CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD());
         }
         const flyLegality: MGPValidation = this.getFlyLegality(stack, start, end, isCapture, config);
         if (flyLegality.isFailure()) {

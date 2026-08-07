@@ -70,7 +70,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`Minority capture is allowed`,
-            $localize`If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.`,
+            $localize`If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.<br/><br/>You're playing Dark. Do the shortest capture here!`,
             EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, _v, __],
@@ -85,7 +85,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),
-            $localize`When a tower reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            $localize`When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
             EvenCheckersState.of([
                 [__, __, __, __, __, __, _v],
                 [__, __, __, uv, __, _v, __],
@@ -100,7 +100,7 @@ export class LascaTutorial extends Tutorial {
                 CheckersMove.fromStep(new Coord(3, 1), new Coord(4, 0)),
             ],
             TutorialStepMessage.CONGRATULATIONS(),
-            $localize`You did not choose the correct tower, and got no promotion.`,
+            $localize`You did not choose the correct stack, and got no promotion.`,
         ),
         TutorialStep.fromMove(
             $localize`Officer move`,
@@ -122,8 +122,8 @@ export class LascaTutorial extends Tutorial {
             $localize`You did not move your officer.`,
         ),
         TutorialStep.fromMove(
-            $localize`Tower capture`,
-            $localize`In Lasca, when a tower is captured, only the top piece is removed. After the capture, the tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!`,
+            $localize`Stack capture`,
+            $localize`In Lasca, when a stack is captured, only the top piece is removed. After the capture, the stack can therefore be commanded by the opponent, depending on the new piece at the top of the stack. But you can also recover a captured king. This is the case here, recover your king!`,
             EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, vU, __, _v, __],
@@ -138,8 +138,23 @@ export class LascaTutorial extends Tutorial {
             $localize`You did not capture the right piece.`,
         ),
         TutorialStep.anyMove(
+            $localize`No promotion mid-capture`,
+            $localize`If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.<br/><br/>You are dark, do a capture.`,
+            EvenCheckersState.of([
+                [__, __, __, __, __, __, __],
+                [__, _v, __, _v, __, __, __],
+                [_u, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+                [__, __, __, __, __, __, __],
+            ], 0),
+            CheckersMove.fromCapture([new Coord(0, 2), new Coord(2, 0)]),
+            $localize`Observe how your piece got promoted but could not continue its capture further.`,
+        ),
+        TutorialStep.anyMove(
             $localize`Capture rule`,
-            $localize`When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.<br/><br/>You are playing Dark. Capture as much pieces as possible.`,
+            $localize`When making multiple captures, you cannot jump twice over the same stack. The captured commander is immediately placed under your capturing stack, while the rest of the captured stack stays on its square. Even if this exposes another opposing commander, you cannot capture that stack again during the same move.<br/><br/>You are playing Dark. Capture as much pieces as possible.`,
             EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],

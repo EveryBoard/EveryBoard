@@ -47,4 +47,5 @@ export class LascaRules extends AbstractCheckersRules {
         return LascaRules.RULES_CONFIG_DESCRIPTION;
     }
 
+
 }

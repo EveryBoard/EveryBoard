@@ -72,10 +72,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         super();
     }
 
-    public override getViewBox(): ViewBox {
-        return this.viewBox();
-    }
-
     public override setRulesAndNode(urlName: string): void {
         super.setRulesAndNode(urlName);
         this.setConstructedState(this.getState());

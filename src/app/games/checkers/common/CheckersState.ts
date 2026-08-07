@@ -203,9 +203,8 @@ export class CheckersState extends GameStateWithTable<CheckersStack> {
 }
 
 /*
- * An "even" checkers state is a state where there stacks are on even-numbered squares.
- * That is, in the starting position, square (0, 0) contain a stack while (1, 0) and (0, 1) are empty.
- * TODO FOR REVIEW: on préfère ça ou bien CheckersState.ofEven/ofOdd ?
+ * An "even" checkers state is a state where there are pieces are on even-numbered squares.
+ * That is, in the starting position, square (0, 0) contain a piece while (1, 0) and (0, 1) are empty.
  */
 export class EvenCheckersState extends CheckersState {
     public static of(board: Table<CheckersStack>, turn: number): CheckersState {
@@ -220,8 +219,8 @@ export class EvenCheckersState extends CheckersState {
 }
 
 /*
- * An "odd" checkers state is a state where there stacks are on odd-numbered squares.
- * That is, in the starting position, square (0, 0) is empty while (1, 0) and (0, 1) contain a stack.
+ * An "odd" checkers state is a state where there pieces are on odd-numbered squares.
+ * That is, in the starting position, square (0, 0) is empty while (1, 0) and (0, 1) contain a piece.
  */
 export class OddCheckersState extends CheckersState {
     public static of(board: Table<CheckersStack>, turn: number): CheckersState {
