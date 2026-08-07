@@ -3,7 +3,7 @@ import { RulesConfig } from '../RulesConfigUtil';
 
 export type GameStateAndConfig = {
     state: GameState;
-    config: RulesConfig
+    config: RulesConfig;
 };
 
 export abstract class GameState {

@@ -86,7 +86,7 @@ export class GameNode<M extends Move, S extends GameState> {
                    max?: number,
                    level: number = 0,
                    id: number = 0)
-    : { dot: string, nextId: number, winner: PlayerOrNone }
+    : { dot: string; nextId: number; winner: PlayerOrNone }
     {
         let buffer: string = '';
         if (level === 0) {
@@ -107,7 +107,7 @@ export class GameNode<M extends Move, S extends GameState> {
             for (const child of children) {
                 const playerColor: string = this.getPlayerDotColor(this.gameState.getCurrentPlayer());
                 buffer += `    node_${id} -> node_${nextId} [label="${child.previousMove.get()}"; color="${playerColor}"];\n`;
-                const result: { dot: string, nextId: number, winner: PlayerOrNone } =
+                const result: { dot: string; nextId: number; winner: PlayerOrNone } =
                     child.showDot(rules, config, labelFn, max, level+1, nextId);
                 nextId = result.nextId;
                 buffer += result.dot;
