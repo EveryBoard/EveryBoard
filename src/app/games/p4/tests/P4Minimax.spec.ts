@@ -2,10 +2,17 @@
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { P4Minimax } from '../P4Minimax';
+import { P4Heuristic } from '../P4Heuristic';
 import { P4Move } from '../P4Move';
+import { P4OrderedMoveGenerator } from '../P4OrderedMoveGenerator';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4State } from '../P4State';
+
+class P4Minimax extends Minimax<P4Move, P4State, P4Config> {
+    public constructor() {
+        super('Minimax', P4Rules.get(), new P4Heuristic(), new P4OrderedMoveGenerator());
+    }
+}
 
 describe('P4Minimax', () => {
 

@@ -4,13 +4,12 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { ReversiMinimax } from './ReversiMinimax';
+import { ReversiHeuristic } from './ReversiHeuristic';
 import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
 import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
@@ -31,21 +30,30 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
 {
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
-    private capturedCoords: Coord[] = [];
+    private captured: Coord[] = [];
 
     public constructor() {
         super();
         this.setRulesAndNode('Reversi');
-        this.availableAIs = [
-            new ReversiMinimax(),
-            new MCTS($localize`MCTS`, new ReversiMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Piece Count',
+                name: $localize`Piece Count`,
+                heuristic: (): ReversiHeuristic => new ReversiHeuristic(),
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(),
+            }],
+        };
         this.encoder = ReversiMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
+        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
@@ -71,20 +79,20 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
             while (this.getState().hasPieceAt(captured, opponent) &&
                    this.getPreviousState().getPieceAt(captured) === player)
             {
-                this.capturedCoords.push(captured);
+                this.captured.push(captured);
                 captured = captured.getNext(dir, 1);
             }
         }
     }
 
     public override hideLastMove(): void {
-        this.capturedCoords = [];
+        this.captured = [];
         this.lastMove = MGPOptional.empty();
     }
 
     public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.capturedCoords.some((c: Coord) => c.equals(coord))) {
+        if (this.captured.some((c: Coord) => c.equals(coord))) {
             return ['captured-fill'];
         } else if (this.lastMove.equalsValue(coord)) {
             return ['moved-fill'];

@@ -29,7 +29,7 @@ export class TaflEscapeThenPieceThenControlHeuristic<M extends TaflMove> extends
         const defender: Player = state.getPieceAt(this.rules.getKingCoord(state).get()).getOwner() as Player;
         const stepForEscape: number = this.getStepForEscape(state) * defender.getScoreModifier();
         if (stepForEscape === -1) {
-            return defender.getOpponent().getPreVictory();
+            return BoardValue.getPreVictoryValueOf(defender.getOpponent());
         } else {
             return -1 * stepForEscape;
         }

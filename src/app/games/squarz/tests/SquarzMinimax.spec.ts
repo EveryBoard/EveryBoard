@@ -1,8 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { SquarzMinimax } from '../SquarzMinimax';
+import { SquarzHeuristic } from '../SquarzHeuristic';
+import { SquarzMove } from '../SquarzMove';
+import { SquarzMoveGenerator } from '../SquarzMoveGenerator';
 import { SquarzConfig, SquarzRules } from '../SquarzRules';
+import { SquarzState } from '../SquarzState';
+
+class SquarzMinimax extends Minimax<SquarzMove, SquarzState, SquarzConfig> {
+    public constructor() {
+        const rules: SquarzRules = SquarzRules.get();
+        super('Score', rules, new SquarzHeuristic(), new SquarzMoveGenerator(rules));
+    }
+}
 
 describe('SquarzMinimax', () => {
 

@@ -1,10 +1,25 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
-import { TaflPieceAndControlMinimax } from '../TaflPieceAndControlMinimax';
+import { TaflMove } from '../TaflMove';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflPieceAndControlHeuristic } from '../TaflPieceAndControlHeuristic';
+import { TaflRules } from '../TaflRules';
+import { TaflState } from '../TaflState';
 import { TablutMove } from '../tablut/TablutMove';
 import { TablutRules } from '../tablut/TablutRules';
+
+class TaflPieceAndControlMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
+    public constructor(rules: TaflRules<M>) {
+        super('Pieces > Control',
+              rules,
+              new TaflPieceAndControlHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
+    }
+}
 
 describe('TaflPieceAndControlMinimax', () => {
 

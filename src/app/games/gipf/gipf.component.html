@@ -73,7 +73,7 @@
               marker-end="url(#arrowhead)"/>
     }
 
-    @for (player of Player.PLAYERS; track player) {
+    @for (player of Player.PLAYERS; track player.getValue()) {
         <g>
             @for (p of getPlayerSidePieces(player); track $index) {
                 <g>

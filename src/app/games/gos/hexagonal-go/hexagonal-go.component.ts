@@ -8,7 +8,6 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -19,7 +18,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { HexagonalGoMinimax } from './HexagonalGoMinimax';
+import { HexagonalGoHeuristic } from './HexagonalGoHeuristic';
 import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
@@ -51,10 +50,19 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     public constructor() {
         super();
         this.setRulesAndNode('HexagonalGo');
-        this.availableAIs = [
-            new HexagonalGoMinimax(),
-            new MCTS($localize`MCTS`, new HexagonalGoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Territory',
+                name: $localize`Territory`,
+                heuristic: (): HexagonalGoHeuristic => new HexagonalGoHeuristic(),
+                moveGenerator: (): HexagonalGoMoveGenerator => new HexagonalGoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): HexagonalGoMoveGenerator => new HexagonalGoMoveGenerator(),
+            }],
+        };
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));

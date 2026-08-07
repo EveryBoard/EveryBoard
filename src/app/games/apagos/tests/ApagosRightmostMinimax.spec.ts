@@ -1,8 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { ApagosRightmostMinimax } from '../ApagosRightmostMinimax';
+import { ApagosMove } from '../ApagosMove';
+import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
+import { ApagosRightmostHeuristic } from '../ApagosRightmostHeuristic';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
+import { ApagosState } from '../ApagosState';
+
+class ApagosRightmostMinimax extends Minimax<ApagosMove, ApagosState, ApagosConfig> {
+    public constructor() {
+        super('Rightmost Focus', ApagosRules.get(), new ApagosRightmostHeuristic(), new ApagosMoveGenerator());
+    }
+}
 
 describe('ApagosRightmostMinimax', () => {
 

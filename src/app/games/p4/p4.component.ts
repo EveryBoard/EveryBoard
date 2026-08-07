@@ -4,13 +4,13 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 
-import { P4Minimax } from './P4Minimax';
+import { P4Heuristic } from './P4Heuristic';
 import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
+import { P4OrderedMoveGenerator } from './P4OrderedMoveGenerator';
 import { P4Config, P4Rules } from './P4Rules';
 import { P4State } from './P4State';
 
@@ -29,11 +29,50 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public constructor() {
         super();
         this.setRulesAndNode('P4');
-        this.availableAIs = [
-            new P4Minimax(),
-            new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                    hash: P4Component.hash,
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: (): P4MoveGenerator => new P4MoveGenerator(),
+                },
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                },
+            ],
+        };
         this.encoder = P4Move.encoder;
+    }
+
+    private static hash(state: P4State): string {
+        let result: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                switch (cell) {
+                    case Player.ZERO:
+                        result += '0';
+                        break;
+                    case Player.ONE:
+                        result += '1';
+                        break;
+                    default:
+                        result += '_';
+                }
+            }
+        }
+        return result;
     }
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
