@@ -103,9 +103,9 @@ export class TableUtils {
 }
 
 export type Cell<T> = {
-    x: number,
-    y: number,
-    content: T,
+    x: number;
+    y: number;
+    content: T;
 };
 
 export class TableWithPossibleNegativeIndices<T extends NonNullable<unknown>> {

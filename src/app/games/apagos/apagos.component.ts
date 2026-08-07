@@ -18,16 +18,16 @@ import { ApagosState } from './ApagosState';
 
 interface PieceLocation {
 
-    square: number,
+    square: number;
 
-    piece: number,
+    piece: number;
 }
 
 interface DropArrow {
 
-    x: number,
+    x: number;
 
-    player: Player,
+    player: Player;
 }
 
 @Component({

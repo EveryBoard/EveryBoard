@@ -55,7 +55,7 @@ if (runtimeTranslations && locale !== 'en') {
                 return { 'locale': 'en', 'translations': {} };
             }
         })
-        .then((json: { locale: string, translations: Record<string, string> }) => {
+        .then((json: { locale: string; translations: Record<string, string> }) => {
             loadTranslations(json.translations);
             $localize.locale = json.locale;
 

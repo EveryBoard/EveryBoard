@@ -52,6 +52,7 @@
     "@angular/compiler": "^20.3.18",
     "@angular/compiler-cli": "^20.3.18",
     "@angular/localize": "^20.3.18",
+    "@stylistic/eslint-plugin-ts": "^2.13.0",
     "@types/jasmine": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "angular-cli-ghpages": "^3.0.2",

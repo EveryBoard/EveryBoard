@@ -8,16 +8,16 @@ export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent
 // The user can be a player in the game (in which case the opponent field is set)
 // or they can be an observer. The role field indicates this.
 export type CurrentGame = {
-    id: string,
-    gameName: string,
-    creator: MinimalUser,
-    opponent?: MinimalUser | null,
-    role: UserRoleInPart,
+    id: string;
+    gameName: string;
+    creator: MinimalUser;
+    opponent?: MinimalUser | null;
+    role: UserRoleInPart;
 };
 
 export type User = {
     username?: string; // may not be set initially for google users
-    verified: boolean,
+    verified: boolean;
 };
 
 export type UserDocument = FirestoreDocument<User>;
