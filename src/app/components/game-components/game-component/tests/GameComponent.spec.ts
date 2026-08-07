@@ -15,8 +15,17 @@ import { Player } from '../../../../jscaip/Player';
 import { RulesConfig } from '../../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../../jscaip/state/GameState';
 import { ErrorLoggerServiceMock } from '../../../../services/tests/ErrorLoggerServiceMock.spec';
+import {
+    ActivatedRouteStub,
+    ComponentTestUtils,
+    ConfigureTestingModuleUtils,
+    createConfiguredMinimaxForTest,
+    expectToBeAbleToPlayAgainstItself,
+    getShallowestMinimaxOptions,
+    SlowTest,
+    UNIVERSAL_SELF_PLAY_PLIES,
+} from '../../../../utils/tests/TestUtils.spec';
 import { GameInfo } from '../../../normal-component/pick-game/pick-game.component';
-import { ActivatedRouteStub, expectToBeAbleToPlayAgainstItself, ComponentTestUtils, ConfigureTestingModuleUtils, createConfiguredMinimaxForTest, getShallowestMinimaxOptions, SlowTest, UNIVERSAL_SELF_PLAY_PLIES } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../GameComponent';
 
 describe('GameComponent', () => {
