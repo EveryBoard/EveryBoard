@@ -4182,8 +4182,8 @@
         <source>Diagonal wrapping</source>
         <target>Bouclage diagonal</target>
       </trans-unit>
-      <trans-unit id="8888657281645108734" datatype="html">
-        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move ?</source>
+      <trans-unit id="5238684930166477750" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?</source>
         <target>Le bouclage fonctionne aussi en diagonale. Une diagonale peut traverser à la fois les bords horizontaux et verticaux simultanément. Ici, une diagonale de pièces claires boucle autour d&apos;un coin du plateau. Pouvez-vous trouver le coup qui les capture ?</target>
       </trans-unit>
       <trans-unit id="6380656983498638368" datatype="html">
@@ -4194,7 +4194,7 @@
         <source>Strategic implications</source>
         <target>Implications stratégiques</target>
       </trans-unit>
-      <trans-unit id="8365215104510165485" datatype="html">
+      <trans-unit id="8991600964307142646" datatype="html">
         <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges, every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
         <target>Sur un plateau Reversi classique, les coins et les bords sont puissants car les pièces qui s&apos;y trouvent ne peuvent pas être encadrées. Sur un plateau torique, il n&apos;y a ni coins ni bords, chaque pièce peut potentiellement être capturée depuis n&apos;importe quelle direction. Cela change complètement la stratégie : la stabilité doit être construite différemment, et aucune position n&apos;est jamais vraiment sûre.</target>
       </trans-unit>
