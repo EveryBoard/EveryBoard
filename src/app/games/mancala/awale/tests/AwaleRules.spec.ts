@@ -372,7 +372,7 @@ describe('AwaleRules', () => {
         describe('multi row', () => {
 
             it('should sow correctly inner row', () => {
-                // Given
+                // Given a board with multiple rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -384,7 +384,7 @@ describe('AwaleRules', () => {
                     [0, 0, 0, 0, 0, 2],
                 ], 10, PlayerNumberMap.of(22, 22));
 
-                // When
+                // When sowing inner row
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
 
                 // Then the move should succeed
@@ -398,7 +398,7 @@ describe('AwaleRules', () => {
             });
 
             it('should sow correctly outer row', () => {
-                // Given
+                // Given a board with multiple rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -410,7 +410,7 @@ describe('AwaleRules', () => {
                     [0, 3, 0, 0, 2, 0],
                 ], 10, PlayerNumberMap.of(22, 22));
 
-                // When
+                // When sowing the outer row
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
 
                 // Then the move should succeed

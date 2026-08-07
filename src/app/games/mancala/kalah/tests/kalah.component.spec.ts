@@ -76,8 +76,8 @@ describe('KalahComponent', () => {
                 [5, 5, 5, 5, 4, 4],
                 [0, 5, 5, 0, 4, 4],
             ], 1, PlayerNumberMap.of(2, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(0)]),
-            distributedSeedCountsByLap: [4, 5],
+            move: MancalaMove.of(MancalaDistribution.of(3, 0), [MancalaDistribution.of(0, 0)]),
+            distributedSeedCountsByLap: [5, 5],
         },
         monsoon: {
             state: new MancalaState([
@@ -157,7 +157,7 @@ describe('KalahComponent', () => {
             it('should wait TIMEOUT_BETWEEN_LAPS between each sub-distribution when receiving move', fakeAsync(async() => {
                 // Given a board where AI move is sure to be two distributions (here, the initial state)
                 // When AI plays
-                const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of(1)));
+                const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of(1, 1)));
                 const localGameWrapper: LocalGameWrapperComponent =
                     mancalaTestUtils.testUtils.getComponent() as LocalGameWrapperComponent;
                 await localGameWrapper.doAIMove(ai, { name: 'noOption' });
@@ -341,7 +341,7 @@ describe('KalahComponent', () => {
             await mancalaTestUtils.testUtils.setupState(state);
 
             // When the AI plays a move
-            const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of(1)));
+            const ai: AbstractAI = getAIReturningOnly(MancalaMove.of(MancalaDistribution.of(1, 1)));
             const localGameWrapper: LocalGameWrapperComponent =
                 mancalaTestUtils.testUtils.getComponent() as LocalGameWrapperComponent;
             await localGameWrapper.doAIMove(ai, { name: 'noOption' });
@@ -397,7 +397,7 @@ describe('KalahComponent', () => {
             const moveOne: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(0, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-0-1', moveOne, customConfig);
 
-            // Then the capture of last turn should be hidden
+            // Then the emptied house should me marked as last move
             mancalaTestUtils.testUtils.expectElementToHaveClass('#circle-0-1', 'last-move-stroke');
         }));
 

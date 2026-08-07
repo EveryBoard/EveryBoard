@@ -337,7 +337,7 @@ describe('BaAwaRules', () => {
         describe('multi row', () => {
 
             it('should sow correctly inner row', () => {
-                // Given
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -349,7 +349,7 @@ describe('BaAwaRules', () => {
                     [0, 0, 0, 0, 0, 2],
                 ], 10, PlayerNumberMap.of(22, 22));
 
-                // When
+                // When sowing inner row
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
 
                 // Then the move should succeed
@@ -363,7 +363,7 @@ describe('BaAwaRules', () => {
             });
 
             it('should sow correctly outer row', () => {
-                // Given
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -375,7 +375,7 @@ describe('BaAwaRules', () => {
                     [0, 3, 0, 0, 2, 0],
                 ], 10, PlayerNumberMap.of(22, 22));
 
-                // When
+                // When sowing outer row
                 const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
 
                 // Then the move should succeed

@@ -82,16 +82,11 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         let resultingState: MancalaState = state.feed(coord);
         const previousValue: number = resultingState.getPieceAt(coord);
         const captureMap: number[][] = TableUtils.create(state.getWidth(), state.getHeight(), 0);
-        // if (this.isCapturableValue(previousValue) && seedsInHand > 1) {
-        //     captureMap[coord.y][coord.x] = previousValue;
-        //     const houseOwner: Player = Player.of(coord.y).getOpponent();
-        //     resultingState = resultingState.capture(houseOwner, coord);
-        //     return { capturedSum: previousValue, captureMap, resultingState };
         if (previousValue === 4 && seedsInHand > 1) {
             captureMap[coord.y][coord.x] = 4;
             const houseOwner: Player = Player.of(coord.y).getOpponent();
             resultingState = resultingState.capture(houseOwner, coord);
-            return { capturedSum: 4, captureMap, resultingState }; // this fix 167 - 167 tests
+            return { capturedSum: 4, captureMap, resultingState };
         } else {
             return { capturedSum: 0, captureMap, resultingState };
         }
@@ -102,7 +97,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         if (mustMonsoon.length > 0) {
             return mustMonsoon;
         } else {
-            if (postCaptureState.getTotalRemainingSeeds() <= 8) { // TODO FOR REVIEW: why the hardcoded numbar ?
+            if (postCaptureState.getTotalRemainingSeeds() <= 8) {
                 if (config.splitFinalSeedsEvenly) {
                     return [Player.ZERO, Player.ONE];
                 } else {

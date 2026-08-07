@@ -397,7 +397,7 @@ describe('KalahRules', () => {
         describe('multi row', () => {
 
             it('should sow correctly inner row', () => {
-                // Given
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -423,7 +423,7 @@ describe('KalahRules', () => {
             });
 
             it('should sow correctly outer row', () => {
-                // Given
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -449,7 +449,7 @@ describe('KalahRules', () => {
             });
 
             it(`should capture inner row`, () => {
-                // Given a multi-row config
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -478,7 +478,7 @@ describe('KalahRules', () => {
             });
 
             it(`should capture outer row`, () => {
-                // Given a multi-row config
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
@@ -507,7 +507,7 @@ describe('KalahRules', () => {
             });
 
             it(`should not capture itself`, () => {
-                // Given a multi-row config
+                // Given a board with several rows
                 const customConfig: MancalaConfig = {
                     ...defaultConfig,
                     numberOfRows: 2,
