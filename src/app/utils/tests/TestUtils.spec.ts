@@ -447,7 +447,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     public async setupState(state: GameState,
                             params: { previousState?: GameState;
                                       previousMove?: Move;
-                                      config?: RulesConfig } = {},
+                                      config?: RulesConfig; } = {},
     ): Promise<void> {
         const config: RulesConfig = this.getConfigFrom(params.config);
         if (Object.keys(config).length > 0) {
