@@ -5,12 +5,11 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { TeekoMinimax } from './TeekoMinimax';
+import { TeekoHeuristic } from './TeekoHeuristic';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoMoveGenerator } from './TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from './TeekoRules';
@@ -37,10 +36,19 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Teeko');
-        this.availableAIs = [
-            new TeekoMinimax(),
-            new MCTS($localize`MCTS`, new TeekoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): TeekoHeuristic => new TeekoHeuristic(),
+                moveGenerator: (): TeekoMoveGenerator => new TeekoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): TeekoMoveGenerator => new TeekoMoveGenerator(),
+            }],
+        };
         this.encoder = TeekoMove.encoder;
     }
 

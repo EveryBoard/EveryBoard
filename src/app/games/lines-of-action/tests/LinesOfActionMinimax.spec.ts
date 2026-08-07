@@ -1,9 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
+import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
+import { LinesOfActionMove } from '../LinesOfActionMove';
+import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionState } from '../LinesOfActionState';
+
+class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
+    public constructor() {
+        super('Minimax', LinesOfActionRules.get(), new LinesOfActionHeuristic(), new LinesOfActionMoveGenerator());
+    }
+}
 
 describe('LinesOfActionMinimax', () => {
 

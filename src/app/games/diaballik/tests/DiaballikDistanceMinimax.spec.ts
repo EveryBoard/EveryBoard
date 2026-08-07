@@ -1,11 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { MoveGenerator } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { DiaballikDistanceMinimax } from '../DiaballikDistanceMinimax';
+import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
+import { DiaballikMove } from '../DiaballikMove';
 import { DiaballikMoveGenerator } from '../DiaballikMoveGenerator';
 import { DiaballikRules } from '../DiaballikRules';
+import { DiaballikState } from '../DiaballikState';
+
+class DiaballikDistanceMinimax extends Minimax<DiaballikMove, DiaballikState, EmptyRulesConfig, DiaballikState> {
+    public constructor(name: string, moveGenerator: MoveGenerator<DiaballikMove, DiaballikState>) {
+        super(name, DiaballikRules.get(), new DiaballikDistanceHeuristic(), moveGenerator,
+        );
+    }
+}
 
 describe('DiaballikDistanceMinimax', () => {
 

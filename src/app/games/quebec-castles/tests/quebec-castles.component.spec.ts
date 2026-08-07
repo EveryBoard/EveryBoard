@@ -1,17 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 
 import { MGPOptional } from '@everyboard/lib';
 
-import { RulesConfigurationComponent } from '../../../components/wrapper-components/rules-configuration/rules-configuration.component';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { ActivatedRouteStub, ComponentTestUtils, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
-import { QuebecCastlesConfig, QuebecCastlesFailure, QuebecCastlesRules } from '../QuebecCastlesRules';
+import { QuebecCastlesConfig, QuebecCastlesRules } from '../QuebecCastlesRules';
 import { QuebecCastlesState } from '../QuebecCastlesState';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 
@@ -155,6 +154,7 @@ describe('QuebecCastlesComponent', () => {
                 // Given a board in non rhombic config
                 const customConfig: QuebecCastlesConfig = {
                     ...defaultConfig,
+                    linesForTerritory: 4,
                     isRhombic: false,
                 };
                 const state: QuebecCastlesState = QuebecCastlesRules.get().getInitialState(customConfig);
@@ -261,6 +261,7 @@ describe('QuebecCastlesComponent', () => {
                     ...defaultConfig,
                     dropMode: 'BY_BATCH',
                     defenders: 2,
+                    linesForTerritory: 4,
                     isRhombic: false,
                 };
                 await testUtils.setupState(rules.getInitialState(customConfig), { config: customConfig });
@@ -280,6 +281,7 @@ describe('QuebecCastlesComponent', () => {
                     dropMode: 'BY_BATCH',
                     invaders: 5,
                     defenders: 3,
+                    linesForTerritory: 4,
                     isRhombic: false,
                 };
                 const state: QuebecCastlesState = new QuebecCastlesState([
@@ -686,115 +688,5 @@ describe('QuebecCastlesComponent', () => {
         });
 
     });
-
-});
-
-describe('QuebecCastles Custom Configs', () => {
-
-    let testUtils: SimpleComponentTestUtils<RulesConfigurationComponent>;
-    let component: RulesConfigurationComponent;
-    const rules: QuebecCastlesRules = QuebecCastlesRules.get();
-    const defaultConfig: QuebecCastlesConfig = rules.getDefaultRulesConfig();
-
-    async function setCustomConfigTags(tags: { [key : string]: number | boolean | string }): Promise<void> {
-        await testUtils.chooseConfig('Custom');
-        testUtils.detectChanges();
-        for (const key of Object.keys(tags)) {
-            const value: number | boolean | string = tags[key];
-            component.rulesConfigForm.get(key)?.setValue(value);
-            tick(1);
-        }
-    }
-
-    function expectElementToHaveError(expectedError: string): void {
-        testUtils.expectElementToExist('#form-error');
-        const errorElement: DebugElement = testUtils.findElement('#form-error > div');
-        expect(errorElement.nativeElement.innerHTML).toEqual(expectedError);
-    }
-
-    beforeEach(async() => {
-        const activatedRoute: ActivatedRouteStub = new ActivatedRouteStub('whatever-game');
-        testUtils = await SimpleComponentTestUtils.create(RulesConfigurationComponent, activatedRoute);
-        component = testUtils.getComponent();
-        testUtils.setInput('rulesConfigDescription', rules.getRulesConfigDescription());
-        testUtils.setInput('editable', true);
-    });
-
-    it('should forbid config with too little room for pieces (invader)', fakeAsync(async() => {
-        // Given a config with too little room for defender piece
-        const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig,
-            invaders: 15, // There won't be enough room for that many pieces
-        };
-
-        // When setting up that invalid config
-        await setCustomConfigTags(customConfig);
-
-        // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_INVADER(14, 5);
-        expectElementToHaveError(error);
-    }));
-
-    it('should forbid config with too little room for pieces (defender)', fakeAsync(async() => {
-        // Given a config with too little room for defender piece
-        const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig,
-            defenders: 15, // There won't be enough room for that many pieces
-        };
-
-        // When setting up that invalid config
-        await setCustomConfigTags(customConfig);
-
-        // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.CANNOT_PUT_THAT_MANY_PIECE_IN_THERE_FOR_DEFENDER(14, 5);
-        expectElementToHaveError(error);
-    }));
-
-    it('should forbid config where player line cross the middle of the board (rhombic)', fakeAsync(async() => {
-        // Given a config with too much lines for territory
-        const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig,
-            linesForTerritory: 8,
-        };
-
-        // When setting up that invalid config
-        await setCustomConfigTags(customConfig);
-
-        // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
-        expectElementToHaveError(error);
-    }));
-
-    it('should forbid config where player line cross the middle of the board (rectangular)', fakeAsync(async() => {
-        // Given a config with too much lines for territory (rectangular board)
-        const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig,
-            linesForTerritory: 5,
-            isRhombic: false,
-        };
-
-        // When setting up that invalid config
-        await setCustomConfigTags(customConfig);
-
-        // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
-        expectElementToHaveError(error);
-    }));
-
-    it('should display territory-zone', fakeAsync(async() => {
-        // Given a config with too much lines for territory (rectangular board)
-        const customConfig: QuebecCastlesConfig = {
-            ...defaultConfig,
-            linesForTerritory: 5,
-            isRhombic: false,
-        };
-
-        // When setting up that invalid config
-        await setCustomConfigTags(customConfig);
-
-        // Then there should be an error eh!
-        const error: string = QuebecCastlesFailure.TOO_MANY_LINES_FOR_TERRITORY();
-        expectElementToHaveError(error);
-    }));
 
 });

@@ -6,7 +6,6 @@ import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -17,7 +16,7 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
 
 import { HiveFailure } from './HiveFailure';
-import { HiveMinimax } from './HiveMinimax';
+import { HiveHeuristic } from './HiveHeuristic';
 import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
 import { HiveMoveGenerator } from './HiveMoveGenerator';
 import { HivePiece, HivePieceStack } from './HivePiece';
@@ -130,10 +129,19 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public constructor() {
         super();
         this.setRulesAndNode('Hive');
-        this.availableAIs = [
-            new HiveMinimax(),
-            new MCTS($localize`MCTS`, new HiveMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Mobility',
+                name: $localize`Mobility`,
+                heuristic: (): HiveHeuristic => new HiveHeuristic(),
+                moveGenerator: (): HiveMoveGenerator => new HiveMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): HiveMoveGenerator => new HiveMoveGenerator(),
+            }],
+        };
         this.encoder = HiveMove.encoder;
         this.SPACE_SIZE = 30;
         this.PIECE_HEIGHT = this.SPACE_SIZE / 3;

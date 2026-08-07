@@ -42,9 +42,20 @@ export class OnlineGameWrapperMessages {
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    providers: [OGWCTimeManagerService, OGWCRequestManagerService],
-    imports: [GameCreationComponent, ViewConfigComponent, TimerComponent,
-        FaIconComponent, RouterLink, NgClass, ChatComponent, EloComponent],
+    providers: [
+        OGWCTimeManagerService,
+        OGWCRequestManagerService,
+    ],
+    imports: [
+        ChatComponent,
+        EloComponent,
+        FaIconComponent,
+        GameCreationComponent,
+        NgClass,
+        RouterLink,
+        TimerComponent,
+        ViewConfigComponent,
+    ],
 })
 @Debug.log
 export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> implements OnInit, OnDestroy {
@@ -209,6 +220,9 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
                 await this.takeBackToPreviousPlayerTurn(accepter.getOpponent());
                 break;
             case 'Rematch':
+                if (this.isSynced === false) {
+                    break;
+                }
                 await this.router.navigate(['/nextGameLoading']);
                 const urlName: string = this.getGameUrlName();
                 await this.router.navigate(['/play', urlName, reply.data]);
@@ -234,6 +248,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             // This is not our move, it is either the move of the opponent, one older move, or we are observing.
             // In any case, we have to show it. We also animate it if we are synced.
             const move: Move = this.gameComponent.encoder.decode(moveEvent.move);
+            this.gameComponent.hideLastMove();
             await this.applyMove(move, this.isSynced);
         }
         // Need to handle the rest irrespective of which move we received
@@ -373,7 +388,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public async onLegalUserMove(move: Move): Promise<void> {
+    public override async onLegalUserMove(move: Move): Promise<void> {
         // First, show the move in the component
         await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move
@@ -481,7 +496,6 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public override getConfig(): RulesConfig {
         return this.configRoom.rulesConfig;
     }
-
 
     public isAgreedDraw(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;

@@ -5,7 +5,6 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
@@ -17,7 +16,7 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
-import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
+import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessDroneComponent } from './martian-chess-drone.component';
 import { MartianChessPawnComponent } from './martian-chess-pawn.component';
@@ -109,10 +108,19 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public constructor() {
         super();
         this.setRulesAndNode('MartianChess');
-        this.availableAIs = [
-            new MartianChessScoreMinimax(),
-            new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): MartianChessScoreHeuristic => new MartianChessScoreHeuristic(),
+                moveGenerator: (): MartianChessMoveGenerator => new MartianChessMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): MartianChessMoveGenerator => new MartianChessMoveGenerator(),
+            }],
+        };
         this.encoder = MartianChessMove.encoder;
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));

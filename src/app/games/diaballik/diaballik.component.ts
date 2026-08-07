@@ -6,14 +6,13 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Line } from '../../jscaip/Line';
 import { Player } from '../../jscaip/Player';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
+import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
 import { DiaballikFailure } from './DiaballikFailure';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
@@ -67,16 +66,56 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
-        this.availableAIs = [
-            new DiaballikDistanceMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
-            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
-            new MCTS($localize`MCTS (3 only)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
-            new MCTS($localize`MCTS (without dups)`, new DiaballikMoveGenerator(true), this.rules),
-            new MCTS($localize`MCTS (3, no dups)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
-        ];
-        for (let i: number = 1; i <= 3; i++) {
-            this.availableAIs.push(new DiaballikDistanceMinimax($localize`Distance (${i})`, new DiaballikFilteredMoveGenerator(i)));
-        }
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'AllMoves',
+                    name: $localize`AllMoves`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikMoveGenerator => new DiaballikMoveGenerator(true),
+                },
+                {
+                    id: 'Distance (1)',
+                    name: $localize`Distance (1)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(1),
+                },
+                {
+                    id: 'Distance (2)',
+                    name: $localize`Distance (2)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(2),
+                },
+                {
+                    id: 'Distance (3)',
+                    name: $localize`Distance (3)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3),
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`MCTS`,
+                    moveGenerator: (): DiaballikMoveGenerator => this.moveGenerator,
+                },
+                {
+                    id: '3-only',
+                    name: $localize`MCTS (3 only)`,
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3, false),
+                },
+                {
+                    id: 'without-dups',
+                    name: $localize`MCTS (without dups)`,
+                    moveGenerator: (): DiaballikMoveGenerator => new DiaballikMoveGenerator(true),
+                },
+                {
+                    id: '3-no-dups',
+                    name: $localize`MCTS (3, no dups)`,
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3, false),
+                },
+            ],
+        };
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {

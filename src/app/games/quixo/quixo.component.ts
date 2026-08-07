@@ -5,13 +5,12 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { QuixoMinimax } from './QuixoMinimax';
+import { QuixoHeuristic } from './QuixoHeuristic';
 import { QuixoMove } from './QuixoMove';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { QuixoRules } from './QuixoRules';
@@ -43,10 +42,19 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Quixo');
-        this.availableAIs = [
-            new QuixoMinimax(),
-            new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Piece Count',
+                name: $localize`Piece Count`,
+                heuristic: (): QuixoHeuristic => new QuixoHeuristic(),
+                moveGenerator: (): QuixoMoveGenerator => new QuixoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): QuixoMoveGenerator => new QuixoMoveGenerator(),
+            }],
+        };
         this.encoder = QuixoMove.encoder;
     }
 

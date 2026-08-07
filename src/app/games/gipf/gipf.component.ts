@@ -8,7 +8,6 @@ import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
@@ -23,7 +22,7 @@ import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfLegalityInformation, GipfRules } from './GipfRules';
-import { GipfScoreMinimax } from './GipfScoreMinimax';
+import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { GipfState } from './GipfState';
 
 @Component({
@@ -69,10 +68,19 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     public constructor() {
         super();
         this.setRulesAndNode('Gipf');
-        this.availableAIs = [
-            new GipfScoreMinimax(),
-            new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): GipfScoreHeuristic => new GipfScoreHeuristic(),
+                moveGenerator: (): GipfMoveGenerator => new GipfMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): GipfMoveGenerator => new GipfMoveGenerator(),
+            }],
+        };
         this.encoder = GipfMove.encoder;
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));

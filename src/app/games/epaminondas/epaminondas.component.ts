@@ -8,19 +8,19 @@ import { DirArrowComponent } from '../../components/game-components/arrow-compon
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { EpaminondasAttackMinimax } from './EpaminondasAttackMinimax';
+import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';
 import { EpaminondasFailure } from './EpaminondasFailure';
-import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasMoveGenerator } from './EpaminondasMoveGenerator';
-import { EpaminondasPositionalMinimax } from './EpaminondasPositionalMinimax';
+import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from './EpaminondasPhalanxSizeAndFilterMoveGenerator';
+import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from './EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic';
+import { EpaminondasPositionalHeuristic } from './EpaminondasPositionalHeuristic';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { EpaminondasState } from './EpaminondasState';
 
@@ -61,12 +61,41 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     public constructor() {
         super();
         this.setRulesAndNode('Epaminondas');
-        this.availableAIs = [
-            new EpaminondasMinimax(),
-            new EpaminondasPositionalMinimax(),
-            new EpaminondasAttackMinimax(),
-            new MCTS($localize`MCTS`, new EpaminondasMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'Piece > Row Domination > Alignment > Row Presence',
+                    name: $localize`Piece > Row Domination > Alignment > Row Presence`,
+                    heuristic: (): EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic => {
+                        return new EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic();
+                    },
+                    moveGenerator: (): EpaminondasPhalanxSizeAndFilterMoveGenerator => {
+                        return new EpaminondasPhalanxSizeAndFilterMoveGenerator();
+                    },
+                },
+                {
+                    id: 'Positional',
+                    name: $localize`Positional`,
+                    heuristic: (): EpaminondasPositionalHeuristic => new EpaminondasPositionalHeuristic(),
+                    moveGenerator: (): EpaminondasPhalanxSizeAndFilterMoveGenerator => {
+                        return new EpaminondasPhalanxSizeAndFilterMoveGenerator();
+                    },
+                },
+                {
+                    id: 'Attack',
+                    name: $localize`Attack`,
+                    heuristic: (): EpaminondasAttackHeuristic => new EpaminondasAttackHeuristic(),
+                    moveGenerator: (): EpaminondasPhalanxSizeAndFilterMoveGenerator => {
+                        return new EpaminondasPhalanxSizeAndFilterMoveGenerator();
+                    },
+                },
+            ],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): EpaminondasMoveGenerator => new EpaminondasMoveGenerator(),
+            }],
+        };
         this.encoder = EpaminondasMove.encoder;
         this.hasAsymmetricBoard = true;
     }

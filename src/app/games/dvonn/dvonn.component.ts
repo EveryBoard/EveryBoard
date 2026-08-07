@@ -5,17 +5,16 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 
-import { DvonnMaxStacksMinimax } from './DvonnMaxStacksMinimax';
+import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnRules } from './DvonnRules';
-import { DvonnScoreMinimax } from './DvonnScoreMinimax';
+import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnState } from './DvonnState';
 
 @Component({
@@ -34,11 +33,35 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public constructor() {
         super();
         this.setRulesAndNode('Dvonn');
-        this.availableAIs = [
-            new DvonnMaxStacksMinimax(),
-            new DvonnScoreMinimax(),
-            new MCTS($localize`MCTS`, new DvonnMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'Stacks',
+                    name: $localize`Stacks`,
+                    heuristic: (): DvonnMaxStacksHeuristic => new DvonnMaxStacksHeuristic(),
+                    moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
+                },
+                {
+                    id: 'Score',
+                    name: $localize`Score`,
+                    heuristic: (): DvonnScoreHeuristic => new DvonnScoreHeuristic(),
+                    moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
+                },
+                {
+                    id: 'Score',
+                    name: $localize`Score`,
+                    heuristic: (): DvonnScoreHeuristic => new DvonnScoreHeuristic(),
+                    moveGenerator: (): DvonnMoveGenerator => new DvonnMoveGenerator(),
+                },
+            ],
+        };
         this.encoder = DvonnMove.encoder;
         this.scores = MGPOptional.of(DvonnRules.getScores(this.getState()));
 
@@ -174,7 +197,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public getTextTransform(spaceContent: DvonnPieceStack): string {
         const containsSource: boolean = spaceContent.containsSource();
         if (spaceContent.size <= 9) {
-            if (containsSource) { // X Z ou Z
+            if (containsSource) { // X Z or Z
                 return 'translate(-7, 0)';
             } else { // X or ""
                 return 'translate(0, 0)';

@@ -6,12 +6,11 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { ConnectSixAlignmentMinimax } from './ConnectSixAlignmentMinimax';
+import { ConnectSixAlignmentHeuristic } from './ConnectSixAlignmentHeuristic';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
 import { ConnectSixRules } from './ConnectSixRules';
@@ -38,10 +37,19 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public constructor() {
         super();
         this.setRulesAndNode('ConnectSix');
-        this.availableAIs = [
-            new ConnectSixAlignmentMinimax(),
-            new MCTS($localize`MCTS`, new ConnectSixMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): ConnectSixAlignmentHeuristic => new ConnectSixAlignmentHeuristic(),
+                moveGenerator: (): ConnectSixMoveGenerator => new ConnectSixMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): ConnectSixMoveGenerator => new ConnectSixMoveGenerator(),
+            }],
+        };
         this.encoder = ConnectSixMove.encoder;
     }
 

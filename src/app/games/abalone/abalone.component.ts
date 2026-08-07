@@ -9,7 +9,6 @@ import { HexArrowComponent } from '../../components/game-components/arrow-compon
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
@@ -25,7 +24,7 @@ import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
 import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
-import { AbaloneScoreMinimax } from './AbaloneScoreMinimax';
+import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneState } from './AbaloneState';
 
 type CapturedInfo = {
@@ -72,10 +71,19 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     public constructor() {
         super();
         this.setRulesAndNode('Abalone');
-        this.availableAIs = [
-            new AbaloneScoreMinimax(),
-            new MCTS($localize`MCTS`, new AbaloneMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): AbaloneScoreHeuristic => new AbaloneScoreHeuristic(),
+                moveGenerator: (): AbaloneMoveGenerator => new AbaloneMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): AbaloneMoveGenerator => new AbaloneMoveGenerator(),
+            }],
+        };
         this.encoder = AbaloneMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
         this.SPACE_SIZE = 30;

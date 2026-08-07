@@ -7,12 +7,11 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
-import { PenteAlignmentMinimax } from './PenteAlignmentMinimax';
+import { PenteAlignmentHeuristic } from './PenteAlignmentHeuristic';
 import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteMoveGenerator } from './PenteMoveGenerator';
@@ -39,10 +38,19 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public constructor() {
         super();
         this.setRulesAndNode('Pente');
-        this.availableAIs = [
-            new PenteAlignmentMinimax(),
-            new MCTS($localize`MCTS`, new PenteMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): PenteAlignmentHeuristic => new PenteAlignmentHeuristic(),
+                moveGenerator: (): PenteMoveGenerator => new PenteMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): PenteMoveGenerator => new PenteMoveGenerator(),
+            }],
+        };
         this.encoder = PenteMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }

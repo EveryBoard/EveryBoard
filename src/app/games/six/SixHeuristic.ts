@@ -21,7 +21,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
         const move: MGPOptional<SixMove> = node.previousMove;
         const state: SixState = node.gameState;
         const previousPlayer: Player = state.getPreviousPlayer();
-        const victoryValue: number = previousPlayer.getVictoryValue();
+        const victoryValue: number = BoardValue.getVictoryValueOf(previousPlayer);
         let shapeInfo: BoardInfo = {
             status: AlignmentStatus.NOTHING,
             victory: MGPOptional.empty(),
@@ -39,7 +39,7 @@ export class SixHeuristic extends AlignmentHeuristic<SixMove, SixState, SixVicto
             return BoardValue.ofPlayerNumberMap(pieces);
         }
         if (shapeInfo.status === AlignmentStatus.PRE_VICTORY) {
-            return BoardValue.of(previousPlayer.getPreVictory());
+            return BoardValue.of(BoardValue.getPreVictoryValueOf(previousPlayer));
         }
         return BoardValue.of(shapeInfo.sum * previousPlayer.getScoreModifier());
     }

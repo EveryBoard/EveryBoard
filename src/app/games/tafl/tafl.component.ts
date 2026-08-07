@@ -3,8 +3,7 @@ import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AI, AIOptions } from '../../jscaip/AI/AI';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { AIConfig } from '../../jscaip/AI/AIConfig';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -13,13 +12,13 @@ import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { TaflConfig } from './TaflConfig';
-import { TaflEscapeThenPieceThenControlMinimax } from './TaflEscapeThenPieceThenControlMinimax';
+import { TaflEscapeThenPieceThenControlHeuristic } from './TaflEscapeThenPieceThenControlHeuristic';
 import { TaflMove } from './TaflMove';
 import { TaflMoveGenerator } from './TaflMoveGenerator';
 import { TaflPawn } from './TaflPawn';
-import { TaflPieceAndControlMinimax } from './TaflPieceAndControlMinimax';
-import { TaflPieceAndInfluenceMinimax } from './TaflPieceAndInfluenceMinimax';
-import { TaflPieceMinimax } from './TaflPieceMinimax';
+import { TaflPieceAndControlHeuristic } from './TaflPieceAndControlHeuristic';
+import { TaflPieceAndInfluenceHeuristic } from './TaflPieceAndInfluenceHeuristic';
+import { TaflPieceHeuristic } from './TaflPieceHeuristic';
 import { TaflRules } from './TaflRules';
 import { TaflState } from './TaflState';
 
@@ -219,15 +218,48 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         return this.board[y][x].isKing();
     }
 
-    protected createAIs(): AI<TaflMove, TaflState, AIOptions, TaflConfig>[] {
-        const moveGenerator: TaflMoveGenerator<M> = new TaflMoveGenerator(this.rules);
-        return [
-            new TaflPieceMinimax(this.rules),
-            new TaflPieceAndInfluenceMinimax(this.rules),
-            new TaflPieceAndControlMinimax(this.rules),
-            new TaflEscapeThenPieceThenControlMinimax(this.rules),
-            new MCTS($localize`MCTS`, moveGenerator, this.rules),
-        ];
+    protected createAIConfig(): AIConfig<TaflMove, TaflState, TaflConfig> {
+        return {
+            minimax: [
+                {
+                    id: 'Pieces',
+                    name: $localize`Pieces`,
+                    heuristic: () => new TaflPieceHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
+                },
+                {
+                    id: 'Pieces > Influence',
+                    name: $localize`Pieces > Influence`,
+                    heuristic: () => new TaflPieceAndInfluenceHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
+                },
+                {
+                    id: 'Pieces > Control',
+                    name: $localize`Pieces > Control`,
+                    heuristic: () => new TaflPieceAndControlHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
+                },
+                {
+                    id: 'Escape > Pieces > Control',
+                    name: $localize`Escape > Pieces > Control`,
+                    heuristic: () => new TaflEscapeThenPieceThenControlHeuristic(this.rules),
+                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`MCTS`,
+                    moveGenerator: (): TaflMoveGenerator<M> => new TaflMoveGenerator(this.rules),
+                },
+                {
+                    id: 'Pieces',
+                    name: $localize`Pieces`,
+                    heuristic: () => new TaflPieceHeuristic(this.rules),
+                    moveGenerator: () => new TaflMoveGenerator(this.rules),
+                },
+            ],
+        };
     }
 
 }

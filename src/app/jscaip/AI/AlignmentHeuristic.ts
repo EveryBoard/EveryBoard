@@ -7,7 +7,7 @@ import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { BoardValue } from './BoardValue';
-import { Heuristic } from './Minimax';
+import { Heuristic } from './Heuristic';
 
 /**
  * Represents possible alignment configurations
@@ -32,7 +32,7 @@ export class AlignmentStatus {
         } else {
             Utils.assert(this === AlignmentStatus.PRE_VICTORY, 'alignment status can only be pre-victory or default');
             const player: Player = Player.of(turn % 2);
-            return BoardValue.of(player.getPreVictory());
+            return BoardValue.of(BoardValue.getPreVictoryValueOf(player));
         }
     }
 

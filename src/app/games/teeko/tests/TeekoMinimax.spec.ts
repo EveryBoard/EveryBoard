@@ -1,8 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { TeekoMinimax } from '../TeekoMinimax';
+import { TeekoHeuristic } from '../TeekoHeuristic';
+import { TeekoMove } from '../TeekoMove';
+import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from '../TeekoRules';
+import { TeekoState } from '../TeekoState';
+
+class TeekoMinimax extends Minimax<TeekoMove, TeekoState, TeekoConfig> {
+    public constructor() {
+        super('Minimax', TeekoRules.get(), new TeekoHeuristic(), new TeekoMoveGenerator());
+    }
+}
 
 describe('TeekoMinimax', () => {
 

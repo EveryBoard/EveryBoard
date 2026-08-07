@@ -72,7 +72,7 @@
               (click)="onClick(coord.x, coord.y)"
               class="indicator"/>
     }
-    @for (player of Player.PLAYERS; track player) {
+    @for (player of Player.PLAYERS; track player.getValue()) {
         <g [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
             @for (_ of [].constructor(viewInfo.sideRings.get(player)); track $index; let ring = $index) {
                 <g app-ring

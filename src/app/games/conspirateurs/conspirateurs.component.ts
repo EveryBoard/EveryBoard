@@ -6,7 +6,6 @@ import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
@@ -14,7 +13,7 @@ import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
 
-import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
+import { ConspirateursHeuristic } from './ConspirateursHeuristic';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursRules } from './ConspirateursRules';
@@ -73,10 +72,19 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     public constructor() {
         super();
         this.setRulesAndNode('Conspirateurs');
-        this.availableAIs = [
-            new ConspirateursJumpMinimax(),
-            new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Jump',
+                name: $localize`Jump`,
+                heuristic: (): ConspirateursHeuristic => new ConspirateursHeuristic(),
+                moveGenerator: (): ConspirateursMoveGenerator => new ConspirateursMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): ConspirateursMoveGenerator => new ConspirateursMoveGenerator(),
+            }],
+        };
         this.encoder = ConspirateursMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }

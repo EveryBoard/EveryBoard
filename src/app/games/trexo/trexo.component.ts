@@ -5,13 +5,12 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
 
-import { TrexoAlignmentMinimax } from './TrexoAlignmentMinimax';
+import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoMoveGenerator } from './TrexoMoveGenerator';
@@ -81,10 +80,19 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public constructor() {
         super();
         this.setRulesAndNode('Trexo');
-        this.availableAIs = [
-            new TrexoAlignmentMinimax(),
-            new MCTS($localize`MCTS`, new TrexoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): TrexoAlignmentHeuristic => new TrexoAlignmentHeuristic(),
+                moveGenerator: (): TrexoMoveGenerator => new TrexoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): TrexoMoveGenerator => new TrexoMoveGenerator(),
+            }],
+        };
         this.encoder = TrexoMove.encoder;
         this.switchToMode('3D');
     }

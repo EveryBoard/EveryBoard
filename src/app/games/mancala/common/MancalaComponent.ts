@@ -3,8 +3,8 @@ import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/l
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { AI, AIOptions, MoveGenerator } from '../../../jscaip/AI/AI';
-import { MCTS } from '../../../jscaip/AI/MCTS';
+import { MoveGenerator } from '../../../jscaip/AI/AI';
+import { AIConfig } from '../../../jscaip/AI/AIConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -14,7 +14,7 @@ import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
-import { MancalaScoreMinimax } from './MancalaScoreMinimax';
+import { MancalaScoreHeuristic } from './MancalaScoreHeuristic';
 import { MancalaState } from './MancalaState';
 
 export type SeedDropResult = {
@@ -397,13 +397,32 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.cdr.detectChanges();
     }
 
-    protected createAIs(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
-    : AI<MancalaMove, MancalaState, AIOptions, MancalaConfig>[]
+    protected createAIConfig(moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>)
+    : AIConfig<MancalaMove, MancalaState, MancalaConfig>
     {
-        return [
-            new MancalaScoreMinimax(this.rules, moveGenerator),
-            new MCTS($localize`MCTS`, moveGenerator, this.rules),
-        ];
+        return {
+            minimax: [{
+                id: 'score',
+                name: $localize`Score`,
+                heuristic: () => new MancalaScoreHeuristic(),
+                moveGenerator: () => moveGenerator,
+                hash: (state: MancalaState) =>
+                    `${state.turn % 2}-${JSON.stringify(state.board)}-${JSON.stringify(state.scores)}`,
+            }],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: () => moveGenerator,
+                },
+                {
+                    id: 'Score',
+                    name: $localize`Score`,
+                    moveGenerator: () => moveGenerator,
+                    heuristic: () => new MancalaScoreHeuristic(),
+                },
+            ],
+        };
     }
 
     /**

@@ -15,14 +15,30 @@ export class BoardValue {
         return BoardValue.multiMetric(min);
     }
 
-    public static VICTORIES: number[] = [Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY];
-
-    public static isVictory(score: number): boolean {
-        return score === Number.POSITIVE_INFINITY || score === Number.NEGATIVE_INFINITY;
+    public static getVictoryValueOf(player: Player): number {
+        if (player === Player.ZERO) {
+            return Number.NEGATIVE_INFINITY;
+        } else {
+            return Number.POSITIVE_INFINITY;
+        }
     }
 
-    public static isPreVictory(score: number): boolean {
-        return score === Number.POSITIVE_INFINITY - 1 || score === Number.NEGATIVE_INFINITY + 1;
+    public static getPreVictoryValueOf(player: Player): number {
+        if (player === Player.ZERO) {
+            return Number.MIN_SAFE_INTEGER + 1;
+        } else {
+            return Number.MAX_SAFE_INTEGER - 1;
+        }
+    }
+
+    public static isVictoryValue(score: number): boolean {
+        return score === BoardValue.getVictoryValueOf(Player.ZERO) ||
+               score === BoardValue.getVictoryValueOf(Player.ONE);
+    }
+
+    public static isPreVictoryValue(score: number): boolean {
+        return score === BoardValue.getPreVictoryValueOf(Player.ZERO) ||
+               score === BoardValue.getPreVictoryValueOf(Player.ONE);
     }
 
     /**
@@ -50,7 +66,7 @@ export class BoardValue {
     : BoardValue
     {
         Utils.assert(playerZeroScores.length === playerOneScores.length, 'both player should have the same number of metric');
-        Utils.assert(playerZeroScores.length >= 1, 'scores list should be filled');
+        Utils.assert(playerZeroScores.length !== 0, 'scores list should not be empty');
         const subValues: number[] = [];
         for (let i: number = 0; i < playerZeroScores.length; i++) {
             const playerZeroScore: number = playerZeroScores[i] * Player.ZERO.getScoreModifier();
@@ -80,13 +96,13 @@ export class BoardValue {
 
     public toMaximum(): BoardValue {
         const size: number = this.metrics.length;
-        const maximums: number[] = ArrayUtils.create(size, Number.POSITIVE_INFINITY);
+        const maximums: number[] = ArrayUtils.create(size, BoardValue.getVictoryValueOf(Player.ONE));
         return BoardValue.multiMetric(maximums);
     }
 
     public toMinimum(): BoardValue {
         const size: number = this.metrics.length;
-        const minimums: number[] = ArrayUtils.create(size, Number.NEGATIVE_INFINITY);
+        const minimums: number[] = ArrayUtils.create(size, BoardValue.getVictoryValueOf(Player.ZERO));
         return BoardValue.multiMetric(minimums);
     }
 
