@@ -192,9 +192,9 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private getLineDirectionAndIndex(player: Player, config: QuebecCastlesConfig)
-    : { lineDirection: number, lineToFillIndex: number }
+    : { lineDirection: number; lineToFillIndex: number }
     {
-        const lineToFillRange: { min: number, max: number } = this.getLegalRangeIndex(player, config);
+        const lineToFillRange: { min: number; max: number } = this.getLegalRangeIndex(player, config);
         if (player === Player.ZERO) {
             return { lineDirection: -1, lineToFillIndex: lineToFillRange.max };
         } else {
@@ -202,7 +202,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         }
     }
 
-    private getLineFirstCoord(line: Coord[], pieceToDrop: number): { coord: Coord, skipCenter: boolean } {
+    private getLineFirstCoord(line: Coord[], pieceToDrop: number): { coord: Coord; skipCenter: boolean } {
         const availableSpaceEvenness: boolean = line.length % 2 === 0;
         const remainingSpace: number = line.length - pieceToDrop;
         const skipCenter: boolean = availableSpaceEvenness === false && (pieceToDrop % 2 === 0);
@@ -476,11 +476,11 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
         } else {
             metric = y;
         }
-        const minMax: { min: number, max: number } = this.getLegalRangeIndex(player, config);
+        const minMax: { min: number; max: number } = this.getLegalRangeIndex(player, config);
         return minMax.min <= metric && metric <= minMax.max;
     }
 
-    private getLegalRangeIndex(player: Player, config: QuebecCastlesConfig): { min: number, max: number } {
+    private getLegalRangeIndex(player: Player, config: QuebecCastlesConfig): { min: number; max: number } {
         const yMax: number = config.height - 1;
         if (config.isRhombic) {
             const xMax: number = config.width - 1;
@@ -492,7 +492,7 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     }
 
     private getLegalRangeFromMaximum(player: Player, config: QuebecCastlesConfig, max: number)
-    : { min: number, max: number }
+    : { min: number; max: number }
     {
         return {
             min: player === Player.ZERO ? (max + 1) - config.linesForTerritory : 0,

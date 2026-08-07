@@ -378,7 +378,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
 
             // Then it should have selected the corresponding minimax AI
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(Minimax));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: 'Level 1', maxDepth: 1 }));
         }));
@@ -394,7 +394,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
 
             // Then it should have selected the corresponding iterative deepening minimax AI
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(IterativeDeepeningMinimax));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds', maxSeconds: 1 }));
         }));
@@ -409,7 +409,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             chooseFirstAILevel(Player.ZERO);
 
             // Then it should have selected the corresponding MCTS
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = wrapper['getPlayingAI']();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(MCTS));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds', maxSeconds: 1 }));
         }));

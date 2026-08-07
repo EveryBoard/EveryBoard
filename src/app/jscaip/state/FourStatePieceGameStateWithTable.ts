@@ -8,13 +8,13 @@ import { GameStateWithTable } from './GameStateWithTable';
 
 export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourStatePiece> {
 
-    public getPlayerCoordsAndContent(): { coord: Coord; content: Player; }[] {
+    public getPlayerCoordsAndContent(): { coord: Coord; content: Player }[] {
         return this
             .getCoordsAndContents()
-            .filter((value: { coord: Coord; content: FourStatePiece; }) => {
+            .filter((value: { coord: Coord; content: FourStatePiece }) => {
                 return value.content.isPlayer();
             })
-            .map((value: { coord: Coord; content: FourStatePiece; }) => {
+            .map((value: { coord: Coord; content: FourStatePiece }) => {
                 return {
                     coord: value.coord,
                     content: value.content.getPlayer() as Player,

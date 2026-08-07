@@ -8,8 +8,8 @@ import { setupEmulators } from '../../utils/tests/TestUtils.spec';
 import { FirestoreDocument, FirestoreDAO } from '../FirestoreDAO';
 
 type Foo = {
-    value: string,
-    otherValue: number,
+    value: string;
+    otherValue: number;
 }
 
 @Injectable({

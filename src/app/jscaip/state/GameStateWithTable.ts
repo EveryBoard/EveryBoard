@@ -88,8 +88,8 @@ export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends
         return MGPOptional.empty();
     }
 
-    public getCoordsAndContents(): {coord: Coord, content: P}[] {
-        const coordsAndContents: {coord: Coord, content: P}[] = [];
+    public getCoordsAndContents(): { coord: Coord; content: P}[] {
+        const coordsAndContents: { coord: Coord; content: P}[] = [];
         for (let y: number = 0; y < this.getHeight(); y++) {
             for (let x: number = 0; x < this.getWidth(); x++) {
                 const coord: Coord = new Coord(x, y);

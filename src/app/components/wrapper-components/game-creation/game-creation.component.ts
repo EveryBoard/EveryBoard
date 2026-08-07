@@ -42,15 +42,15 @@ type GameCreationViewInfo = {
 
     creator?: string;
     firstPlayer: FirstPlayer;
-    firstPlayerClasses: { [key: string]: string[] },
+    firstPlayerClasses: { [key: string]: string[] };
     gameType: GameType;
-    gameTypeClasses: { [key: string]: string[] },
-    gameTypeName?: string,
+    gameTypeClasses: { [key: string]: string[] };
+    gameTypeName?: string;
     moveDuration?: number;
     gameDuration?: number;
-    candidates: { name: string, elo: number }[];
+    candidates: { name: string; elo: number }[];
     chosenOpponent?: string;
-    candidateClasses: { [key: string]: string[] },
+    candidateClasses: { [key: string]: string[] };
 }
 @Component({
     selector: 'app-game-creation',

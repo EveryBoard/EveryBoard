@@ -35,7 +35,7 @@ export class Auth {
         const credential: FireAuth.UserCredential = await FireAuth.signInWithPopup(auth, provider);
         return credential.user;
     }
-    public static updateProfile(user: FireAuth.User, profile: { displayName?: string, photoURL?: string })
+    public static updateProfile(user: FireAuth.User, profile: { displayName?: string; photoURL?: string })
     : Promise<void>
     {
         return FireAuth.updateProfile(user, profile);

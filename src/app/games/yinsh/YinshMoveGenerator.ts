@@ -28,7 +28,7 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
                     const stateAfterCapture: YinshState = rules.applyCaptures(initialCaptures, state);
-                    this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
+                    this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord; end: Coord}): void => {
                         const stateAfterRingMove: YinshState =
                             rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
@@ -60,9 +60,9 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
                 return accumulator.concat(captures);
             }, []);
     }
-    private getRingMoves(state: YinshState): {start: Coord, end: Coord}[] {
+    private getRingMoves(state: YinshState): {start: Coord; end: Coord}[] {
         const rules: YinshRules = YinshRules.get();
-        const moves: {start: Coord, end: Coord}[] = [];
+        const moves: {start: Coord; end: Coord}[] = [];
         for (const start of this.getRingCoords(state)) {
             for (const end of rules.getRingTargets(state, start)) {
                 moves.push({ start, end });
