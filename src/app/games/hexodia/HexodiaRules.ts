@@ -110,7 +110,11 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
         return new FourStatePieceGameStateWithTable(newBoard, state.turn + 1);
     }
 
-    public override isLegal(move: HexodiaMove, state: FourStatePieceGameStateWithTable, config: HexodiaConfig): MGPValidation {
+    public override isLegal(
+        move: HexodiaMove,
+        state: FourStatePieceGameStateWithTable,
+        config: HexodiaConfig,
+    ): MGPValidation {
         const numberOfDrops: number = move.coords.size();
         if (state.turn === 0) {
             Utils.assert(numberOfDrops === 1, 'HexodiaMove should only drop one piece at first turn');
