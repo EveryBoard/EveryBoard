@@ -12,6 +12,7 @@ module.exports = {
             project: 'tsconfig.json',
         },
         plugins: [
+            '@stylistic/ts',
             '@typescript-eslint',
             'jasmine',
             'import',
@@ -63,6 +64,19 @@ module.exports = {
             'complexity': ['error', 20],
             '@angular-eslint/no-output-rename': ['warn'],
             '@angular-eslint/component-class-suffix': ['warn'],
+            '@stylistic/ts/member-delimiter-style': [
+                'error',
+                {
+                    multiline: {
+                        delimiter: 'semi',
+                        requireLast: true,
+                    },
+                    singleline: {
+                        delimiter: 'semi',
+                        requireLast: true,
+                    },
+                },
+            ],
             '@typescript-eslint/no-unnecessary-condition': ['warn'],
             '@typescript-eslint/no-unnecessary-type-arguments': ['warn'],
             '@typescript-eslint/no-unnecessary-type-assertion': ['warn'],
@@ -162,7 +176,8 @@ module.exports = {
                     'checkText': true,
                     'checkAttributes': true,
                     'ignoreTags': ['title', 'meta', 'app-chat'],
-                    'ignoreAttributes': ['href', ':xlink:href', 'r', 'points', 'preserveAspectRatio', 'pointer-events', 'stroke-linecap', 'x', 'y', 'transform', 'refX', 'refY', 'marker-end', 'markerWidth', 'markerHeight', 'orient', 'dx', 'dy', 'text-anchor', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'fill-opacity', 'role', 'cx', 'stroke-dasharray', 'name', 'for', 'step', 'min', 'max', 'scope', 'routerLink', 'debugName', 'value', 'aria-label', 'data-target', 'maxlength', 'ngClass'],
+                    'ignoreAttributes': [
+                        'href', ':xlink:href', 'r', 'points', 'preserveAspectRatio', 'pointer-events', 'stroke-linecap', 'x', 'y', 'transform', 'refX', 'refY', 'marker-end', 'markerWidth', 'markerHeight', 'orient', 'dx', 'dy', 'text-anchor', 'rx', 'ry', 'x1', 'x2', 'y1', 'y2', 'fill-opacity', 'role', 'cx', 'stroke-dasharray', 'name', 'for', 'step', 'min', 'max', 'scope', 'routerLink', 'debugName', 'value', 'aria-label', 'data-target', 'maxlength', 'ngClass'],
                 }
             ]
         },
