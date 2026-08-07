@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
-import { faTwitter, faFacebook, faGithub, IconDefinition } from '@fortawesome/free-brands-svg-icons';
+import { faDiscord, faFacebook, faGithub, IconDefinition } from '@fortawesome/free-brands-svg-icons';
 
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { ErrorLoggerService } from './services/ErrorLoggerService';
@@ -21,7 +21,7 @@ export class AppComponent {
     private readonly _themeService: ThemeService = inject(ThemeService);
     private readonly _errorLoggerService: ErrorLoggerService = inject(ErrorLoggerService);
 
-    public faTwitter: IconDefinition = faTwitter;
+    public faDiscord: IconDefinition = faDiscord;
     public faFacebook: IconDefinition = faFacebook;
     public faGithub: IconDefinition = faGithub;
 }
