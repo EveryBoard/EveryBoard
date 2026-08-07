@@ -18,33 +18,33 @@ import { DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
 
 interface ViewInfo {
-    boardInfo: SpaceInfo[],
-    remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>,
+    boardInfo: SpaceInfo[];
+    remainingPieces: MGPMap<PlayerOrNone, PieceInfo[]>;
 }
 
 interface SpaceInfo {
-    x: number,
-    spaceClasses: string[],
-    pieces: PieceInfo[],
+    x: number;
+    spaceClasses: string[];
+    pieces: PieceInfo[];
 }
 
 interface PieceInfo {
-    backgroundClasses: string[],
-    foregroundClasses: string[],
-    y: number,
-    drawPosition: Coord,
-    actualPiece: DiamPiece,
+    backgroundClasses: string[];
+    foregroundClasses: string[];
+    y: number;
+    drawPosition: Coord;
+    actualPiece: DiamPiece;
 }
 
-type SelectedPiece = { type: 'pieceFromReserve', piece: DiamPiece };
-type SelectedPosition = { type: 'pieceFromBoard', position: Coord };
+type SelectedPiece = { type: 'pieceFromReserve'; piece: DiamPiece };
+type SelectedPosition = { type: 'pieceFromBoard'; position: Coord };
 type Selected = SelectedPiece | SelectedPosition;
 
 interface LastMoved {
-    startDrawPosition: Coord,
-    endDrawPosition: Coord,
-    start: MGPOptional<Coord>,
-    end: Coord
+    startDrawPosition: Coord;
+    endDrawPosition: Coord;
+    start: MGPOptional<Coord>;
+    end: Coord;
 }
 
 @Component({

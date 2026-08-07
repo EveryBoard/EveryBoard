@@ -31,8 +31,8 @@ export type SixConfig = RulesConfig & {
 };
 
 export interface SixVictorySource {
-    typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
-    index: number,
+    typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE';
+    index: number;
 }
 
 @Debug.log

@@ -134,9 +134,9 @@ export abstract class TaflRules<M extends TaflMove> extends ConfigurableRules<M,
     }
 
     public getSurroundings(c: Coord, d: Orthogonal, player: Player, state: TaflState)
-    : { backCoord: Coord, back: RelativePlayer, backInRange: boolean,
-        leftCoord: Coord, left: RelativePlayer,
-        rightCoord: Coord, right: RelativePlayer }
+    : { backCoord: Coord; back: RelativePlayer; backInRange: boolean;
+        leftCoord: Coord; left: RelativePlayer;
+        rightCoord: Coord; right: RelativePlayer; }
     {
         // the piece that just moved came from the front direction (by definition)
         const backCoord: Coord = c.getNext(d);

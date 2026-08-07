@@ -39,10 +39,10 @@ export class AlignmentStatus {
 }
 
 export interface BoardInfo {
-    status: AlignmentStatus,
-    victory: MGPOptional<Coord[]>,
-    preVictory: MGPOptional<Coord>,
-    sum: number,
+    status: AlignmentStatus;
+    victory: MGPOptional<Coord[]>;
+    preVictory: MGPOptional<Coord>;
+    sum: number;
 }
 
 export abstract class AlignmentHeuristic<M extends Move,

@@ -23,8 +23,8 @@ import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { SixState } from './SixState';
 
 type CoordAndClass = {
-    coord: Coord,
-    class: string,
+    coord: Coord;
+    class: string;
 }
 
 @Component({

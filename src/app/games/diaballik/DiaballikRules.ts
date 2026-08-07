@@ -36,9 +36,9 @@ export class DefeatCoords extends VictoryOrDefeatCoords {
 }
 
 export type DefeatCoordsIncomplete = {
-    player: Player,
-    allPieces: Coord[],
-    piecesInContact: Coord[],
+    player: Player;
+    allPieces: Coord[];
+    piecesInContact: Coord[];
 };
 
 interface ConnectionInfos {

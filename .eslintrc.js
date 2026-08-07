@@ -75,6 +75,18 @@ module.exports = {
                         delimiter: 'semi',
                         requireLast: true,
                     },
+                    overrides: {
+                        typeLiteral: {
+                            multiline: {
+                                delimiter: 'semi',
+                                requireLast: true,
+                            },
+                            singleline: {
+                                delimiter: 'semi',
+                                requireLast: false,
+                            },
+                        },
+                    },
                 },
             ],
             '@typescript-eslint/no-unnecessary-condition': ['warn'],
