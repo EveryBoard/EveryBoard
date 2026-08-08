@@ -35,13 +35,13 @@ export class ZoomedGoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
-            $localize`Zoomed Go is a layered version of Go, for extra challenge. Let us explain by the example the difference with normal Go.`,
+            $localize`Zoomed Go is a layered version of Go, for extra challenge. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. Let us explain by the example the difference with normal Go.`,
             ZoomedGoRules.get().getInitialState(defaultConfig),
             MGPOptional.of(defaultConfig),
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`The main and almost only difference is the way you can capture.<br/><br/>You are playing Dark. Do a capture.`,
+            $localize`The main and almost only difference is the way you can capture.<br/><br/>You are playing Dark. Do a normal capture.`,
             new GoState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _],
