@@ -17,7 +17,7 @@ export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove
     public constructor() {
         super(BrandhubMove.from);
         this.setRulesAndNode('Brandhub');
-        this.availableAIs = this.createAIs();
+        this.aiConfig = this.createAIConfig();
         this.encoder = BrandhubMove.encoder;
     }
 }

@@ -9,7 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
-import { Comparable, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
 import { initializeFirebase, routes } from '../../app.routes';
@@ -23,7 +23,9 @@ import { OGWCTimeManagerService } from '../../components/wrapper-components/onli
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { AIDepthLimitOptions } from '../../jscaip/AI/AI';
+import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
+import { MinimaxConfig } from '../../jscaip/AI/AIConfig';
+import { createMinimaxFromConfig } from '../../jscaip/AI/AIConfigUtils';
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
@@ -56,12 +58,12 @@ export class BlankComponent {}
 
 export class ActivatedRouteStub {
 
-    private route: {[key: string]: string} = {};
-    private params: {[key: string]: string} = {};
+    private route: { [key: string]: string } = {};
+    private params: { [key: string]: string } = {};
 
     public snapshot: {
-        paramMap: { get: (str: string) => string },
-        queryParamMap: { get: (str: string) => string, keys: string[] },
+        paramMap: { get: (str: string) => string };
+        queryParamMap: { get: (str: string) => string; keys: string[] };
     };
     public constructor(game?: string, id?: string) {
         this.snapshot = {
@@ -327,6 +329,12 @@ export class SimpleComponentTestUtils<T> {
 
     public selectChildElementOfDropDown(dropDownName: string, childName: string): void {
         const selectedDropDown: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
+        expect(selectedDropDown)
+            .withContext(`dropDown ${dropDownName} does not exist`)
+            .toBeDefined();
+        expect(selectedDropDown.options[childName])
+            .withContext(`option ${childName} of dropdown ${dropDownName} does not exist (keys are: ${Object.keys(selectedDropDown.options)})`)
+            .toBeDefined();
         selectedDropDown.value = selectedDropDown.options[childName].value;
         selectedDropDown.dispatchEvent(new Event('change'));
         this.detectChanges();
@@ -437,9 +445,9 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async setupState(state: GameState,
-                            params: { previousState?: GameState,
-                                      previousMove?: Move,
-                                      config?: RulesConfig } = {})
+                            params: { previousState?: GameState;
+                                      previousMove?: Move;
+                                      config?: RulesConfig; } = {})
     : Promise<void>
     {
         const config: RulesConfig = this.getConfigFrom(params.config);
@@ -644,6 +652,22 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         tick(0);
     }
 
+    public async choosingAILevel(player: Player): Promise<void> {
+        const profileDropDownName: string = player === Player.ZERO ? '#ai-profile-select-0' : '#ai-profile-select-1';
+        const profileSelect: HTMLSelectElement = this.findElement(profileDropDownName).nativeElement;
+        profileSelect.value = profileSelect.options[1].value;
+        profileSelect.dispatchEvent(new Event('change'));
+        this.detectChanges();
+        tick(0);
+        const boundDropDownName: string = player === Player.ZERO ? '#ai-option-select-0' : '#ai-option-select-1';
+        const selectDepth: HTMLSelectElement = this.findElement(boundDropDownName).nativeElement;
+        selectDepth.value = selectDepth.options[1].value;
+        selectDepth.dispatchEvent(new Event('change'));
+        const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
+        expect(aiDepth).toBe('Level 1');
+        this.detectChanges();
+    }
+
 }
 
 export class ConfigureTestingModuleUtils {
@@ -731,9 +755,9 @@ function getComponentClassName(component: Type<any>): string {
 export async function expectValidRouting(router: Router,
                                          path: string[],
                                          component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                         options?: { otherRoutes?: boolean,
-                                                     skipLocationChange?: boolean,
-                                                     queryParams?: Record<string, string> })
+                                         options?: { otherRoutes?: boolean;
+                                                     skipLocationChange?: boolean;
+                                                     queryParams?: Record<string, string>; })
 : Promise<void>
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
@@ -871,24 +895,44 @@ export namespace SlowTest {
 
 }
 
+export const UNIVERSAL_SELF_PLAY_PLIES: number = 24;
+
 export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
                                M extends Move,
                                S extends GameState,
+                               O extends AIOptions,
                                C extends RulesConfig,
                                L> = {
-    rules: R,
-    minimax: Minimax<M, S, C, L>,
-    options: AIDepthLimitOptions,
-    config: C,
-    shouldFinish: boolean
+    rules: R;
+    minimax: Minimax<M, S, C, L>;
+    options: O;
+    config: C;
+    shouldFinish: boolean;
+}
+
+export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
+                                      M extends Move,
+                                      S extends GameState,
+                                      O extends AIDepthLimitOptions,
+                                      C extends RulesConfig,
+                                      L> = {
+    rules: R;
+    playerZeroMinimax: Minimax<M, S, C, L>;
+    playerZeroOptions: O;
+    playerOneMinimax?: Minimax<M, S, C, L>;
+    playerOneOptions?: O;
+    config: C;
+    maxPlies: number;
+    maxDurationMillis: number;
 }
 
 /* Run a minimax test by battling it against itself for a number of turns */
 export function minimaxTest<R extends SuperRules<M, S, C, L>,
                             M extends Move,
                             S extends GameState,
+                            O extends AIDepthLimitOptions,
                             C extends RulesConfig,
-                            L>(options: MinimaxTestOptions<R, M, S, C, L>): void
+                            L>(options: MinimaxTestOptions<R, M, S, O, C, L>): void
 {
     // Given a component where AI plays against AI
     let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
@@ -902,7 +946,9 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     while (performance.now() < start + limit && options.rules.getGameStatus(node, options.config).isEndGame === false) {
         const bestMove: M = options.minimax.chooseNextMove(node, options.options, options.config);
         expect(bestMove).toBeDefined();
-        node = node.getChild(bestMove).get();
+        const nextNode: MGPFallible<GameNode<M, S>> = options.rules.choose(node, bestMove, options.config);
+        expect(nextNode.isSuccess()).withContext(`${options.minimax.name} should choose a legal move at turn ${turn}`).toBeTrue();
+        node = nextNode.get();
         turn++;
     }
     const seconds: number = (performance.now() - start) / 1000;
@@ -912,4 +958,57 @@ export function minimaxTest<R extends SuperRules<M, S, C, L>,
     if (options.shouldFinish) {
         expect(options.rules.getGameStatus(node, options.config).isEndGame).toBeTrue();
     }
+}
+
+export function expectToBeAbleToPlayAgainstItself<R extends SuperRules<M, S, C, L>,
+                                                  M extends Move,
+                                                  S extends GameState,
+                                                  O extends AIDepthLimitOptions,
+                                                  C extends RulesConfig,
+                                                  L>(options: BoundedMinimaxTestOptions<R, M, S, O, C, L>): void {
+    let node: GameNode<M, S> = options.rules.getInitialNode(options.config);
+    const playerOneMinimax: Minimax<M, S, C, L> = options.playerOneMinimax ?? options.playerZeroMinimax;
+    const playerOneOptions: O = options.playerOneOptions ?? options.playerZeroOptions;
+    const deadline: number = performance.now() + options.maxDurationMillis;
+
+    for (let ply: number = 0; ply < options.maxPlies && performance.now() < deadline; ply++) {
+        if (options.rules.getGameStatus(node, options.config).isEndGame) {
+            return;
+        }
+        const currentPlayer: Player = node.gameState.getCurrentPlayer();
+        const minimax: Minimax<M, S, C, L> =
+            currentPlayer === Player.ZERO ? options.playerZeroMinimax : playerOneMinimax;
+        const aiOptions: O = currentPlayer === Player.ZERO ? options.playerZeroOptions : playerOneOptions;
+        const move: M = minimax.chooseNextMove(node, aiOptions, options.config);
+        expect(move).withContext(`${minimax.name} should choose a move at ply ${ply}`).toBeDefined();
+        const nextNode: MGPFallible<GameNode<M, S>> = options.rules.choose(node, move, options.config);
+        expect(nextNode.isSuccess()).withContext(`${minimax.name} should choose a legal move at ply ${ply}`).toBeTrue();
+        node = nextNode.get();
+    }
+}
+
+export function getShallowestMinimaxOptions<M extends Move,
+                                            S extends GameState,
+                                            C extends RulesConfig,
+                                            L>(minimax: Minimax<M, S, C, L>): AIDepthLimitOptions
+{
+    const options: AIOptions[] = minimax.availableOptions as AIOptions[];
+    const depthOptions: AIDepthLimitOptions[] = options.filter((option: AIOptions): option is AIDepthLimitOptions => {
+        return 'maxDepth' in option;
+    });
+    Utils.assert(depthOptions.length > 0, `Minimax ${minimax.name} should expose at least one depth-limited option`);
+    return depthOptions.reduce((best: AIDepthLimitOptions, option: AIDepthLimitOptions) => {
+        return option.maxDepth < best.maxDepth ? option : best;
+    });
+}
+
+export function createConfiguredMinimaxForTest<R extends SuperRules<M, S, C, L>,
+                                               M extends Move,
+                                               S extends GameState,
+                                               C extends RulesConfig,
+                                               L>(rules: R,
+                                                  config: MinimaxConfig<M, S, C>)
+: Minimax<M, S, C, L>
+{
+    return createMinimaxFromConfig(rules, config);
 }

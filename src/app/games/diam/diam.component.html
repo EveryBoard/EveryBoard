@@ -45,7 +45,7 @@
         </g>
     }
 
-    @for (player of Player.PLAYERS; track player) {
+    @for (player of Player.PLAYERS; track player.getValue()) {
         <g>
             @for (piece of viewInfo.remainingPieces.get(player).get(); track $index; let z = $index) {
                 <g (click)="onRemainingPieceClick(piece.actualPiece, z)"

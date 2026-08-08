@@ -41,7 +41,24 @@ describe('NewGameComponent', () => {
     it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
         // Note: we do not want to use `getGameComponent` in game components tests
         await testUtils.getGameComponent().showLastMove(new NewGameMove());
+        await testUtils.getGameComponent().updateBoard(false);
+        testUtils.getGameComponent().hideLastMove();
         testUtils.getGameComponent().cancelMoveAttempt();
         expect(42).toBeGreaterThan(37);
     }));
+
+    it('should expose instantiable AI configs', () => {
+        // Given the new game component
+        const component: NewGameComponent = testUtils.getGameComponent();
+
+        // When instantiating its declared AI dependencies
+        const heuristic: unknown = component.aiConfig.minimax[0].heuristic!();
+        const minimaxMoveGenerator: unknown = component.aiConfig.minimax[0].moveGenerator!();
+        const mctsMoveGenerator: unknown = component.aiConfig.mcts[0].moveGenerator();
+
+        // Then they should be provided
+        expect(heuristic).toBeDefined();
+        expect(minimaxMoveGenerator).toBeDefined();
+        expect(mctsMoveGenerator).toBeDefined();
+    });
 });

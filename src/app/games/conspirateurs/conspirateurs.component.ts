@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
@@ -12,27 +11,27 @@ import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
 
-import { ConspirateursJumpMinimax } from './ConspirateursJumpMinimax';
+import { ConspirateursHeuristic } from './ConspirateursHeuristic';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 
 interface ViewInfo {
-    boardInfo: SquareInfo[][],
-    dropPhase: boolean,
-    victory: Coord[],
-    lastMoveArrow: string,
-    sidePieces: PlayerNumberMap,
+    boardInfo: SquareInfo[][];
+    dropPhase: boolean;
+    victory: Coord[];
+    lastMoveArrow: string;
+    sidePieces: PlayerNumberMap;
 }
 
 interface SquareInfo {
-    coord: Coord,
-    squareClasses: string[],
-    shelterClasses: string[],
-    hasPieceToDraw: boolean,
-    isShelter: boolean,
-    isOccupiedShelter: boolean,
+    coord: Coord;
+    squareClasses: string[];
+    shelterClasses: string[];
+    hasPieceToDraw: boolean;
+    isShelter: boolean;
+    isOccupiedShelter: boolean;
 }
 
 @Component({
@@ -71,10 +70,19 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     public constructor() {
         super();
         this.setRulesAndNode('Conspirateurs');
-        this.availableAIs = [
-            new ConspirateursJumpMinimax(),
-            new MCTS($localize`MCTS`, new ConspirateursMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Jump',
+                name: $localize`Jump`,
+                heuristic: (): ConspirateursHeuristic => new ConspirateursHeuristic(),
+                moveGenerator: (): ConspirateursMoveGenerator => new ConspirateursMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): ConspirateursMoveGenerator => new ConspirateursMoveGenerator(),
+            }],
+        };
         this.encoder = ConspirateursMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE / 2) - this.STROKE_WIDTH;
     }

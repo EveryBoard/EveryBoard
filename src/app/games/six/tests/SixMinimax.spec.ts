@@ -5,7 +5,8 @@ import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { SixMinimax } from '../SixMinimax';
+import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
+import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
 import { SixConfig, SixLegalityInformation, SixNode, SixRules } from '../SixRules';
 import { SixState } from '../SixState';
@@ -13,6 +14,13 @@ import { SixState } from '../SixState';
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
 const _: PlayerOrNone = PlayerOrNone.NONE;
+
+class SixMinimax extends Minimax<SixMove, SixState, SixConfig, SixLegalityInformation> {
+    public constructor() {
+        const rules: SixRules = SixRules.get();
+        super('Minimax', rules, new SixHeuristic(), new SixFilteredMoveGenerator(rules));
+    }
+}
 
 describe('SixMinimax', () => {
 

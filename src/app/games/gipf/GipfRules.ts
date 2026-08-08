@@ -249,13 +249,13 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
 
     public captureValidity(state: GipfState, capture: GipfCapture): MGPValidation {
         const player: Player = state.getCurrentPlayer();
-        const linePortionOpt: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
+        const linePortionOpt: MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}> =
             GipfRules.getLinePortionWithFourPiecesOfPlayer(state, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
             return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED());
         }
 
-        const linePortion: { 0: Coord, 1: Coord, 2: HexaDirection} = linePortionOpt.get();
+        const linePortion: { 0: Coord; 1: Coord; 2: HexaDirection} = linePortionOpt.get();
 
         const capturable: GipfCapture = GipfRules.getCapturable(state, linePortion);
         if (capturable.equals(capture)) {
@@ -266,10 +266,10 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     }
 
     public static getLinePortionsWithFourPiecesOfPlayer(state: GipfState, player: Player):
-    ReadonlyArray<{ 0: Coord, 1: Coord, 2: HexaDirection}> {
-        const linePortions: { 0: Coord, 1: Coord, 2: HexaDirection}[] = [];
+    ReadonlyArray<{ 0: Coord; 1: Coord; 2: HexaDirection}> {
+        const linePortions: { 0: Coord; 1: Coord; 2: HexaDirection}[] = [];
         state.allLines().forEach((line: HexaLine) => {
-            const linePortion: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
+            const linePortion: MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}> =
                 GipfRules.getLinePortionWithFourPiecesOfPlayer(state, player, line);
             if (linePortion.isPresent()) {
                 linePortions.push(linePortion.get());
@@ -279,7 +279,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     }
 
     public static getLinePortionWithFourPiecesOfPlayer(state: GipfState, player: Player, line: HexaLine)
-    : MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}>
+    : MGPOptional<{ 0: Coord; 1: Coord; 2: HexaDirection}>
     {
         let consecutives: number = 0;
         const coord: Coord = state.getEntranceOnLine(line);
@@ -303,7 +303,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
 
     private noMoreCapturesValidity(state: GipfState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
-        const linePortions: ReadonlyArray<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
+        const linePortions: ReadonlyArray<{ 0: Coord; 1: Coord; 2: HexaDirection}> =
             GipfRules.getLinePortionsWithFourPiecesOfPlayer(state, player);
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
@@ -343,7 +343,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
     }
 
     public static getCapturable(state: GipfState,
-                                linePortion: { 0: Coord, 1: Coord, 2: HexaDirection})
+                                linePortion: { 0: Coord; 1: Coord; 2: HexaDirection})
     : GipfCapture
     {
         // Go into each direction and continue until there are pieces
@@ -376,7 +376,7 @@ export class GipfRules extends Rules<GipfMove, GipfState, GipfLegalityInformatio
         const player: Player = state.getCurrentPlayer();
         const captures: GipfCapture[] = [];
         GipfRules.getLinePortionsWithFourPiecesOfPlayer(state, player)
-            .forEach((linePortion: { 0: Coord, 1: Coord, 2: HexaDirection}) => {
+            .forEach((linePortion: { 0: Coord; 1: Coord; 2: HexaDirection}) => {
                 captures.push(GipfRules.getCapturable(state, linePortion));
             });
         return captures;

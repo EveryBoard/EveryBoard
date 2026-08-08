@@ -11,13 +11,13 @@ import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-g
 
 export type DemoNodeInfo = {
     name: string; // The url name of the game
-    title: string, // The title of the step
-    node: AbstractNode, // The demo node
-    click: MGPOptional<string>, // An element to click
+    title: string; // The title of the step
+    node: AbstractNode; // The demo node
+    click: MGPOptional<string>; // An element to click
 }
 
 export type DemoNodeWithConfig = DemoNodeInfo & {
-    config: RulesConfig,
+    config: RulesConfig;
 }
 
 @Component({

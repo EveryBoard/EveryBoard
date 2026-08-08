@@ -16,6 +16,8 @@ import { GoState } from '../GoState';
 
 import { RectangularGoConfig, AbstractRectangularGoRules } from './AbstractRectangularGoRules';
 import { GoSubBoardHelper } from './GoSubBoardHelper';
+import { GoHeuristic } from '../go/GoHeuristic';
+import { GoMoveGenerator } from '../go/GoMoveGenerator';
 
 export abstract class AbstractRectangularGoComponent
     extends GobanGameComponent<AbstractRectangularGoRules,
@@ -47,6 +49,34 @@ export abstract class AbstractRectangularGoComponent
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.aiConfig = {
+            minimax: [{
+                id: 'territory',
+                name: $localize`Territory`,
+                heuristic: (): GoHeuristic => new GoHeuristic(),
+                moveGenerator: (): GoMoveGenerator => new GoMoveGenerator(),
+                hash: AbstractRectangularGoComponent.hash,
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): GoMoveGenerator => new GoMoveGenerator(),
+            }],
+        };
+        this.encoder = GoMove.encoder;
+        this.canPass = true;
+        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    private static hash(state: GoState): string {
+        let board: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                board += cell.toString();
+            }
+            board += '\n';
+        }
+        return `${state.turn % 2}-${state.phase.toString()}-${board}-${JSON.stringify(state.koCoord)}-${JSON.stringify(state.captured)}`;
     }
 
     public viewBox: Signal<ViewBox> = computed(() => {

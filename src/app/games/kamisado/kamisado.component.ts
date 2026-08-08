@@ -4,7 +4,6 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
@@ -12,7 +11,7 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoFailure } from './KamisadoFailure';
-import { KamisadoMinimax } from './KamisadoMinimax';
+import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
 import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoPiece } from './KamisadoPiece';
@@ -39,10 +38,19 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Kamisado');
-        this.availableAIs = [
-            new KamisadoMinimax(),
-            new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Advancement',
+                name: $localize`Advancement`,
+                heuristic: (): KamisadoHeuristic => new KamisadoHeuristic(),
+                moveGenerator: (): KamisadoMoveGenerator => new KamisadoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): KamisadoMoveGenerator => new KamisadoMoveGenerator(),
+            }],
+        };
         this.encoder = KamisadoMove.encoder;
         this.hasAsymmetricBoard = true;
     }

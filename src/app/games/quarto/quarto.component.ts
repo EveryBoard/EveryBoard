@@ -4,11 +4,10 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { QuartoMinimax } from './QuartoMinimax';
+import { QuartoHeuristic } from './QuartoHeuristic';
 import { QuartoMove } from './QuartoMove';
 import { QuartoMoveGenerator } from './QuartoMoveGenerator';
 import { QuartoPiece } from './QuartoPiece';
@@ -41,10 +40,19 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Quarto');
-        this.availableAIs = [
-            new QuartoMinimax(),
-            new MCTS($localize`MCTS`, new QuartoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): QuartoHeuristic => new QuartoHeuristic(),
+                moveGenerator: (): QuartoMoveGenerator => new QuartoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): QuartoMoveGenerator => new QuartoMoveGenerator(),
+            }],
+        };
         this.encoder = QuartoMove.encoder;
         this.pieceInHand = this.getState().pieceInHand;
     }

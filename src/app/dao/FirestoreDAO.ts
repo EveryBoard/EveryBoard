@@ -13,8 +13,8 @@ export type FirestoreJSONValueWithoutArray = FirestoreJSONPrimitive | FirestoreJ
 export type FirestoreJSONObject = { [member: string]: FirestoreJSONValue };
 
 export interface FirestoreDocument<T> {
-    id: string
-    data: T
+    id: string;
+    data: T;
 }
 
 export type FirestoreCondition = [string, Firestore.WhereFilterOp, unknown]
@@ -38,7 +38,7 @@ export interface IFirestoreDAO<T extends FirestoreJSONObject> {
      */
     subscribeToChanges(id: string, callback: (doc: MGPOptional<T>) => void): Subscription;
 
-    findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>
+    findWhere(conditions: FirestoreCondition[], order?: string, limit?: number): Promise<FirestoreDocument<T>[]>;
 
 }
 

@@ -1,12 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from '@everyboard/lib/testing';
 
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 import { HexodiaState } from '../HexodiaState';
@@ -29,6 +31,21 @@ describe('HexodiaRules', () => {
 
     beforeEach(() => {
         rules = HexodiaRules.get();
+    });
+
+    it('should score occupied squares in alignment heuristic', () => {
+        // Given a state with pieces to evaluate
+        const initialState: HexodiaState = rules.getInitialState(defaultConfig);
+        const state: HexodiaState = initialState
+            .setPieceAt(new Coord(11, 11), O)
+            .setPieceAt(new Coord(12, 11), X);
+        const heuristic: HexodiaAlignmentHeuristic = new HexodiaAlignmentHeuristic();
+
+        // When evaluating it
+        const value: BoardValue = heuristic.getBoardValue(new HexodiaNode(state), defaultConfig);
+
+        // Then the heuristic should inspect occupied squares
+        expect(value.metrics.length).toBe(1);
     });
 
     describe('first turn', () => {

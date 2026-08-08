@@ -137,7 +137,7 @@ describe('EncapsuleSpace', () => {
             const c: EncapsuleSpace = _.put(smallDark).put(mediumLight).put(bigDark);
 
             // When removing the biggest one
-            const result: {removedSpace: EncapsuleSpace, removedPiece: EncapsulePiece} = c.removeBiggest();
+            const result: {removedSpace: EncapsuleSpace; removedPiece: EncapsulePiece} = c.removeBiggest();
 
             // Then the removed piece should be the biggest piece and the resulting space should contains what remains
             const expectedSpace: EncapsuleSpace = _.put(smallDark).put(mediumLight);

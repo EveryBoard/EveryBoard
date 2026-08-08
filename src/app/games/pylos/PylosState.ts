@@ -31,7 +31,7 @@ export class PylosState extends GameState {
     }
 
     public applyLegalMove(move: PylosMove, increment: boolean = true): PylosState {
-        const updateValues: { coord: PylosCoord, value: PlayerOrNone }[] = [];
+        const updateValues: { coord: PylosCoord; value: PlayerOrNone }[] = [];
         updateValues.push({ coord: move.landingCoord, value: this.getCurrentPlayer() });
         if (move.startingCoord.isPresent()) {
             updateValues.push({ coord: move.startingCoord.get(), value: PlayerOrNone.NONE });
@@ -51,7 +51,7 @@ export class PylosState extends GameState {
         return this.setBoardAtCoords(updateValues, turn);
     }
 
-    public setBoardAtCoords(coordValues: {coord: PylosCoord, value: PlayerOrNone}[], turn: number): PylosState {
+    public setBoardAtCoords(coordValues: {coord: PylosCoord; value: PlayerOrNone}[], turn: number): PylosState {
         const newBoard: PlayerOrNone[][][] = [
             TableUtils.copy(this.boards[0]),
             TableUtils.copy(this.boards[1]),
@@ -109,7 +109,7 @@ export class PylosState extends GameState {
     }
 
     public removePieceAt(coord: PylosCoord): PylosState {
-        const removeCoord: {coord: PylosCoord, value: PlayerOrNone} = {
+        const removeCoord: {coord: PylosCoord; value: PlayerOrNone} = {
             coord,
             value: PlayerOrNone.NONE,
         };
@@ -117,7 +117,7 @@ export class PylosState extends GameState {
     }
 
     public dropCurrentPlayersPieceAt(coord: PylosCoord): PylosState {
-        const addedCoord: {coord: PylosCoord, value: PlayerOrNone} = {
+        const addedCoord: {coord: PylosCoord; value: PlayerOrNone} = {
             coord,
             value: this.getCurrentPlayer(),
         };

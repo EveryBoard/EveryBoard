@@ -117,7 +117,7 @@
         }
     </g>
     <g id="captures">
-        @for (player of Player.PLAYERS; track player) {
+        @for (player of Player.PLAYERS; track player.getValue()) {
             <g>
                 <g id="capture-of-player-{{ player.toString() }}"
                    [attr.transform]="getCapturesTransformation(player)">

@@ -5,30 +5,29 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 import { ApagosFailure } from './ApagosFailure';
-import { ApagosFullBoardMinimax } from './ApagosFullBoardMinimax';
+import { ApagosFullBoardHeuristic } from './ApagosFullBoardHeuristic';
 import { ApagosMove } from './ApagosMove';
 import { ApagosMoveGenerator } from './ApagosMoveGenerator';
-import { ApagosRightmostMinimax } from './ApagosRightmostMinimax';
+import { ApagosRightmostHeuristic } from './ApagosRightmostHeuristic';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
 
 interface PieceLocation {
 
-    square: number,
+    square: number;
 
-    piece: number,
+    piece: number;
 }
 
 interface DropArrow {
 
-    x: number,
+    x: number;
 
-    player: Player,
+    player: Player;
 }
 
 @Component({
@@ -80,11 +79,27 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     public constructor() {
         super();
         this.setRulesAndNode('Apagos');
-        this.availableAIs = [
-            new ApagosRightmostMinimax(),
-            new ApagosFullBoardMinimax(),
-            new MCTS($localize`MCTS`, new ApagosMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'Rightmost Focus',
+                    name: $localize`Rightmost Focus`,
+                    heuristic: (): ApagosRightmostHeuristic => new ApagosRightmostHeuristic(),
+                    moveGenerator: (): ApagosMoveGenerator => new ApagosMoveGenerator(),
+                },
+                {
+                    id: 'Full Board',
+                    name: $localize`Full Board`,
+                    heuristic: (): ApagosFullBoardHeuristic => new ApagosFullBoardHeuristic(),
+                    moveGenerator: (): ApagosMoveGenerator => new ApagosMoveGenerator(),
+                },
+            ],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): ApagosMoveGenerator => new ApagosMoveGenerator(),
+            }],
+        };
         this.encoder = ApagosMove.encoder;
         this.hasAsymmetricBoard = true;
     }

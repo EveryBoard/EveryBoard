@@ -38,7 +38,7 @@ export class LoginComponent implements OnInit, OnDestroy {
             }
         });
     }
-    public async loginWithEmail(value: {email: string, password: string}): Promise<void> {
+    public async loginWithEmail(value: {email: string; password: string}): Promise<void> {
         const result: MGPValidation = await this.connectedUserService.doEmailLogin(value.email, value.password);
         if (result.isFailure()) {
             this.errorMessage = result.getReason();

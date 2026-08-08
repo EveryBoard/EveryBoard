@@ -17,7 +17,7 @@ export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
     public constructor() {
         super(TablutMove.from);
         this.setRulesAndNode('Tablut');
-        this.availableAIs = this.createAIs();
+        this.aiConfig = this.createAIConfig();
         this.encoder = TablutMove.encoder;
     }
 }

@@ -7,9 +7,10 @@ import { HexagonalUtils } from '../HexagonalUtils';
 import { GameState } from './GameState';
 
 type Scale = {
-    width: number,
-    height: number,
+    width: number;
+    height: number;
 }
+
 export abstract class OpenHexagonalGameState<T extends NonNullable<unknown>> extends GameState {
 
     public readonly width: number;

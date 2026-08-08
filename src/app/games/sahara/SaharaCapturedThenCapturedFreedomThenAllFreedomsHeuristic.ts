@@ -13,9 +13,9 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic
 {
 
     public override getMetrics(node: SaharaNode, _config: EmptyRulesConfig): PlayerNumberTable {
-        const capturedAndFreedomForZero: { captured: boolean, freedoms: number } =
+        const capturedAndFreedomForZero: { captured: boolean; freedoms: number } =
             this.getCapturedAndFreedom(node.gameState, Player.ZERO);
-        const capturedAndFreedomForOne: { captured: boolean, freedoms: number } =
+        const capturedAndFreedomForOne: { captured: boolean; freedoms: number } =
             this.getCapturedAndFreedom(node.gameState, Player.ONE);
         const zeroFreedoms: number[] = this.rules.getBoardValuesFor(node.gameState, Player.ZERO);
         const oneFreedoms: number[] = this.rules.getBoardValuesFor(node.gameState, Player.ONE);
@@ -28,7 +28,7 @@ export class SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic
         );
     }
 
-    private getCapturedAndFreedom(state: SaharaState, player: Player): { captured: boolean, freedoms: number } {
+    private getCapturedAndFreedom(state: SaharaState, player: Player): { captured: boolean; freedoms: number } {
         for (const coord of state.allCoords()) {
             if (state.hasPieceBelongingTo(coord, player)) {
                 if (this.countMovesToClosestAlly(state, coord) === Number.POSITIVE_INFINITY) {

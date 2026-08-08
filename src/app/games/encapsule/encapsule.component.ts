@@ -5,13 +5,12 @@ import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib'
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RingComponent } from '../common/ring/ring.component';
 
-import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
@@ -56,10 +55,19 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public constructor() {
         super();
         this.setRulesAndNode('Encapsule');
-        this.availableAIs = [
-            new EncapsuleDummyMinimax(),
-            new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Dummy',
+                name: $localize`Dummy`,
+                heuristic: (): DummyHeuristic<EncapsuleMove, EncapsuleState, EncapsuleConfig> => new DummyHeuristic(),
+                moveGenerator: (): EncapsuleMoveGenerator => new EncapsuleMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): EncapsuleMoveGenerator => new EncapsuleMoveGenerator(),
+            }],
+        };
         this.encoder = EncapsuleMove.encoder;
     }
 

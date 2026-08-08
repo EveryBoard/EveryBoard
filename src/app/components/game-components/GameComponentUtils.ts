@@ -5,7 +5,7 @@ interface Limits {
     minX: number;
     minY: number;
     maxX: number;
-    maxY: number
+    maxY: number;
 }
 
 export class ViewBox {

@@ -9,7 +9,7 @@ import { Ordinal } from '../../../jscaip/Ordinal';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 
-export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[]; }; } = {
+export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
     Abalone: {
         onPieceClick: [new Coord(0, 0)],
         onSpaceClick: [new Coord(0, 0)],

@@ -6,7 +6,6 @@ import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexaLayout } from '../../jscaip/HexaLayout';
@@ -16,15 +15,16 @@ import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { SixFailure } from './SixFailure';
-import { SixMinimax } from './SixMinimax';
+import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
+import { SixHeuristic } from './SixHeuristic';
 import { SixMove } from './SixMove';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { SixState } from './SixState';
 
 type CoordAndClass = {
-    coord: Coord,
-    class: string,
+    coord: Coord;
+    class: string;
 }
 
 @Component({
@@ -53,10 +53,19 @@ export class SixComponent
     public constructor() {
         super();
         this.setRulesAndNode('Six');
-        this.availableAIs = [
-            new SixMinimax(),
-            new MCTS($localize`MCTS`, new SixMoveGenerator(this.rules), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Shape',
+                name: $localize`Shape`,
+                heuristic: (): SixHeuristic => new SixHeuristic(),
+                moveGenerator: (): SixFilteredMoveGenerator => new SixFilteredMoveGenerator(this.rules),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): SixMoveGenerator => new SixMoveGenerator(this.rules),
+            }],
+        };
         this.encoder = SixMove.encoder;
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,

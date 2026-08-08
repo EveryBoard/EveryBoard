@@ -1,9 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
-import { GoMinimax } from '../../go/GoMinimax';
+import { AbstractGoMinimax } from '../../AbstractGoMinimax';
+import { GoHeuristic } from '../../go/GoHeuristic';
+import { GoMoveGenerator } from '../../go/GoMoveGenerator';
 import { GoRules } from '../../go/GoRules';
 import { RectangularGoConfig } from '../AbstractRectangularGoRules';
+
+class GoMinimax extends AbstractGoMinimax<RectangularGoConfig> {
+    public constructor() {
+        super(GoRules.get(), new GoMoveGenerator(), new GoHeuristic());
+    }
+}
 
 describe('GoMinimax', () => {
 

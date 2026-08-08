@@ -4,14 +4,13 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { PylosCoord } from './PylosCoord';
 import { PylosFailure } from './PylosFailure';
-import { PylosMinimax } from './PylosMinimax';
+import { PylosHeuristic } from './PylosHeuristic';
 import { PylosMove, PylosMoveFailure } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosRules } from './PylosRules';
@@ -52,10 +51,19 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public constructor() {
         super();
         this.setRulesAndNode('Pylos');
-        this.availableAIs = [
-            new PylosMinimax(),
-            new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Reserve',
+                name: $localize`Reserve`,
+                heuristic: (): PylosHeuristic => new PylosHeuristic(),
+                moveGenerator: (): PylosMoveGenerator => new PylosMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): PylosMoveGenerator => new PylosMoveGenerator(),
+            }],
+        };
         this.encoder = PylosMove.encoder;
         this.hasAsymmetricBoard = true;
     }
