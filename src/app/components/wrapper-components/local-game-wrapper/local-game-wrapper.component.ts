@@ -336,15 +336,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.playerSelection.get(opponent) !== 'human';
     }
 
-    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getPlayingAI(): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
         return this.getAI(this.gameComponent.getCurrentPlayer());
     }
 
-    private getOpponentAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getOpponentAI(): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
         return this.getAI(this.gameComponent.getCurrentOpponent());
     }
 
-    private getAI(player: Player): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getAI(player: Player): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
         const strategy: PlayerSelection = this.playerSelection.get(player);
         if (strategy === 'human') {
             return MGPOptional.empty();
