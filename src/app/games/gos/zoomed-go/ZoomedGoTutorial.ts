@@ -1,6 +1,7 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
@@ -9,7 +10,6 @@ import { GoState } from '../GoState';
 import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
 import { ZoomedGoRules } from './ZoomedGoRules';
-import { TutorialStepMessage } from 'dist/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 
 
 const X: GoPiece = GoPiece.LIGHT;
