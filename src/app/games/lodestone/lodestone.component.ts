@@ -22,39 +22,39 @@ import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup
 import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
 export type LodestoneInfo = {
-    direction: LodestoneDirection,
-    owner: Player,
-    selectedClass: string,
-    movingClass: string,
-    orientation: LodestoneOrientation,
+    direction: LodestoneDirection;
+    owner: Player;
+    selectedClass: string;
+    movingClass: string;
+    orientation: LodestoneOrientation;
 };
 
 type PressurePlateGroupInfo = {
-    groupPosition: LodestonePressurePlatePosition,
-    plateInfos: PressurePlateInfo[],
+    groupPosition: LodestonePressurePlatePosition;
+    plateInfos: PressurePlateInfo[];
 };
 
 type PressurePlateInfo = {
-    plateIndex: number,
-    coords: PressurePlateCoordInfo[],
+    plateIndex: number;
+    coords: PressurePlateCoordInfo[];
 };
 
 type PressurePlateCoordInfo = {
-    coord: Coord,
-    hasPiece: boolean,
-    pieceClasses: string[],
-    squareClasses: string[],
-    temporary: boolean,
+    coord: Coord;
+    hasPiece: boolean;
+    pieceClasses: string[];
+    squareClasses: string[];
+    temporary: boolean;
 };
 
 type CaptureInfo = {
-    pieceClasses: string[],
+    pieceClasses: string[];
 };
 
 type ViewInfo = {
-    availableLodestones: LodestoneInfo[],
-    capturesToPlace: CaptureInfo[],
-    pressurePlateGroupInfos: PressurePlateGroupInfo[],
+    availableLodestones: LodestoneInfo[];
+    capturesToPlace: CaptureInfo[];
+    pressurePlateGroupInfos: PressurePlateGroupInfo[];
 };
 
 type PreCaptureInfo = {

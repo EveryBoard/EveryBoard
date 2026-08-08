@@ -58,12 +58,12 @@ export class BlankComponent {}
 
 export class ActivatedRouteStub {
 
-    private route: {[key: string]: string} = {};
-    private params: {[key: string]: string} = {};
+    private route: { [key: string]: string } = {};
+    private params: { [key: string]: string } = {};
 
     public snapshot: {
-        paramMap: { get: (str: string) => string },
-        queryParamMap: { get: (str: string) => string, keys: string[] },
+        paramMap: { get: (str: string) => string };
+        queryParamMap: { get: (str: string) => string; keys: string[] };
     };
     public constructor(game?: string, id?: string) {
         this.snapshot = {
@@ -449,9 +449,9 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     }
 
     public async setupState(state: GameState,
-                            params: { previousState?: GameState,
-                                      previousMove?: Move,
-                                      config?: RulesConfig } = {})
+                            params: { previousState?: GameState;
+                                      previousMove?: Move;
+                                      config?: RulesConfig; } = {})
     : Promise<void>
     {
         const config: RulesConfig = this.getConfigFrom(params.config);
@@ -749,9 +749,9 @@ function getComponentClassName(component: Type<any>): string {
 export async function expectValidRouting(router: Router,
                                          path: string[],
                                          component: Type<any>, // eslint-disable-line @typescript-eslint/no-explicit-any
-                                         options?: { otherRoutes?: boolean,
-                                                     skipLocationChange?: boolean,
-                                                     queryParams?: Record<string, string> })
+                                         options?: { otherRoutes?: boolean;
+                                                     skipLocationChange?: boolean;
+                                                     queryParams?: Record<string, string>; })
 : Promise<void>
 {
     expect(path[0][0]).withContext('Routings should start with /').toBe('/');
@@ -897,11 +897,11 @@ export type MinimaxTestOptions<R extends SuperRules<M, S, C, L>,
                                O extends AIOptions,
                                C extends RulesConfig,
                                L> = {
-    rules: R,
-    minimax: Minimax<M, S, C, L>,
-    options: O,
-    config: C,
-    shouldFinish: boolean
+    rules: R;
+    minimax: Minimax<M, S, C, L>;
+    options: O;
+    config: C;
+    shouldFinish: boolean;
 }
 
 export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
@@ -910,14 +910,14 @@ export type BoundedMinimaxTestOptions<R extends SuperRules<M, S, C, L>,
                                       O extends AIDepthLimitOptions,
                                       C extends RulesConfig,
                                       L> = {
-    rules: R,
-    playerZeroMinimax: Minimax<M, S, C, L>,
-    playerZeroOptions: O,
-    playerOneMinimax?: Minimax<M, S, C, L>,
-    playerOneOptions?: O,
-    config: C,
-    maxPlies: number,
-    maxDurationMillis: number,
+    rules: R;
+    playerZeroMinimax: Minimax<M, S, C, L>;
+    playerZeroOptions: O;
+    playerOneMinimax?: Minimax<M, S, C, L>;
+    playerOneOptions?: O;
+    config: C;
+    maxPlies: number;
+    maxDurationMillis: number;
 }
 
 /* Run a minimax test by battling it against itself for a number of turns */

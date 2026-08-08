@@ -26,8 +26,8 @@ import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 type AIChoice = {
-    id: string,
-    name: string,
+    id: string;
+    name: string;
 }
 
 @Component({
@@ -299,7 +299,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.setInteractive(currentPlayerIsHuman);
         if (currentPlayerIsHuman === false) {
             // It is AI's turn, let it play after a small delay
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
                 setTimeout(async() => {
                     const config: RulesConfig = this.getConfig();
@@ -577,7 +577,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private viewTreeFrom(node: GameNode<Move, GameState>): void {
         // We will use the data from the previous turn's AI
-        const opponentAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getOpponentAI();
+        const opponentAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = this.getOpponentAI();
         // We will annotate the trees with data from MCTS
         function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
             if (opponentAI.isPresent() && opponentAI.get().ai instanceof MCTS) {
@@ -591,7 +591,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }
         }
         const maxDepth: number = Number(localStorage.getItem('tree-depth') ?? '2'); // Change it to a lower/higher value for more tree depth
-        const result: { dot: string, nextId: number, winner: PlayerOrNone } =
+        const result: { dot: string; nextId: number; winner: PlayerOrNone } =
             node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel, maxDepth);
         // Shows the graph on an online tool by opening a new tab
         window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));

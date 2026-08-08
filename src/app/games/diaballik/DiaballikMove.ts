@@ -65,8 +65,8 @@ export function isBallPass(subMove: DiaballikSubMove): subMove is DiaballikBallP
 }
 
 type PassesAndTranslations = {
-    passes: number,
-    translations: number,
+    passes: number;
+    translations: number;
 };
 
 export class DiaballikMove extends Move {

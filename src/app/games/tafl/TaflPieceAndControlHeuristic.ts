@@ -15,9 +15,9 @@ import { TaflNode } from './TaflRules';
 import { TaflState } from './TaflState';
 
 export type TaflPieceAndControlHeuristicMetrics = {
-    controlScore: number,
-    threatenedScore: number,
-    safeScore: number,
+    controlScore: number;
+    threatenedScore: number;
+    safeScore: number;
 };
 
 export class TaflPieceAndControlHeuristic<M extends TaflMove> extends TaflPieceAndInfluenceHeuristic<M> {

@@ -208,7 +208,7 @@ describe('Minimax', () => {
             const boardValue: BoardValue = BoardValue.ofSingle(0, 0);
 
             // When calling getBestMove on it
-            const result: { bestMoves: { move: P4Move, score: BoardValue }[], complete: boolean } = minimax['getBestMoves'](
+            const result: { bestMoves: { move: P4Move; score: BoardValue }[]; complete: boolean } = minimax['getBestMoves'](
                 node,
                 possibleMoves,
                 1,
