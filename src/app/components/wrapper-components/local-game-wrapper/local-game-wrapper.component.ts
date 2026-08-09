@@ -44,11 +44,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public static readonly AI_TIMEOUT: number = 1500;
 
-    public aiProfiles: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
+    private readonly aiProfiles: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
 
-    public aiOptions: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
+    private readonly aiOptions: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
 
-    public playerSelection: PlayerMap<PlayerSelection> = PlayerMap.ofValues('human', 'human');
+    private readonly playerSelection: PlayerMap<PlayerSelection> = PlayerMap.ofValues('human', 'human');
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 

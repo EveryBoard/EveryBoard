@@ -325,33 +325,31 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
         it('should require profile selection for MCTS when multiple configs exist', fakeAsync(async() => {
-            // Given a local wrapper with several MCTS profiles
-            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            await wrapper.onPlayerSelectionChange(Player.ZERO, 'mcts');
-            spyOn(wrapper as unknown as { getMCTSConfigs: () => unknown[] }, 'getMCTSConfigs').and.returnValue([
-                { id: 'first', name: 'First' },
-                { id: 'second', name: 'Second' },
-            ]);
+            // Given a game where several MCTS profiles exist
+            testUtils.expectElementNotToExist('#ai-profile-select-0');
 
-            // When checking if an AI profile must be selected
-            const mustSelect: boolean = wrapper.mustSelectAIProfile(Player.ZERO);
+            // When selecting MCTS for Player.ZERO
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
 
-            // Then the wrapper should require an explicit profile choice
-            expect(mustSelect).toBeTrue();
+            // Then the profile must be explicitly selected before the options are shown
+            testUtils.expectElementToExist('#ai-profile-select-0');
+            testUtils.expectElementNotToExist('#ai-option-select-0');
         }));
 
         it('should reset AI profile to none when no profile is available', fakeAsync(async() => {
-            // Given a local wrapper whose selected strategy has no available profile
-            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            await wrapper.onPlayerSelectionChange(Player.ZERO, 'mcts');
-            await wrapper.onAIProfileChange(Player.ZERO, 'some-profile');
-            spyOn(wrapper, 'availableAIProfiles').and.returnValue([]);
+            // Given a player with an MCTS profile selected
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
+            testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-default');
+            testUtils.expectElementToExist('#ai-option-select-0');
 
-            // When the player selection is applied
-            await wrapper.updatePlayer(Player.ZERO);
+            // When switching to a player type with no available profile
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
 
-            // Then the old profile should fall back to no profile
-            expect(wrapper.aiProfiles.get(Player.ZERO)).toBe('none');
+            // Then selecting MCTS again shows that the previous profile was cleared
+            testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
+            const profileSelection: HTMLSelectElement = testUtils.findElement('#ai-profile-select-0').nativeElement;
+            expect(profileSelection.value).toBe('none');
+            testUtils.expectElementNotToExist('#ai-option-select-0');
         }));
 
         it('should allow iterative deepening selection for minimax configs', fakeAsync(async() => {
