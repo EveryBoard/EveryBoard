@@ -255,3 +255,30 @@ func TestCandidatesFlow(t *testing.T) {
 
 	expectCandidates(1)
 }
+
+func TestPostgresApplyToCandidatesShouldAllowQueriesInCallback(t *testing.T) {
+	// Given a PostgreSQL database containing a candidate with an Elo
+	database := postgresTestStore(t)
+	creator := model.MinimalUser{ID: "creator", Name: "creator"}
+	candidate := model.MinimalUser{ID: "candidate", Name: "candidate"}
+	configRoom, err := database.CreateConfigRoom(creator, "Abalone")
+	require.NoError(t, err, "cannot create config room")
+	candidateElo, err := database.GetElo(configRoom.GameName, candidate)
+	require.NoError(t, err, "cannot create candidate Elo")
+	err = database.AddCandidate(configRoom, candidate, candidateElo.CurrentElo)
+	require.NoError(t, err, "cannot add candidate")
+
+	// When querying the database from an ApplyToCandidates callback
+	seenCandidates := 0
+	err = database.Transaction(func(transaction Store) error {
+		return transaction.ApplyToCandidates(configRoom.ID, func(candidate model.Candidate) error {
+			seenCandidates++
+			_, err := transaction.GetElo(configRoom.GameName, candidate.User)
+			return err
+		})
+	})
+
+	// Then the query and candidate iteration should succeed
+	require.NoError(t, err, "candidate Elo lookup should succeed during iteration")
+	require.Equal(t, 1, seenCandidates, "should iterate over the candidate")
+}
