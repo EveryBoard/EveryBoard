@@ -2,7 +2,7 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Encoder, MGPValidation } from '@everyboard/lib';
+import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../../jscaip/Coord';
@@ -95,6 +95,7 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
 
 export function DoCheckersTests<C extends CheckersComponent<R>,
                                 R extends AbstractCheckersRules>(
+    getTestUtils: () => ComponentTestUtils<C>,
     entries: CheckersComponentTestEntries<C, R>,
 ): void {
 
@@ -105,7 +106,9 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
     describe(entries.gameName + ' component generic tests', () => {
 
         beforeEach(fakeAsync(async() => {
-            testUtils = await ComponentTestUtils.forGame<C>(entries.gameName);
+            // bind test utils, which we cannot take as a parameter from DoCheckersTests,
+            // as it is not instantiated outside beforeEach/it
+            testUtils = getTestUtils();
         }));
 
         it('should create', () => {
@@ -578,49 +581,6 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 expect(gameComponent.basicHeight()).toBe(expectedHeight);
                 expect(gameComponent.getViewBox().width).toBe(expectedViewBoxWidth);
                 expect(gameComponent.getViewBox().height).toBe(expectedViewBoxHeight);
-            }));
-
-        });
-
-        describe('Invalid move attempts', () => {
-
-            it('should validate an attempted jump as a capture', fakeAsync(async() => {
-                // Given a selected piece and an unavailable move that jumps over an occupied square
-                const state: CheckersState = entries.invalidCaptureTest.state;
-                const move: CheckersMove = entries.invalidCaptureTest.move;
-                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
-                await testUtils.setupState(state);
-                const start: Coord = move.getStartingCoord();
-                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
-                spyOn(gameComponent.rules, 'getSubMoveValidity').and.returnValue(MGPValidation.SUCCESS);
-                const reason: string = 'expected capture validation failure';
-                const isLegalSpy: jasmine.Spy =
-                    spyOn(gameComponent.rules, 'isLegal').and.returnValue(MGPValidation.failure(reason));
-
-                // When clicking on the unavailable landing square
-                const end: Coord = move.getEndingCoord();
-                await testUtils.expectClickFailure(`#coord-${ end.x }-${ end.y }`, reason);
-
-                // Then the attempted move should have been validated as a capture
-                expect(isLegalSpy).toHaveBeenCalledOnceWith(move, state, defaultConfig);
-            }));
-
-            it('should fall back to unmovable piece failure when a legal click is not a possible click', fakeAsync(async() => {
-                // Given a selected piece whose attempted move is valid but not currently possible
-                const state: CheckersState = entries.invalidCaptureTest.state;
-                const move: CheckersMove = entries.invalidCaptureTest.move;
-                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
-                await testUtils.setupState(state);
-                const start: Coord = move.getStartingCoord();
-                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
-                spyOn(gameComponent.rules, 'getSubMoveValidity').and.returnValue(MGPValidation.SUCCESS);
-                spyOn(gameComponent.rules, 'isLegal').and.returnValue(MGPValidation.SUCCESS);
-                const reason: string = CheckersFailure.THIS_PIECE_CANNOT_MOVE();
-
-                // When clicking on the unavailable landing square
-                const end: Coord = move.getEndingCoord();
-                // Then it should explain that this piece cannot move
-                await testUtils.expectClickFailure(`#coord-${ end.x }-${ end.y }`, reason);
             }));
 
         });

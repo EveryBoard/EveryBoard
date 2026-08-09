@@ -1,6 +1,6 @@
 import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
-import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
@@ -33,24 +33,23 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         parallelogramHeight: 100,
     };
 
-    private readonly constructedStateSignal: WritableSignal<MGPOptional<CheckersState>> =
+    public readonly constructedState: WritableSignal<MGPOptional<CheckersState>> =
         signal(MGPOptional.empty());
 
-    public readonly constructedState: Signal<CheckersState> = computed(() =>
-        this.constructedStateSignal().get());
-
     private readonly boardSize: Signal<Coord> = computed(() => {
-        const state: CheckersState = this.constructedState();
+        const state: CheckersState = this.constructedState().get();
         return new Coord(state.getWidth(), state.getHeight());
     });
 
     public readonly basicWidth: Signal<number> = computed(() =>
-        this.boardSize().x * this.mode.parallelogramHeight);
+        this.boardSize().x * this.mode.parallelogramHeight,
+    );
 
     public readonly basicHeight: Signal<number> = computed(() =>
-        this.boardSize().y * this.mode.parallelogramHeight);
+        this.boardSize().y * this.mode.parallelogramHeight,
+    );
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => {
+    private readonly viewBox: Signal<ViewBox> = computed(() => {
         const h: number = this.boardSize().y;
         const boardOffset: number = h * this.mode.offsetRatio * this.mode.parallelogramHeight;
         const width: number = (this.basicWidth() * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
@@ -70,6 +69,10 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public constructor() {
         super();
+    }
+
+    public override getViewBox(): ViewBox {
+        return this.viewBox();
     }
 
     public override setRulesAndNode(urlName: string): void {
@@ -110,7 +113,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private setConstructedState(state: CheckersState): void {
-        this.constructedStateSignal.set(MGPOptional.of(state));
+        this.constructedState.set(MGPOptional.of(state));
     }
 
     protected override getScoreName(): ScoreName {
@@ -124,7 +127,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.setConstructedState(this.getState());
         this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
-        this.scores = MGPOptional.of(this.constructedState().getScores());
+        this.scores = MGPOptional.of(this.constructedState().get().getScores());
         this.showPossibleClicks();
     }
 
@@ -143,7 +146,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public getPieceClasses(x: number, y: number, z: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const square: CheckersStack = this.constructedState().getPieceAt(coord);
+        const square: CheckersStack = this.constructedState().get().getPieceAt(coord);
         const max: number = square.getStackSize() - 1;
         const piece: CheckersPiece = square.get(max - z);
         const classes: string[] = [this.getPlayerClass(piece.player)];
@@ -155,7 +158,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public isPiecePromoted(x: number, y: number, z: number): boolean {
         const coord: Coord = new Coord(x, y);
-        const square: CheckersStack = this.constructedState().getPieceAt(coord);
+        const square: CheckersStack = this.constructedState().get().getPieceAt(coord);
         const max: number = square.getStackSize() - 1;
         const piece: CheckersPiece = square.get(max - z);
         return piece.isPromoted;
@@ -207,8 +210,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        const clickedSpace: CheckersStack = this.constructedState().getPieceAt(clickedCoord);
-        const opponent: Player = this.constructedState().getCurrentOpponent();
+        const clickedSpace: CheckersStack = this.constructedState().get().getPieceAt(clickedCoord);
+        const opponent: Player = this.constructedState().get().getCurrentOpponent();
         if (clickedSpace.isCommandedBy(opponent)) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
@@ -233,8 +236,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (clicked.equals(start) && this.possibleClicks.contains(clicked) === false) {
             return this.cancelMove();
         }
-        const clickedSpace: CheckersStack = this.constructedState().getPieceAt(clicked);
-        const player: Player = this.constructedState().getCurrentPlayer();
+        const clickedSpace: CheckersStack = this.constructedState().get().getPieceAt(clicked);
+        const player: Player = this.constructedState().get().getCurrentPlayer();
         if (clickedSpace.isCommandedBy(player)) {
             this.cancelMoveAttempt();
             return this.trySelectingPiece(clicked);
@@ -246,7 +249,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const lastCoord: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
         const steppedOver: Coord[] = lastCoord.getCoordsToward(clicked);
         for (const coord of steppedOver) {
-            if (this.constructedState().getPieceAt(coord).isOccupied()) {
+            if (this.constructedState().get().getPieceAt(coord).isOccupied()) {
                 this.capturedCoords.push(coord);
             } else {
                 this.flownOverCoords.push(coord);
@@ -265,21 +268,20 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private getClickFailureReason(clicked: Coord): string {
-        const start: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
-        const stack: CheckersStack = this.constructedState().getPieceAt(start);
+        const lastSegmentStart: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
+        const stack: CheckersStack = this.constructedState().get().getPieceAt(lastSegmentStart);
         const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
         const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
-        const validation: MGPValidation =
-            this.rules.getSubMoveValidity(stack, isSimpleJump, start, clicked, stateWithoutStarting, this.getConfig());
+        const validation: MGPValidation = this.rules.getSubMoveValidity(
+            stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.getConfig(),
+        );
         if (validation.isFailure()) {
             return validation.getReason();
         }
         const attemptedMove: CheckersMove = this.getMoveAttemptEndingAt(clicked);
         const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.getConfig());
-        if (moveValidity.isFailure()) {
-            return moveValidity.getReason();
-        }
-        return CheckersFailure.THIS_PIECE_CANNOT_MOVE();
+        Utils.assert(moveValidity.isFailure(), 'A move absent from possibleClicks should be illegal');
+        return moveValidity.getReason();
     }
 
     private getMoveAttemptEndingAt(clicked: Coord): CheckersMove {
@@ -313,7 +315,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private async trySelectingPiece(clicked: Coord): Promise<MGPValidation> {
-        const clickedSpace: CheckersStack = this.constructedState().getPieceAt(clicked);
+        const clickedSpace: CheckersStack = this.constructedState().get().getPieceAt(clicked);
         if (clickedSpace.isEmpty()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {

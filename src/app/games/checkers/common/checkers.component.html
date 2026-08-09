@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="viewBox().toSVGString()"
+     [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
 
     <defs>
@@ -14,7 +14,7 @@
     </defs>
 
     <!-- Empty board -->
-    @for (coordAndContent of constructedState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+    @for (coordAndContent of constructedState().get().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <polygon id="square-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                  [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
                  (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)"
@@ -43,7 +43,7 @@
     }
 
     <!-- Pieces -->
-    @for (coordAndContent of constructedState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
+    @for (coordAndContent of constructedState().get().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <g id="coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
            [attr.transform]="getTranslationAtXYZ(coordAndContent.coord.x, coordAndContent.coord.y, 0)"
            (click)="onClick(coordAndContent.coord.x, coordAndContent.coord.y)">

@@ -165,7 +165,7 @@ describe('LascaComponent', () => {
     }));
 
     describe('generic tests', () => {
-        DoCheckersTests(lascaEntries);
+        DoCheckersTests(() => testUtils, lascaEntries);
     });
 
     it('should create', () => {

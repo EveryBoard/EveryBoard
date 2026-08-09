@@ -8,6 +8,7 @@ import { DirectionFailure } from '../../../../jscaip/Direction';
 import { PlayerMap, PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { CheckersConfig } from '../../common/AbstractCheckersRules';
+import { CheckersFailure } from '../../common/CheckersFailure';
 import { CheckersMove } from '../../common/CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../../common/CheckersState';
 import { CheckersComponentTestEntries, DoCheckersTests } from '../../common/tests/CheckersTest.spec';
@@ -200,7 +201,7 @@ describe('InternationalCheckersComponent', () => {
     }));
 
     describe('generic tests', () => {
-        DoCheckersTests(internationalCheckersEntries);
+        DoCheckersTests(() => testUtils, internationalCheckersEntries);
     });
 
     it('should create', () => {
@@ -208,6 +209,28 @@ describe('InternationalCheckersComponent', () => {
     });
 
     describe('second click', () => {
+
+        it('should forbid shorter capture when a longer one is available', fakeAsync(async() => {
+            // Given a king that can capture one piece to the left or two pieces to the right
+            const state: CheckersState = OddCheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, V, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, V, _, V, _, _, _, _],
+                [_, _, _, _, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 0);
+            await testUtils.setupState(state);
+            await testUtils.expectClickSuccess('#coord-4-5');
+
+            // When attempting the valid but shorter capture to the left
+            // Then it should fail
+            await testUtils.expectClickFailure('#coord-2-3', CheckersFailure.MUST_DO_LONGEST_CAPTURE());
+        }));
 
         it('should only highlight captured piece when doing flying capture with king', fakeAsync(async() => {
             // Given a board with a selected king and a possible capture

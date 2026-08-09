@@ -168,7 +168,7 @@ describe('BashniComponent', () => {
     });
 
     describe('generic tests', () => {
-        DoCheckersTests(bashniEntries);
+        DoCheckersTests(() => testUtils, bashniEntries);
     });
 
     it('should allow mid-capture promotion', fakeAsync(async() => {
