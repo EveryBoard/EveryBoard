@@ -2,17 +2,17 @@ import { Tutorial, TutorialStep } from '../../components/wrapper-components/tuto
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
-import { HexodiaState } from './HexodiaState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
-const initialState: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+const initialState: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
 
 export class HexodiaTutorial extends Tutorial {
 
@@ -32,7 +32,7 @@ export class HexodiaTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Next turns`,
             $localize`On all following turns, the players play two pieces, until a victory or a draw is reached.<br/><br/>You're playing Light, do the winning move.`,
-            new HexodiaState([
+            new FourStatePieceGameStateWithTable([
                 [N, N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -66,7 +66,7 @@ export class HexodiaTutorial extends Tutorial {
         TutorialStep.fromMove(
             $localize`Hexagonal Diagonals`,
             $localize`But an unusual kind of diagonal also exist in Hexodia. Here, Dark has made alignment in each of those three direction, in only one a victory is still possible.<br/><br/>You're playing Dark, do the winning move.`,
-            new HexodiaState([
+            new FourStatePieceGameStateWithTable([
                 [N, N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _],

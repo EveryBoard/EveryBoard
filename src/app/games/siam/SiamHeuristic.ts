@@ -11,20 +11,20 @@ import { SiamState } from './SiamState';
 export class SiamHeuristic extends Heuristic<SiamMove, SiamState, BoardValue, SiamConfig> {
 
     public getBoardValue(node: SiamNode, config: SiamConfig): BoardValue {
-        const boardValueInfo: { shortestZero: number, shortestOne: number, boardValue: number } =
+        const boardValueInfo: { shortestZero: number; shortestOne: number; boardValue: number } =
             this.getBoardValueInfo(node.gameState, config);
         return BoardValue.of(boardValueInfo.boardValue);
     }
 
     private getBoardValueInfo(state: SiamState, config: SiamConfig)
-    : { shortestZero: number, shortestOne: number, boardValue: number }
+    : { shortestZero: number; shortestOne: number; boardValue: number }
     {
-        const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
+        const mountainsInfo: { rows: number[]; columns: number[]; nbMountain: number } =
             SiamRules.get().getMountainsRowsAndColumns(state);
         const mountainsRow: number[] = mountainsInfo.rows;
         const mountainsColumn: number[] = mountainsInfo.columns;
 
-        const pushers: { distance: number, coord: Coord}[] =
+        const pushers: { distance: number; coord: Coord}[] =
             SiamRules.get().getPushers(state, mountainsColumn, mountainsRow, config);
         let zeroShortestDistance: number = Number.POSITIVE_INFINITY;
         let oneShortestDistance: number = Number.POSITIVE_INFINITY;

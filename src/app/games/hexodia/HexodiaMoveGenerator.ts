@@ -4,12 +4,12 @@ import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaNode } from './HexodiaRules';
-import { HexodiaState } from './HexodiaState';
 
-export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaState, HexodiaConfig> {
+export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {
 
     public override getListMoves(node: HexodiaNode, _config: HexodiaConfig): HexodiaMove[] {
         if (node.gameState.turn === 0) {
@@ -19,7 +19,7 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
         }
     }
 
-    private getFirstMove(state: HexodiaState): HexodiaMove[] {
+    private getFirstMove(state: FourStatePieceGameStateWithTable): HexodiaMove[] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const cx: number = Math.floor(width / 2);
@@ -36,8 +36,8 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
         for (const firstCoord of availableFirstCoords) {
             const board: FourStatePiece[][] = node.gameState.getCopiedBoard();
             board[firstCoord.y][firstCoord.x] = FourStatePiece.ofPlayer(node.gameState.getCurrentPlayer());
-            const stateAfterFirstDrops: HexodiaState =
-                new HexodiaState(board, node.gameState.turn);
+            const stateAfterFirstDrops: FourStatePieceGameStateWithTable =
+                new FourStatePieceGameStateWithTable(board, node.gameState.turn);
             const availableSecondCoords: Coord[] = this.getAvailableCoords(stateAfterFirstDrops);
             for (const secondCoord of availableSecondCoords) {
                 const newMove: HexodiaMove = HexodiaMove.of([firstCoord, secondCoord]);
@@ -47,7 +47,7 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
         return new Set(moves).toList(); // Removes duplicates
     }
 
-    private getAvailableCoords(state: HexodiaState): Coord[] {
+    private getAvailableCoords(state: FourStatePieceGameStateWithTable): Coord[] {
         const usefulCoordTable: boolean[][] = this.getUsefulCoordsTable(state);
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
@@ -63,7 +63,7 @@ export class HexodiaMoveGenerator extends MoveGenerator<HexodiaMove, HexodiaStat
      * This function returns a table on which table[y][x] is true only if:
      *     (x, y) is empty but has occupied neighbors
      */
-    private getUsefulCoordsTable(state: HexodiaState): boolean[][] {
+    private getUsefulCoordsTable(state: FourStatePieceGameStateWithTable): boolean[][] {
         const width: number = state.getWidth();
         const height: number = state.getHeight();
         const usefulCoordTable: boolean[][] = TableUtils.create(width, height, false);

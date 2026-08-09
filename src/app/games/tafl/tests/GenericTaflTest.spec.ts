@@ -60,7 +60,7 @@ export function DoTaflTests<C extends TaflComponent<R, M>,
                 const defaultConfig: TaflConfig = rules.getDefaultRulesConfig();
                 rules.getInitialState(defaultConfig)
                     .getCoordsAndContents()
-                    .forEach((value: { coord: Coord, content: TaflPawn }) => {
+                    .forEach((value: { coord: Coord; content: TaflPawn }) => {
                         if (value.content.getOwner().isPlayer()) {
                             testUtils.expectElementNotToExist(`#stroke-${ value.coord.x }-${ value.coord.y}`);
                         }

@@ -215,7 +215,7 @@ describe('MCTS', () => {
         }
 
         // When selecting from the opponent turn
-        const selected: { node: GameNode<P4Move, P4State>, path: GameNode<P4Move, P4State>[] } =
+        const selected: { node: GameNode<P4Move, P4State>; path: GameNode<P4Move, P4State>[] } =
             p4Mcts['select']({ node: playerZeroMove, path: [playerZeroMove] }, Player.ZERO);
 
         // Then the opponent should be modeled as choosing the reply that minimizes Player.ZERO's score

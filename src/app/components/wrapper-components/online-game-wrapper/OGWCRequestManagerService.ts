@@ -9,11 +9,11 @@ import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { Localized } from '../../../utils/LocaleUtils';
 
 export interface RequestInfo {
-    requestType: RequestType,
-    textForRequest: Localized,
-    textForReply: Localized,
-    name: Localized,
-    icon: IconDefinition,
+    requestType: RequestType;
+    textForRequest: Localized;
+    textForReply: Localized;
+    name: Localized;
+    icon: IconDefinition;
 }
 
 /**

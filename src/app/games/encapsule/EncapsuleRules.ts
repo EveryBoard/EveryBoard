@@ -176,7 +176,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const oldStartingSpace: EncapsuleSpace = newBoard[startingCoord.y][startingCoord.x];
-            const removalResult: {removedSpace: EncapsuleSpace, removedPiece: EncapsulePiece} =
+            const removalResult: {removedSpace: EncapsuleSpace; removedPiece: EncapsulePiece} =
                 oldStartingSpace.removeBiggest();
             newBoard[startingCoord.y][startingCoord.x] = removalResult.removedSpace;
             movingPiece = removalResult.removedPiece;

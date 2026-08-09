@@ -149,7 +149,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         }
     }
 
-    public getSquareInfo(state: TeekoState): { score: number, victoriousCoords: Coord[] } {
+    public getSquareInfo(state: TeekoState): { score: number; victoriousCoords: Coord[] } {
         const victoriousCoords: Coord[] = [];
         const possibilies: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let cx: number = 0; cx < TeekoState.WIDTH - 1; cx++) {
