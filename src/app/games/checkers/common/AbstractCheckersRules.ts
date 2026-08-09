@@ -124,7 +124,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                 const landings: Coord[] =
                     this.getLandableCoords(state, coord, captured.get(), direction, config);
                 for (const landing of landings) {
-                    const postCapture: { state: CheckersState, piece: CheckersStack } =
+                    const postCapture: { state: CheckersState; piece: CheckersStack } =
                         this.applyCapture(state, coord, captured.get(), landing, config);
 
                     const startOfMove: CheckersMove = CheckersMove.fromCapture([coord, landing]);
@@ -153,7 +153,7 @@ export abstract class AbstractCheckersRules extends ConfigurableRules<CheckersMo
                          captured: Coord,
                          landing: Coord,
                          config: CheckersConfig,
-    ): { state: CheckersState, piece: CheckersStack } {
+    ): { state: CheckersState; piece: CheckersStack } {
         const moved: CheckersStack = state.getPieceAt(start);
         const pieceOwner: Player = moved.getCommander().player;
         let fakePostCaptureState: CheckersState = state.remove(start);

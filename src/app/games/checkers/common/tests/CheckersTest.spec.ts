@@ -72,7 +72,7 @@ export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R exten
         // A state on which a complex capture is possible
         state: CheckersState;
         move: CheckersMove;
-    }
+    };
 
     returnToStartCaptureTest: {
         // A state on which a multiple capture can end on its starting coordinate
