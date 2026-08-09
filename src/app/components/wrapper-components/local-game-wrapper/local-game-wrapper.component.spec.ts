@@ -352,6 +352,20 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#ai-option-select-0');
         }));
 
+        it('should default AI profile to none when selecting MCTS without a config', fakeAsync(async() => {
+            // Given a game without an MCTS config
+            const component: P4Component = testUtils.getGameComponent();
+            component.aiConfig = { ...component.aiConfig, mcts: [] };
+            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
+            spyOn(wrapper, 'proposeAIToPlay').and.resolveTo();
+
+            // When selecting MCTS
+            await wrapper.onPlayerSelectionChange(Player.ZERO, 'mcts');
+
+            // Then the missing profile defaults to none
+            expect(wrapper.getAIProfile(Player.ZERO)).toBe('none');
+        }));
+
         it('should allow iterative deepening selection for minimax configs', fakeAsync(async() => {
             // Given a board where humans are playing humans
             testUtils.expectElementNotToExist('#ai-profile-select-0');
