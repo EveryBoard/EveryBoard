@@ -78,6 +78,20 @@ jobs:
 
   tests-back:
     runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: everyboard
+          POSTGRES_PASSWORD: everyboard
+          POSTGRES_DB: everyboard_test
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U everyboard -d everyboard_test"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v4
@@ -100,6 +114,10 @@ jobs:
         run: cd backend && make
       - name: Test
         run: cd backend && make test
+      - name: Test with PostgreSQL
+        env:
+          POSTGRES_TEST_DSN: postgresql://everyboard:everyboard@127.0.0.1:5432/everyboard_test?sslmode=disable
+        run: cd backend && make test-postgres
       - name: Archive code coverage results
         if: always()
         uses: actions/upload-artifact@v4

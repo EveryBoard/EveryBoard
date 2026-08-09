@@ -202,6 +202,11 @@ func (h *Handler) unsubscribe() error {
 					if err = store.RemoveOpponent(configRoom); err != nil {
 						return err
 					}
+					if configRoom.Status == model.StatusConfigProposed {
+						if err = store.ReviewConfig(configRoom); err != nil {
+							return err
+						}
+					}
 					h.bufferBroadcastToConfigRoom(&buf, configRoom.ID, protocol.ConfigRoomUpdateMessage{
 						GameID:     configRoom.ID,
 						ConfigRoom: *configRoom,
