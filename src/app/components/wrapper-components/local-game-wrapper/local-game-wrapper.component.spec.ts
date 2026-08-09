@@ -528,16 +528,17 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         }));
 
         it('should propose AI to play when restarting game', fakeAsync(async() => {
+            // Given a game against an AI
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            await wrapper.onPlayerSelectionChange(Player.ZERO, 'minimax');
-            await wrapper.onAIProfileChange(Player.ZERO, 'alignment');
-            await wrapper.onAIOptionChange(Player.ZERO, 'Level 1');
+            selectAIPlayer(Player.ZERO);
 
             const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
 
+            // When restarting the game
             await testUtils.expectInterfaceClickSuccess('#restart-button');
             tick(0);
 
+            // Then the AI should be proposed to play
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
         }));
@@ -611,10 +612,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
 
         it('should reject human move if it tries to play when it is not its turn', fakeAsync(async() => {
             // Given a game against an AI
-            const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
-            await wrapper.onPlayerSelectionChange(Player.ZERO, 'minimax');
-            await wrapper.onAIProfileChange(Player.ZERO, 'alignment');
-            await wrapper.onAIOptionChange(Player.ZERO, 'Level 1');
+            selectAIPlayer(Player.ZERO);
 
             // When trying to click
             // Then it should fail
