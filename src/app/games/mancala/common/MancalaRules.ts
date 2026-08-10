@@ -388,7 +388,6 @@ export abstract class MancalaRules<C extends MancalaConfig = MancalaConfig>
         if (config.passByPlayerStore && isPlayerStore && previousDropWasStore === false) {
             return MGPOptional.empty(); // This seed is dropped in the store
         }
-        // const newCoord: Coord = coord.getNext(verticalDirection, verticalFactor);
         const newY: number = this.getOppositeY(coord, config);
         const newCoord: Coord = new Coord(coord.x, newY);
         return MGPOptional.of(newCoord); // switched sid

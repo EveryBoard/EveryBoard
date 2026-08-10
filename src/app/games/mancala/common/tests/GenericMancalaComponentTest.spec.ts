@@ -508,10 +508,6 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                             expectedSleeps.push(MancalaComponent.TIMEOUT_BETWEEN_LAPS);
                         }
                     }
-                    console.log('expected')
-                    console.log(JSON.stringify(expectedSleeps))
-                    console.log('got')
-                    console.log(JSON.stringify(actualSleeps))
                     expect(actualSleeps).toEqual(expectedSleeps);
                 }));
             }
