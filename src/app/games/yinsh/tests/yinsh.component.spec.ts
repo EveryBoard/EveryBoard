@@ -41,8 +41,8 @@ describe('YinshComponent', () => {
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
 
             // Then it should place a ring and show it
-            await testUtils.expectMoveSuccess('#click_3_2', move);
-            testUtils.expectElementToHaveClasses('#space_3_2', ['base', 'moved-fill']);
+            await testUtils.expectMoveSuccess('#click-3-2', move);
+            testUtils.expectElementToHaveClasses('#space-3-2', ['base', 'moved-fill']);
         }));
 
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
@@ -65,17 +65,17 @@ describe('YinshComponent', () => {
 
             // When clicking on an occupied space
             // Then it should fail
-            await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
+            await testUtils.expectClickFailure('#click-3-2', RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }));
 
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
             // Given a state in placement phase, with all rings available
-            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_5');
+            testUtils.expectElementToExist('#PLAYER_ZERO-side-ring-5');
             // When When placing a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
-            await testUtils.expectMoveSuccess('#click_3_2', move);
+            await testUtils.expectMoveSuccess('#click-3-2', move);
             // Then it should not show the placed ring on the side anymore
-            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_5');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO-side-ring-5');
         }));
 
     });
@@ -105,8 +105,8 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // Then the player's ring should be selectable
-            testUtils.expectElementToExist('#selectable_3_3');
-            testUtils.expectElementNotToExist('#selectable_4_4');
+            testUtils.expectElementToExist('#selectable-3-3');
+            testUtils.expectElementNotToExist('#selectable-4-4');
         }));
 
         it('should not highlight clickable rings when it is not players turn', fakeAsync(async() => {
@@ -132,8 +132,8 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // Then the rings should not be selectable
-            testUtils.expectElementNotToExist('#selectable_3_3');
-            testUtils.expectElementNotToExist('#selectable_4_4');
+            testUtils.expectElementNotToExist('#selectable-3-3');
+            testUtils.expectElementNotToExist('#selectable-4-4');
         }));
 
         it('should display score as 0 - 0 when game is in placement phase', fakeAsync(async() => {
@@ -195,8 +195,8 @@ describe('YinshComponent', () => {
                                                   new Coord(3, 2), MGPOptional.of(new Coord(3, 3)),
                                                   []);
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_3_2');
-            await testUtils.expectMoveSuccess('#click_3_3', move);
+            await testUtils.expectClickSuccess('#click-3-2');
+            await testUtils.expectMoveSuccess('#click-3-3', move);
         }));
 
         it('should show flipped markers as moved', fakeAsync(async() => {
@@ -220,14 +220,14 @@ describe('YinshComponent', () => {
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(6, 2)),
                                                   []);
-            await testUtils.expectClickSuccess('#click_3_2');
-            await testUtils.expectMoveSuccess('#click_6_2', move);
+            await testUtils.expectClickSuccess('#click-3-2');
+            await testUtils.expectMoveSuccess('#click-6-2', move);
 
             // Then the markers and the ring should be shown as moved
-            testUtils.expectElementToHaveClass('#space_3_2', 'moved-fill'); // the new marker
-            testUtils.expectElementToHaveClass('#space_4_2', 'moved-fill'); // a flipped marker
-            testUtils.expectElementToHaveClass('#space_5_2', 'moved-fill'); // another flipped marker
-            testUtils.expectElementToHaveClass('#space_6_2', 'moved-fill'); // the moved ring
+            testUtils.expectElementToHaveClass('#space-3-2', 'moved-fill'); // the new marker
+            testUtils.expectElementToHaveClass('#space-4-2', 'moved-fill'); // a flipped marker
+            testUtils.expectElementToHaveClass('#space-5-2', 'moved-fill'); // another flipped marker
+            testUtils.expectElementToHaveClass('#space-6-2', 'moved-fill'); // the moved ring
         }));
 
         it('should show passed-by spaces', fakeAsync(async() => {
@@ -251,14 +251,14 @@ describe('YinshComponent', () => {
             const move: YinshMove = new YinshMove([],
                                                   new Coord(3, 2), MGPOptional.of(new Coord(6, 2)),
                                                   []);
-            await testUtils.expectClickSuccess('#click_3_2');
-            await testUtils.expectMoveSuccess('#click_6_2', move);
+            await testUtils.expectClickSuccess('#click-3-2');
+            await testUtils.expectMoveSuccess('#click-6-2', move);
 
             // Then the markers and the ring should be shown as moved
-            testUtils.expectElementToHaveClass('#space_3_2', 'moved-fill'); // the new marker
-            testUtils.expectElementToHaveClass('#space_4_2', 'moved-fill'); // a flipped marker
-            testUtils.expectElementToHaveClass('#space_5_2', 'moved-fill'); // another flipped marker
-            testUtils.expectElementToHaveClass('#space_6_2', 'moved-fill'); // the moved ring
+            testUtils.expectElementToHaveClass('#space-3-2', 'moved-fill'); // the new marker
+            testUtils.expectElementToHaveClass('#space-4-2', 'moved-fill'); // a flipped marker
+            testUtils.expectElementToHaveClass('#space-5-2', 'moved-fill'); // another flipped marker
+            testUtils.expectElementToHaveClass('#space-6-2', 'moved-fill'); // the moved ring
         }));
 
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
@@ -278,12 +278,12 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
-            testUtils.expectElementNotToExist('#marker_3_2');
+            testUtils.expectElementNotToExist('#marker-3-2');
             // When clicking on the ring
-            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectClickSuccess('#click-3-2');
             // Then it should show a marker there now
-            testUtils.expectElementToHaveClass('#marker_3_2', 'player0-fill');
-            testUtils.expectElementToHaveClass('#ring_3_2 > circle:nth-child(2)', 'player0-stroke');
+            testUtils.expectElementToHaveClass('#marker-3-2', 'player0-fill');
+            testUtils.expectElementToHaveClass('#ring-3-2 > circle:nth-child(2)', 'player0-stroke');
         }));
 
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
@@ -311,10 +311,10 @@ describe('YinshComponent', () => {
                                                   new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                                                   []);
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_3_3'); // click the captured group
-            await testUtils.expectClickSuccess('#click_3_2'); // click the ring
-            await testUtils.expectClickSuccess('#click_4_2'); // select the other ring
-            await testUtils.expectMoveSuccess('#click_4_3', move); // move it
+            await testUtils.expectClickSuccess('#click-3-3'); // click the captured group
+            await testUtils.expectClickSuccess('#click-3-2'); // click the ring
+            await testUtils.expectClickSuccess('#click-4-2'); // select the other ring
+            await testUtils.expectMoveSuccess('#click-4-3', move); // move it
         }));
 
         it('should highlight possible captures', fakeAsync(async() => {
@@ -338,11 +338,11 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should show the pieces as capturable
-            testUtils.expectElementToExist('#selectable_3_3');
-            testUtils.expectElementToHaveClass('#selectable_3_3', 'capturable-stroke');
-            testUtils.expectElementToHaveClass('#selectable_3_4', 'capturable-stroke');
-            testUtils.expectElementToHaveClass('#selectable_3_5', 'capturable-stroke');
-            testUtils.expectElementToHaveClass('#selectable_3_6', 'capturable-stroke');
+            testUtils.expectElementToExist('#selectable-3-3');
+            testUtils.expectElementToHaveClass('#selectable-3-3', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable-3-4', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable-3-5', 'capturable-stroke');
+            testUtils.expectElementToHaveClass('#selectable-3-6', 'capturable-stroke');
         }));
 
         it('should show selected captures, and remove highlight upon cancellation', fakeAsync(async() => {
@@ -363,29 +363,29 @@ describe('YinshComponent', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
-            testUtils.expectElementNotToExist('#selected_3_3');
-            testUtils.expectElementNotToExist('#selected_3_4');
-            testUtils.expectElementNotToExist('#selected_3_5');
-            testUtils.expectElementNotToExist('#selected_3_6');
+            testUtils.expectElementNotToExist('#selected-3-3');
+            testUtils.expectElementNotToExist('#selected-3-4');
+            testUtils.expectElementNotToExist('#selected-3-5');
+            testUtils.expectElementNotToExist('#selected-3-6');
 
             // When selecting a capture
-            await testUtils.expectClickSuccess('#click_3_3'); // click the first captured group
-            await testUtils.expectClickSuccess('#click_3_2'); // click the first ring
+            await testUtils.expectClickSuccess('#click-3-3'); // click the first captured group
+            await testUtils.expectClickSuccess('#click-3-2'); // click the first ring
 
             // Then the capture should be selected
-            testUtils.expectElementToHaveClass('#selected_3_3', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#selected_3_4', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#selected_3_5', 'selected-stroke');
-            testUtils.expectElementToHaveClass('#selected_3_6', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected-3-3', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected-3-4', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected-3-5', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#selected-3-6', 'selected-stroke');
 
             // When clicking on something else than a ring to cancel move
-            await testUtils.expectClickFailure('#click_5_5', YinshFailure.SHOULD_SELECT_PLAYER_RING());
+            await testUtils.expectClickFailure('#click-5-5', YinshFailure.SHOULD_SELECT_PLAYER_RING());
 
             // Then the capture should not be selected anymore
-            testUtils.expectElementNotToExist('#selected_3_3');
-            testUtils.expectElementNotToExist('#selected_3_4');
-            testUtils.expectElementNotToExist('#selected_3_5');
-            testUtils.expectElementNotToExist('#selected_3_6');
+            testUtils.expectElementNotToExist('#selected-3-3');
+            testUtils.expectElementNotToExist('#selected-3-4');
+            testUtils.expectElementNotToExist('#selected-3-5');
+            testUtils.expectElementNotToExist('#selected-3-6');
 
         }));
 
@@ -415,12 +415,12 @@ describe('YinshComponent', () => {
                                                   []);
 
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_3_3'); // click the first captured group
-            await testUtils.expectClickSuccess('#click_3_2'); // click the first ring
-            await testUtils.expectClickSuccess('#click_4_3'); // click the second captured group
-            await testUtils.expectClickSuccess('#click_4_2'); // click the second ring
-            await testUtils.expectClickSuccess('#click_5_2'); // select the remaining ring
-            await testUtils.expectMoveSuccess('#click_4_2', move); // move it
+            await testUtils.expectClickSuccess('#click-3-3'); // click the first captured group
+            await testUtils.expectClickSuccess('#click-3-2'); // click the first ring
+            await testUtils.expectClickSuccess('#click-4-3'); // click the second captured group
+            await testUtils.expectClickSuccess('#click-4-2'); // click the second ring
+            await testUtils.expectClickSuccess('#click-5-2'); // select the remaining ring
+            await testUtils.expectMoveSuccess('#click-4-2', move); // move it
         }));
 
         it('should fail when trying to move while there are still captures', fakeAsync(async() => {
@@ -443,7 +443,7 @@ describe('YinshComponent', () => {
 
             // When trying to place a marker in a ring
             // Then it should fail
-            await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES());
+            await testUtils.expectClickFailure('#click-4-2', YinshFailure.MISSING_CAPTURES());
         }));
 
         it('should show the number of rings of each player', fakeAsync(async() => {
@@ -455,16 +455,16 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // Then it should show all side rings for each player
-            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_1');
-            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_2');
-            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_3');
-            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_4');
-            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_5');
-            testUtils.expectElementToExist('#PLAYER_ONE_sideRing_1');
-            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_2');
-            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_3');
-            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_4');
-            testUtils.expectElementNotToExist('#PLAYER_ONE_sideRing_5');
+            testUtils.expectElementToExist('#PLAYER_ZERO-side-ring-1');
+            testUtils.expectElementToExist('#PLAYER_ZERO-side-ring-2');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO-side-ring-3');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO-side-ring-4');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO-side-ring-5');
+            testUtils.expectElementToExist('#PLAYER_ONE-side-ring-1');
+            testUtils.expectElementNotToExist('#PLAYER_ONE-side-ring-2');
+            testUtils.expectElementNotToExist('#PLAYER_ONE-side-ring-3');
+            testUtils.expectElementNotToExist('#PLAYER_ONE-side-ring-4');
+            testUtils.expectElementNotToExist('#PLAYER_ONE-side-ring-5');
         }));
 
         it('should increase the number of rings shown when a player makes a capture', fakeAsync(async() => {
@@ -484,7 +484,7 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
-            testUtils.expectElementNotToExist('#PLAYER_ZERO_sideRing_1');
+            testUtils.expectElementNotToExist('#PLAYER_ZERO-side-ring-1');
 
             // When performing a move that captures
             const move: YinshMove = new YinshMove([YinshCapture.of(new Coord(3, 3),
@@ -493,13 +493,13 @@ describe('YinshComponent', () => {
                                                   new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                                                   []);
 
-            await testUtils.expectClickSuccess('#click_3_3'); // click the captured group
-            await testUtils.expectClickSuccess('#click_3_2'); // click the ring
-            await testUtils.expectClickSuccess('#click_4_2'); // select the other ring
-            await testUtils.expectMoveSuccess('#click_4_3', move); // move it
+            await testUtils.expectClickSuccess('#click-3-3'); // click the captured group
+            await testUtils.expectClickSuccess('#click-3-2'); // click the ring
+            await testUtils.expectClickSuccess('#click-4-2'); // select the other ring
+            await testUtils.expectMoveSuccess('#click-4-3', move); // move it
 
             // Then the captured ring of player 0 is shown
-            testUtils.expectElementToExist('#PLAYER_ZERO_sideRing_1');
+            testUtils.expectElementToExist('#PLAYER_ZERO-side-ring-1');
         }));
 
         it('should recompute captures upon intersecting captures', fakeAsync(async() => {
@@ -522,19 +522,19 @@ describe('YinshComponent', () => {
 
             for (const coord of [[3, 3], [3, 4], [3, 5], [3, 6], [3, 7], [4, 5], [5, 5], [6, 5], [7, 5], [8, 5]]) {
                 // All elements of the captures must be selectable
-                testUtils.expectElementToExist('#selectable_' + coord[0] + '_' + coord[1]);
+                testUtils.expectElementToExist('#selectable-' + coord[0] + '-' + coord[1]);
             }
 
             // When performing a capture and selecting a ring
-            await testUtils.expectClickSuccess('#click_3_3'); // capture
-            await testUtils.expectClickSuccess('#click_3_2'); // select the ring
+            await testUtils.expectClickSuccess('#click-3-3'); // capture
+            await testUtils.expectClickSuccess('#click-3-2'); // select the ring
 
             // Then there now should only remain 5 selectable coords
             for (const coord of [[3, 3], [3, 4], [3, 5], [3, 6], [3, 7]]) {
-                testUtils.expectElementNotToExist('#selectable_' + coord[0] + '_' + coord[1]);
+                testUtils.expectElementNotToExist('#selectable-' + coord[0] + '-' + coord[1]);
             }
             for (const coord of [[4, 5], [5, 5], [6, 5], [7, 5], [8, 5]]) {
-                testUtils.expectElementToExist('#selectable_' + coord[0] + '_' + coord[1]);
+                testUtils.expectElementToExist('#selectable-' + coord[0] + '-' + coord[1]);
             }
         }));
 
@@ -556,16 +556,16 @@ describe('YinshComponent', () => {
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
 
-            testUtils.expectElementNotToExist('#ring_0');
-            testUtils.expectElementToExist('#selectable_3_3');
+            testUtils.expectElementNotToExist('#ring-0');
+            testUtils.expectElementToExist('#selectable-3-3');
 
             // When capturing
-            await testUtils.expectClickSuccess('#click_3_3'); // capture
+            await testUtils.expectClickSuccess('#click-3-3'); // capture
 
             // Then it should highlight the rings instead
-            testUtils.expectElementNotToExist('#selectable_3_3');
-            testUtils.expectElementToExist('#selectable_3_2'); // ring
-            testUtils.expectElementToExist('#selectable_4_2'); // other ring
+            testUtils.expectElementNotToExist('#selectable-3-3');
+            testUtils.expectElementToExist('#selectable-3-2'); // ring
+            testUtils.expectElementToExist('#selectable-4-2'); // other ring
         }));
 
         it('should forbid clicking on two ambiguous capture coordinates', fakeAsync(async() => {
@@ -587,10 +587,10 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on the intersecting coordinate
-            await testUtils.expectClickSuccess('#click_4_5');
+            await testUtils.expectClickSuccess('#click-4-5');
 
             // Then it should fail
-            await testUtils.expectClickFailure('#click_5_5', YinshFailure.AMBIGUOUS_CAPTURE_COORD());
+            await testUtils.expectClickFailure('#click-5-5', YinshFailure.AMBIGUOUS_CAPTURE_COORD());
         }));
 
         it('should cancel the move when clicking on something else than a ring after a capture', fakeAsync(async() => {
@@ -611,11 +611,11 @@ describe('YinshComponent', () => {
 
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_3_3');
+            await testUtils.expectClickSuccess('#click-3-3');
 
             // When clicking somewhere else than on a ring
             // Then it should fail
-            await testUtils.expectClickFailure('#click_3_5', YinshFailure.CAPTURE_SHOULD_TAKE_RING());
+            await testUtils.expectClickFailure('#click-3-5', YinshFailure.CAPTURE_SHOULD_TAKE_RING());
         }));
 
         it('should cancel the move when clicking on an invalid move destination', fakeAsync(async() => {
@@ -638,8 +638,8 @@ describe('YinshComponent', () => {
 
             // When moving on an occupied space
             // Then it should fail
-            await testUtils.expectClickSuccess('#click_3_2');
-            await testUtils.expectClickFailure('#click_3_3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE());
+            await testUtils.expectClickSuccess('#click-3-2');
+            await testUtils.expectClickFailure('#click-3-3', YinshFailure.SHOULD_END_MOVE_ON_EMPTY_SPACE());
         }));
 
         it('should allow moves with one final capture', fakeAsync(async() => {
@@ -668,10 +668,10 @@ describe('YinshComponent', () => {
                                                                    MGPOptional.of(new Coord(4, 2)))]);
 
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_3_3'); // Select the ring
-            await testUtils.expectClickSuccess('#click_3_7'); // Move it
-            await testUtils.expectClickSuccess('#click_3_6'); // Select the capture
-            await testUtils.expectMoveSuccess('#click_4_2', move); // Take a ring
+            await testUtils.expectClickSuccess('#click-3-3'); // Select the ring
+            await testUtils.expectClickSuccess('#click-3-7'); // Move it
+            await testUtils.expectClickSuccess('#click-3-6'); // Select the capture
+            await testUtils.expectMoveSuccess('#click-4-2', move); // Take a ring
         }));
 
         it('should allow moves with two final captures', fakeAsync(async() => {
@@ -702,12 +702,12 @@ describe('YinshComponent', () => {
                               ]);
 
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_3_3'); // Select the ring
-            await testUtils.expectClickSuccess('#click_3_8'); // Move it
-            await testUtils.expectClickSuccess('#click_3_2'); // Select first capture
-            await testUtils.expectClickSuccess('#click_4_2'); // Take a ring
-            await testUtils.expectClickSuccess('#click_3_7'); // Select second capture
-            await testUtils.expectMoveSuccess('#click_5_2', move); // Take another ring
+            await testUtils.expectClickSuccess('#click-3-3'); // Select the ring
+            await testUtils.expectClickSuccess('#click-3-8'); // Move it
+            await testUtils.expectClickSuccess('#click-3-2'); // Select first capture
+            await testUtils.expectClickSuccess('#click-4-2'); // Take a ring
+            await testUtils.expectClickSuccess('#click-3-7'); // Select second capture
+            await testUtils.expectMoveSuccess('#click-5-2', move); // Take another ring
         }));
 
         it('should allow moves with two final captures, when selecting ambiguous coord first', fakeAsync(async() => {
@@ -737,11 +737,11 @@ describe('YinshComponent', () => {
                               ]);
 
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_3_3'); // Select the ring
-            await testUtils.expectClickSuccess('#click_3_8'); // Move it
-            await testUtils.expectClickSuccess('#click_3_7'); // Select first capture, first coord
-            await testUtils.expectClickSuccess('#click_3_3'); // select first capture, second coord
-            await testUtils.expectMoveSuccess('#click_4_2', move); // Take a ring
+            await testUtils.expectClickSuccess('#click-3-3'); // Select the ring
+            await testUtils.expectClickSuccess('#click-3-8'); // Move it
+            await testUtils.expectClickSuccess('#click-3-7'); // Select first capture, first coord
+            await testUtils.expectClickSuccess('#click-3-3'); // select first capture, second coord
+            await testUtils.expectMoveSuccess('#click-4-2', move); // Take a ring
         }));
 
         it('should allow selecting ambiguous captures with two clicks', fakeAsync(async() => {
@@ -772,11 +772,11 @@ describe('YinshComponent', () => {
                 [],
             );
             // Then it should succeed
-            await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
-            await testUtils.expectClickSuccess('#click_5_5'); // select second capture coord
-            await testUtils.expectClickSuccess('#click_3_2'); // select the first ring taken
-            await testUtils.expectClickSuccess('#click_4_1'); // select ring to move
-            await testUtils.expectMoveSuccess('#click_4_2', move); // move the ring
+            await testUtils.expectClickSuccess('#click-5-4'); // select first capture coord
+            await testUtils.expectClickSuccess('#click-5-5'); // select second capture coord
+            await testUtils.expectClickSuccess('#click-3-2'); // select the first ring taken
+            await testUtils.expectClickSuccess('#click-4-1'); // select ring to move
+            await testUtils.expectMoveSuccess('#click-4-2', move); // move the ring
         }));
 
         it('should cancel move when second ambiguous capture click is invalid', fakeAsync(async() => {
@@ -799,8 +799,8 @@ describe('YinshComponent', () => {
 
             // When trying to capture with two clicks, but clicking incorrectly
             // Then it should fail
-            await testUtils.expectClickSuccess('#click_5_4'); // select first capture coord
-            await testUtils.expectClickFailure('#click_6_8', YinshFailure.MISSING_CAPTURES()); // select second capture coord
+            await testUtils.expectClickSuccess('#click-5-4'); // select first capture coord
+            await testUtils.expectClickFailure('#click-6-8', YinshFailure.MISSING_CAPTURES()); // select second capture coord
         }));
 
         it('should make pieces captured at the last turn disappear upon first player click', fakeAsync(async() => {
@@ -826,24 +826,24 @@ describe('YinshComponent', () => {
                               new Coord(4, 2), MGPOptional.of(new Coord(4, 3)),
                               []);
 
-            await testUtils.expectClickSuccess('#click_3_3'); // capture
-            await testUtils.expectClickSuccess('#click_3_2'); // take ring
-            await testUtils.expectClickSuccess('#click_4_2'); // move start
-            await testUtils.expectMoveSuccess('#click_4_3', move); // move end
+            await testUtils.expectClickSuccess('#click-3-3'); // capture
+            await testUtils.expectClickSuccess('#click-3-2'); // take ring
+            await testUtils.expectClickSuccess('#click-4-2'); // move start
+            await testUtils.expectMoveSuccess('#click-4-3', move); // move end
 
-            testUtils.expectElementToExist('#marker_3_3');
-            testUtils.expectElementToHaveClass('#pieceGroup_3_3', 'semi-transparent');
-            testUtils.expectElementToExist('#ring_3_2');
-            testUtils.expectElementToHaveClass('#pieceGroup_3_2', 'semi-transparent');
+            testUtils.expectElementToExist('#marker-3-3');
+            testUtils.expectElementToHaveClass('#piece-group-3-3', 'semi-transparent');
+            testUtils.expectElementToExist('#ring-3-2');
+            testUtils.expectElementToHaveClass('#piece-group-3-2', 'semi-transparent');
 
             // When the first click of the next move is donen
-            await testUtils.expectClickSuccess('#click_5_2'); // move start, other player
+            await testUtils.expectClickSuccess('#click-5-2'); // move start, other player
 
             // Then all previously captured pieces should have disappeared
-            testUtils.expectElementNotToExist('#marker_3_3');
-            testUtils.expectElementNotToHaveClass('#pieceGroup_3_3', 'semi-transparent');
-            testUtils.expectElementNotToExist('#ring_3_2');
-            testUtils.expectElementNotToHaveClass('#pieceGroup_3_2', 'semi-transparent');
+            testUtils.expectElementNotToExist('#marker-3-3');
+            testUtils.expectElementNotToHaveClass('#piece-group-3-3', 'semi-transparent');
+            testUtils.expectElementNotToExist('#ring-3-2');
+            testUtils.expectElementNotToHaveClass('#piece-group-3-2', 'semi-transparent');
         }));
 
         it('should show indicator when selecting your ring', fakeAsync(async() => {
@@ -865,12 +865,12 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on the ring
-            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectClickSuccess('#click-3-2');
 
             // Then there should be indicators
-            testUtils.expectElementToExist('#indicator_4_1'); // The one in the up-right diagonal
-            testUtils.expectElementToExist('#indicator_2_3'); // The two in the down-left diagonal
-            testUtils.expectElementToExist('#indicator_1_4');
+            testUtils.expectElementToExist('#indicator-4-1'); // The one in the up-right diagonal
+            testUtils.expectElementToExist('#indicator-2-3'); // The two in the down-left diagonal
+            testUtils.expectElementToExist('#indicator-1-4');
         }));
 
         it('should cancel move attempt chosen ring when clicking on it again', fakeAsync(async() => {
@@ -890,15 +890,15 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectClickSuccess('#click-3-2');
 
             // When clicking again on the ring
-            await testUtils.expectClickFailure('#click_3_2');
+            await testUtils.expectClickFailure('#click-3-2');
 
             // Then there should no longer be indicators
-            testUtils.expectElementNotToExist('#indicator_4_1'); // The one in the up-right diagonal
-            testUtils.expectElementNotToExist('#indicator_2_3'); // The two in the down-left diagonal
-            testUtils.expectElementNotToExist('#indicator_1_4');
+            testUtils.expectElementNotToExist('#indicator-4-1'); // The one in the up-right diagonal
+            testUtils.expectElementNotToExist('#indicator-2-3'); // The two in the down-left diagonal
+            testUtils.expectElementNotToExist('#indicator-1-4');
         }));
 
         it('should change selected ring when clicking on another ring', fakeAsync(async() => {
@@ -918,17 +918,17 @@ describe('YinshComponent', () => {
             ];
             const state: YinshState = new YinshState(board, PlayerNumberMap.of(0, 0), 10);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click_3_2');
+            await testUtils.expectClickSuccess('#click-3-2');
 
             // When clicking on another ring of current player
-            await testUtils.expectClickSuccess('#click_4_2');
+            await testUtils.expectClickSuccess('#click-4-2');
 
             // Then that new one should be selected
-            testUtils.expectElementToExist('#indicator_5_1'); // The two in the up-right diagonal
-            testUtils.expectElementToExist('#indicator_6_0');
-            testUtils.expectElementToExist('#indicator_4_3'); // Some of the one below
-            testUtils.expectElementToExist('#indicator_4_4');
-            testUtils.expectElementToExist('#indicator_4_5');
+            testUtils.expectElementToExist('#indicator-5-1'); // The two in the up-right diagonal
+            testUtils.expectElementToExist('#indicator-6-0');
+            testUtils.expectElementToExist('#indicator-4-3'); // Some of the one below
+            testUtils.expectElementToExist('#indicator-4-4');
+            testUtils.expectElementToExist('#indicator-4-5');
         }));
 
         it('should not put marker inside captured ring', fakeAsync(async() => {
@@ -949,14 +949,14 @@ describe('YinshComponent', () => {
             await testUtils.setupState(state);
 
             // When choosing first pre-capture and ring
-            await testUtils.expectClickSuccess('#click_4_5');
-            await testUtils.expectClickSuccess('#click_3_3');
+            await testUtils.expectClickSuccess('#click-4-5');
+            await testUtils.expectClickSuccess('#click-3-3');
 
             // Then marker below captured piece should not exist
-            testUtils.expectElementNotToExist('#marker_3_3');
+            testUtils.expectElementNotToExist('#marker-3-3');
             // But it should be selected
-            testUtils.expectElementToExist('#selected_3_3');
-            testUtils.expectElementToHaveClass('#ring_3_3 > circle:nth-child(2)', 'semi-transparent');
+            testUtils.expectElementToExist('#selected-3-3');
+            testUtils.expectElementToHaveClass('#ring-3-3 > circle:nth-child(2)', 'semi-transparent');
         }));
 
         it('should show multiple capture of previous turn', fakeAsync(async() => {
@@ -1003,7 +1003,7 @@ describe('YinshComponent', () => {
             // Then 10 different captures should be displayed and 2 rings taken
             for (const capture of previousMove.initialCaptures) {
                 for (const capturedCoord of capture.capturedSpaces.concat(capture.ringTaken.get())) {
-                    const spaceName: string = '#space_' + capturedCoord.x + '_' + capturedCoord.y;
+                    const spaceName: string = '#space-' + capturedCoord.x + '-' + capturedCoord.y;
                     testUtils.expectElementToHaveClass(spaceName, 'captured-fill');
                 }
             }

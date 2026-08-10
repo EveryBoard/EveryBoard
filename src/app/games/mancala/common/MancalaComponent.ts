@@ -1,6 +1,7 @@
 import { MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 import { AIConfig } from '../../../jscaip/AI/AIConfig';
@@ -152,11 +153,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.changeVisibleState(state);
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.animationOngoing) {
             return MGPValidation.SUCCESS;
         } else {
@@ -410,11 +408,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
         }
     }
 
-    public async onStoreClick(owner: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#store-' + owner.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+    @ClickHandler((owner: Player) => `#store-${ owner.toString() }`)
+    public async onStoreClick(_: Player): Promise<MGPValidation> {
         return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
     }
 
