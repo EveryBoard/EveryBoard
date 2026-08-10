@@ -76,7 +76,7 @@ fdescribe('KalahComponent', () => {
                 [4, 4, 0, 5, 5, 0],
                 [4, 4, 5, 5, 5, 5],
             ], 1, PlayerNumberMap.of(2, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(2, 0), [MancalaDistribution.of(0, 0)]),
+            move: MancalaMove.of(MancalaDistribution.of(2, 0), [MancalaDistribution.of(5, 0)]),
             distributedSeedCountsByLap: [4, 5],
         },
         monsoon: {
