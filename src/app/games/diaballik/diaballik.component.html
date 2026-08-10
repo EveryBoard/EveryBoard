@@ -16,10 +16,10 @@
         @for (line of stateInConstruction.board; track $index; let y = $index) {
             <g>
                 @for (square of line; track $index; let x = $index) {
-                    <g id="click_{{ x }}_{{ y }}"
+                    <g id="click-{{ x }}-{{ y }}"
                        (click)="onClick(x, y)"
                        [attr.transform]="getTranslationAtXY(x, y)">
-                        <rect id="space_{{ x }}_{{ y }}"
+                        <rect id="space-{{ x }}-{{ y }}"
                               class="base"
                               [ngClass]="getSpaceClasses(x, y)"
                               [attr.x]="0"
@@ -27,7 +27,7 @@
                               [attr.width]="SPACE_SIZE"
                               [attr.height]="SPACE_SIZE"/>
                         @if (square.owner.isPlayer()) {
-                            <circle id="piece_{{ x }}_{{ y }}"
+                            <circle id="piece-{{ x }}-{{ y }}"
                                     class="base"
                                     [ngClass]="getPieceClasses(x, y, square)"
                                     [attr.r]="42"
@@ -35,7 +35,7 @@
                                     [attr.cy]="SPACE_SIZE / 2"/>
                         }
                         @if (square.holdsBall) {
-                            <circle id="ball_{{ x }}_{{ y }}"
+                            <circle id="ball-{{ x }}-{{ y }}"
                                     class="base"
                                     [ngClass]="getBallClasses(x, y, square)"
                                     [attr.r]="22"
@@ -55,7 +55,7 @@
         }
         @for (coord of indicators; track coord.toString()) {
             <rect [attr.transform]="getTranslationAt(coord)"
-                  id="indicator_{{ coord.x }}_{{ coord.y }}"
+                  id="indicator-{{ coord.x }}-{{ coord.y }}"
                   [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
                   [attr.y]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
                   [attr.width]="INDICATOR_SIZE"

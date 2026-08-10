@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { RulesFailure } from '../../jscaip/RulesFailure';
@@ -72,28 +73,25 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         this.victoriousCoords = this.rules.getVictoriousCoords(state, config);
     }
 
-    public async clickCoord(clicked: Coord): Promise<MGPValidation> {
+    @ClickHandler((coord: Coord) => `#click-coord-${ coord.x }-${ coord.y }`)
+    public async clickCoord(coord: Coord): Promise<MGPValidation> {
         // called when the user click on the quarto board
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-coord-' + clicked.x + '-' + clicked.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        if (this.chosen.equalsValue(clicked)) {
+        if (this.chosen.equalsValue(coord)) {
             return this.cancelMove();
         }
-        if (this.board[clicked.y][clicked.x] === QuartoPiece.EMPTY) {
+        if (this.board[coord.y][coord.x] === QuartoPiece.EMPTY) {
             // if it's a legal place to put the piece
-            this.showPieceInHandOnBoard(clicked); // let's show the user his decision
+            this.showPieceInHandOnBoard(coord); // let's show the user his decision
             if (this.getState().turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
-                const chosenMove: QuartoMove = new QuartoMove(clicked.x, clicked.y, QuartoPiece.EMPTY);
+                const chosenMove: QuartoMove = new QuartoMove(coord.x, coord.y, QuartoPiece.EMPTY);
                 return this.chooseMove(chosenMove);
             } else if (this.pieceToGive.isAbsent()) {
                 return MGPValidation.SUCCESS; // the user has just chosen their coord
             } else {
                 // the user has already chosen his piece before his coord
-                const chosenMove: QuartoMove = new QuartoMove(clicked.x, clicked.y, this.pieceToGive.get());
+                const chosenMove: QuartoMove = new QuartoMove(coord.x, coord.y, this.pieceToGive.get());
                 return this.chooseMove(chosenMove);
             }
         } else {
@@ -102,11 +100,8 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
 
+    @ClickHandler((givenPiece: number) => '#click-piece-' + givenPiece)
     public async clickPiece(givenPiece: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-piece-' + givenPiece);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.pieceToGive.equalsValue(QuartoPiece.ofInt(givenPiece))) {
             return this.cancelMove();
         }

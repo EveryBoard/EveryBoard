@@ -11,7 +11,7 @@
         <g>
             @for (c of line; track $index; let x = $index) {
                 <g>
-                    <circle id="click_{{ x }}_{{ y }}"
+                    <circle id="click-{{ x }}-{{ y }}"
                             (click)="onBoardClick(x, y)"
                             [attr.r]="0.45 * SPACE_SIZE"
                             [attr.cx]="(x + 0.5) * SPACE_SIZE"
@@ -26,7 +26,7 @@
         <g>
             @for (direction of getPossiblesDirections(); track direction.toString()) {
                 <use xlink:href="#triangle"
-                     id="chooseDirection_{{ direction }}"
+                     id="choose-direction-{{ direction }}"
                      (click)="chooseDirection(direction)"
                      [attr.transform]="getQuixoArrowTransform(direction)"
                      class="semi-transparent"/>

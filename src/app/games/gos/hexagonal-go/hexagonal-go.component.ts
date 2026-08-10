@@ -7,7 +7,8 @@ import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -101,14 +102,9 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
             .expandBelow(this.SPACE_SIZE);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const resultlessMove: GoMove = new GoMove(x, y);
+        const resultlessMove: GoMove = new GoMove(coord.x, coord.y);
         return this.chooseMove(resultlessMove);
     }
 

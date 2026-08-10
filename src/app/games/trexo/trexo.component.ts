@@ -4,6 +4,7 @@ import { Component, computed, Signal, signal, WritableSignal } from '@angular/co
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
@@ -226,11 +227,8 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         };
     }
 
+    @ClickHandler((x: number, y: number) => `#space-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#space_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clicked: Coord = new Coord(x, y);
         if (this.droppedPiece.isPresent()) {
             const dropped: Coord = this.droppedPiece.get();

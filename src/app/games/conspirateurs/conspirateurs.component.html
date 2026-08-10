@@ -5,9 +5,9 @@
     @for (line of viewInfo.boardInfo; track $index; let y = $index) {
         <g>
             @for (square of line; track $index; let x = $index) {
-                <g id="click_{{ x }}_{{ y }}"
+                <g id="click-{{ x }}-{{ y }}"
                    (click)="onClick(square.coord)">
-                    <rect id="space_{{ x }}_{{ y }}"
+                    <rect id="space-{{ x }}-{{ y }}"
                           class="base"
                           [ngClass]="getSpaceClasses(x, y)"
                           [attr.x]="(SPACE_SIZE * x) + STROKE_WIDTH"
@@ -22,7 +22,7 @@
                               [attr.height]="SPACE_SIZE - STROKE_WIDTH * 3"/>
                     }
                     @if (hasPieceToDraw(x, y)) {
-                        <circle id="piece_{{ x }}_{{ y }}"
+                        <circle id="piece-{{ x }}-{{ y }}"
                                 [ngClass]="getPieceClasses(x, y)"
                                 class="base"
                                 [attr.r]="PIECE_RADIUS"
@@ -45,14 +45,14 @@
         </g>
     }
     @for (y of ArrayUtils.range(viewInfo.sidePieces.get(Player.ZERO)); track y) {
-        <circle id="sidePiece_0_{{ y }}"
+        <circle id="side-piece-0-{{ y }}"
                 [attr.cx]="-PIECE_RADIUS"
                 [attr.cy]="1670 - y * PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"
                 class="base mid-stroke player0-fill"/>
     }
     @for (y of ArrayUtils.range(viewInfo.sidePieces.get(Player.ONE)); track y) {
-        <circle id="sidePiece_1_{{ y }}"
+        <circle id="side-piece-1-{{ y }}"
                 [attr.cx]="1715 + PIECE_RADIUS"
                 [attr.cy]="1670 - y * PIECE_RADIUS"
                 [attr.r]="PIECE_RADIUS - 5"

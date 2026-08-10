@@ -6,14 +6,14 @@
     @for (line of board; track $index; let y = $index) {
         <g>
             @for (spaceContent of line; track $index; let x = $index) {
-                <g id="click_{{ x }}_{{ y }}"
+                <g id="click-{{ x }}-{{ y }}"
                    [attr.transform]="getTriangleTranslationAtXY(x, y)"
                    (click)="onClick(x, y)">
                     @if (spaceContent.isReachable()) {
                         <g>
                             @if (spaceContent.isPlayer()) {
                                 <g>
-                                    <polygon id="pyramid_{{ x }}_{{ y }}"
+                                    <polygon id="pyramid-{{ x }}-{{ y }}"
                                              [attr.points]="getPyramidPointsAtXY(x, y)"
                                              [ngClass]="getPlayerClassAtXY(x, y)"
                                              class="base mid-stroke"/>
@@ -22,12 +22,12 @@
                             @if (spaceContent.isPlayer() === false) {
                                 <g>
                                     @if ((x + y) % 2 === 1) {
-                                        <polygon id="triangle_{{ x }}_{{ y }}"
+                                        <polygon id="triangle-{{ x }}-{{ y }}"
                                                  [attr.points]="getTrianglePointsAtXY(x, y)"
                                                  class="base mid-stroke"/>
                                     }
                                     @if ((x + y) % 2 === 0) {
-                                        <polygon id="triangle_{{ x }}_{{ y }}"
+                                        <polygon id="triangle-{{ x }}-{{ y }}"
                                                  [attr.points]="getTrianglePointsAtXY(x, y)"
                                                  class="base mid-stroke background2"/>
                                     }
@@ -43,13 +43,13 @@
     @if (chosenCoord.isPresent()) {
         <ng-container>
             @for (possibleLanding of possibleLandings; track possibleLanding.toString()) {
-                <polygon id="possible_landing_{{ possibleLanding.x }}_{{ possibleLanding.y }}"
+                <polygon id="possible-landing-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
                          [attr.points]="getTrianglePointsAt(possibleLanding)"
                          [attr.transform]="getTriangleTranslationAt(possibleLanding)"
                          class="base no-fill mid-stroke selected-stroke"/>
             }
             @if (chosenCoord.isPresent()) {
-                <polygon id="chosen_coord_{{ chosenCoord.get().x }}_{{ chosenCoord.get().y }}"
+                <polygon id="chosen-coord-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
                          [attr.points]="getTrianglePointsAt(chosenCoord.get())"
                          [attr.transform]="getTriangleTranslationAt(chosenCoord.get())"
                          class="base no-fill mid-stroke selected-stroke"/>
@@ -58,11 +58,11 @@
     } @else {
         @if (lastMoved.isPresent()) {
             <ng-container>
-                <polygon id="last_move_origin"
+                <polygon id="last-move-origin"
                          [attr.points]="getTrianglePointsAt(lastCoord.get())"
                          [attr.transform]="getTriangleTranslationAt(lastCoord.get())"
                          class="base no-fill mid-stroke last-move-stroke"/>
-                <polygon id="last_move_destination"
+                <polygon id="last-move-destination"
                          [attr.points]="getTrianglePointsAt(lastMoved.get())"
                          [attr.transform]="getTriangleTranslationAt(lastMoved.get())"
                          class="base no-fill mid-stroke last-move-stroke"/>

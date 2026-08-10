@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
@@ -317,12 +318,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         return MGPValidation.SUCCESS;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
             case 'FINAL_CAPTURE_SELECT_FIRST':

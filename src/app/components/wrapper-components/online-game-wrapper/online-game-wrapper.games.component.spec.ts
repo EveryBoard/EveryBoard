@@ -8,7 +8,7 @@ import { UserMocks } from '../../../domain/UserMocks.spec';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { clickableMethods } from '../../game-components/game-component/clickableMethods.spec';
+import { clickableMethods } from '../../game-components/game-component/tests/clickableMethods.spec';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';

@@ -5,9 +5,9 @@
     @for (line of board; track $index; let y = $index) {
         <g>
             @for (square of line; track $index; let x = $index) {
-                <g id="click_{{ x }}_{{ y }}"
+                <g id="click-{{ x }}-{{ y }}"
                    (click)="onClick(x, y)">
-                    <rect id="space_{{ x }}_{{ y }}"
+                    <rect id="space-{{ x }}-{{ y }}"
                           class="base"
                           [ngClass]="getSpaceClasses(x, y)"
                           [attr.x]="SPACE_SIZE * x"
@@ -15,7 +15,7 @@
                           [attr.width]="SPACE_SIZE"
                           [attr.height]="SPACE_SIZE"/>
                     @if (square.isPlayer()) {
-                        <circle id="piece_{{ x }}_{{ y }}"
+                        <circle id="piece-{{ x }}-{{ y }}"
                                 class="base"
                                 [ngClass]="getPieceClasses(x, y)"
                                 [attr.r]="42"

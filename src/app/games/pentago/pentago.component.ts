@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
@@ -194,13 +195,11 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.canSkipRotation = false;
     }
 
+
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.state.board[y][x].isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
@@ -252,23 +251,16 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         return classes;
     }
 
+    @ClickHandler((arrow: ArrowInfo) => `#rotate-${ arrow.blockIndex }-${ arrow.clockwise ? 'clockwise' : 'counterclockwise' }`)
     public async rotate(arrow: ArrowInfo): Promise<MGPValidation> {
-        const clockwise: string = arrow.clockwise ? 'clockwise' : 'counterclockwise';
-        const clickValidity: MGPValidation = await this.canUserPlay('#rotate-' + arrow.blockIndex + '-' + clockwise);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const currentDrop: Coord = this.currentDrop.get();
         const move: PentagoMove =
             PentagoMove.withRotation(currentDrop.x, currentDrop.y, arrow.blockIndex, arrow.clockwise);
         return this.chooseMove(move);
     }
 
+    @ClickHandler(() => `#skip-rotation`)
     public async skipRotation(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#skip-rotation');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const currentDrop: Coord = this.currentDrop.get();
         const drop: PentagoMove = PentagoMove.rotationless(currentDrop.x, currentDrop.y);
         return this.chooseMove(drop);

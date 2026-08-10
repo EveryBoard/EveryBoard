@@ -6,8 +6,9 @@ import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
@@ -184,13 +185,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
+    @ClickHandler((coord: Coord) => `#piece-${ coord.x }-${ coord.y }`)
     public async onPieceClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#piece-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+        // onLegalPieceClick is called somewhere else where no click handling check need to be done
         return this.onLegalPieceClick(coord);
     }
 
@@ -199,7 +196,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const y: number = coord.y;
         const opponent: Player = this.getState().getCurrentOpponent();
         if (this.hexaBoard[y][x].is(opponent)) {
-            return this.opponentClick(coord);
+            return this.tryChoosingDirection(coord);
         }
         if (this.selecteds.length === 0) {
             return this.firstClick(coord);
@@ -208,10 +205,6 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         } else {
             return this.thirdClick(coord);
         }
-    }
-
-    private async opponentClick(coord: Coord): Promise<MGPValidation> {
-        return this.tryChoosingDirection(coord);
     }
 
     private async firstClick(coord: Coord): Promise<MGPValidation> {
@@ -365,15 +358,13 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return MGPValidation.SUCCESS;
     }
 
+    @ClickHandler((dir: HexaDirection) => `#direction-${ dir.toString() }`)
     public async chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#direction-' + dir.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        return this._chooseDirection(dir);
+        // doChooseDirection is called somewhere else where no click handling check need to be done
+        return this.doChooseDirection(dir);
     }
 
-    private async _chooseDirection(dir: HexaDirection): Promise<MGPValidation> {
+    private async doChooseDirection(dir: HexaDirection): Promise<MGPValidation> {
         const firstPiece: Coord = this.selecteds[0];
         if (this.selecteds.length === 1) {
             const move: AbaloneMove = AbaloneMove.ofSingleCoord(firstPiece, dir);
@@ -385,19 +376,14 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         }
     }
 
+    @ClickHandler((coord: Coord) => `#invisible-space-${ coord.x }-${ coord.y }`)
     public async onInvisibleSpaceClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#invisible-space-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+        // tryChoosingDirection is called somewhere else where no click handling check need to be done
         return this.tryChoosingDirection(coord);
     }
 
+    @ClickHandler((coord: Coord) => `#space-${ coord.x }-${ coord.y }`)
     public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#space-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.getState().getPieceAt(coord).isPlayer()) {
             return this.onLegalPieceClick(coord);
         }
@@ -411,7 +397,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     private async tryChoosingDirection(clicked: Coord): Promise<MGPValidation> {
         for (const direction of this.directions) {
             if (direction.landing.equals(clicked)) {
-                return this._chooseDirection(direction.dir);
+                return this.doChooseDirection(direction.dir);
             }
         }
         return this.cancelMove();

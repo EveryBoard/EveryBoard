@@ -6,7 +6,7 @@
         <g>
             @for (space of line; track $index; let x = $index) {
                 <g>
-                    <polygon id="space_{{ x }}_{{ y }}"
+                    <polygon id="space-{{ x }}-{{ y }}"
                              [attr.points]="getParallelogramPoints()"
                              [attr.transform]="getTranslationAtXYZ(x, y, 0)"
                              (click)="onClick(x, y)"
@@ -24,7 +24,7 @@
                         <g>
                             @if (piece.move.isPresent()) {
                                 <g app-trexo-half-piece
-                                   id="half_tile_{{ x }}_{{ y }}_{{ z }}"
+                                   id="half-tile-{{ x }}-{{ y }}-{{ z }}"
                                    (click)="onClick(x, y)"
                                    [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
                                    [mode]="mode()"
@@ -36,7 +36,7 @@
                             @if (piece.isDroppedPiece) {
                                 <g app-trexo-half-piece
                                    [mode]="mode()"
-                                   id="dropped_piece_{{ x }}_{{ y }}_{{ z }}"
+                                    id="dropped-piece-{{ x }}-{{ y }}-{{ z }}"
                                    (click)="onClick(x, y)"
                                    [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
                                    [coord]="Coord3D.of(x, y, z)"
@@ -51,7 +51,7 @@
     <g #switchModeIndicator>
         @if (chosenMode() === '2D') {
             <g app-trexo-half-piece
-               id="switchTo3D"
+               id="switch-to-3D"
                (click)="switchToMode('3D')"
                [mode]="TrexoComponent.modeMap['3D']"
                [attr.transform]="get3DSwitcherTransform()"
@@ -59,7 +59,7 @@
                [pieceClasses]="['player0-fill']"/>
         } @else {
             <g app-trexo-half-piece
-               id="switchTo2D"
+               id="switch-to-2D"
                (click)="switchToMode('2D')"
                [mode]="TrexoComponent.modeMap['2D']"
                [attr.transform]="getTranslationAtXYZ(12, 9, 0)"

@@ -7,20 +7,20 @@
             @for (space of line; track $index; let x = $index) {
                 <g>
                     @if (space.isReachable()) {
-                        <g id="click_{{ x }}_{{ y }}"
+                        <g id="click-{{ x }}-{{ y }}"
                            (click)="onClick(x, y)">
-                            <polygon id="space_{{ x }}_{{ y }}"
+                            <polygon id="space-{{ x }}-{{ y }}"
                                      [attr.points]="getHexaPoints()"
                                      [attr.transform]="getHexaCenterTranslationAtXY(x, y)"
                                      [ngClass]="getSpaceClasses(x, y)"
                                      class="base"
                                      stroke-linecap="round"/>
-                            <g id="pieceGroup_{{ x }}_{{ y }}"
+                            <g id="piece-group-{{ x }}-{{ y }}"
                                [ngClass]="getPieceGroupClasses(x, y)"
                                [attr.transform]="getSVGTranslationAt(getCenterAtXY(x, y))">
                                 @if (isRing(x, y)) {
                                     <g app-ring
-                                       id="ring_{{ x }}_{{ y }}"
+                                       id="ring-{{ x }}-{{ y }}"
                                        transform="scale(0.43)"
                                        [strokeWidth]="10"
                                        [width]="20"
@@ -28,7 +28,7 @@
                                     </g>
                                 }
                                 @if (isMarker(x, y)) {
-                                    <circle id="marker_{{ x }}_{{ y }}"
+                                    <circle id="marker-{{ x }}-{{ y }}"
                                             [attr.r]="viewInfo.markerSize"
                                             [ngClass]="getMarkerClasses(x, y)"
                                             class="base mid-stroke"/>
@@ -41,7 +41,7 @@
         </g>
     }
     @for (coord of selectedCoords.union(selectedRings); track coord.toString()) {
-        <polygon id="selected_{{ coord.x }}_{{ coord.y }}"
+        <polygon id="selected-{{ coord.x }}-{{ coord.y }}"
                  (click)="onClick(coord.x, coord.y)"
                  class="base no-fill selected-stroke"
                  [attr.points]="getHexaPoints()"
@@ -52,7 +52,7 @@
     @if (isPlayerTurn()) {
         <g>
             @for (coord of selectableCoords; track coord.toString()) {
-                <polygon id="selectable_{{ coord.x }}_{{ coord.y }}"
+                <polygon id="selectable-{{ coord.x }}-{{ coord.y }}"
                          (click)="onClick(coord.x, coord.y)"
                          class="base no-fill capturable-stroke"
                          [attr.points]="getHexaPoints()"
@@ -63,7 +63,7 @@
         </g>
     }
     @for (coord of viewInfo.targets; track coord.toString()) {
-        <rect id="indicator_{{ coord.x }}_{{ coord.y }}"
+        <rect id="indicator-{{ coord.x }}-{{ coord.y }}"
               [attr.transform]="getSVGTranslationAt(getCenterAt(coord))"
               [attr.x]=" - viewInfo.indicatorSize/2"
               [attr.y]=" - viewInfo.indicatorSize/2"
@@ -76,7 +76,7 @@
         <g [attr.transform]="'rotate(' + ((getPointOfView().getValue() + 1) * 180) + ' 532.5 780)'">
             @for (_ of [].constructor(viewInfo.sideRings.get(player)); track $index; let ring = $index) {
                 <g app-ring
-                   id="{{ player.toString() }}_sideRing_{{ ring + 1 }}"
+                   id="{{ player.toString() }}-side-ring-{{ ring + 1 }}"
                    [attr.transform]="translateRing(player, ring) + 'scale(0.43)'"
                    [strokeWidth]="10"
                    [width]="20"

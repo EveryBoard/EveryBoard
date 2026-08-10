@@ -7,7 +7,7 @@
         <g>
             @for (spaceContent of line; track $index; let x = $index) {
                 <g>
-                    <g id="click_{{ x }}_{{ y }}"
+                    <g id="click-{{ x }}-{{ y }}"
                        (click)="onClick(x, y)">
                         <!-- Background -->
                         <rect [attr.x]="x * SPACE_SIZE"
@@ -43,13 +43,13 @@
     <!-- Highlight last move -->
     @if (lastPieceMove.isPresent()) {
         <g>
-            <rect id="last_move_start_{{ lastPieceMove.get().getStart().x }}_{{ lastPieceMove.get().getStart().y }}"
+            <rect id="last-move-start-{{ lastPieceMove.get().getStart().x }}-{{ lastPieceMove.get().getStart().y }}"
                   [attr.x]="lastPieceMove.get().getStart().x * SPACE_SIZE"
                   [attr.y]="lastPieceMove.get().getStart().y * SPACE_SIZE"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   class="base no-fill mid-stroke last-move-stroke"/>
-            <rect id="last_move_start_{{ lastPieceMove.get().getEnd().x }}_{{ lastPieceMove.get().getEnd().y }}"
+            <rect id="last-move-start-{{ lastPieceMove.get().getEnd().x }}-{{ lastPieceMove.get().getEnd().y }}"
                   [attr.x]="lastPieceMove.get().getEnd().x * SPACE_SIZE"
                   [attr.y]="lastPieceMove.get().getEnd().y * SPACE_SIZE"
                   [attr.width]="SPACE_SIZE"
@@ -59,7 +59,7 @@
     }
     <!-- Highlight selected piece -->
     @if (chosen.isPresent()) {
-        <circle id="selectedPiece"
+        <circle id="selected-piece"
                 [attr.cx]="SPACE_SIZE/2 + (chosen.get().x * SPACE_SIZE)"
                 [attr.cy]="SPACE_SIZE/2 + (chosen.get().y * SPACE_SIZE)"
                 [attr.r]="(SPACE_SIZE / 2) - STROKE_WIDTH"
