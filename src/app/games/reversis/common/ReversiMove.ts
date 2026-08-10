@@ -1,7 +1,7 @@
 import { Encoder } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
+import { Coord } from '../../../jscaip/Coord';
+import { MoveCoord } from '../../../jscaip/MoveCoord';
 
 export class ReversiMove extends MoveCoord {
 

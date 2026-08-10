@@ -1,52 +1,43 @@
-import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
-
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 
+import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
 import { ReversiHeuristic } from './ReversiHeuristic';
 import { ReversiMove } from './ReversiMove';
 import { ReversiMoveGenerator } from './ReversiMoveGenerator';
-import { ReversiConfig, ReversiLegalityInformation, ReversiRules } from './ReversiRules';
 import { ReversiState } from './ReversiState';
 
-@Component({
-    selector: 'app-reversi',
-    templateUrl: './reversi.component.html',
-    styleUrls: ['../../components/game-components/game-component/game-component.scss'],
-    imports: [NgClass],
-})
-export class ReversiComponent extends RectangularGameComponent<ReversiRules,
-                                                               ReversiMove,
-                                                               ReversiState,
-                                                               PlayerOrNone,
-                                                               ReversiConfig,
-                                                               ReversiLegalityInformation>
+export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
+    extends RectangularGameComponent<R,
+                                     ReversiMove,
+                                     ReversiState,
+                                     PlayerOrNone,
+                                     ReversiConfig,
+                                     ReversiLegalityInformation>
 {
     public lastMove: MGPOptional<Coord> = MGPOptional.empty();
 
     private captured: Coord[] = [];
 
-    public constructor() {
+    public constructor(urlName: string) {
         super();
-        this.setRulesAndNode('Reversi');
+        this.setRulesAndNode(urlName);
         this.aiConfig = {
             minimax: [{
                 id: 'Piece Count',
                 name: $localize`Piece Count`,
                 heuristic: (): ReversiHeuristic => new ReversiHeuristic(),
-                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(),
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(this.rules),
             }],
             mcts: [{
                 id: 'default',
                 name: $localize`Default`,
-                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(),
+                moveGenerator: (): ReversiMoveGenerator => new ReversiMoveGenerator(this.rules),
             }],
         };
         this.encoder = ReversiMove.encoder;
@@ -65,22 +56,13 @@ export class ReversiComponent extends RectangularGameComponent<ReversiRules,
         this.board = state.getCopiedBoard();
 
         this.scores = MGPOptional.of(state.countScore());
-        this.canPass = this.rules.playerCanOnlyPass(state, this.config);
+        this.canPass = this.rules.playerCanOnlyPass(state, this.getConfig());
     }
 
     public override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
-        const player: Player = this.getState().getCurrentPlayer();
-        const opponent: Player = this.getState().getCurrentOpponent();
-        for (const dir of Ordinal.ORDINALS) {
-            let captured: Coord = move.coord.getNext(dir, 1);
-            while (this.getState().hasPieceAt(captured, opponent) &&
-                   this.getPreviousState().getPieceAt(captured) === player)
-            {
-                this.captured.push(captured);
-                captured = captured.getNext(dir, 1);
-            }
-        }
+        const player: Player = this.getState().getCurrentOpponent();
+        this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.getConfig());
     }
 
     public override hideLastMove(): void {
