@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -123,7 +123,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public readonly PIECE_HEIGHT: number;
 
     private boardViewBox: ViewBox;
-    private readonly viewBoxRevision: WritableSignal<number> = signal(0);
     public inspectedStackTransform: string;
 
     public constructor() {
@@ -195,7 +194,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     }
 
     protected override computeViewBox(): ViewBox {
-        this.viewBoxRevision();
         const coords: Coord[] = this.getPieceCoords().union(this.getAllNeighbors()).toList();
         coords.push(new Coord(0, 0)); // Need at least one coord for the first space
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
@@ -233,10 +231,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         } else {
             return boardAndRemainingViewBox;
         }
-    }
-
-    private refreshViewBox(): void {
-        this.viewBoxRevision.update((revision: number) => revision + 1);
     }
 
     private getPieceCoords(): CoordSet {

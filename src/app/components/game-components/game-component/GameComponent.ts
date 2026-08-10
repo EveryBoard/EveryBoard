@@ -201,18 +201,18 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
         await this.updateBoard(triggerAnimation);
-        this.invalidateViewBox();
+        this.refreshViewBox();
         this.cdr.detectChanges();
     }
 
     public async showLastMoveAndRedraw(): Promise<void> {
         const move: M = this.node.previousMove.get();
         await this.showLastMove(move);
-        this.invalidateViewBox();
+        this.refreshViewBox();
         this.cdr.detectChanges();
     }
 
-    private invalidateViewBox(): void {
+    protected refreshViewBox(): void {
         this.gameViewBoxRevision.update((revision: number) => revision + 1);
     }
 

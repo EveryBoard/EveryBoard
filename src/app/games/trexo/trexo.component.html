@@ -35,10 +35,10 @@
                             }
                             @if (piece.isDroppedPiece) {
                                 <g app-trexo-half-piece
-                                   [mode]="mode()"
-                                    id="dropped-piece-{{ x }}-{{ y }}-{{ z }}"
+                                   id="dropped-piece-{{ x }}-{{ y }}-{{ z }}"
                                    (click)="onClick(x, y)"
                                    [attr.transform]="getTranslationAtXYZ(x, y, z + 1)"
+                                   [mode]="mode()"
                                    [coord]="Coord3D.of(x, y, z)"
                                    [pieceClasses]="[currentOpponentClass]"/>
                             }
