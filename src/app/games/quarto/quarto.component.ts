@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { RulesFailure } from '../../jscaip/RulesFailure';
@@ -36,6 +37,12 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     // the piece that the user wants to give to the opponent
     public pieceToGive: MGPOptional<QuartoPiece> = MGPOptional.empty();
     public victoriousCoords: Set<Coord> = new Set();
+
+    protected override computeViewBox(): ViewBox {
+        const width: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
+        const height: number = (10.75 * this.SPACE_SIZE) + this.STROKE_WIDTH;
+        return new ViewBox(0, 0, width, height);
+    }
 
     public constructor() {
         super();
