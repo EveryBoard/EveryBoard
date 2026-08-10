@@ -13,11 +13,11 @@ import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
+import { GoHeuristic } from '../go/GoHeuristic';
+import { GoMoveGenerator } from '../go/GoMoveGenerator';
 
 import { RectangularGoConfig, AbstractRectangularGoRules } from './AbstractRectangularGoRules';
 import { GoSubBoardHelper } from './GoSubBoardHelper';
-import { GoHeuristic } from '../go/GoHeuristic';
-import { GoMoveGenerator } from '../go/GoMoveGenerator';
 
 export abstract class AbstractRectangularGoComponent
     extends GobanGameComponent<AbstractRectangularGoRules,

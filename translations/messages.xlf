@@ -2026,7 +2026,7 @@
         <source>In the previous step and this one, the same rules are applied, but in this one you get a visual help.&lt;br/&gt;&lt;br/&gt;Do it again</source>
       </trans-unit>
       <trans-unit id="3104202027774587409" datatype="html">
-        <source>See how the main board is split in 4 little boards ? On the zoom 2 lower-right board, you can see the capture as in a normal go board. Note that you can click on either a small board or the big board, piece are dropped in both, since the small boards are just a visual help.</source>
+        <source>Observe how the main board is split in 4 little boards ? On the zoom 2 lower-right board, you can see the capture as in a normal go board. Note that you can click on either a small board or the big board, piece are dropped in both, since the small boards are just a visual help.</source>
       </trans-unit>
       <trans-unit id="6386757882103410531" datatype="html">
         <source>Suicide with zooms</source>
@@ -2041,7 +2041,7 @@
         <source>Here, the 1-1 corner is a suicide at zoom-2, and a capture at zoom-1, which is not enough to make it legal. But since that capture at zoom-1 would capture some of the piece that make it a suicide at zoom-2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
       </trans-unit>
       <trans-unit id="1652033508965326256" datatype="html">
-        <source>Congratulations. What make a move legal or not is then that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
       </trans-unit>
       <trans-unit id="4031483934278136444" datatype="html">
         <source>End game</source>
