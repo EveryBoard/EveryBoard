@@ -71,8 +71,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.encoder = EncapsuleMove.encoder;
     }
 
-    public override getViewBox(): ViewBox {
-        const boardViewBox: ViewBox = super.getViewBox();
+    protected override computeViewBox(): ViewBox {
+        const boardViewBox: ViewBox = super.computeViewBox();
         return boardViewBox
             .expandAll((4 / 3) * this.SPACE_SIZE);
     }

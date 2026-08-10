@@ -369,8 +369,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         return `rotate(${rotation} ${centerX} ${centerY})`;
     }
 
-    public override getViewBox(): ViewBox {
-        return super.getViewBox().expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
+    protected override computeViewBox(): ViewBox {
+        return super.computeViewBox().expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
     }
 
 }

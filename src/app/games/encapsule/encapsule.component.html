@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.viewBox]="viewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     @for (player of Player.PLAYERS; track player.getValue()) {
         <g #remainingPieces>

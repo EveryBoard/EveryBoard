@@ -77,7 +77,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.ARROWS = this.generateArrowsCoord();
     }
 
-    public override getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const stroke: number = 2 * this.STROKE_WIDTH + 75;
         return new ViewBox(
             0,

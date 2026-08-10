@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="getViewBox().toSVGString()"
+     [attr.viewBox]="viewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
     @for (coordAndContent of getState().getCoordsAndContents(); track coordAndContent.coord.toString()) {
         <g id="click-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
