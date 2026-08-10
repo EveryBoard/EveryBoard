@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
@@ -28,6 +29,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public pieceRowHeight: number = this.SPACE_SIZE / 2;
     public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(0, 0, this.boardWidth, this.boardHeight));
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
     public constructedState: PylosState;
 
     public lastLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
