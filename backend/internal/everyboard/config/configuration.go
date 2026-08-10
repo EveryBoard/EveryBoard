@@ -51,6 +51,7 @@ func Read() (*Configuration, error) {
 		WebhookURL:  os.Getenv("DISCORD_WEBHOOK_URL"),
 		FrontendURL: os.Getenv("FRONTEND_URL"),
 	}
+	fmt.Printf("Webhook URL: %s\n", config.WebhookURL)
 	if config.ListenAddr == "" {
 		config.ListenAddr = ":8081"
 	}
