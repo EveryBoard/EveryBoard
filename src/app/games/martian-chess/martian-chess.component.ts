@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
@@ -72,6 +73,10 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public readonly WIDTH: number =
         this.UNSTROKED_WIDTH + (2.5 * MartianChessComponentUtils.SPACE_SIZE) + MartianChessComponentUtils.STROKE_WIDTH;
     public readonly HEIGHT: number = this.UNSTROKED_HEIGHT + (3 * MartianChessComponentUtils.STROKE_WIDTH);
+
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(this.LEFT, this.UP, this.WIDTH, this.HEIGHT);
+    }
 
     public MartianChessComponent: typeof MartianChessComponent = MartianChessComponent;
 
