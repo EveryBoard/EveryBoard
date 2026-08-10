@@ -1,4 +1,4 @@
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
@@ -30,11 +30,7 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
         return this.getState().getHeight();
     }
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => this.computeViewBox());
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
-
-    protected computeViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const width: number = this.getWidth() * this.SPACE_SIZE;
         const height: number = this.getHeight() * this.SPACE_SIZE;
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;

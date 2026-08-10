@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -56,9 +56,9 @@ interface LastMoved {
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(-110, -120, 800, 710));
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(-110, -120, 800, 710);
+    }
 
     private static readonly CENTER: Coord[] = [
         new Coord(40, 160),

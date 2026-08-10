@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
@@ -116,7 +116,7 @@ export class SixComponent
         this.disconnectedCoords = [];
     }
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => {
+    protected override computeViewBox(): ViewBox {
         const disconnectedCoords: Coord[] = this.disconnectedCoords.map((value: CoordAndClass) => value.coord);
         const coords: Coord[] = this.pieces.concat(disconnectedCoords).concat(this.neighbors);
         return ViewBox
@@ -125,9 +125,7 @@ export class SixComponent
             .expandBelow(this.SPACE_SIZE + this.STROKE_WIDTH)
             .expandLeft(this.SPACE_SIZE + (2 * this.STROKE_WIDTH))
             .expandRight(this.SPACE_SIZE + (2 * this.STROKE_WIDTH));
-    });
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    }
 
     public override async showLastMove(move: SixMove): Promise<void> {
         this.lastDrop = MGPOptional.of(move.landing);

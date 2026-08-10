@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -26,9 +26,9 @@ import { DvonnState } from './DvonnState';
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(0, 0, 875, 380));
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, 875, 380);
+    }
 
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();

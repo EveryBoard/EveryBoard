@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, Signal } from '@angular/core';
 
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -19,6 +19,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
+import { ViewBox } from '../GameComponentUtils';
 
 export class ScoreName {
 
@@ -152,6 +153,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public animationOngoing: boolean = false;
 
     public state: S;
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => this.computeViewBox());
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
+    protected abstract computeViewBox(): ViewBox;
 
     public hasScores(): boolean {
         return this.scores.isPresent();

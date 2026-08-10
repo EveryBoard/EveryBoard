@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -91,7 +91,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
         this.last = MGPOptional.empty();
     }
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => {
+    protected override computeViewBox(): ViewBox {
         return ViewBox.fromHexa(
             this.getState().allCoords(),
             this.hexaLayout,
@@ -99,9 +99,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
         )
             .expandAbove(this.SPACE_SIZE)
             .expandBelow(this.SPACE_SIZE);
-    });
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;

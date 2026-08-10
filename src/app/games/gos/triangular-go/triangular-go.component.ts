@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -78,7 +78,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
         this.last = MGPOptional.empty();
     }
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => {
+    protected override computeViewBox(): ViewBox {
         const state: GoState = this.getState();
         const leftmostOccupiedX: number = TableUtils.getLeftmostMatchColumn(state.board, GoPiece.isReachable).get();
         const width: number = state.board[0].length;
@@ -92,9 +92,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
             (this.SPACE_SIZE * abstractSize) + oddnessOffset,
             this.SPACE_SIZE * state.getHeight(),
         ).expandAll(this.STROKE_WIDTH / 2);
-    });
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    }
 
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;

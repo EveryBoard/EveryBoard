@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -287,16 +287,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return this.getSVGTranslation(x, y);
     }
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => {
+    protected override computeViewBox(): ViewBox {
         const left: number = 0;
         const up: number = 0;
         const width: number = this.getWidth();
         const height: number = this.getHeight();
         const halfStroke: number = this.STROKE_WIDTH / 2;
         return new ViewBox(left, up, width, height).expandAll(halfStroke);
-    });
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    }
 
     private getWidth(): number {
         const abstractWidth: number = this.getState().getWidth();

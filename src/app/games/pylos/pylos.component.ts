@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
@@ -30,9 +30,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public pieceRowHeight: number = this.SPACE_SIZE / 2;
     public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(0, 0, this.boardWidth, this.boardHeight));
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, this.boardWidth, this.boardHeight);
+    }
 
     public constructedState: PylosState;
 

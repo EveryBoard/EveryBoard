@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -46,9 +46,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            EmptyRulesConfig,
                                                            YinshLegalityInformation>
 {
-    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(0, 250, 1065, 1060));
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 250, 1065, 1060);
+    }
 
     private static readonly RING_OUTER_SIZE: number = 40;
     private static readonly RING_MID_SIZE: number = 34;

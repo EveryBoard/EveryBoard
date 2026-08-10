@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -157,15 +157,13 @@ export class LodestoneComponent
         return ScoreName.CAPTURES;
     }
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => {
+    protected override computeViewBox(): ViewBox {
         const left: number = - this.platesGroupSize;
         const up: number = - (this.platesGroupSize + this.SPACE_SIZE + this.STROKE_WIDTH);
         const width: number = this.boardSize + (2 * this.platesGroupSize);
         const height: number = width + (2 * (this.SPACE_SIZE + this.STROKE_WIDTH));
         return new ViewBox(left, up, width, height);
-    });
-
-    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+    }
 
     public async selectCoord(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
