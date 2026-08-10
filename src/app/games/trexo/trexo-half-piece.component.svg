@@ -1,8 +1,8 @@
-<svg:polyline id="tile_{{ coord()!.x }}_{{ coord()!.y }}_{{ coord()!.z }}"
+<svg:polyline id="tile-{{ coord()!.x }}-{{ coord()!.y }}-{{ coord()!.z }}"
               [attr.points]="get3DIsoSquarePoints()"
               [ngClass]="pieceClasses()"/>
 @if (mustDisplayHeight()) {
-    <svg:text id="height_{{ coord()!.x }}_{{ coord()!.y }}_{{ coord()!.z }}"
+    <svg:text id="height-{{ coord()!.x }}-{{ coord()!.y }}-{{ coord()!.z }}"
               x="50"
               y="66"
               class="text-big text-center"
@@ -10,7 +10,7 @@
     </svg:text>
 }
 @if (isBottomHalf() === false || mustForceStrokeDisplay()) {
-    <svg:polyline id="line_0_to_1"
+    <svg:polyline id="line-0-to-1"
                   [ngClass]="pieceClasses()"
                   class="base manual-stroke"
                   [attr.points]="getUpperHorizontalLine()"/>
@@ -18,17 +18,17 @@
 @if (isTopHalf() === false || mustForceStrokeDisplay()) {
     <svg:g>
         <svg:polyline [attr.points]="getMiddleHorizontalLine()"
-                      id="line_2_to_3"
+                      id="line-2-to-3"
                       [ngClass]="pieceClasses()"
                       class="base manual-stroke"/>
         <svg:polyline [attr.points]="getLowerHorizontalLine()"
-                      id="line_5_to_6"
+                      id="line-5-to-6"
                       [ngClass]="pieceClasses()"
                       class="base manual-stroke"/>
     </svg:g>
 }
 @if (isRightHalf() === false || mustForceStrokeDisplay()) {
-    <svg:polyline id="line_0_to_2"
+    <svg:polyline id="line-0-to-2"
                   [ngClass]="pieceClasses()"
                   class="base manual-stroke"
                   [attr.points]="getLeftDiagonalLine()"/>
@@ -36,29 +36,29 @@
 @if (isLeftHalf() === false || mustForceStrokeDisplay()) {
     <svg:g>
         <svg:polyline [attr.points]="getMiddleDiagonalLine()"
-                      id="line_1_to_3"
+                      id="line-1-to-3"
                       class="base manual-stroke"
                       [ngClass]="pieceClasses()"/>
         <svg:polyline [attr.points]="getRighterDiagonalLine()"
-                      id="line_4_to_6"
+                      id="line-4-to-6"
                       [ngClass]="pieceClasses()"
                       class="base manual-stroke"/>
     </svg:g>
 }
 @if (isBottomHalf() || isLeftHalf() || mustForceStrokeDisplay()) {
-    <svg:polyline id="line_2_to_5"
+    <svg:polyline id="line-2-to-5"
                   [ngClass]="pieceClasses()"
                   class="base manual-stroke"
                   [attr.points]="getLeftVerticalLine()"/>
 }
 @if (isBottomHalf() || isRightHalf() || mustForceStrokeDisplay()) {
-    <svg:polyline id="line_3_to_6"
+    <svg:polyline id="line-3-to-6"
                   [ngClass]="pieceClasses()"
                   class="base manual-stroke"
                   [attr.points]="getMiddleVerticalLine()"/>
 }
 @if (isTopHalf() || isRightHalf() || mustForceStrokeDisplay()) {
-    <svg:polyline id="line_1_to_4"
+    <svg:polyline id="line-1-to-4"
                   [ngClass]="pieceClasses()"
                   class="base manual-stroke"
                   [attr.points]="getRighterVerticalLine()"/>

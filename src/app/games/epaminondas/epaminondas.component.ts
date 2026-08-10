@@ -5,7 +5,8 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { DirArrowComponent } from '../../components/game-components/arrow-component/dir-arrow.component';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
@@ -133,11 +134,8 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         }
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.firstPiece.isPresent()) {
             return this.secondClick(x, y);
         } else {

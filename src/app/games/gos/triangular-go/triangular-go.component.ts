@@ -4,7 +4,8 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
@@ -94,14 +95,9 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
         ).expandAll(this.STROKE_WIDTH / 2);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const resultlessMove: GoMove = new GoMove(x, y);
+        const resultlessMove: GoMove = new GoMove(coord.x, coord.y);
         return this.chooseMove(resultlessMove);
     }
 

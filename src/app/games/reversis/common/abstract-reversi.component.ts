@@ -1,5 +1,6 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../../jscaip/Coord';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
@@ -43,11 +44,8 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
         this.scores = MGPOptional.of(PlayerNumberMap.of(2, 2));
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const chosenMove: ReversiMove = new ReversiMove(x, y);
         return await this.chooseMove(chosenMove);
     }
