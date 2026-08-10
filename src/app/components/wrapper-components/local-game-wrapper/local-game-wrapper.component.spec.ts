@@ -117,6 +117,10 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         chooseFirstAILevel(player);
     }
 
+    function expectTurnToBe(turn: number): void {
+        testUtils.expectTextToBe('#infos > .subtitle', 'Turn n°' + (turn+1));
+    }
+
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<P4Component>('P4');
         ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
@@ -144,7 +148,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
         // When doing a move
         await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
         // Then the turn should be incremented
-        expect(testUtils.getGameComponent().getTurn()).toBe(1);
+        expectTurnToBe(1);
     }));
 
     it('should be interactive by default', fakeAsync(async() => {
@@ -242,7 +246,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             tick(0);
 
             // Then the draw indication should be removed and we should be back at turn 0
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+            expectTurnToBe(0);
             testUtils.expectElementNotToExist('#draw');
         }));
 
@@ -537,8 +541,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             chooseAIOrHuman(Player.ZERO, 'human');
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
 
-            // Then the stale AI callback should not play a move
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+            // Then the stale AI callback should not advance the displayed turn
+            expectTurnToBe(0);
         }));
 
         it('should propose AI to play when restarting game', fakeAsync(async() => {
@@ -773,14 +777,14 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             expect(state.turn).toBe(0);
 
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
-            expect(testUtils.getGameComponent().getTurn()).toBe(1);
+            expectTurnToBe(1);
 
             // When taking back
             spyOn(testUtils.getGameComponent(), 'updateBoard').and.callThrough();
             await testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then we should be back on turn 0 and board should have been updated
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+            expectTurnToBe(0);
             expect(testUtils.getGameComponent().updateBoard).toHaveBeenCalledTimes(1);
         }));
 
@@ -789,20 +793,20 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             await testUtils.expectMoveSuccess('#click-3-0', P4Move.of(3));
             selectAIPlayer(Player.ONE);
+            expectTurnToBe(2);
 
             // When user take back
-            expect(testUtils.getGameComponent().getTurn()).toBe(2);
             await testUtils.expectInterfaceClickSuccess('#take-back');
 
             // Then it should take back to user turn, hence back to turn N
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+            expectTurnToBe(0);
         }));
 
         it('should not allow to take back when only AI move has been made', fakeAsync(async() => {
             // Given a board with the first move made by AI
             selectAIPlayer(Player.ZERO);
             tick(LocalGameWrapperComponent.AI_TIMEOUT);
-            expect(testUtils.getGameComponent().getTurn()).toBe(1); // AI just played
+            expectTurnToBe(1);
 
             // When searching for takeBack button
             // Then it should not be visible
