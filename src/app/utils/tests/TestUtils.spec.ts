@@ -458,7 +458,6 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
                     TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
                 },
             );
-            // TODO: config should be in URL already (rules-config-param-in-the-url-in-test)
             await wrapper.setConfigFromParams();
             this.gameComponent.setConfig(config);
             tick(0);
