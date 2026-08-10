@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     viewBox="-3 -3 606 606"
+     [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
 
     @for (line of board; track $index; let y = $index) {

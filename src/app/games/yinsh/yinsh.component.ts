@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
@@ -45,6 +46,10 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            EmptyRulesConfig,
                                                            YinshLegalityInformation>
 {
+    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(0, 250, 1065, 1060));
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
     private static readonly RING_OUTER_SIZE: number = 40;
     private static readonly RING_MID_SIZE: number = 34;
     private static readonly RING_INNER_SIZE: number = 28;

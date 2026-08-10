@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
@@ -28,6 +29,10 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaState,
                                                              FourStatePiece>
 {
+    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(-3, -3, 606, 606));
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
     public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();

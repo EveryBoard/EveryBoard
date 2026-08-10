@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
@@ -54,6 +55,10 @@ interface LastMoved {
     imports: [NgClass],
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(-110, -120, 800, 710));
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
     private static readonly CENTER: Coord[] = [
         new Coord(40, 160),

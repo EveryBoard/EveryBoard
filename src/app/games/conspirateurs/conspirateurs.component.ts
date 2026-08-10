@@ -1,8 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -41,6 +42,10 @@ interface SquareInfo {
     imports: [NgClass],
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => new ViewBox(-100, 0, 1915, 1715));
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
     public PIECE_RADIUS: number;
     public ALL_SHELTERS: Coord[] = ConspirateursState.ALL_SHELTERS;
