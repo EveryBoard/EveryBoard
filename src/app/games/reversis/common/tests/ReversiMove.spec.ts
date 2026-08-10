@@ -10,7 +10,7 @@ import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
 describe('ReversiMove', () => {
 
-    const rulesSets: { rules: AbstractReversiRules, name: string }[] = [
+    const rulesSets: { rules: AbstractReversiRules; name: string }[] = [
         { rules: ReversiRules.get(), name: 'Reversi' },
         { rules: ToricReversiRules.get(), name: 'Toric Reversi' },
     ];

@@ -2,7 +2,6 @@ import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../../jscaip/Coord';
-import { Ordinal } from '../../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 

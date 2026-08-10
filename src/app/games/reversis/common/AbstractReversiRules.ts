@@ -110,7 +110,12 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         return resultingState;
     }
 
-    public getAllSwitchedCoords(move: ReversiMove, player: Player, state: ReversiState, config: ReversiConfig): Coord[] {
+    public getAllSwitchedCoords(
+        move: ReversiMove,
+        player: Player,
+        state: ReversiState,
+        config: ReversiConfig,
+    ): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
         const opponent: Player = player.getOpponent();

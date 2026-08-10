@@ -18,7 +18,7 @@ describe('ReversiMoveGenerator', () => {
     let defaultConfig: ReversiConfig;
     let rules: AbstractReversiRules;
 
-    const rulesSets: { rules: AbstractReversiRules, name: string }[] = [
+    const rulesSets: { rules: AbstractReversiRules; name: string }[] = [
         { rules: ReversiRules.get(), name: 'ReversiRules' },
         { rules: ToricReversiRules.get(), name: 'ToricReversiRules' },
     ];
