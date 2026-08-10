@@ -2,10 +2,10 @@
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
+import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
-import { HexodiaState } from '../HexodiaState';
 
 describe('HexodiaMoveGenerator', () => {
 
@@ -22,7 +22,7 @@ describe('HexodiaMoveGenerator', () => {
 
     it('should propose only one move at first turn', () => {
         // Given the initial node
-        const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+        const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
         const size: number = state.getWidth();
         const node: HexodiaNode = new HexodiaNode(state);
 
@@ -61,7 +61,7 @@ describe('HexodiaMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexodiaState = new HexodiaState(board, 3);
+        const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
         const node: HexodiaNode = new HexodiaNode(state);
 
         // When listing the moves

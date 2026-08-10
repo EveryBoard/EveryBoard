@@ -13,7 +13,7 @@ export class PylosMoveGenerator extends MoveGenerator<PylosMove, PylosState> {
     public override getListMoves(node: PylosNode, _config: EmptyRulesConfig): PylosMove[] {
         const state: PylosState = node.gameState;
         const result: PylosMove[] = [];
-        const stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getStateInfo(state);
+        const stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[] } = PylosRules.getStateInfo(state);
         const climbings: PylosMove[] = PylosRules.getClimbingMoves(stateInfo);
         const drops: PylosMove[] = PylosRules.getDropMoves(stateInfo);
         const moves: PylosMove[] = climbings.concat(drops);

@@ -161,7 +161,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
         } else {
             let movingPiece: SiamPiece;
             if (this.isInsertion(move, state)) {
-                const insertionInfo: {insertedPiece: SiamPiece, legal: MGPValidation} =
+                const insertionInfo: {insertedPiece: SiamPiece; legal: MGPValidation} =
                     this.isLegalInsertion(move.coord, state, config);
                 if (insertionInfo.legal.isFailure()) {
                     return MGPFallible.failure(insertionInfo.legal.getReason());
@@ -175,7 +175,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
     }
 
     private isLegalInsertion(coord: Coord, state: SiamState, config: SiamConfig)
-    : {insertedPiece: SiamPiece, legal: MGPValidation}
+    : {insertedPiece: SiamPiece; legal: MGPValidation}
     {
         const numberOnBoard: number = state.countCurrentPlayerPawn();
         const currentPlayer: Player = state.getCurrentPlayer();
@@ -291,7 +291,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
     }
 
     public getMountainsRowsAndColumns(state: SiamState)
-    : { rows: number[], columns: number[], nbMountain: number }
+    : { rows: number[]; columns: number[]; nbMountain: number }
     {
         const rows: number[] = [];
         const columns: number[] = [];
@@ -362,10 +362,10 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
                       mountainsColumn: number[],
                       mountainsRow: number[],
                       config: SiamConfig)
-    : { coord: Coord; distance: number; }[]
+    : { coord: Coord; distance: number }[]
     {
-        let pushers: { coord: Coord; distance: number; }[] = [];
-        const lineDirections: { direction: Orthogonal, fallingCoord: Coord}[] = [];
+        let pushers: { coord: Coord; distance: number }[] = [];
+        const lineDirections: { direction: Orthogonal; fallingCoord: Coord}[] = [];
         for (const x of mountainsColumn) {
             let direction: Orthogonal = Orthogonal.DOWN;
             let fallingCoord: Coord = new Coord(x, config.height - 1);
@@ -395,16 +395,16 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
     private addPotentialDirectionPusher(state: SiamState,
                                         fallingCoord: Coord,
                                         direction: Orthogonal,
-                                        pushers: { coord: Coord, distance: number }[],
+                                        pushers: { coord: Coord; distance: number }[],
                                         config: SiamConfig)
-    : { coord: Coord, distance: number }[]
+    : { coord: Coord; distance: number }[]
     {
-        const directionClosestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+        const directionClosestPusher: MGPOptional<{ distance: number; coord: Coord }> =
             this.getLineClosestPusher(state, fallingCoord, direction, config);
         if (directionClosestPusher.isAbsent()) {
             return pushers;
         }
-        const pusher: { distance: number, coord: Coord } = directionClosestPusher.get();
+        const pusher: { distance: number; coord: Coord } = directionClosestPusher.get();
         const distance: number = pusher.distance;
         const pusherCoord: Coord = pusher.coord;
         // find who own that pushing piece found
@@ -604,7 +604,7 @@ export class SiamRules extends ConfigurableRules<SiamMove, SiamState, SiamConfig
     }
 
     public override getGameStatus(node: SiamNode, config: SiamConfig): GameStatus {
-        const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
+        const mountainsInfo: { rows: number[]; columns: number[]; nbMountain: number } =
             this.getMountainsRowsAndColumns(node.gameState);
 
         const winner: PlayerOrNone =

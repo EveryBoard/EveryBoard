@@ -26,9 +26,9 @@ interface TTEntry<M> {
 }
 
 export type SearchResult<M> = {
-    move: M,
-    score: BoardValue,
-    complete: boolean,
+    move: M;
+    score: BoardValue;
+    complete: boolean;
 };
 
 /**
@@ -165,7 +165,7 @@ implements AI<M, S, O, C>
             possibleMoves = new Set([ttEntry.bestMove, ...possibleMoves]);
         }
 
-        const search: { bestMoves: SearchResult<M>[], complete: boolean } =
+        const search: { bestMoves: SearchResult<M>[]; complete: boolean } =
             this.getBestMoves(node, possibleMoves, depth, alpha, beta, config);
         const bestMove: SearchResult<M> = this.getBestMoveAmong(search.bestMoves);
         Utils.assert(possibleMoves.contains(bestMove.move), 'best child is not a possible move?!' + bestMove.move.toString());
@@ -213,7 +213,7 @@ implements AI<M, S, O, C>
                          alpha: BoardValue,
                          beta: BoardValue,
                          config: C)
-    : { bestMoves: SearchResult<M>[], complete: boolean }
+    : { bestMoves: SearchResult<M>[]; complete: boolean }
     {
         let bestMoves: SearchResult<M>[] = [];
         let complete: boolean = true;

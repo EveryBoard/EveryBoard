@@ -21,14 +21,14 @@ import { LodestonePressurePlate, LodestonePressurePlatePosition, LodestonePressu
 export class LodestoneNode extends GameNode<LodestoneMove, LodestoneState> {}
 
 export type LodestoneInfos = {
-    board: LodestonePiece[][]
-    captures: Coord[]
-    moved: Coord[]
+    board: LodestonePiece[][];
+    captures: Coord[];
+    moved: Coord[];
 }
 
 export interface PressurePlateViewPosition {
-    start: (plateIndex: number, plateWidth: number) => Coord,
-    direction: Ordinal,
+    start: (plateIndex: number, plateWidth: number) => Coord;
+    direction: Ordinal;
 }
 
 export type PressurePlatePositionInformation = MGPMap<LodestonePressurePlatePosition,
