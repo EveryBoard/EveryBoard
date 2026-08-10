@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { Coord } from '../../jscaip/Coord';
@@ -71,29 +72,23 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.lastMoved = [];
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('.space-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            const move: ConnectSixMove = ConnectSixFirstMove.of(clickedCoord);
+            const move: ConnectSixMove = ConnectSixFirstMove.of(coord);
             return this.chooseMove(move);
         } else {
-            if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
+            if (this.getState().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoord.isPresent()) {
-                if (this.droppedCoord.equalsValue(clickedCoord)) {
+                if (this.droppedCoord.equalsValue(coord)) {
                     return this.cancelMove();
                 } else {
-                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), clickedCoord);
+                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), coord);
                     return this.chooseMove(move);
                 }
             } else {
-                this.droppedCoord = MGPOptional.of(clickedCoord);
+                this.droppedCoord = MGPOptional.of(coord);
                 return MGPValidation.SUCCESS;
             }
         }

@@ -4,16 +4,11 @@ import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { GobanUtils } from '../../../jscaip/GobanUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoConfig, AbstractGoRules, ZoomConfig } from '../AbstractGoRules';
 import { GoGroupDataFactory, OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
-
-type ZoomConfig = {
-    zoom: number;
-    showZooms: boolean;
-}
 
 export type RectangularGoConfig =
     AbstractGoConfig &

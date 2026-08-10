@@ -14,68 +14,13 @@ import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
-import { Localized } from '../../../utils/LocaleUtils';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
-export class ScoreName {
+import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './ClickHandler';
+import { ScoreName } from './ScoreName';
 
-    public static readonly POINTS: ScoreName =
-        new ScoreName(() => $localize`0 points`,
-                      () => $localize`1 point`,
-                      (n: number) => $localize`${n} points`);
-
-    public static readonly CAPTURES: ScoreName =
-        new ScoreName(() => $localize`0 captures`,
-                      () => $localize`1 capture`,
-                      (n: number) => $localize`${n} captures`);
-
-    public static readonly REMAINING_PIECES: ScoreName =
-        new ScoreName(() => $localize`0 remaining pieces`,
-                      () => $localize`1 remaining piece`,
-                      (n: number) => $localize`${n} remaining pieces`);
-
-    public static readonly PIECES_TO_DROP: ScoreName =
-        new ScoreName(() => $localize`0 pieces to drop`,
-                      () => $localize`1 piece to drop`,
-                      (n: number) => $localize`${n} pieces to drop`);
-
-    public static readonly PROTECTED_PIECES: ScoreName =
-        new ScoreName(() => $localize`0 protected pieces`,
-                      () => $localize`1 protected piece`,
-                      (n: number) => $localize`${n} protected pieces`);
-
-    public static readonly PIECES_UNDER_CONTROL: ScoreName =
-        new ScoreName(() => $localize`0 pieces under control`,
-                      () => $localize`1 piece under control`,
-                      (n: number) => $localize`${n} pieces under control`);
-
-    public static readonly STACKS_UNDER_CONTROL: ScoreName =
-        new ScoreName(() => $localize`0 stacks under control`,
-                      () => $localize`1 stack under control`,
-                      (n: number) => $localize`${n} stacks under control`);
-
-    /**
-     * A score name might be differently written for zero, one, or more than one "points".
-     * Zero might be plural like in english, but different in another language, like french where it is singular.
-     */
-    private constructor(public readonly zero: Localized,
-                        public readonly singular: Localized,
-                        public readonly plural: (n: number) => string) {
-    }
-
-    public getString(count: number): string {
-        switch (count) {
-            case 0:
-                return this.zero();
-            case 1:
-                return this.singular();
-            default:
-                return this.plural(count);
-        }
-    }
-}
 
 /**
  * All method are to be implemented by the "final" GameComponent classes
@@ -97,6 +42,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 {
 
     private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+
     protected readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     public encoder: Encoder<M>;
@@ -151,6 +97,21 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public animationOngoing: boolean = false;
 
     public state: S;
+
+    public setClickInterceptor(interceptor: MoveInterceptor): void {
+        const proto: {
+            [key: string]: AnyFunction;
+            [key: typeof CLICK_HANDLERS]: Map<string, ClickNamer>;
+        } = Object.getPrototypeOf(this);
+        const handlers: Map<string, ClickNamer> = proto[CLICK_HANDLERS] ?? new Map();
+        const self: { [key: string]: AnyFunction } = this as unknown as { [key: string]: AnyFunction };
+        for (const [key, moveMapper] of handlers) {
+            self[key] = interceptor(
+                proto[key].bind(this),
+                moveMapper,
+            );
+        }
+    }
 
     public hasScores(): boolean {
         return this.scores.isPresent();

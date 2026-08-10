@@ -323,6 +323,9 @@
       <trans-unit id="6432141756227180076" datatype="html">
         <source>Align your 4 pieces or form a square with them to win!</source>
       </trans-unit>
+      <trans-unit id="2856851705672899185" datatype="html">
+        <source>A toric version of Reversi!</source>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
@@ -466,6 +469,9 @@
       </trans-unit>
       <trans-unit id="9017157884114080234" datatype="html">
         <source>Zoomed Go</source>
+      </trans-unit>
+      <trans-unit id="3697715893908807208" datatype="html">
+        <source>Toric Reversi</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -883,6 +889,9 @@
       </trans-unit>
       <trans-unit id="4053624367526659457" datatype="html">
         <source>Number of pieces rows</source>
+      </trans-unit>
+      <trans-unit id="6874699210811358423" datatype="html">
+        <source>Toric</source>
       </trans-unit>
       <trans-unit id="5607669932062416162" datatype="html">
         <source>Default</source>
@@ -3078,17 +3087,11 @@
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
       </trans-unit>
-      <trans-unit id="8006607638702407149" datatype="html">
-        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
-        When one piece is flipped, its owner changes.
-        The player owning the most pieces at the end of the game wins.
-        Here, Dark has 28 points and Light has 36, hence Light wins.</source>
+      <trans-unit id="4123522127538652179" datatype="html">
+        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.</source>
       </trans-unit>
-      <trans-unit id="5285597397338861824" datatype="html">
-        <source>At the beginning of the game, pieces are placed as shown here.
-        For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
-        Do any move by clicking to put your piece
-        Dark plays first.</source>
+      <trans-unit id="4322708137610040654" datatype="html">
+        <source>At the beginning of the game, pieces are placed as shown here. For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;Do any move by clicking to put your piece. Dark plays first.</source>
       </trans-unit>
       <trans-unit id="7280078972566788741" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
@@ -3099,9 +3102,44 @@
       <trans-unit id="1243885947284298199" datatype="html">
         <source>Passing a turn</source>
       </trans-unit>
-      <trans-unit id="3839030392804080169" datatype="html">
-        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
-        Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
+      <trans-unit id="450833244866003504" datatype="html">
+        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass. Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
+      </trans-unit>
+      <trans-unit id="7531322064121954356" datatype="html">
+        <source>Toric Reversi is a variant of Reversi played on a toric board. If you are not familiar with the base rules of Reversi, check them out &lt;a href=&quot;/tutorial/Reversi&quot;&gt;here&lt;/a&gt; before continuing. This tutorial only covers what changes with the toric board.</source>
+      </trans-unit>
+      <trans-unit id="9138862778564760989" datatype="html">
+        <source>Left-right connectivity</source>
+      </trans-unit>
+      <trans-unit id="5219741148542864373" datatype="html">
+        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
+      </trans-unit>
+      <trans-unit id="447603454412761814" datatype="html">
+        <source>Look at the fourth row: there is a line of dark pieces that wraps around the left edge.</source>
+      </trans-unit>
+      <trans-unit id="524383038680502602" datatype="html">
+        <source>Top-bottom connectivity</source>
+      </trans-unit>
+      <trans-unit id="1533479423868245608" datatype="html">
+        <source>The same applies vertically: the top edge is connected to the bottom edge. Find the move that captures by playing on the top row.</source>
+      </trans-unit>
+      <trans-unit id="905915555335437932" datatype="html">
+        <source>Look at the fourth column: the dark piece at the bottom wraps around to the top.</source>
+      </trans-unit>
+      <trans-unit id="7079964026141010612" datatype="html">
+        <source>Diagonal wrapping</source>
+      </trans-unit>
+      <trans-unit id="5238684930166477750" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?</source>
+      </trans-unit>
+      <trans-unit id="6380656983498638368" datatype="html">
+        <source>Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.</source>
+      </trans-unit>
+      <trans-unit id="424008605734944795" datatype="html">
+        <source>Strategic implications</source>
+      </trans-unit>
+      <trans-unit id="8991600964307142646" datatype="html">
+        <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges, every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
       </trans-unit>
       <trans-unit id="1982783281923413187" datatype="html">
         <source>You can only rebound on dark spaces.</source>

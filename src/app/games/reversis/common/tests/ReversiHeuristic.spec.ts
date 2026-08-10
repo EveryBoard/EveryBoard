@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
+import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player, PlayerOrNone } from '../../../../jscaip/Player';
+import { Table } from '../../../../jscaip/TableUtils';
+import { ReversiRules } from '../../reversi/ReversiRules';
+import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
 import { ReversiHeuristic } from '../ReversiHeuristic';
-import { ReversiConfig, ReversiNode, ReversiRules } from '../ReversiRules';
 import { ReversiState } from '../ReversiState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

@@ -28,7 +28,12 @@ export type GoLegalityInformation = {
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
-export type AbstractGoConfig = RulesConfig;
+export type ZoomConfig = {
+    zoom: number;
+    showZooms: boolean;
+}
+
+export type AbstractGoConfig = RulesConfig & ZoomConfig;
 
 @Debug.log
 export abstract class AbstractGoRules<C extends AbstractGoConfig>
@@ -41,8 +46,8 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     public abstract getGoGroupDataFactory(zoom: number): GoGroupDataFactory;
 
-    public getZoom(_config: C): number {
-        return 1;
+    public getZoom(config: C): number {
+        return config.zoom;
     }
 
     private getNewKo(
