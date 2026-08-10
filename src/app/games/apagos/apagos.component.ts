@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -104,9 +104,11 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.hasAsymmetricBoard = true;
     }
 
-    public getViewBox(): ViewBox {
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
         return new ViewBox(0, 0, this.BOARD_WIDTH, this.BOARD_HEIGHT).expandAll(this.STROKE_WIDTH / 2);
-    }
+    });
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
     public override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
@@ -117,14 +117,16 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         }
     }
 
-    public getViewBox(): ViewBox {
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
         return new ViewBox(
             -this.STROKE_WIDTH,
             0,
             this.boardWidth,
             this.boardHeight,
         );
-    }
+    });
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
     private arrowToward(placement: Coord, direction: HexaDirection): Arrow<HexaDirection> {
         const previous: Coord = placement.getNext(direction.getOpposite());

@@ -32,6 +32,8 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
 
     public readonly viewBox: Signal<ViewBox> = computed(() => this.computeViewBox());
 
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
     protected computeViewBox(): ViewBox {
         const width: number = this.getWidth() * this.SPACE_SIZE;
         const height: number = this.getHeight() * this.SPACE_SIZE;

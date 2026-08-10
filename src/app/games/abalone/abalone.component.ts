@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
@@ -105,7 +105,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return ScoreName.CAPTURES;
     }
 
-    public getViewBox(): ViewBox {
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
         const abstractSize: number = this.getState().getWidth() + 2;
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
@@ -116,7 +116,9 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         const width: number = size + (1.75 * configSize * this.STROKE_WIDTH);
         const height: number = size + this.STROKE_WIDTH;
         return new ViewBox(left, up, width, height);
-    }
+    });
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.hexaBoard = this.getState().getCopiedBoard();

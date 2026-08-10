@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, computed, Signal } from '@angular/core';
 
 import { MGPValidation } from '@everyboard/lib';
 
@@ -69,7 +69,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                          PointyHexaOrientation.INSTANCE);
     }
 
-    public getViewBox(): ViewBox {
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
         const abstractSize: number = this.getState().getWidth();
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
@@ -79,7 +79,9 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         const width: number = size + (1.75 * configSize * this.STROKE_WIDTH);
         const height: number = size + this.STROKE_WIDTH;
         return new ViewBox(left, 0, width, height);
-    }
+    });
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: FourStatePieceGameStateWithTable = this.getState();
