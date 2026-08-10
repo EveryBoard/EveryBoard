@@ -3,9 +3,9 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { HexaLayout } from '../../../jscaip/HexaLayout';

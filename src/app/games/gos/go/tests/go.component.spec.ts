@@ -11,9 +11,9 @@ import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
+import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
 import { GoRules } from '../../go/GoRules';
 import { GoComponent } from '../../go/go.component';
-import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
 
 describe('GoComponent', () => {
 
@@ -109,7 +109,9 @@ describe('GoComponent', () => {
         // Then all state fields relevant to minimax identity should be encoded
         expect(hash).toContain('1-ACCEPT');
         expect(hash).toContain(JSON.stringify(new Coord(0, 0)));
-        expect(hash).toContain(JSON.stringify(PlayerNumberMap.of(2, 1)));
+        const scoreMap: PlayerNumberMap = PlayerNumberMap.of(2, 1);
+        scoreMap.makeImmutable();
+        expect(hash).toContain(JSON.stringify(scoreMap));
         expect(GoPhase.ACCEPT.toString()).toBe('ACCEPT');
         expect(GoPhase.FINISHED.toString()).toBe('FINISHED');
         expect(Object.create(GoPhase.prototype).toString()).toBe('');

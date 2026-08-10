@@ -20,7 +20,7 @@ import { GoState } from './GoState';
 
 export type GoLegalityInformation = {
 
-    readonly postCaptureState: GoState,
+    readonly postCaptureState: GoState;
 
     readonly uniqueCapture: MGPOptional<Coord>;
 
