@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, computed, inject, Signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    inject,
+    signal,
+    Signal,
+    WritableSignal,
+} from '@angular/core';
 
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -100,7 +109,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public state: S;
 
-    public readonly viewBox: Signal<ViewBox> = computed(() => this.computeViewBox());
+    private readonly gameViewBoxRevision: WritableSignal<number> = signal(0);
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
+        this.gameViewBoxRevision();
+        return this.computeViewBox();
+    });
 
     public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
@@ -187,13 +201,19 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
         await this.updateBoard(triggerAnimation);
+        this.invalidateViewBox();
         this.cdr.detectChanges();
     }
 
     public async showLastMoveAndRedraw(): Promise<void> {
         const move: M = this.node.previousMove.get();
         await this.showLastMove(move);
+        this.invalidateViewBox();
         this.cdr.detectChanges();
+    }
+
+    private invalidateViewBox(): void {
+        this.gameViewBoxRevision.update((revision: number) => revision + 1);
     }
 
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
