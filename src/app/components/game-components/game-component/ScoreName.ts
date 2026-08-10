@@ -57,4 +57,3 @@ export class ScoreName {
         }
     }
 }
-// TODO VON JAJA

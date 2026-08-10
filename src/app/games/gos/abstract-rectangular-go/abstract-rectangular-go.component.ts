@@ -3,7 +3,7 @@ import { computed, ModelSignal, signal, Signal, WritableSignal } from '@angular/
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
