@@ -23,7 +23,7 @@ import { KalahMoveGenerator } from '../KalahMoveGenerator';
 import { KalahRules } from '../KalahRules';
 import { KalahComponent } from '../kalah.component';
 
-describe('KalahComponent', () => {
+fdescribe('KalahComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<KalahComponent, KalahRules>;
     const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
