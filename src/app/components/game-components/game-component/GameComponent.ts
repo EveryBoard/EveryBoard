@@ -101,8 +101,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public setClickInterceptor(interceptor: MoveInterceptor): void {
         const proto: {
-            [key: string]: AnyFunction,
-            [key: typeof CLICK_HANDLERS]: Map<string, ClickNamer>
+            [key: string]: AnyFunction;
+            [key: typeof CLICK_HANDLERS]: Map<string, ClickNamer>;
         } = Object.getPrototypeOf(this);
         const handlers: Map<string, ClickNamer> = proto[CLICK_HANDLERS] ?? new Map();
         const self: { [key: string]: AnyFunction } = this as unknown as { [key: string]: AnyFunction };
