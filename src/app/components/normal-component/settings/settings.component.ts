@@ -4,7 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ThemeService } from '../../../services/ThemeService';
 import { UserSettingsService } from '../../../services/UserSettingsService';
 
-type SettingOption = { value: string, name: string }
+type SettingOption = { value: string; name: string }
 
 @Component({
     selector: 'app-settings',

@@ -18,10 +18,10 @@ import { MancalaScoreHeuristic } from './MancalaScoreHeuristic';
 import { MancalaState } from './MancalaState';
 
 export type SeedDropResult = {
-    houseToDistribute: Coord,
-    currentDropIsStore: boolean,
-    seedsInHand: number,
-    resultingState: MancalaState,
+    houseToDistribute: Coord;
+    currentDropIsStore: boolean;
+    seedsInHand: number;
+    resultingState: MancalaState;
 };
 
 export abstract class MancalaComponent<R extends MancalaRules>

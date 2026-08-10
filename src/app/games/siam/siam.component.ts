@@ -23,10 +23,10 @@ import { SiamState } from './SiamState';
 import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {
-    source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
-    target: Coord,
-    direction: Orthogonal,
-    move: SiamMove,
+    source: MGPOptional<{ coord: Coord; piece: SiamPiece }>;
+    target: Coord;
+    direction: Orthogonal;
+    move: SiamMove;
 }
 
 @Component({

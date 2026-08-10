@@ -6,10 +6,10 @@ import { MoveCoord } from '../../jscaip/MoveCoord';
 import { LodestoneDirection, LodestoneOrientation } from './LodestonePiece';
 
 export type LodestoneCaptures = {
-    top: number,
-    bottom: number,
-    left: number,
-    right: number,
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
 }
 
 export class LodestoneMove extends MoveCoord {

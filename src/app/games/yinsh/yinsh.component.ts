@@ -23,14 +23,14 @@ import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshState } from './YinshState';
 
 interface ViewInfo {
-    targets: Coord[],
-    markerSize: number,
-    indicatorSize: number,
-    ringOuterSize: number,
-    ringMidSize: number,
-    ringInnerSize: number,
-    sideRings: PlayerNumberMap,
-    sideRingClass: PlayerMap<string>,
+    targets: Coord[];
+    markerSize: number;
+    indicatorSize: number;
+    ringOuterSize: number;
+    ringMidSize: number;
+    ringInnerSize: number;
+    sideRings: PlayerNumberMap;
+    sideRingClass: PlayerMap<string>;
 }
 
 @Component({

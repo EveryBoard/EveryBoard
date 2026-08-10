@@ -12,8 +12,8 @@ import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
 import { GameNode } from './GameNode';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
-    node: GameNode<M, S>,
-    path: GameNode<M, S>[],
+    node: GameNode<M, S>;
+    path: GameNode<M, S>[];
 }
 
 /**

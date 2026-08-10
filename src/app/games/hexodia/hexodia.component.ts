@@ -12,12 +12,12 @@ import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 
 import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
-import { HexodiaState } from './HexodiaState';
 
 @Component({
     selector: 'app-hexodia',
@@ -27,7 +27,7 @@ import { HexodiaState } from './HexodiaState';
 })
 export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                                              HexodiaMove,
-                                                             HexodiaState,
+                                                             FourStatePieceGameStateWithTable,
                                                              FourStatePiece,
                                                              HexodiaConfig>
 {
@@ -83,7 +83,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: HexodiaState = this.getState();
+        const state: FourStatePieceGameStateWithTable = this.getState();
         this.hexaBoard = state.getCopiedBoard();
         const config: HexodiaConfig = this.getConfig();
         this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);

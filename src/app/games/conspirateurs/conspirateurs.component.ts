@@ -20,20 +20,20 @@ import { ConspirateursRules } from './ConspirateursRules';
 import { ConspirateursState } from './ConspirateursState';
 
 interface ViewInfo {
-    boardInfo: SquareInfo[][],
-    dropPhase: boolean,
-    victory: Coord[],
-    lastMoveArrow: string,
-    sidePieces: PlayerNumberMap,
+    boardInfo: SquareInfo[][];
+    dropPhase: boolean;
+    victory: Coord[];
+    lastMoveArrow: string;
+    sidePieces: PlayerNumberMap;
 }
 
 interface SquareInfo {
-    coord: Coord,
-    squareClasses: string[],
-    shelterClasses: string[],
-    hasPieceToDraw: boolean,
-    isShelter: boolean,
-    isOccupiedShelter: boolean,
+    coord: Coord;
+    squareClasses: string[];
+    shelterClasses: string[];
+    hasPieceToDraw: boolean;
+    isShelter: boolean;
+    isOccupiedShelter: boolean;
 }
 
 @Component({

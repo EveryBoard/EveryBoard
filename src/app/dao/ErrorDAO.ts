@@ -8,19 +8,19 @@ import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
 
 export type MGPError = {
     // The component in which the error occured
-    component: string,
+    component: string;
     // Route on which the error occured
-    route: string,
+    route: string;
     // A message detailing the error
-    message: string,
+    message: string;
     // Some extra data for the error
-    data?: NonNullable<JSONValue>,
+    data?: NonNullable<JSONValue>;
     // First time the error occured
-    firstEncounter: FirestoreTime,
+    firstEncounter: FirestoreTime;
     // Last time the error occured
-    lastEncounter: FirestoreTime,
+    lastEncounter: FirestoreTime;
     // Number of times the error occured
-    occurences: number,
+    occurences: number;
 }
 export type ErrorDocument = FirestoreDocument<MGPError>;
 
