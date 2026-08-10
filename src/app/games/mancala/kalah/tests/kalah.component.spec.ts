@@ -73,11 +73,11 @@ fdescribe('KalahComponent', () => {
         receivedMultiDistributionAnimation: {
             previousState: KalahRules.get().getInitialState(defaultConfig),
             state: new MancalaState([
-                [5, 5, 5, 5, 4, 4],
-                [0, 5, 5, 0, 4, 4],
+                [4, 4, 0, 5, 5, 0],
+                [4, 4, 5, 5, 5, 5],
             ], 1, PlayerNumberMap.of(2, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(3, 0), [MancalaDistribution.of(0, 0)]),
-            distributedSeedCountsByLap: [5, 5],
+            move: MancalaMove.of(MancalaDistribution.of(2, 0), [MancalaDistribution.of(0, 0)]),
+            distributedSeedCountsByLap: [4, 5],
         },
         monsoon: {
             state: new MancalaState([
