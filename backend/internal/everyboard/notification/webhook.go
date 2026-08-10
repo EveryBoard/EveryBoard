@@ -106,6 +106,7 @@ func (w *Webhook) run() {
 }
 
 func (w *Webhook) publish(payload webhookPayload) error {
+	logger.Debug.Printf("Webhook publish: %s", payload.Content)
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return err
