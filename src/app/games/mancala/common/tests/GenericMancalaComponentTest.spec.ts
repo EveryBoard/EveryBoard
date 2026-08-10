@@ -483,7 +483,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             const multiDistributionAnimation: ReceivedMultiDistributionAnimationTestEntry | undefined =
                 entries.receivedMultiDistributionAnimation;
             if (multiDistributionAnimation != null) {
-                fit('should wait TIMEOUT_BETWEEN_LAPS before continuing a received multi-distribution move', fakeAsync(async() => {
+                it('should wait TIMEOUT_BETWEEN_LAPS before continuing a received multi-distribution move', fakeAsync(async() => {
                     // Given a received move with several distributions
                     await mancalaTestUtils.testUtils.setupState(multiDistributionAnimation.state, {
                         previousState: multiDistributionAnimation.previousState,
