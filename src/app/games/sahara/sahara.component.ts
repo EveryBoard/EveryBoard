@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
@@ -82,11 +83,8 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.chosenCoord = MGPOptional.empty();
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const currentPlayer: Player = this.getState().getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
         if (this.chosenCoord.equalsValue(new Coord(x, y))) {

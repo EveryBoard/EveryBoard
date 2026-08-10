@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
@@ -335,11 +336,8 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    public async selectRemaining(piece: HivePiece, index: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#remaining-piece-${piece.toString()}-${index}`);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+    @ClickHandler((piece: HivePiece, index: number) => `#remaining-piece-${piece.toString()}-${index}`)
+    public async selectRemaining(piece: HivePiece, _: number): Promise<MGPValidation> {
         if (piece.owner === this.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
@@ -361,22 +359,16 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         }
     }
 
-    public async selectPiece(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#piece-${x}-${y}-${z}`);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y));
-        return selectionValidity;
+    @ClickHandler((x: number, y: number, z: number) => `#piece-${ x }-${ y }-${ z }`)
+    public async selectPiece(x: number, y: number, _: number): Promise<MGPValidation> {
+        // select is called somewhere else where no click handling check need to be done
+        return this.select(new Coord(x, y));
     }
 
+    @ClickHandler((x: number, y: number) => `#space-${ x }-${ y }`)
     public async selectSpace(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#space-${x}-${y}`);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const selectionValidity: MGPValidation = await this.select(new Coord(x, y));
-        return selectionValidity;
+        // select is called somewhere else where no click handling check need to be done
+        return await this.select(new Coord(x, y));
     }
 
     private async select(coord: Coord): Promise<MGPValidation> {
