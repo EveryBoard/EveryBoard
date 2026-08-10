@@ -18,8 +18,8 @@ import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 import { ViewBox } from '../GameComponentUtils';
+import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 export class ScoreName {
 
