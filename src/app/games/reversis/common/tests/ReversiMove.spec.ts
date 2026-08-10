@@ -10,16 +10,15 @@ import { ReversiMoveGenerator } from '../ReversiMoveGenerator';
 
 describe('ReversiMove', () => {
 
-    const rulesSets: { rules: AbstractReversiRules; name: string }[] = [
-        { rules: ReversiRules.get(), name: 'Reversi' },
-        { rules: ToricReversiRules.get(), name: 'Toric Reversi' },
+    const rules: AbstractReversiRules[] = [
+        ReversiRules.get(),
+        ToricReversiRules.get(),
     ];
-    for (const rulesSet of rulesSets) {
+    for (const rule of rules) {
 
-        it(`should have a bijective encoder for ${ rulesSet.name }`, () => {
-            const rules: ReversiRules = rulesSet.rules;
-            const moveGenerator: ReversiMoveGenerator = new ReversiMoveGenerator(rules);
-            MoveTestUtils.testFirstTurnMovesBijectivity(rules, moveGenerator, ReversiMove.encoder);
+        it(`should have a bijective encoder for ${ rule.constructor.name  }`, () => {
+            const moveGenerator: ReversiMoveGenerator = new ReversiMoveGenerator(rule);
+            MoveTestUtils.testFirstTurnMovesBijectivity(rule, moveGenerator, ReversiMove.encoder);
             EncoderTestUtils.expectToBeBijective(ReversiMove.encoder, ReversiMove.PASS);
         });
 

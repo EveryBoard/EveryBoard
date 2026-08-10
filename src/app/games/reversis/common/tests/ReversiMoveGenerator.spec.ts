@@ -16,25 +16,23 @@ describe('ReversiMoveGenerator', () => {
 
     let moveGenerator: ReversiMoveGenerator;
     let defaultConfig: ReversiConfig;
-    let rules: AbstractReversiRules;
 
-    const rulesSets: { rules: AbstractReversiRules; name: string }[] = [
-        { rules: ReversiRules.get(), name: 'ReversiRules' },
-        { rules: ToricReversiRules.get(), name: 'ToricReversiRules' },
+    const rules: AbstractReversiRules[] = [
+        ReversiRules.get(),
+        ToricReversiRules.get(),
     ];
 
-    for (const rulesSet of rulesSets) {
+    for (const rule of rules) {
 
-        describe('for ' + rulesSet.name, () => {
+        describe('for ' + rule.constructor.name, () => {
 
             beforeEach(() => {
-                rules = rulesSet.rules;
-                defaultConfig = rules.getDefaultRulesConfig();
-                moveGenerator = new ReversiMoveGenerator(rules);
+                defaultConfig = rule.getDefaultRulesConfig();
+                moveGenerator = new ReversiMoveGenerator(rule);
             });
 
             it('should have 4 choices at first turn', () => {
-                const node: ReversiNode = rules.getInitialNode(defaultConfig);
+                const node: ReversiNode = rule.getInitialNode(defaultConfig);
                 const moves: ReversiMove[] = moveGenerator.getListMoves(node, defaultConfig);
                 expect(moves.length).toBe(4);
             });
