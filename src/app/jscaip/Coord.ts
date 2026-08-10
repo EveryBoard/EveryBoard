@@ -30,6 +30,13 @@ export class Coord extends Vector {
         return new Coord(combinedVector.x, combinedVector.y);
     }
 
+    public getNextToric(dir: Vector, boardWidth: number, boardHeight: number, distance?: number): Coord {
+        const combinedVector: Vector = this.combine(dir, distance);
+        const toricX: number = (combinedVector.x + boardWidth) % boardWidth;
+        const toricY: number = (combinedVector.y + boardHeight) % boardHeight;
+        return new Coord(toricX, toricY);
+    }
+
     public getPrevious(dir: Vector, distance: number = 1): Coord {
         return this.getNext(dir, -distance);
     }
