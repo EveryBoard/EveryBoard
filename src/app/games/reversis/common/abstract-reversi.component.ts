@@ -65,7 +65,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     public override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentOpponent();
-        this.captured = this.rules.getAllSwitcheds(move, player, this.getPreviousState(), this.getConfig());
+        this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.getConfig());
     }
 
     public override hideLastMove(): void {

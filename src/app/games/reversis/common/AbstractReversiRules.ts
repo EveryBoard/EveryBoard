@@ -43,7 +43,7 @@ export interface BoardMode {
     getNextCoord: (coord: Coord, direction: Ordinal, state: ReversiState) => Coord;
 
 }
-class RectangularBoard implements BoardMode {
+class RectangularBoardMode implements BoardMode {
 
     public getNextCoord(coord: Coord, direction: Ordinal, _: ReversiState): Coord {
         return coord.getNext(direction);
@@ -51,7 +51,7 @@ class RectangularBoard implements BoardMode {
 
 }
 
-class ToricBoard implements BoardMode {
+class ToricBoardMode implements BoardMode {
 
     public getNextCoord(coord: Coord, direction: Ordinal, state: ReversiState): Coord {
         return coord.getNextToric(direction, state.getWidth(), state.getHeight());
@@ -66,15 +66,15 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
                                                                      ReversiLegalityInformation>
 {
 
-    private readonly toricBoard: BoardMode = new ToricBoard();
+    private readonly toricBoardMode: BoardMode = new ToricBoardMode();
 
-    private readonly rectangularBoard: BoardMode = new RectangularBoard();
+    private readonly rectangularBoardMode: BoardMode = new RectangularBoardMode();
 
     private getBoardMode(config: ReversiConfig): BoardMode {
         if (config.toric) {
-            return this.toricBoard;
+            return this.toricBoardMode;
         } else {
-            return this.rectangularBoard;
+            return this.rectangularBoardMode;
         }
     }
 
@@ -110,7 +110,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         return resultingState;
     }
 
-    public getAllSwitcheds(move: ReversiMove, player: Player, state: ReversiState, config: ReversiConfig): Coord[] {
+    public getAllSwitchedCoords(move: ReversiMove, player: Player, state: ReversiState, config: ReversiConfig): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
         const opponent: Player = player.getOpponent();
@@ -209,7 +209,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
                     // if one of the 8 neighboring space is an opponent then, there could be a switch,
                     // and hence a legal move
                     const move: ReversiMove = new ReversiMove(coord.x, coord.y);
-                    const result: Coord[] = this.getAllSwitcheds(move, player, state, config);
+                    const result: Coord[] = this.getAllSwitchedCoords(move, player, state, config);
                     if (result.length > 0) {
                         // there was switched piece and hence, a legal move
                         for (const switched of result) {
@@ -244,7 +244,7 @@ export abstract class AbstractReversiRules extends ConfigurableRules<ReversiMove
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPFallible.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SPACE());
         }
-        const switched: Coord[] = this.getAllSwitcheds(move, state.getCurrentPlayer(), state, config);
+        const switched: Coord[] = this.getAllSwitchedCoords(move, state.getCurrentPlayer(), state, config);
         if (switched.length === 0) {
             return MGPFallible.failure(ReversiFailure.NO_ELEMENT_SWITCHED());
         } else {
