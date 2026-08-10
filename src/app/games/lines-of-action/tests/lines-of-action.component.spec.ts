@@ -44,24 +44,24 @@ describe('LinesOfActionComponent', () => {
             const state: LinesOfActionState = new LinesOfActionState(board, 1);
             await testUtils.setupState(state);
 
-            await testUtils.expectClickFailure('#click_0_0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
+            await testUtils.expectClickFailure('#click-0-0', LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }));
 
         it('should forbid selecting an empty piece', fakeAsync(async() => {
-            await testUtils.expectClickFailure('#click_2_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
+            await testUtils.expectClickFailure('#click-2-2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }));
 
         it('should forbid selecting a piece of the opponent', fakeAsync(async() => {
-            await testUtils.expectClickFailure('#click_0_2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            await testUtils.expectClickFailure('#click-0-2', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }));
 
         it('should show selected piece', fakeAsync(async() => {
             // Given any board
             // When clicking on a piece of the user
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickSuccess('#click-2-0');
 
             // Then the piece should be shown as selected
-            testUtils.expectElementToHaveClass('#piece_2_0', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#piece-2-0', 'selected-stroke');
         }));
 
     });
@@ -69,20 +69,20 @@ describe('LinesOfActionComponent', () => {
     describe('Second click', () => {
 
         it('should allow a simple move', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickSuccess('#click-2-0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-            await testUtils.expectMoveSuccess('#click_2_2', move);
+            await testUtils.expectMoveSuccess('#click-2-2', move);
         }));
 
         it('should forbid moving in an invalid direction', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_2_0');
-            await testUtils.expectClickFailure('#click_4_5', DirectionFailure.DIRECTION_MUST_BE_LINEAR());
+            await testUtils.expectClickSuccess('#click-2-0');
+            await testUtils.expectClickFailure('#click-4-5', DirectionFailure.DIRECTION_MUST_BE_LINEAR());
         }));
 
         it('should show last move spaces', fakeAsync(async() => {
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickSuccess('#click-2-0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-            await testUtils.expectMoveSuccess('#click_2_2', move);
+            await testUtils.expectMoveSuccess('#click-2-2', move);
 
             const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['moved-fill']);
@@ -103,9 +103,9 @@ describe('LinesOfActionComponent', () => {
             const state: LinesOfActionState = new LinesOfActionState(board, 0);
             await testUtils.setupState(state);
 
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickSuccess('#click-2-0');
             const move: LinesOfActionMove = LinesOfActionMove.from(new Coord(2, 0), new Coord(2, 2)).get();
-            await testUtils.expectMoveSuccess('#click_2_2', move);
+            await testUtils.expectMoveSuccess('#click-2-2', move);
 
             const component: LinesOfActionComponent = testUtils.getGameComponent();
             expect(component.getSquareClasses(2, 2)).toEqual(['captured-fill']);
@@ -113,26 +113,26 @@ describe('LinesOfActionComponent', () => {
 
         it('should change selected piece when clicking another piece', fakeAsync(async() => {
             // Given a board on which you have a selected piece
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickSuccess('#click-2-0');
 
             // When clicking on another one
-            await testUtils.expectClickSuccess('#click_3_0');
+            await testUtils.expectClickSuccess('#click-3-0');
 
             // Then the secondly clicked coord should be selected
-            testUtils.expectElementToHaveClass('#piece_3_0', 'selected-stroke');
+            testUtils.expectElementToHaveClass('#piece-3-0', 'selected-stroke');
             // And the previous one no longer
-            testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#piece-2-0', 'selected-stroke');
         }));
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given any board with a piece selected
-            await testUtils.expectClickSuccess('#click_2_0');
+            await testUtils.expectClickSuccess('#click-2-0');
 
             // When clicking on that piece again
-            await testUtils.expectClickFailure('#click_2_0');
+            await testUtils.expectClickFailure('#click-2-0');
 
             // Then it should no longer be selected
-            testUtils.expectElementNotToHaveClass('#piece_2_0', 'selected-stroke');
+            testUtils.expectElementNotToHaveClass('#piece-2-0', 'selected-stroke');
         }));
 
     });
@@ -158,7 +158,7 @@ describe('LinesOfActionComponent', () => {
         await testUtils.expectInterfaceClickSuccess('#take-back');
 
         // Then no highlight should be found
-        testUtils.expectElementNotToHaveClass('#space_2_0', 'moved-fill');
-        testUtils.expectElementNotToHaveClass('#space_2_2', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space-2-0', 'moved-fill');
+        testUtils.expectElementNotToHaveClass('#space-2-2', 'moved-fill');
     }));
 });

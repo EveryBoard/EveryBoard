@@ -100,9 +100,12 @@ import { QuebecCastlesComponent } from '../../../games/quebec-castles/quebec-cas
 import { QuixoRules } from '../../../games/quixo/QuixoRules';
 import { QuixoTutorial } from '../../../games/quixo/QuixoTutorial';
 import { QuixoComponent } from '../../../games/quixo/quixo.component';
-import { ReversiRules } from '../../../games/reversi/ReversiRules';
-import { ReversiTutorial } from '../../../games/reversi/ReversiTutorial';
-import { ReversiComponent } from '../../../games/reversi/reversi.component';
+import { ReversiRules } from '../../../games/reversis/reversi/ReversiRules';
+import { ReversiTutorial } from '../../../games/reversis/reversi/ReversiTutorial';
+import { ReversiComponent } from '../../../games/reversis/reversi/reversi.component';
+import { ToricReversiRules } from '../../../games/reversis/toric-reversi/ToricReversiRules';
+import { ToricReversiTutorial } from '../../../games/reversis/toric-reversi/ToricReversiTutorial';
+import { ToricReversiComponent } from '../../../games/reversis/toric-reversi/toric-reversi.component';
 import { SaharaRules } from '../../../games/sahara/SaharaRules';
 import { SaharaTutorial } from '../../../games/sahara/SaharaTutorial';
 import { SaharaComponent } from '../../../games/sahara/sahara.component';
@@ -225,6 +228,8 @@ class GameDescription {
 
     public static readonly TEEKO: Localized = () => $localize`Align your 4 pieces or form a square with them to win!`;
 
+    public static readonly TORIC_REVERSI: Localized = () => $localize`A toric version of Reversi!`;
+
     public static readonly TREXO: Localized = () => $localize`Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!`;
 
     public static readonly TRIANGULAR_GO: Localized = () => $localize`A version of Go on triangular spaces!`;
@@ -299,6 +304,7 @@ export class GameInfo {
             new GameInfo($localize`Quebec Castles`,         'QuebecCastles',         QuebecCastlesComponent,         new QuebecCastlesTutorial(),         QuebecCastlesRules.get(),         new Date('2025-09-29'), GameDescription.QUEBEC_CASTLES()        ), // 41:                             * Martin
 
             new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
+            new GameInfo($localize`Toric Reversi`,          'ToricReversi',          ToricReversiComponent,          new ToricReversiTutorial(),          ToricReversiRules.get(),          new Date('2026-08-10'), GameDescription.TORIC_REVERSI()         ), // 43:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
