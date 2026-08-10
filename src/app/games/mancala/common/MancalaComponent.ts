@@ -1,5 +1,8 @@
+import { computed, Signal } from '@angular/core';
+
 import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { MoveGenerator } from '../../../jscaip/AI/AI';
@@ -55,16 +58,16 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return ScoreName.CAPTURES;
     }
 
-    public getMancalaViewBox(): string {
+    public readonly viewBoxWidth: Signal<number> = computed(() =>
+        60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE),
+    );
+
+    protected override computeViewBox(): ViewBox {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
-        const width: number = this.getViewBoxWidth() + this.STROKE_WIDTH;
+        const width: number = this.viewBoxWidth() + this.STROKE_WIDTH;
         const height: number = (2 * this.SPACE_SIZE) + 50;
-        return left + ' ' + up + ' ' + width + ' ' + height;
-    }
-
-    public getViewBoxWidth(): number {
-        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
+        return new ViewBox(left, up, width, height);
     }
 
     public override async showLastMove(move: MancalaMove): Promise<void> {
