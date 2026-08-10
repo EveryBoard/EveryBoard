@@ -58,15 +58,15 @@ func newWebhook(client *http.Client, endpoint string, frontendURL string) *Webho
 
 func (w *Webhook) GameStarted(game model.Game) {
 	w.enqueue(webhookPayload{Content: fmt.Sprintf(
-		"Game started! %s vs. %s on %s. [Observe](%s)",
+		"Game started! %s vs. %s on %s. [Observe the game](%s).",
 		game.PlayerZero.Name, game.PlayerOne.Name, game.GameName, w.observeURL(game),
 	), AllowedMentions: allowedMentions{Parse: []string{}}})
 }
 
 func (w *Webhook) GameFinished(game model.Game) {
 	w.enqueue(webhookPayload{Content: fmt.Sprintf(
-		"Game finished! %s on %s. [Observe](%s)",
-		resultSummary(game), game.GameName, w.observeURL(game),
+		"Game finished! %s on %s.",
+		resultSummary(game), game.GameName,
 	), AllowedMentions: allowedMentions{Parse: []string{}}})
 }
 
