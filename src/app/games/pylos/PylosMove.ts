@@ -23,8 +23,8 @@ export class PylosMove extends Move {
     public static ofClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
         const capturesOptionals: {
-            firstCapture: MGPOptional<PylosCoord>,
-            secondCapture: MGPOptional<PylosCoord>
+            firstCapture: MGPOptional<PylosCoord>;
+            secondCapture: MGPOptional<PylosCoord>;
         } = PylosMove.checkCaptures(captures);
         const newMove: PylosMove = new PylosMove(startingCoordOpt,
                                                  landingCoord,
@@ -34,7 +34,7 @@ export class PylosMove extends Move {
         return newMove;
     }
     public static checkCaptures(captures: PylosCoord[])
-    : { firstCapture: MGPOptional<PylosCoord>, secondCapture: MGPOptional<PylosCoord> }
+    : { firstCapture: MGPOptional<PylosCoord>; secondCapture: MGPOptional<PylosCoord> }
     {
         let firstCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         let secondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
@@ -59,8 +59,8 @@ export class PylosMove extends Move {
     public static ofDrop(landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
         const capturesOptionals: {
-            firstCapture: MGPOptional<PylosCoord>,
-            secondCapture: MGPOptional<PylosCoord>
+            firstCapture: MGPOptional<PylosCoord>;
+            secondCapture: MGPOptional<PylosCoord>;
         } = PylosMove.checkCaptures(captures);
         return new PylosMove(startingCoord,
                              landingCoord,
@@ -69,8 +69,8 @@ export class PylosMove extends Move {
     }
     public static changeCapture(move: PylosMove, captures: PylosCoord[]): PylosMove {
         const capturesOptionals: {
-            firstCapture: MGPOptional<PylosCoord>,
-            secondCapture: MGPOptional<PylosCoord>
+            firstCapture: MGPOptional<PylosCoord>;
+            secondCapture: MGPOptional<PylosCoord>;
         } = PylosMove.checkCaptures(captures);
         return new PylosMove(move.startingCoord,
                              move.landingCoord,

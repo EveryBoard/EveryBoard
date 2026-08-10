@@ -37,7 +37,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return new PylosState([board0, board1, board2, board3], turn);
     }
 
-    public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
+    public static getStateInfo(state: PylosState): { freeToMove: PylosCoord[]; landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];
         for (let z: number = 0; z < 3; z++) {
@@ -58,7 +58,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return { freeToMove, landable };
     }
 
-    public static getClimbingMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
+    public static getClimbingMoves(stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[] }): PylosMove[] {
         const moves: PylosMove[] = [];
         for (const startingCoord of stateInfo.freeToMove) {
             for (const landingCoord of stateInfo.landable) {
@@ -72,7 +72,7 @@ export class PylosRules extends Rules<PylosMove, PylosState> {
         return moves;
     }
 
-    public static getDropMoves(stateInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] }): PylosMove[] {
+    public static getDropMoves(stateInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[] }): PylosMove[] {
         const drops: PylosMove[] = [];
         for (const landableCoord of stateInfo.landable) {
             const newMove: PylosMove = PylosMove.ofDrop(landableCoord, []);

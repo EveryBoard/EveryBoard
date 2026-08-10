@@ -142,13 +142,13 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 			Status:         model.StatusCreated,
 		})
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID))
 		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c)
 
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
 		require.NoError(t, err, "WriteMessage failed")
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
 				break
@@ -157,6 +157,39 @@ func TestUnsubscribeEdgeCases(t *testing.T) {
 		// Chosen opponent should be cleared
 		configRoom := fakeStore.ConfigRoomForTest(configRoomID)
 		assert.Nil(t, configRoom.ChosenOpponent, "chosen opponent should have been removed")
+	})
+
+	t.Run("ConfigRoomProposedToChosenOpponent", func(t *testing.T) {
+		// Given a config room proposed to a chosen opponent
+		uid := "user_proposed_opponent"
+		c := dial(uid)
+		defer c.Close()
+		configRoomID := model.GameID(103)
+		encodedConfigRoomID, _ := model.EncodeID(configRoomID)
+		fakeStore.SetConfigRoomForTest(configRoomID, &model.ConfigRoom{
+			ID:             configRoomID,
+			Creator:        model.MinimalUser{ID: "creator", Name: "creator"},
+			ChosenOpponent: &model.MinimalUser{ID: uid, Name: uid},
+			Status:         model.StatusConfigProposed,
+		})
+
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedConfigRoomID))
+		require.NoError(t, err, "WriteMessage failed")
+		readWithTimeout(t, c)
+
+		// When the chosen opponent unsubscribes
+		err = c.WriteMessage(websocket.TextMessage, []byte(`["Unsubscribe"]`))
+		require.NoError(t, err, "WriteMessage failed")
+		for range 5 {
+			msg := readWithTimeout(t, c)
+			if strings.Contains(string(msg), `"CurrentGameUpdate"`) && strings.Contains(string(msg), `"currentGame":null`) {
+				break
+			}
+		}
+		// Then the opponent is cleared and the proposal is returned to its editable state
+		configRoom := fakeStore.ConfigRoomForTest(configRoomID)
+		assert.Nil(t, configRoom.ChosenOpponent, "chosen opponent should have been removed")
+		assert.Equal(t, model.StatusCreated, configRoom.Status, "config room should no longer be proposed")
 	})
 }
 

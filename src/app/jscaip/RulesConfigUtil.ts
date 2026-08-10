@@ -13,9 +13,9 @@ export type NamedRulesConfig<R extends RulesConfig = EmptyRulesConfig> = {
 };
 
 export type DefaultConfigDescription<R extends RulesConfig = EmptyRulesConfig> = {
-    name: Localized,
-    config: Record<keyof R, ConfigLine>,
-    validators?: ((config: R) => MGPValidation)[],
+    name: Localized;
+    config: Record<keyof R, ConfigLine>;
+    validators?: ((config: R) => MGPValidation)[];
 }
 
 export type RulesConfig = {

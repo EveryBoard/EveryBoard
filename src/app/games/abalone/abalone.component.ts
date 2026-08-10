@@ -27,8 +27,8 @@ import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
 import { AbaloneState } from './AbaloneState';
 
 type CapturedInfo = {
-    coord: Coord,
-    pieceClasses: string[],
+    coord: Coord;
+    pieceClasses: string[];
 };
 
 type AbaloneArrowInfo = {
