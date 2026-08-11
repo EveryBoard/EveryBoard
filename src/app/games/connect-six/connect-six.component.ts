@@ -72,7 +72,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.lastMoved = [];
     }
 
-    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
+    @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         if (this.getState().turn === 0) {
             const move: ConnectSixMove = ConnectSixFirstMove.of(coord);

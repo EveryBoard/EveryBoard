@@ -2,8 +2,8 @@ import { computed, ModelSignal, signal, Signal, WritableSignal } from '@angular/
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
 import { Coord } from '../../../jscaip/Coord';

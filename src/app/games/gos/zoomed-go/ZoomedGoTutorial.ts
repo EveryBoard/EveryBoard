@@ -119,7 +119,7 @@ export class ZoomedGoTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
             ], PlayerNumberMap.of(0, 0), 1, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(0, 0)],
-            $localize`Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !`,
+            $localize`Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !`,
             $localize`Failed, try again.`,
             MGPOptional.of(zoom2Shown),
         ),

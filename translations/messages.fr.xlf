@@ -2288,8 +2288,8 @@
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
         <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l&apos;adversaire que l&apos;adversaire n&apos;en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c&apos;est au tour de Foncé de jouer, il a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="2623510393491755816" datatype="html">
-        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
+      <trans-unit id="1201123309681006244" datatype="html">
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c&apos;est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n&apos;en a qu&apos;une sur la ligne de départ de Clair.</target>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
@@ -2531,15 +2531,9 @@
         <source>The object of the game is to have the most points at the end of the game. We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player&apos;s score at the end of the game is the sum of that player&apos;s territories and captures.</source>
         <target>Le but du jeu est d&apos;avoir le plus de points en fin de partie. On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d&apos;un seul joueur. Ici, Foncé a 9 territoires à gauche, le joueur clair en a 8 à droite. La zone en haut au milieu n&apos;appartient à personne. Le score d&apos;un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
-      <trans-unit id="5503442899127352055" datatype="html">
-        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light piece on the board only has one liberty left, play there.</source>
-        <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
-        Il est dit d&apos;un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés.
-        Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé. Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
+      <trans-unit id="258436632288646647" datatype="html">
+        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light piece on the board has only one liberty left, play there.</source>
+        <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales). Il est dit d&apos;un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés. Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
       </trans-unit>
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
@@ -2553,11 +2547,9 @@
         <source>Capturing multiple stones</source>
         <target>Capture de plusieurs pierres</target>
       </trans-unit>
-      <trans-unit id="9030216406782132195" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light group here only has one liberty left, capture it.</source>
-        <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé. Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
+      <trans-unit id="3872645745846261317" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
+        <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -2788,8 +2780,8 @@
         <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
         <target>Ici, le coin 1-1 constitue un suicide au zoom 2, et une capture au zoom 1, ce qui ne suffit pas à rendre le coup légal. Mais puisque cette capture au zoom 1 capturerait une partie des pierres qui provoquent le suicide au zoom 2, il s&apos;agit alors d&apos;un faux suicide, et le coup est donc légal.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres claires. Effectuez cette capture.</target>
       </trans-unit>
-      <trans-unit id="7004028541086424851" datatype="html">
-        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+      <trans-unit id="6317794074367608738" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
         <target>Félicitations. Pour qu&apos;un coup soit légal, il faut qu&apos;après l&apos;avoir joué et effectué les captures, la pierre que vous avez placée possède au moins une liberté à chaque zoom !</target>
       </trans-unit>
       <trans-unit id="7696235060281000608" datatype="html">

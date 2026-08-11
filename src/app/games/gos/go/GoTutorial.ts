@@ -46,10 +46,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
-        You're playing Dark. The light piece on the board has only one liberty left, play there.`,
+            $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>You're playing Dark. The light piece on the board has only one liberty left, play there.`,
             new GoState([
                 [_, _, _, _, _],
                 [_, _, O, _, _],
@@ -63,8 +60,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing multiple stones`,
-            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
-        You're playing Dark. The light group here has only one liberty left, capture it.`,
+            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>You're playing Dark. The light group here has only one liberty left, capture it.`,
             new GoState([
                 [_, O, _, _, _],
                 [O, X, _, _, _],
