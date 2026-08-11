@@ -5,14 +5,14 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { KamisadoColor } from './KamisadoColor';
 
 type KamisadoPieceList = {
-    ORANGE: KamisadoPiece,
-    BLUE: KamisadoPiece,
-    PURPLE: KamisadoPiece,
-    PINK: KamisadoPiece,
-    YELLOW: KamisadoPiece,
-    RED: KamisadoPiece,
-    GREEN: KamisadoPiece,
-    BROWN: KamisadoPiece,
+    ORANGE: KamisadoPiece;
+    BLUE: KamisadoPiece;
+    PURPLE: KamisadoPiece;
+    PINK: KamisadoPiece;
+    YELLOW: KamisadoPiece;
+    RED: KamisadoPiece;
+    GREEN: KamisadoPiece;
+    BROWN: KamisadoPiece;
 };
 
 export class KamisadoPiece implements ComparableObject {

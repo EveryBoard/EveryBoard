@@ -4,6 +4,7 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
@@ -22,10 +23,10 @@ import { SiamState } from './SiamState';
 import { SiamOrientationArrowComponent } from './siam-orientation-arrow.component';
 
 export type SiamIndicatorArrow = {
-    source: MGPOptional<{ coord: Coord, piece: SiamPiece }>,
-    target: Coord,
-    direction: Orthogonal,
-    move: SiamMove,
+    source: MGPOptional<{ coord: Coord; piece: SiamPiece }>;
+    target: Coord;
+    direction: Orthogonal;
+    move: SiamMove;
 }
 
 @Component({
@@ -103,11 +104,9 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.indicatorArrows = [];
     }
 
+
+    @ClickHandler((player: Player) => `#remaining-pieces-${ player.toString() }`)
     public async selectPieceForInsertion(player: Player): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#remainingPieces_' + player.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (player === this.getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
@@ -135,22 +134,19 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return MGPValidation.SUCCESS;
     }
 
+    @ClickHandler((move: SiamMove) => `#orientation-${ move.landingOrientation.toString() }`)
     public async selectOrientation(move: SiamMove): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#orientation_' + move.landingOrientation.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         // The player has clicked on an orientation arrow, we know the move directly
         return this.chooseMove(move);
     }
 
-    public async clickSquare(x: number, y: number, externalCall: boolean = true): Promise<MGPValidation> {
-        if (externalCall) {
-            const clickValidity: MGPValidation = await this.canUserPlay('#square_' + x + '_' + y);
-            if (clickValidity.isFailure()) {
-                return this.cancelMove(clickValidity.getReason());
-            }
-        }
+    @ClickHandler((x: number, y: number) => `#square-${ x }-${ y }`)
+    public async clickSquare(x: number, y: number): Promise<MGPValidation> {
+        // doSquareClick is called somewhere else where no click handling check need to be done
+        return this.doSquareClick(x, y);
+    }
+
+    private async doSquareClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
         if (this.insertingPiece) {
             return this.insertPiece(clickedCoord);
@@ -209,7 +205,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         const piece: SiamPiece = this.getState().getPieceAt(clickedCoord);
         if (piece.getOwner() === this.getCurrentPlayer()) {
             // The click was made on another piece of the player, likely to select it
-            return this.clickSquare(clickedCoord.x, clickedCoord.y, false);
+            return this.doSquareClick(clickedCoord.x, clickedCoord.y);
         } else {
             // The click was made on an invalid destination
             return this.cancelMove(SiamFailure.MUST_SELECT_VALID_DESTINATION());
@@ -259,11 +255,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         return MGPValidation.SUCCESS;
     }
 
+    @ClickHandler((arrow: SiamIndicatorArrow) => `#indicator-${ arrow.target.x }-${ arrow.target.y }-${ arrow.move.landingOrientation }`)
     public async clickArrow(arrow: SiamIndicatorArrow): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#indicator_' + arrow.target.x + '_' + arrow.target.y + '_' + arrow.move.landingOrientation);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         // The user clicked on an arrow directly instead of a square,
         // we can perform the move without asking for the orientation
         return this.chooseMove(arrow.move);

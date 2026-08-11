@@ -9,11 +9,11 @@ import { AbstractConfigRoomService, Candidate } from '../ConfigRoomService';
 export class ConfigRoomServiceMock extends AbstractConfigRoomService {
 
     private subscribedCallback: MGPOptional<{
-        configRoomUpdate: (configRoom: ConfigRoom) => void,
-        configRoomDeleted: () => void,
-        candidateJoined: (candidate: Candidate) => void,
-        candidateLeft: (candidate: MinimalUser) => void,
-        error: (reason: string) => void,
+        configRoomUpdate: (configRoom: ConfigRoom) => void;
+        configRoomDeleted: () => void;
+        candidateJoined: (candidate: Candidate) => void;
+        candidateLeft: (candidate: MinimalUser) => void;
+        error: (reason: string) => void;
     }> = MGPOptional.empty();
 
     public override async join(gameId: string,

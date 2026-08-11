@@ -242,7 +242,7 @@ export class RulesConfigurationComponent extends BaseWrapperComponent implements
         return this.rulesConfigDescription().getValidityError(field, fieldValue);
     }
 
-    public getEnumOptions(field: string): { enumValue: string, localized: Localized }[] {
+    public getEnumOptions(field: string): { enumValue: string; localized: Localized }[] {
         const defaultConfig: DefaultConfigDescription = this.rulesConfigDescription().defaultConfigDescription;
         const config: EnumConfig = defaultConfig.config[field] as EnumConfig;
         return Object.keys(config.possibleValues).map((key: string) => {

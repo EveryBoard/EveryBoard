@@ -86,7 +86,7 @@ export class BashniTutorial extends Tutorial {
             CheckersMove.fromCapture([new Coord(6, 5), new Coord(4, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
-        TutorialStep.anyMove(
+        TutorialStep.fromMove(
             $localize`Minority capture is allowed`,
             $localize`In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.<br/><br/>You're playing Dark, do a capture.`,
             OddCheckersState.of([
@@ -99,8 +99,9 @@ export class BashniTutorial extends Tutorial {
                 [__, __, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __, __],
             ], 2),
-            CheckersMove.fromCapture([new Coord(3, 4), new Coord(1, 2)]),
+            [CheckersMove.fromCapture([new Coord(3, 4), new Coord(1, 2)])],
             TutorialStepMessage.CONGRATULATIONS(),
+            $localize`You made the majority capture, but you were asked to do the minority one here!`,
         ),
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),

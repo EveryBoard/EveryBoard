@@ -1,6 +1,7 @@
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { AIConfig } from '../../jscaip/AI/AIConfig';
 import { Coord } from '../../jscaip/Coord';
@@ -98,11 +99,8 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         this.viewInfo = { pieceClasses };
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clicked: Coord = new Coord(x, y);
         if (this.chosen.equalsValue(clicked)) {
             return this.cancelMove();

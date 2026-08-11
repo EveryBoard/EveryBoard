@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { HexaLayout } from '../../jscaip/HexaLayout';
@@ -27,7 +28,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
 
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
-    public disconnectedSpaces: { coord: Coord, spaceContent: DvonnPieceStack }[] = [];
+    public disconnectedSpaces: { coord: Coord; spaceContent: DvonnPieceStack }[] = [];
 
     public constructor() {
         super();
@@ -96,7 +97,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
                     const stack: DvonnPieceStack = state.getPieceAt(coord);
                     const previousStack: DvonnPieceStack = previousState.getPieceAt(coord);
                     if (stack.isEmpty() && previousStack.hasPieces()) {
-                        const disconnected: { coord: Coord, spaceContent: DvonnPieceStack } =
+                        const disconnected: { coord: Coord; spaceContent: DvonnPieceStack } =
                             { coord, spaceContent: previousStack };
                         this.disconnectedSpaces.push(disconnected);
                     }
@@ -114,11 +115,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         return await this.chooseMove(DvonnMove.PASS);
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.chosen.isAbsent()) {
             return this.choosePiece(x, y);
         } else if (this.chosen.equalsValue(new Coord(x, y))) {

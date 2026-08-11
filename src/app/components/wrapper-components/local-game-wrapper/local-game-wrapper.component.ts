@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Type, inject } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Type, inject } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ParamMap } from '@angular/router';
 
@@ -25,8 +25,8 @@ import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 
 type AIChoice = {
-    id: string,
-    name: string,
+    id: string;
+    name: string;
 }
 
 @Component({
@@ -36,10 +36,12 @@ type AIChoice = {
     imports: [ViewConfigComponent, NgClass, ReactiveFormsModule, FormsModule],
 })
 @Debug.log
-export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit {
+export class LocalGameWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnDestroy {
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
     private readonly aiInstances: AIInstanceRegistry = new AIInstanceRegistry();
+
+    private aiTimeout: MGPOptional<ReturnType<typeof setTimeout>> = MGPOptional.empty();
 
     public static readonly AI_TIMEOUT: number = 1500;
 
@@ -262,24 +264,39 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async proposeAIToPlay(): Promise<void> {
+        this.cancelPendingAIMove();
         const currentPlayerIsHuman: boolean = await this.hasSelectedAI() === false;
         await this.setInteractive(currentPlayerIsHuman);
+        // Another call may have scheduled a move while this call was awaiting.
+        this.cancelPendingAIMove();
         if (currentPlayerIsHuman === false) {
             // It is AI's turn, let it play after a small delay
-            const playingAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getPlayingAI();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = this.getPlayingAI();
             if (playingAI.isPresent()) {
-                setTimeout(async() => {
+                this.aiTimeout = MGPOptional.of(setTimeout(async() => {
+                    this.aiTimeout = MGPOptional.empty();
                     const config: RulesConfig = this.getConfig();
                     const gameIsOngoing: boolean =
                         this.gameComponent.rules.getGameStatus(this.gameComponent.node, config) === GameStatus.ONGOING;
                     if (gameIsOngoing) {
                         await this.doAIMove(playingAI.get().ai, playingAI.get().options);
                     }
-                }, LocalGameWrapperComponent.AI_TIMEOUT);
+                }, LocalGameWrapperComponent.AI_TIMEOUT));
             }
             // If playingAI is absent, that means the user selected an AI without selecting options yet
             // We do nothing in this case.
         }
+    }
+
+    private cancelPendingAIMove(): void {
+        if (this.aiTimeout.isPresent()) {
+            window.clearTimeout(this.aiTimeout.get());
+            this.aiTimeout = MGPOptional.empty();
+        }
+    }
+
+    public ngOnDestroy(): void {
+        this.cancelPendingAIMove();
     }
 
     /**
@@ -303,15 +320,15 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return this.playerSelection[playerIndex] !== 'human';
     }
 
-    private getPlayingAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getPlayingAI(): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
         return this.getAI(this.gameComponent.getTurn());
     }
 
-    private getOpponentAI(): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getOpponentAI(): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
         return this.getAI(this.gameComponent.getTurn() + 1);
     }
 
-    private getAI(turn: number): MGPOptional<{ ai: AbstractAI, options: AIOptions }> {
+    private getAI(turn: number): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
         const playerIndex: number = turn % 2;
         const strategy: PlayerSelection = this.playerSelection[playerIndex];
         if (strategy === 'human') {
@@ -545,7 +562,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     private viewTreeFrom(node: GameNode<Move, GameState>): void {
         // We will use the data from the previous turn's AI
-        const opponentAI: MGPOptional<{ ai: AbstractAI, options: AIOptions }> = this.getOpponentAI();
+        const opponentAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = this.getOpponentAI();
         // We will annotate the trees with data from MCTS
         function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
             if (opponentAI.isPresent() && opponentAI.get().ai instanceof MCTS) {
@@ -559,7 +576,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             }
         }
         const maxDepth: number = Number(localStorage.getItem('tree-depth') ?? '2'); // Change it to a lower/higher value for more tree depth
-        const result: { dot: string, nextId: number, winner: PlayerOrNone } =
+        const result: { dot: string; nextId: number; winner: PlayerOrNone } =
             node.showDot(this.gameComponent.rules, this.rulesConfig, mctsLabel, maxDepth);
         // Shows the graph on an online tool by opening a new tab
         window.open('https://dreampuf.github.io/GraphvizOnline/#' + encodeURI(result.dot));

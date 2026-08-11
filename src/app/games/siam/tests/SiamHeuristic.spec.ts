@@ -122,7 +122,7 @@ describe('SiamHeuristic', () => {
             // Given the initial state
             const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
             // When computing the pushers
-            const pushers: { coord: Coord, distance: number }[] =
+            const pushers: { coord: Coord; distance: number }[] =
                 SiamRules.get().getPushers(state, [1, 2, 3], [2], defaultConfig);
             // Then it should compute 6 pushers to a distance of 5
             expect(pushers.length).withContext('should find 6 pushers').toBe(6);
@@ -143,7 +143,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             const fallingCoord: Coord = new Coord(3, 0);
             // When computing the closest pusher
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then it should identify the closest pusher and know the distance to the border
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -164,7 +164,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then it should be at a distance of 3+1
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -185,7 +185,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then it should be at a distance of 4
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -206,7 +206,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then it should be at distance 5, meaning it is a piece out of the board
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -227,7 +227,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then it should be a piece outside of the board
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -248,7 +248,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then there should be none
             expect(closestPusher).toEqual(MGPOptional.empty());
@@ -266,7 +266,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher for the aligned mountains
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then there should be none
             expect(closestPusher).toEqual(MGPOptional.empty());
@@ -284,7 +284,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             // When computing the closest pusher
             const fallingCoord: Coord = new Coord(3, 0);
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then it should be the furthest
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -305,7 +305,7 @@ describe('SiamHeuristic', () => {
             const state: SiamState = new SiamState(board, 0);
             const fallingCoord: Coord = new Coord(3, 0);
             // When computing the closest pusher
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, fallingCoord, Orthogonal.UP, defaultConfig);
             // Then the result shouldn't be affected by the piece after the mountain
             expect(closestPusher).toEqual(MGPOptional.of({
@@ -318,7 +318,7 @@ describe('SiamHeuristic', () => {
             // Given a board with unpushable mountains, such as the initial board
             const state: SiamState = SiamRules.get().getInitialState(defaultConfig);
             // When computing the closest pusher horizontally
-            const closestPusher: MGPOptional<{ distance: number, coord: Coord }> =
+            const closestPusher: MGPOptional<{ distance: number; coord: Coord }> =
                 SiamRules.get().getLineClosestPusher(state, new Coord(4, 2), Orthogonal.RIGHT, defaultConfig);
             // Then it should not find any
             expect(closestPusher).toEqual(MGPOptional.empty());
