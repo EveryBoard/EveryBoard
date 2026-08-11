@@ -2722,86 +2722,79 @@
       </trans-unit>
       <trans-unit id="6552934315157659079" datatype="html">
         <source>Zoom <x id="PH" equiv-text="z"/></source>
-        <target></target>
+        <target>Zoom <x id="PH" equiv-text="z"/></target>
       </trans-unit>
       <trans-unit id="1733084177692338637" datatype="html">
         <source>(medium)</source>
-        <target></target>
+        <target>(moyen)</target>
       </trans-unit>
       <trans-unit id="4150591404644298753" datatype="html">
         <source>Show Zooms</source>
-        <target></target>
+        <target>Afficher les zooms</target>
       </trans-unit>
       <trans-unit id="4707463689820472290" datatype="html">
         <source>(small)</source>
-        <target></target>
+        <target>(petit)</target>
       </trans-unit>
       <trans-unit id="7789802452524788997" datatype="html">
         <source>(large)</source>
-        <target></target>
+        <target>(grand)</target>
       </trans-unit>
       <trans-unit id="3430912882867311505" datatype="html">
         <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
-        <target></target>
+        <target>Le Zoom Go est une version en couches du Go qui ajoute un défi supplémentaire. Si vous ne connaissez pas le Go, vous pouvez apprendre à y jouer &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Prenons un exemple pour voir en quoi le Zoom Go diffère du Go classique.</target>
       </trans-unit>
       <trans-unit id="2962447017140596910" datatype="html">
         <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
+        <target>La principale différence réside dans la manière dont vous pouvez capturer.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres foncées. Effectuez une capture comme dans une partie de Go classique.</target>
       </trans-unit>
       <trans-unit id="5821528921373090826" datatype="html">
         <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
-        <target></target>
+        <target>Félicitations, vous avez capturé la pierre que vous attendiez, mais aussi une autre à gauche. Observez comment celle-ci est capturée par quatre pierres à une distance de deux. Cependant, le motif de l&apos;atari est exactement le même que dans le Go classique. Cette capture est appelée une capture au zoom 2, tandis que la capture à droite est une capture au zoom 1.</target>
       </trans-unit>
       <trans-unit id="6779631138176400609" datatype="html">
         <source>Simple capture, with shown zoom</source>
-        <target></target>
+        <target>Capture simple, avec le zoom affiché</target>
       </trans-unit>
       <trans-unit id="1581530473515108605" datatype="html">
         <source>You can chose a configuration showing a visual aid in the form of sub-boards.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
-        <target></target>
+        <target>Vous pouvez choisir une configuration affichant une aide visuelle sous la forme de sous-plateaux.&lt;br/&gt;Qu&apos;ils soient affichés ou non, les mêmes règles s&apos;appliquent. Les mini-plateaux ne servent qu&apos;à fournir une aide visuelle.&lt;br/&gt;Observez que l&apos;intersection survolée dans un zoom apparaît également comme survolée dans l&apos;un des 4 autres sous-plateaux.&lt;br/&gt;&lt;br/&gt;Effectuez à nouveau une capture comme dans une partie de Go classique.</target>
       </trans-unit>
       <trans-unit id="7134632842648889058" datatype="html">
         <source>Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
-        <target></target>
+        <target>Observez comment le plateau principal est divisé en 4 petits plateaux. Sur le plateau inférieur droit du zoom 2, vous pouvez voir la capture comme sur un plateau de Go classique. Notez que vous pouvez cliquer aussi bien sur un petit plateau que sur le grand plateau. La pierre sera placée sur tous les plateaux concernés, puisque les petits plateaux ne sont qu&apos;une aide visuelle.</target>
       </trans-unit>
       <trans-unit id="5161717226000455851" datatype="html">
         <source>What is a zoom</source>
-        <target></target>
+        <target>Qu&apos;est-ce qu&apos;un zoom ?</target>
       </trans-unit>
       <trans-unit id="8285899720891132557" datatype="html">
         <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
-        <target></target>
+        <target>Dans le Go classique, une pierre interagit avec les intersections situées directement au-dessus, au-dessous, à gauche et à droite.&lt;br/&gt;Dans le Zoom Go, le même motif existe à des distances plus grandes.&lt;br/&gt;Les quatre mini-plateaux montrent le plateau vu au zoom 2. Sur celui-ci, les intersections espacées de deux cases se comportent exactement comme des intersections adjacentes dans le Go classique.</target>
       </trans-unit>
       <trans-unit id="6386757882103410531" datatype="html">
         <source>Suicide with zooms</source>
-        <target></target>
+        <target>Suicide avec les zooms</target>
       </trans-unit>
       <trans-unit id="2684174386875652712" datatype="html">
         <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
-        <target></target>
+        <target>Comme vous pouvez le voir, en 4-4 vous pourriez jouer au Go classique, mais ici, à cause du zoom 2, vous ne pouvez pas, car ce coup constitue désormais un suicide.&lt;br/&gt;En revanche, en 7-4, vous avez un placement légal au zoom 2, mais il constitue un suicide au zoom 1. C&apos;est donc également un suicide.</target>
       </trans-unit>
       <trans-unit id="6006075893165138386" datatype="html">
         <source>Fake-suicide with zooms</source>
-        <target></target>
+        <target>Faux suicide avec les zooms</target>
       </trans-unit>
       <trans-unit id="6661043680356597257" datatype="html">
         <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
-        <target></target>
+        <target>Ici, le coin 1-1 constitue un suicide au zoom 2, et une capture au zoom 1, ce qui ne suffit pas à rendre le coup légal. Mais puisque cette capture au zoom 1 capturerait une partie des pierres qui provoquent le suicide au zoom 2, il s&apos;agit alors d&apos;un faux suicide, et le coup est donc légal.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres claires. Effectuez cette capture.</target>
       </trans-unit>
-      <trans-unit id="6317794074367608738" datatype="html">
-        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
-        <target></target>
-      </trans-unit>
-      <trans-unit id="4031483934278136444" datatype="html">
-        <source>End game</source>
-        <target></target>
+      <trans-unit id="7004028541086424851" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+        <target>Félicitations. Pour qu&apos;un coup soit légal, il faut qu&apos;après l&apos;avoir joué et effectué les captures, la pierre que vous avez placée possède au moins une liberté à chaque zoom !</target>
       </trans-unit>
       <trans-unit id="7696235060281000608" datatype="html">
         <source>At the end of the game, only what is marked as dead on the zoom 1 is counted.</source>
-        <target></target>
-      </trans-unit>
-      <trans-unit id="3430912882867311505" datatype="html">
-        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
-        <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Si vous n'êtes pas famillier avec le Go, vous pouvez aller l'apprendre &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Laissez nous vous expliquer les différences avec le Go normal.</target>
+        <target>À la fin de la partie, seules les pierres marquées comme mortes au zoom 1 sont comptées.</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
