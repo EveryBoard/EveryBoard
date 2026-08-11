@@ -2720,81 +2720,88 @@
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
         <target>Étant donné que le plateau est trianguliare, les groupes de deux pièces n'ont qu'une liberté en plus (faisant d'un atari un shisho par défaut).</target>
       </trans-unit>
-      <trans-unit id="1857127553160075909" datatype="html">
-        <source>Zoom 3 (medium)</source>
-        <target>Zoom 3 (moyen)</target>
+      <trans-unit id="6552934315157659079" datatype="html">
+        <source>Zoom <x id="PH" equiv-text="z"/></source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="4277978951212904875" datatype="html">
-        <source>Zoom 2 (small)</source>
-        <target>Zoom 2 (petit)</target>
+      <trans-unit id="1733084177692338637" datatype="html">
+        <source>(medium)</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="7311423676604503997" datatype="html">
-        <source>Zoom 2 (medium)</source>
-        <target>Zoom 2 (moyen)</target>
+      <trans-unit id="4150591404644298753" datatype="html">
+        <source>Show Zooms</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="4295480671452895468" datatype="html">
-        <source>Zoom 2 (large)</source>
-        <target>Zoom 2 (grand)</target>
+      <trans-unit id="4707463689820472290" datatype="html">
+        <source>(small)</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="133468435047863204" datatype="html">
-        <source>Zoom 3 (small)</source>
-        <target>Zoom 3 (petit)</target>
+      <trans-unit id="7789802452524788997" datatype="html">
+        <source>(large)</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="4413953239414926035" datatype="html">
-        <source>Zoom 3 (large)</source>
-        <target>Zoom 3 (grand)</target>
+      <trans-unit id="3430912882867311505" datatype="html">
+        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="8948952905518631530" datatype="html">
-        <source>Zoomed Go is a layered version of Go, for extra challenge. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let us explain by the example the difference with regular Go.</source>
-        <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Go est présent sur Everyboard, vous pouvez aller l'apprendre &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Laissez nous vous expliquer les différences avec le Go normal.</target>
+      <trans-unit id="2962447017140596910" datatype="html">
+        <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
       </trans-unit>
-      <trans-unit id="7432770342060030351" datatype="html">
-        <source>Why are there multiple boards?</source>
-        <target>Pourquoi y a t'il plusieurs plateauxINSECABLE_ESPACE?</target>
+      <trans-unit id="5821528921373090826" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="1261295226077086547" datatype="html">
-        <source>In Zoomed Go, the different boards are only visual aids.&lt;br/&gt;&lt;br/&gt;There is only one real game board and one move to play each turn.&lt;br/&gt;&lt;br/&gt;The additional boards simply help visualize interactions at different distances.&lt;br/&gt;The largest board (zoom 1) shows the real board.&lt;br/&gt;The other boards show the different zooms.&lt;br/&gt;For example, the middle boards show interactions at a distance of 2, and the small boards show interactions at a distance of 3. The zoom level can be configured for extra challenges. A level of 2 is already challenging.&lt;br/&gt;Every move is played on the same intersection on all boards at once. The extra boards do not add new pieces or new decisions, they only help understand the extended liberties.</source>
-        <target>Au Zoomed Go, les différents plateaux sont seulement des aides visuelles.&lt;br/&gt;&lt;br/&gt;Il n'y a que un vrai plateau et un coup à faire par tour.&lt;br/&gt;&lt;br/&gt;Les plateaux additionnels aident à visualiser les interactions à différentes distances.&lt;br/&gt;Le plus grand plateau (zoom 1) montre le vrai plateau.&lt;br/&gt;Les autres plateaux montrent les différentes couches.&lt;br/&gt;Par exemple, le plateau du milieu montre les interactions à une distance de 2, et les petits plateaux montrent les interactions à une distance de 3. Le niveau de zoom peut être configuré pour plus de difficultés. Un niveau de 2 est déjà un défi.&lt;br/&gt;Chaque coup est joué sur la même intersection sur tout les plateaux en même temps.</target>
+      <trans-unit id="6779631138176400609" datatype="html">
+        <source>Simple capture, with shown zoom</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="8122837695661234238" datatype="html">
-        <source>In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
-        <target>Dans cette variante du jeu de go, les pierres ne sont pas seulement reliées aux intersections directement adjacentes. Au niveau de zoom 2, les pierres interagissent également avec les intersections situées exactement à deux espaces horizontalement ou verticalement. Cela signifie que les libertés sont comptées à la fois à distance 1 et à distance 2. Par conséquent, des captures peuvent se produire de plus loin que dans le jeu de go classique.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres sombres. Effectuez une capture.</target>
+      <trans-unit id="1581530473515108605" datatype="html">
+        <source>You can chose a configuration showing a visual aid in the form of sub-boards.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="8023345927754693797" datatype="html">
-        <source>The end of the game works exactly like in regular Go.&lt;br/&gt;&lt;br/&gt; When both players pass consecutively, the game ends and territory is counted normally.&lt;br/&gt;&lt;br/&gt; The only difference in Zoomed Go is how stones connect and how liberties are counted during play.</source>
-        <target>La fin de partie fonctionne exactement comme dans le jeu de go classique.&lt;br/&gt;&lt;br/&gt;Lorsque les deux joueurs passent consécutivement, la partie se termine et le territoire est compté normalement.&lt;br/&gt;&lt;br/&gt;La seule différence du Go zoomé est la manière dont les pierres se connectent et dont les libertés sont comptées pendant le jeu.</target>
+      <trans-unit id="7134632842648889058" datatype="html">
+        <source>Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="5769798792711453761" datatype="html">
-        <source>Zoom 2 capture</source>
-        <target>Capture au zoom 2</target>
+      <trans-unit id="5161717226000455851" datatype="html">
+        <source>What is a zoom</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="5030374832295292182" datatype="html">
-        <source>Here, the Light stones are not directly adjacent to the Dark stone. However, because the game is played with zoom level 2, the three Dark stones can still remove liberties from the Light stone. The Light stone has only one liberty left and is therefore capturable.</source>
-        <target>Ici, les pierres claires ne sont pas directement adjacentes à la pierre sombre. Cependant, comme la partie se joue au niveau de zoom 2, les trois pierres sombres peuvent tout de même retirer des libertés à la pierre claire. La pierre claire n'a plus qu'une seule liberté et peut donc être capturée.</target>
+      <trans-unit id="8285899720891132557" datatype="html">
+        <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="261671265885677140" datatype="html">
-        <source>Capture at distance 2</source>
-        <target>Capture à distance 2</target>
+      <trans-unit id="6386757882103410531" datatype="html">
+        <source>Suicide with zooms</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="4532106069499119312" datatype="html">
-        <source>You&apos;re playing Light. In this variant, the Dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.</source>
-        <target>Vous jouez les pierres claires. Dans cette variante, la pierre sombre au centre est reliée aux intersections à distance 1 et à distance 2. Jouez sur sa dernière liberté restante pour la capturer.</target>
+      <trans-unit id="2684174386875652712" datatype="html">
+        <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="4721508449983577172" datatype="html">
-        <source>Congratulations, the Dark stone has been captured from a distance.</source>
-        <target>Félicitations, la pierre sombre a été capturée à distance.</target>
+      <trans-unit id="6006075893165138386" datatype="html">
+        <source>Fake-suicide with zooms</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="5050189966653599623" datatype="html">
-        <source>Failed, try again by playing on the last liberty of the Dark stone.</source>
-        <target>Échec, réessayez en jouant sur la dernière liberté de la pierre sombre.</target>
+      <trans-unit id="6661043680356597257" datatype="html">
+        <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="6609145753194079647" datatype="html">
-        <source>Extended eyes</source>
-        <target>Yeux étendus</target>
+      <trans-unit id="6317794074367608738" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+        <target></target>
       </trans-unit>
-      <trans-unit id="8278092448434944265" datatype="html">
-        <source>Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable in this variant.</source>
-        <target>Les yeux fonctionnent également différemment au niveau de zoom 2. Un groupe doit désormais conserver suffisamment de libertés à la fois à proximité et à distance 2 pour rester vivant. Les groupes qui semblent vivants dans le jeu de go classique peuvent devenir vulnérables dans cette variante.</target>
+      <trans-unit id="4031483934278136444" datatype="html">
+        <source>End game</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="7696235060281000608" datatype="html">
+        <source>At the end of the game, only what is marked as dead on the zoom 1 is counted.</source>
+        <target></target>
+      </trans-unit>
+      <trans-unit id="3430912882867311505" datatype="html">
+        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
+        <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Si vous n'êtes pas famillier avec le Go, vous pouvez aller l'apprendre &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Laissez nous vous expliquer les différences avec le Go normal.</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>

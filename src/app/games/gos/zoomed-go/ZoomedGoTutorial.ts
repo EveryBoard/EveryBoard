@@ -59,7 +59,7 @@ export class ZoomedGoTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Simple capture, with shown zoom`,
-            $localize`You can chose a configuration showing a visual aid in the form of sub-boards.<br/>Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.<br/>Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-board.<br/><br/>Do a capture like in a regular game of Go again`,
+            $localize`You can chose a configuration showing a visual aid in the form of sub-boards.<br/>Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.<br/>Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.<br/><br/>Do a capture like in a regular game of Go again`,
             new GoState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _],
@@ -92,7 +92,7 @@ export class ZoomedGoTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Suicide with zooms`,
-            $localize`Now as you can see, in 4-4 you could play in the regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.<br/>On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.`,
+            $localize`Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.<br/>On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.`,
             new GoState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _],

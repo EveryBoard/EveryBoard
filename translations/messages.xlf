@@ -2013,35 +2013,35 @@
       <trans-unit id="7789802452524788997" datatype="html">
         <source>(large)</source>
       </trans-unit>
-      <trans-unit id="8948952905518631530" datatype="html">
-        <source>Zoomed Go is a layered version of Go, for extra challenge. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let us explain by the example the difference with regular Go.</source>
+      <trans-unit id="3430912882867311505" datatype="html">
+        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
       </trans-unit>
       <trans-unit id="2962447017140596910" datatype="html">
         <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
       </trans-unit>
-      <trans-unit id="3973030030762844472" datatype="html">
+      <trans-unit id="5821528921373090826" datatype="html">
         <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
       </trans-unit>
       <trans-unit id="6779631138176400609" datatype="html">
         <source>Simple capture, with shown zoom</source>
       </trans-unit>
-      <trans-unit id="5733186548919960801" datatype="html">
-        <source>You have the option to choose a configuration where you can see helping sub-board.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered coord in one zoom is shown as hovered in one of the 4 other sub-board.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
+      <trans-unit id="1581530473515108605" datatype="html">
+        <source>You can chose a configuration showing a visual aid in the form of sub-boards.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
       </trans-unit>
-      <trans-unit id="439648106060503792" datatype="html">
-        <source>Observe how the main board is split in 4 little boards ? On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
+      <trans-unit id="7134632842648889058" datatype="html">
+        <source>Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
       </trans-unit>
       <trans-unit id="5161717226000455851" datatype="html">
         <source>What is a zoom</source>
       </trans-unit>
-      <trans-unit id="6174614803819852856" datatype="html">
+      <trans-unit id="8285899720891132557" datatype="html">
         <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
       </trans-unit>
       <trans-unit id="6386757882103410531" datatype="html">
         <source>Suicide with zooms</source>
       </trans-unit>
-      <trans-unit id="5276900375331242450" datatype="html">
-        <source>Now as you can see, in 4-4 you could play in the regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
+      <trans-unit id="2684174386875652712" datatype="html">
+        <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
       </trans-unit>
       <trans-unit id="6006075893165138386" datatype="html">
         <source>Fake-suicide with zooms</source>
