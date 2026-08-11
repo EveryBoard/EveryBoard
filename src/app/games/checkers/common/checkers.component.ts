@@ -26,12 +26,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
                                        CheckersConfig>
 {
     public readonly THICKNESS: number = 40;
-    public readonly mode: ModeConfig = {
+    public readonly mode: Signal<ModeConfig> = signal({
         horizontalWidthRatio: 1.2,
         offsetRatio: 0.4,
         pieceHeightRatio: 1,
         parallelogramHeight: 100,
-    };
+    });
 
     public readonly constructedState: WritableSignal<MGPOptional<CheckersState>> =
         signal(MGPOptional.empty());
@@ -42,17 +42,17 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     });
 
     public readonly basicWidth: Signal<number> = computed(() =>
-        this.boardSize().x * this.mode.parallelogramHeight,
+        this.boardSize().x * this.mode().parallelogramHeight,
     );
 
     public readonly basicHeight: Signal<number> = computed(() =>
-        this.boardSize().y * this.mode.parallelogramHeight,
+        this.boardSize().y * this.mode().parallelogramHeight,
     );
 
     private readonly viewBox: Signal<ViewBox> = computed(() => {
         const h: number = this.boardSize().y;
-        const boardOffset: number = h * this.mode.offsetRatio * this.mode.parallelogramHeight;
-        const width: number = (this.basicWidth() * this.mode.horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
+        const boardOffset: number = h * this.mode().offsetRatio * this.mode().parallelogramHeight;
+        const width: number = (this.basicWidth() * this.mode().horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
         const height: number = this.basicHeight() + this.THICKNESS + this.STROKE_WIDTH + this.SPACE_SIZE;
         return new ViewBox(-this.STROKE_WIDTH / 2, -this.SPACE_SIZE, width, height);
     });
@@ -66,10 +66,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private flownOverCoords: Coord[] = []; // Coord that where flown over during ongoing turn
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
-
-    public constructor() {
-        super();
-    }
 
     public override getViewBox(): ViewBox {
         return this.viewBox();
@@ -336,7 +332,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public getTranslationAtXYZ(x: number, y: number, z: number): string {
         const adaptedCoord: Coord = this.adaptXY(x, y);
-        const coordTransform: Coord = this.getCoordTranslation(adaptedCoord.x, adaptedCoord.y, z, this.mode);
+        const coordTransform: Coord = this.getCoordTranslation(adaptedCoord.x, adaptedCoord.y, z, this.mode());
         return this.getSVGTranslationAt(coordTransform);
     }
 
@@ -351,13 +347,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     public readonly parallelogramPoints: Signal<string> = computed(() => {
-        return this.getParallelogramCoords(this.mode)
+        return this.getParallelogramCoords(this.mode())
             .map((coord: Coord) => coord.x + ', ' + coord.y)
             .join(' ');
     });
 
     private readonly parallelogramCenter: Signal<Coord> = computed(() => {
-        const coords: Coord[] = this.getParallelogramCoords(this.mode);
+        const coords: Coord[] = this.getParallelogramCoords(this.mode());
         return this.getParallelogramCenterOf(coords[0], coords[1], coords[2], coords[3]);
     });
 
@@ -375,8 +371,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     public readonly rightEdge: Signal<string> = computed(() => {
-        const width: number = this.basicWidth() * this.mode.horizontalWidthRatio;
-        const offset: number = this.basicHeight() * this.mode.offsetRatio;
+        const width: number = this.basicWidth() * this.mode().horizontalWidthRatio;
+        const offset: number = this.basicHeight() * this.mode().offsetRatio;
         const x0: number = offset + width;
         const y0: number = 0;
         const x1: number = offset + width;

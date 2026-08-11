@@ -568,11 +568,11 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
                 await testUtils.setupState(state, { config: customConfig });
 
                 // Then SVG geometry should be derived from the displayed state
-                const expectedWidth: number = state.getWidth() * gameComponent.mode.parallelogramHeight;
-                const expectedHeight: number = state.getHeight() * gameComponent.mode.parallelogramHeight;
+                const expectedWidth: number = state.getWidth() * gameComponent.mode().parallelogramHeight;
+                const expectedHeight: number = state.getHeight() * gameComponent.mode().parallelogramHeight;
                 const expectedViewBoxWidth: number =
-                    (expectedWidth * gameComponent.mode.horizontalWidthRatio) +
-                    (expectedHeight * gameComponent.mode.offsetRatio) +
+                    (expectedWidth * gameComponent.mode().horizontalWidthRatio) +
+                    (expectedHeight * gameComponent.mode().offsetRatio) +
                     gameComponent.STROKE_WIDTH;
                 const expectedViewBoxHeight: number =
                     expectedHeight + gameComponent.THICKNESS + gameComponent.STROKE_WIDTH + gameComponent.SPACE_SIZE;
