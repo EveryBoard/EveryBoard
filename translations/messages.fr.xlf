@@ -2288,7 +2288,7 @@
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent's starting line than the number of pieces the opponent has on the player's starting line, the player wins. Here, it's Dark's turn to play: Dark has therefore won.</source>
         <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c'est au tour de Foncé de jouer, il a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="2623510393491755816" datatype="html">
+      <trans-unit id="1201123309681006244" datatype="html">
         <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.</target>
       </trans-unit>
@@ -2531,7 +2531,7 @@
         <source>The object of the game is to have the most points at the end of the game. We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player's score at the end of the game is the sum of that player's territories and captures.</source>
         <target>Le but du jeu est d'avoir le plus de points en fin de partie. On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d'un seul joueur. Ici, Foncé a 9 territoires à gauche, le joueur clair en a 8 à droite. La zone en haut au milieu n'appartient à personne. Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
-      <trans-unit id="2047079418793425161" datatype="html">
+      <trans-unit id="5503442899127352055" datatype="html">
         <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
         It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
         If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
@@ -2553,7 +2553,7 @@
         <source>Capturing multiple stones</source>
         <target>Capture de plusieurs pierres</target>
       </trans-unit>
-      <trans-unit id="3197348089105327020" datatype="html">
+      <trans-unit id="9030216406782132195" datatype="html">
         <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
         You're playing Dark. The light group here has only one liberty left, capture it.</source>
         <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
@@ -2744,9 +2744,9 @@
         <source>Zoom 3 (large)</source>
         <target>Zoom 3 (grand)</target>
       </trans-unit>
-      <trans-unit id="8084014192904533918" datatype="html">
-        <source>Zoomed Go is a layered version of Go, for extra challenge. Let us explain what we call &quot;layer&quot; or &quot;zoom&quot;</source>
-        <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Laissez nous vous expliquer ce qu'on veux dire par &quot;couche&quot; ou &quot;zoom&quot;</target>
+      <trans-unit id="8948952905518631530" datatype="html">
+        <source>Zoomed Go is a layered version of Go, for extra challenge. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let us explain by the example the difference with regular Go.</source>
+        <target>Le Zoom Go est une version en couche du Go, pour plus de difficultés. Go est présent sur Everyboard, vous pouvez aller l'apprendre &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Laissez nous vous expliquer les différences avec le Go normal.</target>
       </trans-unit>
       <trans-unit id="7432770342060030351" datatype="html">
         <source>Why are there multiple boards?</source>

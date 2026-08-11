@@ -8,10 +8,14 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
 
     private static singleton: MGPOptional<ZoomedGoRules> = MGPOptional.empty();
 
+    private static zoom(z: number): string {
+        return $localize`Zoom ${ z }`;
+    }
+
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<RectangularGoConfig> =
         new RulesConfigDescription<RectangularGoConfig>(
             {
-                name: (): string => $localize`Zoom ${ 3 } ` + $localize`(medium)`,
+                name: (): string => ZoomedGoRules.zoom(3) + ' ' + $localize`(medium)`,
                 config: {
                     width: new NumberConfig(12, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
                     height: new NumberConfig(12, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
@@ -22,7 +26,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
             },
             [
                 {
-                    name: (): string => $localize`Zoom ${ 2 } ` + $localize`(small)`,
+                    name: (): string => ZoomedGoRules.zoom(2) + ' ' + $localize`(small)`,
                     config: {
                         width: 6,
                         height: 6,
@@ -31,7 +35,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         showZooms: true,
                     },
                 }, {
-                    name: (): string => $localize`Zoom ${ 2 } ` + $localize`(medium)`,
+                    name: (): string => ZoomedGoRules.zoom(2) + ' ' + $localize`(medium)`,
                     config: {
                         width: 10,
                         height: 10,
@@ -40,7 +44,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         showZooms: true,
                     },
                 }, {
-                    name: (): string => $localize`Zoom ${ 2 } ` + $localize`(large)`,
+                    name: (): string => ZoomedGoRules.zoom(2) + ' ' + $localize`(large)`,
                     config: {
                         width: 14,
                         height: 14,
@@ -49,7 +53,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         showZooms: true,
                     },
                 }, {
-                    name: (): string => $localize`Zoom ${ 3 } ` + $localize`(small)`,
+                    name: (): string => ZoomedGoRules.zoom(3) + ' ' + $localize`(small)`,
                     config: {
                         width: 6,
                         height: 6,
@@ -58,7 +62,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                         showZooms: true,
                     },
                 }, {
-                    name: (): string => $localize`Zoom ${ 3 } ` + $localize`(large)`,
+                    name: (): string => ZoomedGoRules.zoom(3) + ' ' + $localize`(large)`,
                     config: {
                         width: 18,
                         height: 18,

@@ -294,14 +294,14 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
         const originalPhase: GoPhase = state.phase;
         Utils.assert(originalPhase.isPlaying() || originalPhase.isPassed(), 'Cannot pass in counting phase!');
         const newPhase: GoPhase = originalPhase.isPassed() ? GoPhase.COUNTING : GoPhase.PASSED;
-        state = state
+        let passedState: GoState = state
             .incrementTurn()
             .withKo(MGPOptional.empty())
             .withPhase(newPhase);
         if (originalPhase.isPassed()) {
-            state = this.markTerritoryAndCount(state);
+            passedState = this.markTerritoryAndCount(passedState);
         }
-        return state;
+        return passedState;
     }
 
     private applyLegalAccept(state: GoState): GoState {

@@ -35,7 +35,7 @@ export class ZoomedGoTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
             TutorialStepMessage.INITIAL_BOARD_AND_OBJECT_OF_THE_GAME(),
-            $localize`Zoomed Go is a layered version of Go, for extra challenge. Go is present on Everyboard, you can go learn it <a href="/tutorial/Go">here</a>. Let us explain by the example the difference with normal Go.`,
+            $localize`Zoomed Go is a layered version of Go that adds an extra challenge. If you're not familiar with Go, you can learn how to play it <a href="/tutorial/Go">here</a>. Let's use an example to see how Zoomed Go differs from regular Go.`,
             ZoomedGoRules.get().getInitialState(defaultConfig),
             MGPOptional.of(defaultConfig),
         ),
@@ -53,13 +53,13 @@ export class ZoomedGoTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
             ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(5, 3)],
-            $localize`Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.`,
+            $localize`Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.`,
             $localize`Failed, try again.`,
             MGPOptional.of(zoom2Hidden),
         ),
         TutorialStep.fromMove(
             $localize`Simple capture, with shown zoom`,
-            $localize`You have the option to choose a configuration where you can see helping sub-board.<br/>Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.<br/>Observe that the hovered coord in one zoom is shown as hovered in one of the 4 other sub-board.<br/><br/>Do a capture like in a regular game of Go again`,
+            $localize`You can chose a configuration showing a visual aid in the form of sub-boards.<br/>Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.<br/>Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-board.<br/><br/>Do a capture like in a regular game of Go again`,
             new GoState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _],
@@ -71,13 +71,13 @@ export class ZoomedGoTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
             ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(5, 3)],
-            $localize`Observe how the main board is split in 4 little boards ? On the zoom 2 lower-right board, you can see the capture as in a normal go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.`,
+            $localize`Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.`,
             $localize`Failed, try again.`,
             MGPOptional.of(zoom2Shown),
         ),
         TutorialStep.informational(
             $localize`What is a zoom`,
-            $localize`In normal Go, a stone interacts with the intersections directly above, below, left and right.<br/>In Zoomed Go, the same pattern exists at larger distances.<br/>The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in normal Go.`,
+            $localize`In regular Go, a stone interacts with the intersections directly above, below, left and right.<br/>In Zoomed Go, the same pattern exists at larger distances.<br/>The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.`,
             new GoState([
                 [O, _, O, _, O, _, _, _],
                 [X, _, _, _, _, _, _, _],
@@ -92,7 +92,7 @@ export class ZoomedGoTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Suicide with zooms`,
-            $localize`Now as you can see, in 4-4 you could play in the normal go, but here, due to zoom 2, you cannot, as it is now a suicide.<br/>On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.`,
+            $localize`Now as you can see, in 4-4 you could play in the regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.<br/>On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.`,
             new GoState([
                 [_, _, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _, _],
