@@ -44,7 +44,7 @@ describe('KalahMoveGenerator', () => {
     });
 
     it('should include several rows when present', () => {
-        // Given a config with several rows and a state with possible moves in each of theses rows
+        // Given a config with several rows and a state with possible moves in each of these rows
         const customConfig: MancalaConfig = {
             ...defaultConfig,
             numberOfRows: 2,
