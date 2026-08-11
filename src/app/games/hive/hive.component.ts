@@ -162,7 +162,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             }
         }
         this.ground = this.getGround();
-        this.refreshViewBox();
         this.remainingStacks = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
         const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node);
