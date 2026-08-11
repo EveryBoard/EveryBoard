@@ -14,9 +14,7 @@ export interface Shape {
 
 export abstract class TopologicShape {
 
-    public constructor(private readonly topology: Topology) {
-
-    }
+    public constructor(private readonly topology: Topology) {}
 
     public getNextCoord(coord: Coord, direction: Direction): Coord {
         return this.topology.getNextCoord(coord, direction);
