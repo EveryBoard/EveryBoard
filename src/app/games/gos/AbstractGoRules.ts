@@ -28,12 +28,7 @@ export type GoLegalityInformation = {
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
-export type ZoomConfig = {
-    zoom: number;
-    showZooms: boolean;
-}
-
-export type AbstractGoConfig = RulesConfig & ZoomConfig;
+export type AbstractGoConfig = RulesConfig;
 
 @Debug.log
 export abstract class AbstractGoRules<C extends AbstractGoConfig>
@@ -46,8 +41,8 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
 
     public abstract getGoGroupDataFactory(zoom: number): GoGroupDataFactory;
 
-    public getZoom(config: C): number {
-        return config.zoom;
+    public getZoom(_config: C): number {
+        return 1;
     }
 
     private getNewKo(
@@ -60,8 +55,8 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
             const captured: Coord = goLegalityInformation.uniqueCapture.get();
             const capturerCoord: Coord = move.coord;
             const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
-            const maxStepSize: number = this.getZoom(config);
-            for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
+            const maxZoom: number = this.getZoom(config);
+            for (let zoom: number = 1; zoom <= maxZoom; zoom++) {
                 const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
                 const capturersInfo: GoGroupData = goGroupDataFactory.getGroupData(capturerCoord, newBoard);
                 const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
@@ -202,8 +197,8 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
     private doesPieceHaveFreedoms(coord: Coord, state: GoState, config: C): boolean {
         const boardCopy: GoPiece[][] = state.getCopiedBoard();
         boardCopy[coord.y][coord.x] = GoPiece.ofPlayer(state.getCurrentPlayer());
-        const maxStepSize: number = this.getZoom(config);
-        for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
+        const maxZoom: number = this.getZoom(config);
+        for (let zoom: number = 1; zoom <= maxZoom; zoom++) {
             const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
             const goGroupsData: GoGroupData = goGroupDataFactory.getGroupData(coord, boardCopy);
             const isSuicide: boolean = goGroupsData.emptyCoords.length === 0;
@@ -230,14 +225,12 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
      */
     private applyCaptures(move: GoMove, state: GoState, config: C): GoLegalityInformation {
         const captureds: Coord[] = [];
-        const maxStepSize: number = this.getZoom(config);
-        for (let zoom: number = 1; zoom <= maxStepSize; zoom++) {
+        const maxZoom: number = this.getZoom(config);
+        for (let zoom: number = 1; zoom <= maxZoom; zoom++) {
             const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
             for (const direction of goGroupDataFactory.getDirections(move.coord)) {
                 const captures: Coord[] = this.getCapturedInDirection(move.coord, direction, state, goGroupDataFactory);
-                captureds.push(
-                    ...captures,
-                );
+                captureds.push(...captures);
             }
         }
         const capturedSet: Set<Coord> = new Set(captureds);

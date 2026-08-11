@@ -2289,7 +2289,8 @@
         <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c'est au tour de Foncé de jouer, il a donc gagné.</target>
       </trans-unit>
       <trans-unit id="2623510393491755816" datatype="html">
-        <source>Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark has only one on Light's starting line.</source>
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.</target>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
