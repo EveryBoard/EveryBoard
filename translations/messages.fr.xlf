@@ -2290,7 +2290,6 @@
       </trans-unit>
       <trans-unit id="2623510393491755816" datatype="html">
         <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
-        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
         <target>Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.</target>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
@@ -2759,43 +2758,43 @@
       </trans-unit>
       <trans-unit id="8122837695661234238" datatype="html">
         <source>In this variant of Go, stones are not only connected to directly adjacent intersections. At zoom level 2, stones also interact with intersections located exactly two spaces away horizontally or vertically. This means that liberties are counted both at distance 1 and distance 2. As a consequence, captures can happen from farther away than in regular Go.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
-        <target>TODO</target>
+        <target>Dans cette variante du jeu de go, les pierres ne sont pas seulement reliées aux intersections directement adjacentes. Au niveau de zoom 2, les pierres interagissent également avec les intersections situées exactement à deux espaces horizontalement ou verticalement. Cela signifie que les libertés sont comptées à la fois à distance 1 et à distance 2. Par conséquent, des captures peuvent se produire de plus loin que dans le jeu de go classique.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres sombres. Effectuez une capture.</target>
       </trans-unit>
       <trans-unit id="8023345927754693797" datatype="html">
         <source>The end of the game works exactly like in regular Go.&lt;br/&gt;&lt;br/&gt; When both players pass consecutively, the game ends and territory is counted normally.&lt;br/&gt;&lt;br/&gt; The only difference in Zoomed Go is how stones connect and how liberties are counted during play.</source>
-        <target>TODO</target>
+        <target>La fin de partie fonctionne exactement comme dans le jeu de go classique.&lt;br/&gt;&lt;br/&gt;Lorsque les deux joueurs passent consécutivement, la partie se termine et le territoire est compté normalement.&lt;br/&gt;&lt;br/&gt;La seule différence du Go zoomé est la manière dont les pierres se connectent et dont les libertés sont comptées pendant le jeu.</target>
       </trans-unit>
       <trans-unit id="5769798792711453761" datatype="html">
-        <source>Zoom-2 capture</source>
-        <target>TODO</target>
+        <source>Zoom 2 capture</source>
+        <target>Capture au zoom 2</target>
       </trans-unit>
       <trans-unit id="5030374832295292182" datatype="html">
         <source>Here, the Light stones are not directly adjacent to the Dark stone. However, because the game is played with zoom level 2, the three Dark stones can still remove liberties from the Light stone. The Light stone has only one liberty left and is therefore capturable.</source>
-        <target>TODO</target>
+        <target>Ici, les pierres claires ne sont pas directement adjacentes à la pierre sombre. Cependant, comme la partie se joue au niveau de zoom 2, les trois pierres sombres peuvent tout de même retirer des libertés à la pierre claire. La pierre claire n'a plus qu'une seule liberté et peut donc être capturée.</target>
       </trans-unit>
       <trans-unit id="261671265885677140" datatype="html">
         <source>Capture at distance 2</source>
-        <target>TODO</target>
+        <target>Capture à distance 2</target>
       </trans-unit>
       <trans-unit id="4532106069499119312" datatype="html">
         <source>You&apos;re playing Light. In this variant, the Dark stone in the center is connected to intersections at distance 1 and distance 2. Play on its last remaining liberty to capture it.</source>
-        <target>TODO</target>
+        <target>Vous jouez les pierres claires. Dans cette variante, la pierre sombre au centre est reliée aux intersections à distance 1 et à distance 2. Jouez sur sa dernière liberté restante pour la capturer.</target>
       </trans-unit>
       <trans-unit id="4721508449983577172" datatype="html">
         <source>Congratulations, the Dark stone has been captured from a distance.</source>
-        <target>TODO</target>
+        <target>Félicitations, la pierre sombre a été capturée à distance.</target>
       </trans-unit>
       <trans-unit id="5050189966653599623" datatype="html">
         <source>Failed, try again by playing on the last liberty of the Dark stone.</source>
-        <target>TODO</target>
+        <target>Échec, réessayez en jouant sur la dernière liberté de la pierre sombre.</target>
       </trans-unit>
       <trans-unit id="6609145753194079647" datatype="html">
         <source>Extended eyes</source>
-        <target>TODO</target>
+        <target>Yeux étendus</target>
       </trans-unit>
       <trans-unit id="8278092448434944265" datatype="html">
         <source>Eyes also work differently in zoom level 2. A group must now keep enough liberties both nearby and at distance 2 in order to stay alive. Groups that seem alive in regular Go may become vulnerable in this variant.</source>
-        <target>TODO</target>
+        <target>Les yeux fonctionnent également différemment au niveau de zoom 2. Un groupe doit désormais conserver suffisamment de libertés à la fois à proximité et à distance 2 pour rester vivant. Les groupes qui semblent vivants dans le jeu de go classique peuvent devenir vulnérables dans cette variante.</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>
