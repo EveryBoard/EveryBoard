@@ -22,9 +22,9 @@ import { Table } from '../../TableUtils';
 import { AITimeLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
+import { HeuristicBounds } from '../Heuristic';
 import { MCTS } from '../MCTS';
 import { MCTSWithHeuristic } from '../MCTSWithHeuristic';
-import { HeuristicBounds } from '../Minimax';
 
 class TestMCTSWithHeuristic extends MCTSWithHeuristic<P4Move, P4State, P4Config> {
 
@@ -215,7 +215,7 @@ describe('MCTS', () => {
         }
 
         // When selecting from the opponent turn
-        const selected: { node: GameNode<P4Move, P4State>, path: GameNode<P4Move, P4State>[] } =
+        const selected: { node: GameNode<P4Move, P4State>; path: GameNode<P4Move, P4State>[] } =
             p4Mcts['select']({ node: playerZeroMove, path: [playerZeroMove] }, Player.ZERO);
 
         // Then the opponent should be modeled as choosing the reply that minimizes Player.ZERO's score

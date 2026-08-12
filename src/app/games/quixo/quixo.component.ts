@@ -3,14 +3,14 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { QuixoMinimax } from './QuixoMinimax';
+import { QuixoHeuristic } from './QuixoHeuristic';
 import { QuixoMove } from './QuixoMove';
 import { QuixoMoveGenerator } from './QuixoMoveGenerator';
 import { QuixoRules } from './QuixoRules';
@@ -42,10 +42,19 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Quixo');
-        this.availableAIs = [
-            new QuixoMinimax(),
-            new MCTS($localize`MCTS`, new QuixoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Piece Count',
+                name: $localize`Piece Count`,
+                heuristic: (): QuixoHeuristic => new QuixoHeuristic(),
+                moveGenerator: (): QuixoMoveGenerator => new QuixoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): QuixoMoveGenerator => new QuixoMoveGenerator(),
+            }],
+        };
         this.encoder = QuixoMove.encoder;
     }
 
@@ -88,11 +97,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         return classes;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clickedCoord: Coord = new Coord(x, y);
         const state: QuixoState = this.getState();
         const coordLegality: MGPValidation = this.rules.isValidCoord(state, clickedCoord);
@@ -122,11 +128,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         return directions;
     }
 
+    @ClickHandler((direction: Orthogonal) => `#choose-direction-${ direction.toString() }`)
     public async chooseDirection(direction: Orthogonal): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#chooseDirection_' + direction.toString());
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         this.chosenDirection = direction;
         return await this.tryMove();
     }

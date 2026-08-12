@@ -1,4 +1,4 @@
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 
 export class GoPhase {
     public static PLAYING: GoPhase = new GoPhase();
@@ -8,6 +8,17 @@ export class GoPhase {
     public static FINISHED: GoPhase = new GoPhase();
 
     private constructor() {
+    }
+
+    public toString(): string {
+        switch (this) {
+            case GoPhase.PLAYING: return 'PLAYING';
+            case GoPhase.PASSED: return 'PASSED';
+            case GoPhase.COUNTING: return 'COUNTING';
+            case GoPhase.ACCEPT: return 'ACCEPT';
+            case GoPhase.FINISHED: return 'FINISHED';
+        }
+        return '';
     }
 
     public isPlaying(): boolean {

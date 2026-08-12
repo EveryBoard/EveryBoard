@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
@@ -16,15 +16,16 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { SixFailure } from './SixFailure';
-import { SixMinimax } from './SixMinimax';
+import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
+import { SixHeuristic } from './SixHeuristic';
 import { SixMove } from './SixMove';
 import { SixMoveGenerator } from './SixMoveGenerator';
 import { SixConfig, SixLegalityInformation, SixRules } from './SixRules';
 import { SixState } from './SixState';
 
 type CoordAndClass = {
-    coord: Coord,
-    class: string,
+    coord: Coord;
+    class: string;
 }
 
 @Component({
@@ -53,10 +54,19 @@ export class SixComponent
     public constructor() {
         super();
         this.setRulesAndNode('Six');
-        this.availableAIs = [
-            new SixMinimax(),
-            new MCTS($localize`MCTS`, new SixMoveGenerator(this.rules), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Shape',
+                name: $localize`Shape`,
+                heuristic: (): SixHeuristic => new SixHeuristic(),
+                moveGenerator: (): SixFilteredMoveGenerator => new SixFilteredMoveGenerator(this.rules),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): SixMoveGenerator => new SixMoveGenerator(this.rules),
+            }],
+        };
         this.encoder = SixMove.encoder;
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
@@ -174,11 +184,8 @@ export class SixComponent
         return this.getPlayerClass(player);
     }
 
+    @ClickHandler((piece: Coord) => `#piece-${ piece.x }-${ piece.y }`)
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#piece-' + piece.x + '-' + piece.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const config: SixConfig = this.getConfig();
         const maxPiece: number = 2 * config.piecesPerPlayer;
         if (this.state.turn < maxPiece) {
@@ -200,11 +207,8 @@ export class SixComponent
         }
     }
 
+    @ClickHandler((neighbor: Coord) => `#neighbor-${ neighbor.x }-${ neighbor.y }`)
     public async onNeighborClick(neighbor: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#neighbor-' + neighbor.x + '-' + neighbor.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.nextClickShouldSelectGroup) {
             return this.cancelMove(SixFailure.MUST_CUT());
         }

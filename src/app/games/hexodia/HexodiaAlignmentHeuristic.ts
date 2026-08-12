@@ -1,17 +1,17 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Minimax';
+import { Heuristic } from '../../jscaip/AI/Heuristic';
+import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from './HexodiaRules';
-import { HexodiaState } from './HexodiaState';
 
 export class HexodiaAlignmentHeuristic extends Heuristic<HexodiaMove,
-                                                         HexodiaState,
+                                                         FourStatePieceGameStateWithTable,
                                                          BoardValue,
                                                          HexodiaConfig>
 {
     public getBoardValue(node: HexodiaNode, config: HexodiaConfig): BoardValue {
-        const state: HexodiaState = node.gameState;
+        const state: FourStatePieceGameStateWithTable = node.gameState;
         let score: number = 0;
         for (const coordAndContent of state.getPlayerCoordsAndContent()) {
             const squareScore: number = HexodiaRules

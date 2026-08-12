@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
@@ -12,7 +12,7 @@ import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoFailure } from './KamisadoFailure';
-import { KamisadoMinimax } from './KamisadoMinimax';
+import { KamisadoHeuristic } from './KamisadoHeuristic';
 import { KamisadoMove, KamisadoPieceMove } from './KamisadoMove';
 import { KamisadoMoveGenerator } from './KamisadoMoveGenerator';
 import { KamisadoPiece } from './KamisadoPiece';
@@ -39,10 +39,19 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Kamisado');
-        this.availableAIs = [
-            new KamisadoMinimax(),
-            new MCTS($localize`MCTS`, new KamisadoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Advancement',
+                name: $localize`Advancement`,
+                heuristic: (): KamisadoHeuristic => new KamisadoHeuristic(),
+                moveGenerator: (): KamisadoMoveGenerator => new KamisadoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): KamisadoMoveGenerator => new KamisadoMoveGenerator(),
+            }],
+        };
         this.encoder = KamisadoMove.encoder;
         this.hasAsymmetricBoard = true;
     }
@@ -93,11 +102,8 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         return this.chooseMove(KamisadoMove.PASS);
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clickedCoord: Coord = new Coord(x, y);
         if (this.canPass) {
             return this.cancelMove(RulesFailure.MUST_PASS());

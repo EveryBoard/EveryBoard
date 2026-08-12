@@ -1,9 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { QuixoMinimax } from '../QuixoMinimax';
+import { QuixoHeuristic } from '../QuixoHeuristic';
+import { QuixoMove } from '../QuixoMove';
+import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 import { QuixoRules } from '../QuixoRules';
 import { QuixoConfig } from '../QuixoState';
+import { QuixoState } from '../QuixoState';
+
+class QuixoMinimax extends Minimax<QuixoMove, QuixoState, QuixoConfig> {
+    public constructor() {
+        super('Minimax', QuixoRules.get(), new QuixoHeuristic(), new QuixoMoveGenerator());
+    }
+}
 
 describe('QuixoMinimax', () => {
 

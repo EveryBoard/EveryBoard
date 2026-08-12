@@ -4,20 +4,20 @@ import { Component } from '@angular/core';
 import { MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { HexaLayout } from '../../jscaip/layout/HexaLayout';
+import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 
-import { HexodiaAlignmentMinimax } from './HexodiaAlignmentMinimax';
+import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
-import { HexodiaState } from './HexodiaState';
 
 @Component({
     selector: 'app-hexodia',
@@ -27,7 +27,7 @@ import { HexodiaState } from './HexodiaState';
 })
 export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                                              HexodiaMove,
-                                                             HexodiaState,
+                                                             FourStatePieceGameStateWithTable,
                                                              FourStatePiece,
                                                              HexodiaConfig>
 {
@@ -40,12 +40,19 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     public constructor() {
         super();
         this.setRulesAndNode('Hexodia');
-        this.availableAIs = [
-            new HexodiaAlignmentMinimax(),
-            new MCTS($localize`MCTS`,
-                     new HexodiaMoveGenerator(),
-                     this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): HexodiaAlignmentHeuristic => new HexodiaAlignmentHeuristic(),
+                moveGenerator: (): HexodiaMoveGenerator => new HexodiaMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): HexodiaMoveGenerator => new HexodiaMoveGenerator(),
+            }],
+        };
         this.encoder = HexodiaMove.encoder;
         this.SPACE_SIZE = 30;
         this.setHexaLayout();
@@ -76,7 +83,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: HexodiaState = this.getState();
+        const state: FourStatePieceGameStateWithTable = this.getState();
         this.hexaBoard = state.getCopiedBoard();
         const config: HexodiaConfig = this.getConfig();
         this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
@@ -90,22 +97,19 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         this.lastMoved = [];
     }
 
-    public async onClick(clickedCoord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + clickedCoord.x + '-' + clickedCoord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
+    public async onClick(coord: Coord): Promise<MGPValidation> {
         const totalDrop: number = this.getConfig().numberOfDrops;
         if (this.getState().turn === 0) {
-            const move: HexodiaMove = HexodiaMove.of([clickedCoord]);
+            const move: HexodiaMove = HexodiaMove.of([coord]);
             return this.chooseMove(move);
         } else {
-            if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
+            if (this.getState().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (this.droppedCoords.some((c: Coord) => c.equals(clickedCoord))) {
+            } else if (this.droppedCoords.some((c: Coord) => c.equals(coord))) {
                 return this.cancelMove();
             } else {
-                this.droppedCoords = this.droppedCoords.concat(clickedCoord);
+                this.droppedCoords = this.droppedCoords.concat(coord);
                 if (this.droppedCoords.length === totalDrop) {
                     const move: HexodiaMove = HexodiaMove.of(this.droppedCoords);
                     return this.chooseMove(move);

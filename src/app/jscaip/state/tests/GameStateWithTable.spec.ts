@@ -24,10 +24,10 @@ describe('GameStateWithTable', () => {
             const state: MyGameState = new MyGameState([[0, 1], [2, 3]], 0);
 
             // When rendering to map
-            const map: {coord: Coord, content: number}[] = state.getCoordsAndContents();
+            const map: { coord: Coord; content: number }[] = state.getCoordsAndContents();
 
             // Then it should be ordered
-            const expectedMap: {coord: Coord, content: number}[] = [
+            const expectedMap: { coord: Coord; content: number }[] = [
                 { coord: new Coord(0, 0), content: 0 },
                 { coord: new Coord(1, 0), content: 1 },
                 { coord: new Coord(0, 1), content: 2 },

@@ -2,9 +2,11 @@ package server
 
 import (
 	"net/http"
+
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 )
 
-const Version = "1.0.2"
+const Version = "1.0.3"
 
 func cors(origin string, next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -31,10 +33,11 @@ var showVersion = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) 
 	w.Write([]byte(Version))
 })
 
-func New(listenAddr string, origin string, websocketHandler http.Handler) *http.Server {
+func New(listenAddr string, origin string, websocketHandler http.Handler, gameStore store.GameStore) *http.Server {
 	mux := http.NewServeMux()
 	mux.Handle("/ws", cors(origin, websocketHandler))
 	mux.Handle("/version", showVersion)
+	mux.Handle("/api/games", cors(origin, gamesHandler(origin, gameStore)))
 	return &http.Server{
 		Addr:    listenAddr,
 		Handler: mux,

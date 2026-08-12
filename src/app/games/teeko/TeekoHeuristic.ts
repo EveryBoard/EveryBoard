@@ -1,5 +1,5 @@
 import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Minimax';
+import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
 
 import { TeekoMove } from './TeekoMove';

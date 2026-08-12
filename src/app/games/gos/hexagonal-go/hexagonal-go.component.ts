@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../../jscaip/AI/MCTS';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PointyHexaOrientation } from '../../../jscaip/HexaOrientation';
@@ -19,7 +19,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { HexagonalGoMinimax } from './HexagonalGoMinimax';
+import { HexagonalGoHeuristic } from './HexagonalGoHeuristic';
 import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
@@ -51,10 +51,19 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     public constructor() {
         super();
         this.setRulesAndNode('HexagonalGo');
-        this.availableAIs = [
-            new HexagonalGoMinimax(),
-            new MCTS($localize`MCTS`, new HexagonalGoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Territory',
+                name: $localize`Territory`,
+                heuristic: (): HexagonalGoHeuristic => new HexagonalGoHeuristic(),
+                moveGenerator: (): HexagonalGoMoveGenerator => new HexagonalGoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): HexagonalGoMoveGenerator => new HexagonalGoMoveGenerator(),
+            }],
+        };
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
@@ -93,14 +102,9 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
             .expandBelow(this.SPACE_SIZE);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const resultlessMove: GoMove = new GoMove(x, y);
+        const resultlessMove: GoMove = new GoMove(coord.x, coord.y);
         return this.chooseMove(resultlessMove);
     }
 

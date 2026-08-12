@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
-import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -19,7 +19,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { TriangularGoMinimax } from './TriangularGoMinimax';
+import { TriangularGoHeuristic } from './TriangularGoHeuristic';
 import { TriangularGoMoveGenerator } from './TriangularGoMoveGenerator';
 import { TriangularGoConfig, TriangularGoRules } from './TriangularGoRules';
 
@@ -51,10 +51,19 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     public constructor() {
         super();
         this.setRulesAndNode('TriangularGo');
-        this.availableAIs = [
-            new TriangularGoMinimax(),
-            new MCTS($localize`MCTS`, new TriangularGoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Territory',
+                name: $localize`Territory`,
+                heuristic: (): TriangularGoHeuristic => new TriangularGoHeuristic(),
+                moveGenerator: (): TriangularGoMoveGenerator => new TriangularGoMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): TriangularGoMoveGenerator => new TriangularGoMoveGenerator(),
+            }],
+        };
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
@@ -86,14 +95,9 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
         ).expandAll(this.STROKE_WIDTH / 2);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const resultlessMove: GoMove = new GoMove(x, y);
+        const resultlessMove: GoMove = new GoMove(coord.x, coord.y);
         return this.chooseMove(resultlessMove);
     }
 

@@ -7,8 +7,8 @@ export interface ComparableObject {
 export type ComparableValue = JSONPrimitive | ComparableObject | ComparableJSON;
 
 export type ComparableJSON = {
-    [key: string]: ComparableValue,
-    [key: number]: ComparableValue,
+    [key: string]: ComparableValue;
+    [key: number]: ComparableValue;
 };
 
 export type Comparable = JSONPrimitive | ComparableObject | ComparableJSON;

@@ -3,10 +3,10 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ScoreName } from '../../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { MCTS } from '../../../jscaip/AI/MCTS';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
@@ -17,7 +17,7 @@ import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-import { GoMinimax } from './GoMinimax';
+import { GoHeuristic } from './GoHeuristic';
 import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
 
@@ -49,13 +49,34 @@ export class GoComponent extends GobanGameComponent<GoRules,
     public constructor() {
         super();
         this.setRulesAndNode('Go');
-        this.availableAIs = [
-            new GoMinimax(),
-            new MCTS($localize`MCTS`, new GoMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'territory',
+                name: $localize`Territory`,
+                heuristic: (): GoHeuristic => new GoHeuristic(),
+                moveGenerator: (): GoMoveGenerator => new GoMoveGenerator(),
+                hash: GoComponent.hash,
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): GoMoveGenerator => new GoMoveGenerator(),
+            }],
+        };
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    private static hash(state: GoState): string {
+        let board: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                board += cell.toString();
+            }
+            board += '\n';
+        }
+        return `${state.turn % 2}-${state.phase.toString()}-${board}-${JSON.stringify(state.koCoord)}-${JSON.stringify(state.captured)}`;
     }
 
     public override async showLastMove(move: GoMove): Promise<void> {
@@ -68,14 +89,9 @@ export class GoComponent extends GobanGameComponent<GoRules,
         this.last = MGPOptional.empty();
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const resultlessMove: GoMove = new GoMove(x, y);
+        const resultlessMove: GoMove = new GoMove(coord.x, coord.y);
         return this.chooseMove(resultlessMove);
     }
 

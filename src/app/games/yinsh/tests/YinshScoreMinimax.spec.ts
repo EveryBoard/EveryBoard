@@ -1,9 +1,20 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { YinshMove } from '../YinshMove';
+import { YinshMoveGenerator } from '../YinshMoveGenerator';
 import { YinshRules } from '../YinshRules';
-import { YinshScoreMinimax } from '../YinshScoreMinimax';
+import { YinshLegalityInformation } from '../YinshRules';
+import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
+import { YinshState } from '../YinshState';
+
+class YinshScoreMinimax extends Minimax<YinshMove, YinshState, EmptyRulesConfig, YinshLegalityInformation> {
+    public constructor() {
+        super('Score', YinshRules.get(), new YinshScoreHeuristic(), new YinshMoveGenerator());
+    }
+}
 
 describe('YinshScoreMinimax', () => {
 

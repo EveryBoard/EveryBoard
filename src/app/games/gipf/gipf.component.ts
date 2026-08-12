@@ -5,9 +5,9 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everybo
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
-import { ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
@@ -22,7 +22,7 @@ import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfMoveGenerator } from './GipfMoveGenerator';
 import { GipfLegalityInformation, GipfRules } from './GipfRules';
-import { GipfScoreMinimax } from './GipfScoreMinimax';
+import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { GipfState } from './GipfState';
 
 @Component({
@@ -68,10 +68,19 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     public constructor() {
         super();
         this.setRulesAndNode('Gipf');
-        this.availableAIs = [
-            new GipfScoreMinimax(),
-            new MCTS($localize`MCTS`, new GipfMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): GipfScoreHeuristic => new GipfScoreHeuristic(),
+                moveGenerator: (): GipfMoveGenerator => new GipfMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`Default`,
+                moveGenerator: (): GipfMoveGenerator => new GipfMoveGenerator(),
+            }],
+        };
         this.encoder = GipfMove.encoder;
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
@@ -155,11 +164,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return this.constructedState.getPieceAt(coord);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
             case GipfComponent.PHASE_FINAL_CAPTURE:

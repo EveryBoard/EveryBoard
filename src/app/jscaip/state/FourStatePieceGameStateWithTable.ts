@@ -19,13 +19,13 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         );
     }
 
-    public getPlayerCoordsAndContent(): { coord: Coord; content: Player; }[] {
+    public getPlayerCoordsAndContent(): { coord: Coord; content: Player }[] {
         return this
             .getCoordsAndContents()
-            .filter((value: { coord: Coord; content: FourStatePiece; }) => {
+            .filter((value: { coord: Coord; content: FourStatePiece }) => {
                 return value.content.isPlayer();
             })
-            .map((value: { coord: Coord; content: FourStatePiece; }) => {
+            .map((value: { coord: Coord; content: FourStatePiece }) => {
                 return {
                     coord: value.coord,
                     content: value.content.getPlayer() as Player,
@@ -65,17 +65,16 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
     }
 
     public setPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             FourStatePieceGameStateWithTable.of);
+        return GameStateWithTable.setPieceAt(
+            this,
+            coord,
+            value,
+            FourStatePieceGameStateWithTable.of,
+        );
     }
 
-    public incrementTurn(): this {
-        return new FourStatePieceGameStateWithTable(
-            this.getCopiedBoard(),
-            this.turn + 1,
-        ) as this;
+    public incrementTurn(): FourStatePieceGameStateWithTable {
+        return new FourStatePieceGameStateWithTable(this.getCopiedBoard(), this.turn + 1);
     }
 
 }

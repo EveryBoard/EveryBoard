@@ -3,15 +3,16 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
-import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { PylosCoord } from './PylosCoord';
 import { PylosFailure } from './PylosFailure';
-import { PylosMinimax } from './PylosMinimax';
+import { PylosHeuristic } from './PylosHeuristic';
 import { PylosMove, PylosMoveFailure } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
 import { PylosRules } from './PylosRules';
@@ -52,10 +53,19 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public constructor() {
         super();
         this.setRulesAndNode('Pylos');
-        this.availableAIs = [
-            new PylosMinimax(),
-            new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Reserve',
+                name: $localize`Reserve`,
+                heuristic: (): PylosHeuristic => new PylosHeuristic(),
+                moveGenerator: (): PylosMoveGenerator => new PylosMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): PylosMoveGenerator => new PylosMoveGenerator(),
+            }],
+        };
         this.encoder = PylosMove.encoder;
         this.hasAsymmetricBoard = true;
     }
@@ -91,31 +101,28 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                this.chosenSecondCapture.equalsValue(coord);
     }
 
+    @ClickHandler((x: number, y: number, z: number) => `#piece-${ x }-${ y }-${ z }`)
     public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: PlayerOrNone = this.state.getPieceAt(clickedCoord);
+        const coord: PylosCoord = new PylosCoord(x, y, z);
+        const clickedPiece: PlayerOrNone = this.state.getPieceAt(coord);
         const pieceBelongToOpponent: boolean = clickedPiece === this.state.getCurrentOpponent();
         if (pieceBelongToOpponent) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
+        if (this.chosenStartingCoord.equalsValue(coord)) {
             return this.cancelMove();
         }
         if (this.chosenLandingCoord.isPresent()) {
             // Starting to select capture
-            if (this.isSupporting(clickedCoord, this.constructedState)) {
+            if (this.isSupporting(coord, this.constructedState)) {
                 return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
-            return this.onCaptureClick(clickedCoord);
+            return this.onCaptureClick(coord);
         } else {
-            if (this.isSupporting(clickedCoord, this.getState())) {
+            if (this.isSupporting(coord, this.getState())) {
                 return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
-            return this.onClimbClick(clickedCoord);
+            return this.onClimbClick(coord);
         }
     }
 
@@ -170,11 +177,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
 
+    @ClickHandler(() => `#capture-validation`)
     public async validateCapture(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#capture_validation');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.chosenFirstCapture.isAbsent() && this.chosenSecondCapture.isAbsent()) {
             return MGPValidation.SUCCESS;
         }
@@ -208,19 +212,16 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.capturables = new Set();
     }
 
+    @ClickHandler((x: number, y: number, z: number) => `#drop-${ x }-${ y }-${ z }`)
     public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        if (PylosRules.canCapture(this.constructedState, clickedCoord)) {
-            this.chosenLandingCoord = MGPOptional.of(clickedCoord);
-            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
+        const coord: PylosCoord = new PylosCoord(x, y, z);
+        if (PylosRules.canCapture(this.constructedState, coord)) {
+            this.chosenLandingCoord = MGPOptional.of(coord);
+            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(coord);
             this.updateCapturableList();
             return MGPValidation.SUCCESS; // now player can click on their captures
         } else {
-            this.chosenLandingCoord = MGPOptional.of(clickedCoord);
+            this.chosenLandingCoord = MGPOptional.of(coord);
             return this.concludeMoveWithCapture([]);
         }
     }

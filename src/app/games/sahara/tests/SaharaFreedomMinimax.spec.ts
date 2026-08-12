@@ -1,9 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { SaharaFreedomMinimax } from '../SaharaMinimax';
+import { SaharaFreedomHeuristic } from '../SaharaFreedomHeuristic';
+import { SaharaMove } from '../SaharaMove';
+import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
 import { SaharaRules } from '../SaharaRules';
+import { SaharaState } from '../SaharaState';
+
+class SaharaFreedomMinimax extends Minimax<SaharaMove, SaharaState> {
+    public constructor() {
+        super('Freedom', SaharaRules.get(), new SaharaFreedomHeuristic(), new SaharaMoveGenerator());
+    }
+}
 
 describe('SaharaFreedomMinimax', () => {
 

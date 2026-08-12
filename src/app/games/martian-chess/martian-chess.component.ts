@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player } from '../../jscaip/Player';
@@ -16,19 +16,19 @@ import { MartianChessMove } from './MartianChessMove';
 import { MartianChessMoveGenerator } from './MartianChessMoveGenerator';
 import { MartianChessPiece } from './MartianChessPiece';
 import { MartianChessMoveResult, MartianChessRules } from './MartianChessRules';
-import { MartianChessScoreMinimax } from './MartianChessScoreMinimax';
+import { MartianChessScoreHeuristic } from './MartianChessScoreHeuristic';
 import { MartianChessState } from './MartianChessState';
 import { MartianChessDroneComponent } from './martian-chess-drone.component';
 import { MartianChessPawnComponent } from './martian-chess-pawn.component';
 import { MartianChessQueenComponent } from './martian-chess-queen.component';
 
 type SelectedPieceInfo = {
-    selectedPiece: Coord,
-    legalLandings: Coord[],
+    selectedPiece: Coord;
+    legalLandings: Coord[];
 }
 export type MartianChessFace = {
-    readonly shape: MartianChessShape,
-    readonly points: MartianChessPoint,
+    readonly shape: MartianChessShape;
+    readonly points: MartianChessPoint;
 };
 export type MartianChessShape = 'Star' | 'Polygon' | 'Circle';
 export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Points';
@@ -97,7 +97,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
 
     public displayModePanel: boolean = false;
 
-    public listOfStyles: { name: string, style: MartianChessFace }[] = [
+    public listOfStyles: { name: string; style: MartianChessFace }[] = [
         { name: 'Star', style: { shape: 'Star', points: 'Dots' } },
         { name: 'Polygon', style: { shape: 'Polygon', points: 'Concentric Circles' } },
         { name: 'Simple', style: { shape: 'Circle', points: 'Horizontal Points' } },
@@ -108,10 +108,19 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public constructor() {
         super();
         this.setRulesAndNode('MartianChess');
-        this.availableAIs = [
-            new MartianChessScoreMinimax(),
-            new MCTS($localize`MCTS`, new MartianChessMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): MartianChessScoreHeuristic => new MartianChessScoreHeuristic(),
+                moveGenerator: (): MartianChessMoveGenerator => new MartianChessMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): MartianChessMoveGenerator => new MartianChessMoveGenerator(),
+            }],
+        };
         this.encoder = MartianChessMove.encoder;
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
@@ -189,12 +198,9 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         return classes;
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         this.displayModePanel = false;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.selectedPieceInfo.isPresent()) {
             return this.secondClick(coord);
         } else {
@@ -289,11 +295,8 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.callTheClock = false;
     }
 
+    @ClickHandler(() => `#clock-or-count-down-view`)
     public async onClockClick(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#clock-or-count-down-view');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const canCallTheClock: boolean = this.getState().countDown.isAbsent();
         if (canCallTheClock) {
             this.callTheClock = this.callTheClock === false;

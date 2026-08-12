@@ -3,15 +3,15 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { SquarzMinimax } from './SquarzMinimax';
+import { SquarzHeuristic } from './SquarzHeuristic';
 import { SquarzMove as SquarzMove } from './SquarzMove';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
 import { SquarzConfig, SquarzRules } from './SquarzRules';
@@ -42,10 +42,19 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     public constructor() {
         super();
         this.setRulesAndNode('Squarz');
-        this.availableAIs = [
-            new SquarzMinimax(),
-            new MCTS($localize`MCTS`, new SquarzMoveGenerator(this.rules), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: 'Score',
+                heuristic: (): SquarzHeuristic => new SquarzHeuristic(),
+                moveGenerator: (): SquarzMoveGenerator => new SquarzMoveGenerator(this.rules),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): SquarzMoveGenerator => new SquarzMoveGenerator(this.rules),
+            }],
+        };
         this.encoder = SquarzMove.encoder;
 
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
@@ -87,11 +96,8 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         this.moves = [];
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clicked: Coord = new Coord(x, y);
         if (this.selected.equalsValue(clicked)) {
             await this.cancelMove();

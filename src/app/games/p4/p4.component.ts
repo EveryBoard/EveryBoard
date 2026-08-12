@@ -3,16 +3,15 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
-import { MCTSWithHeuristic } from '../../jscaip/AI/MCTSWithHeuristic';
 import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 import { P4Heuristic } from './P4Heuristic';
-import { P4Minimax } from './P4Minimax';
 import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
+import { P4OrderedMoveGenerator } from './P4OrderedMoveGenerator';
 import { P4Config, P4Rules } from './P4Rules';
 import { P4State } from './P4State';
 
@@ -31,19 +30,54 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public constructor() {
         super();
         this.setRulesAndNode('P4');
-        this.availableAIs = [
-            new P4Minimax(),
-            new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
-            new MCTSWithHeuristic($localize`MCTS with heuristic`, new P4MoveGenerator(), this.rules, new P4Heuristic()),
-        ];
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                    hash: P4Component.hash,
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: (): P4MoveGenerator => new P4MoveGenerator(),
+                },
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                },
+            ],
+        };
         this.encoder = P4Move.encoder;
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#click-${ x }-${ y }`);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
+    private static hash(state: P4State): string {
+        let result: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                switch (cell) {
+                    case Player.ZERO:
+                        result += '0';
+                        break;
+                    case Player.ONE:
+                        result += '1';
+                        break;
+                    default:
+                        result += '_';
+                }
+            }
         }
+        return result;
+    }
+
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove);
     }

@@ -2,7 +2,7 @@
      class="board"
      [attr.viewBox]="getViewBox().toSVGString()"
      preserveAspectRatio="xMidYMid meet">
-    @for (player of Player.PLAYERS; track player) {
+    @for (player of Player.PLAYERS; track player.getValue()) {
         <g #remainingPieces>
             @for (piece of getRemainingPiecesTypeOfPlayer(player); track $index; let pieceIdX = $index) {
                 <g id="remaining-piece-{{ piece.toString() }}"

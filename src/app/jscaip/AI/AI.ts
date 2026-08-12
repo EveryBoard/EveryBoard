@@ -41,7 +41,7 @@ export type AITimeLimitOptions = AIOptions & {
 }
 
 export class AIStats {
-    public static aiTime: number = 0;
+    public static aiTime: Map<string, number> = new Map();
 }
 /**
  * An AI selects a move from a game node.

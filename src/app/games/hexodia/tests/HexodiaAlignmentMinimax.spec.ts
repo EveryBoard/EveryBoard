@@ -4,15 +4,22 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Table } from '../../../jscaip/TableUtils';
+import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
 import { SlowTest, minimaxTest } from '../../../utils/tests/TestUtils.spec';
-import { HexodiaAlignmentMinimax } from '../HexodiaAlignmentMinimax';
+import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';
+import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
-import { HexodiaState } from '../HexodiaState';
+
+class HexodiaAlignmentMinimax extends Minimax<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {
+    public constructor() {
+        super('Alignment', HexodiaRules.get(), new HexodiaAlignmentHeuristic(), new HexodiaMoveGenerator());
+    }
+}
 
 describe('HexodiaAlignmentMinimax', () => {
 
-    let minimax: Minimax<HexodiaMove, HexodiaState, HexodiaConfig>;
+    let minimax: Minimax<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
     const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
@@ -47,7 +54,7 @@ describe('HexodiaAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexodiaState = new HexodiaState(board, 2);
+        const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 2);
         const node: HexodiaNode = new HexodiaNode(state);
 
         // When asking what is the best move
@@ -81,7 +88,7 @@ describe('HexodiaAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexodiaState = new HexodiaState(board, 3);
+        const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
         const node: HexodiaNode = new HexodiaNode(state);
 
         // When asking what is the best move
@@ -115,7 +122,7 @@ describe('HexodiaAlignmentMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexodiaState = new HexodiaState(board, 3);
+        const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
         const node: HexodiaNode = new HexodiaNode(state);
 
         // When asking what is the best move

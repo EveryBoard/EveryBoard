@@ -3,14 +3,14 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { LinesOfActionFailure } from './LinesOfActionFailure';
-import { LinesOfActionMinimax } from './LinesOfActionMinimax';
+import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
 import { LinesOfActionRules } from './LinesOfActionRules';
@@ -37,19 +37,24 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     public constructor() {
         super();
         this.setRulesAndNode('LinesOfAction');
-        this.availableAIs = [
-            new LinesOfActionMinimax(),
-            new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Groups',
+                name: $localize`Groups`,
+                heuristic: (): LinesOfActionHeuristic => new LinesOfActionHeuristic(),
+                moveGenerator: (): LinesOfActionMoveGenerator => new LinesOfActionMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): LinesOfActionMoveGenerator => new LinesOfActionMoveGenerator(),
+            }],
+        };
         this.encoder = LinesOfActionMove.encoder;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const coord: Coord = new Coord(x, y);
         if (this.selected.equalsValue(coord)) {
             return this.cancelMove();

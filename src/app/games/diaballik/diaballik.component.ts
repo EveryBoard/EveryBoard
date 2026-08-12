@@ -4,15 +4,15 @@ import { Component } from '@angular/core';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { Line } from '../../jscaip/Line';
 import { Player } from '../../jscaip/Player';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
-import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
+import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
 import { DiaballikFailure } from './DiaballikFailure';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
@@ -66,16 +66,56 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
-        this.availableAIs = [
-            new DiaballikDistanceMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
-            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
-            new MCTS($localize`MCTS (3 only)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
-            new MCTS($localize`MCTS (without dups)`, new DiaballikMoveGenerator(true), this.rules),
-            new MCTS($localize`MCTS (3, no dups)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
-        ];
-        for (let i: number = 1; i <= 3; i++) {
-            this.availableAIs.push(new DiaballikDistanceMinimax($localize`Distance (${i})`, new DiaballikFilteredMoveGenerator(i)));
-        }
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'AllMoves',
+                    name: $localize`AllMoves`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikMoveGenerator => new DiaballikMoveGenerator(true),
+                },
+                {
+                    id: 'Distance (1)',
+                    name: $localize`Distance (1)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(1),
+                },
+                {
+                    id: 'Distance (2)',
+                    name: $localize`Distance (2)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(2),
+                },
+                {
+                    id: 'Distance (3)',
+                    name: $localize`Distance (3)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3),
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`MCTS`,
+                    moveGenerator: (): DiaballikMoveGenerator => this.moveGenerator,
+                },
+                {
+                    id: '3-only',
+                    name: $localize`MCTS (3 only)`,
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3, false),
+                },
+                {
+                    id: 'without-dups',
+                    name: $localize`MCTS (without dups)`,
+                    moveGenerator: (): DiaballikMoveGenerator => new DiaballikMoveGenerator(true),
+                },
+                {
+                    id: '3-no-dups',
+                    name: $localize`MCTS (3, no dups)`,
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3, false),
+                },
+            ],
+        };
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -213,58 +253,58 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const clickedCoord: Coord = new Coord(x, y);
-        return this.onLegalClick(clickedCoord);
+        if (this.currentSelection.isPresent()) {
+            return this.onSecondClick(clickedCoord);
+        } else {
+            // No piece selected, select this one if it is a player piece
+            return this.onFirstClick(clickedCoord);
+        }
     }
 
-    private async onLegalClick(clickedCoord: Coord): Promise<MGPValidation> {
+    private async onFirstClick(clickedCoord: Coord): Promise<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
-        if (this.currentSelection.isPresent()) {
-            const selection: Coord = this.currentSelection.get();
-            if (selection.equals(clickedCoord)) {
-                // Just deselects
-                this.currentSelection = MGPOptional.empty();
-                this.indicators = [];
-                if (this.subMoves.length === 0) {
-                    // No sub moves constructed at all, cancel the move to show the last one
-                    return this.cancelMove();
+        if (clickedPiece.owner === this.getCurrentPlayer()) {
+            if (this.hasMadePass && clickedPiece.holdsBall) {
+                // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
+                return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
+            } else if (this.translationsMade === 2 && clickedPiece.holdsBall === false) {
+                // At most two translations are allowed
+                return this.cancelMove(DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
+            } else {
+                this.currentSelection = MGPOptional.of(clickedCoord);
+                if (clickedPiece.holdsBall) {
+                    this.indicators = this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord);
+                } else {
+                    this.indicators = this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord);
                 }
                 return MGPValidation.SUCCESS;
             }
-            if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
-                return this.performPass(selection, clickedCoord);
-            } else {
-                return this.performTranslation(selection, clickedCoord);
-            }
+        } else if (clickedPiece.owner.isNone()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
-            // No piece selected, select this one if it is a player piece
-            if (clickedPiece.owner === this.getCurrentPlayer()) {
-                if (this.hasMadePass && clickedPiece.holdsBall) {
-                    // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
-                    return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
-                } else if (this.translationsMade === 2 && clickedPiece.holdsBall === false) {
-                    // At most two translations are allowed
-                    return this.cancelMove(DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
-                } else {
-                    this.currentSelection = MGPOptional.of(clickedCoord);
-                    if (clickedPiece.holdsBall) {
-                        this.indicators = this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord);
-                    } else {
-                        this.indicators = this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord);
-                    }
-                    return MGPValidation.SUCCESS;
-                }
-            } else if (clickedPiece.owner.isNone()) {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-            } else {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        }
+    }
+
+    private async onSecondClick(clickedCoord: Coord): Promise<MGPValidation> {
+        const selection: Coord = this.currentSelection.get();
+        if (selection.equals(clickedCoord)) {
+            // Just deselects
+            this.currentSelection = MGPOptional.empty();
+            this.indicators = [];
+            if (this.subMoves.length === 0) {
+                // No sub moves constructed at all, cancel the move to show the last one
+                return this.cancelMove();
             }
+            return MGPValidation.SUCCESS;
+        }
+        if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
+            return this.performPass(selection, clickedCoord);
+        } else {
+            return this.performTranslation(selection, clickedCoord);
         }
     }
 
@@ -304,12 +344,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         return this.interactive && this.subMoves.length >= 1;
     }
 
+    @ClickHandler(() => `#done`)
     public async done(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#done');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
         if (this.subMoves.length >= 2) {
             second = MGPOptional.of(this.subMoves[1]);

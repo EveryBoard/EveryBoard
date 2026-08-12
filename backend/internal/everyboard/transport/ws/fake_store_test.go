@@ -157,6 +157,14 @@ func (s *FakeStore) GetConfigRoom(gameId model.GameID) (*model.ConfigRoom, error
 	return cr, nil
 }
 
+func (s *FakeStore) ListGames() ([]model.Game, error) {
+	games := make([]model.Game, 0, len(s.Games))
+	for _, game := range s.Games {
+		games = append(games, *game)
+	}
+	return games, nil
+}
+
 func (s *FakeStore) CreateConfigRoom(creator model.MinimalUser, gameName string) (*model.ConfigRoom, error) {
 	creatorElo, err := s.GetElo(gameName, creator)
 	if err != nil {

@@ -1,8 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { AbaloneMove } from '../AbaloneMove';
+import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
 import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
-import { AbaloneScoreMinimax } from '../AbaloneScoreMinimax';
+import { AbaloneLegalityInformation } from '../AbaloneRules';
+import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
+import { AbaloneState } from '../AbaloneState';
+
+class AbaloneScoreMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneConfig, AbaloneLegalityInformation> {
+    public constructor() {
+        super('Score', AbaloneRules.get(), new AbaloneScoreHeuristic(), new AbaloneMoveGenerator());
+    }
+}
 
 describe('AbaloneScoreMinimax', () => {
 

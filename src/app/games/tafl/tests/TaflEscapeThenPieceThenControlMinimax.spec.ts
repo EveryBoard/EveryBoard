@@ -1,10 +1,25 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
+import { TaflMove } from '../TaflMove';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflRules } from '../TaflRules';
+import { TaflState } from '../TaflState';
 import { TablutMove } from '../tablut/TablutMove';
 import { TablutRules } from '../tablut/TablutRules';
+
+class TaflEscapeThenPieceThenControlMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
+    public constructor(rules: TaflRules<M>) {
+        super('Escape > Pieces > Control',
+              rules,
+              new TaflEscapeThenPieceThenControlHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
+    }
+}
 
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
 

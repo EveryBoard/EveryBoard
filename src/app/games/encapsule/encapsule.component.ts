@@ -4,14 +4,14 @@ import { Component } from '@angular/core';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RingComponent } from '../common/ring/ring.component';
 
-import { EncapsuleDummyMinimax } from './EncapsuleDummyMinimax';
 import { EncapsuleFailure } from './EncapsuleFailure';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
@@ -56,10 +56,19 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     public constructor() {
         super();
         this.setRulesAndNode('Encapsule');
-        this.availableAIs = [
-            new EncapsuleDummyMinimax(),
-            new MCTS($localize`MCTS`, new EncapsuleMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Dummy',
+                name: $localize`Dummy`,
+                heuristic: (): DummyHeuristic<EncapsuleMove, EncapsuleState, EncapsuleConfig> => new DummyHeuristic(),
+                moveGenerator: (): EncapsuleMoveGenerator => new EncapsuleMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): EncapsuleMoveGenerator => new EncapsuleMoveGenerator(),
+            }],
+        };
         this.encoder = EncapsuleMove.encoder;
     }
 
@@ -150,12 +159,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         return remainingPieceSet.map((size: number) => EncapsulePiece.ofSizeAndPlayer(size, player));
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     protected async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const clickedCoord: Coord = new Coord(x, y);
         const state: EncapsuleState = this.getState();
         if (this.chosenCoord.isAbsent()) {
@@ -186,13 +191,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         this.chosenPiece = MGPOptional.empty();
     }
 
+    @ClickHandler((piece: EncapsulePiece) => '#remaining-piece-' + piece.toString())
     protected async onPieceClick(piece: EncapsulePiece): Promise<MGPValidation> {
-        const clickedId: string = '#remaining-piece-' + piece.toString();
-        const clickValidity: MGPValidation = await this.canUserPlay(clickedId);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const state: EncapsuleState = this.getState();
         if (state.isDroppable(piece) === false) {
             return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE());

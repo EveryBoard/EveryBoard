@@ -7,7 +7,7 @@ import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';
 
-export type Candidate = { user: MinimalUser, elo: number };
+export type Candidate = { user: MinimalUser; elo: number };
 
 export abstract class AbstractConfigRoomService {
     public abstract join(gameId: string,

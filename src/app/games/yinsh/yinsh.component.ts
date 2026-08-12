@@ -3,8 +3,8 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
@@ -19,18 +19,18 @@ import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshMoveGenerator } from './YinshMoveGenerator';
 import { YinshPiece } from './YinshPiece';
 import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { YinshScoreMinimax } from './YinshScoreMinimax';
+import { YinshScoreHeuristic } from './YinshScoreHeuristic';
 import { YinshState } from './YinshState';
 
 interface ViewInfo {
-    targets: Coord[],
-    markerSize: number,
-    indicatorSize: number,
-    ringOuterSize: number,
-    ringMidSize: number,
-    ringInnerSize: number,
-    sideRings: PlayerNumberMap,
-    sideRingClass: PlayerMap<string>,
+    targets: Coord[];
+    markerSize: number;
+    indicatorSize: number;
+    ringOuterSize: number;
+    ringMidSize: number;
+    ringInnerSize: number;
+    sideRings: PlayerNumberMap;
+    sideRingClass: PlayerMap<string>;
 }
 
 @Component({
@@ -96,10 +96,19 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     public constructor() {
         super();
         this.setRulesAndNode('Yinsh');
-        this.availableAIs = [
-            new YinshScoreMinimax(),
-            new MCTS($localize`MCTS`, new YinshMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): YinshScoreHeuristic => new YinshScoreHeuristic(),
+                moveGenerator: (): YinshMoveGenerator => new YinshMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): YinshMoveGenerator => new YinshMoveGenerator(),
+            }],
+        };
         this.encoder = YinshMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
 
@@ -304,12 +313,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         return MGPValidation.SUCCESS;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE_SELECT_FIRST':
             case 'FINAL_CAPTURE_SELECT_FIRST':
