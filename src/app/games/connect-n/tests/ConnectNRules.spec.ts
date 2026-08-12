@@ -27,7 +27,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
-fdescribe('ConnectNRules (SQUARE)', () => {
+describe('ConnectNRules (SQUARE)', () => {
     /**
      * Naming of cases, some of them will be used
      * A. double open: _ _ X X X X _ _
@@ -44,7 +44,7 @@ fdescribe('ConnectNRules (SQUARE)', () => {
         rules = ConnectNRules.get();
     });
 
-    fdescribe('first turn', () => {
+    describe('first turn', () => {
 
         it('should not create move when coord is out of board', () => {
             // Given the initial state

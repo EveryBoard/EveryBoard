@@ -83,7 +83,9 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
                 if (this.droppedCoords().some((c: Coord) => c.equals(clickedCoord))) {
                     return this.cancelMove();
                 } else {
-                    this.droppedCoords().push(clickedCoord); // TODO: is this CLEAN ???
+                    const droppedCoords: Coord[] = this.droppedCoords();
+                    droppedCoords.push(clickedCoord);
+                    this.droppedCoords.set(droppedCoords);
                     if (this.droppedCoords().length === this.NUMBER_OF_AWAITED_DROPS) {
                         const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());
                         return this.chooseMove(move);
