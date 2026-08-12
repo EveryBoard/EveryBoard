@@ -27,7 +27,7 @@ export class ConnectNAlignmentHeuristic
             const squareScore: number = new NInARowHelper(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 config.n,
-            ).getSquareScoreWithTopology(state, coord);
+            ).getSquareScore(state, coord);
             score += squareScore;
         }
         return BoardValue.of(score);

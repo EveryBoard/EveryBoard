@@ -85,7 +85,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return new NInARowHelper(
             (piece: FourStatePiece) => piece.getPlayer(),
             config.n,
-        ).getVictoriousCoordWithTopology(state);
+        ).getVictoriousCoord(state);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<ConnectNConfig> {
