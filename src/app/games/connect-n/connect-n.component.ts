@@ -3,20 +3,18 @@ import { Component, signal, WritableSignal } from '@angular/core';
 
 import { MGPValidation } from '@everyboard/lib';
 
-import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { MCTS } from '../../jscaip/AI/MCTS';
+import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 
-import { ConnectNAlignmentMinimax } from './ConnectNAlignmentMinimax';
+import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
 import { ConnectNMove } from './ConnectNMove';
 import { ConnectNMoveGenerator } from './ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
-import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
 
 @Component({
     selector: 'app-connect-n',
@@ -75,28 +73,21 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
 
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const x: number = coord.x;
-        const y: number = coord.y;
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: Coord = new Coord(x, y);
         if (this.getState().turn === 0) {
-            const move: ConnectNMove = ConnectNMove.of([clickedCoord]);
+            const move: ConnectNMove = ConnectNMove.of([coord]);
             return this.chooseMove(move);
         } else {
-            if (this.getState().getPieceAt(clickedCoord).isPlayer()) {
+            if (this.getState().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoords().length === 0) {
-                this.droppedCoords.set([clickedCoord]);
+                this.droppedCoords.set([coord]);
                 return MGPValidation.SUCCESS;
             } else {
-                if (this.droppedCoords().some((c: Coord) => c.equals(clickedCoord))) {
+                if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
                     return this.cancelMove();
                 } else {
                     const droppedCoords: Coord[] = this.droppedCoords();
-                    droppedCoords.push(clickedCoord);
+                    droppedCoords.push(coord);
                     this.droppedCoords.set(droppedCoords);
                     if (this.droppedCoords().length === this.NUMBER_OF_AWAITED_DROPS) {
                         const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());

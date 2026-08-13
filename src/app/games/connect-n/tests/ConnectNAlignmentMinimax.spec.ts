@@ -11,9 +11,23 @@ import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGame
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
-import { ConnectNAlignmentMinimax } from '../ConnectNAlignmentMinimax';
+import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
+import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
+
+class ConnectNAlignmentMinimax
+    extends Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
+{
+
+    public constructor() {
+        super($localize`Alignment`,
+              ConnectNRules.get(),
+              new ConnectNAlignmentHeuristic(),
+              new ConnectNMoveGenerator(),
+        );
+    }
+}
 
 describe('ConnectNAlignmentMinimax', () => {
 

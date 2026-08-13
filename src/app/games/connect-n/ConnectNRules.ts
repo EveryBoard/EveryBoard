@@ -29,9 +29,9 @@ import { ConnectNMove } from './ConnectNMove';
 
 export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
 
-export type TopologyEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
+export type TopologyID = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
 
-export const Topologies: Record<TopologyEnum, Localized> = {
+export const TopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE': () => $localize`Square`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
@@ -49,7 +49,7 @@ export type ConnectNConfig = {
 
     n: number;
 
-    topology: TopologyEnum;
+    topology: TopologyID;
 
     shape: ShapeEnum;
 
@@ -69,7 +69,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
             config: {
                 n: new NumberConfig(6, () => $localize`N`, MGPValidators.range(3, 10)),
                 boardSize: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 100)),
-                topology: new EnumConfig('SQUARE', () => $localize`Space shape`, Topologies),
+                topology: new EnumConfig('SQUARE', () => $localize`Space shape`, TopologyNamer),
                 shape: new EnumConfig('SQUARE', () => $localize`Board shape`, Shapes),
             },
         });
@@ -110,12 +110,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
             if (state.isNotOnBoard(coord)) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));
             }
-        }
-        return this.isLegalDrops(move.coords, state);
-    }
-
-    public isLegalDrops(coords: Set<Coord>, state: TopologicGameState<FourStatePiece>): MGPValidation {
-        for (const coord of coords) {
             if (state.getPieceAt(coord).isPlayer()) {
                 return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             }

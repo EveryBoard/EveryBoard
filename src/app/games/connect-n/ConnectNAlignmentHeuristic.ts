@@ -19,10 +19,10 @@ export class ConnectNAlignmentHeuristic
         const currentPlayer: Player = state.getCurrentPlayer();
         const playerCoords: Coord[] = state
             .getCoordsAndContents()
-            .filter((coordAndContent: { coord: Coord, content: FourStatePiece }) => {
+            .filter((coordAndContent: { coord: Coord; content: FourStatePiece }) => {
                 return coordAndContent.content.is(currentPlayer);
             })
-            .map((coordAndContent: { coord: Coord, content: FourStatePiece }) => coordAndContent.coord);
+            .map((coordAndContent: { coord: Coord; content: FourStatePiece }) => coordAndContent.coord);
         for (const coord of playerCoords) {
             const squareScore: number = new NInARowHelper(
                 (piece: FourStatePiece) => piece.getPlayer(),

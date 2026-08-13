@@ -16,7 +16,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
         return this.topology;
     }
 
-    public abstract getCoordsAndContents(): { coord: Coord, content: P }[];
+    public abstract getCoordsAndContents(): { coord: Coord; content: P }[];
 
     public abstract getPieceAt(coord: Coord): P;
 

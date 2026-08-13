@@ -15,7 +15,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends
         super(gameStateWithTable.turn, topology);
     }
 
-    public override getCoordsAndContents(): { coord: Coord, content: P }[] {
+    public override getCoordsAndContents(): { coord: Coord; content: P }[] {
         return this.gameStateWithTable.getCoordsAndContents();
     }
 

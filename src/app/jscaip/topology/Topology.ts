@@ -5,7 +5,7 @@ import { Vector } from '../Vector';
 export interface Topology {
 
     // So Up and Down are the axe "vertical" of which your provide only one of the two
-    getDirections(): Direction[]; // TODO: figure out if Direction have anything to do with Topology
+    getDirections(): Direction[];
 
     // Does not known wether or not the coord is in board
     getNextCoord(coord: Coord, direction: Vector): Coord;

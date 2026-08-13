@@ -50,7 +50,7 @@ describe('HexodiaRules', () => {
 
     describe('first turn', () => {
 
-        it('should not create move when coord is out of board', () => {
+        it('should consider move illegal when coord is out of board', () => {
             // Given the initial state
             const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
 

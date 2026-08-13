@@ -30,7 +30,6 @@ export class ConnectNMoveGenerator
 
     private getListDrops(node: ConnectNNode): ConnectNMove[] {
         const availableFirstCoords: Set<Coord> = this.getUsefulCoordsMap(node.gameState);
-        console.log('jajette available coords', availableFirstCoords.map((m: Coord) => m.toString()))
         let moves: ConnectNMove[] = [];
         for (const firstCoord of availableFirstCoords) {
             for (const secondCoord of availableFirstCoords) {
@@ -47,12 +46,11 @@ export class ConnectNMoveGenerator
      */
     private getUsefulCoordsMap(state: TopologicGameState<FourStatePiece>): Set<Coord> {
         let usefulCoord: Set<Coord> = new Set();
-        const coordsAndContents: { coord: Coord, content: FourStatePiece }[] = state.getCoordsAndContents();
-        const playerCoordsAndContents: { coord: Coord, content: FourStatePiece }[] = coordsAndContents
-            .filter((value: { coord: Coord, content: FourStatePiece }) => value.content.isPlayer());
+        const coordsAndContents: { coord: Coord; content: FourStatePiece }[] = state.getCoordsAndContents();
+        const playerCoordsAndContents: { coord: Coord; content: FourStatePiece }[] = coordsAndContents
+            .filter((value: { coord: Coord; content: FourStatePiece }) => value.content.isPlayer());
         const playerCoords: Coord[] = playerCoordsAndContents
-            .map((value: { coord: Coord, content: FourStatePiece }) => value.coord);
-        console.log('playerCoords', playerCoords)
+            .map((value: { coord: Coord; content: FourStatePiece }) => value.coord);
         for (const playerCoord of playerCoords) {
             usefulCoord = usefulCoord.union(
                 this.getNeighboringCoords(state, playerCoord),

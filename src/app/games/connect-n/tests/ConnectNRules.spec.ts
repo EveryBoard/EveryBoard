@@ -46,7 +46,7 @@ describe('ConnectNRules (SQUARE)', () => {
 
     describe('first turn', () => {
 
-        it('should not create move when coord is out of board', () => {
+        it('should consider move illegal when coord is out of board', () => {
             // Given the initial state
             const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
 
@@ -143,7 +143,7 @@ describe('ConnectNRules (SQUARE)', () => {
                 gameState,
             );
 
-            // When doing a move who'se second coord is out of range
+            // When doing a move whose second coord is out of range
             const move: ConnectNMove = ConnectNMove.of([new Coord(0, 0), new Coord(-1, -1)]);
 
             // Then the move should be illegal
@@ -180,7 +180,7 @@ describe('ConnectNRules (SQUARE)', () => {
                 gameState,
             );
 
-            // When doing a move who'se second coord is out of range
+            // When doing a move whose second coord is out of range
             const move: ConnectNMove = ConnectNMove.of([new Coord(-2, -2), new Coord(0, 0)]);
 
             // Then the move should be illegal
@@ -404,7 +404,7 @@ describe('ConnectNRules (SQUARE)', () => {
         });
 
         it('should draw when no one can play anymore', () => {
-            // Given the wildly unlikely case in which in 180 turn no one win
+            // Given the wildly unlikely case in which in 180 turn no one wins
             const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],

@@ -8,6 +8,6 @@ export abstract class GameStateWithCoords<P extends NonNullable<unknown>> extend
 
     public abstract isOnBoard(coord: Coord): boolean;
 
-    public abstract getCoordsAndContents(): {coord: Coord, content: P}[];
+    public abstract getCoordsAndContents(): {coord: Coord; content: P}[];
 
 }
