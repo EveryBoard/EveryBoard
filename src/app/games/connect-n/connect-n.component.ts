@@ -4,6 +4,7 @@ import { Component, signal, WritableSignal } from '@angular/core';
 import { MGPValidation } from '@everyboard/lib';
 
 import { TopologicGameComponent } from '../../components/game-components/topologic-game-component/TopologicGameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { MCTS } from '../../jscaip/AI/MCTS';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
@@ -15,6 +16,7 @@ import { ConnectNAlignmentMinimax } from './ConnectNAlignmentMinimax';
 import { ConnectNMove } from './ConnectNMove';
 import { ConnectNMoveGenerator } from './ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
+import { ConnectNAlignmentHeuristic } from './ConnectNAlignmentHeuristic';
 
 @Component({
     selector: 'app-connect-n',
@@ -41,10 +43,19 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     public constructor() {
         super();
         this.setRulesAndNode('ConnectN');
-        this.availableAIs = [
-            new ConnectNAlignmentMinimax(),
-            new MCTS($localize`MCTS`, new ConnectNMoveGenerator(), this.rules),
-        ];
+        this.aiConfig = {
+            minimax: [{
+                id: 'Alignment',
+                name: $localize`Alignment`,
+                heuristic: (): ConnectNAlignmentHeuristic => new ConnectNAlignmentHeuristic(),
+                moveGenerator: (): ConnectNMoveGenerator => new ConnectNMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): ConnectNMoveGenerator => new ConnectNMoveGenerator(),
+            }],
+        };
         this.encoder = ConnectNMove.encoder;
     }
 
@@ -62,6 +73,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         this.lastMoveds.set([]);
     }
 
+    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const x: number = coord.x;
         const y: number = coord.y;
