@@ -32,7 +32,7 @@ describe('AwaleMoveGenerator', () => {
 
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
     });
 
     describe('Custom Config', () => {
@@ -61,6 +61,23 @@ describe('AwaleMoveGenerator', () => {
             expect(storeMoves.length).toBe(5);
             // Hence a total of 10 choices
             expect(moves.length).toBe(10);
+        });
+
+        it('should provide move from all rows', () => {
+            // Given a state with a config with several rows
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                numberOfRows: 2,
+            };
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
+
+            const node: MancalaNode = new MancalaNode(state);
+
+            // When listing the moves
+            const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
+
+            // Then there should be the 12 moves
+            expect(moves.length).toBe(12);
         });
 
     });

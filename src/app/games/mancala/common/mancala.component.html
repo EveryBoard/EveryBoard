@@ -7,8 +7,8 @@
           y="0"
           ry="115"
           rx="115"
-          [attr.width]="viewBoxWidth()"
-          [attr.height]="240"
+          [attr.width]="getViewBoxWidth()"
+          [attr.height]="getViewBoxHeight()"
           fill="blue"
           class="base"/>
     @for (line of board; track $index; let y = $index) {
@@ -29,26 +29,27 @@
             }
         </g>
     }
-    <line x1="120"
-          y1="120"
-          [attr.x2]="viewBoxWidth() - 120"
-          y2="120"
+    <line id="horizontal-line"
+          x1="120"
+          [attr.y1]="getVerticalCenter()"
+          [attr.x2]="getViewBoxWidth() - 120"
+          [attr.y2]="getVerticalCenter()"
           class="base"/>
     <line x1="120"
           y1="0"
           x2="120"
-          y2="240"
+          [attr.y2]="getViewBoxHeight()"
           class="base"/>
-    <line [attr.x1]="viewBoxWidth() - 120"
+    <line [attr.x1]="getViewBoxWidth() - 120"
           y1="0"
-          [attr.x2]="viewBoxWidth() - 120"
-          y2="240"
+          [attr.x2]="getViewBoxWidth() - 120"
+          [attr.y2]="getViewBoxHeight()"
           class="base"/>
 
     <g id="store-PLAYER_ZERO"
        (click)="onStoreClick(Player.ZERO)"
        app-numbered-circle
-       transform="translate(60 120)"
+       [attr.transform]="getStoreTranslate(Player.ZERO)"
        [x]="-1"
        [y]="-1"
        [content]="getStoreContent(Player.ZERO)"
@@ -58,11 +59,11 @@
     <g id="store-PLAYER_ONE"
        (click)="onStoreClick(Player.ONE)"
        app-numbered-circle
-       [attr.transform]="getSVGTranslation(viewBoxWidth() - 60, 120)"
-       [x]="2"
-       [y]="2"
+       [attr.transform]="getStoreTranslate(Player.ONE)"
+       [x]="-1"
+       [y]="1"
        [content]="getStoreContent(Player.ONE)"
-       [spaceClasses]="getSpaceClasses(2, 2)"
+       [spaceClasses]="getSpaceClasses(-1, 1)"
        [rotation]="getPieceRotation()"
        [secondaryContent]="getStoreSecondaryContent(Player.ONE)"></g>
 </svg>
