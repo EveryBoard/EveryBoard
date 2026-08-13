@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -11,7 +12,6 @@ import { ScoreName } from '../../components/game-components/game-component/Score
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Vector } from '../../jscaip/Vector';
 
 import { ConspirateursHeuristic } from './ConspirateursHeuristic';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';

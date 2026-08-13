@@ -1,13 +1,13 @@
 import { NgClass } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
 
+import { Vector } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 import { ModeConfig } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { Coord3D } from '../../jscaip/Coord3D';
-import { Vector } from '../../jscaip/Vector';
 
 import { TrexoMove } from './TrexoMove';
 

@@ -1,4 +1,5 @@
 import { Player } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
@@ -6,7 +7,6 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { PieceThreat } from '../../jscaip/PieceThreat';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { Vector } from '../../jscaip/Vector';
 import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
 
 import { CoerceoHeuristic } from './CoerceoHeuristic';

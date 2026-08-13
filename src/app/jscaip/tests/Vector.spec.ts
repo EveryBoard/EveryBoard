@@ -1,4 +1,4 @@
-import { Vector } from '../Vector';
+import { Vector } from '@everyboard/games';
 
 describe('Vector', () => {
     it('should compute minimal vector correctly', () => {

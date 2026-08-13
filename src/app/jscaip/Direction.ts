@@ -1,6 +1,7 @@
+import { Vector } from '@everyboard/games';
+
 import { Localized } from '../utils/LocaleUtils';
 
-import { Vector } from './Vector';
 
 export abstract class Direction extends Vector {
 

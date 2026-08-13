@@ -1,5 +1,6 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
 import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
@@ -7,7 +8,6 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils, Table } from '../../jscaip/TableUtils';
-import { Vector } from '../../jscaip/Vector';
 import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
 
 import { SixFailure } from './SixFailure';

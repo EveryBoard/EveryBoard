@@ -1,4 +1,5 @@
 import { Player } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
@@ -7,7 +8,6 @@ import { ScoreName } from '../../../components/game-components/game-component/Sc
 import { ModeConfig, ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Vector } from '../../../jscaip/Vector';
 
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
 import { CheckersControlHeuristic } from './CheckersControlHeuristic';

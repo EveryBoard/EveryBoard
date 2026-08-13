@@ -1,4 +1,5 @@
 import { Player } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, MGPUniqueList, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../../jscaip/AI/GameNode';
@@ -9,7 +10,6 @@ import { ConfigurableRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TableUtils } from '../../../jscaip/TableUtils';
-import { Vector } from '../../../jscaip/Vector';
 import { Localized } from '../../../utils/LocaleUtils';
 
 import { CheckersFailure } from './CheckersFailure';

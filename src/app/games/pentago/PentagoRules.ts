@@ -1,5 +1,6 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -9,7 +10,6 @@ import { Rules } from '../../jscaip/Rules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { Vector } from '../../jscaip/Vector';
 
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
