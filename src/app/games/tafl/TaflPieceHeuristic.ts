@@ -1,9 +1,9 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { HeuristicBounds } from '../../jscaip/AI/Heuristic';
 import { PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { TaflConfig } from './TaflConfig';

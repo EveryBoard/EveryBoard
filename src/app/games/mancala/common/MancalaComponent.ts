@@ -1,4 +1,5 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
@@ -7,7 +8,6 @@ import { RectangularGameComponent } from '../../../components/game-components/re
 import { MoveGenerator } from '../../../jscaip/AI/AI';
 import { AIConfig } from '../../../jscaip/AI/AIConfig';
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
 
 import { MancalaConfig } from './MancalaConfig';

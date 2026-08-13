@@ -3,13 +3,13 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractAI, AI, AIOptions } from '../../../../jscaip/AI/AI';
 import { GameNode } from '../../../../jscaip/AI/GameNode';
 import { Coord } from '../../../../jscaip/Coord';
 import { Move } from '../../../../jscaip/Move';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../../jscaip/TableUtils';
 import { GameState } from '../../../../jscaip/state/GameState';

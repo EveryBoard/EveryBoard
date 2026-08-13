@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';

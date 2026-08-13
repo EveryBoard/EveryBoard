@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { YinshCapture } from '../YinshMove';

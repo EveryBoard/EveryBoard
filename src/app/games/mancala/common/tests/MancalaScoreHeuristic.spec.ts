@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { BoardValue } from '../../../../jscaip/AI/BoardValue';
 import { HeuristicBounds } from '../../../../jscaip/AI/Heuristic';
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../../../jscaip/PlayerNumberTable';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';

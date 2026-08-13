@@ -1,8 +1,8 @@
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaState } from '../common/MancalaState';

@@ -1,8 +1,8 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Table } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 

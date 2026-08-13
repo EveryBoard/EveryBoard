@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -10,7 +11,6 @@ import { GameComponent } from '../../components/game-components/game-component/G
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TableUtils } from '../../jscaip/TableUtils';
 

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';

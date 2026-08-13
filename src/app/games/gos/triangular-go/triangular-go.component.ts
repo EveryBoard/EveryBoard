@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
@@ -9,7 +10,6 @@ import { ScoreName } from '../../../components/game-components/game-component/Sc
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TableUtils } from '../../../jscaip/TableUtils';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { Debug } from '../../../utils/Debug';

@@ -1,4 +1,5 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -9,7 +10,6 @@ import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLine } from '../../jscaip/HexaLine';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Table } from '../../jscaip/TableUtils';

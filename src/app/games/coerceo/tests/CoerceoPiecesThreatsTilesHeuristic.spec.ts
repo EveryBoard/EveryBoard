@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
@@ -7,7 +8,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { PieceThreat } from '../../../jscaip/PieceThreat';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
 import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';

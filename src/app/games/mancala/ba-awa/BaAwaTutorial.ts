@@ -1,6 +1,7 @@
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaState } from '../common/MancalaState';
 import { MancalaTutorial } from '../common/MancalaTutorial';

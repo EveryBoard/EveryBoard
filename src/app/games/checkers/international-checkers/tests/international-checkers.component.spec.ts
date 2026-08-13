@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { DirectionFailure } from '../../../../jscaip/Direction';
-import { PlayerMap, PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { CheckersConfig } from '../../common/AbstractCheckersRules';
 import { CheckersMove } from '../../common/CheckersMove';

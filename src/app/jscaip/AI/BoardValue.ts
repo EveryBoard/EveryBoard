@@ -1,7 +1,7 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { ArrayUtils, Utils } from '@everyboard/lib';
 
-import { PlayerNumberMap } from '../PlayerMap';
 
 export class BoardValue {
 

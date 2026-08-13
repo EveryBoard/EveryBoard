@@ -1,6 +1,6 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 import { SiamPiece } from './SiamPiece';

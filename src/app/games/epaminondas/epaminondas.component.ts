@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
@@ -11,7 +12,6 @@ import { ScoreName } from '../../components/game-components/game-component/Score
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { EpaminondasAttackHeuristic } from './EpaminondasAttackHeuristic';

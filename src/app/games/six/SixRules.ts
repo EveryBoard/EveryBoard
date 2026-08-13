@@ -1,4 +1,5 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -7,7 +8,6 @@ import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';

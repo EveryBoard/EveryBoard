@@ -1,4 +1,5 @@
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneState } from '../LodestoneState';
 

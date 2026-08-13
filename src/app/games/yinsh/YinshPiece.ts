@@ -1,7 +1,7 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
 import { ComparableObject, Encoder, Utils } from '@everyboard/lib';
 
-import { PlayerMap } from '../../jscaip/PlayerMap';
 
 export class YinshPiece implements ComparableObject {
 

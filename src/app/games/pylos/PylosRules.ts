@@ -1,10 +1,10 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, MGPFallible, Set, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';

@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -9,7 +10,6 @@ import { GameComponent } from '../../components/game-components/game-component/G
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Vector } from '../../jscaip/Vector';
 

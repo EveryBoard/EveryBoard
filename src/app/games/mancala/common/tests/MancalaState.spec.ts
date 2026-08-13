@@ -1,4 +1,5 @@
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { MancalaState } from '../MancalaState';
 
 describe('MancalaState', () => {

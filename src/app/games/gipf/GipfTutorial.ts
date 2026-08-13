@@ -1,3 +1,4 @@
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
@@ -6,7 +7,6 @@ import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfRules } from './GipfRules';

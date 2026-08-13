@@ -4,6 +4,7 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { ArrayUtils, JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';
@@ -21,7 +22,6 @@ import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepening
 import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { ErrorLoggerService } from '../../../services/ErrorLoggerService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';

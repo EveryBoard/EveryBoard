@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
@@ -9,7 +10,6 @@ import { GobanGameComponent } from '../../../components/game-components/goban-ga
 import { BlankGobanComponent } from '../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';

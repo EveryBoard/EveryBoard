@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';

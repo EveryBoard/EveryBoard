@@ -1,7 +1,7 @@
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { PlayerOrNoneGameStateWithTable } from '../../../jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class ReversiState extends PlayerOrNoneGameStateWithTable {

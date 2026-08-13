@@ -1,9 +1,9 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';

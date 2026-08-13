@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -15,7 +16,6 @@ import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { GipfFailure } from './GipfFailure';

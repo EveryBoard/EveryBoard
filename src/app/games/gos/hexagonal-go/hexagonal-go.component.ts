@@ -4,6 +4,7 @@ import { HexagonalGameComponent } from 'src/app/components/game-components/game-
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
@@ -11,7 +12,6 @@ import { ClickHandler } from '../../../components/game-components/game-component
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';

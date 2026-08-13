@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { GoMove } from '../../GoMove';

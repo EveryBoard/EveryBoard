@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
 

@@ -1,7 +1,7 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { Set, Utils } from '@everyboard/lib';
 
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { GameState } from '../../jscaip/state/GameState';
 

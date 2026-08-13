@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { DirectionFailure } from '../../../jscaip/Direction';
-import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';

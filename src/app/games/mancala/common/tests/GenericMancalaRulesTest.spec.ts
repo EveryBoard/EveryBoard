@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { GameNode } from '../../../../jscaip/AI/GameNode';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../MancalaConfig';

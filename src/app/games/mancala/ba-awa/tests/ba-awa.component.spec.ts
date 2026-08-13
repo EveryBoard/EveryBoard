@@ -2,7 +2,8 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { PlayerNumberMap } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';

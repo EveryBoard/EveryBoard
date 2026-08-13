@@ -1,4 +1,5 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
@@ -7,7 +8,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { AIConfig } from '../../jscaip/AI/AIConfig';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 

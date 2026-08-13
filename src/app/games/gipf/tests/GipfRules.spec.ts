@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';

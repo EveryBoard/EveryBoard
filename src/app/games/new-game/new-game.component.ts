@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 
+import { PlayerNumberMap } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { NewGameHeuristic } from './NewGameHeuristic';
