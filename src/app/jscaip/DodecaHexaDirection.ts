@@ -1,6 +1,7 @@
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
-import { Direction, DirectionFactory } from './Direction';
+import { Direction } from './Direction';
+import { DirectionFactory } from './DirectionFactory';
 
 export class DodecaHexaDirection extends Direction {
 

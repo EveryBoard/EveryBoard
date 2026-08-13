@@ -2,7 +2,8 @@
 import { MGPFallible, MGPValidation } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { DirectionFactory, DirectionFailure } from '../Direction';
+import { DirectionFailure } from '../Direction';
+import { DirectionFactory } from '../DirectionFactory';
 import { Ordinal } from '../Ordinal';
 
 describe('Ordinal', () => {

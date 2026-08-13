@@ -1,6 +1,7 @@
 import { Encoder, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
 
-import { Direction, DirectionFactory } from './Direction';
+import { Direction } from './Direction';
+import { DirectionFactory } from './DirectionFactory';
 import { Ordinal } from './Ordinal';
 
 export class Orthogonal extends Direction {
