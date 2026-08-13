@@ -310,8 +310,8 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#ai-option-select-0');
         }));
 
-        it('should skip profile selection for MCTS when there is a single config', fakeAsync(async() => {
-            // Given a board where humans are playing humans and only one MCTS profile exists
+        it('should select profile automaticallyfor MCTS when there is a single available profile', fakeAsync(async() => {
+            // Given a game where only one MCTS profile exists
             const component: P4Component = testUtils.getGameComponent();
             component.aiConfig = {
                 ...component.aiConfig,
@@ -323,12 +323,12 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // When selecting MCTS for Player.ZERO
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-ai-mcts');
 
-            // Then the config is selected implicitly and only the time bound is shown
+            // Then the profile is selected implicitly (because it's the only one) and only the time bound is shown
             testUtils.expectElementNotToExist('#ai-profile-select-0');
             testUtils.expectElementToExist('#ai-option-select-0');
         }));
 
-        it('should require profile selection for MCTS when multiple configs exist', fakeAsync(async() => {
+        it('should require profile selection for MCTS when there are multiple available profiles', fakeAsync(async() => {
             // Given a game where several MCTS profiles exist
             testUtils.expectElementNotToExist('#ai-profile-select-0');
 
