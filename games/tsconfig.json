@@ -1,0 +1,20 @@
+{
+    "compilerOptions": {
+        "module": "preserve",
+        "moduleResolution": "bundler",
+        "rootDir": "./src",
+        "outDir": "./dist",
+        "declaration": true,
+        "target": "es2022",
+        "lib": ["es2020", "dom"],
+        "esModuleInterop": true,
+        "strict": true,
+        "noImplicitAny": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false,
+        "experimentalDecorators": true,
+        "types": ["jasmine"]
+    },
+    "include": ["src/**/*.ts"],
+    "exclude": ["src/**/*.spec.ts"]
+}

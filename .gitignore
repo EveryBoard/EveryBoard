@@ -3,12 +3,14 @@
 # compiled output
 /dist
 /lib/dist
+/games/dist
 /tmp
 /out-tsc
 
 # dependencies
 /node_modules
 /lib/node_modules
+/games/node_modules
 
 # IDEs and editors
 /.idea
@@ -57,6 +59,14 @@ games.txt
 /lib/dist
 /lib/.nyc_output
 /lib/coverage
+
+# games
+/games/tsconfig.tsbuildinfo
+/games/build
+/games/node_modules
+/games/dist
+/games/.nyc_output
+/games/coverage
 
 # firebase config file
 /src/app/firebaseConfig.ts

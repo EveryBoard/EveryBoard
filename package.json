@@ -27,6 +27,7 @@
     "@angular/router": "^20.3.18",
     "@creativebulma/bulma-tooltip": "^1.2.0",
     "@everyboard/lib": "file:lib",
+    "@everyboard/games": "file:games",
     "@fortawesome/angular-fontawesome": "^3.0.0",
     "@fortawesome/fontawesome-svg-core": "^7.2.0",
     "@fortawesome/free-brands-svg-icons": "^7.2.0",
