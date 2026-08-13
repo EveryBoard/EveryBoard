@@ -31,7 +31,12 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              FourStatePiece>
 {
     protected override computeViewBox(): ViewBox {
-        return new ViewBox(-3, -3, 606, 606);
+        const state: SaharaState = this.getState();
+        const width: number = ((state.getWidth() + 1) / 2) * this.SPACE_SIZE;
+        const height: number = state.getHeight() * this.SPACE_SIZE;
+        return ViewBox
+            .fromLimits(0, width, 0, height)
+            .expandAll(this.STROKE_WIDTH / 2);
     }
 
     public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
