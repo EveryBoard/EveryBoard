@@ -211,7 +211,7 @@ export class BashniTutorial extends Tutorial {
                 ]),
             ],
             TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
-            $localize`You did not capture everything!.`,
+            $localize`You did not capture everything!`,
         ),
     ];
 }

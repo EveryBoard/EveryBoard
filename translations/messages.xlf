@@ -467,11 +467,11 @@
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
       </trans-unit>
-      <trans-unit id="5468337301522272954" datatype="html">
-        <source>Bashni</source>
-      </trans-unit>
       <trans-unit id="3697715893908807208" datatype="html">
         <source>Toric Reversi</source>
+      </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1103,6 +1103,9 @@
       <trans-unit id="4060948936151379193" datatype="html">
         <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
       </trans-unit>
+      <trans-unit id="3134181849403890425" datatype="html">
+        <source>You made the majority capture, but you were asked to do the minority one here!</source>
+      </trans-unit>
       <trans-unit id="2170682009266275861" datatype="html">
         <source>When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
       </trans-unit>
@@ -1136,8 +1139,8 @@
       <trans-unit id="7127492795528845730" datatype="html">
         <source>When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.&lt;br/&gt;Here you must also use your king&apos;s backward and flying capture abilities.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture all remaining pieces.</source>
       </trans-unit>
-      <trans-unit id="7399878947806405624" datatype="html">
-        <source>You did not capture everything!.</source>
+      <trans-unit id="3989795384384835435" datatype="html">
+        <source>You did not capture everything!</source>
       </trans-unit>
       <trans-unit id="2406587628849019715" datatype="html">
         <source>Stack pieces instead of capturing them</source>
@@ -1250,8 +1253,8 @@
       <trans-unit id="2683903961757093456" datatype="html">
         <source>No promotion mid-capture</source>
       </trans-unit>
-      <trans-unit id="4874260658400648627" datatype="html">
-        <source>If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.&lt;br/&gt;&lt;br/&gt;You are dark, capture the remaining opponent&apos;s piece.</source>
+      <trans-unit id="6992466040069837979" datatype="html">
+        <source>If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.&lt;br/&gt;&lt;br/&gt;You are playing Dark, capture the remaining opponent&apos;s piece.</source>
       </trans-unit>
       <trans-unit id="1172092152887347450" datatype="html">
         <source>Observe how your piece did not get a promotion despite having reached the last line.</source>
@@ -1298,8 +1301,8 @@
       <trans-unit id="5396877629075826495" datatype="html">
         <source>You did not capture the right piece.</source>
       </trans-unit>
-      <trans-unit id="326760054466315859" datatype="html">
-        <source>If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.&lt;br/&gt;&lt;br/&gt;You are dark, do a capture.</source>
+      <trans-unit id="2841090669908192003" datatype="html">
+        <source>If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture.</source>
       </trans-unit>
       <trans-unit id="6441891554333297114" datatype="html">
         <source>Observe how your piece got promoted but could not continue its capture further.</source>

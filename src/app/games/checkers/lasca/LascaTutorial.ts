@@ -139,7 +139,7 @@ export class LascaTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`No promotion mid-capture`,
-            $localize`If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.<br/><br/>You are dark, do a capture.`,
+            $localize`If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.<br/><br/>You are playing Dark, do a capture.`,
             EvenCheckersState.of([
                 [__, __, __, __, __, __, __],
                 [__, _v, __, _v, __, __, __],

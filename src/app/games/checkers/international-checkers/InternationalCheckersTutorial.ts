@@ -151,7 +151,7 @@ export class InternationalCheckersTutorial extends Tutorial {
         ),
         TutorialStep.anyMove(
             $localize`No promotion mid-capture`,
-            $localize`If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.<br/><br/>You are dark, capture the remaining opponent's piece.`,
+            $localize`If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.<br/><br/>You are playing Dark, capture the remaining opponent's piece.`,
             OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, V, _, V, _, _, _],
