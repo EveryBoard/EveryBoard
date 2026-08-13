@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -9,7 +10,6 @@ import { RectangularGameComponent } from '../../components/game-components/recta
 import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RingComponent } from '../common/ring/ring.component';
 
 import { EncapsuleFailure } from './EncapsuleFailure';

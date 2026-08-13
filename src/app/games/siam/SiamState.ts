@@ -1,4 +1,5 @@
-import { Player } from '../../jscaip/Player';
+import { Player } from '@everyboard/games';
+
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 

@@ -1,8 +1,8 @@
+import { Player } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';
-import { Player } from '../Player';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';

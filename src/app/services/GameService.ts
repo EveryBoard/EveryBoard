@@ -1,10 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { JSONValue, MGPFallible } from '@everyboard/lib';
 
 import { GameEvent, Game } from '../domain/Game';
-import { Player, PlayerOrNone } from '../jscaip/Player';
 import { Debug } from '../utils/Debug';
 
 import { BackendService, BackendMessage } from './BackendService';

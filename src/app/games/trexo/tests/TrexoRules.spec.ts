@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';

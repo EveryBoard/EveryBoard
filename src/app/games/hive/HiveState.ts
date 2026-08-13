@@ -1,9 +1,9 @@
+import { Player } from '@everyboard/games';
 import { ComparableObject, MGPMap, MGPOptional, ReversibleMap, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { Player } from '../../jscaip/Player';
 import { Table } from '../../jscaip/TableUtils';
 import { Vector } from '../../jscaip/Vector';
 import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';

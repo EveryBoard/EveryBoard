@@ -1,4 +1,5 @@
-import { Player } from '../../jscaip/Player';
+import { Player } from '@everyboard/games';
+
 import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export class EpaminondasState extends PlayerOrNoneGameStateWithTable {

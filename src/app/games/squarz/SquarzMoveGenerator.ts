@@ -1,8 +1,8 @@
+import { Player } from '@everyboard/games';
 import { MGPMap } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
-import { Player } from '../../jscaip/Player';
 
 import { SquarzMove } from './SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from './SquarzRules';

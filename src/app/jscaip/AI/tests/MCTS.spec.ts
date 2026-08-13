@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
+
 import { AwaleMoveGenerator } from '../../../games/mancala/awale/AwaleMoveGenerator';
 import { AwaleRules } from '../../../games/mancala/awale/AwaleRules';
 import { MancalaConfig } from '../../../games/mancala/common/MancalaConfig';
@@ -17,7 +19,6 @@ import { QuartoConfig, QuartoNode, QuartoRules } from '../../../games/quarto/Qua
 import { QuartoState } from '../../../games/quarto/QuartoState';
 import { Coord } from '../../Coord';
 import { GameStatus } from '../../GameStatus';
-import { Player } from '../../Player';
 import { Table } from '../../TableUtils';
 import { AITimeLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';

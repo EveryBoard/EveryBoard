@@ -5,6 +5,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ConfigRoom } from '../../../domain/ConfigRoom';
@@ -13,7 +14,6 @@ import { MinimalUser } from '../../../domain/MinimalUser';
 import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';

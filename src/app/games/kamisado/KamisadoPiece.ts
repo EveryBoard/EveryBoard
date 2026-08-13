@@ -1,6 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { ComparableObject } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 import { KamisadoColor } from './KamisadoColor';
 

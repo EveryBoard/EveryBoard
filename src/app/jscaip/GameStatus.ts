@@ -1,5 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
+
 import { BoardValue } from './AI/BoardValue';
-import { Player, PlayerOrNone } from './Player';
 
 export class GameStatus {
 

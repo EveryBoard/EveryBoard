@@ -1,4 +1,5 @@
-import { Player } from '../Player';
+import { Player } from '@everyboard/games';
+
 import { RulesConfig } from '../RulesConfigUtil';
 
 export type GameStateAndConfig = {

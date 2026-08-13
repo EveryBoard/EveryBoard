@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -11,7 +12,6 @@ import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 

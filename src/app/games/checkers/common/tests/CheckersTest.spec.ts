@@ -2,12 +2,12 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
+import { Player } from '@everyboard/games';
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../../jscaip/Coord';
 import { Direction, DirectionFailure } from '../../../../jscaip/Direction';
-import { Player } from '../../../../jscaip/Player';
 import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';

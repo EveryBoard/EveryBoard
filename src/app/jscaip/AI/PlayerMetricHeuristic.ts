@@ -1,5 +1,6 @@
+import { Player } from '@everyboard/games';
+
 import { Move } from '../Move';
-import { Player } from '../Player';
 import { PlayerNumberTable } from '../PlayerNumberTable';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';

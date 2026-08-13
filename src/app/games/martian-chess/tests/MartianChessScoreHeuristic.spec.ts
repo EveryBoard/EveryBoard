@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from '../../../jscaip/Player';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessPiece } from '../MartianChessPiece';

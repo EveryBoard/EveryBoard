@@ -1,7 +1,7 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { ComparableObject, MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { TableUtils } from '../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 

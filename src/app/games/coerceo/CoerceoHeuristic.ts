@@ -1,10 +1,10 @@
+import { Player } from '@everyboard/games';
 import { MGPMap } from '@everyboard/lib';
 
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { CoerceoMove } from './CoerceoMove';

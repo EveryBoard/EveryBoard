@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from '@everyboard/games';
+
 import { Coord } from '../../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
 import { SixMove } from '../SixMove';

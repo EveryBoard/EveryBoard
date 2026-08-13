@@ -1,7 +1,8 @@
+import { PlayerOrNone } from '@everyboard/games';
+
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
-import { PlayerOrNone } from '../../jscaip/Player';
 
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoConfig, TeekoNode } from './TeekoRules';

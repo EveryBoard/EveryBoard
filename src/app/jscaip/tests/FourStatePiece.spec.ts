@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
+
 import { FourStatePiece } from '../FourStatePiece';
-import { Player } from '../Player';
 
 describe('FourStatePiece', () => {
     describe('ofPlayer', () => {

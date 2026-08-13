@@ -1,10 +1,10 @@
 import { Component, ComponentRef, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Move } from '../../jscaip/Move';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';

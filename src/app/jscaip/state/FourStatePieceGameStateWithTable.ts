@@ -1,8 +1,8 @@
+import { Player } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
 import { FourStatePiece } from '../FourStatePiece';
-import { Player } from '../Player';
 import { Table } from '../TableUtils';
 
 import { GameStateWithTable } from './GameStateWithTable';

@@ -1,3 +1,4 @@
+import { Player } from '@everyboard/games';
 import { ArrayUtils, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -6,7 +7,6 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { Player } from '../../jscaip/Player';
 import { Rules } from '../../jscaip/Rules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';

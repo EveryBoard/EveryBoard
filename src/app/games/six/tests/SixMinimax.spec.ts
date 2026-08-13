@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from '@everyboard/games';
+
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';

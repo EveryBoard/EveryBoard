@@ -1,7 +1,7 @@
+import { Player } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
 import { Move } from '../Move';
-import { Player } from '../Player';
 import { PlayerNumberTable } from '../PlayerNumberTable';
 import { SuperRules } from '../Rules';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';

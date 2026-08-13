@@ -1,8 +1,8 @@
+import { Player } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
 import { Move } from '../Move';
-import { Player } from '../Player';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 

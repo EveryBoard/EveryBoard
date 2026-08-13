@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';

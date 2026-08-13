@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AIConfig } from '../../../jscaip/AI/AIConfig';
@@ -8,7 +9,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { Coord3D } from '../../../jscaip/Coord3D';
 import { Move } from '../../../jscaip/Move';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';

@@ -2,6 +2,7 @@
 import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { LodestoneNode, LodestoneRules } from '../../../games/lodestone/LodestoneRules';
@@ -9,7 +10,6 @@ import { P4Move } from '../../../games/p4/P4Move';
 import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
 import { GameNode } from '../../../jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';

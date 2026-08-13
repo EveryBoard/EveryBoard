@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Player, PlayerOrNone } from '@everyboard/games';
+
 import { EncapsulePiece } from '../EncapsulePiece';
 
 describe('EncapsulePiece', () => {

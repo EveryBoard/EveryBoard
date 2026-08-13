@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
+
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';

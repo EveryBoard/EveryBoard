@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';

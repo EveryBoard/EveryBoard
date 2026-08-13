@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { LinesOfActionHeuristic } from '../LinesOfActionHeuristic';
 import { LinesOfActionRules } from '../LinesOfActionRules';

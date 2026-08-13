@@ -1,6 +1,6 @@
+import { Player } from '@everyboard/games';
 import { ArrayUtils, MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { Player } from './Player';
 
 export class PlayerNumberTable extends MGPMap<Player, ReadonlyArray<number>> {
 

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { PlayerOrNone } from '../../../jscaip/Player';
 import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
 import { PentagoMove } from '../PentagoMove';

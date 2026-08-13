@@ -1,3 +1,4 @@
+import { Player } from '@everyboard/games';
 import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
@@ -5,7 +6,6 @@ import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player } from '../../jscaip/Player';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';

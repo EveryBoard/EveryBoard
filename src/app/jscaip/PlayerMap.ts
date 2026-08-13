@@ -1,6 +1,6 @@
+import { Player } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { Player } from './Player';
 import { PlayerNumberTable } from './PlayerNumberTable';
 
 export class PlayerMap<T extends NonNullable<unknown>> {

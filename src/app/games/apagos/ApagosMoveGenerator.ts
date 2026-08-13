@@ -1,5 +1,6 @@
+import { Player } from '@everyboard/games';
+
 import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Player } from '../../jscaip/Player';
 
 import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from './ApagosRules';

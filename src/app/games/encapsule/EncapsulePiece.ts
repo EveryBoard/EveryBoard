@@ -1,6 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { ComparableObject, Encoder } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 export class EncapsulePiece implements ComparableObject {
 

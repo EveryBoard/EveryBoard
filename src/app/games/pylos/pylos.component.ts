@@ -1,12 +1,12 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 

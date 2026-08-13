@@ -1,3 +1,4 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPMap, Set, Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../../jscaip/AI/BoardValue';
@@ -6,7 +7,6 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Orthogonal } from '../../jscaip/Orthogonal';
 import { SandwichThreat } from '../../jscaip/PieceThreat';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';

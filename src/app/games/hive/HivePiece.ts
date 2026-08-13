@@ -1,6 +1,6 @@
+import { Player } from '@everyboard/games';
 import { ArrayUtils, ComparableObject, Encoder, JSONValueWithoutArray, Utils } from '@everyboard/lib';
 
-import { Player } from '../../jscaip/Player';
 
 export type HivePieceKind = 'QueenBee' | 'Beetle' | 'Grasshopper' | 'Spider' | 'SoldierAnt';
 

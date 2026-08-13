@@ -1,3 +1,4 @@
+import { Player } from '@everyboard/games';
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
@@ -7,7 +8,6 @@ import { CoordSet } from '../../jscaip/CoordSet';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { Rules } from '../../jscaip/Rules';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';

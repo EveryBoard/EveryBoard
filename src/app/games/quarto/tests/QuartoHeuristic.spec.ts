@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
+
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { QuartoHeuristic } from '../QuartoHeuristic';
 import { QuartoMove } from '../QuartoMove';

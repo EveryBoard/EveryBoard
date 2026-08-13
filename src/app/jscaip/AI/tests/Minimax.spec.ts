@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerOrNone } from '@everyboard/games';
 import { ArrayUtils, MGPOptional, Set } from '@everyboard/lib';
 
 import { P4Heuristic } from '../../../games/p4/P4Heuristic';
@@ -6,7 +7,6 @@ import { P4Move } from '../../../games/p4/P4Move';
 import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
 import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
-import { PlayerOrNone } from '../../Player';
 import { AIDepthLimitOptions, AITimeLimitOptions } from '../AI';
 import { BoardValue } from '../BoardValue';
 import { DummyHeuristic } from '../DummyHeuristic';

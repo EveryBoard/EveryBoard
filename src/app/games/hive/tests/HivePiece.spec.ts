@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../../../jscaip/Player';
+import { Player } from '@everyboard/games';
+
 import { HivePiece, HivePieceStack } from '../HivePiece';
 
 const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');

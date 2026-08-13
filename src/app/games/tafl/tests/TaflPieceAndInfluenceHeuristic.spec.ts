@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
-import { Player } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
 import { TaflMove } from '../TaflMove';

@@ -1,7 +1,7 @@
+import { Player } from '@everyboard/games';
 import { MGPMap, NumberMap } from '@everyboard/lib';
 
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { Player } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 

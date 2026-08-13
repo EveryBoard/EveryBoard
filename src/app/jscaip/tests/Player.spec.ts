@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '../Player';
+import { Player } from '@everyboard/games';
 
 describe('Player', () => {
 

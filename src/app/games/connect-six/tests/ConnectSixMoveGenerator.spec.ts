@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerOrNone } from '@everyboard/games';
+
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
+
 import { Coord } from '../../../../jscaip/Coord';
-import { Player } from '../../../../jscaip/Player';
 import { Table } from '../../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { TaflConfig } from '../../TaflConfig';

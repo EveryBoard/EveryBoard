@@ -1,7 +1,8 @@
+import { Player } from '@everyboard/games';
+
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
 

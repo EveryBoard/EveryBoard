@@ -1,4 +1,5 @@
-import { Player } from '../../jscaip/Player';
+import { Player } from '@everyboard/games';
+
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { CoerceoHeuristic } from './CoerceoHeuristic';

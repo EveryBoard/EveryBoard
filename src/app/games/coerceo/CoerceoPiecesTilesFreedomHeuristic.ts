@@ -1,7 +1,7 @@
+import { Player } from '@everyboard/games';
 import { MGPMap } from '@everyboard/lib';
 
 import { CoordSet } from '../../jscaip/CoordSet';
-import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
 import { CoerceoHeuristic } from './CoerceoHeuristic';

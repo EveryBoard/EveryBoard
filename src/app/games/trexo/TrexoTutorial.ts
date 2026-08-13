@@ -1,9 +1,9 @@
+import { Player } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
-import { Player } from '../../jscaip/Player';
 
 import { TrexoMove } from './TrexoMove';
 import { TrexoRules } from './TrexoRules';

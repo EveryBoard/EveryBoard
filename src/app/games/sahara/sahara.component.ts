@@ -1,13 +1,13 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Player } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
 
 import { SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic';
 import { SaharaFailure } from './SaharaFailure';

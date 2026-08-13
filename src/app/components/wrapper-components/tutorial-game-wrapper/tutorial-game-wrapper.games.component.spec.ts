@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MGPValidationTestUtils } from '@everyboard/lib/testing';
 
@@ -76,7 +77,6 @@ import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../../jscaip/HexaDirection';
 import { Move } from '../../../jscaip/Move';
 import { Ordinal } from '../../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { AbstractRules, SuperRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';

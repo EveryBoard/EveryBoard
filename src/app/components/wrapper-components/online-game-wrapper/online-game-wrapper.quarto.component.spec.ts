@@ -3,6 +3,7 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
@@ -14,7 +15,6 @@ import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { GameStatus } from '../../../jscaip/GameStatus';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';

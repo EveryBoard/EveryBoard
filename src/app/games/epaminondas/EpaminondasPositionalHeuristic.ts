@@ -1,8 +1,9 @@
+import { Player } from '@everyboard/games';
+
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
-import { Player } from '../../jscaip/Player';
 
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';

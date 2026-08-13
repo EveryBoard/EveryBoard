@@ -1,9 +1,9 @@
+import { Player } from '@everyboard/games';
 import { Set, MGPMap } from '@everyboard/lib';
 
 import { AlignmentStatus, BoardInfo } from '../../jscaip/AI/AlignmentHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { Player } from '../../jscaip/Player';
 
 import { SixHeuristic } from './SixHeuristic';
 import { SixMove } from './SixMove';

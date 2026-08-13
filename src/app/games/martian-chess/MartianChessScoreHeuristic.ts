@@ -1,5 +1,6 @@
+import { Player } from '@everyboard/games';
+
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 

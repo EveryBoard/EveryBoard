@@ -1,6 +1,6 @@
+import { Player } from '@everyboard/games';
 import { ArrayUtils, Utils } from '@everyboard/lib';
 
-import { Player } from '../../jscaip/Player';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DvonnMove } from './DvonnMove';

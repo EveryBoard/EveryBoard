@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { PlayerOrNone } from '../../../jscaip/Player';
 import { Table } from '../../../jscaip/TableUtils';
 import { QuixoHeuristic } from '../QuixoHeuristic';
 import { QuixoMove } from '../QuixoMove';

@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { BoardValue } from '../../../jscaip/AI/BoardValue';
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';

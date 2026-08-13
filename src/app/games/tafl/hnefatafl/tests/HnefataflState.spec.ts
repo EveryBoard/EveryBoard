@@ -1,4 +1,5 @@
-import { PlayerOrNone } from '../../../../jscaip/Player';
+import { PlayerOrNone } from '@everyboard/games';
+
 import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
 import { HnefataflRules } from '../HnefataflRules';

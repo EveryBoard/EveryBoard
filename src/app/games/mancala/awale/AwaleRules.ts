@@ -1,8 +1,8 @@
+import { Player } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
 import { TableUtils } from '../../../jscaip/TableUtils';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { MancalaConfig } from '../common/MancalaConfig';

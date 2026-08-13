@@ -1,4 +1,5 @@
-import { Player } from '../../jscaip/Player';
+import { Player } from '@everyboard/games';
+
 import { TableUtils, Table } from '../../jscaip/TableUtils';
 
 import { KamisadoColor } from './KamisadoColor';

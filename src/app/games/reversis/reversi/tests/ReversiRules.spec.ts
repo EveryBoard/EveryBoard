@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { Table } from '../../../../jscaip/TableUtils';

@@ -1,6 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { Set, Utils } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { GameState } from '../../jscaip/state/GameState';

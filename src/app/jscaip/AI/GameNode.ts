@@ -1,9 +1,9 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';
-import { Player, PlayerOrNone } from '../Player';
 import { AbstractRules } from '../Rules';
 import { RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';

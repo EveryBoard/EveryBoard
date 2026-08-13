@@ -1,6 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { ComparableObject, Utils } from '@everyboard/lib';
 
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty' | 'unreachable';
 

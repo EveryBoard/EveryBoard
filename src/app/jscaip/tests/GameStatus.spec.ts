@@ -1,6 +1,7 @@
+import { Player } from '@everyboard/games';
+
 import { BoardValue } from '../AI/BoardValue';
 import { GameStatus } from '../GameStatus';
-import { Player } from '../Player';
 
 describe('GameStatus', () => {
 

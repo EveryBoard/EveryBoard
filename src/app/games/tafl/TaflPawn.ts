@@ -1,4 +1,4 @@
-import { PlayerOrNone } from '../../jscaip/Player';
+import { PlayerOrNone } from '@everyboard/games';
 
 export class TaflPawn {
 

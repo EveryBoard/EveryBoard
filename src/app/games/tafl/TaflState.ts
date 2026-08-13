@@ -1,7 +1,7 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RelativePlayer } from '../../jscaip/RelativePlayer';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 

@@ -1,5 +1,6 @@
+import { Player } from '@everyboard/games';
+
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { TriangularGameState } from '../../jscaip/state/TriangularGameState';

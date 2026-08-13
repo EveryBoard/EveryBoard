@@ -1,5 +1,6 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
+
 import { Coord } from '../Coord';
-import { Player, PlayerOrNone } from '../Player';
 
 import { GameStateWithTable } from './GameStateWithTable';
 

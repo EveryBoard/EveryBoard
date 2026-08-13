@@ -1,6 +1,7 @@
+import { PlayerOrNone } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerOrNone } from '../../jscaip/Player';
 
 import { P4Move } from './P4Move';
 import { P4Config, P4Rules } from './P4Rules';

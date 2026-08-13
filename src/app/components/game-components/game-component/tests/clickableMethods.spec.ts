@@ -1,3 +1,4 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { DiamPiece } from '../../../../games/diam/DiamPiece';
@@ -7,7 +8,6 @@ import { SiamMove } from '../../../../games/siam/SiamMove';
 import { Coord } from '../../../../jscaip/Coord';
 import { Ordinal } from '../../../../jscaip/Ordinal';
 import { Orthogonal } from '../../../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../../../jscaip/Player';
 
 export const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
     Abalone: {

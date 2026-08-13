@@ -1,9 +1,9 @@
+import { Player } from '@everyboard/games';
 import { MGPFallible, Set } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 
 import { AbaloneMove } from './AbaloneMove';

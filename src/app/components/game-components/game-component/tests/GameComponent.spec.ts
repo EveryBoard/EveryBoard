@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { Player } from '@everyboard/games';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../../games/abalone/abalone.component';
@@ -11,7 +12,6 @@ import { Heuristic } from '../../../../jscaip/AI/Heuristic';
 import { MCTS } from '../../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { Move } from '../../../../jscaip/Move';
-import { Player } from '../../../../jscaip/Player';
 import { RulesConfig } from '../../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../../jscaip/state/GameState';
 import { ErrorLoggerServiceMock } from '../../../../services/tests/ErrorLoggerServiceMock.spec';

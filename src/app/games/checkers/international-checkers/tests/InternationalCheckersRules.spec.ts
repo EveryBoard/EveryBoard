@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
+
 import { Coord, CoordFailure } from '../../../../jscaip/Coord';
-import { Player } from '../../../../jscaip/Player';
 import { RulesFailure } from '../../../../jscaip/RulesFailure';
 import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { CheckersConfig, CheckersNode } from '../../common/AbstractCheckersRules';

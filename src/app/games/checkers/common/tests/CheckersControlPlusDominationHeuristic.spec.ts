@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Player } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Player } from '../../../../jscaip/Player';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';

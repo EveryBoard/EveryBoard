@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
+import { Player } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
@@ -29,7 +30,6 @@ import { createMinimaxFromConfig } from '../../jscaip/AI/AIConfigUtils';
 import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
-import { Player } from '../../jscaip/Player';
 import { SuperRules } from '../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { GameState } from '../../jscaip/state/GameState';

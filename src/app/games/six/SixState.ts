@@ -1,9 +1,9 @@
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
 import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils, Table } from '../../jscaip/TableUtils';

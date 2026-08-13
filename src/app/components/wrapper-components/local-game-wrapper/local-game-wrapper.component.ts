@@ -3,6 +3,7 @@ import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, O
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ParamMap } from '@angular/router';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
 import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
@@ -14,7 +15,6 @@ import { MCTS } from '../../../jscaip/AI/MCTS';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';

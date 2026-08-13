@@ -2,11 +2,11 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { Player } from '@everyboard/games';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
 import { MoveGenerator } from '../../../../jscaip/AI/AI';
 import { Coord } from '../../../../jscaip/Coord';
-import { Player } from '../../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
 import { Cell, Table } from '../../../../jscaip/TableUtils';

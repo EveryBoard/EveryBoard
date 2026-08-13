@@ -1,9 +1,9 @@
+import { PlayerOrNone } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../AI/BoardValue';
 import { GameStatus } from '../GameStatus';
 import { NInARowHelper } from '../NInARowHelper';
-import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
 

@@ -1,4 +1,4 @@
-import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Player, PlayerOrNone } from '@everyboard/games';
 
 export type LodestoneDirection = 'push' | 'pull';
 
