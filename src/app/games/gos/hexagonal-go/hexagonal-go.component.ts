@@ -92,7 +92,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
         this.last = MGPOptional.empty();
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         return ViewBox.fromHexa(
             this.getState().allCoords(),
             this.hexaLayout,

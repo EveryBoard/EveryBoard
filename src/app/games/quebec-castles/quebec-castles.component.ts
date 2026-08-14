@@ -76,7 +76,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public override getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         let viewBox: ViewBox = this.getBasicViewBox();
         if (this.isPlayerDropping()) {
             viewBox = viewBox.expandAbove(this.SPACE_SIZE);
@@ -116,7 +116,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
             this.minX = 0;
             this.maxX = width * this.SPACE_SIZE;
             this.minY = 0;
-            return super.getViewBox();
+            return super.computeViewBox();
         }
     }
 

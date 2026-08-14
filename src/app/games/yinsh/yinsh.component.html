@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     viewBox="0 250 1065 1060"
+     [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
     @for (line of hexaBoard; track $index; let y = $index) {
         <g>
