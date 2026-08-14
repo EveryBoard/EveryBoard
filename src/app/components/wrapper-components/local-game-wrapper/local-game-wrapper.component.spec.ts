@@ -310,7 +310,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.expectElementNotToExist('#ai-option-select-0');
         }));
 
-        it('should select profile automaticallyf or MCTS when there is a single available profile', fakeAsync(async() => {
+        it('should select profile automatically for MCTS when there is a single available profile', fakeAsync(async() => {
             // Given a game where only one MCTS profile exists
             const component: P4Component = testUtils.getGameComponent();
             component.aiConfig = {
