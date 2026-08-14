@@ -58,7 +58,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public node: GameNode<M, S>;
 
-    public config: C;
+    protected config: C;
 
     public aiConfig: AIConfig<M, S, C> = {
         minimax: [],
@@ -231,8 +231,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         this.tutorial = gameInfo.tutorial.tutorial;
     }
 
-    protected getConfig(): C {
+    public getConfig(): C {
         return this.config;
+    }
+
+    public setConfig(config: C): void {
+        this.config = config;
     }
 
     /**

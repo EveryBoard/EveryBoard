@@ -451,19 +451,19 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     public async setupState(state: GameState,
                             params: { previousState?: GameState;
                                       previousMove?: Move;
-                                      config?: RulesConfig; } = {})
-    : Promise<void>
-    {
+                                      config?: RulesConfig; } = {},
+    ): Promise<void> {
         const config: RulesConfig = this.getConfigFrom(params.config);
         if (Object.keys(config).length > 0) {
             // If the game is configurable, set its config
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
-            Object.entries(config)
-                .map((configElement: [string, ConfigDescriptionType]) => {
+            Object.entries(config).forEach(
+                (configElement: [string, ConfigDescriptionType]) => {
                     TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
-                });
+                },
+            );
             await wrapper.setConfigFromParams();
-            this.gameComponent.config = config;
+            this.gameComponent.setConfig(config);
             tick(0);
         }
         this.gameComponent.node = new GameNode(
@@ -586,8 +586,8 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   clickAnimationDuration?: number)
-    : Promise<void>
+                                   clickAnimationDuration?: number,
+    ): Promise<void>
     {
         return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
     }

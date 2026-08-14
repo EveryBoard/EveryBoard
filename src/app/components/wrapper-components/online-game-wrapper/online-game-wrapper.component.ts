@@ -131,7 +131,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise game-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
-            this.gameComponent.config = configRoom.rulesConfig;
+            this.gameComponent.setConfig(configRoom.rulesConfig);
             await this.subscribeToGameUpdates();
         }, 2);
     }

@@ -219,12 +219,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     KalahRules.get(),
                     kalahTutorial[4],
-                    MancalaMove.of(MancalaDistribution.of(0)),
+                    MancalaMove.of(MancalaDistribution.of(0, 1)),
                     MGPValidation.failure('This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!'),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],
-                    MancalaMove.of(MancalaDistribution.of(4)),
+                    MancalaMove.of(MancalaDistribution.of(4, 1)),
                     MGPValidation.failure('You did not capture, try again!'),
                 ], [
                     LinesOfActionRules.get(),
