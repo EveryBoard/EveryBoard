@@ -7,7 +7,7 @@
           y="0"
           ry="115"
           rx="115"
-          [attr.width]="getViewBoxWidth()"
+          [attr.width]="viewBoxWidth()"
           [attr.height]="getViewBoxHeight()"
           fill="blue"
           class="base"/>
@@ -32,7 +32,7 @@
     <line id="horizontal-line"
           x1="120"
           [attr.y1]="getVerticalCenter()"
-          [attr.x2]="getViewBoxWidth() - 120"
+          [attr.x2]="viewBoxWidth() - 120"
           [attr.y2]="getVerticalCenter()"
           class="base"/>
     <line x1="120"
@@ -40,9 +40,9 @@
           x2="120"
           [attr.y2]="getViewBoxHeight()"
           class="base"/>
-    <line [attr.x1]="getViewBoxWidth() - 120"
+    <line [attr.x1]="viewBoxWidth() - 120"
           y1="0"
-          [attr.x2]="getViewBoxWidth() - 120"
+          [attr.x2]="viewBoxWidth() - 120"
           [attr.y2]="getViewBoxHeight()"
           class="base"/>
 

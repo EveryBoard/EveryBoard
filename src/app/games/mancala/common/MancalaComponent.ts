@@ -72,13 +72,9 @@ export abstract class MancalaComponent<R extends MancalaRules>
     protected override computeViewBox(): ViewBox {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
-        const width: number = this.getViewBoxWidth() + this.STROKE_WIDTH;
+        const width: number = this.viewBoxWidth() + this.STROKE_WIDTH;
         const height: number = this.getViewBoxHeight() + this.STROKE_WIDTH;
         return new ViewBox(left, up, width, height);
-    }
-
-    public getViewBoxWidth(): number {
-        return this.viewBoxWidth();
     }
 
     public getViewBoxHeight(): number {
@@ -98,7 +94,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getStoreTranslate(player: Player): string {
-        const translateX: number = player === Player.ZERO ? 60 : this.getViewBoxWidth() - 60;
+        const translateX: number = player === Player.ZERO ? 60 : this.viewBoxWidth() - 60;
         const translateY: number = this.getVerticalCenter();
         return `translate(${ translateX } ${ translateY })`;
     }
