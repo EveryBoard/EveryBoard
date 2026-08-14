@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+
+import { Ordinal } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { EpaminondasFailure } from '../EpaminondasFailure';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasMoveGenerator } from '../EpaminondasMoveGenerator';

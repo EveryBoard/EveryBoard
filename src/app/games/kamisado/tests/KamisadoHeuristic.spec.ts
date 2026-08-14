@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoHeuristic } from '../KamisadoHeuristic';
 import { KamisadoPiece } from '../KamisadoPiece';

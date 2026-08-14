@@ -2,8 +2,8 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiConfig } from '../../common/AbstractReversiRules';
 import { ReversiMove } from '../../common/ReversiMove';

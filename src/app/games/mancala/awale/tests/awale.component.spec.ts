@@ -2,8 +2,8 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerNumberMap } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaFailure } from '../../common/MancalaFailure';

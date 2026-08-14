@@ -1,7 +1,8 @@
 import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
 
-import { Coord } from '../../../../jscaip/Coord';
-import { GobanUtils } from '../../../../jscaip/GobanUtils';
+import { Coord } from '@everyboard/games';
+import { GobanUtils } from '@everyboard/games';
+
 import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 
 @Component({

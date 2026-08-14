@@ -1,6 +1,7 @@
 import { TestBed, tick } from '@angular/core/testing';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesConfig, RulesConfigUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ConfigRoom } from '../../../domain/ConfigRoom';
@@ -8,7 +9,6 @@ import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';

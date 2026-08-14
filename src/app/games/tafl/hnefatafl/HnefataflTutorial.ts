@@ -1,6 +1,7 @@
+import { Coord } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../../jscaip/Coord';
 import { TaflConfig } from '../TaflConfig';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';

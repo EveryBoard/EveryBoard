@@ -2,9 +2,9 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HiveFailure } from '../HiveFailure';
 import { HiveDropMove, HiveMove } from '../HiveMove';

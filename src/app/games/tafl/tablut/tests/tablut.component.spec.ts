@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../jscaip/Coord';
+import { Coord } from '@everyboard/games';
+
 import { TaflConfig } from '../../TaflConfig';
 import { TaflPawn } from '../../TaflPawn';
 import { TaflState } from '../../TaflState';

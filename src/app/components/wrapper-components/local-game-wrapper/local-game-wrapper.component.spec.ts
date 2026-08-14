@@ -5,6 +5,13 @@ import { Router } from '@angular/router';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { AIDepthLimitOptions, AIOptions, AbstractAI } from '@everyboard/games';
+import { MinimaxConfig } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { IterativeDeepeningMinimax } from '@everyboard/games';
+import { MCTS } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
 import { ArrayUtils, JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { UserMocks } from '../../../domain/UserMocks.spec';
@@ -15,13 +22,6 @@ import { P4OrderedMoveGenerator } from '../../../games/p4/P4OrderedMoveGenerator
 import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
 import { P4Component } from '../../../games/p4/p4.component';
-import { AIDepthLimitOptions, AIOptions, AbstractAI } from '../../../jscaip/AI/AI';
-import { MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { GameStatus } from '../../../jscaip/GameStatus';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { ErrorLoggerService } from '../../../services/ErrorLoggerService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';

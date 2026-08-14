@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerNumberMap } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { GipfMoveGenerator } from '../GipfMoveGenerator';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfState } from '../GipfState';

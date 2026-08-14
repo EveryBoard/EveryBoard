@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessRules } from '../MartianChessRules';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';

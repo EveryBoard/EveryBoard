@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
 import { ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';

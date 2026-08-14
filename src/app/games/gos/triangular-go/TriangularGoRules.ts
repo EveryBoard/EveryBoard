@@ -1,10 +1,10 @@
 import { PlayerNumberMap } from '@everyboard/games';
+import { HexagonalUtils } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, TriangularGoGroupDataFactory } from '../GoGroupDataFactory';

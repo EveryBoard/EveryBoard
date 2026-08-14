@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';

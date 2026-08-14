@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 import { MGPValidationTestUtils, TestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+
 import { TaflFailure } from '../TaflFailure';
 import { TaflMove } from '../TaflMove';
 

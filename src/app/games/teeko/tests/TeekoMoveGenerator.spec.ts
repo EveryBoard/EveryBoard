@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Table } from '../../../jscaip/TableUtils';
 import { TeekoMove } from '../TeekoMove';
 import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';

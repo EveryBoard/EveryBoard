@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { SaharaMobilityHeuristic } from '../SaharaMobilityHeuristic';
 import { SaharaRules } from '../SaharaRules';
 import { SaharaState } from '../SaharaState';

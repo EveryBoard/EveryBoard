@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { ApagosFullBoardHeuristic } from '../ApagosFullBoardHeuristic';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';

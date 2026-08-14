@@ -2,9 +2,9 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerNumberMap } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { GoMove } from '../../GoMove';
 import { GoPhase } from '../../GoPhase';

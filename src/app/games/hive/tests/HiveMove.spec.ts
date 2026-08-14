@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+
 import { HiveMove } from '../HiveMove';
 import { HivePiece } from '../HivePiece';
 

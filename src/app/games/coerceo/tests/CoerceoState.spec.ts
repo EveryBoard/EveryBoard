@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
 
 describe('CoerceoState', () => {

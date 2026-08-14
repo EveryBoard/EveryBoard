@@ -1,7 +1,8 @@
+
+import { Coord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
 import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { MoveWithTwoCoords } from '../../../jscaip/MoveWithTwoCoords';
 import { TaflMove } from '../TaflMove';
 
 export class BrandhubMove extends TaflMove {

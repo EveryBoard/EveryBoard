@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerNumberMap } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
 import { MancalaMoveGenerator } from '../common/MancalaMoveGenerator';

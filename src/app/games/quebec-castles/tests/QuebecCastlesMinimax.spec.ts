@@ -1,6 +1,7 @@
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { DummyHeuristic } from '../../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { DummyHeuristic } from '@everyboard/games';
+
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';

@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPFallible, MGPOptional, Set } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';

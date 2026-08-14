@@ -4,10 +4,10 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesMove } from '../QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesRules } from '../QuebecCastlesRules';

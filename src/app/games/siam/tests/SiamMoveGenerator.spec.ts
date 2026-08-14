@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from '../../../jscaip/TableUtils';
+import { Table } from '@everyboard/games';
+
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { SiamPiece } from '../SiamPiece';

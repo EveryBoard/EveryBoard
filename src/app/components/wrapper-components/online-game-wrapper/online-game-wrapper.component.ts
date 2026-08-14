@@ -6,16 +6,16 @@ import { Mutex } from 'async-mutex';
 import { Subscription } from 'rxjs';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { AbstractNode, GameNode } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { JSONValue, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { Game, GameEvent, GameEventMove, GameEventReply, GameResult, RequestType } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { Move } from '../../../jscaip/Move';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { GameService } from '../../../services/GameService';
 import { Debug } from '../../../utils/Debug';

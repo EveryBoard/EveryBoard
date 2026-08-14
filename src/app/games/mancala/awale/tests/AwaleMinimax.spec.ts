@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerNumberMap } from '@everyboard/games';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
-import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
-import { Minimax } from '../../../../jscaip/AI/Minimax';
-import { Table } from '../../../../jscaip/TableUtils';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';

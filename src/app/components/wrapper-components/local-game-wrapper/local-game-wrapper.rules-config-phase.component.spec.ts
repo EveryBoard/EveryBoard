@@ -2,11 +2,12 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { RulesConfig } from '@everyboard/games';
+
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { DropMode, QuebecCastlesConfig, QuebecCastlesRules } from '../../../games/quebec-castles/QuebecCastlesRules';
 import { QuebecCastlesState } from '../../../games/quebec-castles/QuebecCastlesState';
 import { QuebecCastlesComponent } from '../../../games/quebec-castles/quebec-castles.component';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ErrorLoggerService } from '../../../services/ErrorLoggerService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';

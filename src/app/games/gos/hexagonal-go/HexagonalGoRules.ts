@@ -1,10 +1,9 @@
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-
+import { TableUtils } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';

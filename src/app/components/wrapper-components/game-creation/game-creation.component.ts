@@ -5,13 +5,13 @@ import { Router } from '@angular/router';
 import { Subscription, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
+import { AbstractNode, GameNode } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { FirstPlayer, ConfigRoom, GameType, GameDuration, Status } from '../../../domain/ConfigRoom';
 import { MinimalUser } from '../../../domain/MinimalUser';
-import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { HumanDurationPipe } from '../../../pipes-and-directives/human-duration.pipe';
 import { Candidate, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser, ConnectedUserService } from '../../../services/ConnectedUserService';

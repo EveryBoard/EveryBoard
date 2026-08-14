@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';

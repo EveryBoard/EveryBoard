@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Orthogonal } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Table } from '../../../jscaip/TableUtils';
+
 import { SiamMove } from '../SiamMove';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
 import { SiamPiece } from '../SiamPiece';

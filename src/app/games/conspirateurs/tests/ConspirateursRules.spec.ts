@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ConspirateursFailure } from '../ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from '../ConspirateursMove';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';

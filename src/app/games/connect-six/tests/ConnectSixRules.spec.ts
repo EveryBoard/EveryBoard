@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';

@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { SandwichThreat } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Coord } from '../../../jscaip/Coord';
-import { CoordSet } from '../../../jscaip/CoordSet';
-import { SandwichThreat } from '../../../jscaip/PieceThreat';
-import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
 import { TaflMove } from '../TaflMove';
 import { TaflPawn } from '../TaflPawn';

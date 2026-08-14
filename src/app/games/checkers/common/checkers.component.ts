@@ -1,13 +1,13 @@
 import { Player } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { ModeConfig, ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 
 import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
 import { CheckersControlHeuristic } from './CheckersControlHeuristic';

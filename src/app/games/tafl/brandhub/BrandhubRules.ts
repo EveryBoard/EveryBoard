@@ -1,7 +1,7 @@
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig, RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
 import { TaflPawn } from '../TaflPawn';
 import { TaflNode, TaflRules } from '../TaflRules';

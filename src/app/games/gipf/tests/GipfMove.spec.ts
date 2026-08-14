@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+
+import { Coord } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { HexaLine } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { HexaLine } from '../../../jscaip/HexaLine';
 import { GipfMove, GipfPlacement } from '../GipfMove';
 
 describe('GipfCapture', () => {

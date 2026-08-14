@@ -3,10 +3,10 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { AbstractControl } from '@angular/forms';
 
+import { RulesConfig } from '@everyboard/games';
 import { MGPOptional, Utils, MGPValidation } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 

@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { BoardData, GroupInfos } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
-import { TableUtils, Table } from '../../../jscaip/TableUtils';
+import { BoardData, GroupInfos } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { TableUtils, Table } from '@everyboard/games';
+
 import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';

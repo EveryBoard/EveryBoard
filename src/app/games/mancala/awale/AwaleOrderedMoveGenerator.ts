@@ -1,7 +1,7 @@
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
 import { MancalaConfig } from '../common/MancalaConfig';
 import { MancalaMove } from '../common/MancalaMove';
 import { MancalaDistributionResult, MancalaNode } from '../common/MancalaRules';

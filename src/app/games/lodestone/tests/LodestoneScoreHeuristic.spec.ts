@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { LodestonePiece, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
 import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';

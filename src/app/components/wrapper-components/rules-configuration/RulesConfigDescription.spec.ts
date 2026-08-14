@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '@everyboard/games';
 import { JSONValue, MGPValidation } from '@everyboard/lib';
 
-import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 

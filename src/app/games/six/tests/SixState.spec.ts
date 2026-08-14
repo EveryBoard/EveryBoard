@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { Set, ReversibleMap, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { CoordSet } from '../../../jscaip/CoordSet';
-import { Table } from '../../../jscaip/TableUtils';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { SixState } from '../SixState';
 

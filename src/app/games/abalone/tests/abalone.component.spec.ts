@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneMove } from '../AbaloneMove';

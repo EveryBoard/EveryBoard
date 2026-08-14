@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DiamFailure } from '../DiamFailure';
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from '../DiamMove';

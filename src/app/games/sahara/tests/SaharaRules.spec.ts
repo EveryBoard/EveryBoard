@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SaharaFailure } from '../SaharaFailure';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaNode, SaharaRules } from '../SaharaRules';

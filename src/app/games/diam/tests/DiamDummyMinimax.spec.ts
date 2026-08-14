@@ -1,6 +1,7 @@
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { DummyHeuristic, Minimax } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { DiamMove } from '../DiamMove';
 import { DiamMoveGenerator } from '../DiamMoveGenerator';

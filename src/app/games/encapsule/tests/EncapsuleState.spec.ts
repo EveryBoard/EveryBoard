@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { PlayerMap } from '@everyboard/map';
 
-import { TableUtils } from '../../../jscaip/TableUtils';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoNode, TrexoRules } from '../TrexoRules';

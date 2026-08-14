@@ -1,4 +1,4 @@
-import { MoveGenerator } from '../../../jscaip/AI/AI';
+import { MoveGenerator } from '@everyboard/games';
 
 import { ReversiNode, ReversiMoveWithSwitched, ReversiConfig, AbstractReversiRules } from './AbstractReversiRules';
 import { ReversiMove } from './ReversiMove';

@@ -2,12 +2,13 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
+
+import { Coord } from '@everyboard/games';
+import { RulesConfigUtils } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { Encoder, MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';

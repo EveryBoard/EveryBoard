@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
 import { GipfState } from '../GipfState';

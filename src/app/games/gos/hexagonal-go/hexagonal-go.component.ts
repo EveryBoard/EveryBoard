@@ -1,17 +1,17 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 
+import { HexaLayout } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
-import { GroupData } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';

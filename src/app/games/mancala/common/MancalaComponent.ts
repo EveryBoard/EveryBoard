@@ -1,14 +1,14 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { AIConfig } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 import { MGPOptional, Set, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MoveGenerator } from '../../../jscaip/AI/AI';
-import { AIConfig } from '../../../jscaip/AI/AIConfig';
-import { Coord } from '../../../jscaip/Coord';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
 
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaFailure } from './MancalaFailure';

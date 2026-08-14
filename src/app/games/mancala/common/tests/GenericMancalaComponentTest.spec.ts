@@ -4,13 +4,13 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesConfigUtils } from '@everyboard/games';
+import { Cell, Table } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../../../jscaip/AI/AI';
-import { Coord } from '../../../../jscaip/Coord';
-import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
-import { Cell, Table } from '../../../../jscaip/TableUtils';
-import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
 import { MancalaConfig } from '../MancalaConfig';

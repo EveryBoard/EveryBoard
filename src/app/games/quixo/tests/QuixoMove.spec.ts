@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Table } from '../../../jscaip/TableUtils';
+
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 import { QuixoNode, QuixoRules } from '../QuixoRules';

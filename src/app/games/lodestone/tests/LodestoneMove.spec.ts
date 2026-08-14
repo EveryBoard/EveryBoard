@@ -1,6 +1,6 @@
+import { Coord } from '@everyboard/games';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
 import { LodestoneMove } from '../LodestoneMove';
 
 describe('LodestoneMove', () => {

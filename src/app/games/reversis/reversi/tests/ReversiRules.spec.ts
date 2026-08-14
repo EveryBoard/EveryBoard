@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { RulesFailure } from '../../../../jscaip/RulesFailure';
-import { Table } from '../../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { ReversiConfig, ReversiNode } from '../../common/AbstractReversiRules';
 import { ReversiFailure } from '../../common/ReversiFailure';
 import { ReversiMove } from '../../common/ReversiMove';

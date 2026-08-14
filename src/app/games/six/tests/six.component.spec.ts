@@ -2,10 +2,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SixFailure } from '../SixFailure';
 import { SixMove } from '../SixMove';

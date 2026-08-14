@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Table } from '../../../jscaip/TableUtils';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { EpaminondasConfig, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';

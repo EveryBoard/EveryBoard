@@ -1,6 +1,6 @@
+import { MoveGenerator } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../../jscaip/AI/AI';
 
 import { MancalaConfig } from './MancalaConfig';
 import { MancalaDistribution, MancalaMove } from './MancalaMove';

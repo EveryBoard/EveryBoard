@@ -3,9 +3,9 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/map';
 
-import { Coord } from '../../../jscaip/Coord';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { EncapsuleFailure } from '../EncapsuleFailure';
 import { EncapsuleMove } from '../EncapsuleMove';

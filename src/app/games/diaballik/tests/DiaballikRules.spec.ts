@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordFailure } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { CoordFailure } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation, DiaballikSubMove } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';

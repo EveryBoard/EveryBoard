@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ConspirateursOrderedMoveGenerator } from '../ConspirateursOrderedMoveGenerator';
 import { ConspirateursNode, ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';

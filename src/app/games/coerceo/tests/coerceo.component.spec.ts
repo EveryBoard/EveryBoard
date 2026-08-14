@@ -2,10 +2,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '../CoerceoMove';

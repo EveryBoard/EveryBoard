@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '../TeekoMove';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';

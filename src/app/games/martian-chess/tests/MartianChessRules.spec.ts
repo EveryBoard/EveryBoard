@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { MartianChessFailure } from '../MartianChessFailure';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';

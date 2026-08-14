@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
-
-import { PlayerMetricHeuristic } from '../../../jscaip/AI/PlayerMetricHeuristic';
-import { Coord } from '../../../jscaip/Coord';
-import { CoordSet } from '../../../jscaip/CoordSet';
-import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from './AbstractCheckersRules';
 import { CheckersMove } from './CheckersMove';

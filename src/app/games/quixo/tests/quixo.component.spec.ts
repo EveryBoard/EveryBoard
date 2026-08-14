@@ -2,10 +2,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuixoFailure } from '../QuixoFailure';
 import { QuixoMove } from '../QuixoMove';

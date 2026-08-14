@@ -3,14 +3,14 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Arrow } from '../../../components/game-components/arrow-component/Arrow';
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { GipfFailure } from '../GipfFailure';
 import { GipfMove, GipfPlacement } from '../GipfMove';

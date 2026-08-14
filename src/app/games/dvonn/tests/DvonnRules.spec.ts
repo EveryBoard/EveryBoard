@@ -2,13 +2,13 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { DvonnFailure } from '../DvonnFailure';
 import { DvonnMove } from '../DvonnMove';

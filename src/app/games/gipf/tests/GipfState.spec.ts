@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Table } from '../../../jscaip/TableUtils';
 import { GipfRules } from '../GipfRules';
 import { GipfState } from '../GipfState';
 

@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions, MoveGenerator } from '../../../../jscaip/AI/AI';
-import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions, MoveGenerator } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';

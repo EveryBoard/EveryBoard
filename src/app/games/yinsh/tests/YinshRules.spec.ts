@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { YinshFailure } from '../YinshFailure';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';

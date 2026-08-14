@@ -2,9 +2,9 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { DvonnFailure } from '../DvonnFailure';
 import { DvonnMove } from '../DvonnMove';

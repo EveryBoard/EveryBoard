@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerNumberMap } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
 
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
 import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoState } from '../CoerceoState';

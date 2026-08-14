@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { ApagosFailure } from '../ApagosFailure';
 import { ApagosMove } from '../ApagosMove';
 import { ApagosConfig, ApagosNode, ApagosRules } from '../ApagosRules';

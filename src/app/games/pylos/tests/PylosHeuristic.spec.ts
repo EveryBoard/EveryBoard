@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { PylosCoord } from '../PylosCoord';
 import { PylosHeuristic } from '../PylosHeuristic';
 import { PylosMove } from '../PylosMove';

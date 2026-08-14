@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Table } from '../../../jscaip/TableUtils';
 import { P4MoveGenerator } from '../P4MoveGenerator';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4State } from '../P4State';

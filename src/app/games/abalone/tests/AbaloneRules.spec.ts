@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { AbaloneFailure } from '../AbaloneFailure';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';

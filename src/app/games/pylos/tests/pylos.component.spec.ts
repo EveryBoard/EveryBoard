@@ -2,8 +2,8 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosFailure } from '../PylosFailure';

@@ -2,17 +2,17 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@
 
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { AIConfig } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Coord3D } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AIConfig } from '../../../jscaip/AI/AIConfig';
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { Coord } from '../../../jscaip/Coord';
-import { Coord3D } from '../../../jscaip/Coord3D';
-import { Move } from '../../../jscaip/Move';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { SuperRules } from '../../../jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';

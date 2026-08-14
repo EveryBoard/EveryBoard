@@ -1,6 +1,6 @@
+import { MoveGenerator } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../../jscaip/AI/AI';
 
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from './AbstractCheckersRules';
 import { CheckersMove } from './CheckersMove';

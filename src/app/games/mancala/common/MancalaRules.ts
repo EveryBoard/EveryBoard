@@ -1,12 +1,12 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
 
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { Coord } from '../../../jscaip/Coord';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { ConfigurableRules } from '../../../jscaip/Rules';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { Localized } from '../../../utils/LocaleUtils';
 
 import { MancalaConfig } from './MancalaConfig';

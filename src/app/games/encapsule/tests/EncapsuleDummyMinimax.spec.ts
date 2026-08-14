@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { DummyHeuristic, Minimax } from '@everyboard/games';
+
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';

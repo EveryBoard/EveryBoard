@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Coord } from '../../../jscaip/Coord';
-import { Table } from '../../../jscaip/TableUtils';
 import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
 import { SixConfig, SixNode, SixRules } from '../SixRules';

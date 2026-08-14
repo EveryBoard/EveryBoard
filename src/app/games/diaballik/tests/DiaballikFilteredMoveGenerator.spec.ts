@@ -1,4 +1,5 @@
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '@everyboard/games';
+
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';

@@ -3,9 +3,9 @@ import { fakeAsync } from '@angular/core/testing';
 
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PenteMove } from '../PenteMove';
 import { PenteState } from '../PenteState';

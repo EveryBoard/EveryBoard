@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../jscaip/Coord';
-import { Table } from '../../../jscaip/TableUtils';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+
 import { TaflConfig } from '../TaflConfig';
 import { TaflMoveGenerator } from '../TaflMoveGenerator';
 import { TaflPawn } from '../TaflPawn';

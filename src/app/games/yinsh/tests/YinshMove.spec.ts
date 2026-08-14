@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
 import { YinshCapture, YinshMove } from '../YinshMove';
 
 describe('YinshCapture', () => {

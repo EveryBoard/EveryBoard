@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPFallible } from '@everyboard/lib';
 import { MGPFallibleTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+
 import { SquarzMove } from '../SquarzMove';
 
 describe('SquarzMove', () => {

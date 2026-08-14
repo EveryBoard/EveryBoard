@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
+
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { SiamMove } from '../SiamMove';

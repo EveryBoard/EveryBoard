@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '@everyboard/games';
+
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';

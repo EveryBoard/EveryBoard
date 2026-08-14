@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { SquarzFailure } from '../SquarzFailure';
 import { SquarzMove } from '../SquarzMove';
 import { SquarzConfig, SquarzNode, SquarzRules } from '../SquarzRules';

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { Coord } from '../../../jscaip/Coord';
-import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
 import { SixHeuristic } from '../SixHeuristic';

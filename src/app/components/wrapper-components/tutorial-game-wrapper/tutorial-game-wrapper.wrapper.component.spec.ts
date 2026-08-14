@@ -3,6 +3,8 @@ import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
 import { Player } from '@everyboard/games';
+import { RulesConfig, RulesConfigUtils } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { QuartoMove } from '../../../games/quarto/QuartoMove';
@@ -10,8 +12,6 @@ import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoConfig, QuartoRules } from '../../../games/quarto/QuartoRules';
 import { QuartoState } from '../../../games/quarto/QuartoState';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
-import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';

@@ -2,6 +2,14 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { AbstractRules, SuperRules } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 import { MGPValidationTestUtils } from '@everyboard/lib/testing';
 
@@ -72,14 +80,6 @@ import { TrexoTutorial } from '../../../games/trexo/TrexoTutorial';
 import { YinshCapture, YinshMove } from '../../../games/yinsh/YinshMove';
 import { YinshRules } from '../../../games/yinsh/YinshRules';
 import { YinshTutorial, YinshTutorialMessages } from '../../../games/yinsh/YinshTutorial';
-import { Coord } from '../../../jscaip/Coord';
-import { GipfCapture } from '../../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { Move } from '../../../jscaip/Move';
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { AbstractRules, SuperRules } from '../../../jscaip/Rules';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';

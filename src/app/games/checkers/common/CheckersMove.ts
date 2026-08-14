@@ -1,7 +1,7 @@
-import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Move } from '../../../jscaip/Move';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 
 import { CheckersFailure } from './CheckersFailure';
 

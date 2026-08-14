@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
-import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiConfig, ReversiLegalityInformation, ReversiNode } from '../AbstractReversiRules';

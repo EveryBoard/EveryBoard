@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { MartianChessMove } from '../MartianChessMove';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';

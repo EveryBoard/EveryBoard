@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { Coord } from '../../../jscaip/Coord';
-import { Orthogonal } from '../../../jscaip/Orthogonal';
-import { Table } from '../../../jscaip/TableUtils';
 import { SiamHeuristic } from '../SiamHeuristic';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';

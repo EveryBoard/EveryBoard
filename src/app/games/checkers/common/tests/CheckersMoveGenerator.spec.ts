@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../jscaip/Coord';
+import { Coord } from '@everyboard/games';
+
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';

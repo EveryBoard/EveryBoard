@@ -1,5 +1,5 @@
-import { PlayerMetricHeuristic } from '../../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { CheckersConfig, CheckersNode } from './AbstractCheckersRules';
 import { CheckersMove } from './CheckersMove';

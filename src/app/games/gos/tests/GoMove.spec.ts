@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+
+import { RulesConfig } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';

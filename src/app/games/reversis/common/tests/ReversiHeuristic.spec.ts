@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Table } from '../../../../jscaip/TableUtils';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ReversiConfig, ReversiNode } from '../AbstractReversiRules';
 import { ReversiHeuristic } from '../ReversiHeuristic';

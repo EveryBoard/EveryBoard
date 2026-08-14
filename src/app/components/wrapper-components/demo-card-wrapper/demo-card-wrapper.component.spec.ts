@@ -3,16 +3,16 @@ import { DebugElement, SimpleChanges } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { AbstractRules } from '@everyboard/games';
+import { RulesConfig, RulesConfigUtils } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { LodestoneNode, LodestoneRules } from '../../../games/lodestone/LodestoneRules';
 import { P4Move } from '../../../games/p4/P4Move';
 import { P4Config, P4Node, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { AbstractRules } from '../../../jscaip/Rules';
-import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';

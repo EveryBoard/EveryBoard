@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
+
+import { Coord } from '@everyboard/games';
+import { DirectionFailure } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { MartianChessMove, MartianChessMoveFailure } from '../MartianChessMove';
 import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';

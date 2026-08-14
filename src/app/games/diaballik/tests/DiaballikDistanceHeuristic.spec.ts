@@ -1,8 +1,8 @@
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
 import { DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';

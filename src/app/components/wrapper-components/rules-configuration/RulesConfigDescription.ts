@@ -1,7 +1,8 @@
+
+import { GobanConfig } from '@everyboard/games';
+import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '@everyboard/games';
 import { JSONPrimitive, MGPValidation, Set, Utils } from '@everyboard/lib';
 
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Localized } from '../../../utils/LocaleUtils';
 import { MGPValidator, MGPValidators } from '../../../utils/MGPValidator';
 

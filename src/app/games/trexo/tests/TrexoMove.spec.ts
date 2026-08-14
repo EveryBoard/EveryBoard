@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPFallible, Utils } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+
 import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';

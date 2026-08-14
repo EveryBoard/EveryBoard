@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { Table } from '../../../jscaip/TableUtils';
 import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';

@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Table } from '../../../jscaip/TableUtils';
-import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
+
 import { SlowTest, minimaxTest } from '../../../utils/tests/TestUtils.spec';
 import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';

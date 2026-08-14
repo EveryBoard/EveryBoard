@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosFailure } from '../PylosFailure';
 import { PylosMove } from '../PylosMove';

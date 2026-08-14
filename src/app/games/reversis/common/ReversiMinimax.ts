@@ -1,4 +1,4 @@
-import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Minimax } from '@everyboard/games';
 
 import { AbstractReversiRules, ReversiConfig, ReversiLegalityInformation } from './AbstractReversiRules';
 import { ReversiHeuristic } from './ReversiHeuristic';

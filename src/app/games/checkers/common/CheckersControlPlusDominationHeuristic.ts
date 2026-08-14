@@ -1,6 +1,5 @@
 import { Player } from '@everyboard/games';
-
-import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { CheckersConfig, CheckersNode } from './AbstractCheckersRules';
 import { CheckersControlHeuristic } from './CheckersControlHeuristic';

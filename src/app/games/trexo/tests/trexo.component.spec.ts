@@ -3,8 +3,8 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 
-import { Coord } from '../../../jscaip/Coord';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';

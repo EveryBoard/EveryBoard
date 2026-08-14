@@ -2,16 +2,16 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { PlayerNumberMap } from '@everyboard/games';
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
-import { GroupData } from '../../../jscaip/BoardData';
-import { Coord } from '../../../jscaip/Coord';
-import { TableUtils } from '../../../jscaip/TableUtils';
-import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';

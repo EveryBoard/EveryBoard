@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { HeuristicBounds } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { HeuristicBounds } from '../../../jscaip/AI/Heuristic';
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { Table } from '../../../jscaip/TableUtils';
 import { P4Heuristic } from '../P4Heuristic';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4State } from '../P4State';

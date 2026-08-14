@@ -1,10 +1,10 @@
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { GobanUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { Coord } from '../../../jscaip/Coord';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { GobanUtils } from '../../../jscaip/GobanUtils';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';

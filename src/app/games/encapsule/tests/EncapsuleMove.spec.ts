@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsulePiece } from '../EncapsulePiece';

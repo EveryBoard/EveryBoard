@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesConfig } from '@everyboard/games';
+
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { NumberConfig, RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';

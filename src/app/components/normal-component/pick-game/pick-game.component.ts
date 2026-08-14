@@ -2,6 +2,9 @@
 import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
 import Fuse, { FuseResult } from 'fuse.js';
 
+import { AbstractRules } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { AbaloneRules } from '../../../games/abalone/AbaloneRules';
@@ -136,9 +139,6 @@ import { TrexoComponent } from '../../../games/trexo/trexo.component';
 import { YinshRules } from '../../../games/yinsh/YinshRules';
 import { YinshTutorial } from '../../../games/yinsh/YinshTutorial';
 import { YinshComponent } from '../../../games/yinsh/yinsh.component';
-import { AbstractRules } from '../../../jscaip/Rules';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
 import { Localized } from '../../../utils/LocaleUtils';

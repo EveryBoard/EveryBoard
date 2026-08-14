@@ -1,8 +1,8 @@
 import { Player } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
 import { TrexoRules } from '../TrexoRules';
 import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';

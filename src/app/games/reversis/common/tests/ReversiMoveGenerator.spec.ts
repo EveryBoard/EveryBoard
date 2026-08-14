@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { Table } from '../../../../jscaip/TableUtils';
 import { ReversiRules } from '../../reversi/ReversiRules';
 import { ToricReversiRules } from '../../toric-reversi/ToricReversiRules';
 import { AbstractReversiRules, ReversiConfig, ReversiNode } from '../AbstractReversiRules';

@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, InputSignal, OnDestroy, OnInit, eff
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { Subscription } from 'rxjs';
 
+import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '@everyboard/games';
 import { comparableEquals, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 

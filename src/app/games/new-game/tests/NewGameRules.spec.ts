@@ -1,5 +1,6 @@
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
+
 import { NewGameMove } from '../NewGameMove';
 import { NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';

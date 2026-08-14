@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '@everyboard/games';
+
 import { DiaballikRules } from '../../diaballik/DiaballikRules';
 import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamPiece } from '../DiamPiece';

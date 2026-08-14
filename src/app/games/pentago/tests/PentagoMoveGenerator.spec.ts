@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoNode, PentagoRules } from '../PentagoRules';

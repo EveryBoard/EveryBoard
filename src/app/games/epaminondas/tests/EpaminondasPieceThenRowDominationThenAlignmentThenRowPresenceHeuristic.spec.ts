@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { HeuristicUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';
 import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic } from '../EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic';

@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Table, TableUtils } from '../../../../jscaip/TableUtils';
-import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaFailure } from '../../common/MancalaFailure';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';

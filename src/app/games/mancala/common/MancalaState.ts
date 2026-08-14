@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-
-import { Coord } from '../../../jscaip/Coord';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 
 export class MancalaState extends GameStateWithTable<number> {
 

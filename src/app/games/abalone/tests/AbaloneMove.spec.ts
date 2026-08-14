@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+
+import { Coord, CoordFailure } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { HexaDirection } from '../../../jscaip/HexaDirection';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
 import { AbaloneRules } from '../AbaloneRules';

@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { HeuristicBounds } from '../../../jscaip/AI/Heuristic';
-import { Table } from '../../../jscaip/TableUtils';
+import { BoardValue } from '@everyboard/games';
+import { HeuristicBounds } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+
 import { TaflConfig } from '../TaflConfig';
 import { TaflPawn } from '../TaflPawn';
 import { TaflPieceHeuristic } from '../TaflPieceHeuristic';

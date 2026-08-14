@@ -1,8 +1,7 @@
 import { Player } from '@everyboard/games';
-
-import { PlayerMetricHeuristic } from '../../../jscaip/AI/Minimax';
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberTable } from '../../../jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { ReversiConfig, ReversiNode } from './AbstractReversiRules';
 import { ReversiMove } from './ReversiMove';

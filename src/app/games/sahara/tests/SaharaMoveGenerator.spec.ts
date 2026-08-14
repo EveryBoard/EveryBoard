@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '@everyboard/games';
+
 import { SaharaMove } from '../SaharaMove';
 import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
 import { SaharaNode, SaharaRules } from '../SaharaRules';

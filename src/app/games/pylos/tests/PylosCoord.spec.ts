@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Orthogonal } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils, TestUtils } from '@everyboard/lib/testing';
 
-import { Orthogonal } from '../../../jscaip/Orthogonal';
 import { PylosCoord } from '../PylosCoord';
 
 describe('PylosCoord', () => {

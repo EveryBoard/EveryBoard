@@ -1,10 +1,10 @@
 /* eslint-disable max-lines-per-function */
 import { PlayerOrNone } from '@everyboard/games';
+import { AIDepthLimitOptions } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
-import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { Ordinal } from '../../../jscaip/Ordinal';
-import { Table } from '../../../jscaip/TableUtils';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhalanxSizeAndFilterMoveGenerator';

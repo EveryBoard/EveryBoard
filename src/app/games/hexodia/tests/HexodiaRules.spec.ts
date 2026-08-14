@@ -1,14 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { Player } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { DodecaHexaDirection } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
+import { RulesUtils } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { Coord, CoordFailure } from '../../../jscaip/Coord';
-import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
-import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';

@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from '@everyboard/games';
 import { JSONValue, MGPFallible } from '@everyboard/lib';
 
-import { Coord } from '../../../../jscaip/Coord';
 import { CheckersFailure } from '../CheckersFailure';
 import { CheckersMove } from '../CheckersMove';
 

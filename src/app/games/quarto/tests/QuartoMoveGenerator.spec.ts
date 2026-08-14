@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from '../../../jscaip/TableUtils';
+import { Table } from '@everyboard/games';
+
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';

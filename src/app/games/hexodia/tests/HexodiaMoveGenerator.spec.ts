@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../jscaip/Coord';
-import { FourStatePiece } from '../../../jscaip/FourStatePiece';
-import { Table } from '../../../jscaip/TableUtils';
-import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
+
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';

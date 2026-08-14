@@ -1,8 +1,9 @@
 /* eslint-disable max-lines-per-function */
+
+import { Coord } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { QuebecCastlesDrop, QuebecCastlesMove, QuebecCastlesTranslation } from '../QuebecCastlesMove';
 import { QuebecCastlesMoveGenerator } from '../QuebecCastlesMoveGenerator';
 import { QuebecCastlesRules } from '../QuebecCastlesRules';

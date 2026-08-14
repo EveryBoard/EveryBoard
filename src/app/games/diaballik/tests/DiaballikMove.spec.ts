@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
+import { Coord } from '@everyboard/games';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 import { EncoderTestUtils, TestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
 import { DiaballikFailure } from '../DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '../DiaballikMove';
 
