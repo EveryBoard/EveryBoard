@@ -666,7 +666,7 @@ describe('RulesConfigurationComponent', () => {
         setEditableInput(true);
         setRulesConfigDescriptionInput(rulesConfigDescriptionWithNumber);
         setRulesConfigToDisplayInput(secondConfig);
-        await testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
+        testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
         setConfigValue('nombre', secondConfig.nombre);
         setConfigValue('canailleDeBoule', secondConfig.canailleDeBoule);
 
