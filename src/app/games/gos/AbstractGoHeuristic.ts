@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
 
 import { GoNode, AbstractGoRules } from './AbstractGoRules';
 import { GoMove } from './GoMove';

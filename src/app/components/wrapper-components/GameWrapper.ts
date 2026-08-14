@@ -2,10 +2,10 @@ import { Component, ComponentRef, Signal, Type, ViewContainerRef, inject, viewCh
 import { Router } from '@angular/router';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { RulesConfig, RulesConfigUtils } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Move } from '../../jscaip/Move';
-import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
 import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';

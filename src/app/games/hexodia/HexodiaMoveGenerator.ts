@@ -1,10 +1,10 @@
-import { Set } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { TableUtils } from '../../jscaip/TableUtils';
-import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
+import { Set } from '@everyboard/lib';
 
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaNode } from './HexodiaRules';

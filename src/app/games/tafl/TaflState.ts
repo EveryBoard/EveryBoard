@@ -1,9 +1,8 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RelativePlayer } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { RelativePlayer } from '../../jscaip/RelativePlayer';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 import { TaflPawn } from './TaflPawn';
 

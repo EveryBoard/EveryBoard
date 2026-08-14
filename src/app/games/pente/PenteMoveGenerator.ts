@@ -1,7 +1,6 @@
 import { PlayerOrNone } from '@everyboard/games';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 
 import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';

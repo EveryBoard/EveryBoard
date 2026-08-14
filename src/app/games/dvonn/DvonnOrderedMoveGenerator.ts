@@ -1,7 +1,7 @@
 import { Player } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { ArrayUtils, Utils } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';

@@ -1,9 +1,8 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
 import { MGPFallible } from '@everyboard/lib';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
 
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasNode, EpaminondasLegalityInformation, EpaminondasRules, EpaminondasConfig } from './EpaminondasRules';

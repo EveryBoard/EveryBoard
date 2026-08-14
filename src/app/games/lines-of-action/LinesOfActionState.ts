@@ -1,5 +1,5 @@
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { PlayerOrNoneGameStateWithTable } from '@everyboard/games';
 
 export class LinesOfActionState extends PlayerOrNoneGameStateWithTable {
 

@@ -1,14 +1,13 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { HexagonalUtils } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TableUtils, Table } from '@everyboard/games';
+import { OpenHexagonalGameState } from '@everyboard/games';
 import { Set, MGPOptional, MGPValidation, ReversibleMap, Utils } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TableUtils, Table } from '../../jscaip/TableUtils';
-import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
 
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';

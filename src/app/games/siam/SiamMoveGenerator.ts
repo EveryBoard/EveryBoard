@@ -1,6 +1,5 @@
 import { Player } from '@everyboard/games';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
+import { MoveGenerator } from '@everyboard/games';
 
 import { SiamMove } from './SiamMove';
 import { SiamPiece } from './SiamPiece';

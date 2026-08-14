@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-
-import { Coord } from '../../jscaip/Coord';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
+import { Coord } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { HexagonalGameState } from '@everyboard/games';
 
 import { YinshPiece } from './YinshPiece';
 

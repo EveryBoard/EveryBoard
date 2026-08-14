@@ -1,8 +1,7 @@
 import { PlayerOrNone } from '@everyboard/games';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';

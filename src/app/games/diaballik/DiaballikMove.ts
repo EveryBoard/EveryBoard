@@ -1,11 +1,10 @@
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
 import { Encoder, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { Move } from '../../jscaip/Move';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { Ordinal } from '../../jscaip/Ordinal';
 
 import { DiaballikFailure } from './DiaballikFailure';
 

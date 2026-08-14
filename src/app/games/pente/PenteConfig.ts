@@ -1,4 +1,4 @@
-import { GobanConfig } from '../../jscaip/GobanConfig';
+import { GobanConfig } from '@everyboard/games';
 
 export type PenteConfig = GobanConfig & {
 

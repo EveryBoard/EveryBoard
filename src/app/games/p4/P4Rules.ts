@@ -1,14 +1,14 @@
 import { PlayerOrNone } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { NInARowHelper } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
 import { MGPValidators } from '../../utils/MGPValidator';
 

@@ -1,10 +1,9 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-
-import { Coord } from '../../jscaip/Coord';
-import { Table } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
-import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
+import { PlayerOrNoneGameStateWithTable } from '@everyboard/games';
 
 export class SquarzState extends PlayerOrNoneGameStateWithTable {
 

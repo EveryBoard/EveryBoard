@@ -2,15 +2,15 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Debug } from '../../utils/Debug';
 
 import { SiamFailure } from './SiamFailure';

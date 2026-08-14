@@ -1,5 +1,5 @@
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MoveGenerator } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';

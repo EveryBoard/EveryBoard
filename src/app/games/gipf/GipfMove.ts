@@ -1,9 +1,9 @@
-import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { GipfCapture } from '../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { Move } from '../../jscaip/Move';
+import { Coord } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { ArrayUtils, Encoder, MGPOptional } from '@everyboard/lib';
 
 type GipfPlacementFields = [Coord, MGPOptional<HexaDirection>];
 

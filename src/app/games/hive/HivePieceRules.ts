@@ -1,9 +1,9 @@
-import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { HexagonalUtils } from '@everyboard/games';
+import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';

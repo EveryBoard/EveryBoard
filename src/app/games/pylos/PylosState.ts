@@ -1,9 +1,8 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { Set, Utils } from '@everyboard/lib';
-
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { GameState } from '../../jscaip/state/GameState';
 
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';

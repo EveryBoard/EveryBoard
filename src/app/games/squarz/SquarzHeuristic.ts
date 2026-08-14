@@ -1,5 +1,5 @@
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { SquarzMove } from './SquarzMove';
 import { SquarzConfig, SquarzNode } from './SquarzRules';

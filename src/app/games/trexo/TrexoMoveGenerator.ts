@@ -1,5 +1,5 @@
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MoveGenerator } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';

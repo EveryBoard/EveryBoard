@@ -1,10 +1,9 @@
 import { Player } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GipfCapture, GipfProjectHelper } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { Combinatorics, MGPOptional } from '@everyboard/lib';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { GipfCapture, GipfProjectHelper } from '../../jscaip/GipfProjectHelper';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';

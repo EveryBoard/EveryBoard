@@ -1,9 +1,9 @@
-import { Encoder, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Move } from '../../jscaip/Move';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
+import { Encoder, Utils } from '@everyboard/lib';
 
 import { KamisadoState } from './KamisadoState';
 

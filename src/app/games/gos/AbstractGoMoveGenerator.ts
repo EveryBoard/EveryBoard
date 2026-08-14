@@ -1,9 +1,10 @@
+
+import { MoveGenerator } from '@everyboard/games';
+import { GroupDataFactory } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
 import { MGPFallible } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { GroupDataFactory } from '../../jscaip/BoardData';
-import { Coord } from '../../jscaip/Coord';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { Debug } from '../../utils/Debug';
 
 import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';

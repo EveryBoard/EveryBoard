@@ -3,13 +3,13 @@ import { Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { SquarzHeuristic } from './SquarzHeuristic';
 import { SquarzMove as SquarzMove } from './SquarzMove';

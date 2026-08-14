@@ -1,10 +1,10 @@
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Localized } from '../../utils/LocaleUtils';
 
 import { MartianChessState } from './MartianChessState';

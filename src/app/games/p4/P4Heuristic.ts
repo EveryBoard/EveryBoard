@@ -1,6 +1,6 @@
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { HeuristicBounds, HeuristicWithBounds } from '../../jscaip/AI/Heuristic';
-import { Coord } from '../../jscaip/Coord';
+import { BoardValue } from '@everyboard/games';
+import { HeuristicBounds, HeuristicWithBounds } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 
 import { P4Move } from './P4Move';
 import { P4Config, P4Node, P4Rules } from './P4Rules';

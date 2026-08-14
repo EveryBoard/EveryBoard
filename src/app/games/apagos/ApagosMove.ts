@@ -1,7 +1,7 @@
 import { Player } from '@everyboard/games';
+import { Move } from '@everyboard/games';
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { Move } from '../../jscaip/Move';
 
 import { ApagosFailure } from './ApagosFailure';
 

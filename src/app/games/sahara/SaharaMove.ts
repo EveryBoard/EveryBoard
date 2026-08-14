@@ -1,10 +1,10 @@
-import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
+import { Coord } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
+import { Encoder, MGPFallible, MGPValidation } from '@everyboard/lib';
 
 import { SaharaFailure } from './SaharaFailure';
 

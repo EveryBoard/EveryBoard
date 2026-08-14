@@ -1,5 +1,5 @@
-import { Minimax } from '../../jscaip/AI/Minimax';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { Minimax } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
 
 import { AbstractGoHeuristic } from './AbstractGoHeuristic';
 import { AbstractGoMoveGenerator } from './AbstractGoMoveGenerator';

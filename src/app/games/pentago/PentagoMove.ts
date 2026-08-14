@@ -1,7 +1,7 @@
-import { MGPOptional, Encoder, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
+import { Coord } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { MGPOptional, Encoder, Utils } from '@everyboard/lib';
 
 import { PentagoState } from './PentagoState';
 

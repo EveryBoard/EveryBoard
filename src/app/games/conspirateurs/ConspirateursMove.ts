@@ -1,12 +1,12 @@
-import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { Move } from '../../jscaip/Move';
-import { MoveCoord } from '../../jscaip/MoveCoord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Encoder, ArrayUtils, MGPFallible } from '@everyboard/lib';
 
 import { ConspirateursFailure } from './ConspirateursFailure';
 

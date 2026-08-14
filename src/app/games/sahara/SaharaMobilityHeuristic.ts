@@ -1,12 +1,11 @@
 import { Player } from '@everyboard/games';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
-
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { SaharaMove } from './SaharaMove';
 import { SaharaNode, SaharaRules } from './SaharaRules';

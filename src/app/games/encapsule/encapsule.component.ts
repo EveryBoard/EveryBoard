@@ -2,14 +2,14 @@ import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
 import { RingComponent } from '../common/ring/ring.component';
 
 import { EncapsuleFailure } from './EncapsuleFailure';

@@ -1,17 +1,17 @@
 import { Player } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { HexagonalUtils } from '@everyboard/games';
+import { Rules } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
+import { TriangularGameState } from '@everyboard/games';
 import { ArrayUtils, MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { Rules } from '../../jscaip/Rules';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
 import { Debug } from '../../utils/Debug';
 
 import { SaharaFailure } from './SaharaFailure';

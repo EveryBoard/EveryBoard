@@ -1,8 +1,8 @@
-import { Encoder, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
+import { Coord } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Encoder, Utils } from '@everyboard/lib';
 
 import { EpaminondasFailure } from './EpaminondasFailure';
 

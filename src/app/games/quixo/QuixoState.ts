@@ -1,7 +1,6 @@
 import { PlayerOrNone } from '@everyboard/games';
-
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { PlayerOrNoneGameStateWithTable } from '@everyboard/games';
 
 import { QuixoMove } from './QuixoMove';
 

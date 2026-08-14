@@ -1,7 +1,7 @@
-import { Set } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MoveGenerator } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Set } from '@everyboard/lib';
 
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';

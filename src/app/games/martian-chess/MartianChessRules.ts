@@ -1,12 +1,11 @@
 import { Player } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Rules } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPFallible, MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Rules } from '../../jscaip/Rules';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Table } from '../../jscaip/TableUtils';
 
 import { MartianChessFailure } from './MartianChessFailure';
 import { MartianChessMove, MartianChessMoveFailure } from './MartianChessMove';

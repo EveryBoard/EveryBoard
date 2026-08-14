@@ -1,15 +1,15 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TableUtils } from '../../jscaip/TableUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { SquarzFailure } from './SquarzFailure';

@@ -1,6 +1,6 @@
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { NewGameMove } from './NewGameMove';
 import { NewGameNode } from './NewGameRules';

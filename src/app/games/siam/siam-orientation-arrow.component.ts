@@ -2,11 +2,11 @@ import { NgClass } from '@angular/common';
 import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
 
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Orthogonal } from '../../jscaip/Orthogonal';
 
 import { SiamMove } from './SiamMove';
 import { SiamConfig } from './SiamRules';

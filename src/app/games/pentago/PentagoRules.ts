@@ -1,15 +1,14 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Rules } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Rules } from '../../jscaip/Rules';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
 
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';

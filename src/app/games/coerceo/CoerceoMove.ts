@@ -1,10 +1,9 @@
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
 import { Encoder, Utils } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { Ordinal } from '../../jscaip/Ordinal';
 
 import { CoerceoFailure } from './CoerceoFailure';
 

@@ -1,7 +1,6 @@
 import { PlayerOrNone } from '@everyboard/games';
-
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosNode } from './ApagosRules';

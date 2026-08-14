@@ -1,4 +1,4 @@
-import { FourStatePieceTriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { FourStatePieceTriangularGameState } from '@everyboard/games';
 
 export class SaharaState extends FourStatePieceTriangularGameState {
 

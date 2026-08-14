@@ -1,15 +1,15 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord, CoordFailure } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { NInARowHelper } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 
 import { RulesConfigDescription, RulesConfigDescriptions } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord, CoordFailure } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { GobanConfig } from '../../jscaip/GobanConfig';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
 
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';

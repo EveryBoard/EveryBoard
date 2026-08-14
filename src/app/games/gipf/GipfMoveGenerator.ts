@@ -1,7 +1,7 @@
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { GipfCapture, GipfProjectHelper } from '../../jscaip/GipfProjectHelper';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { Table } from '../../jscaip/TableUtils';
+import { MoveGenerator } from '@everyboard/games';
+import { GipfCapture, GipfProjectHelper } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 
 import { GipfMove, GipfPlacement } from './GipfMove';
 import { GipfRules, GipfNode } from './GipfRules';

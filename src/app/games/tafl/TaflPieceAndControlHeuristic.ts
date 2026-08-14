@@ -1,11 +1,10 @@
 import { Player } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { SandwichThreat } from '@everyboard/games';
 import { MGPMap, Set } from '@everyboard/lib';
-
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { SandwichThreat } from '../../jscaip/PieceThreat';
 
 import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';

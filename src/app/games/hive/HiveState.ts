@@ -1,12 +1,11 @@
 import { Player } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { HexagonalUtils } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { OpenHexagonalGameState } from '@everyboard/games';
 import { ComparableObject, MGPMap, MGPOptional, ReversibleMap, Utils } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
-import { Table } from '../../jscaip/TableUtils';
-import { OpenHexagonalGameState } from '../../jscaip/state/OpenHexagonalGameState';
 
 import { HivePiece, HivePieceStack } from './HivePiece';
 

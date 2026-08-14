@@ -1,9 +1,9 @@
 import { Player } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
 import { Debug } from '../../utils/Debug';
 
 import { SixMove } from './SixMove';

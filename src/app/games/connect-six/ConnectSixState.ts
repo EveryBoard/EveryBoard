@@ -1,4 +1,4 @@
-import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+import { PlayerOrNoneGameStateWithTable } from '@everyboard/games';
 
 export class ConnectSixState extends PlayerOrNoneGameStateWithTable {
 

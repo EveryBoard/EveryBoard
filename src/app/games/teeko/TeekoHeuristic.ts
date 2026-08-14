@@ -1,6 +1,6 @@
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { Coord } from '../../jscaip/Coord';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 
 import { TeekoMove } from './TeekoMove';
 import { TeekoConfig, TeekoNode, TeekoRules } from './TeekoRules';

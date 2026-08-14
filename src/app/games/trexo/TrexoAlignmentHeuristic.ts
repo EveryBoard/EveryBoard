@@ -1,8 +1,7 @@
 import { PlayerOrNone } from '@everyboard/games';
-
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { TrexoMove } from './TrexoMove';
 import { TrexoNode, TrexoRules } from './TrexoRules';

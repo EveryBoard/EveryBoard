@@ -1,7 +1,7 @@
-import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+import { Coord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
+import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
 
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoState } from './TrexoState';

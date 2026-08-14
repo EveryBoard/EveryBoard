@@ -1,8 +1,8 @@
 import { Player } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
 import { Debug } from '../../utils/Debug';
 
 import { TaflConfig } from './TaflConfig';

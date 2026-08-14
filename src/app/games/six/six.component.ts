@@ -3,17 +3,17 @@ import { Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 
 import { SixFailure } from './SixFailure';
 import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';

@@ -1,5 +1,5 @@
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
 
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneConfig, AbaloneNode } from './AbaloneRules';

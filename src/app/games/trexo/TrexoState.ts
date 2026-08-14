@@ -1,8 +1,7 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 /**
  * Represent half a tile

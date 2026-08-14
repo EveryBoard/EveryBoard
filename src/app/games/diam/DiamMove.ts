@@ -1,7 +1,7 @@
-import { Encoder } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Move } from '../../jscaip/Move';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Encoder } from '@everyboard/lib';
 
 import { DiamPiece } from './DiamPiece';
 

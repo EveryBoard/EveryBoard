@@ -1,8 +1,8 @@
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { HeuristicBounds } from '../../jscaip/AI/Heuristic';
-import { PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { BoardValue } from '@everyboard/games';
+import { HeuristicBounds } from '@everyboard/games';
+import { PlayerMetricHeuristicWithBounds } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';

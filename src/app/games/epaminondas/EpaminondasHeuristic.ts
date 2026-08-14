@@ -1,5 +1,5 @@
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
 
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasConfig } from './EpaminondasRules';

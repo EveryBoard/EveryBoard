@@ -1,8 +1,8 @@
-import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Table, TableUtils } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
+import { MGPOptional } from '@everyboard/lib';
 
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';

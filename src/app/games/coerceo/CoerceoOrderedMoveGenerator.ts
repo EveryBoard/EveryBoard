@@ -1,6 +1,6 @@
+import { Coord } from '@everyboard/games';
 import { ArrayUtils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
 
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';

@@ -1,8 +1,8 @@
-import { Encoder } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { Move } from '../../jscaip/Move';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Encoder } from '@everyboard/lib';
 
 export class HexodiaMove extends Move {
 

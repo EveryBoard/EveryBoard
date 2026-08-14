@@ -3,15 +3,15 @@ import { Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RingComponent } from '../common/ring/ring.component';
 
 import { YinshFailure } from './YinshFailure';

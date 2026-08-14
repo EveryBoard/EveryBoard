@@ -1,14 +1,14 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { RelativePlayer } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { RelativePlayer } from '../../jscaip/RelativePlayer';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesFailure } from '../../jscaip/RulesFailure';
 import { Debug } from '../../utils/Debug';
 import { Localized } from '../../utils/LocaleUtils';
 

@@ -1,9 +1,9 @@
-import { Encoder, MGPFallible } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 
 export type TeekoMove = TeekoDropMove | TeekoTranslationMove;
 

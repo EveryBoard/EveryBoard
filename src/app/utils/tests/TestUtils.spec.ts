@@ -10,6 +10,15 @@ import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
 import { Player } from '@everyboard/games';
+import { AIDepthLimitOptions, AIOptions } from '@everyboard/games';
+import { MinimaxConfig } from '@everyboard/games';
+import { createMinimaxFromConfig } from '@everyboard/games';
+import { GameNode, GameNodeStats } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { ConfigDescriptionType, RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
@@ -24,15 +33,6 @@ import { OGWCTimeManagerService } from '../../components/wrapper-components/onli
 import { UserDAO } from '../../dao/UserDAO';
 import { UserDAOMock } from '../../dao/tests/UserDAOMock.spec';
 import { UserMocks } from '../../domain/UserMocks.spec';
-import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
-import { MinimaxConfig } from '../../jscaip/AI/AIConfig';
-import { createMinimaxFromConfig } from '../../jscaip/AI/AIConfigUtils';
-import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
-import { Minimax } from '../../jscaip/AI/Minimax';
-import { Move } from '../../jscaip/Move';
-import { SuperRules } from '../../jscaip/Rules';
-import { ConfigDescriptionType, RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { GameState } from '../../jscaip/state/GameState';
 import { ActiveConfigRoomsService } from '../../services/ActiveConfigRoomsService';
 import { BackendService } from '../../services/BackendService';
 import { ChatService } from '../../services/ChatService';

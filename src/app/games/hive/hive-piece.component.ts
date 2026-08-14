@@ -1,9 +1,10 @@
 import { NgClass } from '@angular/common';
 import { AfterContentChecked, Component, input, InputSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 
 import { HivePiece } from './HivePiece';
 

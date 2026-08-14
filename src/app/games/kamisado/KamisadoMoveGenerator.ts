@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { ArrayUtils, Utils } from '@everyboard/lib';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoMove } from './KamisadoMove';

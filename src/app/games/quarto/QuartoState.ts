@@ -1,5 +1,5 @@
-import { Table } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { Table } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 
 import { QuartoPiece } from './QuartoPiece';
 

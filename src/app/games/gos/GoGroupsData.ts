@@ -1,7 +1,7 @@
-import { MGPMap, Utils } from '@everyboard/lib';
 
-import { GroupData } from '../../jscaip/BoardData';
-import { Coord } from '../../jscaip/Coord';
+import { GroupData } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { MGPMap, Utils } from '@everyboard/lib';
 
 import { GoPiece } from './GoPiece';
 

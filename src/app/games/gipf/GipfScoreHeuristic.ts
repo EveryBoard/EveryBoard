@@ -1,8 +1,7 @@
 import { Player } from '@everyboard/games';
-
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { GipfMove } from './GipfMove';
 import { GipfNode, GipfRules } from './GipfRules';

@@ -1,14 +1,14 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { TriangularCheckerBoard } from '@everyboard/games';
+import { FourStatePieceTriangularGameState } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { Table } from '../../jscaip/TableUtils';
-import { TriangularCheckerBoard } from '../../jscaip/state/TriangularCheckerBoard';
-import { FourStatePieceTriangularGameState } from '../../jscaip/state/TriangularGameState';
 import { Debug } from '../../utils/Debug';
 
 import { CoerceoRegularMove, CoerceoStep } from './CoerceoMove';

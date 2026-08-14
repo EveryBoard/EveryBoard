@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
-
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { FourStatePiece } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { TriangularGameState } from '@everyboard/games';
 
 import { SaharaMobilityHeuristic } from './SaharaMobilityHeuristic';
 import { SaharaNode } from './SaharaRules';

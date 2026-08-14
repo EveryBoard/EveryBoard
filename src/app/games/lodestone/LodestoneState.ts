@@ -1,10 +1,9 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { ArrayUtils, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { Table } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 import { LodestoneCaptures } from './LodestoneMove';
 import { LodestoneDirection, LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from './LodestonePiece';

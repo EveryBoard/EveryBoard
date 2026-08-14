@@ -1,6 +1,6 @@
+import { EmptyRulesConfig } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { DiaballikMove } from './DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from './DiaballikMoveGenerator';

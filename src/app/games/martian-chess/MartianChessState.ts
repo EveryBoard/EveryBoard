@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { MGPMap, MGPOptional, Set } from '@everyboard/lib';
-
-import { Coord } from '../../jscaip/Coord';
-import { Table } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
 import { MartianChessMove } from './MartianChessMove';
 import { MartianChessPiece } from './MartianChessPiece';

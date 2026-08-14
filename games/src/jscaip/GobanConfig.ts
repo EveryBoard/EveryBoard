@@ -1,4 +1,4 @@
-import { RulesConfig } from '../jscaip/RulesConfigUtil';
+import { RulesConfig } from '@everyboard/games';
 
 export type GobanConfig = RulesConfig & {
 

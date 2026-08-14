@@ -1,7 +1,6 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 
 import { QuebecCastlesDrop, QuebecCastlesMove } from './QuebecCastlesMove';
 import { QuebecCastlesConfig, QuebecCastlesNode, QuebecCastlesRules } from './QuebecCastlesRules';

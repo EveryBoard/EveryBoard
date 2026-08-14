@@ -1,10 +1,9 @@
 import { Player } from '@everyboard/games';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { TriangularGameState } from '../../jscaip/state/TriangularGameState';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { TriangularGameState } from '@everyboard/games';
 
 import { SaharaMove } from './SaharaMove';
 import { SaharaNode, SaharaRules } from './SaharaRules';

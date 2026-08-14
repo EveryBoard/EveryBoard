@@ -1,14 +1,13 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { NInARowHelper } from '@everyboard/games';
+import { Rules } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { Rules } from '../../jscaip/Rules';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { TableUtils } from '../../jscaip/TableUtils';
 
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';

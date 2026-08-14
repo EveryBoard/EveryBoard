@@ -1,7 +1,6 @@
 import { PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-
-import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
 
 export class AbaloneState extends FourStatePieceGameStateWithTable {
 

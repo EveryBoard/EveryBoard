@@ -1,4 +1,5 @@
-import { MoveGenerator } from '../../jscaip/AI/AI';
+import { MoveGenerator } from '@everyboard/games';
+
 import { Debug } from '../../utils/Debug';
 
 import { P4Move } from './P4Move';

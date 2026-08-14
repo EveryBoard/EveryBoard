@@ -1,4 +1,4 @@
-import { GameState } from '../../jscaip/state/GameState';
+import { GameState } from '@everyboard/games';
 
 /**
  * This class represent the state of the game at a specific turn.

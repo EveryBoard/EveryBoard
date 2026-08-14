@@ -1,11 +1,11 @@
 import { Player } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-import { Move } from '../../jscaip/Move';
-import { GameState } from '../../jscaip/state/GameState';
 
 import { HiveMove } from './HiveMove';
 import { HivePiece } from './HivePiece';

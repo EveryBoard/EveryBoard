@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { RulesConfig } from '../jscaip/RulesConfigUtil';
+import { RulesConfig } from '@everyboard/games';
 
 import { FirstPlayer, ConfigRoom, Status, GameType, GameDuration } from './ConfigRoom';
 import { UserMocks } from './UserMocks.spec';

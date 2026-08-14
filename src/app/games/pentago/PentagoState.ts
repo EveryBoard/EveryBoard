@@ -1,10 +1,9 @@
 import { PlayerOrNone } from '@everyboard/games';
 import { Vector } from '@everyboard/games';
-
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Table } from '../../jscaip/TableUtils';
-import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { PlayerOrNoneGameStateWithTable } from '@everyboard/games';
 
 import { PentagoMove } from './PentagoMove';
 

@@ -3,13 +3,13 @@ import { Component } from '@angular/core';
 
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { MartianChessComponentUtils } from './MartianChessComponentUtils';
 import { MartianChessMove } from './MartianChessMove';

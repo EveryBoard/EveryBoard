@@ -1,8 +1,8 @@
 import { Player } from '@everyboard/games';
 import { PlayerMap, PlayerNumberTable } from '@everyboard/games';
+import { PlayerMetricHeuristic } from '@everyboard/games';
 import { MGPMap, NumberMap } from '@everyboard/lib';
 
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 
 import { QuixoMove } from './QuixoMove';
 import { QuixoNode, QuixoRules } from './QuixoRules';

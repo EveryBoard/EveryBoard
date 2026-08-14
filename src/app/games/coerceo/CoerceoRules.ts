@@ -1,17 +1,17 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Table } from '../../jscaip/TableUtils';
 import { Debug } from '../../utils/Debug';
 
 import { CoerceoFailure } from './CoerceoFailure';

@@ -1,10 +1,9 @@
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
-
-import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { PlayerNumberTable } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { DvonnMove } from './DvonnMove';
 import { DvonnNode, DvonnRules } from './DvonnRules';

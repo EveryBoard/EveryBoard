@@ -1,7 +1,7 @@
-import { Utils } from '@everyboard/lib';
 
-import { Table } from '../../jscaip/TableUtils';
-import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
+import { Table } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
+import { Utils } from '@everyboard/lib';
 
 import { DiamPiece } from './DiamPiece';
 

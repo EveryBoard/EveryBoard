@@ -1,7 +1,6 @@
 import { Player } from '@everyboard/games';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MoveGenerator } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { HiveMove } from './HiveMove';
 import { HivePiece } from './HivePiece';

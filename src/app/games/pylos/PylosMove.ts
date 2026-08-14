@@ -1,6 +1,6 @@
+import { Move } from '@everyboard/games';
 import { Encoder, MGPOptional, Utils } from '@everyboard/lib';
 
-import { Move } from '../../jscaip/Move';
 import { Localized } from '../../utils/LocaleUtils';
 
 import { PylosCoord } from './PylosCoord';

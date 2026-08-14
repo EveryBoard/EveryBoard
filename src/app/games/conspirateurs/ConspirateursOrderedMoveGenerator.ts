@@ -1,4 +1,4 @@
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { EmptyRulesConfig } from '@everyboard/games';
 
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';

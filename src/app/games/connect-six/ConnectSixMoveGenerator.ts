@@ -1,10 +1,9 @@
 import { PlayerOrNone } from '@everyboard/games';
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
 import { Set } from '@everyboard/lib';
-
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
-import { GobanConfig } from '../../jscaip/GobanConfig';
-import { TableUtils } from '../../jscaip/TableUtils';
 
 import { ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixFirstMove } from './ConnectSixMove';

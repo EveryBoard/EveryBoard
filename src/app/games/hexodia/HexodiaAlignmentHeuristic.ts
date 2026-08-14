@@ -1,6 +1,6 @@
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
 
 import { HexodiaMove } from './HexodiaMove';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from './HexodiaRules';

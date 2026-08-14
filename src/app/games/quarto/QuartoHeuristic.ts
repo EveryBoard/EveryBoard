@@ -1,7 +1,7 @@
-import { AlignmentStatus } from '../../jscaip/AI/AlignmentHeuristic';
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { CoordSet } from '../../jscaip/CoordSet';
+import { AlignmentStatus } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
 
 import { QuartoMove } from './QuartoMove';
 import { QuartoNode, BoardStatus, QuartoRules, QuartoConfig, VictoryPattern } from './QuartoRules';

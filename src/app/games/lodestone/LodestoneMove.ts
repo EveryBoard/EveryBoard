@@ -1,7 +1,7 @@
-import { Encoder, JSONObject, JSONValueWithoutArray, Utils } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { MoveCoord } from '../../jscaip/MoveCoord';
+import { Coord } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { Encoder, JSONObject, JSONValueWithoutArray, Utils } from '@everyboard/lib';
 
 import { LodestoneDirection, LodestoneOrientation } from './LodestonePiece';
 

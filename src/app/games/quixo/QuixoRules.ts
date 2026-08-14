@@ -1,16 +1,16 @@
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerMap } from '@everyboard/games';
+import { GameNode } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { NInARowHelper } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { ConfigurableRules } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
 import { MGPMap, MGPOptional, Set, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
 
 import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TableUtils } from '../../jscaip/TableUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { QuixoFailure } from './QuixoFailure';

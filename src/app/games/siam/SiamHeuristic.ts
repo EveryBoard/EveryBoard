@@ -1,8 +1,7 @@
 import { Player } from '@everyboard/games';
-
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../jscaip/AI/Heuristic';
-import { Coord } from '../../jscaip/Coord';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
 
 import { SiamMove } from './SiamMove';
 import { SiamPiece } from './SiamPiece';

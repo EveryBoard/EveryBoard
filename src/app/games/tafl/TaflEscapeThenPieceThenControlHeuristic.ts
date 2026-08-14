@@ -1,9 +1,8 @@
 import { Player } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
-
-import { BoardValue } from '../../jscaip/AI/BoardValue';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
 
 import { TaflConfig } from './TaflConfig';
 import { TaflMove } from './TaflMove';

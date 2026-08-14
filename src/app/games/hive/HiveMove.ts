@@ -1,11 +1,11 @@
-import { Encoder, MGPFallible } from '@everyboard/lib';
 
-import { Coord } from '../../jscaip/Coord';
-import { Move } from '../../jscaip/Move';
-import { MoveCoord } from '../../jscaip/MoveCoord';
-import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
-import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { MoveCoord } from '@everyboard/games';
+import { MoveCoordToCoord } from '@everyboard/games';
+import { MoveWithTwoCoords } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Encoder, MGPFallible } from '@everyboard/lib';
 
 import { HivePiece } from './HivePiece';
 

@@ -1,4 +1,4 @@
-import { MoveGenerator } from '../../jscaip/AI/AI';
+import { MoveGenerator } from '@everyboard/games';
 
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
