@@ -174,7 +174,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
                                                currentStep.parent,
                                                currentStep.previousMove);
         const defaultConfig: RulesConfig = this.gameComponent.rules.getDefaultRulesConfig();
-        this.gameComponent.config = currentStep.config.getOrElse(defaultConfig);
+        this.gameComponent.setConfig(currentStep.config.getOrElse(defaultConfig));
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
