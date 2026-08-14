@@ -3,22 +3,30 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AbaloneComponent } from '../../../games/abalone/abalone.component';
-import { AIDepthLimitOptions, MoveGenerator } from '../../../jscaip/AI/AI';
-import { createMCTSFromConfig } from '../../../jscaip/AI/AIConfigUtils';
-import { BoardValue } from '../../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../../jscaip/AI/Heuristic';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { Move } from '../../../jscaip/Move';
-import { Player } from '../../../jscaip/Player';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
-import { ActivatedRouteStub, expectToBeAbleToPlayAgainstItself, ComponentTestUtils, ConfigureTestingModuleUtils, createConfiguredMinimaxForTest, getShallowestMinimaxOptions, SlowTest, UNIVERSAL_SELF_PLAY_PLIES } from '../../../utils/tests/TestUtils.spec';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-
-import { AbstractGameComponent } from './GameComponent';
+import { AbaloneComponent } from '../../../../games/abalone/abalone.component';
+import { AIDepthLimitOptions, MoveGenerator } from '../../../../jscaip/AI/AI';
+import { createMCTSFromConfig } from '../../../../jscaip/AI/AIConfigUtils';
+import { BoardValue } from '../../../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../../../jscaip/AI/Heuristic';
+import { MCTS } from '../../../../jscaip/AI/MCTS';
+import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { Move } from '../../../../jscaip/Move';
+import { Player } from '../../../../jscaip/Player';
+import { RulesConfig } from '../../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../../jscaip/state/GameState';
+import { ErrorLoggerServiceMock } from '../../../../services/tests/ErrorLoggerServiceMock.spec';
+import {
+    ActivatedRouteStub,
+    ComponentTestUtils,
+    ConfigureTestingModuleUtils,
+    createConfiguredMinimaxForTest,
+    expectToBeAbleToPlayAgainstItself,
+    getShallowestMinimaxOptions,
+    SlowTest,
+    UNIVERSAL_SELF_PLAY_PLIES,
+} from '../../../../utils/tests/TestUtils.spec';
+import { GameInfo } from '../../../normal-component/pick-game/pick-game.component';
+import { AbstractGameComponent } from '../GameComponent';
 
 describe('GameComponent', () => {
 
@@ -92,11 +100,11 @@ describe('GameComponent', () => {
                 expect(config.moveGenerator).withContext('moveGenerator missing for ' + config.name).toBeDefined();
                 const heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig> = config.heuristic!();
                 const moveGenerator: MoveGenerator<Move, GameState, RulesConfig> = config.moveGenerator!();
-                const moves: Move[] = moveGenerator.getListMoves(component.node, component.config);
+                const moves: Move[] = moveGenerator.getListMoves(component.node, component.getConfig());
                 expect(moves.length)
                     .withContext('minimax moveGenerator returned no move for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
-                const boardValue: BoardValue = heuristic.getBoardValue(component.node, component.config);
+                const boardValue: BoardValue = heuristic.getBoardValue(component.node, component.getConfig());
                 expect(boardValue.metrics.length)
                     .withContext('heuristic returned no metric for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
@@ -113,7 +121,7 @@ describe('GameComponent', () => {
                 expect(config.name).withContext('MCTS config name missing for ' + gameInfo.urlName).toBeTruthy();
                 const moveGenerator: MoveGenerator<Move, GameState, RulesConfig> = config.moveGenerator();
                 expect(moveGenerator).withContext('MCTS moveGenerator missing for ' + config.name).toBeDefined();
-                const moves: Move[] = moveGenerator.getListMoves(component.node, component.config);
+                const moves: Move[] = moveGenerator.getListMoves(component.node, component.getConfig());
                 expect(moves.length)
                     .withContext('MCTS moveGenerator returned no move for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
@@ -139,7 +147,7 @@ describe('GameComponent', () => {
                     rules: component.rules,
                     playerZeroMinimax: minimax,
                     playerZeroOptions: options,
-                    config: component.config,
+                    config: component.getConfig(),
                     maxPlies: UNIVERSAL_SELF_PLAY_PLIES,
                     maxDurationMillis: 10000,
                 });

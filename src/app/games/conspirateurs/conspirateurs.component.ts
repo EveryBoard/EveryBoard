@@ -3,7 +3,9 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { GameComponent, ScoreName } from '../../components/game-components/game-component/GameComponent';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { PlayerOrNone } from '../../jscaip/Player';
@@ -265,12 +267,8 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
         this.selected = MGPOptional.empty();
     }
 
+    @ClickHandler((coord: Coord) => `#click-${ coord.x }-${ coord.y }`)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + coord.x + '_' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const state: ConspirateursState = this.getState();
         const piece: PlayerOrNone = state.getPieceAt(coord);
         if (state.getPieceAt(coord) === this.getCurrentPlayer()) {

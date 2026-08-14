@@ -13,7 +13,7 @@
             <g>
                 @for (c of line; track $index; let x = $index) {
                     <g [attr.transform]="getTranslationAtXY(x, y)">
-                        <rect id="square_{{ x }}_{{ y }}"
+                        <rect id="square-{{ x }}-{{ y }}"
                               (click)="clickSquare(x, y)"
                               [attr.x]="SPACE_SIZE * x * 0"
                               [attr.y]="SPACE_SIZE * y * 0"
@@ -22,7 +22,7 @@
                               [ngClass]="getSquareClasses(x, y)"
                               class="base"/>
                         @if (c.isPlayer()) {
-                            <use id="piece_{{ x }}_{{ y }}"
+                            <use id="piece-{{ x }}-{{ y }}"
                                  class="base mid-stroke"
                                  [ngClass]="getPieceClasses(x, y, c)"
                                  (click)="clickSquare(x, y)"
@@ -42,7 +42,7 @@
     @for (coord of clickableCoords; track $index) {
         <g>
             @if (getState().isNotOnBoard(coord)) {
-                <rect id="square_{{ coord.x }}_{{ coord.y }}"
+                <rect id="square-{{ coord.x }}-{{ coord.y }}"
                       (click)="clickSquare(coord.x, coord.y)"
                       [attr.x]="SPACE_SIZE * coord.x"
                       [attr.y]="SPACE_SIZE * coord.y"
@@ -76,10 +76,10 @@
               class="base no-fill small-stroke selected-stroke"/>
     }
     @for (player of Player.PLAYERS; track $index) {
-        <g id="remainingPieces_{{ player.toString() }}"
+        <g id="remaining-pieces-{{ player.toString() }}"
            (click)="selectPieceForInsertion(player)">
             @for (x of ArrayUtils.range(playerPieces(player)); track $index) {
-                <use id="remainingPieces_{{ player.toString() }}_{{ x }}"
+                <use id="remaining-pieces-{{ player.toString() }}-{{ x }}"
                      class="base mid-stroke"
                      [ngClass]="getRemainingPieceClasses(player, x)"
                      xlink:href="#arrow"
@@ -89,7 +89,7 @@
     }
     @for (arrow of indicatorArrows; track $index) {
         <g>
-            <use id="indicator_{{ arrow.target.x }}_{{ arrow.target.y }}_{{ arrow.direction.toString() }}"
+            <use id="indicator-{{ arrow.target.x }}-{{ arrow.target.y }}-{{ arrow.direction.toString() }}"
                  class="base mid-stroke indicator-fill"
                  (click)="clickArrow(arrow)"
                  xlink:href="#arrow"

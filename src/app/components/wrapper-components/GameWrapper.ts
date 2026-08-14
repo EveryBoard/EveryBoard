@@ -8,6 +8,7 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
+import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
 import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
@@ -80,7 +81,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     protected async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>): Promise<void> {
         await this.createGameComponent(componentType);
         const config: RulesConfig = this.getConfig();
-        this.gameComponent.config = config;
+        this.gameComponent.setConfig(config);
         this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
         await this.setRole(this.role);
         await this.gameComponent.updateBoardAndRedraw(false);
@@ -113,6 +114,16 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         this.gameComponent.canUserPlay = (elementName: string): Promise<MGPValidation> => {
             return this.canUserPlay(elementName);
         };
+        this.gameComponent.setClickInterceptor(
+            (fn: AnyFunction, clickNamer: ClickNamer) => async(...args: unknown[]): Promise<MGPValidation> => {
+                const clickedElementName: string = clickNamer(...args);
+                const clickValidity: MGPValidation = await this.gameComponent.canUserPlay(clickedElementName);
+                if (clickValidity.isFailure()) {
+                    return this.gameComponent.cancelMove(clickValidity.getReason());
+                }
+                return fn(...args);
+            },
+        );
         this.gameComponent.isPlayerTurn = (): boolean => {
             return this.isPlayerTurn();
         };

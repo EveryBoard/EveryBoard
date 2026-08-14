@@ -1,10 +1,11 @@
 import { ArrayUtils } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../jscaip/AI/AI';
-import { Coord } from '../../jscaip/Coord';
+import { MoveGenerator } from '../../../jscaip/AI/AI';
+import { Coord } from '../../../jscaip/Coord';
+import { ReversiRules } from '../reversi/ReversiRules';
 
+import { ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './AbstractReversiRules';
 import { ReversiMove } from './ReversiMove';
-import { ReversiRules, ReversiNode, ReversiMoveWithSwitched, ReversiConfig } from './ReversiRules';
 import { ReversiState } from './ReversiState';
 
 export class ReversiOrderedMoveGenerator extends MoveGenerator<ReversiMove, ReversiState, ReversiConfig> {
