@@ -50,14 +50,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.boardSize().y * this.mode().parallelogramHeight,
     );
 
-    private readonly viewBox: Signal<ViewBox> = computed(() => {
-        const h: number = this.boardSize().y;
-        const boardOffset: number = h * this.mode().offsetRatio * this.mode().parallelogramHeight;
-        const width: number = (this.basicWidth() * this.mode().horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
-        const height: number = this.basicHeight() + this.THICKNESS + this.STROKE_WIDTH + this.SPACE_SIZE;
-        return new ViewBox(-this.STROKE_WIDTH / 2, -this.SPACE_SIZE, width, height);
-    });
-
     private currentMoveClicks: Coord[] = [];
     private lastCaptures: Coord[] = [];
     private lastMoved: Coord[] = [];
@@ -69,18 +61,11 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     protected moveGenerator: CheckersMoveGenerator;
 
     protected override computeViewBox(): ViewBox {
-        const abstractWidth: number = this.getState().getWidth();
-        const abstractHeight: number = this.getState().getHeight();
-        this.LEFT = 0;
-        this.UP = - this.SPACE_SIZE;
-        this.basicWidth = abstractWidth * this.mode.parallelogramHeight;
-        this.basicHeight = abstractHeight * this.mode.parallelogramHeight;
-        const boardOffset: number = abstractHeight * this.mode.offsetRatio * this.mode.parallelogramHeight;
-        this.WIDTH = (this.basicWidth * this.mode.horizontalWidthRatio) + boardOffset;
-        this.HEIGHT = this.basicHeight + this.THICKNESS + this.STROKE_WIDTH - this.UP;
-        this.CX = this.WIDTH / 2;
-        this.CY = (this.HEIGHT + this.UP) / 2;
-        return new ViewBox(this.LEFT, this.UP, this.WIDTH, this.HEIGHT);
+        const h: number = this.boardSize().y;
+        const boardOffset: number = h * this.mode().offsetRatio * this.mode().parallelogramHeight;
+        const width: number = (this.basicWidth() * this.mode().horizontalWidthRatio) + boardOffset + this.STROKE_WIDTH;
+        const height: number = this.basicHeight() + this.THICKNESS + this.STROKE_WIDTH + this.SPACE_SIZE;
+        return new ViewBox(-this.STROKE_WIDTH / 2, -this.SPACE_SIZE, width, height);
     }
 
     public override setRulesAndNode(urlName: string): void {

@@ -579,8 +579,8 @@ export function DoCheckersTests<C extends CheckersComponent<R>,
 
                 expect(gameComponent.basicWidth()).toBe(expectedWidth);
                 expect(gameComponent.basicHeight()).toBe(expectedHeight);
-                expect(gameComponent.getViewBox().width).toBe(expectedViewBoxWidth);
-                expect(gameComponent.getViewBox().height).toBe(expectedViewBoxHeight);
+                expect(gameComponent.viewBox().width).toBe(expectedViewBoxWidth);
+                expect(gameComponent.viewBox().height).toBe(expectedViewBoxHeight);
             }));
 
         });
