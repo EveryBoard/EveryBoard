@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
 import { Coord } from '../../jscaip/Coord';
@@ -29,6 +30,15 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaState,
                                                              FourStatePiece>
 {
+    protected override computeViewBox(): ViewBox {
+        const state: SaharaState = this.getState();
+        const width: number = ((state.getWidth() + 1) / 2) * this.SPACE_SIZE;
+        const height: number = state.getHeight() * this.SPACE_SIZE;
+        return ViewBox
+            .fromLimits(0, width, 0, height)
+            .expandAll(this.STROKE_WIDTH / 2);
+    }
+
     public lastCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public lastMoved: MGPOptional<Coord> = MGPOptional.empty();

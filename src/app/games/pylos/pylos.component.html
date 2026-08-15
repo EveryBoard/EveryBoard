@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="'0 0 ' + boardWidth + ' ' + boardHeight"
+     [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
 
     <g [attr.transform]="'rotate(' + (getPointOfView().getValue() * 180) + ' ' + (boardWidth / 2) + ' ' + (boardHeight / 2) + ')'">

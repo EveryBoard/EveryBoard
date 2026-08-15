@@ -282,7 +282,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return this.getSVGTranslation(x, y);
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const left: number = 0;
         const up: number = 0;
         const width: number = this.getWidth();

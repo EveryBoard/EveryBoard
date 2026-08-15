@@ -79,7 +79,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
         this.last = MGPOptional.empty();
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const state: GoState = this.getState();
         const leftmostOccupiedX: number = TableUtils.getLeftmostMatchColumn(state.board, GoPiece.isReachable).get();
         const width: number = state.board[0].length;

@@ -105,7 +105,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.hasAsymmetricBoard = true;
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         return new ViewBox(0, 0, this.BOARD_WIDTH, this.BOARD_HEIGHT).expandAll(this.STROKE_WIDTH / 2);
     }
 

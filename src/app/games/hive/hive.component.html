@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      class="board"
-     [attr.viewBox]="viewBox"
+     [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
     @for (groundInfo of ground; track groundInfo.x + '-' + groundInfo.y) {
         <g>

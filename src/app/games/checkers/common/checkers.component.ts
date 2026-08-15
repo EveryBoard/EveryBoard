@@ -53,7 +53,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private legalMoves: CheckersMove[] = [];
     protected moveGenerator: CheckersMoveGenerator;
 
-    public override getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const abstractWidth: number = this.getState().getWidth();
         const abstractHeight: number = this.getState().getHeight();
         this.LEFT = 0;
