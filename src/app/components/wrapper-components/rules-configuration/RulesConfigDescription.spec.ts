@@ -3,7 +3,7 @@ import { JSONValue, MGPValidation } from '@everyboard/lib';
 
 import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 
 import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from './RulesConfigDescription';
 

@@ -22,7 +22,7 @@ import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { EloComponent } from '../../normal-component/elo/elo.component';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';

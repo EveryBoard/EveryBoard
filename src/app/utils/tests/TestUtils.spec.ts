@@ -15,7 +15,7 @@ import { TestVars } from '../../../TestVars.spec';
 import { initializeFirebase, routes } from '../../app.routes';
 import { findMatchingRoute } from '../../app.routes.spec';
 import { AbstractGameComponent } from 'src/app/components/game-components/game-component/AbstractGameComponent';
-import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../components/normal-component/pick-game/GameInfo';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
@@ -375,7 +375,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
         const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
+            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in GameInfo.ts)');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,

@@ -10,7 +10,7 @@ import { MGPOptional } from '@everyboard/lib';
 import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
 import { CurrentGameService } from '../../../services/CurrentGameService';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { GameInfo } from '../pick-game/GameInfo';
 
 @Component({
     selector: 'app-header',

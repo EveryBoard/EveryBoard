@@ -15,7 +15,7 @@ import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserS
 import { CurrentGameServiceMock } from '../../../services/tests/CurrentGameServiceMock.spec';
 import { expectValidRoutingLink, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AccountComponent } from '../account/account.component';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { GameInfo } from '../pick-game/GameInfo';
 
 import { HeaderComponent } from './header.component';
 

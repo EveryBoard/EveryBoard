@@ -82,7 +82,7 @@ import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { GameWrapper } from '../GameWrapper';
 
 import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';

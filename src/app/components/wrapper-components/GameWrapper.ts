@@ -10,7 +10,7 @@ import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
 import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
 import { AbstractGameComponent } from '../game-components/game-component/AbstractGameComponent';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';
 
