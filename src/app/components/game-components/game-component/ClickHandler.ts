@@ -1,5 +1,5 @@
 import { MGPValidation } from '@everyboard/lib';
-
+// TODO FOR REVIEW: no split here right ?
 export type AnyFunction = (...args: unknown[]) => Promise<MGPValidation>;
 
 export type ClickNamer = (...args: unknown[]) => string;

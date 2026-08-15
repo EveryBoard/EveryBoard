@@ -9,7 +9,7 @@ import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
 import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
-import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../game-components/game-component/AbstractGameComponent';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';

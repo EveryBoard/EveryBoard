@@ -1,5 +1,6 @@
 import { isJSONPrimitive, JSONPrimitive } from './JSON';
 
+// TODO FOR REVIEW: no split here right ?
 export interface ComparableObject {
 
     equals(other: this): boolean;

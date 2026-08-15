@@ -16,7 +16,7 @@ import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomService
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';

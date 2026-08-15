@@ -142,7 +142,7 @@ import { GameState } from '../../../jscaip/state/GameState';
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
 import { Localized } from '../../../utils/LocaleUtils';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 

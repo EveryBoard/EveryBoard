@@ -26,7 +26,7 @@ import {
     UNIVERSAL_SELF_PLAY_PLIES,
 } from '../../../../utils/tests/TestUtils.spec';
 import { GameInfo } from '../../../normal-component/pick-game/pick-game.component';
-import { AbstractGameComponent } from '../GameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 
 describe('GameComponent', () => {
 

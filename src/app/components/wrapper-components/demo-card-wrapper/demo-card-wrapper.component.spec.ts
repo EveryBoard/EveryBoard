@@ -14,7 +14,7 @@ import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { Table, TableUtils } from '../../../jscaip/TableUtils';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';

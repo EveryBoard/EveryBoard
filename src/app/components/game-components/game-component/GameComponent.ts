@@ -313,14 +313,3 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
 }
-
-export abstract class AbstractGameComponent extends GameComponent<SuperRules<Move,
-                                                                             GameState,
-                                                                             RulesConfig,
-                                                                             unknown>,
-                                                                  Move,
-                                                                  GameState,
-                                                                  RulesConfig,
-                                                                  unknown>
-{
-}

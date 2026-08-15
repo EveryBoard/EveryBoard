@@ -3,7 +3,7 @@ import { MGPOptional } from './MGPOptional';
 // These are the datatypes supported by firestore. Arrays of arrays are not
 // supported, but arrays containing objects containing arrays are, which is what
 // is encoded in these types.
-
+// TODO FOR REVIEW: no split here right ?
 export type JSONPrimitive = string | number | boolean | null;
 // Nothing really prevents us from dealing with arrays of arrays, except for TypeScript's type system.
 export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray>;

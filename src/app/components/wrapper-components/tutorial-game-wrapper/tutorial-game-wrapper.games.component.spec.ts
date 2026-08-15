@@ -81,7 +81,7 @@ import { AbstractRules, SuperRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
 import { GameWrapper } from '../GameWrapper';
 
