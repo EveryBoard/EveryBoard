@@ -17,7 +17,7 @@ import { CheckersMove } from '../CheckersMove';
 import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
 import { CheckersStack, CheckersState } from '../CheckersState';
 import { CheckersComponent } from '../checkers.component';
-// TODO: oui ou non ?
+
 export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R extends AbstractCheckersRules> = {
     component: Type<C>; // InternationalCheckersComponent, LascaComponent, etc
     gameName: string; // 'InternationalCheckers', 'Lasca', etc

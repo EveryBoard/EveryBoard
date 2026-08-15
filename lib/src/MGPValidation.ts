@@ -1,5 +1,5 @@
 import { MGPFallible } from './MGPFallible';
-// TODO FOR REVIEW: no split here right ?
+
 export type MGPValidation = MGPFallible<void>
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare

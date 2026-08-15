@@ -19,7 +19,7 @@ import { Debug } from '../../utils/Debug';
 import { CoerceoFailure } from './CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-// TODO: oui ou non ?
+
 export type CoerceoConfig = RulesConfig & {
 
     smallBoard: boolean;

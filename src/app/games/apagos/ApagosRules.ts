@@ -16,7 +16,7 @@ import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-// TODO: oui ou non ?
+
 export type ApagosConfig = RulesConfig & {
 
     width: number;

@@ -19,7 +19,7 @@ import { MGPValidators } from '../../utils/MGPValidator';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneState } from './AbaloneState';
-// TODO: oui ou non ?
+
 export type AbaloneConfig = RulesConfig & {
 
     nbToCapture: number;

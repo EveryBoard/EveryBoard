@@ -15,7 +15,7 @@ import { Table, TableUtils } from '../../jscaip/TableUtils';
 
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
-// TODO: oui ou non ?
+
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
 export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSixState, GobanConfig> {

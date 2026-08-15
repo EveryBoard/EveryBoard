@@ -5,7 +5,7 @@ import { Player } from '../../../jscaip/Player';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
-// TODO: oui ou non ?
+
 export class CheckersPiece {
 
     public static readonly ZERO: CheckersPiece = new CheckersPiece(Player.ZERO, false);
