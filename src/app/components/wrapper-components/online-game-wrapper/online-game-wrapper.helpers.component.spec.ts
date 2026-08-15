@@ -25,7 +25,7 @@ export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;
     role: PlayerOrNone;
 }
-
+// TODO FOR REVIEW: pas besin de splitter celui là ?
 export type PreparationOptions = {
     shorterGlobalClock: boolean;
     waitForGameToStart: boolean;

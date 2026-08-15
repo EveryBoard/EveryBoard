@@ -1,6 +1,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
+import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';

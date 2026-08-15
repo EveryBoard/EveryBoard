@@ -1,6 +1,7 @@
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';

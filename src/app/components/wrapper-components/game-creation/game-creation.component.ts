@@ -23,7 +23,7 @@ import { BaseWrapperComponent } from '../BaseWrapperComponent';
 import { DemoNodeInfo, DemoCardWrapperComponent } from '../demo-card-wrapper/demo-card-wrapper.component';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../rules-configuration/rules-configuration.component';
-
+// TODO FOR REVIEW: pas besin de splitter celui là ?
 export class GameCreationComponentMessages {
 
     public static readonly GAME_DOES_NOT_EXIST_OR_UNKNOWN: Localized = () => $localize`The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.`;

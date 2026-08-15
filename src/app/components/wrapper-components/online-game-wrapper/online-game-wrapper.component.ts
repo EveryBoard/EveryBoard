@@ -30,7 +30,7 @@ import { GameCreationComponent } from '../game-creation/game-creation.component'
 
 import { OGWCRequestManagerService, RequestInfo } from './OGWCRequestManagerService';
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
-
+// TODO FOR REVIEW: pas besin de splitter celui là ?
 export class OnlineGameWrapperMessages {
 
     public static readonly CANNOT_PLAY_AS_OBSERVER: Localized = () => $localize`You are an observer in this game, you cannot play.`;
