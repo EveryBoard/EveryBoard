@@ -67,7 +67,7 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		// set it ourselves otherwise the "autoIncrement" feature of postgresql
 		// will be confused and try to allocate 1 as the next id)
 		lobby := model.ConfigRoom{
-			Creator:     model.MinimalUser{Name: "", ID: ""},
+			Creator:     model.MinimalUser{},
 			CreatorElo:  0,
 			Status:      model.StatusFinished,
 			FirstPlayer: model.FirstPlayerRandom,

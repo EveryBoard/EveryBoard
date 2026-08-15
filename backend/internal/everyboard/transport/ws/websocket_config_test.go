@@ -1,4 +1,5 @@
 package ws
+// TODO: rename file to config_room something
 
 import (
 	"encoding/json"
@@ -12,6 +13,12 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/gorilla/websocket"
 )
+
+// TODO: add simple tests:
+// - user can subscribe to config room
+// - bot can subscribe to config room
+// - bot can subscribe twice to config room
+// TODO: read on t.Run and see what is preferred betwene this and TestXXX, and how to better name tests
 
 func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 	stopServer, fakeStore, _ := PrepareServer(t)

@@ -1,4 +1,5 @@
 package handler
+// TODO: rename to config_room.go
 
 import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"

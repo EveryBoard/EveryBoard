@@ -13,6 +13,7 @@ import (
 )
 
 func TestServeHTTPUnauthorized(t *testing.T) {
+	// TODO: need GWT
 	fakeStore := NewFakeStore()
 	subscriptions := session.NewSubscriptionManager[*websocket.Conn]()
 	connections := session.NewConnectionManager[*websocket.Conn]()
@@ -25,7 +26,7 @@ func TestServeHTTPUnauthorized(t *testing.T) {
 	})
 
 	req := httptest.NewRequest("GET", "/ws", nil)
-	rr := httptest.NewRecorder()
+	rr := httptest.NewRecorder() // TODO: why do we need this?
 
 	handler.ServeHTTP(rr, req)
 
@@ -33,10 +34,12 @@ func TestServeHTTPUnauthorized(t *testing.T) {
 }
 
 func TestWebSocketRequest(t *testing.T) {
+	// TODO: ned GWT
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
 	headers := http.Header{}
+	// TODO: token should be in clear + function call
 	headers.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJmb28ifQo.")
 	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
@@ -53,6 +56,7 @@ func TestWebSocketRequest(t *testing.T) {
 	require.NoError(t, err, "failed to read message")
 	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
 
+	// TODO: why does this one look like the same as the previous? Add GWT to be clear
 	err = c.WriteMessage(websocket.TextMessage, []byte(`["Unknown"]`))
 	require.NoError(t, err, "WriteMessage failed")
 	_, msg, err = c.ReadMessage()
@@ -67,6 +71,7 @@ func TestWebSocketRequest(t *testing.T) {
 }
 
 func TestInitialStateOnlySentToNewConnection(t *testing.T) {
+	// TODO: GWT
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
@@ -92,3 +97,5 @@ func TestInitialStateOnlySentToNewConnection(t *testing.T) {
 	require.Error(t, err, "first connection should not receive another initial state")
 	require.Nil(t, msg, "unexpected message on first connection")
 }
+
+// TODO: test that a bot can authenticate?
