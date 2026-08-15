@@ -7,7 +7,7 @@ import { Ordinal } from '../../jscaip/Ordinal';
 import { Vector } from '../../jscaip/Vector';
 
 import { CoerceoFailure } from './CoerceoFailure';
-
+// TODO: oui ou non ?
 export class CoerceoStep {
 
     public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');

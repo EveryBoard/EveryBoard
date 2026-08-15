@@ -15,7 +15,7 @@ import { GameWrapper } from '../GameWrapper';
 
 import { TutorialFailure } from './TutorialFailure';
 import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
-// TODO FOR REVIEW: pas besin de splitter celui là ?
+// TODO FOR REVIEW: pas besoin de splitter celui là ?
 export class TutorialGameWrapperMessages {
 
     public static readonly COMPLETED_TUTORIAL_MESSAGE: Localized = () => $localize`Congratulations, you completed the tutorial.`;

@@ -1,7 +1,8 @@
+import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
@@ -18,7 +19,7 @@ import { MGPValidators } from '../../utils/MGPValidator';
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneMove } from './AbaloneMove';
 import { AbaloneState } from './AbaloneState';
-
+// TODO: oui ou non ?
 export type AbaloneConfig = RulesConfig & {
 
     nbToCapture: number;

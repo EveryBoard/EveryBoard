@@ -1,9 +1,11 @@
-import { MGPOptional } from '@everyboard/lib';
 
-import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
 import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractReversiRules, ReversiConfig } from '../common/AbstractReversiRules';
 

@@ -1,12 +1,12 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
+import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ModeConfig';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ModeConfig';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';

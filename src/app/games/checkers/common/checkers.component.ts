@@ -1,10 +1,11 @@
+import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ModeConfig';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { ModeConfig } from 'src/app/components/game-components/parallelogram-game-component/ModeConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

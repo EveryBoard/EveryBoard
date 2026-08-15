@@ -4,7 +4,7 @@ import { GameNode } from '../../../jscaip/AI/GameNode';
 import { Move } from '../../../jscaip/Move';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-
+// TODO: oui ou non ?
 export type Click = string;
 
 export type TutorialPredicate = (move: Move, previousState: GameState, resultingState: GameState) => MGPValidation;

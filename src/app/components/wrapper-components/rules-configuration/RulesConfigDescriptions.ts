@@ -1,5 +1,6 @@
 import { GobanConfig } from 'src/app/jscaip/GobanConfig';
 import { MGPValidators } from 'src/app/utils/MGPValidator';
+
 import { NumberConfig } from './NumberConfig';
 import { RulesConfigDescription } from './RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from './RulesConfigDescriptionLocalizable';

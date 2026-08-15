@@ -1,7 +1,8 @@
+import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
+
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';

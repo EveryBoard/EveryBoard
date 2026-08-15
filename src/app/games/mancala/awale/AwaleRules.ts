@@ -1,9 +1,11 @@
-import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
 import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+
+import { MGPOptional, Utils } from '@everyboard/lib';
+
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { TableUtils } from '../../../jscaip/TableUtils';

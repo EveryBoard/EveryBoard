@@ -15,7 +15,7 @@ import { Localized } from '../../../utils/LocaleUtils';
 import { CheckersFailure } from './CheckersFailure';
 import { CheckersMove } from './CheckersMove';
 import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
-
+// TODO: oui ou non ?
 export type CheckersConfig = RulesConfig & {
 
     playerRows: number;

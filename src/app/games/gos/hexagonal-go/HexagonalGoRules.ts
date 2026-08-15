@@ -1,10 +1,10 @@
+import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 import { MGPOptional } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';

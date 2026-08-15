@@ -1,7 +1,8 @@
+import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
+
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
@@ -18,7 +19,7 @@ import { Debug } from '../../utils/Debug';
 import { CoerceoFailure } from './CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-
+// TODO: oui ou non ?
 export type CoerceoConfig = RulesConfig & {
 
     smallBoard: boolean;

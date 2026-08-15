@@ -13,7 +13,7 @@ import { TableUtils } from '../../jscaip/TableUtils';
 import { ConspirateursFailure } from './ConspirateursFailure';
 import { ConspirateursMove, ConspirateursMoveDrop, ConspirateursMoveJump, ConspirateursMoveSimple } from './ConspirateursMove';
 import { ConspirateursState } from './ConspirateursState';
-
+// TODO: oui ou non ?
 export class ConspirateursNode extends GameNode<ConspirateursMove, ConspirateursState> {}
 
 export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursState> {

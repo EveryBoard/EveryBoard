@@ -1,8 +1,9 @@
+import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
@@ -15,7 +16,7 @@ import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-
+// TODO: oui ou non ?
 export type ApagosConfig = RulesConfig & {
 
     width: number;

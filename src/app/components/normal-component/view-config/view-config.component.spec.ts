@@ -4,8 +4,8 @@ import { fakeAsync } from '@angular/core/testing';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { NumberConfig } from '../../wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../../wrapper-components/rules-configuration/rules-configuration.component';
 
 import { ViewConfigComponent } from './view-config.component';

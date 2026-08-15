@@ -3,7 +3,7 @@ import { Encoder, Utils } from '@everyboard/lib';
 import { Coord } from '../../jscaip/Coord';
 import { MoveCoord } from '../../jscaip/MoveCoord';
 import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
-
+// TODO: oui ou non ?
 export class ConnectSixFirstMove extends MoveCoord {
 
     public static of(coord: Coord): ConnectSixFirstMove {

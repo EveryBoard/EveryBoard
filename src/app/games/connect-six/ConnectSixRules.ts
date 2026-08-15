@@ -1,7 +1,8 @@
+import { RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptions';
+
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptions';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
@@ -14,7 +15,7 @@ import { Table, TableUtils } from '../../jscaip/TableUtils';
 
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
 import { ConnectSixState } from './ConnectSixState';
-
+// TODO: oui ou non ?
 export class ConnectSixNode extends GameNode<ConnectSixMove, ConnectSixState> {}
 
 export class ConnectSixRules extends ConfigurableRules<ConnectSixMove, ConnectSixState, GobanConfig> {

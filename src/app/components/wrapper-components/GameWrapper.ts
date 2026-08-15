@@ -8,12 +8,12 @@ import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
-import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
 import { AbstractGameComponent } from '../game-components/game-component/AbstractGameComponent';
+import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
 import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';
-
+// TODO: oui ou non ?
 export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;

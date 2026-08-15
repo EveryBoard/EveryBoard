@@ -9,7 +9,7 @@ import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
 import { Ordinal } from '../../jscaip/Ordinal';
 
 import { ConspirateursFailure } from './ConspirateursFailure';
-
+// TODO: oui ou non ?
 export class ConspirateursMoveDrop extends MoveCoord {
 
     public static encoder: Encoder<ConspirateursMoveDrop> = MoveCoord.getEncoder(ConspirateursMoveDrop.of);

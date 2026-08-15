@@ -10,10 +10,10 @@ import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
-import { RulesConfigDescription } from './RulesConfigDescription';
 import { BooleanConfig } from './BooleanConfig';
 import { EnumConfig } from './EnumConfig';
 import { NumberConfig } from './NumberConfig';
+import { RulesConfigDescription } from './RulesConfigDescription';
 import { RulesConfigurationComponent } from './rules-configuration.component';
 
 describe('RulesConfigurationComponent', () => {

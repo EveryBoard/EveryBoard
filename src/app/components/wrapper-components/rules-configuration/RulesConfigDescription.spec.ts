@@ -5,9 +5,9 @@ import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../../.
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 
-import { RulesConfigDescription } from './RulesConfigDescription';
 import { BooleanConfig } from './BooleanConfig';
 import { NumberConfig } from './NumberConfig';
+import { RulesConfigDescription } from './RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from './RulesConfigDescriptionLocalizable';
 
 describe(`RulesConfigDescriptions`, () => {
