@@ -96,7 +96,21 @@ class PlayerDriver():
         '''Wait for an element to be present on the page. Timeout is in seconds'''
         print('Waiting for "{}"'.format(selector))
         wait = WebDriverWait(self.driver, MAX_WAIT)
-        return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+        try:
+            return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
+        except Exception:
+            # A Selenium timeout has an empty message by default, which makes CI
+            # failures particularly difficult to diagnose. Record enough browser
+            # state to identify navigation races and frontend errors.
+            print('[browser-state] URL: {}'.format(self.driver.current_url))
+            print('[browser-state] title: {}'.format(self.driver.title))
+            print('[browser-state] readyState: {}'.format(
+                self.driver.execute_script('return document.readyState')))
+            body = self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML')
+            print('[browser-state] body: {}'.format(body[:20000]))
+            for log in self.driver.get_log('browser'):
+                print('[browser]{} {}'.format(log['level'], log['message']))
+            raise
 
     def click(self, selector):
         '''Click somewhere'''
