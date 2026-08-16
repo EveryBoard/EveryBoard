@@ -1,5 +1,8 @@
+import { computed, Signal } from '@angular/core';
+
 import { MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
@@ -62,17 +65,16 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return ScoreName.CAPTURES;
     }
 
-    public getMancalaViewBox(): string {
+    public readonly viewBoxWidth: Signal<number> = computed(() =>
+        60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE),
+    );
+
+    protected override computeViewBox(): ViewBox {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
-        const width: number = this.getViewBoxWidth() + this.STROKE_WIDTH;
+        const width: number = this.viewBoxWidth() + this.STROKE_WIDTH;
         const height: number = this.getViewBoxHeight() + this.STROKE_WIDTH;
-        return left + ' ' + up + ' ' + width + ' ' + height;
-    }
-
-    public getViewBoxWidth(): number {
-        const width: number = this.getState().getWidth();
-        return 60 + ((2 + width) * this.SPACE_SIZE);
+        return new ViewBox(left, up, width, height);
     }
 
     public getViewBoxHeight(): number {
@@ -92,7 +94,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getStoreTranslate(player: Player): string {
-        const translateX: number = player === Player.ZERO ? 60 : this.getViewBoxWidth() - 60;
+        const translateX: number = player === Player.ZERO ? 60 : this.viewBoxWidth() - 60;
         const translateY: number = this.getVerticalCenter();
         return `translate(${ translateX } ${ translateY })`;
     }

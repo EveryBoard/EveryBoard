@@ -116,7 +116,6 @@ export class LodestoneComponent
         pressurePlateGroupInfos: [],
     };
 
-    public viewBox: ViewBox;
     public platesGroupSize: number;
     public boardSize: number;
 
@@ -160,7 +159,7 @@ export class LodestoneComponent
         return ScoreName.CAPTURES;
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const left: number = - this.platesGroupSize;
         const up: number = - (this.platesGroupSize + this.SPACE_SIZE + this.STROKE_WIDTH);
         const width: number = this.boardSize + (2 * this.platesGroupSize);

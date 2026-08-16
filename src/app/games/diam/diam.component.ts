@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
@@ -55,6 +56,10 @@ interface LastMoved {
     imports: [NgClass],
 })
 export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState> {
+
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(-110, -120, 800, 710);
+    }
 
     private static readonly CENTER: Coord[] = [
         new Coord(40, 160),
