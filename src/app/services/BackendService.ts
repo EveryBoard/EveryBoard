@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Subscription } from 'rxjs';
 
 import { JSONValue, MGPFallible, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
@@ -104,7 +104,7 @@ export abstract class AbstractBackendService {
     // because we want only a single websocket connection, shared among all other services
     providedIn: 'root',
 })
-export class BackendService extends AbstractBackendService {
+export class BackendService extends AbstractBackendService implements OnDestroy {
 
     private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
     private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
@@ -116,6 +116,14 @@ export class BackendService extends AbstractBackendService {
 
     private nextConnectionAttemptTime: number = 1;
     private disconnectRequested: boolean = false;
+    private pageIsUnloading: boolean = false;
+
+    private readonly disconnectOnPageHide: () => void = (): void => {
+        this.pageIsUnloading = true;
+        if (this.webSocket.isPresent()) {
+            this.disconnect();
+        }
+    };
 
     public constructor()
     {
@@ -123,6 +131,7 @@ export class BackendService extends AbstractBackendService {
         this.connectionPromise = new Promise((resolve: () => void) => {
             this.resolveConnection = resolve;
         });
+        window.addEventListener('pagehide', this.disconnectOnPageHide);
     }
 
     public waitForConnection(): Promise<void> {
@@ -152,6 +161,11 @@ export class BackendService extends AbstractBackendService {
             };
 
             ws.onopen = (): void => {
+                if (this.pageIsUnloading) {
+                    ws.close();
+                    resolve(new Subscription());
+                    return;
+                }
                 if (timeout.isPresent()) {
                     window.clearTimeout(timeout.get());
                     timeout = MGPOptional.empty(); // clear the timeout
@@ -217,5 +231,10 @@ export class BackendService extends AbstractBackendService {
         this.connectionPromise = new Promise((resolve: () => void) => {
             this.resolveConnection = resolve;
         });
+    }
+
+    public ngOnDestroy(): void {
+        window.removeEventListener('pagehide', this.disconnectOnPageHide);
+        this.disconnectOnPageHide();
     }
 }
