@@ -15,7 +15,7 @@ import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRecta
 import { ZoomedGoRules } from '../ZoomedGoRules';
 import { ZoomedGoComponent } from '../zoomed-go.component';
 
-describe('ZoomedGoComponent', () => {
+fdescribe('ZoomedGoComponent', () => {
 
     let testUtils: ComponentTestUtils<ZoomedGoComponent>;
     const defaultConfig: RectangularGoConfig = ZoomedGoRules.get().getDefaultRulesConfig();
@@ -381,7 +381,7 @@ describe('ZoomedGoComponent', () => {
         testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 > .data-ko');
     }));
 
-    describe('highlight on mouse hover', () => {
+    fdescribe('highlight on mouse hover', () => {
 
         it('should show hovered coord on multiple zooms (go-board)', () => {
             // given any board with a config that shows multiple zooms
@@ -405,8 +405,24 @@ describe('ZoomedGoComponent', () => {
             testUtils.expectElementToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
         });
 
-        it('should hide hovered coord on multiple zooms when leaving (go-board)', () => {
+        fit('should hide hovered coord on multiple zooms when leaving (board)', () => {
             // given any board with a config that shows multiple zooms and an hover coord
+            testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
+
+            // when hovering away from the board
+            testUtils.enterMouseOutElement('#zoom-0 .data-coord-4-2');
+
+            // then its equivalents coords should be hidden on every zooms
+            testUtils.expectElementNotToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');
+            testUtils.expectElementNotToExist('#zoom-0-zx-0-zy-0 .data-hover');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-0 .data-hover-2-1');
+            testUtils.expectElementNotToExist('#zoom-1-zx-0-zy-0 .data-hover');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
+            testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 .data-hover');
+        });
+
+        it('should hide hovered coord on multiple zooms when leaving (piece)', () => {
+            // given any board with a config that shows multiple zooms and an hover piece
             testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
 
             // when hovering a coord
