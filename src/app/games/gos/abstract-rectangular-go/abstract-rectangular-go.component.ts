@@ -1,4 +1,4 @@
-import { computed, ModelSignal, signal, Signal, WritableSignal } from '@angular/core';
+import { ModelSignal, signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -80,7 +80,7 @@ export abstract class AbstractRectangularGoComponent
         return `${state.turn % 2}-${state.phase.toString()}-${board}-${JSON.stringify(state.koCoord)}-${JSON.stringify(state.captured)}`;
     }
 
-    public viewBox: Signal<ViewBox> = computed(() => {
+    public override computeViewBox(): ViewBox {
         const zooms: number = this.zooms().length;
         const zoomSeparatorCount: number = zooms - 1;
         const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
@@ -91,7 +91,7 @@ export abstract class AbstractRectangularGoComponent
         height += this.SUB_BOARD_SEPARATOR * verticalSubBoardSeparatorCount;
         height += this.ZOOM_SEPARATOR * zoomSeparatorCount;
         return ViewBox.fromLimits(0, width, 0, height);
-    });
+    }
 
     public override async showLastMove(move: GoMove): Promise<void> {
         this.last.set(MGPOptional.of(move.coord));
