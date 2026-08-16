@@ -836,7 +836,7 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
         spy.and.callThrough();
         // The subscription method could be a promise, we need to deal with both cases
         const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
-        if (subscription.unsubscribe !== undefined) {
+        if (subscription['unsubscribe'] !== undefined) {
             // This is not a promise, we can wrap it directly
             return new Subscription(() => {
                 unsubscribed = true;

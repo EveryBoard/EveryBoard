@@ -7,7 +7,7 @@ import { GameEventReply, GameEventRequest, RequestType } from '../../../domain/G
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
 import { Localized } from '../../../utils/LocaleUtils';
-// TODO FOR REVIEW: pas besin de splitter celui là ?
+
 export interface RequestInfo {
     requestType: RequestType;
     textForRequest: Localized;
