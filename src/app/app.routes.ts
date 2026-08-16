@@ -36,8 +36,10 @@ export const routes: Route[] = [
 /* eslint-enable @typescript-eslint/typedef */
 
 export function initializeFirebase(): void {
-    Firebase.initializeApp(environment.firebaseConfig);
-    const firestore: Firestore.Firestore = Firestore.getFirestore();
+    const firebaseApp: Firebase.FirebaseApp = Firebase.initializeApp(environment.firebaseConfig);
+    const firestore: Firestore.Firestore = environment.useEmulators ?
+        Firestore.initializeFirestore(firebaseApp, { experimentalForceLongPolling: true }) :
+        Firestore.getFirestore();
     const host: string = firestore.toJSON()['settings'].host;
     if (environment.useEmulators && host !== 'localhost:8080') {
         Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
