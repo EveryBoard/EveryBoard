@@ -118,6 +118,10 @@ export class BackendService extends AbstractBackendService implements OnDestroy 
     private disconnectRequested: boolean = false;
     private pageIsUnloading: boolean = false;
 
+    // Upon the "pagehide" event, we need to disconnect
+    // This arises for example when we navigate away from the page in the same tab (e.g., by entering another URL)
+    // It is necessary to disconnect at that time because otherwise the websocket may remain open for too long
+    // and then if we load EveryBoard in the same tab, we may get an already-subscribed error
     private readonly disconnectOnPageHide: () => void = (): void => {
         this.pageIsUnloading = true;
         if (this.webSocket.isPresent()) {
@@ -125,8 +129,7 @@ export class BackendService extends AbstractBackendService implements OnDestroy 
         }
     };
 
-    public constructor()
-    {
+    public constructor() {
         super();
         this.connectionPromise = new Promise((resolve: () => void) => {
             this.resolveConnection = resolve;

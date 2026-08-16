@@ -42,7 +42,7 @@ func (c clientSession) start() error {
 
 	c.connections.AddConnection(c.user, c.connection)
 	defer c.connections.RemoveConnection(c.user, c.connection)
-	logger.Debug.Printf("[%v][connection=%p] Connect", c.user.Name, c.connection)
+	logger.Debug.Printf("[%v] Connect", c.user.Name)
 
 	if err := c.sendInitialState(); err != nil {
 		return err
@@ -75,7 +75,7 @@ func (c clientSession) readMessages() {
 }
 
 func (c clientSession) handleMessage(msg []byte) {
-	logger.Debug.Printf("<<< [%v][connection=%p] %v", c.user.Name, c.connection, string(msg))
+	logger.Debug.Printf("<<< [%v] %v", c.user.Name, string(msg))
 	messageType, messageData, err := protocol.DecodeIncomingMessage(msg)
 	if err != nil {
 		c.handlers.SendError(apperror.ErrorUnknownMessage)
@@ -85,7 +85,7 @@ func (c clientSession) handleMessage(msg []byte) {
 }
 
 func (c clientSession) disconnect() {
-	logger.Info.Printf("[%v][connection=%p] Disconnect", c.user.Name, c.connection)
+	logger.Info.Printf("[%v] Disconnect", c.user.Name)
 	if err := c.handlers.ClientLeft(); err != nil {
 		logger.Error.Printf("Error when disconnecting client: %v", err)
 	}
