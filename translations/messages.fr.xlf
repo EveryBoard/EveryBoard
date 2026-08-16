@@ -3127,7 +3127,7 @@
       </trans-unit>
       <trans-unit id="556454886843041764" datatype="html">
         <source>In Lasca, when a stack is captured, only the top piece is removed. After the capture, the stack can therefore be commanded by the opponent, depending on the new piece at the top of the stack. But you can also recover a captured king. This is the case here, recover your king!</source>
-        <target>À Lasca, quand une pile est capturée, seulement la pièce en son dessus est enlevée. Après la capture, la pile peut donc être commandée par l'adversaire, dépendamment de la pièce qui se trouve en son dessus. Mais vous pouvez aussi récupérer une reine capturée. C'est le cas ici, récupérez votre reine !</target>
+        <target>À Lasca, quand une pile est capturée, seulement la pièce du dessus est enlevée. Après la capture, la pile peut donc être commandée par l'adversaire, dépendamment de la pièce qui se trouve à son sommet. Mais vous pouvez aussi récupérer une reine capturée. C'est le cas ici, récupérez votre reine !</target>
       </trans-unit>
       <trans-unit id="5396877629075826495" datatype="html">
         <source>You did not capture the right piece.</source>
@@ -3135,7 +3135,7 @@
       </trans-unit>
       <trans-unit id="2841090669908192003" datatype="html">
         <source>If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture.</source>
-        <target>Si, lors d'une capture multipl, une pièce atteint la dernière ligne, cette pièce s'arrêtera là et sera promue. Mais elle ne peut pas continuer sa capture car elle est seulement promue après la capture.&lt;br/&gt;&lt;br/&gt;Vous êtes Foncé, faites la capture.</target>
+        <target>Si, lors d'une capture multiple, une pièce atteint la dernière ligne, cette pièce s'arrêtera là et sera promue. Mais elle ne peut pas continuer sa capture car elle est seulement promue après la capture.&lt;br/&gt;&lt;br/&gt;Vous êtes Foncé, faites la capture.</target>
       </trans-unit>
       <trans-unit id="6441891554333297114" datatype="html">
         <source>Observe how your piece got promoted but could not continue its capture further.</source>
@@ -3143,7 +3143,7 @@
       </trans-unit>
       <trans-unit id="6354536314365385481" datatype="html">
         <source>When making multiple captures, you cannot jump twice over the same stack. The captured commander is immediately placed under your capturing stack, while the rest of the captured stack stays on its square. Even if this exposes another opposing commander, you cannot capture that stack again during the same move.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture as much pieces as possible.</source>
-        <target>Durant une capture multiple, vous ne pouvez pas sauter deux fois par dessus la même pile. Le commandeur capturé est immédiatement placé sous votre pile, tandis que le reste de la pile reste sur la même case. Même si cela révèle un autre commandeur adverse, vous ne pouvez pas capturer cette pile à nouveau durant le même mouvement&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez autant de pièce que possible.</target>
+        <target>Durant une capture multiple, vous ne pouvez pas sauter deux fois par dessus la même pile. Le commandeur capturé est immédiatement placé sous votre pile, tandis que le reste de la pile reste sur la même case. Même si cela révèle un autre commandeur adverse, vous ne pouvez pas capturer cette pile à nouveau durant le même tour.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Capturez autant de pièce que possible.</target>
       </trans-unit>
       <trans-unit id="318262165361158083" datatype="html">
         <source>Control</source>
@@ -3626,15 +3626,15 @@
       </trans-unit>
       <trans-unit id="8402752246011864012" datatype="html">
         <source>The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
-        <target>Le but à Bashni est, tout comme pour les dames, de mettre l'adversaire dans l'incapacité de se déplacer, soit en capturant toutes ses pièces, où on les bloquant.</target>
+        <target>Le but à Bashni est, tout comme pour les dames, de mettre l'adversaire dans l'incapacité de se déplacer, soit en capturant toutes ses pièces, ou en les bloquant.</target>
       </trans-unit>
       <trans-unit id="3182705657358075075" datatype="html">
         <source>A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
-        <target>Une capture a lieu lorsque vous sautez en diagonale par dessus une pièce adverse. À Bashni, la pièce capturée n'est pas supprimée : elle est placée en dessous de votre pièce, formant une tour. Vous devez capturer quand c'est possible.&lt;br/&gt;&lt;br/&gt;Vous jouez foncé, faites une capture.</target>
+        <target>Une capture a lieu lorsque vous sautez en diagonale par dessus une pièce adverse. À Bashni, la pièce capturée n'est pas supprimée : elle est placée en dessous de votre pièce, formant une tour. Vous devez capturer quand c'est possible.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
       </trans-unit>
       <trans-unit id="5185460173069548908" datatype="html">
         <source>Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower controlled the player at the top of the tower.</source>
-        <target>Bravo ! Notez que la pièce capturée n'a pas été enlevée du plateau, mais a été placée en dessous de celle qui a capturé, afin de former une tour contrôlée par le joueur en sous nessus</target>
+        <target>Bravo ! Notez que la pièce capturée n'a pas été enlevée du plateau, mais a été placée en dessous de celle qui a capturé, afin de former une tour contrôlée par le joueur au sommet de celle-ci.</target>
       </trans-unit>
       <trans-unit id="6522624192206928831" datatype="html">
         <source>Minority capture is allowed</source>
@@ -3642,7 +3642,7 @@
       </trans-unit>
       <trans-unit id="4060948936151379193" datatype="html">
         <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
-        <target>À Bashni, contrairement au dames internationales, vous pouvez choisir n'importe quelle séquence de capture. Si vous avez le choix entre capturer une pièce ou deux, vous pouvez choisir l'un des deux choix.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
+        <target>À Bashni, contrairement aux dames internationales, vous pouvez choisir n'importe quelle séquence de capture. Si vous avez le choix entre capturer une pièce ou deux, vous pouvez choisir l'un des deux choix.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé, faites une capture.</target>
       </trans-unit>
       <trans-unit id="3134181849403890425" datatype="html">
         <source>You made the majority capture, but you were asked to do the minority one here!</source>
@@ -3678,7 +3678,7 @@
       </trans-unit>
       <trans-unit id="3957194373025613682" datatype="html">
         <source>In Bashni, when a tower is captured, only the top piece is removed. After the capture, the old tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!</source>
-        <target>À Bashni, quand une tour est capturée, seulement la pièce en son sommet est enlevée. Après la capture, l'ancienne tour peut alors devenir commandée par un adversaire, dépendemment de la nouvelle pièce au dessus de la tour. Mais vous pouvez toujours récupérer une dame. C'est le cas ici, récupérez votre dame !</target>
+        <target>À Bashni, quand une tour est capturée, seulement la pièce du dessus est enlevée. Après la capture, l'ancienne tour peut alors devenir commandée par un adversaire, dépendemment de la nouvelle pièce au dessus de la tour. Mais vous pouvez toujours récupérer une dame. C'est le cas ici, récupérez votre dame !</target>
       </trans-unit>
       <trans-unit id="7127492795528845730" datatype="html">
         <source>When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.&lt;br/&gt;Here you must also use your king&apos;s backward and flying capture abilities.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture all remaining pieces.</source>
