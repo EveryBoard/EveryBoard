@@ -1,4 +1,3 @@
-// TODO: yes or non ?
 export class RulesConfigDescriptionLocalizable {
 
     public static readonly WIDTH: () => string = (): string => $localize`Width`;

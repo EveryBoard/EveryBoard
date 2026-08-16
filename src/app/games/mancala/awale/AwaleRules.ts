@@ -1,11 +1,10 @@
 
-import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
-
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { TableUtils } from '../../../jscaip/TableUtils';

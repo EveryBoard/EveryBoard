@@ -1,12 +1,12 @@
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { TableUtils } from '../../../jscaip/TableUtils';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';

@@ -1,6 +1,7 @@
-import { MGPValidation } from 'lib/dist';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { MGPValidator } from 'src/app/utils/MGPValidator';
+import { MGPValidation } from '@everyboard/lib';
+
+import { Localized } from '../../../utils/LocaleUtils';
+import { MGPValidator } from '../../../utils/MGPValidator';
 
 import { ConfigLine } from './ConfigLine';
 

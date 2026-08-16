@@ -1,5 +1,6 @@
-import { JSONPrimitive, MGPValidation } from 'lib/dist';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { JSONPrimitive, MGPValidation } from '@everyboard/lib';
+
+import { Localized } from '../../../utils/LocaleUtils';
 
 import { ConfigLine } from './ConfigLine';
 

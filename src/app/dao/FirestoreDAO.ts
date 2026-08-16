@@ -2,7 +2,7 @@ import * as Firestore from '@firebase/firestore';
 import { Subscription } from 'rxjs';
 
 import { JSONPrimitive, MGPOptional, Utils } from '@everyboard/lib';
-// TODO: oui ou non ?
+
 
 export type FirestoreJSONPrimitive = JSONPrimitive | Firestore.FieldValue;
 export type FirestoreJSONValue =

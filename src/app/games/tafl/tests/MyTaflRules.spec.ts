@@ -1,8 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
-
 import { MGPOptional } from '@everyboard/lib';
 
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';

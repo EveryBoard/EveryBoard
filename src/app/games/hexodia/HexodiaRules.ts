@@ -1,9 +1,8 @@
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
-
 import { MGPValidation, MGPOptional, Utils, MGPMap } from '@everyboard/lib';
 
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { DodecaHexaDirection } from '../../jscaip/DodecaHexaDirection';

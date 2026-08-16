@@ -8,11 +8,12 @@ import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
-import { AbstractGameComponent } from 'src/app/components/game-components/game-component/AbstractGameComponent';
+
 
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
+import { AbstractGameComponent } from '../../../components/game-components/game-component/AbstractGameComponent';
 import { initializeFirebase, routes } from '../../app.routes';
 import { findMatchingRoute } from '../../app.routes.spec';
 import { GameInfo } from '../../components/normal-component/pick-game/GameInfo';

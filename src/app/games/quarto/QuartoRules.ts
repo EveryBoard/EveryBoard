@@ -1,7 +1,6 @@
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { AlignmentStatus } from '../../jscaip/AI/AlignmentHeuristic';
 import { GameNode } from '../../jscaip/AI/GameNode';

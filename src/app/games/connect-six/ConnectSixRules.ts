@@ -1,8 +1,8 @@
-import { RulesConfigDescriptions } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptions';
 
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptions } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptions';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';

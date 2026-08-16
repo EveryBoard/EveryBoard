@@ -1,6 +1,7 @@
-import { JSONPrimitive, MGPValidation } from 'lib/dist';
-import { ConfigDescriptionType } from 'src/app/jscaip/RulesConfigUtil';
-import { Localized } from 'src/app/utils/LocaleUtils';
+import { JSONPrimitive, MGPValidation } from '@everyboard/lib';
+
+import { ConfigDescriptionType } from '../../../jscaip/RulesConfigUtil';
+import { Localized } from '../../../utils/LocaleUtils';
 
 
 export abstract class ConfigLine {

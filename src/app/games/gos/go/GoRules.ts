@@ -1,9 +1,8 @@
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
-
 import { MGPOptional } from '@everyboard/lib';
 
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { Coord } from '../../../jscaip/Coord';
 import { GobanConfig } from '../../../jscaip/GobanConfig';
 import { GobanUtils } from '../../../jscaip/GobanUtils';

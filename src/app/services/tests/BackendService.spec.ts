@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { JSONValue } from 'lib/dist';
 import { Subscription } from 'rxjs';
 
+import { JSONValue } from '@everyboard/lib';
 import { MGPFallible } from '@everyboard/lib';
 
 import { environment } from '../../../environments/environment';

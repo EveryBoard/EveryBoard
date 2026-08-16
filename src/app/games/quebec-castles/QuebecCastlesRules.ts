@@ -1,12 +1,11 @@
 
-import { BooleanConfig } from 'src/app/components/wrapper-components/rules-configuration/BooleanConfig';
-import { EnumConfig } from 'src/app/components/wrapper-components/rules-configuration/EnumConfig';
-import { NumberConfig } from 'src/app/components/wrapper-components/rules-configuration/NumberConfig';
-import { RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
-
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { EnumConfig } from '../../components/wrapper-components/rules-configuration/EnumConfig';
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { DirectionFailure } from '../../jscaip/Direction';

@@ -5,7 +5,7 @@ import { JSONValue } from '@everyboard/lib';
 import { FirestoreTime } from '../domain/Time';
 
 import { FirestoreDocument, FirestoreDAO } from './FirestoreDAO';
-// TODO: oui ou non ?
+
 export type MGPError = {
     // The component in which the error occured
     component: string;
