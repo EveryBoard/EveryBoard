@@ -42,6 +42,8 @@ export function initializeFirebase(): void {
     if (environment.useEmulators && host !== 'localhost:8080') {
         Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
     }
+    // A Firestore WebChannel can otherwise outlive a full-page navigation long enough to stall later connections.
+    window.addEventListener('pagehide', () => void Firestore.terminate(firestore), { once: true });
 
     const fireauth: Auth.Auth = Auth.getAuth();
     if (environment.useEmulators && fireauth.config['emulator'] == null) {
