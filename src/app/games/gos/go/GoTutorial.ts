@@ -60,7 +60,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing multiple stones`,
-            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>You're playing Dark. The light group here has only one liberty left, capture it.`,
+            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.<br/><br/>You're playing Dark. The light group here has only one liberty left, capture it.`,
             new GoState([
                 [_, O, _, _, _],
                 [O, X, _, _, _],
@@ -88,12 +88,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Life and death (death)`,
-            $localize`From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light's territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
+            $localize`From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light's territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
             new GoState([
                 [_, _, _, _, _],
                 [O, O, O, _, _],

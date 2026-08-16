@@ -113,8 +113,7 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
     }
 
     private getEmptyZones(deadlessState: GoState): GoGroupData[] {
-        const zoom: number = 1;
-        return this.getGoGroupDataFactory(zoom)
+        return this.getGoGroupDataFactory(1)
             .getGroupsDataWhere(
                 deadlessState.getCopiedBoard(),
                 (piece: GoPiece) => piece.isEmpty(),
@@ -234,12 +233,13 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
             }
         }
         const capturedSet: Set<Coord> = new Set(captureds);
+        let resultingState: GoState = state;
         for (const captured of capturedSet) {
-            state = state.withPieceAt(captured, GoPiece.EMPTY);
+            resultingState = resultingState.withPieceAt(captured, GoPiece.EMPTY);
         }
-        state = state.withAddedCaptures(state.getCurrentPlayer(), capturedSet.size());
+        resultingState = resultingState.withAddedCaptures(resultingState.getCurrentPlayer(), capturedSet.size());
         return {
-            postCaptureState: state,
+            postCaptureState: resultingState,
             uniqueCapture: capturedSet.size() === 1 ?
                 MGPOptional.of(capturedSet.getAnyElement().get()) :
                 MGPOptional.empty(),
@@ -404,16 +404,12 @@ export abstract class AbstractGoRules<C extends AbstractGoConfig>
     : GoState
     {
         if (this.isPass(legalMove)) {
-            Debug.display('GoRules', 'applyLegalMove', 'isPass');
             return this.applyPass(state);
         } else if (this.isAccept(legalMove)) {
-            Debug.display('GoRules', 'applyLegalMove', 'isAccept');
             return this.applyLegalAccept(state);
         } else if (this.isLegalDeadMarking(legalMove, state)) {
-            Debug.display('GoRules', 'applyLegalMove', 'isDeadMarking');
             return this.applyDeadMarkingMove(legalMove, state);
         } else {
-            Debug.display('GoRules', 'applyLegalMove', 'else it is normal move');
             return this.applyNormalLegalMove(legalMove, infos, config);
         }
     }

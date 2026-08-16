@@ -1882,8 +1882,8 @@
       <trans-unit id="8946006948417629723" datatype="html">
         <source>Capturing multiple stones</source>
       </trans-unit>
-      <trans-unit id="3872645745846261317" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
+      <trans-unit id="2570306403572655790" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -1903,13 +1903,8 @@
       <trans-unit id="2066383177849177665" datatype="html">
         <source>Life and death (death)</source>
       </trans-unit>
-      <trans-unit id="3595592714473441808" datatype="html">
-        <source>From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
+      <trans-unit id="7971199836923877142" datatype="html">
+        <source>From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light&apos;s territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -1999,9 +1994,6 @@
       </trans-unit>
       <trans-unit id="1733084177692338637" datatype="html">
         <source>(medium)</source>
-      </trans-unit>
-      <trans-unit id="4150591404644298753" datatype="html">
-        <source>Show Zooms</source>
       </trans-unit>
       <trans-unit id="4707463689820472290" datatype="html">
         <source>(small)</source>

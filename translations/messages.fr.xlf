@@ -500,7 +500,7 @@
       </trans-unit>
       <trans-unit id="8484396493346861583" datatype="html">
         <source>Show zooms</source>
-        <target>Montrer les zooms</target>
+        <target>Afficher les zooms</target>
       </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
@@ -2547,8 +2547,8 @@
         <source>Capturing multiple stones</source>
         <target>Capture de plusieurs pierres</target>
       </trans-unit>
-      <trans-unit id="3872645745846261317" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
+      <trans-unit id="2570306403572655790" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
         <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;Vous jouez Foncé. Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
@@ -2577,19 +2577,9 @@
         <source>Life and death (death)</source>
         <target>Vie et mort (mort)</target>
       </trans-unit>
-      <trans-unit id="3595592714473441808" datatype="html">
-        <source>From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
-        <target>De la règle de capture découle la notion de vie et de mort :
-        des pierres mortes sont des pierres que l&apos;on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
-        Tandis que des pierres vivantes sont des pierres que l&apos;on ne peut plus espérer capturer.
-        D&apos;après la règle de capture, Foncé peut jouer à l&apos;intérieur du territoire de Clair et le capturer.
-        On dit dans ce cas que Clair n&apos;a qu&apos;un œil (sa dernière liberté) et qu&apos;il est mort (même si pas encore capturé).
-        En fin de partie, les pierres mortes sont comptées comme captures, et les cases qu&apos;elles occupent comme territoires.</target>
+      <trans-unit id="7971199836923877142" datatype="html">
+        <source>From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light&apos;s territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
+        <target>De la règle de capture découle la notion de vie et de mort : des pierres mortes sont des pierres que l&apos;on est sûr de pouvoir capturer (sans rien y perdre ailleurs). Tandis que des pierres vivantes sont des pierres que l&apos;on ne peut plus espérer capturer. D&apos;après la règle de capture, Foncé peut jouer à l&apos;intérieur du territoire de Clair et le capturer. On dit dans ce cas que Clair n&apos;a qu&apos;un œil (sa dernière liberté) et qu&apos;il est mort (même si pas encore capturé). En fin de partie, les pierres mortes sont comptées comme captures, et les cases qu&apos;elles occupent comme territoires.</target>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -2720,10 +2710,6 @@
         <source>(medium)</source>
         <target>(moyen)</target>
       </trans-unit>
-      <trans-unit id="4150591404644298753" datatype="html">
-        <source>Show Zooms</source>
-        <target>Afficher les zooms</target>
-      </trans-unit>
       <trans-unit id="4707463689820472290" datatype="html">
         <source>(small)</source>
         <target>(petit)</target>
@@ -2742,7 +2728,7 @@
       </trans-unit>
       <trans-unit id="5821528921373090826" datatype="html">
         <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
-        <target>Félicitations, vous avez capturé la pierre que vous attendiez, mais aussi une autre à gauche. Observez comment celle-ci est capturée par quatre pierres à une distance de deux. Cependant, le motif de l&apos;atari est exactement le même que dans le Go classique. Cette capture est appelée une capture au zoom 2, tandis que la capture à droite est une capture au zoom 1.</target>
+        <target>Félicitations, vous avez capturé la pierre que vous attendiez, mais aussi une autre à gauche. Observez comment celle-ci est capturée par quatre pierres à une distance de deux. Cependant, le motif de l&apos;atari est exactement le même que au Go classique. Cette capture est appelée une capture au zoom 2, tandis que la capture à droite est une capture au zoom 1.</target>
       </trans-unit>
       <trans-unit id="6779631138176400609" datatype="html">
         <source>Simple capture, with shown zoom</source>
@@ -2762,7 +2748,7 @@
       </trans-unit>
       <trans-unit id="8285899720891132557" datatype="html">
         <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
-        <target>Dans le Go classique, une pierre interagit avec les intersections situées directement au-dessus, au-dessous, à gauche et à droite.&lt;br/&gt;Dans le Zoom Go, le même motif existe à des distances plus grandes.&lt;br/&gt;Les quatre mini-plateaux montrent le plateau vu au zoom 2. Sur celui-ci, les intersections espacées de deux cases se comportent exactement comme des intersections adjacentes dans le Go classique.</target>
+        <target>Au Go classique, une pierre interagit avec les intersections situées directement au-dessus, au-dessous, à gauche et à droite.&lt;br/&gt;Dans le Zoom Go, le même motif existe à des distances plus grandes.&lt;br/&gt;Les quatre mini-plateaux montrent le plateau vu au zoom 2. Sur celui-ci, les intersections espacées de deux cases se comportent exactement comme des intersections adjacentes au Go classique.</target>
       </trans-unit>
       <trans-unit id="6386757882103410531" datatype="html">
         <source>Suicide with zooms</source>
@@ -2770,7 +2756,7 @@
       </trans-unit>
       <trans-unit id="2684174386875652712" datatype="html">
         <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
-        <target>Comme vous pouvez le voir, en 4-4 vous pourriez jouer au Go classique, mais ici, à cause du zoom 2, vous ne pouvez pas, car ce coup constitue désormais un suicide.&lt;br/&gt;En revanche, en 7-4, vous avez un placement légal au zoom 2, mais il constitue un suicide au zoom 1. C&apos;est donc également un suicide.</target>
+        <target>Comme vous pouvez le voir, en 4-4 vous pourriez déposer une pièce au Go classique, mais ici, à cause du zoom 2, vous ne pouvez pas, car ce coup constitue désormais un suicide.&lt;br/&gt;En revanche, en 7-4, vous avez un placement légal au zoom 2, mais il constitue un suicide au zoom 1. C&apos;est donc également un suicide.</target>
       </trans-unit>
       <trans-unit id="6006075893165138386" datatype="html">
         <source>Fake-suicide with zooms</source>

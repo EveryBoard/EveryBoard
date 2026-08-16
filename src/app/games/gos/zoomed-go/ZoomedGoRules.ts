@@ -21,7 +21,7 @@ export class ZoomedGoRules extends AbstractRectangularGoRules {
                     height: new NumberConfig(12, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
                     handicap: new NumberConfig(0, () => $localize`Handicap`, MGPValidators.range(0, 9)),
                     zoom: new NumberConfig(3, () => $localize`Zoom`, MGPValidators.range(1, 5)),
-                    showZooms: new BooleanConfig(true, () => $localize`Show Zooms`),
+                    showZooms: new BooleanConfig(true, () => $localize`Show zooms`),
                 },
             },
             [
