@@ -1,6 +1,8 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';

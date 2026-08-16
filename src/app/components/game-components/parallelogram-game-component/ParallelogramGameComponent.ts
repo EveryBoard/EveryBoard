@@ -7,17 +7,7 @@ import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 
-export type ModeConfig = RulesConfig & {
-
-    offsetRatio: number;
-
-    horizontalWidthRatio: number;
-
-    pieceHeightRatio: number;
-
-    parallelogramHeight: number;
-
-};
+import { ModeConfig } from './ModeConfig';
 
 @Component({
     template: '',

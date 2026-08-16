@@ -13,7 +13,7 @@ import { Player } from '../../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
