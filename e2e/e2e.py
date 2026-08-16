@@ -99,18 +99,19 @@ class PlayerDriver():
         try:
             return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
         except Exception:
-            # A Selenium timeout has an empty message by default, which makes CI
-            # failures particularly difficult to diagnose. Record enough browser
-            # state to identify navigation races and frontend errors.
-            print('[browser-state] URL: {}'.format(self.driver.current_url))
-            print('[browser-state] title: {}'.format(self.driver.title))
-            print('[browser-state] readyState: {}'.format(
-                self.driver.execute_script('return document.readyState')))
-            body = self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML')
-            print('[browser-state] body: {}'.format(body[:20000]))
-            for log in self.driver.get_log('browser'):
-                print('[browser]{} {}'.format(log['level'], log['message']))
+            self.print_browser_state()
             raise
+
+    def print_browser_state(self):
+        '''Print enough browser state to diagnose otherwise-empty Selenium errors'''
+        print('[browser-state] URL: {}'.format(self.driver.current_url))
+        print('[browser-state] title: {}'.format(self.driver.title))
+        print('[browser-state] readyState: {}'.format(
+            self.driver.execute_script('return document.readyState')))
+        body = self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML')
+        print('[browser-state] body: {}'.format(body[:20000]))
+        for log in self.driver.get_log('browser'):
+            print('[browser]{} {}'.format(log['level'], log['message']))
 
     def click(self, selector):
         '''Click somewhere'''
@@ -122,6 +123,7 @@ class PlayerDriver():
             button.click()
         except Exception as e:
             print('Failed when clicking on button "{}": {}'.format(selector, e))
+            self.print_browser_state()
             raise e
 
     def fill(self, selector, content):
