@@ -64,6 +64,18 @@ class PlayerDriver():
         # Make sure the page has fully loaded
         self.wait_for('app-root')
 
+    def wait_until_connected(self):
+        '''Wait until Firebase has restored the authenticated user after a page load.'''
+        print('Waiting for authenticated user')
+        wait = WebDriverWait(self.driver, 30)
+        wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#connectedUserName')))
+
+    def go_home(self):
+        '''Return home through Angular without recreating all Firebase connections.'''
+        self.click('#logo')
+        self.wait_for('app-welcome')
+        self.wait_until_connected()
+
     def reload_page(self):
         '''Reload the current page'''
         self.driver.get(self.driver.current_url)
@@ -73,7 +85,7 @@ class PlayerDriver():
         self.username = name_prefix + ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
         self.email = self.username + '@everyboard.org'
         self.password = ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
-        self.go_to_page('http://localhost:4200')
+        self.go_home()
         # Access registration page
         if MOBILE:
             self.click('.navbar-burger')
@@ -245,7 +257,7 @@ def launch_scenarios(only_scenarios=None):
     scenarios['simple'].reverse() # so that they are run in order of appearance
     for simple_scenario in scenarios['simple']:
        # Always go back home for a new scenario
-       driver.go_to_page('http://localhost:4200')
+       driver.go_home()
        driver.ensure_no_errors() # we don't want errors before starting scenarios
        print('----------------------------------------------')
        print('Running scenario: ' + simple_scenario.__name__)
@@ -256,7 +268,7 @@ def launch_scenarios(only_scenarios=None):
     driver.register('1-')
     scenarios['registered'].reverse() # so that they are run in order of appearance
     for registered_scenario in scenarios['registered']:
-        driver.go_to_page('http://localhost:4200')
+        driver.go_home()
         driver.ensure_no_errors()
         print('----------------------------------------------')
         print('Running scenario: ' + registered_scenario.__name__)
@@ -268,8 +280,8 @@ def launch_scenarios(only_scenarios=None):
     driver2.register('2-')
     scenarios['two_drivers'].reverse() # so that they are run in order of appearance
     for two_drivers_scenario in scenarios['two_drivers']:
-        driver.go_to_page('http://localhost:4200')
-        driver2.go_to_page('http://localhost:4200')
+        driver.go_home()
+        driver2.go_home()
         driver.ensure_no_errors()
         driver2.ensure_no_errors()
         print('----------------------------------------------')
