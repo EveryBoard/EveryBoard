@@ -3,7 +3,7 @@ import { FirestoreDocument } from '../dao/FirestoreDAO';
 import { MinimalUser } from './MinimalUser';
 
 export type UserRoleInPart = 'Player' | 'Observer' | 'Creator' | 'ChosenOpponent' | 'Candidate';
-// TODO: oui ou non ?
+
 // The "current game" is the only game in which a user can be at any point in time.
 // The user can be a player in the game (in which case the opponent field is set)
 // or they can be an observer. The role field indicates this.

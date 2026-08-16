@@ -8,10 +8,12 @@ import { ConfigLine } from './ConfigLine';
 
 export class EnumConfig extends ConfigLine {
 
-    public constructor(value: string,
-                       title: Localized,
+    public constructor(
+        value: string,
+        title: Localized,
         public readonly possibleValues: { [key: string]: Localized },
-        public readonly validator: MGPValidator = (_: string) => MGPValidation.SUCCESS) {
+        public readonly validator: MGPValidator = (_: string) => MGPValidation.SUCCESS,
+    ) {
         super(value, title);
     }
 

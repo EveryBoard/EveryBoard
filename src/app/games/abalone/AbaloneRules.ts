@@ -1,4 +1,3 @@
-
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';

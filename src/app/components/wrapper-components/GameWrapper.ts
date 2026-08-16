@@ -13,7 +13,7 @@ import { AnyFunction, ClickNamer } from '../game-components/game-component/Click
 import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';
-// TODO: oui ou non ?
+
 export class GameWrapperMessages {
 
     public static readonly NOT_YOUR_TURN: Localized = () => $localize`It is not your turn!`;

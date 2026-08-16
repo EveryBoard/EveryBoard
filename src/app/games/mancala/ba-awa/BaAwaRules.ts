@@ -1,4 +1,3 @@
-
 import { MGPOptional } from '@everyboard/lib';
 
 import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';

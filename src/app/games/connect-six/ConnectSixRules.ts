@@ -1,4 +1,3 @@
-
 import { MGPValidation, MGPOptional, Utils } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';

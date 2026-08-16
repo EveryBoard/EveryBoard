@@ -3,7 +3,6 @@ import { Subscription } from 'rxjs';
 
 import { JSONPrimitive, MGPOptional, Utils } from '@everyboard/lib';
 
-
 export type FirestoreJSONPrimitive = JSONPrimitive | Firestore.FieldValue;
 export type FirestoreJSONValue =
     FirestoreJSONPrimitive |

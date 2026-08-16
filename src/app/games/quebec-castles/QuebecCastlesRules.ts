@@ -1,4 +1,3 @@
-
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/BooleanConfig';

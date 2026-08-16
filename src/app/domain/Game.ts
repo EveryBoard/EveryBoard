@@ -1,7 +1,7 @@
 import { JSONValue } from '@everyboard/lib';
 
 import { MinimalUser } from './MinimalUser';
-// TODO: oui ou non ?
+
 export type Game = {
     readonly gameName: string; // the type of game
     readonly playerZero: MinimalUser; // the first player

@@ -8,9 +8,11 @@ import { ConfigLine } from './ConfigLine';
 
 export class NumberConfig extends ConfigLine {
 
-    public constructor(defaultValue: number,
-                       title: Localized,
-        public readonly validator: MGPValidator) {
+    public constructor(
+        defaultValue: number,
+        title: Localized,
+        public readonly validator: MGPValidator,
+    ) {
         super(defaultValue, title);
     }
 

@@ -8,7 +8,7 @@ import { PlayerOrNone } from '../../../jscaip/Player';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameWrapper } from '../GameWrapper';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
-// TODO FOR REVIEW: pas besin de splitter celui là ?
+
 export type DemoNodeInfo = {
     name: string; // The url name of the game
     title: string; // The title of the step
