@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
@@ -43,6 +44,10 @@ interface SquareInfo {
     imports: [NgClass],
 })
 export class ConspirateursComponent extends GameComponent<ConspirateursRules, ConspirateursMove, ConspirateursState> {
+
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(-100, 0, 1915, 1715);
+    }
 
     public PIECE_RADIUS: number;
     public ALL_SHELTERS: Coord[] = ConspirateursState.ALL_SHELTERS;

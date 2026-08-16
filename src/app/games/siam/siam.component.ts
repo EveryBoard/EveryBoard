@@ -73,8 +73,8 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.encoder = SiamMove.encoder;
     }
 
-    public override getViewBox(): ViewBox {
-        return super.getViewBox()
+    protected override computeViewBox(): ViewBox {
+        return super.computeViewBox()
             .expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
     }
 
