@@ -3,7 +3,7 @@ package model
 type MinimalUser struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
-	IsBot       bool   `json:"-"`
+	IsBot       bool   `json:"isBot"`
 }
 
 type UserRole string
@@ -24,6 +24,7 @@ type CurrentGame struct {
 	ID       uint         `gorm:"primaryKey;autoIncrement;autoIncrementIncrement:1" json:"-"`
 	UserID   string       `gorm:"column:user_id;uniqueIndex;not null" json:"-"`
 	UserName string       `gorm:"column:user_name;not null" json:"-"`
+	UserIsBot bool        `gorm:"colmun:user_is_bot;not null;default:false" json:"-"`
 	GameID   GameID       `gorm:"index;not null;foreignKey:ConfigRoom" json:"id"`
 	GameName string       `gorm:"not null" json:"gameName"`
 	Creator  MinimalUser  `gorm:"embedded;embeddedPrefix:creator_;not null" json:"creator"`
@@ -32,7 +33,7 @@ type CurrentGame struct {
 }
 
 func (cg CurrentGame) GetUser() MinimalUser {
-	return MinimalUser{ID: cg.UserID, Name: cg.UserName}
+	return MinimalUser{ID: cg.UserID, Name: cg.UserName, IsBot: cg.UserIsBot}
 }
 
 var CurrentGameRows = []string{"id", "user_id", "user_name", "game_id", "game_name", "creator_id", "creator_name", "opponent_id", "opponent_name", "role"}

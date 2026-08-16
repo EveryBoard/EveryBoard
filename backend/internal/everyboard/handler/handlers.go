@@ -7,29 +7,16 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
 )
 
-// TODO: generalize to multiple arguments
 func withMessageArgument[T any](
 	messageData map[string]json.RawMessage,
 	key string,
 	handle func(T) error,
-) func() error {
+) error {
 	value, err := getMessageArgument[T](messageData, key)
 	if err != nil {
-		return func() error { return apperror.ErrorInvalidData }
+		return apperror.ErrorInvalidData
 	}
-	return func() error { return handle(*value) }
-}
-
-func withOptionalMessageArgument[T any](
-	messageData map[string]json.RawMessage,
-	key string, defaultValue T,
-	handle func(T) error,
-) func() error {
-	_, ok := messageData[key]
-	if !ok {
-		return func() error { return handle(defaultValue) }
-	}
-	return withMessageArgument(messageData, key, handle)
+	return handle(*value)
 }
 
 func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[string]json.RawMessage) error {
@@ -37,10 +24,7 @@ func (h *Handler) handleWithoutErrorSend(messageType string, messageData map[str
 	case "SubscribeLobby":
 		return h.handleSubscribeLobby()
 	case "SubscribeConfigRoom":
-		return withMessageArgument(messageData, "gameId",
-			func (gameId GameId) error {
-				return withOptionalMessageArgument(messageData, "botDescription",
-					func (h.handleSubscribeConfigRoom)
+		return withMessageArgument(messageData, "gameId", h.handleSubscribeConfigRoom)
 	case "SubscribeGame":
 		return withMessageArgument(messageData, "gameId", h.handleSubscribeGame)
 	case "Unsubscribe":

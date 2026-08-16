@@ -182,7 +182,7 @@ func startFirebaseEmulator(t *testing.T) {
 func TestTokenVerificationWithEmulator(t *testing.T) {
 	// Given the emulator
 	startFirebaseEmulator(t)
-	 InitializeFirebaseForTest(t, &Firebase{
+	InitializeFirebaseForTest(t, &Firebase{
 		UseEmulator: true,
 		ProjectID:   "my-project",
 	})
