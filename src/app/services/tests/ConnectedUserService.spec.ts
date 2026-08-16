@@ -657,16 +657,6 @@ describe('ConnectedUserService', () => {
         expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
     });
 
-    it('should unsubscribe from Firebase when the page is hidden', () => {
-        spyOn(connectedUserService['userSubscription'], 'unsubscribe').and.callThrough();
-        spyOn(connectedUserService['authSubscription'], 'unsubscribe').and.callThrough();
-
-        window.dispatchEvent(new Event('pagehide'));
-
-        expect(connectedUserService['userSubscription'].unsubscribe).toHaveBeenCalledWith();
-        expect(connectedUserService['authSubscription'].unsubscribe).toHaveBeenCalledWith();
-    });
-
     it('should throw when encountering a non-firebase error', () => {
         // Given a non-firebase error
         const error: Error = new Error('some other error');

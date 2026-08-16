@@ -68,16 +68,6 @@ class PlayerDriver():
         '''Reload the current page'''
         self.driver.get(self.driver.current_url)
 
-    def wait_until_connected(self):
-        '''Wait until Firebase has restored the authenticated user after a page load.'''
-        print('Waiting for authenticated user')
-        wait = WebDriverWait(self.driver, 30)
-        try:
-            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#connectedUserName')))
-        except Exception:
-            self.print_browser_state()
-            raise
-
     def register(self, name_prefix):
         '''Registers the user by filling in the registration form'''
         self.username = name_prefix + ''.join(random.choices(string.ascii_uppercase + string.digits, k=16))
@@ -106,22 +96,7 @@ class PlayerDriver():
         '''Wait for an element to be present on the page. Timeout is in seconds'''
         print('Waiting for "{}"'.format(selector))
         wait = WebDriverWait(self.driver, MAX_WAIT)
-        try:
-            return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
-        except Exception:
-            self.print_browser_state()
-            raise
-
-    def print_browser_state(self):
-        '''Print enough browser state to diagnose otherwise-empty Selenium errors'''
-        print('[browser-state] URL: {}'.format(self.driver.current_url))
-        print('[browser-state] title: {}'.format(self.driver.title))
-        print('[browser-state] readyState: {}'.format(
-            self.driver.execute_script('return document.readyState')))
-        body = self.driver.find_element(By.CSS_SELECTOR, 'body').get_attribute('innerHTML')
-        print('[browser-state] body: {}'.format(body[:20000]))
-        for log in self.driver.get_log('browser'):
-            print('[browser]{} {}'.format(log['level'], log['message']))
+        return wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, selector)))
 
     def click(self, selector):
         '''Click somewhere'''
@@ -133,7 +108,6 @@ class PlayerDriver():
             button.click()
         except Exception as e:
             print('Failed when clicking on button "{}": {}'.format(selector, e))
-            self.print_browser_state()
             raise e
 
     def fill(self, selector, content):
@@ -283,7 +257,6 @@ def launch_scenarios(only_scenarios=None):
     scenarios['registered'].reverse() # so that they are run in order of appearance
     for registered_scenario in scenarios['registered']:
         driver.go_to_page('http://localhost:4200')
-        driver.wait_until_connected()
         driver.ensure_no_errors()
         print('----------------------------------------------')
         print('Running scenario: ' + registered_scenario.__name__)
@@ -297,8 +270,6 @@ def launch_scenarios(only_scenarios=None):
     for two_drivers_scenario in scenarios['two_drivers']:
         driver.go_to_page('http://localhost:4200')
         driver2.go_to_page('http://localhost:4200')
-        driver.wait_until_connected()
-        driver2.wait_until_connected()
         driver.ensure_no_errors()
         driver2.ensure_no_errors()
         print('----------------------------------------------')

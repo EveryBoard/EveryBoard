@@ -91,11 +91,6 @@ export class ConnectedUserService implements OnDestroy {
 
     private readonly authSubscription: Subscription;
 
-    private readonly disconnectOnPageHide: () => void = (): void => {
-        this.userSubscription.unsubscribe();
-        this.authSubscription.unsubscribe();
-    };
-
     /**
      * This is the current user, if there is one.
      * Components depending on an AccountGuard can safely assume it is defined and directly call .get() on it.
@@ -146,7 +141,6 @@ export class ConnectedUserService implements OnDestroy {
                         });
                 }
             }));
-        window.addEventListener('pagehide', this.disconnectOnPageHide);
     }
     public emailVerified(user: FireAuth.User): boolean {
         // Only needed for mocking purposes
@@ -332,7 +326,7 @@ export class ConnectedUserService implements OnDestroy {
         return currentUser.getIdToken();
     }
     public ngOnDestroy(): void {
-        window.removeEventListener('pagehide', this.disconnectOnPageHide);
-        this.disconnectOnPageHide();
+        this.userSubscription.unsubscribe();
+        this.authSubscription.unsubscribe();
     }
 }

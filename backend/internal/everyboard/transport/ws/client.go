@@ -42,7 +42,6 @@ func (c clientSession) start() error {
 
 	c.connections.AddConnection(c.user, c.connection)
 	defer c.connections.RemoveConnection(c.user, c.connection)
-	logger.Debug.Printf("[%v] Connect", c.user.Name)
 
 	if err := c.sendInitialState(); err != nil {
 		return err

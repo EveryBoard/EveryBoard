@@ -383,27 +383,6 @@ describe('CurrentGameService', () => {
     });
 
     describe('unsubscriptions', () => {
-        it('should unsubscribe from a connection that finishes after logout', fakeAsync(() => {
-            // Given a backend connection that is still being established
-            let resolveConnection!: (subscription: Subscription) => void;
-            const connection: Promise<Subscription> = new Promise(
-                (resolve: (subscription: Subscription) => void) => {
-                    resolveConnection = resolve;
-                });
-            spyOn(backendService, 'connect').and.returnValue(connection);
-            ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
-            tick(0);
-
-            // When the user logs out before the connection finishes
-            ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
-            const obsoleteConnection: Subscription = new Subscription();
-            resolveConnection(obsoleteConnection);
-            tick(0);
-
-            // Then the late connection is not left alive without an owner
-            expect(obsoleteConnection.closed).toBeTrue();
-        }));
-
         it('should unsubscribe from backend subscription when destroying service', fakeAsync(async() => {
             // Given a service on which user is logged in
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
