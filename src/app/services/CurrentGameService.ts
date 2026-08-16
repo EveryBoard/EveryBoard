@@ -117,17 +117,15 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
 
     private currentGameSubscription: Subscription = new Subscription();
     private backendSubscription: Subscription = new Subscription();
-    private userUpdateRevision: number = 0;
 
     public constructor() {
         super();
         this.authSubscription = this.connectedUserService.subscribeToUser(async(user: AuthUser) => {
-            const revision: number = ++this.userUpdateRevision;
-            await this.onUserUpdate(user, revision);
+            await this.onUserUpdate(user);
         });
     }
 
-    private async onUserUpdate(user: AuthUser, revision: number): Promise<void> {
+    private async onUserUpdate(user: AuthUser): Promise<void> {
         if (user === AuthUser.NOT_CONNECTED || user.verified === false) { // user logged out or not yet verified
             this.currentGameSubscription.unsubscribe();
             this.backendSubscription.unsubscribe();
@@ -139,15 +137,7 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
                     this.onCurrentGameUpdate(message.getOptionalArgument('currentGame'));
                 });
             // connect after setting callback to be sure to get the first one
-            const backendSubscription: Subscription = await this.backendService.connect();
-            if (revision === this.userUpdateRevision) {
-                this.backendSubscription = backendSubscription;
-            } else {
-                // Authentication may change, or the application may be destroyed,
-                // while the asynchronous connection is being established. Do not
-                // leave that obsolete connection alive without an owner.
-                backendSubscription.unsubscribe();
-            }
+            this.backendSubscription = await this.backendService.connect();
         }
     }
 
@@ -165,7 +155,6 @@ export class CurrentGameService extends AbstractCurrentGameService implements On
     }
 
     public ngOnDestroy(): void {
-        this.userUpdateRevision++;
         this.currentGameSubscription.unsubscribe();
         this.authSubscription.unsubscribe();
         this.backendSubscription.unsubscribe();
