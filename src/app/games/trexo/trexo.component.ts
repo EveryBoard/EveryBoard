@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 
-
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';

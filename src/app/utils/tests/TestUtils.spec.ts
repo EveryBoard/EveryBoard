@@ -9,13 +9,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
-
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { TestVars } from '../../../TestVars.spec';
-import { AbstractGameComponent } from '../../../components/game-components/game-component/AbstractGameComponent';
 import { initializeFirebase, routes } from '../../app.routes';
 import { findMatchingRoute } from '../../app.routes.spec';
+import { AbstractGameComponent } from '../../components/game-components/game-component/AbstractGameComponent';
 import { GameInfo } from '../../components/normal-component/pick-game/GameInfo';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -837,7 +836,7 @@ export function prepareUnsubscribeCheck(service: any, subscribeMethod: string): 
         spy.and.callThrough();
         // The subscription method could be a promise, we need to deal with both cases
         const subscription: Subscription | Promise<Subscription> = service[subscribeMethod](...args);
-        if (subscription['unsubscribe'] !== undefined) {
+        if (subscription.unsubscribe !== undefined) {
             // This is not a promise, we can wrap it directly
             return new Subscription(() => {
                 unsubscribed = true;

@@ -1,7 +1,6 @@
 import { NgClass } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
 
-
 import { Utils } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
