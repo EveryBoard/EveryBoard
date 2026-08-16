@@ -70,13 +70,13 @@ class PlayerDriver():
 
     def wait_until_connected(self):
         '''Wait until Firebase has restored the authenticated user after a page load.'''
-        self.wait_for('#connectedUserName')
-
-    def go_home(self):
-        '''Return home through Angular without recreating all Firebase connections.'''
-        self.click('#logo')
-        self.wait_for('app-welcome')
-        self.wait_until_connected()
+        print('Waiting for authenticated user')
+        wait = WebDriverWait(self.driver, 30)
+        try:
+            wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, '#connectedUserName')))
+        except Exception:
+            self.print_browser_state()
+            raise
 
     def register(self, name_prefix):
         '''Registers the user by filling in the registration form'''
@@ -282,7 +282,8 @@ def launch_scenarios(only_scenarios=None):
     driver.register('1-')
     scenarios['registered'].reverse() # so that they are run in order of appearance
     for registered_scenario in scenarios['registered']:
-        driver.go_home()
+        driver.go_to_page('http://localhost:4200')
+        driver.wait_until_connected()
         driver.ensure_no_errors()
         print('----------------------------------------------')
         print('Running scenario: ' + registered_scenario.__name__)
@@ -294,8 +295,10 @@ def launch_scenarios(only_scenarios=None):
     driver2.register('2-')
     scenarios['two_drivers'].reverse() # so that they are run in order of appearance
     for two_drivers_scenario in scenarios['two_drivers']:
-        driver.go_home()
-        driver2.go_home()
+        driver.go_to_page('http://localhost:4200')
+        driver2.go_to_page('http://localhost:4200')
+        driver.wait_until_connected()
+        driver2.wait_until_connected()
         driver.ensure_no_errors()
         driver2.ensure_no_errors()
         print('----------------------------------------------')
