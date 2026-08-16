@@ -221,6 +221,35 @@ describe('BackendService', () => {
             subscription.unsubscribe();
         }));
 
+        it('should close the connection when the page is hidden', fakeAsync(async() => {
+            // Given a connected backend service
+            await connect();
+            const ws: WebSocket = webSocketInstances[0];
+            spyOn(ws, 'close').and.callThrough();
+
+            // When a full-page navigation starts
+            window.dispatchEvent(new Event('pagehide'));
+
+            // Then this page does not leave its WebSocket alive
+            expect(ws.close).toHaveBeenCalledOnceWith();
+        }));
+
+        it('should close a connection that opens after the page is hidden', fakeAsync(async() => {
+            // Given a connection whose handshake has not completed yet
+            const subscriptionPromise: Promise<Subscription> = backendService.connect();
+            tick(0);
+            const ws: WebSocket = webSocketInstances[0];
+            spyOn(ws, 'close').and.callThrough();
+
+            // When navigation starts before the socket opens
+            window.dispatchEvent(new Event('pagehide'));
+            ws.onopen!(new Event('open'));
+            await subscriptionPromise;
+
+            // Then the late socket is closed instead of becoming orphaned
+            expect(ws.close).toHaveBeenCalledOnceWith();
+        }));
+
     });
 
     describe('send', () => {
