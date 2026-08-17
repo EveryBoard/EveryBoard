@@ -57,6 +57,15 @@ module.exports = {
             'jasmine/expect-matcher': ['error'],
             'jasmine/new-line-before-expect': ['off'],
             'jasmine/new-line-between-declarations': ['off'],
+            'no-restricted-imports': [
+              'error',
+              {
+                patterns: [
+                  'src/*',
+                  'src/**',
+                ],
+              },
+            ],
             'no-warning-comments': [
                 'error',
                 { 'terms': ['todo', 'fixme', 'xxx', 'review'], 'location': 'start' }

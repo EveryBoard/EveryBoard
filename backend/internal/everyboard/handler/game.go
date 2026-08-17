@@ -92,12 +92,14 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 	}
 
 	var buf MsgBuffer
+	var game *model.Game
+	finished := false
 	err := h.store.Transaction(func(store store.Store) error {
 		configRoom, err := store.GetConfigRoom(gameId)
 		if err != nil {
 			return err
 		}
-		game, err := store.GetGame(gameId)
+		game, err = store.GetGame(gameId)
 		if err != nil {
 			return err
 		}
@@ -170,6 +172,7 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 		if err = store.FinishConfigRoom(configRoom); err != nil {
 			return err
 		}
+		finished = true
 
 		// Remove current game for everyone
 		if err = h.removeCurrentGame(&buf, store, game.PlayerZero); err != nil {
@@ -200,6 +203,9 @@ func (h *Handler) doEndGame(getResult func(*model.MinimalUser, *model.MinimalUse
 	}
 
 	h.flush(&buf)
+	if finished {
+		h.notifier.GameFinished(*game)
+	}
 	return nil
 }
 

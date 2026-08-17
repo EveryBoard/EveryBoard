@@ -32,8 +32,8 @@
                                i18n>Player {{ player.getValue()+1 }}</p>
                             <div class="select is-fullwidth">
                                 <select id="player-select-{{ player.getValue() }}"
-                                        (change)="updatePlayer(player)"
-                                        [(ngModel)]="playerSelection[player.getValue()]">
+                                        [ngModel]="getPlayerSelection(player)"
+                                        (ngModelChange)="onPlayerSelectionChange(player, $event)">
                                     <option selected
                                             id="player-{{ player.getValue() }}-human"
                                             value="human"
@@ -44,30 +44,30 @@
                                     }
                                 </select>
                             </div>
-                            @if (mustSelectAIProfile(player.getValue())) {
+                            @if (mustSelectAIProfile(player)) {
                                 <div class="select is-fullwidth">
                                     <select id="ai-profile-select-{{ player.getValue() }}"
-                                            [(ngModel)]="aiProfiles[player.getValue()]"
-                                            (change)="updatePlayer(player)">
+                                            [ngModel]="getAIProfile(player)"
+                                            (ngModelChange)="onAIProfileChange(player, $event)">
                                         <option selected
                                                 value="none"
                                                 i18n>Pick the profile</option>
-                                        @for (profile of availableAIProfiles(player.getValue()); track profile.id) {
+                                        @for (profile of availableAIProfiles(player); track profile.id) {
                                             <option id="player-{{ player.getValue() }}-profile-{{ profile.id }}"
                                                     [value]="profile.id">{{ profile.name }}</option>
                                         }
                                     </select>
                                 </div>
                             }
-                            @if (players[player.getValue()].equalsValue('human') === false && isAIProfileSelected(player.getValue())) {
+                            @if (players.get(player).equalsValue('human') === false && isAIProfileSelected(player)) {
                                 <div class="select is-fullwidth">
                                     <select id="ai-option-select-{{ player.getValue() }}"
-                                            [(ngModel)]="aiOptions[player.getValue()]"
-                                            (change)="updatePlayer(player)">
+                                            [ngModel]="getAIOption(player)"
+                                            (ngModelChange)="onAIOptionChange(player, $event)">
                                         <option selected
                                                 value="none"
                                                 i18n>Pick the options</option>
-                                        @for (option of availableAIOptions(player.getValue()); track option.name) {
+                                        @for (option of availableAIOptions(player); track option.name) {
                                             <option id="player-{{ player.getValue() }}-option-{{ option.name }}"
                                                     [value]="option.name">{{ option.name }}</option>
                                         }
