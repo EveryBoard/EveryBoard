@@ -234,7 +234,6 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
         this.viewInfo.creator = configRoom.creator.name;
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
-            console.log(c)
             return {
                 name: c.user.name,
                 isBot: c.user.isBot ?? false,

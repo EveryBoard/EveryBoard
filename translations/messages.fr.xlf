@@ -1081,6 +1081,10 @@
         <source>Actions</source>
         <target>Actions</target>
       </trans-unit>
+      <trans-unit id="2597866491429942649" datatype="html">
+        <source>bot</source>
+        <target>bot</target>
+      </trans-unit>
       <trans-unit id="8698515801873408462" datatype="html">
         <source>Pick</source>
         <target>Sélectionner</target>
