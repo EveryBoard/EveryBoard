@@ -6,6 +6,7 @@ import (
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/config"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/notification"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/server"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
@@ -17,6 +18,7 @@ type Dependencies struct {
 	Store         store.Store
 	Subscriptions *session.SubscriptionManager[*websocket.Conn]
 	Connections   *session.ConnectionManager[*websocket.Conn]
+	Notifier      notification.Notifier
 }
 
 func NewDependencies() Dependencies {
@@ -49,6 +51,17 @@ func Prepare(cfg *config.Configuration, dependencies Dependencies) (*http.Server
 			dependencies.Connections = defaults.Connections
 		}
 	}
+	if dependencies.Notifier == nil {
+		if cfg.WebhookURL == "" {
+			dependencies.Notifier = notification.Noop{}
+		} else {
+			notifier, err := notification.NewWebhook(cfg.WebhookURL, cfg.FrontendURL)
+			if err != nil {
+				return nil, fmt.Errorf("error initializing webhook: %v", err)
+			}
+			dependencies.Notifier = notifier
+		}
+	}
 
 	websocketHandler := ws.New(ws.Dependencies{
 		Firebase:      cfg.Firebase,
@@ -56,6 +69,7 @@ func Prepare(cfg *config.Configuration, dependencies Dependencies) (*http.Server
 		Subscriptions: dependencies.Subscriptions,
 		Connections:   dependencies.Connections,
 		Origin:        cfg.Origin,
+		Notifier:      dependencies.Notifier,
 	})
 	return server.New(cfg.ListenAddr, cfg.Origin, websocketHandler, dependencies.Store), nil
 }
