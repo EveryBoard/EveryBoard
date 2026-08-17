@@ -9,6 +9,10 @@ import { HexagonalGameComponent } from '../../../components/game-components/game
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
+<<<<<<< HEAD
+=======
+import { HexaLayout } from '../../../jscaip/HexaLayout';
+>>>>>>> 351e3d2440b1500dec95d07edca9d6fa928fff39
 import { PointyHexaOrientation } from '../../../jscaip/HexaOrientation';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { HexaLayout } from '../../../jscaip/layout/HexaLayout';
@@ -92,7 +96,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
         this.last = MGPOptional.empty();
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         return ViewBox.fromHexa(
             this.getState().allCoords(),
             this.hexaLayout,

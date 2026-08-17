@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, ProviderToken, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -14,8 +14,8 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 import { TestVars } from '../../../TestVars.spec';
 import { initializeFirebase, routes } from '../../app.routes';
 import { findMatchingRoute } from '../../app.routes.spec';
-import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
-import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
+import { AbstractGameComponent } from '../../components/game-components/game-component/AbstractGameComponent';
+import { GameInfo } from '../../components/normal-component/pick-game/GameInfo';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
@@ -123,6 +123,10 @@ export class SimpleComponentTestUtils<T> {
     public prepareFixture(componentType: Type<T>): void {
         this.fixture = TestBed.createComponent(componentType);
         this.component = this.fixture.debugElement.componentInstance;
+    }
+
+    public getFromInjector<U>(token: ProviderToken<U>): U {
+        return this.fixture.debugElement.injector.get(token);
     }
 
     public getComponent(): T {
@@ -375,7 +379,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
         const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
+            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in GameInfo.ts)');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
@@ -447,19 +451,19 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
     public async setupState(state: GameState,
                             params: { previousState?: GameState;
                                       previousMove?: Move;
-                                      config?: RulesConfig; } = {})
-    : Promise<void>
-    {
+                                      config?: RulesConfig; } = {},
+    ): Promise<void> {
         const config: RulesConfig = this.getConfigFrom(params.config);
         if (Object.keys(config).length > 0) {
             // If the game is configurable, set its config
             const wrapper: LocalGameWrapperComponent = this.getWrapper() as unknown as LocalGameWrapperComponent;
-            Object.entries(config)
-                .map((configElement: [string, ConfigDescriptionType]) => {
+            Object.entries(config).forEach(
+                (configElement: [string, ConfigDescriptionType]) => {
                     TestBed.inject(ActivatedRouteStub).setParam(configElement[0], JSON.stringify(configElement[1]));
-                });
+                },
+            );
             await wrapper.setConfigFromParams();
-            this.gameComponent.config = config;
+            this.gameComponent.setConfig(config);
             tick(0);
         }
         this.gameComponent.node = new GameNode(
@@ -582,8 +586,8 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
 
     public async expectMoveSuccess(elementName: string,
                                    move: Move,
-                                   clickAnimationDuration?: number)
-    : Promise<void>
+                                   clickAnimationDuration?: number,
+    ): Promise<void>
     {
         return this.expectMoveSuccessWithAsymmetricNaming(elementName, elementName, move, clickAnimationDuration);
     }

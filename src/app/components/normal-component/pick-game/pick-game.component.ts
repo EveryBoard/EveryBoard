@@ -1,7 +1,8 @@
 /* eslint-disable no-multi-spaces */
-import { Component, OutputEmitterRef, Type, inject, output } from '@angular/core';
+import { Component, OutputEmitterRef, inject, output } from '@angular/core';
 import Fuse, { FuseResult } from 'fuse.js';
 
+<<<<<<< HEAD
 import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { AbaloneRules } from '../../../games/abalone/AbaloneRules';
@@ -141,13 +142,12 @@ import { YinshComponent } from '../../../games/yinsh/yinsh.component';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
+=======
+>>>>>>> 351e3d2440b1500dec95d07edca9d6fa928fff39
 import { AutofocusDirective } from '../../../pipes-and-directives/autofocus.directive';
 import { ThemeService } from '../../../services/ThemeService';
-import { Localized } from '../../../utils/LocaleUtils';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
-import { Tutorial } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 
+<<<<<<< HEAD
 class GameDescription {
 
     public static readonly ABALONE: Localized = () => $localize`Use simple mechanics to push 6 of the opponent's pieces out of the board!`;
@@ -352,6 +352,9 @@ export class GameInfo {
     }
 
 }
+=======
+import { GameInfo } from './GameInfo';
+>>>>>>> 351e3d2440b1500dec95d07edca9d6fa928fff39
 
 @Component({
     selector: 'app-pick-game',

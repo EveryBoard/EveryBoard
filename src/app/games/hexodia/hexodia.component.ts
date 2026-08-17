@@ -70,7 +70,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
                                          PointyHexaOrientation.INSTANCE);
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const abstractSize: number = this.getState().getWidth();
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);

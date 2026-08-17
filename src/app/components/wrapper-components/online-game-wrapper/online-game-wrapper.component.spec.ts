@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { GameResult } from '../../../domain/Game';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
@@ -17,10 +18,11 @@ import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomService
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
 import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameWrapperMessages } from '../GameWrapper';
 
+import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 describe('OnlineGameWrapper for non-existing game', () => {
@@ -204,6 +206,34 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         // Then it unsubscribed from the game
         expectUnsubscribeToHaveBeenCalled();
+    }));
+
+    it('should register timers only once', fakeAsync(async() => {
+        // Given a started game
+        const timeManager: OGWCTimeManagerService = testUtils.getFromInjector(OGWCTimeManagerService);
+        spyOn(timeManager, 'setTimers').and.callThrough();
+        await prepareComponent(true);
+
+        // When a second game update is received
+        const gameService: GameServiceMock =
+            TestBed.inject(GameService) as AbstractGameService as GameServiceMock;
+        await gameService.mockGameUpdate(GameMocks.STARTED);
+
+        // Then timers are not registered again
+        expect(timeManager.setTimers).toHaveBeenCalledTimes(1);
+    }));
+
+    it('should identify player zero as loser when player one wins', fakeAsync(async() => {
+        // Given a game won by player one
+        await prepareComponent(true);
+        wrapper.game = {
+            ...GameMocks.STARTED,
+            result: GameResult.VICTORY_OF_ONE,
+        };
+
+        // When asking for the loser
+        // Then it should be player zero
+        expect(wrapper.getLoser()).toEqual(UserMocks.CREATOR_MINIMAL_USER);
     }));
 
 });

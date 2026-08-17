@@ -15,7 +15,7 @@ import { Debug } from '../../../utils/Debug';
 import { ChatComponent } from '../chat/chat.component';
 import { EloComponent } from '../elo/elo.component';
 import { OnlineGameSelectionComponent } from '../online-game-selection/online-game-selection.component';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { GameInfo } from '../pick-game/GameInfo';
 
 type Tab = 'games' | 'create' | 'chat';
 

@@ -7,9 +7,9 @@ import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
 import { PlayerOrNone } from '../../../jscaip/Player';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { clickableMethods } from '../../game-components/game-component/tests/clickableMethods.spec';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 
 import { OnlineGameWrapperComponent, OnlineGameWrapperMessages } from './online-game-wrapper.component';
 import { PreparationOptions, prepareStartedGameFor } from './online-game-wrapper.helpers.component.spec';

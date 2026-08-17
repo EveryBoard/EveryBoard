@@ -117,7 +117,7 @@ export class SixComponent
         this.disconnectedCoords = [];
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const disconnectedCoords: Coord[] = this.disconnectedCoords.map((value: CoordAndClass) => value.coord);
         const coords: Coord[] = this.pieces.concat(disconnectedCoords).concat(this.neighbors);
         return ViewBox

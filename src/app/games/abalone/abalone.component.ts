@@ -106,7 +106,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         return ScoreName.CAPTURES;
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const abstractSize: number = this.getState().getWidth() + 2;
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);

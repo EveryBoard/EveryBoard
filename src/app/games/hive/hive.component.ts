@@ -123,7 +123,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public readonly PIECE_HEIGHT: number;
 
     private boardViewBox: ViewBox;
-    public viewBox: string;
     public inspectedStackTransform: string;
 
     public constructor() {
@@ -163,7 +162,6 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             }
         }
         this.ground = this.getGround();
-        this.computeViewBox();
         this.remainingStacks = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
         const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node);
@@ -194,7 +192,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         return await this.chooseMove(HiveMove.PASS);
     }
 
-    private computeViewBox(): void {
+    protected override computeViewBox(): ViewBox {
         const coords: Coord[] = this.getPieceCoords().union(this.getAllNeighbors()).toList();
         coords.push(new Coord(0, 0)); // Need at least one coord for the first space
         this.boardViewBox = ViewBox.fromHexa(coords, this.hexaLayout, this.STROKE_WIDTH);
@@ -228,9 +226,9 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
             this.inspectedStackTransform = this.getSVGTranslation(inspectedStackPosition.x, y);
 
             const spaceForInspectedStack: number = this.SPACE_SIZE*5;
-            this.viewBox = boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0).toSVGString();
+            return boardAndRemainingViewBox.expand(0, spaceForInspectedStack, 0, 0);
         } else {
-            this.viewBox = boardAndRemainingViewBox.toSVGString();
+            return boardAndRemainingViewBox;
         }
     }
 
@@ -277,7 +275,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.selectedRemaining = MGPOptional.empty();
         this.selectedSpiderCoords = [];
         this.inspectedStack = MGPOptional.empty();
-        this.computeViewBox();
+        this.refreshViewBox();
     }
 
     public override async showLastMove(move: HiveMove): Promise<void> {
@@ -420,7 +418,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
                 this.highlight(coord, 'selected-stroke');
                 this.inspectedStack = MGPOptional.of(stack);
                 this.inspectedStackCoord = MGPOptional.of(coord);
-                this.computeViewBox();
+                this.refreshViewBox();
                 return MGPValidation.SUCCESS;
             }
         }
@@ -437,7 +435,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         if (stack.size() > 1) {
             this.inspectedStack = MGPOptional.of(stack);
             this.inspectedStackCoord = MGPOptional.of(coord);
-            this.computeViewBox();
+            this.refreshViewBox();
         }
         this.highlightNextPossibleCoords(coord);
         return MGPValidation.SUCCESS;

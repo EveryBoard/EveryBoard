@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { MGPMap, ReversibleMap } from '../MGPMap';
+import { MGPMap } from '../MGPMap';
 import { MGPOptional } from '../MGPOptional';
+import { ReversibleMap } from '../ReversibleMap';
 import { Set } from '../Set';
 
 describe('MGPMap', () => {

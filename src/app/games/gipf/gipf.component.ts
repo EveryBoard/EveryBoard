@@ -118,7 +118,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         }
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         return new ViewBox(
             -this.STROKE_WIDTH,
             0,

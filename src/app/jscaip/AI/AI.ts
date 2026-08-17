@@ -12,7 +12,7 @@ import { GameNode } from './GameNode';
 export abstract class MoveGenerator<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig> {
     /**
      * Gives the list of all the possible moves.
-     * Has to be implemented for each rule so that the AI can choose among theses moves.
+     * Has to be implemented for each rule so that the AI can choose among these moves.
      * This function could give an incomplete set of data if some of them are redundant
      * or if some of them are too bad to be interesting to count, as a matter of performance.
      */

@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
@@ -25,6 +26,10 @@ import { DvonnState } from './DvonnState';
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
+
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, 875, 380);
+    }
 
     public lastMove: MGPOptional<DvonnMove> = MGPOptional.empty();
     public chosen: MGPOptional<Coord> = MGPOptional.empty();

@@ -32,9 +32,8 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
     public async expectMoveSuccess(click: string, move: MancalaMove, config: MancalaConfig): Promise<void> {
         const component: C = this.testUtils.getGameComponent();
         const state: MancalaState = component.constructedState;
-        const playerY: number = state.getCurrentPlayerY();
         const lastDistribution: MancalaDistribution = move.distributions[move.distributions.length - 1];
-        const coord: Coord = new Coord(lastDistribution.x, playerY);
+        const coord: Coord = new Coord(lastDistribution.x, lastDistribution.y);
         const moveDuration: number = this.showSeedBySeed(coord, state, config);
         await this.testUtils.expectMoveSuccess(click, move, moveDuration);
     }
@@ -159,8 +158,8 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
                     const classes: string[] = ['base', 'moved-stroke', playerFill];
                     this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
                 } else {
-                    const playerY: number = actionAndResult.state.getCurrentPlayerY();
-                    const startingCoord: Coord = new Coord(actionAndResult.move.getFirstDistribution().x, playerY);
+                    const firstDistribution: MancalaDistribution = actionAndResult.move.getFirstDistribution();
+                    const startingCoord: Coord = new Coord(firstDistribution.x, firstDistribution.y);
                     if (startingCoord.equals(coord)) { // Initial house
                         const classes: string[] = ['base', 'last-move-stroke', playerFill];
                         this.testUtils.expectElementToHaveClasses('#circle-' + suffix, classes);
@@ -197,7 +196,7 @@ export class MancalaComponentTestUtils<C extends MancalaComponent<R>,
             const coord: Coord = new Coord(-1, -1);
             return this.expectHouseToContain(coord, value, secondaryMessage);
         } else {
-            const coord: Coord = new Coord(2, 2);
+            const coord: Coord = new Coord(-1, 1);
             return this.expectHouseToContain(coord, value, secondaryMessage);
         }
     }
@@ -319,7 +318,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // Given any state (initial here by default)
 
             // When player performs a move
-            const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
+            const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
 
             // Then the moved spaces should be shown
@@ -364,7 +363,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
 
         it('should hide last move when taking move back', fakeAsync(async() => {
             // Given a board with a last move
-            const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5);
+            const move: MancalaMove = mancalaTestUtils.testUtils.getGameComponent().generateMove(5, 1);
             await mancalaTestUtils.expectMoveSuccess('#click-5-1', move, defaultConfig);
 
             // When taking back
@@ -447,7 +446,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
                 } else {
                     receiveMoveOrDoClick = async(coord: Coord): Promise<void> => {
                         const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
-                        const move: MancalaMove = gameComponent.generateMove(coord.x);
+                        const move: MancalaMove = gameComponent.generateMove(coord.x, coord.y);
                         await gameComponent.chooseMove(move);
                         void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                     };
@@ -548,7 +547,7 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             it('should make click impossible during opponent move animation', fakeAsync(async() => {
                 // Given a move triggered by the opponent
                 const gameComponent: C = mancalaTestUtils.testUtils.getGameComponent();
-                const move: MancalaMove = gameComponent.generateMove(2);
+                const move: MancalaMove = gameComponent.generateMove(2, 1);
                 await gameComponent.chooseMove(move);
                 void gameComponent.updateBoard(true); // void, so it starts but doesn't wait the animation's end
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // so that it is started but bot finished yet

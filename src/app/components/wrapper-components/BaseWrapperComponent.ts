@@ -6,7 +6,7 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { GameState } from '../../jscaip/state/GameState';
 import { BaseComponent } from '../BaseComponent';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
 import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
 

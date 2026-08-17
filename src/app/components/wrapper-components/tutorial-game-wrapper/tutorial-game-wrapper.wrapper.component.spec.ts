@@ -13,7 +13,7 @@ import { Player } from '../../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
@@ -176,7 +176,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // Then the config of the board should be set on the game component
-            expect(wrapper.gameComponent.config).toEqual(customConfig);
+            expect(wrapper.gameComponent.getConfig()).toEqual(customConfig);
         }));
 
         it('should change the game config to default config when going back to non-configured-step', fakeAsync(async() => {
@@ -199,13 +199,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            expect(wrapper.gameComponent.config).toEqual(customConfig);
+            expect(wrapper.gameComponent.getConfig()).toEqual(customConfig);
 
             // When going to a step without config
             await testUtils.clickElement('#nextButton');
 
             // Then the config of the board should be set to the default config again
-            expect(wrapper.gameComponent.config).toEqual(defaultConfig);
+            expect(wrapper.gameComponent.getConfig()).toEqual(defaultConfig);
         }));
 
         it('should call setRole according to the current player (player zero)', fakeAsync(async() => {
