@@ -8,7 +8,8 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { CurrentGameService } from '../../../services/CurrentGameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { ThemeService } from '../../../services/ThemeService';
-import { GameInfo, PickGameComponent } from '../pick-game/pick-game.component';
+import { GameInfo } from '../pick-game/GameInfo';
+import { PickGameComponent } from '../pick-game/pick-game.component';
 
 @Component({
     selector: 'app-welcome',

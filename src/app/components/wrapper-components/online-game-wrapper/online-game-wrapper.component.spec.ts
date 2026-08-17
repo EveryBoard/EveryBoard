@@ -18,7 +18,7 @@ import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomService
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
 import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameWrapperMessages } from '../GameWrapper';
 
