@@ -15,11 +15,12 @@ import { Minimax } from '../../../jscaip/AI/Minimax';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { SuperRules } from '../../../jscaip/Rules';
 import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { Debug } from '../../../utils/Debug';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
 import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
@@ -45,11 +46,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public static readonly AI_TIMEOUT: number = 1500;
 
-    public aiProfiles: [string, string] = ['none', 'none'];
+    private readonly aiProfiles: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
 
-    public aiOptions: [string, string] = ['none', 'none'];
+    private readonly aiOptions: PlayerMap<string> = PlayerMap.ofValues('none', 'none');
 
-    public playerSelection: [PlayerSelection, PlayerSelection] = ['human', 'human'];
+    private readonly playerSelection: PlayerMap<PlayerSelection> = PlayerMap.ofValues('human', 'human');
 
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
@@ -58,7 +59,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public constructor()
     {
         super();
-        this.players = [MGPOptional.of(this.playerSelection[0]), MGPOptional.of(this.playerSelection[1])];
+        this.players = PlayerMap.ofValues(MGPOptional.of(this.playerSelection.get(Player.ZERO)),
+                                          MGPOptional.of(this.playerSelection.get(Player.ONE)));
         this.role = Player.ZERO; // The user is playing, not observing
     }
 
@@ -174,48 +176,80 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         await this.router.navigate(['/local', this.getGameUrlName(), 'config']);
     }
 
+    public getPlayerSelection(player: Player): string {
+        return this.playerSelection.get(player);
+    }
+
+    public async onPlayerSelectionChange(player: Player, value: PlayerSelection): Promise<void> {
+        this.playerSelection.put(player, value);
+        await this.updatePlayer(player);
+    }
+
+    public getAIProfile(player: Player): string {
+        return this.aiProfiles.get(player);
+    }
+
+    public async onAIProfileChange(player: Player, value: string): Promise<void> {
+        this.aiProfiles.put(player, value);
+        await this.updatePlayer(player);
+    }
+
+    public getAIOption(player: Player): string {
+        return this.aiOptions.get(player);
+    }
+
+    public async onAIOptionChange(player: Player, value: string): Promise<void> {
+        this.aiOptions.put(player, value);
+        await this.updatePlayer(player);
+    }
+
     public async updatePlayer(player: Player): Promise<void> {
-        this.players[player.getValue()] = MGPOptional.of(this.playerSelection[player.getValue()]);
-        this.resetInvalidAISelection(player.getValue());
-        if (this.playerSelection[1] === 'human' && this.playerSelection[0] !== 'human') {
+        this.resetInvalidAISelection(player);
+        this.players.put(player, MGPOptional.of(this.playerSelection.get(player)));
+        const playerZeroIsHuman: boolean = this.playerSelection.get(Player.ZERO) === 'human';
+        const playerOneIsHuman: boolean = this.playerSelection.get(Player.ONE) === 'human';
+        if (playerZeroIsHuman) {
+            await this.setInteractive(true);
+            await this.setRole(Player.ZERO);
+        } else if (playerOneIsHuman) {
             await this.setInteractive(false);
             await this.setRole(Player.ONE);
         } else {
-            await this.setInteractive(true);
+            await this.setInteractive(false);
             await this.setRole(Player.ZERO);
         }
         await this.proposeAIToPlay();
     }
 
-    private resetInvalidAISelection(playerIndex: number): void {
-        if (this.playerSelection[playerIndex] === 'human') {
-            this.aiProfiles[playerIndex] = 'none';
-            this.aiOptions[playerIndex] = 'none';
+    private resetInvalidAISelection(player: Player): void {
+        if (this.playerSelection.get(player) === 'human') {
+            this.aiProfiles.put(player, 'none');
+            this.aiOptions.put(player, 'none');
             return;
         }
-        if (this.mustSelectAIProfile(playerIndex) === false) {
-            this.aiProfiles[playerIndex] = this.availableAIProfiles(playerIndex)[0]?.id ?? 'none';
+        if (this.mustSelectAIProfile(player) === false) {
+            this.aiProfiles.put(player, this.availableAIProfiles(player)[0]?.id ?? 'none');
         }
-        const profileExists: boolean = this.availableAIProfiles(playerIndex).some((profile: AIChoice) => {
-            return profile.id === this.aiProfiles[playerIndex];
+        const profileExists: boolean = this.availableAIProfiles(player).some((profile: AIChoice) => {
+            return profile.id === this.aiProfiles.get(player);
         });
         if (profileExists === false) {
-            this.aiProfiles[playerIndex] = 'none';
-            this.aiOptions[playerIndex] = 'none';
-        } else if (this.availableAIOptions(playerIndex).some((option: AIOptions) => {
-            return option.name === this.aiOptions[playerIndex];
+            this.aiProfiles.put(player, 'none');
+            this.aiOptions.put(player, 'none');
+        } else if (this.availableAIOptions(player).some((option: AIOptions) => {
+            return option.name === this.aiOptions.get(player);
         }) === false) {
-            this.aiOptions[playerIndex] = 'none';
+            this.aiOptions.put(player, 'none');
         }
     }
 
-    public mustSelectAIProfile(playerIndex: number): boolean {
-        return this.playerSelection[playerIndex] !== 'human' &&
-               (this.playerSelection[playerIndex] !== 'mcts' || this.availableAIProfiles(playerIndex).length > 1);
+    public mustSelectAIProfile(player: Player): boolean {
+        return this.playerSelection.get(player) !== 'human' &&
+               (this.playerSelection.get(player) !== 'mcts' || this.availableAIProfiles(player).length > 1);
     }
 
-    public isAIProfileSelected(playerIndex: number): boolean {
-        return this.mustSelectAIProfile(playerIndex) === false || this.aiProfiles[playerIndex] !== 'none';
+    public isAIProfileSelected(player: Player): boolean {
+        return this.mustSelectAIProfile(player) === false || this.aiProfiles.get(player) !== 'none';
     }
 
     public override async onLegalUserMove(move: Move): Promise<void> {
@@ -232,20 +266,19 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             if (gameStatus.winner.isPlayer()) {
                 const winner: string = $localize`Player ${gameStatus.winner.getValue() + 1}`;
                 const loser: Player = gameStatus.winner.getOpponent();
-                const loserValue: number = loser.getValue();
-                if (this.players[gameStatus.winner.getValue()].equalsValue('human')) {
+                if (this.players.get(gameStatus.winner).equalsValue('human')) {
                     // When human wins
-                    if (this.players[loserValue].equalsValue('human')) {
+                    if (this.players.get(loser).equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`${ winner } won`);
                     } else {
                         this.winnerMessage = MGPOptional.of($localize`You won`);
                     }
                 } else {
                     // When AI wins
-                    if (this.players[loserValue].equalsValue('human')) {
+                    if (this.players.get(loser).equalsValue('human')) {
                         this.winnerMessage = MGPOptional.of($localize`You lost`);
                     } else {
-                        this.winnerMessage = MGPOptional.of($localize`${this.getPlayerName(gameStatus.winner.getValue())} (Player ${gameStatus.winner.getValue() + 1}) won`);
+                        this.winnerMessage = MGPOptional.of($localize`${this.getPlayerName(gameStatus.winner)} (Player ${gameStatus.winner.getValue() + 1}) won`);
                     }
                 }
             }
@@ -253,12 +286,12 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.cdr.detectChanges();
     }
 
-    private getPlayerName(playerIndex: number): string {
-        if (this.playerSelection[playerIndex] === 'human') {
+    private getPlayerName(player: Player): string {
+        if (this.playerSelection.get(player) === 'human') {
             return $localize`Human`;
         }
-        const profile: AIChoice | undefined = this.availableAIProfiles(playerIndex).find((candidate: AIChoice) => {
-            return candidate.id === this.aiProfiles[playerIndex];
+        const profile: AIChoice | undefined = this.availableAIProfiles(player).find((candidate: AIChoice) => {
+            return candidate.id === this.aiProfiles.get(player);
         });
         return Utils.getNonNullable(profile).name;
     }
@@ -311,33 +344,32 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
             return false;
         }
 
-        const playerIndex: number = this.gameComponent.getTurn() % 2;
-        return this.playerSelection[playerIndex] !== 'human';
+        const player: Player = this.gameComponent.getCurrentPlayer();
+        return this.playerSelection.get(player) !== 'human';
     }
 
     private lastMoveWasAI(): boolean {
-        const playerIndex: number = (this.gameComponent.getTurn() - 1) % 2;
-        return this.playerSelection[playerIndex] !== 'human';
+        const opponent: Player = this.gameComponent.getCurrentOpponent();
+        return this.playerSelection.get(opponent) !== 'human';
     }
 
     private getPlayingAI(): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
-        return this.getAI(this.gameComponent.getTurn());
+        return this.getAI(this.gameComponent.getCurrentPlayer());
     }
 
     private getOpponentAI(): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
-        return this.getAI(this.gameComponent.getTurn() + 1);
+        return this.getAI(this.gameComponent.getCurrentOpponent());
     }
 
-    private getAI(turn: number): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
-        const playerIndex: number = turn % 2;
-        const strategy: PlayerSelection = this.playerSelection[playerIndex];
+    private getAI(player: Player): MGPOptional<{ ai: AbstractAI; options: AIOptions }> {
+        const strategy: PlayerSelection = this.playerSelection.get(player);
         if (strategy === 'human') {
             return MGPOptional.empty();
         }
-        const profileId: string = this.aiProfiles[playerIndex];
-        const optionName: string = this.aiOptions[playerIndex];
+        const profileId: string = this.aiProfiles.get(player);
+        const optionName: string = this.aiOptions.get(player);
         const options: MGPOptional<AIOptions> = MGPOptional.ofNullable(
-            this.availableAIOptions(playerIndex).find((option: AIOptions) => option.name === optionName));
+            this.availableAIOptions(player).find((option: AIOptions) => option.name === optionName));
         if (options.isAbsent()) {
             return MGPOptional.empty();
         }
@@ -444,8 +476,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         });
     }
 
-    public availableAIOptions(player: number): AIOptions[] {
-        switch (this.playerSelection[player]) {
+    public availableAIOptions(player: Player): AIOptions[] {
+        switch (this.playerSelection.get(player)) {
             case 'minimax':
                 return this.depthOptions();
             case 'iterative-deepening':
@@ -468,8 +500,8 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         return strategies;
     }
 
-    public availableAIProfiles(player: number): AIChoice[] {
-        switch (this.playerSelection[player]) {
+    public availableAIProfiles(player: Player): AIChoice[] {
+        switch (this.playerSelection.get(player)) {
             case 'minimax':
             case 'iterative-deepening':
                 return this.getMinimaxConfigs();
@@ -497,9 +529,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public canTakeBack(): boolean {
-        if (this.players[0].equalsValue('human')) {
+        if (this.players.get(Player.ZERO).equalsValue('human')) {
             return this.gameComponent.getTurn() > 0;
-        } else if (this.players[1].equalsValue('human')) {
+        } else if (this.players.get(Player.ONE).equalsValue('human')) {
             return this.gameComponent.getTurn() > 1;
         } else {
             return false;

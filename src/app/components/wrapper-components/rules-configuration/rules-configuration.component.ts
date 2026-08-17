@@ -9,7 +9,8 @@ import { ConfigDescriptionType, DefaultConfigDescription, NamedRulesConfig, Rule
 import { Localized } from '../../../utils/LocaleUtils';
 import { BaseWrapperComponent } from '../BaseWrapperComponent';
 
-import { EnumConfig, RulesConfigDescription } from './RulesConfigDescription';
+import { EnumConfig } from './EnumConfig';
+import { RulesConfigDescription } from './RulesConfigDescription';
 
 const CUSTOM_CONFIG_NAME: string = '__custom__';
 

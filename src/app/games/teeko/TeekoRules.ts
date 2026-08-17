@@ -1,6 +1,7 @@
 import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { BooleanConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
