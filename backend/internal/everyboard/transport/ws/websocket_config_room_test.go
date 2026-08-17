@@ -1,5 +1,4 @@
 package ws
-// TODO: rename file to config_room something
 
 import (
 	"encoding/json"

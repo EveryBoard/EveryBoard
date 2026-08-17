@@ -13,7 +13,7 @@ import (
 )
 
 func TestServeHTTPUnauthorized(t *testing.T) {
-	// TODO: need GWT
+	// Given a WebSocket handler and a request without authentication
 	fakeStore := NewFakeStore()
 	subscriptions := session.NewSubscriptionManager[*websocket.Conn]()
 	connections := session.NewConnectionManager[*websocket.Conn]()
@@ -26,52 +26,80 @@ func TestServeHTTPUnauthorized(t *testing.T) {
 	})
 
 	req := httptest.NewRequest("GET", "/ws", nil)
-	rr := httptest.NewRecorder() // TODO: why do we need this?
+	rr := httptest.NewRecorder()
 
+	// When serving the request
 	handler.ServeHTTP(rr, req)
 
+	// Then the request should be rejected as unauthorized
 	assert.Equal(t, http.StatusUnauthorized, rr.Code, "expected status 401")
 }
 
 func TestWebSocketRequest(t *testing.T) {
-	// TODO: ned GWT
+	// Given a running WebSocket server and valid authentication
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
 	headers := http.Header{}
-	// TODO: token should be in clear + function call
-	headers.Set("Sec-WebSocket-Protocol", "Authorization, yJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJzdWIiOiJmb28ifQo.")
+	headers.Set("Sec-WebSocket-Protocol", tokenForUser("foo"))
+
+	// When establishing a WebSocket connection
 	c, resp, err := websocket.DefaultDialer.Dial(testWebSocketURL("/ws"), headers)
 	require.NoError(t, err, "Dial failed")
 	defer c.Close()
 
+	// Then the HTTP connection should be upgraded to WebSocket
 	assert.Equal(t, http.StatusSwitchingProtocols, resp.StatusCode, "expected websocket upgrade")
 
+	// And the connection should receive its initial state
 	_, _, err = c.ReadMessage()
 	require.NoError(t, err, "failed to read message")
+}
 
-	err = c.WriteMessage(websocket.TextMessage, []byte(`alq"`))
-	require.NoError(t, err, "WriteMessage failed")
-	_, msg, err := c.ReadMessage()
-	require.NoError(t, err, "failed to read message")
-	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
+func TestMalformedWebSocketMessage(t *testing.T) {
+	// Given an established WebSocket connection
+	stopServer, _, _ := PrepareServer(t)
+	defer stopServer()
+	client := EstablishWebSocketConnection(t, "foo")
+	defer client.Close()
 
-	// TODO: why does this one look like the same as the previous? Add GWT to be clear
-	err = c.WriteMessage(websocket.TextMessage, []byte(`["Unknown"]`))
-	require.NoError(t, err, "WriteMessage failed")
-	_, msg, err = c.ReadMessage()
-	require.NoError(t, err, "failed to read message")
-	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
+	// When sending a malformed message
+	sendRawMessage(t, client, `alq"`)
 
-	err = c.WriteMessage(websocket.TextMessage, []byte(`["SubscribeToLobby"]`))
-	require.NoError(t, err, "WriteMessage failed")
-	_, msg, err = c.ReadMessage()
-	require.NoError(t, err, "failed to read message")
-	require.Equal(t, `["Error",{"reason":"unknown-message"}]`, string(msg), "expected unknown-message error")
+	// Then an unknown-message error should be returned
+	expectMessage(t, client, `["Error",{"reason":"unknown-message"}]`)
+}
+
+func TestUnknownWebSocketMessage(t *testing.T) {
+	// Given an established WebSocket connection
+	stopServer, _, _ := PrepareServer(t)
+	defer stopServer()
+	client := EstablishWebSocketConnection(t, "foo")
+	defer client.Close()
+
+	// When sending a message with an unknown tag
+	sendRawMessage(t, client, `["Unknown"]`)
+
+	// Then an unknown-message error should be returned
+	expectMessage(t, client, `["Error",{"reason":"unknown-message"}]`)
+}
+
+func TestSubscribeToLobbyWebSocketMessage(t *testing.T) {
+	// Given an established WebSocket connection
+	stopServer, _, _ := PrepareServer(t)
+	defer stopServer()
+	client := EstablishWebSocketConnection(t, "foo")
+	defer client.Close()
+
+	// When sending a SubscribeToLobby message
+	sendRawMessage(t, client, `["SubscribeToLobby"]`)
+
+	// Then an unknown-message error should be returned
+	expectMessage(t, client, `["Error",{"reason":"unknown-message"}]`)
 }
 
 func TestInitialStateOnlySentToNewConnection(t *testing.T) {
-	// TODO: GWT
+	// Given a user with an established WebSocket connection that received its initial state
 	stopServer, _, _ := PrepareServer(t)
 	defer stopServer()
 
@@ -88,8 +116,11 @@ func TestInitialStateOnlySentToNewConnection(t *testing.T) {
 	defer first.Close()
 	expectMessage(t, first, `["CurrentGameUpdate",{"currentGame":null}]`)
 
+	// When the same user establishes a second connection
 	second := dial()
 	defer second.Close()
+
+	// Then only the new connection should receive the initial state
 	expectMessage(t, second, `["CurrentGameUpdate",{"currentGame":null}]`)
 
 	require.NoError(t, first.SetReadDeadline(time.Now().Add(200*time.Millisecond)), "SetReadDeadline failed")
@@ -97,5 +128,3 @@ func TestInitialStateOnlySentToNewConnection(t *testing.T) {
 	require.Error(t, err, "first connection should not receive another initial state")
 	require.Nil(t, msg, "unexpected message on first connection")
 }
-
-// TODO: test that a bot can authenticate?
