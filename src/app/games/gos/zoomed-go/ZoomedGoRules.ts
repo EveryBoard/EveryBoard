@@ -1,6 +1,9 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable, BooleanConfig } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractRectangularGoRules, RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
