@@ -214,7 +214,7 @@ export class GameInfo {
 
             new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
             new GameInfo($localize`Toric Reversi`,          'ToricReversi',          ToricReversiComponent,          new ToricReversiTutorial(),          ToricReversiRules.get(),          new Date('2026-08-10'), GameDescription.TORIC_REVERSI()         ), // 43:                             * Martin
-            new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),                BashniRules.get(),                new Date('2026-08-16'), GameDescription.BASHNI()                ), // 44:                             * Quentin
+            new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),                BashniRules.get(),                new Date('2026-08-17'), GameDescription.BASHNI()                ), // 44:                             * Quentin
 
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
