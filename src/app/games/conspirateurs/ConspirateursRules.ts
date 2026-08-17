@@ -41,8 +41,7 @@ export class ConspirateursRules extends Rules<ConspirateursMove, ConspirateursSt
         state: ConspirateursState,
         _config: EmptyRulesConfig,
         _info: void,
-    ): ConspirateursState
-    {
+    ): ConspirateursState {
         const updatedBoard: PlayerOrNone[][] = state.getCopiedBoard();
         if (ConspirateursMove.isDrop(move)) {
             updatedBoard[move.coord.y][move.coord.x] = state.getCurrentPlayer();

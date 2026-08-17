@@ -7,7 +7,7 @@ import { InternationalCheckersRules } from '../../international-checkers/Interna
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { CheckersScoreHeuristic } from '../CheckersScoreHeuristic';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '../CheckersState';
 
 const u: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const v: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
@@ -31,7 +31,7 @@ for (const rule of rules) {
 
         it('should only be based on the score', () => {
             // Given two boards with differents number of pieces
-            const equalityState: CheckersState = CheckersState.of([
+            const equalityState: CheckersState = EvenCheckersState.of([
                 [v, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -40,7 +40,7 @@ for (const rule of rules) {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, u],
             ], 0);
-            const oneDominatedState: CheckersState = CheckersState.of([
+            const oneDominatedState: CheckersState = EvenCheckersState.of([
                 [v, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, v, _, _, _, _],
