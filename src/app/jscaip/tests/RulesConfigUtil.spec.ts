@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { NumberConfig, RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPValidators } from '../../utils/MGPValidator';
 import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 

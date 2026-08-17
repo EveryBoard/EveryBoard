@@ -24,7 +24,7 @@ import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { ViewBox } from '../GameComponentUtils';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
@@ -312,15 +312,4 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return [scale, translation, rotation].join(' ');
     }
 
-}
-
-export abstract class AbstractGameComponent extends GameComponent<SuperRules<Move,
-                                                                             GameState,
-                                                                             RulesConfig,
-                                                                             unknown>,
-                                                                  Move,
-                                                                  GameState,
-                                                                  RulesConfig,
-                                                                  unknown>
-{
 }

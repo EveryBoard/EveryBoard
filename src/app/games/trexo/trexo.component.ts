@@ -5,7 +5,8 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ModeConfig, ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
+import { ModeConfig } from '../../components/game-components/parallelogram-game-component/ModeConfig';
+import { ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';

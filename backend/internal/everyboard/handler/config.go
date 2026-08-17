@@ -221,6 +221,7 @@ func (h *Handler) handleAcceptConfig() error {
 
 	var buf MsgBuffer
 	var configRoom *model.ConfigRoom
+	var game *model.Game
 	err := h.store.Transaction(func(store store.Store) error {
 		var err error
 		configRoom, err = store.GetConfigRoom(gameId)
@@ -240,7 +241,7 @@ func (h *Handler) handleAcceptConfig() error {
 			return err
 		}
 
-		if _, err = store.CreateGame(configRoom, Now(), RandBool()); err != nil {
+		if game, err = store.CreateGame(configRoom, Now(), RandBool()); err != nil {
 			return err
 		}
 
@@ -296,5 +297,6 @@ func (h *Handler) handleAcceptConfig() error {
 	}
 
 	h.flush(&buf)
+	h.notifier.GameStarted(*game)
 	return nil
 }
