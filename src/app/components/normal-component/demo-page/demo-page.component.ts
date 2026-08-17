@@ -9,7 +9,7 @@ import { Move } from '../../../jscaip/Move';
 import { AbstractRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
-import { DemoNodeInfo, DemoNodeWithConfig, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
+import { DemoNodeInfo, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/pick-game.component';
 
@@ -61,7 +61,7 @@ export class DemoPageComponent {
             const rules: AbstractRules = gameInfo.rules;
             const defaultConfig: RulesConfig = gameInfo.getRulesConfig();
             for (const step of steps) {
-                const nodeFromStep: DemoNodeWithConfig =
+                const nodeFromStep: DemoNodeInfo =
                     this.getNodeFromStep(step, rules, defaultConfig, gameInfo.urlName);
                 demoNodes.push(nodeFromStep);
             }
@@ -73,7 +73,7 @@ export class DemoPageComponent {
                             rules: AbstractRules,
                             defaultConfig: RulesConfig,
                             name: string)
-    : DemoNodeWithConfig
+    : DemoNodeInfo
     {
         const state: GameState = step.state;
         const stepConfig: RulesConfig = step.config.getOrElse(defaultConfig);

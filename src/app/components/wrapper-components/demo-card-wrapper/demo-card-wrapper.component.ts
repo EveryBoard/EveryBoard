@@ -14,9 +14,6 @@ export type DemoNodeInfo = {
     title: string; // The title of the step
     node: AbstractNode; // The demo node
     click: MGPOptional<string>; // An element to click
-}
-
-export type DemoNodeWithConfig = DemoNodeInfo & {
     config: RulesConfig;
 }
 
@@ -64,6 +61,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // And also it is called on creation, then, this.gameComponent is not set yet
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
+            this.gameComponent.setConfig(this.getConfig());
             this.gameComponent.node = this.demoNodeInfo().node;
             await this.gameComponent.updateBoardAndRedraw(false);
         }
@@ -73,6 +71,10 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
         return this.demoNodeInfo().name;
+    }
+
+    public override getConfig(): RulesConfig {
+        return this.demoNodeInfo().config;
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {

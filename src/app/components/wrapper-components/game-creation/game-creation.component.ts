@@ -417,6 +417,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 name: this.getGameUrlName(),
                 title: this.getGameUrlName(),
                 node,
+                config,
             };
             this.cdr.detectChanges();
         }
