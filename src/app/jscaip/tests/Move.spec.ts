@@ -18,8 +18,7 @@ export class MoveTestUtils {
         generator: MoveGenerator<M, S, C>,
         encoder: Encoder<M>,
         nullableConfig?: C,
-    ): void
-    {
+    ): void {
         let config: C = rules.getDefaultRulesConfig();
         if (nullableConfig !== undefined) {
             config = nullableConfig;

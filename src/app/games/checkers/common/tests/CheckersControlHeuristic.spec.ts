@@ -7,7 +7,7 @@ import { InternationalCheckersRules } from '../../international-checkers/Interna
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { CheckersControlHeuristic } from '../CheckersControlHeuristic';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '../CheckersState';
 
 const u: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const v: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
@@ -31,7 +31,7 @@ for (const rule of rules) {
 
         it('should not count the immobilized stacks', () => {
             // Given two boards with the exact same stacks, one having blocked stacks
-            const immobilizedState: CheckersState = CheckersState.of([
+            const immobilizedState: CheckersState = EvenCheckersState.of([
                 [v, _, _, _, _, _, _],
                 [_, u, _, _, _, _, _],
                 [_, _, u, _, _, _, _],
@@ -40,7 +40,7 @@ for (const rule of rules) {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 0);
-            const mobileState: CheckersState = CheckersState.of([
+            const mobileState: CheckersState = EvenCheckersState.of([
                 [v, _, _, _, _, _, _],
                 [_, _, _, u, _, _, _],
                 [_, _, u, _, _, _, _],
@@ -63,7 +63,7 @@ for (const rule of rules) {
 
         it('should count the potential mobility as primary board value', () => {
             // Given two boards with the same stacks, one with a unique forced capture, the other without
-            const forcedState: CheckersState = CheckersState.of([
+            const forcedState: CheckersState = EvenCheckersState.of([
                 [v, _, _, _, _, _, _],
                 [_, u, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -72,7 +72,7 @@ for (const rule of rules) {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 0); // O has 1 stack, X has 2
-            const freeState: CheckersState = CheckersState.of([
+            const freeState: CheckersState = EvenCheckersState.of([
                 [v, _, _, _, _, _, _],
                 [_, _, _, u, _, _, _],
                 [_, _, _, _, _, _, _],
