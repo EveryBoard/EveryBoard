@@ -2,8 +2,8 @@ package store
 
 import (
 	"errors"
-	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/apperror"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 
 	"gorm.io/gorm"
@@ -26,24 +26,29 @@ func (s *GORMStore) SetCurrentGame(currentGame *model.CurrentGame) error {
 	return wrapError("SetCurrentGame", result.Error)
 }
 
-// Update the current game of an user. Different from SetCurrentGame which sets
+// UpdateCurrentGame updates the current game of an user. Different from SetCurrentGame which sets
 // it initially, here we change e.g., the opponent displayed
 func (s *GORMStore) UpdateCurrentGame(user model.MinimalUser, currentGame *model.CurrentGame) error {
 	var opponentID any
 	var opponentName any
+	var opponentIsBot any
 	if currentGame.Opponent != nil {
 		opponentID = currentGame.Opponent.ID
 		opponentName = currentGame.Opponent.Name
+		opponentIsBot = currentGame.Opponent.IsBot
 	}
 	result := s.db.Model(&model.CurrentGame{}).Where("user_id = ?", user.ID).Updates(map[string]any{
-		"user_name":     currentGame.User.Name,
-		"game_id":       currentGame.GameID,
-		"game_name":     currentGame.GameName,
-		"creator_id":    currentGame.Creator.ID,
-		"creator_name":  currentGame.Creator.Name,
-		"opponent_id":   opponentID,
-		"opponent_name": opponentName,
-		"role":          currentGame.Role,
+		"user_name":       currentGame.User.Name,
+		"user_is_bot":     currentGame.User.IsBot,
+		"game_id":         currentGame.GameID,
+		"game_name":       currentGame.GameName,
+		"creator_id":      currentGame.Creator.ID,
+		"creator_name":    currentGame.Creator.Name,
+		"creator_is_bot":  currentGame.Creator.IsBot,
+		"opponent_id":     opponentID,
+		"opponent_name":   opponentName,
+		"opponent_is_bot": opponentIsBot,
+		"role":            currentGame.Role,
 	})
 	return wrapError("UpdateCurrentGame", result.Error)
 }
@@ -52,8 +57,9 @@ func (s *GORMStore) RemoveCurrentGame(user model.MinimalUser) error {
 	result := s.db.Model(&model.CurrentGame{}).Where("user_id = ?", user.ID).Delete(&model.CurrentGame{})
 	return wrapError("RemoveCurrentGame", result.Error)
 }
-func (s *GORMStore) ApplyToObservers(gameId model.GameID, action func(model.MinimalUser) error) error {
-	result := s.db.Model(&model.CurrentGame{}).Where("game_id = ? and role = 'Observer'", gameId)
+
+func (s *GORMStore) ApplyToObservers(gameID model.GameID, action func(model.MinimalUser) error) error {
+	result := s.db.Model(&model.CurrentGame{}).Where("game_id = ? and role = 'Observer'", gameID)
 	return wrapError("ApplyToObservers", applyToQueryResult(s.db, result, func(currentGame model.CurrentGame) error {
 		return action(currentGame.User)
 	}))

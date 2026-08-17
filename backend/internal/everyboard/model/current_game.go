@@ -23,5 +23,3 @@ type CurrentGame struct {
 	Opponent *MinimalUser `gorm:"embedded;embeddedPrefix:opponent_" json:"opponent"`
 	Role     UserRole     `gorm:"not null" json:"role"`
 }
-
-var CurrentGameRows = []string{"id", "user_id", "user_name", "game_id", "game_name", "creator_id", "creator_name", "opponent_id", "opponent_name", "role"}

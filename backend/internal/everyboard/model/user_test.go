@@ -10,6 +10,12 @@ func TestMarshalMinimalUser(t *testing.T) {
 	ExpectMarshallingToWork(t, original, json)
 }
 
+func TestMarshalMinimalBotUser(t *testing.T) {
+	original := MinimalUser{ID: "bot", Name: "EveryBot", IsBot: true}
+	json := `{"id":"bot","name":"EveryBot","isBot":true}`
+	ExpectMarshallingToWork(t, original, json)
+}
+
 func TestMarshalCurrentGameWithoutOpponent(t *testing.T) {
 	creator := MinimalUser{
 		ID:   "foo",

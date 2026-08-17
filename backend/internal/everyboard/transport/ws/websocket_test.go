@@ -6,11 +6,33 @@ import (
 	"testing"
 	"time"
 
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/gorilla/websocket"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
+
+func TestAuthenticateBot(t *testing.T) {
+	// Given a request authenticated as a bot
+	handler := &Handler{firebase: FirebaseMock{
+		Users: map[string]map[string]any{
+			"bot": {
+				"username": "EveryBot",
+				"isBot":    true,
+			},
+		},
+	}}
+	req := httptest.NewRequest("GET", "/ws", nil)
+	req.Header.Set("Sec-WebSocket-Protocol", tokenForUser("bot"))
+
+	// When authenticating the request
+	user, err := handler.authenticate(req)
+
+	// Then the authenticated user should retain its bot identity
+	require.NoError(t, err, "failed to authenticate bot")
+	assert.Equal(t, model.MinimalUser{ID: "bot", Name: "EveryBot", IsBot: true}, user)
+}
 
 func TestServeHTTPUnauthorized(t *testing.T) {
 	// Given a WebSocket handler and a request without authentication

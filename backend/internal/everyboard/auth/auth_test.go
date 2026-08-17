@@ -109,6 +109,7 @@ func TestTokenVerificationHappyFlow(t *testing.T) {
 	// Then it should return the uid and user
 	require.Equal(t, "foo-uid", uid, "did not retrieve the correct user")
 	require.Equal(t, "foo", user.Username, "did not retrieve the correct user")
+	require.False(t, user.IsBot, "human user should not be identified as a bot")
 }
 
 func TestTokenVerificationBotHappyFlow(t *testing.T) {
@@ -132,7 +133,7 @@ func TestTokenVerificationBotHappyFlow(t *testing.T) {
 	// Then it should return the uid and user, as well as the fact that this is a bot
 	require.Equal(t, "bot-uid", uid, "did not retrieve the correct user")
 	require.Equal(t, "everybot", user.Username, "did not retrieve the correct user")
-	require.Equal(t, true, user.IsBot, "did not retrieve the fact that user is a bot")
+	require.True(t, user.IsBot, "did not retrieve the fact that user is a bot")
 }
 
 func waitForPort(address string, timeout time.Duration) error {
