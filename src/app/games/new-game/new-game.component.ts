@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
@@ -60,6 +61,13 @@ export class NewGameComponent extends GameComponent<NewGameRules,
 
         // If your game has no scores in-game, disable the following:
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    /**
+     * This method defines the part of the SVG canvas displayed by the game.
+     */
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, 100, 100);
     }
 
     /**

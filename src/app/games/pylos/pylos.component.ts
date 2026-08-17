@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
@@ -30,6 +31,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public pieceRowHeight: number = this.SPACE_SIZE / 2;
     public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
+
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, this.boardWidth, this.boardHeight);
+    }
+
     public constructedState: PylosState;
 
     public lastLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();

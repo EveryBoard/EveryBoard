@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
@@ -46,6 +47,10 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                                                            EmptyRulesConfig,
                                                            YinshLegalityInformation>
 {
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 250, 1065, 1060);
+    }
+
     private static readonly RING_OUTER_SIZE: number = 40;
     private static readonly RING_MID_SIZE: number = 34;
     private static readonly RING_INNER_SIZE: number = 28;

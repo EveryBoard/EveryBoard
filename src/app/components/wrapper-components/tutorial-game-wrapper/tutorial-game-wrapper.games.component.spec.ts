@@ -81,8 +81,8 @@ import { AbstractRules, SuperRules } from '../../../jscaip/Rules';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { GameWrapper } from '../GameWrapper';
 
 import { Click, TutorialPredicate, TutorialStep } from './TutorialStep';
@@ -219,12 +219,12 @@ describe('TutorialGameWrapperComponent (games)', () => {
                 ], [
                     KalahRules.get(),
                     kalahTutorial[4],
-                    MancalaMove.of(MancalaDistribution.of(0)),
+                    MancalaMove.of(MancalaDistribution.of(0, 1)),
                     MGPValidation.failure('This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!'),
                 ], [
                     KalahRules.get(),
                     kalahTutorial[5],
-                    MancalaMove.of(MancalaDistribution.of(4)),
+                    MancalaMove.of(MancalaDistribution.of(4, 1)),
                     MGPValidation.failure('You did not capture, try again!'),
                 ], [
                     LinesOfActionRules.get(),

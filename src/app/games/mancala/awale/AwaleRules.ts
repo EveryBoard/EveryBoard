@@ -1,6 +1,9 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
 import { Coord } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';
 import { TableUtils } from '../../../jscaip/TableUtils';
@@ -24,6 +27,7 @@ export class AwaleRules extends MancalaRules {
                 continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                numberOfRows: new NumberConfig(1, MancalaRules.NUMBER_OF_ROWS, MGPValidators.range(1, 99)),
             },
         });
 
@@ -38,7 +42,9 @@ export class AwaleRules extends MancalaRules {
         return AwaleRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyCapture(distributionResult: MancalaDistributionResult, config: MancalaConfig): MancalaCaptureResult {
+    public override applyCapture(distributionResult: MancalaDistributionResult,
+                                 config: MancalaConfig,
+    ): MancalaCaptureResult {
         const filledCoords: Coord[] = distributionResult.filledCoords;
         const landingCoord: Coord = filledCoords[filledCoords.length - 1];
         const resultingState: MancalaState = distributionResult.resultingState;
@@ -46,19 +52,18 @@ export class AwaleRules extends MancalaRules {
     }
 
     /**
-     * Only called if y and player are not equal.
+     * Only called if piece is opponent's territory
      * If the condition to make a capture into the opponent's side are met
      * Captures and return the number of captured
      * Captures even if this could mean doing an illegal starvation
      */
     private capture(x: number, y: number, state: MancalaState, config: MancalaConfig): MancalaCaptureResult {
-        const playerY: number = state.getCurrentPlayerY();
-        Utils.assert(y !== playerY, 'AwaleRules.capture cannot capture the players house');
+        Utils.assert(this.coordIsInOpponentTerritory(x, y, state, config), 'AwaleRules.capture cannot capture the players house');
         let resultingState: MancalaState = state;
         let target: MGPOptional<number> = resultingState.getOptionalPieceAtXY(x, y);
         let capturedSum: number = 0;
-        const captureMap: number[][] = TableUtils.create(config.width, 2, 0);
-        if ((target.get() < 2) || (target.get() > 3)) {
+        const captureMap: number[][] = TableUtils.create(config.width, 2 * config.numberOfRows, 0);
+        if (this.isCapturableValue(target.get()) === false) {
             // first space not capturable, we apply no change
             return { capturedSum: 0, captureMap, resultingState: state };
         }
@@ -80,9 +85,19 @@ export class AwaleRules extends MancalaRules {
             resultingState = resultingState.capture(player, new Coord(x, y));
             x += direction;
             target = resultingState.getOptionalPieceAtXY(x, y);
-        } while ((x !== limit) && (target.equalsValue(2) || target.equalsValue(3)));
+        } while ((x !== limit) && target.isPresent() && this.isCapturableValue(target.get()));
 
         return { capturedSum, captureMap, resultingState };
+    }
+
+    private coordIsInOpponentTerritory(x: number, y: number, state: MancalaState, config: MancalaConfig): boolean {
+        if (state.isOnBoard(new Coord(x, y))) {
+            return state.getCurrentPlayer() === Player.ZERO ?
+                y < config.numberOfRows :
+                config.numberOfRows <= y;
+        } else {
+            return false;
+        }
     }
 
     public captureIfLegal(x: number, y: number, state: MancalaState, config: MancalaConfig): MancalaCaptureResult {
@@ -90,12 +105,19 @@ export class AwaleRules extends MancalaRules {
         const captureLessResult: MancalaCaptureResult = {
             capturedSum: 0,
             resultingState: state, // Apply no capture
-            captureMap: TableUtils.create(state.getWidth(), 2, 0),
+            captureMap: TableUtils.create(
+                state.getWidth(),
+                state.getHeight(),
+                0,
+            ),
         };
-        if (y === player.getValue()) {
+        if (this.coordIsInOpponentTerritory(x, y, state, config)) {
             const captureResult: MancalaCaptureResult = this.capture(x, y, state, config);
-            const isStarving: boolean = MancalaRules.isStarving(player.getOpponent(),
-                                                                captureResult.resultingState.board);
+            const isStarving: boolean = MancalaRules.isStarving(
+                player.getOpponent(),
+                captureResult.resultingState.board,
+                config,
+            );
             if (captureResult.capturedSum > 0 && isStarving) {
                 /* if the distribution would capture all seeds
                  * the capture is forbidden and cancelled

@@ -1,4 +1,13 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    computed,
+    inject,
+    signal,
+    Signal,
+    WritableSignal,
+} from '@angular/core';
 
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -15,8 +24,9 @@ import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { Debug } from '../../../utils/Debug';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { ViewBox } from '../GameComponentUtils';
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './ClickHandler';
@@ -58,7 +68,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public node: GameNode<M, S>;
 
-    public config: C;
+    protected config: C;
 
     public aiConfig: AIConfig<M, S, C> = {
         minimax: [],
@@ -98,6 +108,17 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public animationOngoing: boolean = false;
 
     public state: S;
+
+    private readonly gameViewBoxRevision: WritableSignal<number> = signal(0);
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
+        this.gameViewBoxRevision();
+        return this.computeViewBox();
+    });
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
+    protected abstract computeViewBox(): ViewBox;
 
     public setClickInterceptor(interceptor: MoveInterceptor): void {
         const proto: {
@@ -180,13 +201,19 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
         await this.updateBoard(triggerAnimation);
+        this.refreshViewBox();
         this.cdr.detectChanges();
     }
 
     public async showLastMoveAndRedraw(): Promise<void> {
         const move: M = this.node.previousMove.get();
         await this.showLastMove(move);
+        this.refreshViewBox();
         this.cdr.detectChanges();
+    }
+
+    protected refreshViewBox(): void {
+        this.gameViewBoxRevision.update((revision: number) => revision + 1);
     }
 
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
@@ -231,8 +258,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         this.tutorial = gameInfo.tutorial.tutorial;
     }
 
-    protected getConfig(): C {
+    public getConfig(): C {
         return this.config;
+    }
+
+    public setConfig(config: C): void {
+        this.config = config;
     }
 
     /**
@@ -281,15 +312,4 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return [scale, translation, rotation].join(' ');
     }
 
-}
-
-export abstract class AbstractGameComponent extends GameComponent<SuperRules<Move,
-                                                                             GameState,
-                                                                             RulesConfig,
-                                                                             unknown>,
-                                                                  Move,
-                                                                  GameState,
-                                                                  RulesConfig,
-                                                                  unknown>
-{
 }
