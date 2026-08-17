@@ -19,8 +19,7 @@ func TestMarshalCurrentGameWithoutOpponent(t *testing.T) {
 		// GameID is not part of the JSON
 		GameID: 42,
 
-		UserID:   creator.ID,
-		UserName: creator.Name,
+		User:     creator,
 		Creator:  creator,
 		GameName: "Go",
 		Opponent: nil,
@@ -43,8 +42,7 @@ func TestMarshalCurrentGameWithOpponent(t *testing.T) {
 		// GameID is not part of the JSON
 		GameID: 42,
 
-		UserID:   creator.ID,
-		UserName: creator.Name,
+		User:     creator,
 		Creator:  creator,
 		Opponent: &opponent,
 		GameName: "Go",

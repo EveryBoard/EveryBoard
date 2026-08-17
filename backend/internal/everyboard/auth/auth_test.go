@@ -120,7 +120,7 @@ func TestTokenVerificationBotHappyFlow(t *testing.T) {
 		errorOnFetch:                false,
 		documentToFetch: map[string]any{
 			"username": "everybot",
-			"isBot": true,
+			"isBot":    true,
 		},
 	})
 	req, err := http.NewRequest("GET", "http://whocares.com", nil)

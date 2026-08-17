@@ -36,7 +36,7 @@ func (s *GORMStore) UpdateCurrentGame(user model.MinimalUser, currentGame *model
 		opponentName = currentGame.Opponent.Name
 	}
 	result := s.db.Model(&model.CurrentGame{}).Where("user_id = ?", user.ID).Updates(map[string]any{
-		"user_name":     currentGame.UserName,
+		"user_name":     currentGame.User.Name,
 		"game_id":       currentGame.GameID,
 		"game_name":     currentGame.GameName,
 		"creator_id":    currentGame.Creator.ID,
@@ -55,6 +55,6 @@ func (s *GORMStore) RemoveCurrentGame(user model.MinimalUser) error {
 func (s *GORMStore) ApplyToObservers(gameId model.GameID, action func(model.MinimalUser) error) error {
 	result := s.db.Model(&model.CurrentGame{}).Where("game_id = ? and role = 'Observer'", gameId)
 	return wrapError("ApplyToObservers", applyToQueryResult(s.db, result, func(currentGame model.CurrentGame) error {
-		return action(currentGame.GetUser())
+		return action(currentGame.User)
 	}))
 }

@@ -9,7 +9,7 @@ import (
 
 type User struct {
 	Username string `json:"username"`
-	IsBot bool `json:"-"`
+	IsBot    bool   `json:"-"`
 	// User may have other fields, but we don't care about them
 }
 

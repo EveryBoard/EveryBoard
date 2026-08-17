@@ -35,8 +35,7 @@ func TestSetCurrentGame(t *testing.T) {
 	currentGame := &model.CurrentGame{
 		GameID:   42,
 		GameName: gameName,
-		UserID:   user.ID,
-		UserName: user.Name,
+		User:     user,
 		Creator:  user,
 		Opponent: nil,
 		Role:     role,
@@ -63,8 +62,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user.ID,
-		UserName: user.Name,
+		User:     user,
 		GameName: gameName,
 		Creator:  user,
 		Opponent: nil,
@@ -110,8 +108,7 @@ func TestRemoveCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user.ID,
-		UserName: user.Name,
+		User:     user,
 		GameName: gameName,
 		Creator:  user,
 		Opponent: nil,
@@ -138,8 +135,7 @@ func TestApplyToObservers(t *testing.T) {
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user1.ID,
-		UserName: user1.Name,
+		User:     user1,
 		GameName: "Go",
 		Creator:  user1,
 		Opponent: nil,
@@ -150,8 +146,7 @@ func TestApplyToObservers(t *testing.T) {
 
 	currentGame2 := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user2.ID,
-		UserName: user2.Name,
+		User:     user2,
 		GameName: "Go",
 		Creator:  user1,
 		Opponent: nil,
@@ -187,7 +182,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 
 	errors := make(chan error, numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for i := range numRequests {
 		go func(id int) {
 			defer wg.Done()
 
@@ -209,8 +204,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 				}
 
 				return s.SetCurrentGame(&model.CurrentGame{
-					UserID:   user.ID,
-					UserName: user.Name,
+					User:     user,
 					GameID:   cr.ID,
 					GameName: gameName,
 					Creator:  user,
