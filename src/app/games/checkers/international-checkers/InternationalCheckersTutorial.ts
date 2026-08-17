@@ -5,7 +5,7 @@ import { TutorialStepMessage } from '../../../components/wrapper-components/tuto
 import { Coord } from '../../../jscaip/Coord';
 import { CheckersConfig } from '../common/AbstractCheckersRules';
 import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, OddCheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
 
 import { InternationalCheckersRules } from './InternationalCheckersRules';
@@ -24,8 +24,8 @@ export class InternationalCheckersTutorial extends Tutorial {
             InternationalCheckersRules.get().getInitialState(defaultConfig),
         ),
         TutorialStep.anyMove(
-            $localize`Steps`,
-            $localize`A simple step is made by one diagonal move forward left or forward right. Click on the chosen piece, then on its landing square.<br/><br/>You are playing Dark, do the first move.`,
+            CheckersTutorialStep.SIMPLE_STEPS_TITLE(),
+            CheckersTutorialStep.SIMPLE_STEPS(),
             InternationalCheckersRules.get().getInitialState(defaultConfig),
             CheckersMove.fromStep(new Coord(5, 6), new Coord(4, 5)),
             TutorialStepMessage.CONGRATULATIONS(),
@@ -33,79 +33,79 @@ export class InternationalCheckersTutorial extends Tutorial {
         TutorialStep.anyMove(
             $localize`Captures`,
             CheckersTutorialStep.CAPTURES(),
-            CheckersState.of([
-                [V, _, V, _, V, _, V, _, V, _],
+            OddCheckersState.of([
                 [_, V, _, V, _, V, _, V, _, V],
                 [V, _, V, _, V, _, V, _, V, _],
-                [_, V, _, V, _, V, _, _, _, V],
-                [_, _, _, _, _, _, _, _, V, _],
-                [_, _, _, _, _, _, _, _, _, U],
-                [U, _, U, _, U, _, U, _, _, _],
-                [_, U, _, U, _, U, _, U, _, U],
+                [_, V, _, V, _, V, _, V, _, V],
+                [V, _, _, _, V, _, V, _, V, _],
+                [_, V, _, _, _, _, _, _, _, _],
+                [U, _, _, _, _, _, _, _, _, _],
+                [_, _, _, U, _, U, _, U, _, U],
                 [U, _, U, _, U, _, U, _, U, _],
                 [_, U, _, U, _, U, _, U, _, U],
+                [U, _, U, _, U, _, U, _, U, _],
             ], 4),
-            CheckersMove.fromCapture([new Coord(9, 5), new Coord(7, 3)]).get(),
+            CheckersMove.fromCapture([new Coord(0, 5), new Coord(2, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
-        ).withPreviousMove(CheckersMove.fromStep(new Coord(7, 3), new Coord(8, 4))),
+        ).withPreviousMove(CheckersMove.fromStep(new Coord(2, 3), new Coord(1, 4))),
         TutorialStep.anyMove(
             CheckersTutorialStep.BACKWARD_CAPTURES_TITLE(),
             CheckersTutorialStep.BACKWARD_CAPTURES(),
-            CheckersState.of([
-                [V, _, V, _, V, _, V, _, V, _],
+            OddCheckersState.of([
                 [_, V, _, V, _, V, _, V, _, V],
-                [V, _, V, _, _, _, V, _, V, _],
-                [_, V, _, _, _, V, _, _, _, V],
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, U, _, _, _, _, _, _, _, U],
-                [U, _, _, _, U, _, _, _, V, _],
-                [_, U, _, U, _, U, _, _, _, _],
-                [U, _, U, _, U, _, U, _, U, _],
+                [V, _, V, _, V, _, V, _, V, _],
+                [_, V, _, V, _, _, _, V, _, V],
+                [_, _, V, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, U, _, _],
+                [_, _, U, _, _, _, _, _, V, _],
+                [_, U, _, _, _, U, _, _, _, _],
+                [_, _, U, _, U, _, U, _, _, _],
                 [_, U, _, U, _, U, _, U, _, U],
+                [U, _, U, _, U, _, U, _, U, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(9, 5), new Coord(7, 7)]).get(),
+            CheckersMove.fromCapture([new Coord(7, 4), new Coord(9, 6)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
             CheckersTutorialStep.MULTIPLE_CAPTURES_TITLE(),
             CheckersTutorialStep.MULTIPLE_CAPTURES(),
-            CheckersState.of([
+            OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, V, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, V, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, V, _, _, _],
-                [_, _, _, _, _, U, _, _, _, _],
+                [_, _, _, _, _, _, _, V, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, V, _, _],
+                [_, _, _, _, _, _, U, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(5, 7), new Coord(7, 5), new Coord(5, 3), new Coord(3, 1)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 7), new Coord(8, 5), new Coord(6, 3)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
             $localize`Maximum capture`,
             $localize`If at some turn you have several capture choices, you have to capture the maximal number of pieces.<br/><br/>You are playing Dark, do the maximal capture.`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, V, _, _, _],
+                [_, _, _, _, _, _, _, V, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, V, _, V, _, _, _],
-                [_, _, _, _, _, U, _, _, _, _],
+                [_, _, _, _, _, V, _, V, _, _],
+                [_, _, _, _, _, _, U, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
             ], 2),
-            CheckersMove.fromCapture([new Coord(5, 5), new Coord(7, 3), new Coord(5, 1)]).get(),
+            CheckersMove.fromCapture([new Coord(6, 5), new Coord(8, 3), new Coord(6, 1)]),
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.fromMove(
             CheckersTutorialStep.PROMOTION_TITLE(),
-            $localize`When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your piece could be promoted now.<br/><br/>You're playing Dark. Do it.`,
-            CheckersState.of([
+            $localize`When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your pieces could be promoted now.<br/><br/>You're playing Dark. Do it.`,
+            OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, V],
                 [_, _, _, _, _, _, U, _, V, _],
                 [_, _, _, _, _, _, _, _, _, _],
@@ -127,7 +127,7 @@ export class InternationalCheckersTutorial extends Tutorial {
         TutorialStep.fromPredicate(
             $localize`King move`,
             $localize`Kings can, like any other piece, move forward and capture backward. They have extra abilities. First, they can move backward without capturing. Second, they are able to "fly": they can move over multiple squares without jumping over any piece, or by jumping over exactly one opponent piece to capture it, and finally landing wherever in the same line.<br/><br/>You're playing Dark, move your king!`,
-            CheckersState.of([
+            OddCheckersState.of([
                 [_, _, _, _, _, _, _, O, _, V],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, V, _, _],
@@ -137,7 +137,7 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
-                [_, _, U, _, _, U, _, U, _, U],
+                [_, _, U, _, U, _, U, _, U, _],
             ], 2),
             CheckersMove.fromStep(new Coord(7, 0), new Coord(0, 7)),
             (move: CheckersMove, _ps: CheckersState, _rs: CheckersState) => {
@@ -150,11 +150,28 @@ export class InternationalCheckersTutorial extends Tutorial {
             TutorialStepMessage.CONGRATULATIONS(),
         ),
         TutorialStep.anyMove(
+            $localize`No promotion mid-capture`,
+            $localize`If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.<br/><br/>You are playing Dark, capture the remaining opponent's piece.`,
+            OddCheckersState.of([
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, V, _, V, _, _, _],
+                [_, _, _, U, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
+            ], 2),
+            CheckersMove.fromCapture([new Coord(3, 2), new Coord(5, 0), new Coord(7, 2)]),
+            $localize`Observe how your piece did not get a promotion despite having reached the last line.`,
+        ),
+        TutorialStep.anyMove(
             $localize`Capture rule`,
-            $localize`When you do multiple jumps, you cannot jump twice over neither the same piece nor the same empty space.<br/>Here you have to apply all the different capturing rules: backward, maximal, flying, and of course not jumping twice over the same square.<br/><br/>You are playing Dark, go ahead.`,
-            new CheckersState([
-                [_, _, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _, _],
+            $localize`When you do multiple jumps, you cannot jump twice over the same piece. The captured pieces are actually removed after your full move.<br/>Here you have to apply all the different capturing rules: backward, maximal, flying, and not jumping twice over the same piece.<br/><br/>You are playing Dark, go ahead.`,
+            OddCheckersState.of([
+                [_, O, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
@@ -163,15 +180,17 @@ export class InternationalCheckersTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _, _, O],
                 [_, _, _, _, V, _, V, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
             ], 20),
             CheckersMove.fromCapture([
-                new Coord(9, 7),
-                new Coord(6, 4),
-                new Coord(3, 7),
-                new Coord(5, 9),
-                new Coord(7, 7),
-            ]).get(),
-            TutorialStepMessage.CONGRATULATIONS_YOU_WON(),
+                new Coord(9, 6),
+                new Coord(6, 3),
+                new Coord(3, 6),
+                new Coord(5, 8),
+                new Coord(7, 6),
+            ]),
+
+            TutorialStepMessage.CONGRATULATIONS_YOU_KNOW_EVERYTHING(),
         ),
     ];
 }

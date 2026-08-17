@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { BashniRules } from '../../bashni/BashniRules';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
 import { CheckersMove } from '../CheckersMove';
 import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState, OddCheckersState } from '../CheckersState';
 
 const U: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const V: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
@@ -16,6 +18,7 @@ const _: CheckersStack = CheckersStack.EMPTY;
 const rules: AbstractCheckersRules[] = [
     InternationalCheckersRules.get(),
     LascaRules.get(),
+    BashniRules.get(),
 ];
 
 for (const rule of rules) {
@@ -38,39 +41,7 @@ for (const rule of rules) {
             const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
             // Then it should return the list of steps
-            expect(moves.every((move: CheckersMove) => rule.isMoveStep(move))).toBe(true);
-        });
-
-        it('should not suggest invalid move (not jumping twice the same coord)', () => {
-            // Given a state where current player could be tempted to do illegal capture
-            const customConfig: CheckersConfig = {
-                ...rule.getDefaultRulesConfig(),
-                frisianCaptureAllowed: true,
-                promotedPiecesCanFly: true,
-                mustMakeMaximalCapture: true,
-            };
-            const state: CheckersState = CheckersState.of([
-                [U, _, U, _, X, _, U],
-                [_, _, _, U, _, _, _],
-                [U, _, U, _, U, _, _],
-                [_, _, _, _, _, _, _],
-                [V, _, V, _, _, _, V],
-                [_, V, _, V, _, _, _],
-                [V, _, V, _, V, _, V],
-            ], 1);
-            const node: CheckersNode = new CheckersNode(state);
-
-            // When listing the moves
-            const moves: CheckersMove[] = moveGenerator.getListMoves(node, customConfig);
-
-            // Then it should return the list of captures
-            expect(moves.length).toBe(1);
-            const captures: Coord[] = [
-                new Coord(4, 0),
-                new Coord(4, 4),
-                new Coord(1, 1),
-            ];
-            expect(moves[0]).toEqual(CheckersMove.fromCapture(captures).get());
+            expect(moves.every((move: CheckersMove) => move.isStep)).toBe(true);
         });
 
     });
@@ -88,13 +59,13 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
     it('should only include majoritary capture from list move', () => {
         // Given a state where current player should capture
-        const state: CheckersState = CheckersState.of([
-            [_, _, _, _, _, _, _],
+        const state: CheckersState = OddCheckersState.of([
             [_, _, _, _, _, _, _],
             [_, _, V, _, _, _, _],
             [_, U, _, U, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, U, _],
+            [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
         ], 1);
         const node: CheckersNode = new CheckersNode(state);
@@ -108,10 +79,9 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
     describe('getLegalCaptures', () => {
 
-        it('should forbid to pass over the same coord several times', () => {
+        it('should forbid to pass over the same piece several times', () => {
             // Given a board with only one possible capture
-            const state: CheckersState = new CheckersState([
-                [_, _, _, _, _, _, _, _, _, _],
+            const state: CheckersState = OddCheckersState.of([
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
@@ -121,6 +91,7 @@ describe('CheckersMoveGenerator for International Checkers', () => {
                 [_, _, _, _, _, _, _, _, _, O],
                 [_, _, _, _, V, _, V, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _],
             ], 20);
 
             // When checking the legal list of captures
@@ -128,13 +99,13 @@ describe('CheckersMoveGenerator for International Checkers', () => {
 
             // Then it should be this one, the bigger not to fly over same coord twice
             const coords: Coord[] = [
-                new Coord(9, 7),
-                new Coord(6, 4),
-                new Coord(3, 7),
-                new Coord(5, 9),
-                new Coord(7, 7),
+                new Coord(9, 6),
+                new Coord(6, 3),
+                new Coord(3, 6),
+                new Coord(5, 8),
+                new Coord(7, 6),
             ];
-            const move: CheckersMove = CheckersMove.fromCapture(coords).get();
+            const move: CheckersMove = CheckersMove.fromCapture(coords);
             expect(legalCaptures).toEqual([move]);
         });
 
@@ -152,7 +123,7 @@ describe('CheckersMoveGenerator for Lasca', () => {
 
     it('should include minoritary capture from list move', () => {
         // Given a state where current player should capture
-        const state: CheckersState = CheckersState.of([
+        const state: CheckersState = EvenCheckersState.of([
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
             [_, _, V, _, _, _, _],
@@ -172,9 +143,9 @@ describe('CheckersMoveGenerator for Lasca', () => {
 
     describe('getLegalCaptures', () => {
 
-        it('should forbid to pass over the same coord several times', () => {
-            // Given a board with only one possible capture
-            const state: CheckersState = new CheckersState([
+        it('should allow returning to the starting coordinate during a multiple capture', () => {
+            // Given an officer that could capture pieces so that it returns to its original position
+            const state: CheckersState = EvenCheckersState.of([
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -184,27 +155,104 @@ describe('CheckersMoveGenerator for Lasca', () => {
                 [_, _, _, _, _, _, _],
             ], 20);
 
-            // When checking the legal list of captures
+            // When listing captures that jump over each piece once and return to the starting coordinate
             const legalCaptures: CheckersMove[] = moveGenerator.getLegalCaptures(state, defaultConfig);
 
-            // Then it should be this one, the bigger not to fly over same coord twice
+            // Then both circular paths should be legal
             const coordsClockwise: Coord[] = [
                 new Coord(6, 4),
                 new Coord(4, 2),
                 new Coord(2, 4),
                 new Coord(4, 6),
+                new Coord(6, 4),
             ];
-            const moveClockwise: CheckersMove = CheckersMove.fromCapture(coordsClockwise).get();
+            const moveClockwise: CheckersMove = CheckersMove.fromCapture(coordsClockwise);
             const coordsCounterClockwise: Coord[] = [
                 new Coord(6, 4),
                 new Coord(4, 6),
                 new Coord(2, 4),
                 new Coord(4, 2),
+                new Coord(6, 4),
             ];
-            const moveCounterClockwise: CheckersMove = CheckersMove.fromCapture(coordsCounterClockwise).get();
+            const moveCounterClockwise: CheckersMove = CheckersMove.fromCapture(coordsCounterClockwise);
             expect(legalCaptures).toEqual([moveClockwise, moveCounterClockwise]);
         });
 
+    });
+
+});
+
+describe('CheckersMoveGenerator for Bashni', () => {
+
+    let moveGenerator: CheckersMoveGenerator;
+    const bashniRules: BashniRules = BashniRules.get();
+    const defaultConfig: CheckersConfig = bashniRules.getDefaultRulesConfig();
+
+    beforeEach(() => {
+        moveGenerator = new CheckersMoveGenerator(bashniRules);
+    });
+
+    it('should not generate captures that are illegal after mid-capture promotion', () => {
+        // Given a board where a man promotes during a capture
+        const state: CheckersState = OddCheckersState.of([
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, V, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, V, _, V, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, V, _, _, _, _, _],
+            [_, U, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ], 0);
+        const node: CheckersNode = new CheckersNode(state);
+
+        // When listing the generated moves
+        const moves: CheckersMove[] = moveGenerator.getListMoves(node, defaultConfig);
+
+        // Then every generated move should be legal
+        expect(moves.every((move: CheckersMove) => bashniRules.isLegal(move, state, defaultConfig).isSuccess()))
+            .toBeTrue();
+    });
+
+    it('should generate flying captures for a non-current player based on the moving piece owner', () => {
+        // Given a board where Player.ONE is not the current player but has a flying capture
+        const state: CheckersState = OddCheckersState.of([
+            [_, X, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, U, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ], 0);
+
+        // When listing Player.ONE's captures for heuristic evaluation
+        const captures: CheckersMove[] = bashniRules.getCapturesOf(state, Player.ONE, defaultConfig);
+
+        // Then the capture should be generated even though Player.ZERO is the current player
+        const expectedMove: CheckersMove = CheckersMove.fromCapture([new Coord(1, 0), new Coord(4, 3)]);
+        expect(captures.some((move: CheckersMove) => move.equals(expectedMove))).toBeTrue();
+    });
+
+    it('should not generate flying captures over a non-current player own piece', () => {
+        // Given a board where Player.ONE's flying king is blocked by another Player.ONE piece
+        const state: CheckersState = OddCheckersState.of([
+            [_, X, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, V, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [U, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+        ], 0);
+
+        // When listing Player.ONE's captures for heuristic evaluation
+        const captures: CheckersMove[] = bashniRules.getCapturesOf(state, Player.ONE, defaultConfig);
+
+        // Then no self-capture should be generated
+        expect(captures).toEqual([]);
     });
 
 });
