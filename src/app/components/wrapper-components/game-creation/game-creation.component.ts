@@ -48,7 +48,7 @@ type GameCreationViewInfo = {
     gameTypeName?: string;
     moveDuration?: number;
     gameDuration?: number;
-    candidates: { name: string; elo: number }[];
+    candidates: { name: string; isBot: boolean; elo: number }[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] };
 }
@@ -234,8 +234,10 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
 
         this.viewInfo.creator = configRoom.creator.name;
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
+            console.log(c)
             return {
                 name: c.user.name,
+                isBot: c.user.isBot ?? false,
                 elo: c.elo,
             };
         });

@@ -92,7 +92,6 @@ func TestUpdateCurrentGame(t *testing.T) {
 
 func TestClearCurrentGameOpponent(t *testing.T) {
 	// Given a db with acurrent game and a chosen opponent
-	// Given a db with a current game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
@@ -135,7 +134,7 @@ func TestCurrentGameUserIDIsUnique(t *testing.T) {
 	second := &model.CurrentGame{User: changedUser, GameID: 43, Creator: changedUser}
 	err = store.SetCurrentGame(second)
 
-	// Then the user ID uniqueness constraint should reject it
+	// Then it should fail because the user is already subscribed
 	assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 }
 
