@@ -17,6 +17,8 @@ import { LascaComponent } from '../../../games/checkers/lasca/lasca.component';
 import { CoerceoRules } from '../../../games/coerceo/CoerceoRules';
 import { CoerceoTutorial } from '../../../games/coerceo/CoerceoTutorial';
 import { CoerceoComponent } from '../../../games/coerceo/coerceo.component';
+import { ConnectNRules } from '../../../games/connect-n/ConnectNRules';
+import { ConnectNComponent } from '../../../games/connect-n/connect-n.component';
 import { ConnectSixRules } from '../../../games/connect-six/ConnectSixRules';
 import { ConnectSixTutorial } from '../../../games/connect-six/ConnectSixTutorial';
 import { ConnectSixComponent } from '../../../games/connect-six/connect-six.component';
@@ -211,6 +213,7 @@ export class GameInfo {
 
             new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
             new GameInfo($localize`Toric Reversi`,          'ToricReversi',          ToricReversiComponent,          new ToricReversiTutorial(),          ToricReversiRules.get(),          new Date('2026-08-10'), GameDescription.TORIC_REVERSI()         ), // 43:                             * Martin
+            new GameInfo($localize`Connect N`,              'ConnectN',              ConnectNComponent,              new ConnectSixTutorial(),            ConnectNRules.get(),              new Date('2026-07-18'), GameDescription.CONNECT_SIX()           ), // 44:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m
