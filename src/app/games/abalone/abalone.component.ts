@@ -69,8 +69,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getOrdinalNeighbors())).toList();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Abalone');
+        super('Abalone');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',

@@ -16,8 +16,7 @@ import { AwaleRules } from './AwaleRules';
 export class AwaleComponent extends MancalaComponent<AwaleRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Awale');
+        super('Awale');
         this.aiConfig = this.createAIConfig(new AwaleMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

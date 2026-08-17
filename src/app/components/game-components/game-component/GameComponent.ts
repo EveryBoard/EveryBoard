@@ -1,7 +1,5 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
     computed,
     inject,
     signal,
@@ -38,11 +36,6 @@ import { ScoreName } from './ScoreName';
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({
-    template: '',
-    styleUrls: ['./game-component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-})
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
@@ -117,6 +110,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     });
 
     public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
+    public constructor(urlName: string) {
+        super();
+        this.setRulesAndNode(urlName);
+    }
 
     protected abstract computeViewBox(): ViewBox;
 

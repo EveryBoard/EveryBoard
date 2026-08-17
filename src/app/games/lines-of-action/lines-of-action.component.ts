@@ -35,8 +35,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('LinesOfAction');
+        super('LinesOfAction');
         this.aiConfig = {
             minimax: [{
                 id: 'Groups',

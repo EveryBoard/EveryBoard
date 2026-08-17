@@ -48,8 +48,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     public possibleLandings: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Sahara');
+        super('Sahara');
         this.aiConfig = {
             minimax: [{
                 id: 'capture-freedom',

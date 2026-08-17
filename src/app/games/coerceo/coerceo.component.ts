@@ -46,8 +46,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public possibleLandings: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Coerceo');
+        super('Coerceo');
         this.aiConfig = {
             minimax: [
                 {

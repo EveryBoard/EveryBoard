@@ -49,8 +49,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     public GoPiece: typeof GoPiece = GoPiece;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('HexagonalGo');
+        super('HexagonalGo');
         this.aiConfig = {
             minimax: [{
                 id: 'Territory',

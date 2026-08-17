@@ -40,8 +40,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Squarz');
+        super('Squarz');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',

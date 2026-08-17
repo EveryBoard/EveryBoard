@@ -126,8 +126,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public inspectedStackTransform: string;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Hive');
+        super('Hive');
         this.aiConfig = {
             minimax: [{
                 id: 'Mobility',

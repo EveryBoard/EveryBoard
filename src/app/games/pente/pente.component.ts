@@ -36,8 +36,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public captured: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Pente');
+        super('Pente');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',

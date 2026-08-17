@@ -17,8 +17,7 @@ export class BaAwaComponent extends MancalaComponent<BaAwaRules> {
 
     public constructor()
     {
-        super();
-        this.setRulesAndNode('BaAwa');
+        super('BaAwa');
         this.aiConfig = this.createAIConfig(new BaAwaMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

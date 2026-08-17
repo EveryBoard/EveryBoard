@@ -59,8 +59,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private capturedCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Epaminondas');
+        super('Epaminondas');
         this.aiConfig = {
             minimax: [
                 {

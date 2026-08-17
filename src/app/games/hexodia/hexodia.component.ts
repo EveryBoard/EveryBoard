@@ -38,8 +38,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     public victoryCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Hexodia');
+        super('Hexodia');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',

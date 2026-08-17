@@ -53,8 +53,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public ARROWS: ArrowInfo[];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Pentago');
+        super('Pentago');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',

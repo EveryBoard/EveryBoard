@@ -15,8 +15,7 @@ import { HnefataflRules } from './HnefataflRules';
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 
     public constructor() {
-        super(HnefataflMove.from);
-        this.setRulesAndNode('Hnefatafl');
+        super('Hnefatafl', HnefataflMove.from);
         this.aiConfig = this.createAIConfig();
         this.encoder = HnefataflMove.encoder;
     }

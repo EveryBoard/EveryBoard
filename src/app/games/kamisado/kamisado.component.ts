@@ -37,8 +37,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosenAutomatically: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Kamisado');
+        super('Kamisado');
         this.aiConfig = {
             minimax: [{
                 id: 'Advancement',

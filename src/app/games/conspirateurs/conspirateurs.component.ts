@@ -75,8 +75,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     private victoriousCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Conspirateurs');
+        super('Conspirateurs');
         this.aiConfig = {
             minimax: [{
                 id: 'Jump',

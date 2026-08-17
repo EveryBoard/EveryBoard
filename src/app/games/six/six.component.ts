@@ -52,8 +52,7 @@ export class SixComponent
     private nextClickShouldSelectGroup: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Six');
+        super('Six');
         this.aiConfig = {
             minimax: [{
                 id: 'Shape',

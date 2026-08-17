@@ -55,8 +55,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     private opponentMoveIsBeingAnimated: boolean = false;
 
-    public constructor() {
-        super();
+    public constructor(urlName: string) {
+        super(urlName);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }

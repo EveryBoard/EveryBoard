@@ -52,7 +52,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private flyiedOverCoords: Coord[] = []; // Coord that where flyied over during ongoing turn
     private legalMoves: CheckersMove[] = [];
-    protected moveGenerator: CheckersMoveGenerator;
+    protected moveGenerator: CheckersMoveGenerator = new CheckersMoveGenerator(this.rules);
 
     protected override computeViewBox(): ViewBox {
         const abstractWidth: number = this.getState().getWidth();
@@ -71,7 +71,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override setRulesAndNode(urlName: string): void {
         super.setRulesAndNode(urlName);
-        this.moveGenerator = new CheckersMoveGenerator(this.rules);
         this.aiConfig = {
             minimax: [
                 {

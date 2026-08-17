@@ -99,8 +99,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     };
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Yinsh');
+        super('Yinsh');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',

@@ -39,8 +39,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * The AI config can remain empty.
      */
     public constructor() {
-        super();
-        this.setRulesAndNode('NewGame');
+        super('NewGame');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',

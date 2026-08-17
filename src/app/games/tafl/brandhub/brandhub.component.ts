@@ -15,8 +15,7 @@ import { BrandhubRules } from './BrandhubRules';
 export class BrandhubComponent extends TaflComponent<BrandhubRules, BrandhubMove> {
 
     public constructor() {
-        super(BrandhubMove.from);
-        this.setRulesAndNode('Brandhub');
+        super('Brandhub', BrandhubMove.from);
         this.aiConfig = this.createAIConfig();
         this.encoder = BrandhubMove.encoder;
     }

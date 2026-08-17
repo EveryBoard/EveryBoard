@@ -28,8 +28,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public victoryCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('P4');
+        super('P4');
         this.aiConfig = {
             minimax: [
                 {

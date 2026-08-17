@@ -78,8 +78,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Apagos');
+        super('Apagos');
         this.aiConfig = {
             minimax: [
                 {

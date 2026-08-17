@@ -47,8 +47,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
     public GoPiece: typeof GoPiece = GoPiece;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Go');
+        super('Go');
         this.aiConfig = {
             minimax: [{
                 id: 'territory',

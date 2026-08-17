@@ -15,8 +15,7 @@ import { TablutRules } from './TablutRules';
 export class TablutComponent extends TaflComponent<TablutRules, TablutMove> {
 
     public constructor() {
-        super(TablutMove.from);
-        this.setRulesAndNode('Tablut');
+        super('Tablut', TablutMove.from);
         this.aiConfig = this.createAIConfig();
         this.encoder = TablutMove.encoder;
     }

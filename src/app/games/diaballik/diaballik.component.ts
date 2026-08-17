@@ -60,8 +60,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Diaballik');
+        super('Diaballik');
         this.hasAsymmetricBoard = true;
         this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();

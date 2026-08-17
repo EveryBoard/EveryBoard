@@ -49,8 +49,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     public GoPiece: typeof GoPiece = GoPiece;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('TriangularGo');
+        super('TriangularGo');
         this.aiConfig = {
             minimax: [{
                 id: 'Territory',

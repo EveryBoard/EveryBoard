@@ -1,5 +1,3 @@
-import { Component } from '@angular/core';
-
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
@@ -8,9 +6,6 @@ import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
 
-@Component({
-    template: '',
-})
 export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
@@ -19,6 +14,10 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                L = void>
     extends GameComponent<R, M, S, C, L>
 {
+
+    public constructor(urlName: string) {
+        super(urlName);
+    }
 
     public board: Table<P>;
 

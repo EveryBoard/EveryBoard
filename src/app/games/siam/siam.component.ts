@@ -55,8 +55,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     private insertingPiece: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Siam');
+        super('Siam');
         this.aiConfig = {
             minimax: [{
                 id: 'Distance',

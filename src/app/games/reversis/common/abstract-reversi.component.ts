@@ -25,8 +25,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     private captured: Coord[] = [];
 
     public constructor(urlName: string) {
-        super();
-        this.setRulesAndNode(urlName);
+        super(urlName);
         this.aiConfig = {
             minimax: [{
                 id: 'Piece Count',

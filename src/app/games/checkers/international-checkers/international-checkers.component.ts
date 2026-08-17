@@ -14,8 +14,7 @@ import { InternationalCheckersRules } from './InternationalCheckersRules';
 export class InternationalCheckersComponent extends CheckersComponent<InternationalCheckersRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('InternationalCheckers');
+        super('InternationalCheckers');
     }
 
 }

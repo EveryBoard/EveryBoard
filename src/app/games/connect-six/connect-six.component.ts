@@ -35,8 +35,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public victoryCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('ConnectSix');
+        super('ConnectSix');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',

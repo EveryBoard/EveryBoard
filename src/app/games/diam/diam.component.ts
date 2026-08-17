@@ -107,8 +107,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     };
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Diam');
+        super('Diam');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',

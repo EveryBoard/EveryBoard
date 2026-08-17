@@ -54,8 +54,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     protected pieceSizeToRadius: MGPMap<EncapsulePiece, number> = new MGPMap();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Encapsule');
+        super('Encapsule');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',

@@ -36,8 +36,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnectedSpaces: { coord: Coord; spaceContent: DvonnPieceStack }[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Dvonn');
+        super('Dvonn');
         this.aiConfig = {
             minimax: [
                 {

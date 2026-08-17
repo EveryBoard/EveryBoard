@@ -66,8 +66,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private finalCaptures: GipfCapture[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Gipf');
+        super('Gipf');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',

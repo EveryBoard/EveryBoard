@@ -111,8 +111,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public clockNeedlesPoints: string;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('MartianChess');
+        super('MartianChess');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',

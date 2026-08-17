@@ -34,8 +34,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public victory: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Teeko');
+        super('Teeko');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',

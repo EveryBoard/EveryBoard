@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, Signal, WritableSignal, computed, signal } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -76,8 +76,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentPlayerClass: string = 'player0';
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Trexo');
+        super('Trexo');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',

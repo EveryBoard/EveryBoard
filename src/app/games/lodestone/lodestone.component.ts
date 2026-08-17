@@ -134,8 +134,7 @@ export class LodestoneComponent
     private lastCaptures: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Lodestone');
+        super('Lodestone');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',

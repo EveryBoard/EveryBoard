@@ -46,8 +46,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Quarto');
+        super('Quarto');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',

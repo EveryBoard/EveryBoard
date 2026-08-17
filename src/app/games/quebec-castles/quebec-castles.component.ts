@@ -53,8 +53,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private minY: number = 0;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('QuebecCastles');
+        super('QuebecCastles');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',

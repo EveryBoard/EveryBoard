@@ -16,8 +16,7 @@ import { KalahRules } from './KalahRules';
 export class KalahComponent extends MancalaComponent<KalahRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Kalah');
+        super('Kalah');
         this.aiConfig = this.createAIConfig(new KalahMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

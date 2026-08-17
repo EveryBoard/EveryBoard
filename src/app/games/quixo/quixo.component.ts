@@ -40,8 +40,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     private victoriousCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Quixo');
+        super('Quixo');
         this.aiConfig = {
             minimax: [{
                 id: 'Piece Count',
