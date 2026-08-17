@@ -28,7 +28,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
                                                               FourStatePiece,
                                                               ConnectNConfig>
 {
-    protected coordsAndContents: WritableSignal<{ coord: Coord, content: FourStatePiece }[]> = signal([]);
+    protected coordsAndContents: WritableSignal<{ coord: Coord; content: FourStatePiece }[]> = signal([]);
 
     public droppedCoords: WritableSignal<Coord[]> = signal([]);
 

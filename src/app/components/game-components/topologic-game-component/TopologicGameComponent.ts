@@ -40,7 +40,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
         FlatHexaOrientation.INSTANCE,
     );
 
-    public getViewBox(): ViewBox {
+    public computeViewBox(): ViewBox {
         const globalViewBox: ViewBox = ViewBox.fromCoords(
             this.getState()
                 .getAllCoords()

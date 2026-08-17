@@ -7,7 +7,6 @@ import { ThemeService } from '../../../services/ThemeService';
 
 import { GameInfo } from './GameInfo';
 
-
 @Component({
     selector: 'app-pick-game',
     templateUrl: './pick-game.component.html',
