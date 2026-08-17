@@ -116,4 +116,8 @@ export class GoBoardComponent extends BaseGameComponent {
         this.takeHover.emit(coord);
     }
 
+    public onSVGLeave(): void {
+        this.takeHover.emit(MGPOptional.empty());
+    }
+
 }

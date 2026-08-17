@@ -9,6 +9,7 @@
         <svg:g class="data-coord-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                [attr.transform]="getTranslationAt(coordAndContent.coord)"
                (mouseenter)="onMouseEnter(coordAndContent.coord)"
+               (mouseleave)="onSVGLeave()"
                (click)="onClick(coordAndContent.coord)"
         >
             @if (spaceIsFull(coordAndContent.coord)) {
