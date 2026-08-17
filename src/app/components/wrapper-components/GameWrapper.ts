@@ -5,12 +5,13 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 
 import { Move } from '../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
+import { AbstractGameComponent } from '../game-components/game-component/AbstractGameComponent';
 import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
-import { AbstractGameComponent } from '../game-components/game-component/GameComponent';
-import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';
 
@@ -39,7 +40,11 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
 
     public gameComponent: AbstractGameComponent;
 
-    public players: MGPOptional<P>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    protected players: PlayerMap<MGPOptional<P>> = PlayerMap.ofValues(MGPOptional.empty(), MGPOptional.empty());
+
+    public getPlayerAt(player: Player): MGPOptional<P> {
+        return this.players.get(player);
+    }
 
     /**
      * The role of the player, i.e., ZERO if we are the first player, ONE if we are the second player,
@@ -199,11 +204,10 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
             // This can happen if called before the component has been set up
             return false;
         }
-        const turn: number = this.gameComponent.getTurn();
-        const indexPlayer: number = turn % 2;
+        const currentPlayer: Player = this.gameComponent.getCurrentPlayer();
         const player: P = this.getPlayer();
-        if (this.players[indexPlayer].isPresent()) {
-            return this.players[indexPlayer].equalsValue(player);
+        if (this.players.get(currentPlayer).isPresent()) {
+            return this.players.get(currentPlayer).equalsValue(player);
         } else {
             return true;
         }

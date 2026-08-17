@@ -1,98 +1,8 @@
 import { JSONPrimitive, MGPValidation, Set, Utils } from '@everyboard/lib';
 
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { ConfigDescriptionType, DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Localized } from '../../../utils/LocaleUtils';
-import { MGPValidator, MGPValidators } from '../../../utils/MGPValidator';
+import { DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 
-export class RulesConfigDescriptionLocalizable {
-
-    public static readonly WIDTH: () => string = (): string => $localize`Width`;
-
-    public static readonly HEIGHT: () => string = (): string => $localize`Height`;
-
-    public static readonly SIZE: () => string = (): string => $localize`Size`;
-
-    public static readonly ALIGNMENT_SIZE: () => string = () => $localize`Number of aligned pieces needed to win`;
-
-    public static readonly NUMBER_OF_DROPS: () => string = () => $localize`Number of pieces dropped per turn`;
-
-    public static readonly NUMBER_OF_EMPTY_ROWS: () => string = () => $localize`Number of empty rows`;
-
-    public static readonly NUMBER_OF_PIECES_ROWS: () => string = () => $localize`Number of pieces rows`;
-
-    public static readonly TORIC: () => string = () => $localize`Toric`;
-
-}
-
-export abstract class ConfigLine {
-
-    protected constructor(public readonly defaultValue: ConfigDescriptionType,
-                          public readonly title: Localized)
-    {
-    }
-
-    // Should check if the value is valid
-    public abstract checkValidity(value: JSONPrimitive): MGPValidation;
-
-}
-
-export class NumberConfig extends ConfigLine {
-
-    public constructor(defaultValue: number,
-                       title: Localized,
-                       public readonly validator: MGPValidator)
-    {
-        super(defaultValue, title);
-    }
-
-    public checkValidity(value: JSONPrimitive): MGPValidation {
-        if (typeof(value) === 'number') {
-            return this.validator(value);
-        } else {
-            return MGPValidation.failure('NumberConfig expects a number value');
-        }
-    }
-
-}
-
-export class EnumConfig extends ConfigLine {
-
-    public constructor(value: string,
-                       title: Localized,
-                       public readonly possibleValues: { [key: string]: Localized },
-                       public readonly validator: MGPValidator = (_: string) => MGPValidation.SUCCESS)
-    {
-        super(value, title);
-    }
-
-    public override checkValidity(fieldValue: string): MGPValidation {
-        if (typeof(fieldValue) !== 'string') {
-            return MGPValidation.failure('EnumConfig expects a string value');
-        } else if (Object.keys(this.possibleValues).indexOf(fieldValue) === -1) {
-            return MGPValidation.failure('This value is not among the possible values');
-        } else {
-            return this.validator(fieldValue);
-        }
-    }
-}
-
-export class BooleanConfig extends ConfigLine {
-
-    public constructor(defaultValue: boolean, title: Localized)
-    {
-        super(defaultValue, title);
-    }
-
-    public checkValidity(value: JSONPrimitive): MGPValidation {
-        if (typeof(value) === 'boolean') {
-            return MGPValidation.SUCCESS;
-        } else {
-            return MGPValidation.failure('BooleanConfig expects a boolean value');
-        }
-    }
-
-}
+import { ConfigLine } from './ConfigLine';
 
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
 
@@ -172,17 +82,5 @@ export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
     public getValidityError(field: string, value: JSONPrimitive): string {
         return this.getFieldValidity(field, value).getReason();
     }
-
-}
-
-export class RulesConfigDescriptions {
-
-    public static readonly GOBAN: RulesConfigDescription<GobanConfig> = new RulesConfigDescription<GobanConfig>({
-        name: (): string => $localize`Default`,
-        config: {
-            width: new NumberConfig(19, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
-            height: new NumberConfig(19, RulesConfigDescriptionLocalizable.HEIGHT, MGPValidators.range(1, 99)),
-        },
-    });
 
 }

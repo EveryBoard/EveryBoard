@@ -8,7 +8,7 @@ import { CurrentGameService, GameActionFailure } from '../../../services/Current
 import { GameService } from '../../../services/GameService';
 import { MessageDisplayer } from '../../../services/MessageDisplayer';
 import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
-import { GameInfo } from '../pick-game/pick-game.component';
+import { GameInfo } from '../pick-game/GameInfo';
 
 @Component({
     selector: 'app-online-game-creation',
