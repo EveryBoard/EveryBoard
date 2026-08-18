@@ -1,7 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { MoveTestUtils } from 'games/dist/jscaip/tests/Move.spec';
 
 import { MoveGenerator } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
@@ -13,9 +12,11 @@ import { MancalaDropResult, MancalaRules } from '@everyboard/games';
 import { MancalaState } from '@everyboard/games';
 import { MancalaConfig } from '@everyboard/games';
 import { MancalaFailure } from '@everyboard/games';
+import { MoveTestUtils } from '@everyboard/games';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
 import { RulesConfigUtils } from '../../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
+// import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
 

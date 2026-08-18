@@ -315,6 +315,7 @@ export * from './jscaip/AI/MCTS';
 export * from './jscaip/AI/MCTSWithHeuristic';
 export * from './jscaip/AI/Minimax';
 export * from './jscaip/AI/PlayerMetricHeuristic';
+export * from './jscaip/tests/Move.spec';
 export * from './jscaip/state/FourStatePieceGameStateWithTable';
 export * from './jscaip/state/GameState';
 export * from './jscaip/state/GameStateWithTable';

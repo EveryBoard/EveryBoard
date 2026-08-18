@@ -394,7 +394,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-Level 1');
 
             // Then it should have selected the corresponding minimax AI
-            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper.getPlayingAI();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(Minimax));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: 'Level 1', maxDepth: 1 }));
         }));
@@ -410,7 +410,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#ai-option-select-0', 'player-0-option-1 seconds');
 
             // Then it should have selected the corresponding iterative deepening minimax AI
-            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper.getPlayingAI();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(IterativeDeepeningMinimax));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds', maxSeconds: 1 }));
         }));
@@ -425,7 +425,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             chooseFirstAILevel(Player.ZERO);
 
             // Then it should have selected the corresponding MCTS
-            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper.getPlayingAI();
+            const playingAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = wrapper['getPlayingAI']();
             expect(playingAI.get().ai).toEqual(jasmine.any(MCTS));
             expect(playingAI.get().options).toEqual(jasmine.objectContaining({ name: '1 seconds', maxSeconds: 1 }));
         }));
@@ -461,7 +461,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#player-select-0', 'player-0-human');
 
             // Then human players should be named explicitly
-            expect(wrapper.getPlayerName(Player.ZERO)).toBe('Human');
+            expect(wrapper['getPlayerName'](Player.ZERO)).toBe('Human');
         }));
 
         it('should name minimax player by their profile', fakeAsync(async() => {
@@ -473,20 +473,20 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             testUtils.selectChildElementOfDropDown('#ai-profile-select-0', 'player-0-profile-alignment');
 
             // Then human players should be named explicitly
-            expect(wrapper.getPlayerName(Player.ZERO)).toBe('Alignment');
+            expect(wrapper['getPlayerName'](Player.ZERO)).toBe('Alignment');
         }));
 
         it('should preserve profile hash functions when creating minimaxes', fakeAsync(async() => {
             // Given P4's profile, which defines a custom hash for transposition tables
             const wrapper: LocalGameWrapperComponent = testUtils.getWrapper() as LocalGameWrapperComponent;
             const config: MinimaxConfig<P4Move, P4State, P4Config> =
-                wrapper.getMinimaxConfig('alignment').get() as MinimaxConfig<P4Move, P4State, P4Config>;
+                wrapper['getMinimaxConfig']('alignment').get() as MinimaxConfig<P4Move, P4State, P4Config>;
             const minimax: Minimax<P4Move, P4State, P4Config, unknown> =
-                wrapper.createMinimax(config) as Minimax<P4Move, P4State, P4Config, unknown>;
+                wrapper['createMinimax'](config) as Minimax<P4Move, P4State, P4Config, unknown>;
             const state: P4State = P4Rules.get().getInitialState(P4Rules.get().getDefaultRulesConfig());
 
             // When hashing a state through the generic minimax created from the profile
-            const hash: string = minimax.hash(state);
+            const hash: string = minimax['hash'](state);
 
             // Then it should use the profile-provided hash
             expect(hash).toBe('__________________________________________');
@@ -500,7 +500,7 @@ describe('LocalGameWrapperComponent (game phase)', () => {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 2);
-            expect(minimax.hash(occupiedState)).toBe('01________________________________________');
+            expect(minimax['hash'](occupiedState)).toBe('01________________________________________');
         }));
 
         it('should show level when non-human player is selected, and propose AI to play', fakeAsync(async() => {
