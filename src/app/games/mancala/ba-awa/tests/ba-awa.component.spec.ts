@@ -128,6 +128,23 @@ describe('BaAwaComponent', () => {
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new BaAwaMoveGenerator());
         }));
 
+        it('should resize the board when the number of houses changes', fakeAsync(async() => {
+            // Given the board displayed with the default number of houses
+            const component: BaAwaComponent = testUtils.getGameComponent();
+            expect(component.viewBoxWidth()).toBe(860);
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
+                width: 4,
+            };
+
+            // When displaying a configuration with fewer houses
+            const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
+            await testUtils.setupState(state, { config: customConfig });
+
+            // Then the board width should match the configured number of houses
+            expect(component.viewBoxWidth()).toBe(660);
+        }));
+
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
             // Given a Ba-awa state with a config with passByPlayerStore set to true
             const customConfig: BaAwaConfig = {
