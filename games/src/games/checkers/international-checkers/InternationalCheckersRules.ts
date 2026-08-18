@@ -35,6 +35,8 @@ export class InternationalCheckersRules extends AbstractCheckersRules {
                     new BooleanConfig(false, CheckersOptionLocalizable.OCCUPY_EVEN_SQUARE),
                 frisianCaptureAllowed:
                     new BooleanConfig(false, CheckersOptionLocalizable.FRISIAN_CAPTURE_ALLOWED),
+                canPromoteMidCapture:
+                    new BooleanConfig(false, CheckersOptionLocalizable.CAN_PROMOTE_MID_CAPTURE),
             },
         });
 

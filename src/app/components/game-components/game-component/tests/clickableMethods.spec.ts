@@ -21,6 +21,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
     },
     Awale: { onClick: [0, 0] },
     BaAwa: { onClick: [0, 0] },
+    Bashni: { onClick: [0, 0] },
     Brandhub: { onClick: [0, 0] },
     Coerceo: {
         onPyramidClick: [new Coord(0, 0)],

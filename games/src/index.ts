@@ -27,6 +27,7 @@ export * from './games/checkers/common/CheckersMove';
 export * from './games/checkers/common/CheckersMoveGenerator';
 export * from './games/checkers/common/CheckersScoreHeuristic';
 export * from './games/checkers/common/CheckersState';
+export * from './games/checkers/bashni/BashniRules';
 export * from './games/checkers/international-checkers/InternationalCheckersRules';
 export * from './games/checkers/lasca/LascaRules';
 export * from './games/coerceo/CoerceoCapturesAndFreedomHeuristic';

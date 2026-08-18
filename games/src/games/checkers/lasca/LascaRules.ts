@@ -34,6 +34,8 @@ export class LascaRules extends AbstractCheckersRules {
                     new BooleanConfig(true, CheckersOptionLocalizable.OCCUPY_EVEN_SQUARE),
                 frisianCaptureAllowed:
                     new BooleanConfig(false, CheckersOptionLocalizable.FRISIAN_CAPTURE_ALLOWED),
+                canPromoteMidCapture:
+                    new BooleanConfig(false, CheckersOptionLocalizable.CAN_PROMOTE_MID_CAPTURE),
             },
         });
 
@@ -47,5 +49,6 @@ export class LascaRules extends AbstractCheckersRules {
     public override getRulesConfigDescription(): RulesConfigDescription<CheckersConfig> {
         return LascaRules.RULES_CONFIG_DESCRIPTION;
     }
+
 
 }
