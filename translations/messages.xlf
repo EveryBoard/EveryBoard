@@ -215,6 +215,9 @@
       <trans-unit id="1675508830863089385" datatype="html">
         <source>The most widespread multiple-lap Mancala.</source>
       </trans-unit>
+      <trans-unit id="7751928094372476864" datatype="html">
+        <source>Russian column checkers: captured pieces stack under the capturing piece, forming towers.</source>
+      </trans-unit>
       <trans-unit id="5716165296000343717" datatype="html">
         <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
       </trans-unit>
@@ -466,6 +469,9 @@
       </trans-unit>
       <trans-unit id="3697715893908807208" datatype="html">
         <source>Toric Reversi</source>
+      </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -1070,6 +1076,72 @@
       <trans-unit id="6180360850656792663" datatype="html">
         <source>Full Board</source>
       </trans-unit>
+      <trans-unit id="6999105537978094771" datatype="html">
+        <source>Bashni: origins</source>
+      </trans-unit>
+      <trans-unit id="1795254043608057032" datatype="html">
+        <source>Bashni (Russian: башни, towers), also known as column draughts, is a Russian checkers variant. Captured pieces are not removed but stacked under the capturing piece, forming towers.</source>
+      </trans-unit>
+      <trans-unit id="8402752246011864012" datatype="html">
+        <source>The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+      </trans-unit>
+      <trans-unit id="5216257512116603462" datatype="html">
+        <source>Captures</source>
+      </trans-unit>
+      <trans-unit id="3182705657358075075" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="5185460173069548908" datatype="html">
+        <source>Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower controlled the player at the top of the tower.</source>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+      </trans-unit>
+      <trans-unit id="4060948936151379193" datatype="html">
+        <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="3134181849403890425" datatype="html">
+        <source>You made the majority capture, but you were asked to do the minority one here!</source>
+      </trans-unit>
+      <trans-unit id="2170682009266275861" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="2350466795039227682" datatype="html">
+        <source>You did not choose the correct piece, and got no promotion.</source>
+      </trans-unit>
+      <trans-unit id="3494718669384677623" datatype="html">
+        <source>King move</source>
+      </trans-unit>
+      <trans-unit id="4704865038249414760" datatype="html">
+        <source>Kings can move and capture backward as well as forward. They can also &quot;fly&quot;: move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king to capture two pieces of the opponent!</source>
+      </trans-unit>
+      <trans-unit id="7512547184362316069" datatype="html">
+        <source>You should capture twice!</source>
+      </trans-unit>
+      <trans-unit id="8405108678014314848" datatype="html">
+        <source>Promotion mid-capture</source>
+      </trans-unit>
+      <trans-unit id="424666200826678371" datatype="html">
+        <source>In Bashni, if a piece reaches the last line &lt;strong&gt;during a capture sequence&lt;/strong&gt;, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture two light pieces. Your piece will promote mid-sequence and continue as a king!</source>
+      </trans-unit>
+      <trans-unit id="2675066422650988607" datatype="html">
+        <source>Tower capture</source>
+      </trans-unit>
+      <trans-unit id="3957194373025613682" datatype="html">
+        <source>In Bashni, when a tower is captured, only the top piece is removed. After the capture, the old tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!</source>
+      </trans-unit>
+      <trans-unit id="2755311753913057003" datatype="html">
+        <source>Capture rule</source>
+      </trans-unit>
+      <trans-unit id="7127492795528845730" datatype="html">
+        <source>When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.&lt;br/&gt;Here you must also use your king&apos;s backward and flying capture abilities.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture all remaining pieces.</source>
+      </trans-unit>
+      <trans-unit id="3989795384384835435" datatype="html">
+        <source>You did not capture everything!</source>
+      </trans-unit>
       <trans-unit id="2406587628849019715" datatype="html">
         <source>Stack pieces instead of capturing them</source>
       </trans-unit>
@@ -1088,8 +1160,11 @@
       <trans-unit id="3072414657519570345" datatype="html">
         <source>Can do frisian captures</source>
       </trans-unit>
-      <trans-unit id="3581037377692107358" datatype="html">
-        <source>You cannot go backward with normal pieces!</source>
+      <trans-unit id="8702370392264661270" datatype="html">
+        <source>Piece that reaches the last line during a capture continues capturing as king</source>
+      </trans-unit>
+      <trans-unit id="3260884512753946998" datatype="html">
+        <source>Only promoted pieces can go backward.</source>
       </trans-unit>
       <trans-unit id="1347067654692503433" datatype="html">
         <source>You must capture when it is possible!</source>
@@ -1118,8 +1193,8 @@
       <trans-unit id="7678886963795480068" datatype="html">
         <source>You cannot move orthogonally!</source>
       </trans-unit>
-      <trans-unit id="8938938109993892899" datatype="html">
-        <source>You cannot jump over the same square several times!</source>
+      <trans-unit id="4624388853987508390" datatype="html">
+        <source>You cannot capture the same square several times!</source>
       </trans-unit>
       <trans-unit id="8795923620032980614" datatype="html">
         <source>You must do the longest capture possible!</source>
@@ -1130,14 +1205,14 @@
       <trans-unit id="4596314344113953334" datatype="html">
         <source>You have done a step after a capture. A move that starts with a capture can only contain captures.</source>
       </trans-unit>
-      <trans-unit id="8375763259935871100" datatype="html">
-        <source>A simple step is made by one diagonal move forward left or forward right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      <trans-unit id="3181357103919988717" datatype="html">
+        <source>A simple step is made by one diagonal move forward left or forward right. Click on a piece to choose it, then click on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
       </trans-unit>
       <trans-unit id="7318689477424356735" datatype="html">
         <source>Backward captures</source>
       </trans-unit>
-      <trans-unit id="3186677422672219927" datatype="html">
-        <source>A capture can also be done backward&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture backward.</source>
+      <trans-unit id="1323130710227979862" datatype="html">
+        <source>A capture can also be done backward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a backward capture.</source>
       </trans-unit>
       <trans-unit id="5943278728548812168" datatype="html">
         <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
@@ -1145,8 +1220,8 @@
       <trans-unit id="3104604410220998192" datatype="html">
         <source>Multiple captures</source>
       </trans-unit>
-      <trans-unit id="7023776270158690543" datatype="html">
-        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a double capture.</source>
+      <trans-unit id="7126317503040718590" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a double capture.</source>
       </trans-unit>
       <trans-unit id="2693455583384082674" datatype="html">
         <source>Promotion</source>
@@ -1160,26 +1235,14 @@
       <trans-unit id="1163551794419030546" datatype="html">
         <source>The goal of checkers is to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
       </trans-unit>
-      <trans-unit id="1534367694207535197" datatype="html">
-        <source>Steps</source>
-      </trans-unit>
-      <trans-unit id="5216257512116603462" datatype="html">
-        <source>Captures</source>
-      </trans-unit>
       <trans-unit id="7360724816457427020" datatype="html">
         <source>Maximum capture</source>
       </trans-unit>
       <trans-unit id="8944110142689384190" datatype="html">
         <source>If at some turn you have several capture choices, you have to capture the maximal number of pieces.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the maximal capture.</source>
       </trans-unit>
-      <trans-unit id="6705237401508801272" datatype="html">
-        <source>When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-      </trans-unit>
-      <trans-unit id="2350466795039227682" datatype="html">
-        <source>You did not choose the correct piece, and got no promotion.</source>
-      </trans-unit>
-      <trans-unit id="3494718669384677623" datatype="html">
-        <source>King move</source>
+      <trans-unit id="8886795079238941207" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
       </trans-unit>
       <trans-unit id="7943272134877911783" datatype="html">
         <source>Kings can, like any other piece, move forward and capture backward. They have extra abilities. First, they can move backward without capturing. Second, they are able to &quot;fly&quot;: they can move over multiple squares without jumping over any piece, or by jumping over exactly one opponent piece to capture it, and finally landing wherever in the same line.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king!</source>
@@ -1187,17 +1250,23 @@
       <trans-unit id="6253946314470341234" datatype="html">
         <source>You did not move your king.</source>
       </trans-unit>
-      <trans-unit id="2755311753913057003" datatype="html">
-        <source>Capture rule</source>
+      <trans-unit id="2683903961757093456" datatype="html">
+        <source>No promotion mid-capture</source>
       </trans-unit>
-      <trans-unit id="606169029000365891" datatype="html">
-        <source>When you do multiple jumps, you cannot jump twice over neither the same piece nor the same empty space.&lt;br/&gt;Here you have to apply all the different capturing rules: backward, maximal, flying, and of course not jumping twice over the same square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, go ahead.</source>
+      <trans-unit id="6992466040069837979" datatype="html">
+        <source>If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.&lt;br/&gt;&lt;br/&gt;You are playing Dark, capture the remaining opponent&apos;s piece.</source>
+      </trans-unit>
+      <trans-unit id="1172092152887347450" datatype="html">
+        <source>Observe how your piece did not get a promotion despite having reached the last line.</source>
+      </trans-unit>
+      <trans-unit id="5638867880438059400" datatype="html">
+        <source>When you do multiple jumps, you cannot jump twice over the same piece. The captured pieces are actually removed after your full move.&lt;br/&gt;Here you have to apply all the different capturing rules: backward, maximal, flying, and not jumping twice over the same piece.&lt;br/&gt;&lt;br/&gt;You are playing Dark, go ahead.</source>
       </trans-unit>
       <trans-unit id="8274439231274366704" datatype="html">
         <source>Lasca: origins</source>
       </trans-unit>
-      <trans-unit id="3082102783316586508" datatype="html">
-        <source>Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+      <trans-unit id="4990290643353374393" datatype="html">
+        <source>Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, a chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
       </trans-unit>
       <trans-unit id="383124132464771052" datatype="html">
         <source>The goal of Lasca is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
@@ -1205,14 +1274,11 @@
       <trans-unit id="3662184238859847370" datatype="html">
         <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
       </trans-unit>
-      <trans-unit id="6522624192206928831" datatype="html">
-        <source>Minority capture is allowed</source>
+      <trans-unit id="1553562216851898831" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do the shortest capture here!</source>
       </trans-unit>
-      <trans-unit id="4604841825883708598" datatype="html">
-        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
-      </trans-unit>
-      <trans-unit id="2042191715997917496" datatype="html">
-        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      <trans-unit id="4202110740728265051" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
       </trans-unit>
       <trans-unit id="3052116389115675860" datatype="html">
         <source>You did not choose the correct stack, and got no promotion.</source>
@@ -1220,11 +1286,29 @@
       <trans-unit id="4252782057421264089" datatype="html">
         <source>Officer move</source>
       </trans-unit>
-      <trans-unit id="8730503950999903830" datatype="html">
-        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
+      <trans-unit id="2208486977407370994" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officer!</source>
       </trans-unit>
       <trans-unit id="7994037258587314442" datatype="html">
         <source>You did not move your officer.</source>
+      </trans-unit>
+      <trans-unit id="7985068829745395027" datatype="html">
+        <source>Stack capture</source>
+      </trans-unit>
+      <trans-unit id="556454886843041764" datatype="html">
+        <source>In Lasca, when a stack is captured, only the top piece is removed. After the capture, the stack can therefore be commanded by the opponent, depending on the new piece at the top of the stack. But you can also recover a captured king. This is the case here, recover your king!</source>
+      </trans-unit>
+      <trans-unit id="5396877629075826495" datatype="html">
+        <source>You did not capture the right piece.</source>
+      </trans-unit>
+      <trans-unit id="2841090669908192003" datatype="html">
+        <source>If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="6441891554333297114" datatype="html">
+        <source>Observe how your piece got promoted but could not continue its capture further.</source>
+      </trans-unit>
+      <trans-unit id="6354536314365385481" datatype="html">
+        <source>When making multiple captures, you cannot jump twice over the same stack. The captured commander is immediately placed under your capturing stack, while the rest of the captured stack stays on its square. Even if this exposes another opposing commander, you cannot capture that stack again during the same move.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture as much pieces as possible.</source>
       </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
