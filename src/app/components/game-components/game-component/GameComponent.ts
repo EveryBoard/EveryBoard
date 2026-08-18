@@ -167,10 +167,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         this.cdr.markForCheck();
     }
 
-    public markForCheck(): void {
-        this.cdr.markForCheck();
-    }
-
     public isInteractive(): boolean {
         return this.interactive;
     }
