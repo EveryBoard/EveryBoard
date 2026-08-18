@@ -53,8 +53,7 @@
                                                                 [ngClass]="viewInfo.candidateClasses[candidate.name]"
                                                                 (click)="selectOpponent(candidate.name)">
                                                                 <td [id]="viewInfo.chosenOpponent === candidate.name ? ('selected_' + candidate.name) : ('candidate_' + candidate.name)"
-                                                                    class="td">
-                                                                    {{ candidate.name }}
+                                                                    class="td">{{ candidate.name }}
                                                                     @if (candidate.isBot) { <span class="tag is-info is-light" i18n>bot</span> }
                                                                     (<app-elo [elo]="candidate.elo"/>)</td>
                                                                 <td class="td">
