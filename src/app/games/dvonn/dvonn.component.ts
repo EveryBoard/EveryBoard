@@ -1,22 +1,21 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
+import { DvonnMaxStacksHeuristic } from '@everyboard/games';
+import { DvonnMove } from '@everyboard/games';
+import { DvonnMoveGenerator } from '@everyboard/games';
+import { DvonnPieceStack } from '@everyboard/games';
+import { DvonnRules } from '@everyboard/games';
+import { DvonnScoreHeuristic } from '@everyboard/games';
+import { DvonnState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
-
-import { DvonnMaxStacksHeuristic } from './DvonnMaxStacksHeuristic';
-import { DvonnMove } from './DvonnMove';
-import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { DvonnRules } from './DvonnRules';
-import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
-import { DvonnState } from './DvonnState';
 
 @Component({
     selector: 'app-dvonn',

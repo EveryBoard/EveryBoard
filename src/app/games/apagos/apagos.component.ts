@@ -1,21 +1,20 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { ApagosFailure } from '@everyboard/games';
+import { ApagosFullBoardHeuristic } from '@everyboard/games';
+import { ApagosMove } from '@everyboard/games';
+import { ApagosMoveGenerator } from '@everyboard/games';
+import { ApagosRightmostHeuristic } from '@everyboard/games';
+import { ApagosConfig, ApagosRules } from '@everyboard/games';
+import { ApagosSquare } from '@everyboard/games';
+import { ApagosState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-
-import { ApagosFailure } from './ApagosFailure';
-import { ApagosFullBoardHeuristic } from './ApagosFullBoardHeuristic';
-import { ApagosMove } from './ApagosMove';
-import { ApagosMoveGenerator } from './ApagosMoveGenerator';
-import { ApagosRightmostHeuristic } from './ApagosRightmostHeuristic';
-import { ApagosConfig, ApagosRules } from './ApagosRules';
-import { ApagosSquare } from './ApagosSquare';
-import { ApagosState } from './ApagosState';
 
 interface PieceLocation {
 

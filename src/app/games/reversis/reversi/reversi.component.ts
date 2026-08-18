@@ -1,9 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { ReversiRules } from '@everyboard/games';
+
 import { AbstractReversiComponent } from '../common/abstract-reversi.component';
 
-import { ReversiRules } from './ReversiRules';
 
 @Component({
     selector: 'app-reversi',

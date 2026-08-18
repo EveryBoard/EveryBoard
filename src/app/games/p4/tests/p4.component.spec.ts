@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
+import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { P4Move } from '@everyboard/games';
+import { P4Rules, P4Config } from '@everyboard/games';
+import { P4State } from '@everyboard/games';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { P4Move } from '../P4Move';
-import { P4Rules, P4Config } from '../P4Rules';
-import { P4State } from '../P4State';
+
 import { P4Component } from '../p4.component';
 
 describe('P4Component', () => {

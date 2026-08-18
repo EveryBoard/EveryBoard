@@ -3,17 +3,13 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { AbstractControl } from '@angular/forms';
 
+import { BooleanConfig, EnumConfig, NumberConfig, RulesConfig, RulesConfigDescription } from '@everyboard/games';
+import { MGPValidators } from '@everyboard/games';
 import { MGPOptional, Utils, MGPValidation } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
-import { BooleanConfig } from './BooleanConfig';
-import { EnumConfig } from './EnumConfig';
-import { NumberConfig } from './NumberConfig';
-import { RulesConfigDescription } from './RulesConfigDescription';
 import { RulesConfigurationComponent } from './rules-configuration.component';
 
 describe('RulesConfigurationComponent', () => {
@@ -177,7 +173,7 @@ describe('RulesConfigurationComponent', () => {
             // Given a custom config that has been selected
             setRulesConfigDescriptionInput(rulesConfigDescriptionWithNumber);
             await testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
-            const previousControl: AbstractControl = component.rulesConfigForm.controls['nombre'];
+            const previousControl: AbstractControl = component.rulesConfigForm.controls.nombre;
             spyOn(component.updateCallback, 'emit').and.callThrough();
 
             // When changing to the standard config, then modifying the stale control
@@ -718,8 +714,8 @@ describe('RulesConfigurationComponent', () => {
 
         // Then the displayed read-only form is refreshed
         expectConfigToBeSelected('the_other_config_name');
-        expect(component.rulesConfigForm.controls['nombre'].value).toEqual(42);
-        expect(component.rulesConfigForm.controls['canailleDeBoule'].value).toEqual(42);
+        expect(component.rulesConfigForm.controls.nombre.value).toEqual(42);
+        expect(component.rulesConfigForm.controls.canailleDeBoule.value).toEqual(42);
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
     }));
 

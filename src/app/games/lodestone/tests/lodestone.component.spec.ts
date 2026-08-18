@@ -1,18 +1,18 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { LodestoneMove } from '@everyboard/games';
+import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '@everyboard/games';
+import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '@everyboard/games';
+import { LodestoneFailure } from '@everyboard/games';
 import { MGPMap, MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { LodestoneFailure } from '../LodestoneFailure';
-import { LodestoneMove } from '../LodestoneMove';
-import { LodestonePiece, LodestonePieceLodestone, LodestonePieceNone, LodestonePiecePlayer } from '../LodestonePiece';
-import { LodestonePositions, LodestonePressurePlateGroup, LodestonePressurePlates, LodestoneState } from '../LodestoneState';
 import { LodestoneComponent } from '../lodestone.component';
 
 describe('LodestoneComponent', () => {

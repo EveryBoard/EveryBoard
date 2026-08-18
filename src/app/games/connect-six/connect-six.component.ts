@@ -1,20 +1,19 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { ConnectSixAlignmentHeuristic } from '@everyboard/games';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboard/games';
+import { ConnectSixMoveGenerator } from '@everyboard/games';
+import { ConnectSixRules } from '@everyboard/games';
+import { ConnectSixState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GobanGameComponent } from '../../components/game-components/goban-game-component/GobanGameComponent';
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { ConnectSixAlignmentHeuristic } from './ConnectSixAlignmentHeuristic';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from './ConnectSixMove';
-import { ConnectSixMoveGenerator } from './ConnectSixMoveGenerator';
-import { ConnectSixRules } from './ConnectSixRules';
-import { ConnectSixState } from './ConnectSixState';
 
 @Component({
     selector: 'app-connect-six',

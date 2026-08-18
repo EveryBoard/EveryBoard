@@ -1,19 +1,19 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { AIDepthLimitOptions, MoveGenerator } from '@everyboard/games';
+import { createMCTSFromConfig } from '@everyboard/games';
+import { BoardValue } from '@everyboard/games';
+import { Heuristic } from '@everyboard/games';
+import { MCTS } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../../games/abalone/abalone.component';
-import { AIDepthLimitOptions, MoveGenerator } from '../../../../jscaip/AI/AI';
-import { createMCTSFromConfig } from '../../../../jscaip/AI/AIConfigUtils';
-import { BoardValue } from '../../../../jscaip/AI/BoardValue';
-import { Heuristic } from '../../../../jscaip/AI/Heuristic';
-import { MCTS } from '../../../../jscaip/AI/MCTS';
-import { Minimax } from '../../../../jscaip/AI/Minimax';
-import { Move } from '../../../../jscaip/Move';
-import { Player } from '../../../../jscaip/Player';
-import { RulesConfig } from '../../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../../jscaip/state/GameState';
 import { ErrorLoggerServiceMock } from '../../../../services/tests/ErrorLoggerServiceMock.spec';
 import {
     ActivatedRouteStub,

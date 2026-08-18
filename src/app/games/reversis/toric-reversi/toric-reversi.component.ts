@@ -1,9 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { ToricReversiRules } from '@everyboard/games';
+
 import { AbstractReversiComponent } from '../common/abstract-reversi.component';
 
-import { ToricReversiRules } from './ToricReversiRules';
 
 @Component({
     selector: 'app-toric-reversi',

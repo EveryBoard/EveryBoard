@@ -5,6 +5,7 @@ import { BaseGameComponent } from '../../components/game-components/base-game-co
 
 import { LodestoneInfo } from './lodestone.component';
 
+
 @Component({
     selector: '[app-lodestone-lodestone]',
     templateUrl: './lodestone-lodestone.component.svg',

@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic } from '@everyboard/games';
+import { SaharaFailure } from '@everyboard/games';
+import { SaharaFreedomHeuristic } from '@everyboard/games';
+import { SaharaMobilityHeuristic } from '@everyboard/games';
+import { SaharaMove } from '@everyboard/games';
+import { SaharaMoveGenerator } from '@everyboard/games';
+import { SaharaRules } from '@everyboard/games';
+import { SaharaState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
-
-import { SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic } from './SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic';
-import { SaharaFailure } from './SaharaFailure';
-import { SaharaFreedomHeuristic } from './SaharaFreedomHeuristic';
-import { SaharaMobilityHeuristic } from './SaharaMobilityHeuristic';
-import { SaharaMove } from './SaharaMove';
-import { SaharaMoveGenerator } from './SaharaMoveGenerator';
-import { SaharaRules } from './SaharaRules';
-import { SaharaState } from './SaharaState';
 
 @Component({
     selector: 'app-sahara',

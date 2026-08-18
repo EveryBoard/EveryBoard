@@ -1,9 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { LascaRules } from '@everyboard/games';
+
 import { CheckersComponent } from '../common/checkers.component';
 
-import { LascaRules } from './LascaRules';
 
 @Component({
     selector: 'app-lasca',

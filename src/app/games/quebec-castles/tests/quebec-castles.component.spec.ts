@@ -2,16 +2,16 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { QuebecCastlesMove } from '@everyboard/games';
+import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games';
+import { QuebecCastlesState } from '@everyboard/games';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerMap } from '../../../jscaip/PlayerMap';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { QuebecCastlesMove } from '../QuebecCastlesMove';
-import { QuebecCastlesConfig, QuebecCastlesRules } from '../QuebecCastlesRules';
-import { QuebecCastlesState } from '../QuebecCastlesState';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

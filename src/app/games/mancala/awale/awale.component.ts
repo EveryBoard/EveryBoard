@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
-import { MancalaComponent } from '../common/MancalaComponent';
-import { MancalaMove } from '../common/MancalaMove';
-import { NumberedCircleComponent } from '../common/numbered-circle.component';
+import { MancalaMove } from '@everyboard/games';
+import { AwaleMoveGenerator } from '@everyboard/games';
+import { AwaleRules } from '@everyboard/games';
 
-import { AwaleMoveGenerator } from './AwaleMoveGenerator';
-import { AwaleRules } from './AwaleRules';
+import { MancalaComponent } from '../common/MancalaComponent';
+import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 @Component({
     selector: 'app-awale-component',

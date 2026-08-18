@@ -1,12 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { PlayerOrNone } from '@everyboard/games';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MGPValidation } from '@everyboard/lib';
 
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { clickableMethods } from '../../game-components/game-component/tests/clickableMethods.spec';
 import { GameInfo } from '../../normal-component/pick-game/GameInfo';

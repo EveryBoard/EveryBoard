@@ -3,27 +3,29 @@ import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, O
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ParamMap } from '@angular/router';
 
+import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '@everyboard/games';
+import { MCTSConfig, MinimaxConfig } from '@everyboard/games';
+import { AIInstanceRegistry, PlayerSelection, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '@everyboard/games';
+import { AbstractNode, GameNode, GameNodeStats } from '@everyboard/games';
+import { IterativeDeepeningMinimax } from '@everyboard/games';
+import { MCTS } from '@everyboard/games';
+import { Minimax } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { ConfigDescriptionType, RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
+import { RulesConfigDescription } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, JSONParser, JSONValue, isJSONPrimitive } from '@everyboard/lib';
 
-import { AIDepthLimitOptions, AIOptions, AIStats, AITimeLimitOptions, AbstractAI } from '../../../jscaip/AI/AI';
-import { MCTSConfig, MinimaxConfig } from '../../../jscaip/AI/AIConfig';
-import { AIInstanceRegistry, PlayerSelection, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../../../jscaip/AI/AIConfigUtils';
-import { AbstractNode, GameNode, GameNodeStats } from '../../../jscaip/AI/GameNode';
-import { IterativeDeepeningMinimax } from '../../../jscaip/AI/IterativeDeepeningMinimax';
-import { MCTS } from '../../../jscaip/AI/MCTS';
-import { Minimax } from '../../../jscaip/AI/Minimax';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { Move } from '../../../jscaip/Move';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { PlayerMap } from '../../../jscaip/PlayerMap';
-import { SuperRules } from '../../../jscaip/Rules';
-import { ConfigDescriptionType, RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
-import { Debug } from '../../../utils/Debug';
 import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper } from '../GameWrapper';
-import { RulesConfigDescription } from '../rules-configuration/RulesConfigDescription';
+import { RulesConfigUtils } from '../rules-configuration/RulesConfigUtils';
+
 
 type AIChoice = {
     id: string;

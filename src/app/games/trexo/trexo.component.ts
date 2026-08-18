@@ -1,24 +1,25 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { Table3DUtils, TableUtils } from '@everyboard/games';
+import { TrexoAlignmentHeuristic } from '@everyboard/games';
+import { TrexoFailure } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games';
+import { TrexoMoveGenerator } from '@everyboard/games';
+import { TrexoRules } from '@everyboard/games';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { ModeConfig } from '../../components/game-components/parallelogram-game-component/ModeConfig';
 import { ParallelogramGameComponent } from '../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { Table3DUtils, TableUtils } from '../../jscaip/TableUtils';
 
-import { TrexoAlignmentHeuristic } from './TrexoAlignmentHeuristic';
-import { TrexoFailure } from './TrexoFailure';
-import { TrexoMove } from './TrexoMove';
-import { TrexoMoveGenerator } from './TrexoMoveGenerator';
-import { TrexoRules } from './TrexoRules';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from './TrexoState';
 import { TrexoHalfPieceComponent } from './trexo-half-piece.component';
+
 
 interface PieceOnBoard {
 

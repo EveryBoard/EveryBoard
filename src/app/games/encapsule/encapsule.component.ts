@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { EncapsuleFailure } from '@everyboard/games';
+import { EncapsuleMove } from '@everyboard/games';
+import { EncapsuleMoveGenerator } from '@everyboard/games';
+import { EncapsulePiece } from '@everyboard/games';
+import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from '@everyboard/games';
+import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { RingComponent } from '../common/ring/ring.component';
-
-import { EncapsuleFailure } from './EncapsuleFailure';
-import { EncapsuleMove } from './EncapsuleMove';
-import { EncapsuleMoveGenerator } from './EncapsuleMoveGenerator';
-import { EncapsulePiece } from './EncapsulePiece';
-import { EncapsuleConfig, EncapsuleLegalityInformation, EncapsuleRules } from './EncapsuleRules';
-import { EncapsuleState, EncapsuleSpace, EncapsuleSizeToNumberMap } from './EncapsuleState';
 
 type SquareData = {
     coordClasses: string[] | string;

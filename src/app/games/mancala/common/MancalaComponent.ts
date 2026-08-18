@@ -1,24 +1,23 @@
 import { computed, Signal } from '@angular/core';
 
+import { MoveGenerator } from '@everyboard/games';
+import { AIConfig } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games';
+import { MancalaFailure } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '@everyboard/games';
+import { MancalaScoreHeuristic } from '@everyboard/games';
+import { MancalaState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation, TimeUtils, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { RectangularGameComponent } from '../../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { MoveGenerator } from '../../../jscaip/AI/AI';
-import { AIConfig } from '../../../jscaip/AI/AIConfig';
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
-
-import { MancalaConfig } from './MancalaConfig';
-import { MancalaFailure } from './MancalaFailure';
-import { MancalaDistribution, MancalaMove } from './MancalaMove';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from './MancalaRules';
-import { MancalaScoreHeuristic } from './MancalaScoreHeuristic';
-import { MancalaState } from './MancalaState';
 
 export type SeedDropResult = {
     houseToDistribute: Coord;

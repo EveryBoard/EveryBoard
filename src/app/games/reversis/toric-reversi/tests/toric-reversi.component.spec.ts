@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerOrNone } from '../../../../jscaip/Player';
-import { Table } from '../../../../jscaip/TableUtils';
+import { PlayerOrNone } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { ReversiMove } from '@everyboard/games';
+import { ReversiState } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { ReversiMove } from '../../common/ReversiMove';
-import { ReversiState } from '../../common/ReversiState';
 import { ToricReversiComponent } from '../toric-reversi.component';
 
 describe('ToricReversiComponent', () => {

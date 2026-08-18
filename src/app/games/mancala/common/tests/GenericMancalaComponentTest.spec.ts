@@ -1,23 +1,23 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
+import { MoveTestUtils } from 'games/dist/jscaip/tests/Move.spec';
 
+import { MoveGenerator } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Cell, Table } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games';
+import { MancalaDropResult, MancalaRules } from '@everyboard/games';
+import { MancalaState } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games';
+import { MancalaFailure } from '@everyboard/games';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../../../jscaip/AI/AI';
-import { Coord } from '../../../../jscaip/Coord';
-import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
-import { Cell, Table } from '../../../../jscaip/TableUtils';
-import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
+import { RulesConfigUtils } from '../../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
-import { MancalaConfig } from '../MancalaConfig';
-import { MancalaFailure } from '../MancalaFailure';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaDropResult, MancalaRules } from '../MancalaRules';
-import { MancalaState } from '../MancalaState';
 
 type MancalaHouseContents = Cell<{ mainContent: string; secondaryContent?: string }>;
 

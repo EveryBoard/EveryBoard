@@ -1,20 +1,19 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Orthogonal } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { QuixoHeuristic } from '@everyboard/games';
+import { QuixoMove } from '@everyboard/games';
+import { QuixoMoveGenerator } from '@everyboard/games';
+import { QuixoRules } from '@everyboard/games';
+import { QuixoConfig, QuixoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { QuixoHeuristic } from './QuixoHeuristic';
-import { QuixoMove } from './QuixoMove';
-import { QuixoMoveGenerator } from './QuixoMoveGenerator';
-import { QuixoRules } from './QuixoRules';
-import { QuixoConfig, QuixoState } from './QuixoState';
 
 @Component({
     selector: 'app-quixo',

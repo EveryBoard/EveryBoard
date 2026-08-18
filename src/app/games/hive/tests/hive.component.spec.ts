@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { HiveDropMove, HiveMove } from '@everyboard/games';
+import { HivePiece } from '@everyboard/games';
+import { HiveRules } from '@everyboard/games';
+import { HiveState } from '@everyboard/games';
+import { HiveFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { HiveFailure } from '../HiveFailure';
-import { HiveDropMove, HiveMove } from '../HiveMove';
-import { HivePiece } from '../HivePiece';
-import { HiveRules } from '../HiveRules';
-import { HiveState } from '../HiveState';
 import { HiveComponent } from '../hive.component';
 
 describe('HiveComponent', () => {

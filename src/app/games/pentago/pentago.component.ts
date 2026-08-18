@@ -1,21 +1,20 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { PentagoMove } from '@everyboard/games';
+import { PentagoMoveGenerator } from '@everyboard/games';
+import { PentagoRules } from '@everyboard/games';
+import { PentagoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { PentagoMove } from './PentagoMove';
-import { PentagoMoveGenerator } from './PentagoMoveGenerator';
-import { PentagoRules } from './PentagoRules';
-import { PentagoState } from './PentagoState';
 
 interface ArrowInfo {
     path: string;

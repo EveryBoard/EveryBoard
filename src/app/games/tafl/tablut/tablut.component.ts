@@ -1,10 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
-import { TaflComponent } from '../tafl.component';
+import { TablutMove } from '@everyboard/games';
+import { TablutRules } from '@everyboard/games';
 
-import { TablutMove } from './TablutMove';
-import { TablutRules } from './TablutRules';
+import { TaflComponent } from '../tafl.component';
 
 @Component({
     selector: 'app-tablut',

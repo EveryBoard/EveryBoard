@@ -1,25 +1,24 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { CoerceoCapturesAndFreedomHeuristic } from '@everyboard/games';
+import { CoerceoFailure } from '@everyboard/games';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from '@everyboard/games';
+import { CoerceoMoveGenerator } from '@everyboard/games';
+import { CoerceoPiecesThreatsTilesHeuristic } from '@everyboard/games';
+import { CoerceoPiecesTilesFreedomHeuristic } from '@everyboard/games';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from '@everyboard/games';
+import { CoerceoState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-
-import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
-import { CoerceoFailure } from './CoerceoFailure';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
-import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
-import { CoerceoState } from './CoerceoState';
 
 @Component({
     selector: 'app-coerceo',

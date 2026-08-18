@@ -1,12 +1,12 @@
+import { Coord } from '@everyboard/games';
+import { CheckersConfig } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersPiece, CheckersStack, CheckersState } from '@everyboard/games';
+import { LascaRules } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../../jscaip/Coord';
-import { CheckersConfig } from '../common/AbstractCheckersRules';
-import { CheckersMove } from '../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from '../common/CheckersState';
 import { CheckersTutorialStep } from '../common/CheckersTutorialStep';
-
-import { LascaRules } from './LascaRules';
 
 const zero: CheckersPiece = CheckersPiece.ZERO;
 const one: CheckersPiece = CheckersPiece.ONE;

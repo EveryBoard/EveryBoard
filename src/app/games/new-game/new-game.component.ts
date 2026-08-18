@@ -1,17 +1,16 @@
 import { Component } from '@angular/core';
 
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { NewGameHeuristic } from '@everyboard/games';
+import { NewGameMove } from '@everyboard/games';
+import { NewGameMoveGenerator } from '@everyboard/games';
+import { NewGameLegalityInfo, NewGameRules } from '@everyboard/games';
+import { NewGameState } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-
-import { NewGameHeuristic } from './NewGameHeuristic';
-import { NewGameMove } from './NewGameMove';
-import { NewGameMoveGenerator } from './NewGameMoveGenerator';
-import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
-import { NewGameState } from './NewGameState';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.

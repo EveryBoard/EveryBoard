@@ -10,6 +10,7 @@ export * from './ReversibleMap';
 export * from './MGPOptional';
 export * from './Set';
 export * from './MGPUniqueList';
+export * from './MGPValidator';
 export * from './MGPValidation';
 export * from './NumberMap';
 export * from './OptimizedSet';

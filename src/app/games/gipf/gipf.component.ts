@@ -1,29 +1,28 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { GipfCapture } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { GipfFailure } from '@everyboard/games';
+import { GipfMove, GipfPlacement } from '@everyboard/games';
+import { GipfMoveGenerator } from '@everyboard/games';
+import { GipfLegalityInformation, GipfRules } from '@everyboard/games';
+import { GipfScoreHeuristic } from '@everyboard/games';
+import { GipfState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { GipfCapture } from '../../jscaip/GipfProjectHelper';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { Player } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-
-import { GipfFailure } from './GipfFailure';
-import { GipfMove, GipfPlacement } from './GipfMove';
-import { GipfMoveGenerator } from './GipfMoveGenerator';
-import { GipfLegalityInformation, GipfRules } from './GipfRules';
-import { GipfScoreHeuristic } from './GipfScoreHeuristic';
-import { GipfState } from './GipfState';
 
 @Component({
     selector: 'app-gipf',

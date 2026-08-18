@@ -1,24 +1,23 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Line } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { DiaballikDistanceHeuristic } from '@everyboard/games';
+import { DiaballikFailure } from '@everyboard/games';
+import { DiaballikFilteredMoveGenerator } from '@everyboard/games';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from '@everyboard/games';
+import { DiaballikMoveGenerator } from '@everyboard/games';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from '@everyboard/games';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Line } from '../../jscaip/Line';
-import { Player } from '../../jscaip/Player';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
-import { DiaballikFailure } from './DiaballikFailure';
-import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
     selector: 'app-diaballik',

@@ -1,14 +1,14 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { FormControl, ReactiveFormsModule, FormsModule } from '@angular/forms';
 
+import { GameNode } from '@everyboard/games';
+import { AbstractNode } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { AbstractRules } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { GameNode } from '../../../jscaip/AI/GameNode';
-import { AbstractNode } from '../../../jscaip/AI/GameNode';
-import { Move } from '../../../jscaip/Move';
-import { AbstractRules } from '../../../jscaip/Rules';
-import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { GameState } from '../../../jscaip/state/GameState';
 import { DemoNodeInfo, DemoNodeWithConfig, DemoCardWrapperComponent } from '../../wrapper-components/demo-card-wrapper/demo-card-wrapper.component';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { GameInfo } from '../pick-game/GameInfo';

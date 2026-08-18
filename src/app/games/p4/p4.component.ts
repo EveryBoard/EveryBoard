@@ -1,19 +1,18 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { P4Heuristic } from '@everyboard/games';
+import { P4Move } from '@everyboard/games';
+import { P4MoveGenerator } from '@everyboard/games';
+import { P4OrderedMoveGenerator } from '@everyboard/games';
+import { P4Config, P4Rules } from '@everyboard/games';
+import { P4State } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-
-import { P4Heuristic } from './P4Heuristic';
-import { P4Move } from './P4Move';
-import { P4MoveGenerator } from './P4MoveGenerator';
-import { P4OrderedMoveGenerator } from './P4OrderedMoveGenerator';
-import { P4Config, P4Rules } from './P4Rules';
-import { P4State } from './P4State';
 
 @Component({
     selector: 'app-p4',

@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { DummyHeuristic } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { DiamFailure } from '@everyboard/games';
+import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from '@everyboard/games';
+import { DiamMoveGenerator } from '@everyboard/games';
+import { DiamPiece } from '@everyboard/games';
+import { DiamRules } from '@everyboard/games';
+import { DiamState } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { DummyHeuristic } from '../../jscaip/AI/DummyHeuristic';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { Vector } from '../../jscaip/Vector';
-
-import { DiamFailure } from './DiamFailure';
-import { DiamMove, DiamMoveDrop, DiamMoveEncoder, DiamMoveShift } from './DiamMove';
-import { DiamMoveGenerator } from './DiamMoveGenerator';
-import { DiamPiece } from './DiamPiece';
-import { DiamRules } from './DiamRules';
-import { DiamState } from './DiamState';
 
 interface ViewInfo {
     boardInfo: SpaceInfo[];

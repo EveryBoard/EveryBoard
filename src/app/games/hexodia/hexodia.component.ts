@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { FourStatePieceGameStateWithTable } from '@everyboard/games';
+import { HexodiaAlignmentHeuristic } from '@everyboard/games';
+import { HexodiaMove } from '@everyboard/games';
+import { HexodiaMoveGenerator } from '@everyboard/games';
+import { HexodiaConfig, HexodiaRules } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
-
-import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';
-import { HexodiaMove } from './HexodiaMove';
-import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
-import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 
 @Component({
     selector: 'app-hexodia',

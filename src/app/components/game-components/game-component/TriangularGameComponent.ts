@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Move } from '../../../jscaip/Move';
-import { SuperRules } from '../../../jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
-import { GameState } from '../../../jscaip/state/GameState';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
 
 import { GameComponent } from './GameComponent';
 

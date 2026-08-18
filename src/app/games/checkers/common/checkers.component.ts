@@ -1,23 +1,23 @@
+
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { AbstractCheckersRules, CheckersConfig } from '@everyboard/games';
+import { CheckersControlHeuristic } from '@everyboard/games';
+import { CheckersControlPlusDominationHeuristic } from '@everyboard/games';
+import { CheckersFailure } from '@everyboard/games';
+import { CheckersMove } from '@everyboard/games';
+import { CheckersMoveGenerator } from '@everyboard/games';
+import { CheckersScoreHeuristic } from '@everyboard/games';
+import { CheckersPiece, CheckersStack, CheckersState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils, Set, MGPUniqueList } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { ModeConfig } from '../../../components/game-components/parallelogram-game-component/ModeConfig';
 import { ParallelogramGameComponent } from '../../../components/game-components/parallelogram-game-component/ParallelogramGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Vector } from '../../../jscaip/Vector';
-
-import { AbstractCheckersRules, CheckersConfig } from './AbstractCheckersRules';
-import { CheckersControlHeuristic } from './CheckersControlHeuristic';
-import { CheckersControlPlusDominationHeuristic } from './CheckersControlPlusDominationHeuristic';
-import { CheckersFailure } from './CheckersFailure';
-import { CheckersMove } from './CheckersMove';
-import { CheckersMoveGenerator } from './CheckersMoveGenerator';
-import { CheckersScoreHeuristic } from './CheckersScoreHeuristic';
-import { CheckersPiece, CheckersStack, CheckersState } from './CheckersState';
 
 export abstract class CheckersComponent<R extends AbstractCheckersRules>
     extends ParallelogramGameComponent<R,

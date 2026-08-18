@@ -1,19 +1,18 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TeekoHeuristic } from '@everyboard/games';
+import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from '@everyboard/games';
+import { TeekoMoveGenerator } from '@everyboard/games';
+import { TeekoConfig, TeekoRules } from '@everyboard/games';
+import { TeekoState } from '@everyboard/games';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { TeekoHeuristic } from './TeekoHeuristic';
-import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
-import { TeekoMoveGenerator } from './TeekoMoveGenerator';
-import { TeekoConfig, TeekoRules } from './TeekoRules';
-import { TeekoState } from './TeekoState';
 
 @Component({
     selector: 'app-teeko',

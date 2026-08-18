@@ -1,9 +1,10 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { InternationalCheckersRules } from '@everyboard/games';
+
 import { CheckersComponent } from '../common/checkers.component';
 
-import { InternationalCheckersRules } from './InternationalCheckersRules';
 
 @Component({
     selector: 'app-international-checkers',

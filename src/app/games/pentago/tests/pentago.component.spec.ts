@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { PentagoMove } from '@everyboard/games';
+import { PentagoRules } from '@everyboard/games';
+import { PentagoState } from '@everyboard/games';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { PentagoMove } from '../PentagoMove';
-import { PentagoRules } from '../PentagoRules';
-import { PentagoState } from '../PentagoState';
+
 import { PentagoComponent } from '../pentago.component';
 
 describe('PentagoComponent', () => {

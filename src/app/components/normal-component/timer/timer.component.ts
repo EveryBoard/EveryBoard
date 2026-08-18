@@ -1,10 +1,10 @@
 import { NgClass, DecimalPipe } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, InputSignal, OnDestroy, OutputEmitterRef, inject, input, output } from '@angular/core';
 
+import { Player } from '@everyboard/games';
+import { Debug } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-import { Player } from '../../../jscaip/Player';
-import { Debug } from '../../../utils/Debug';
 
 @Component({
     selector: 'app-timer',

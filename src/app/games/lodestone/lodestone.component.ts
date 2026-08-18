@@ -1,26 +1,26 @@
 import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { TableUtils } from '@everyboard/games';
+import { LodestoneFailure } from '@everyboard/games';
+import { LodestoneCaptures, LodestoneMove } from '@everyboard/games';
+import { LodestoneMoveGenerator } from '@everyboard/games';
+import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from '@everyboard/games';
+import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from '@everyboard/games';
+import { LodestoneScoreHeuristic } from '@everyboard/games';
+import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Coord } from '../../jscaip/Coord';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
-import { TableUtils } from '../../jscaip/TableUtils';
 
-import { LodestoneFailure } from './LodestoneFailure';
-import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
-import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
-import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
-import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
-import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
-import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
 import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
 export type LodestoneInfo = {

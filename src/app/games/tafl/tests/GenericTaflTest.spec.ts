@@ -2,20 +2,20 @@
 import { Type } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
+import { Coord } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TaflConfig } from '@everyboard/games';
+import { TaflFailure } from '@everyboard/games';
+import { TaflMove } from '@everyboard/games';
+import { TaflMoveGenerator } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games';
+import { TaflRules } from '@everyboard/games';
+import { TaflState } from '@everyboard/games';
 import { Encoder, MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesConfigUtils } from '../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { TaflConfig } from '../TaflConfig';
-import { TaflFailure } from '../TaflFailure';
-import { TaflMove } from '../TaflMove';
-import { TaflMoveGenerator } from '../TaflMoveGenerator';
-import { TaflPawn } from '../TaflPawn';
-import { TaflRules } from '../TaflRules';
-import { TaflState } from '../TaflState';
 import { TaflComponent } from '../tafl.component';
 
 export type TaflTestEntries<C extends TaflComponent<R, M>, R extends TaflRules<M>, M extends TaflMove> = {
