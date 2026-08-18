@@ -235,6 +235,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;
             element.dispatchEvent(new Event('click'));
+            await Promise.resolve();
+            this.gameComponent.markForCheck();
         }
         this.currentMessage = solutionStep.getSuccessMessage();
         this.moveAttemptMade = true;

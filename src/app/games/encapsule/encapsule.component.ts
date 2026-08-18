@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
@@ -31,6 +31,7 @@ type PieceData = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -77,7 +78,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             .expandAll((4 / 3) * this.SPACE_SIZE);
     }
 
-    public override async showLastMove(move: EncapsuleMove): Promise<void> {
+    protected override async showLastMove(move: EncapsuleMove): Promise<void> {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
         this.renderBoardPiece();

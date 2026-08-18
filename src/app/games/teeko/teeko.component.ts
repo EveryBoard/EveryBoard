@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -16,6 +16,7 @@ import { TeekoConfig, TeekoRules } from './TeekoRules';
 import { TeekoState } from './TeekoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-teeko',
     templateUrl: './teeko.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -55,7 +56,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.board = this.node.gameState.board;
     }
 
-    public override async showLastMove(move: TeekoMove): Promise<void> {
+    protected override async showLastMove(move: TeekoMove): Promise<void> {
         this.last = MGPOptional.of(this.rules.getLastCoord(move));
         if (move instanceof TeekoTranslationMove) {
             this.moved = [move.getStart(), move.getEnd()];

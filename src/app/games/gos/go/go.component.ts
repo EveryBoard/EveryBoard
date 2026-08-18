@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -22,6 +22,7 @@ import { GoMoveGenerator } from './GoMoveGenerator';
 import { GoConfig, GoRules } from './GoRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-go',
     templateUrl: './go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -78,7 +79,7 @@ export class GoComponent extends GobanGameComponent<GoRules,
         return `${state.turn % 2}-${state.phase.toString()}-${board}-${JSON.stringify(state.koCoord)}-${JSON.stringify(state.captured)}`;
     }
 
-    public override async showLastMove(move: GoMove): Promise<void> {
+    protected override async showLastMove(move: GoMove): Promise<void> {
         this.last = MGPOptional.of(move.coord);
         this.showCaptures();
     }

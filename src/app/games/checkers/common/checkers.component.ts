@@ -152,7 +152,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return piece.isPromoted;
     }
 
-    public override async showLastMove(move: CheckersMove): Promise<void> {
+    protected override async showLastMove(move: CheckersMove): Promise<void> {
         this.lastCaptures = [];
         this.lastMoveds = [move.getStartingCoord()];
         if (this.rules.isMoveStep(move)) {

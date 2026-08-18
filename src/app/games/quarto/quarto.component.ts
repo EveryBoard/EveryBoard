@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
@@ -17,6 +17,7 @@ import { QuartoConfig, QuartoRules } from './QuartoRules';
 import { QuartoState } from './QuartoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -115,7 +116,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
 
-    public override async showLastMove(move: QuartoMove): Promise<void> {
+    protected override async showLastMove(move: QuartoMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
     }
 

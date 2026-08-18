@@ -57,7 +57,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         return ScoreName.REMAINING_PIECES;
     }
 
-    public override async showLastMove(move: M): Promise<void> {
+    protected override async showLastMove(move: M): Promise<void> {
         const previousState: TaflState = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {

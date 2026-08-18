@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -65,6 +65,7 @@ type PreCaptureInfo = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -614,7 +615,7 @@ export class LodestoneComponent
         return coordInfo;
     }
 
-    public override async showLastMove(move: LodestoneMove): Promise<void> {
+    protected override async showLastMove(move: LodestoneMove): Promise<void> {
         const lastState: LodestoneState = this.getPreviousState();
         const infos: LodestoneInfos =
             LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, move.coord, move);

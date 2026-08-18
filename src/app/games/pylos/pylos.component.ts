@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
@@ -20,6 +20,7 @@ import { PylosRules } from './PylosRules';
 import { PylosState } from './PylosState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -338,7 +339,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return ScoreName.REMAINING_PIECES;
     }
 
-    public override async showLastMove(move: PylosMove): Promise<void> {
+    protected override async showLastMove(move: PylosMove): Promise<void> {
         this.lastStartingCoord = move.startingCoord;
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastFirstCapture = move.firstCapture;

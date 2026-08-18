@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -22,6 +22,7 @@ import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { CoerceoState } from './CoerceoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -98,7 +99,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.possibleLandings = [];
     }
 
-    public override async showLastMove(move: CoerceoMove): Promise<void> {
+    protected override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());

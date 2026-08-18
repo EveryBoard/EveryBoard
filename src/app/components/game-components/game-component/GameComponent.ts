@@ -159,10 +159,16 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         if (this.hasAsymmetricBoard) {
             this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
+        this.cdr.markForCheck();
     }
 
     public setInteractive(interactive: boolean): void {
         this.interactive = interactive;
+        this.cdr.markForCheck();
+    }
+
+    public markForCheck(): void {
+        this.cdr.markForCheck();
     }
 
     public isInteractive(): boolean {
@@ -243,7 +249,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.node.parent.get().gameState;
     }
 
-    public abstract showLastMove(move: M): Promise<void>;
+    protected abstract showLastMove(move: M): Promise<void>;
 
     public abstract hideLastMove(): void;
 
@@ -262,6 +268,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public setConfig(config: C): void {
         this.config = config;
+        this.cdr.markForCheck();
     }
 
     /**

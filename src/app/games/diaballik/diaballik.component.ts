@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -21,6 +21,7 @@ import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } fro
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-diaballik',
     templateUrl: './diaballik.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -144,7 +145,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
-    public override async showLastMove(move: DiaballikMove): Promise<void> {
+    protected override async showLastMove(move: DiaballikMove): Promise<void> {
         for (const subMove of move.getSubMoves()) {
             if (subMove instanceof DiaballikTranslation) {
                 this.lastMovedPieces.push(subMove.getStart(), subMove.getEnd());

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -24,6 +24,7 @@ import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hexagonal-go',
     templateUrl: './hexagonal-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -81,7 +82,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
                                          PointyHexaOrientation.INSTANCE);
     }
 
-    public override async showLastMove(move: GoMove): Promise<void> {
+    protected override async showLastMove(move: GoMove): Promise<void> {
         this.last = MGPOptional.of(move.coord);
         this.showCaptures();
     }

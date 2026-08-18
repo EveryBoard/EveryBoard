@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -19,6 +19,7 @@ import { PenteRules } from './PenteRules';
 import { PenteState } from './PenteState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -67,7 +68,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.createHoshis();
     }
 
-    public override async showLastMove(move: PenteMove): Promise<void> {
+    protected override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentOpponent();
         this.captured = PenteRules.get().getCaptures(

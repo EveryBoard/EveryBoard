@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { TaflComponent } from '../tafl.component';
 
@@ -7,6 +7,7 @@ import { HnefataflMove } from './HnefataflMove';
 import { HnefataflRules } from './HnefataflRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hnefatafl',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],

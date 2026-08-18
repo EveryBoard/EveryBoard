@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils, MGPMap } from '@everyboard/lib';
 
@@ -26,6 +26,7 @@ import { GipfScoreHeuristic } from './GipfScoreHeuristic';
 import { GipfState } from './GipfState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -103,7 +104,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return ScoreName.CAPTURES;
     }
 
-    public override async showLastMove(move: GipfMove): Promise<void> {
+    protected override async showLastMove(move: GipfMove): Promise<void> {
         const previousState: GipfState = this.getPreviousState();
         move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c, previousState));
         const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(move.initialCaptures, previousState);

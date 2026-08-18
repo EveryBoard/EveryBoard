@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional } from '@everyboard/lib';
 
@@ -18,6 +18,7 @@ import { NewGameState } from './NewGameState';
  * You just have adapt the selector and template URL here.
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-new-game',
     templateUrl: './new-game.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -78,7 +79,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     /**
      * This method should display the last move in the component
      */
-    public override async showLastMove(move: NewGameMove): Promise<void> {
+    protected override async showLastMove(move: NewGameMove): Promise<void> {
         return;
     }
 
