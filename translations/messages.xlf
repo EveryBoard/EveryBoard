@@ -2091,8 +2091,8 @@
       <trans-unit id="2962447017140596910" datatype="html">
         <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
       </trans-unit>
-      <trans-unit id="5821528921373090826" datatype="html">
-        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
+      <trans-unit id="4635444715757714464" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how the pattern of atari is exactly the same as in regular Go, but here at a distance of two. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
       </trans-unit>
       <trans-unit id="6779631138176400609" datatype="html">
         <source>Simple capture, with shown zoom</source>

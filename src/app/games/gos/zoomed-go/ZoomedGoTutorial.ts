@@ -53,7 +53,7 @@ export class ZoomedGoTutorial extends Tutorial {
                 [_, _, _, _, _, _, _, _],
             ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(5, 3)],
-            $localize`Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.`,
+            $localize`Congratulations, you have captured the stone you expected, but also another one on the left. Observe how the pattern of atari is exactly the same as in regular Go, but here at a distance of two. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.`,
             $localize`Failed, try again.`,
             MGPOptional.of(zoom2Hidden),
         ),

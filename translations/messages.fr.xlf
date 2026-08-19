@@ -2734,9 +2734,9 @@
         <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
         <target>La principale différence réside dans la manière dont vous pouvez capturer.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres foncées. Effectuez une capture comme dans une partie de Go classique.</target>
       </trans-unit>
-      <trans-unit id="5821528921373090826" datatype="html">
-        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how this one is captured by four stones at a distance of two. However, the pattern of the atari is the exact same as in regular Go. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
-        <target>Félicitations, vous avez capturé la pierre que vous attendiez, mais aussi une autre à gauche. Observez comment celle-ci est capturée par quatre pierres à une distance de deux. Cependant, le motif de l&apos;atari est exactement le même que au Go classique. Cette capture est appelée une capture au zoom 2, tandis que la capture à droite est une capture au zoom 1.</target>
+      <trans-unit id="4635444715757714464" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how the pattern of atari is exactly the same as in regular Go, but here at a distance of two. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
+        <target>Félicitations, vous avez capturé la pierre que vous attendiez, mais aussi une autre à gauche. Observez comment le motif de l&apos;atari est exactement le même que au Go classique, mais içi a une distance de deux. Cette capture est appelée une capture au zoom 2, tandis que la capture à droite est une capture au zoom 1.</target>
       </trans-unit>
       <trans-unit id="6779631138176400609" datatype="html">
         <source>Simple capture, with shown zoom</source>
