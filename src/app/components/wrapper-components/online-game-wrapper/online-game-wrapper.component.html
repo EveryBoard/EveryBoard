@@ -212,4 +212,30 @@
             </div>
         </div>
     }
+    @if (confirmResignation) {
+        <div id="resignModal"
+             class="modal is-active">
+            <div id="modalBackground"
+                 class="modal-background"
+                 (click)="cancelResign()"></div>
+            <div class="modal-card">
+                <header class="modal-card-head is-danger">
+                    <p class="modal-card-title" i18n>Resignation</p>
+                </header>
+                <section class="modal-card-body">
+                    <p i18n>Are you sure you want to resign from this game?</p>
+                </section>
+                <footer class="modal-card-foot">
+                    <button id="cancelResign"
+                            class="button is-light"
+                            (click)="cancelResign()"
+                            i18n>Cancel</button>
+                    <button id="confirmResign"
+                            class="button is-danger"
+                            (click)="confirmResign()"
+                            i18n>Resign</button>
+                </footer>
+            </div>
+        </div>
+    }
 }

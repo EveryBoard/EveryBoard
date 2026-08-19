@@ -1211,7 +1211,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     describe('Resign', () => {
 
-        it('should end game after clicking on resign button', fakeAsync(async() => {
+        it('should ask for confirmation before resigning', fakeAsync(async() => {
             // Given an online game component
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
@@ -1220,6 +1220,27 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When clicking on the resign button
             await testUtils.clickElement('#resign');
+
+            // Then a confirmation dialog should appear
+            testUtils.expectElementToExist('#resignModal');
+            testUtils.expectElementToExist('#confirmResign');
+            // And it should not resign yet
+            expect(gameService.resign).not.toHaveBeenCalled();
+
+            await receiveEndGame();
+            expectGameToBeOver();
+        }));
+
+        it('should end game after confirming resignation', fakeAsync(async() => {
+            // Given an online game component
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+            spyOn(gameService, 'resign');
+
+            // When clicking on the resign button, then on the confirm button
+            await testUtils.clickElement('#resign');
+            await testUtils.clickElement('#confirmResign');
             tick(0);
 
             // Then it should send it to the backend
@@ -1229,11 +1250,31 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expectGameToBeOver();
         }));
 
+        it('should not resign when cancelling the resignation', fakeAsync(async() => {
+            // Given an online game component
+            await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
+            await receiveSync();
+            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+            spyOn(gameService, 'resign');
+
+            // When clicking on the resign button, then on the cancel button
+            await testUtils.clickElement('#resign');
+            await testUtils.clickElement('#cancelResign');
+
+            // Then the confirmation dialog should disappear and no resignation should be sent
+            testUtils.expectElementNotToExist('#resignModal');
+            expect(gameService.resign).not.toHaveBeenCalled();
+
+            await receiveEndGame();
+            expectGameToBeOver();
+        }));
+
         it('should not allow player to move after resigning', fakeAsync(async() => {
             // Given a component where user has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
             await testUtils.clickElement('#resign');
+            await testUtils.clickElement('#confirmResign');
             tick(0);
             await receiveEndGame(GameResult.RESIGN_OF_ZERO);
             spyOn(gameService, 'resign');
@@ -1274,6 +1315,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When it is finished
             await testUtils.expectInterfaceClickSuccess('#resign', undefined, 0);
+            await testUtils.expectInterfaceClickSuccess('#confirmResign', undefined, 0);
 
             // Then it should allow to propose rematch
             testUtils.expectElementToBeEnabled('#proposeRematch');
@@ -1389,6 +1431,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveEndGame();
 
             await testUtils.expectInterfaceClickSuccess('#resign');
+            await testUtils.expectInterfaceClickSuccess('#confirmResign');
             tick(0);
             testUtils.detectChanges();
             await testUtils.expectInterfaceClickSuccess('#proposeRematch');

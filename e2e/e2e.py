@@ -459,6 +459,8 @@ def can_reload_game(user1, user2):
 
     # Cleanup
     user1.click('#resign')
+    user1.wait_for('#resignModal')
+    user1.click('#confirmResign')
     user1.wait_for('#resignIndicator')
 
 @scenario('two_drivers')
@@ -495,6 +497,8 @@ def can_perform_time_actions(user1, user2):
 
     # Cleanup
     user1.click('#resign')
+    user1.wait_for('#resignModal')
+    user1.click('#confirmResign')
     user1.wait_for('#resignIndicator')
 
 @scenario('two_drivers')
@@ -530,6 +534,8 @@ def can_perform_take_back(user1, user2):
 
     # Cleanup
     user1.click('#resign')
+    user1.wait_for('#resignModal')
+    user1.click('#confirmResign')
     user1.wait_for('#resignIndicator')
 
 @scenario('two_drivers')
@@ -587,6 +593,10 @@ def can_resign(user1, user2):
     user1.create_part(user2)
     # I resign
     user1.click('#resign')
+    # I can see the confirmation dialog
+    user1.wait_for('#resignModal')
+    # I confirm my resignation
+    user1.click('#confirmResign')
     # We can see I resigned
     user1.wait_for('#resignIndicator')
     user2.wait_for('#resignIndicator')
@@ -601,6 +611,8 @@ def can_rematch(user1, user2):
     # A game has finished
     user1.create_part(user2)
     user1.click('#resign')
+    user1.wait_for('#resignModal')
+    user1.click('#confirmResign')
     game_url = user1.get_current_url()
 
     # I ask for a rematch and the user accepts
@@ -616,4 +628,6 @@ def can_rematch(user1, user2):
         raise Exception('Test failed')
 
     user1.click('#resign')
+    user1.wait_for('#resignModal')
+    user1.click('#confirmResign')
     user1.wait_for('#resignIndicator')

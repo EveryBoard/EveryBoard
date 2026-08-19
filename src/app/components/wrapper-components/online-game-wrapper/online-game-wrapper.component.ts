@@ -91,6 +91,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private moveSentButNotReceivedYet: boolean = false;
 
+    public confirmResignation: boolean = false;
+
     private extractGameIdFromURL(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('id'));
     }
@@ -423,8 +425,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     // Called by the resign button
-    public async resign(): Promise<void> {
+    public resign(): void {
+        this.confirmResignation = true;
+        this.cdr.detectChanges();
+    }
+
+    // Called by the confirm button of the resignation confirmation dialog
+    public async confirmResign(): Promise<void> {
+        this.confirmResignation = false;
         await this.gameService.resign();
+    }
+
+    // Called by the cancel button of the resignation confirmation dialog
+    public cancelResign(): void {
+        this.confirmResignation = false;
+        this.cdr.detectChanges();
     }
 
     // Called by the clocks
