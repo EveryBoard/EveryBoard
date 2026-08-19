@@ -13,7 +13,10 @@
         "strictFunctionTypes": false,
         "strictPropertyInitialization": false,
         "experimentalDecorators": true,
-        "types": ["jasmine"]
+        "types": [
+            "@angular/localize",
+            "jasmine"
+        ]
     },
     "include": ["src/**/*.ts"],
     "exclude": ["src/**/*.spec.ts"]
