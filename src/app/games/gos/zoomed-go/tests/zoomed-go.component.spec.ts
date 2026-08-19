@@ -15,7 +15,7 @@ import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRecta
 import { ZoomedGoRules } from '../ZoomedGoRules';
 import { ZoomedGoComponent } from '../zoomed-go.component';
 
-fdescribe('ZoomedGoComponent', () => {
+describe('ZoomedGoComponent', () => {
 
     let testUtils: ComponentTestUtils<ZoomedGoComponent>;
     const defaultConfig: RectangularGoConfig = ZoomedGoRules.get().getDefaultRulesConfig();
@@ -381,7 +381,7 @@ fdescribe('ZoomedGoComponent', () => {
         testUtils.expectElementNotToExist('#zoom-1-zx-1-zy-1 > .data-ko');
     }));
 
-    fdescribe('highlight on mouse hover', () => {
+    describe('highlight on mouse hover', () => {
 
         it('should show hovered coord on multiple zooms (go-board)', () => {
             // given any board with a config that shows multiple zooms
@@ -405,7 +405,7 @@ fdescribe('ZoomedGoComponent', () => {
             testUtils.expectElementToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
         });
 
-        fit('should hide hovered coord on multiple zooms when leaving (board)', () => {
+        it('should hide hovered coord on multiple zooms when leaving (board)', () => {
             // given any board with a config that shows multiple zooms and an hover coord
             testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
 
