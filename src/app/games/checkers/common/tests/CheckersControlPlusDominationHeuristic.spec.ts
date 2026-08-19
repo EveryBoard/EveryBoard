@@ -7,7 +7,7 @@ import { InternationalCheckersRules } from '../../international-checkers/Interna
 import { LascaRules } from '../../lasca/LascaRules';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { CheckersControlPlusDominationHeuristic } from '../CheckersControlPlusDominationHeuristic';
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '../CheckersState';
 
 const O: CheckersStack = new CheckersStack([CheckersPiece.ZERO]);
 const X: CheckersStack = new CheckersStack([CheckersPiece.ONE]);
@@ -32,7 +32,7 @@ for (const rule of rules) {
 
         it('should not count the immobilized stacks', () => {
             // Given two boards with the exact same stacks, one having blocked stacks
-            const immobilizedState: CheckersState = CheckersState.of([
+            const immobilizedState: CheckersState = EvenCheckersState.of([
                 [X, _, _, _, _, _, _],
                 [_, O, _, _, _, _, _],
                 [_, _, O, _, _, _, _],
@@ -41,7 +41,7 @@ for (const rule of rules) {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 0);
-            const mobileState: CheckersState = CheckersState.of([
+            const mobileState: CheckersState = EvenCheckersState.of([
                 [X, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _],
                 [_, _, O, _, _, _, _],
@@ -64,7 +64,7 @@ for (const rule of rules) {
 
         it('should count the potential mobility as primary board value', () => {
             // Given two boards with the same stacks, one with a unique forced capture, the other without
-            const forcedState: CheckersState = CheckersState.of([
+            const forcedState: CheckersState = EvenCheckersState.of([
                 [X, _, _, _, _, _, _],
                 [_, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -73,7 +73,7 @@ for (const rule of rules) {
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
             ], 0); // O has 1 stack, X has 2
-            const freeState: CheckersState = CheckersState.of([
+            const freeState: CheckersState = EvenCheckersState.of([
                 [X, _, _, _, _, _, _],
                 [_, _, _, O, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -93,7 +93,7 @@ for (const rule of rules) {
             // Given two boards with the same potential mobility, one with more "dominant pieces" than the other
             // (dominant = that is of the same color as the commander)
             const d: CheckersStack = new CheckersStack([CheckersPiece.ONE, CheckersPiece.ZERO, CheckersPiece.ZERO]);
-            const dominatedState: CheckersState = CheckersState.of([
+            const dominatedState: CheckersState = EvenCheckersState.of([
                 [d, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
@@ -103,7 +103,7 @@ for (const rule of rules) {
                 [_, _, _, _, _, _, _],
             ], 0);
             const D: CheckersStack = new CheckersStack([CheckersPiece.ONE, CheckersPiece.ONE, CheckersPiece.ONE]);
-            const dominatingState: CheckersState = CheckersState.of([
+            const dominatingState: CheckersState = EvenCheckersState.of([
                 [D, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],

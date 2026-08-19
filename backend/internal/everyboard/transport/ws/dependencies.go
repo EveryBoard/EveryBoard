@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/auth"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/notification"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
 	"github.com/gorilla/websocket"
@@ -15,6 +16,7 @@ type Dependencies struct {
 	Subscriptions *session.SubscriptionManager[*websocket.Conn]
 	Connections   *session.ConnectionManager[*websocket.Conn]
 	Origin        string
+	Notifier      notification.Notifier
 }
 
 func newUpgrader(origin string) websocket.Upgrader {

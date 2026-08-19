@@ -663,6 +663,29 @@ describe('RulesConfigurationComponent', () => {
         testUtils.expectElementToBeDisabled('#nombre_number_config_input');
     }));
 
+    it('should recognize a standard config only when switching from editable to non-editable', fakeAsync(async() => {
+        // Given an editable component whose custom config is changed to match another standard config
+        setCreatorModeInput(true);
+        setEditableInput(true);
+        setRulesConfigDescriptionInput(rulesConfigDescriptionWithNumber);
+        setRulesConfigToDisplayInput(secondConfig);
+        testUtils.chooseConfig(component.CUSTOM_CONFIG_NAME);
+        setConfigValue('nombre', secondConfig.nombre);
+        setConfigValue('canailleDeBoule', secondConfig.canailleDeBoule);
+
+        // The config should remain custom while it is being edited
+        expectConfigToBeSelected(component.CUSTOM_CONFIG_NAME);
+
+        // When switching to non-editable
+        setEditableInput(false);
+        testUtils.detectChanges();
+        tick(1);
+
+        // Then it should recognize the standard config and disable the fields
+        expectConfigToBeSelected('the_other_config_name');
+        testUtils.expectElementToBeDisabled('#nombre_number_config_input');
+    }));
+
     it('should be able to switch from non-editable to editable', fakeAsync(async() => {
         // Given a non-editable component with some custom config
         setCreatorModeInput(true);

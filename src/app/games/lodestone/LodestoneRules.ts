@@ -99,8 +99,7 @@ export class LodestoneRules extends Rules<LodestoneMove, LodestoneState, Lodesto
         state: LodestoneState,
         _config: EmptyRulesConfig,
         infos: LodestoneInfos,
-    ): LodestoneState
-    {
+    ): LodestoneState {
         const currentPlayer: Player = state.getCurrentPlayer();
         const opponent: Player = currentPlayer.getOpponent();
         const board: LodestonePiece[][] = TableUtils.copy(infos.board);
