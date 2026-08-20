@@ -621,7 +621,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy.calls.reset();
     }
 
-    public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
+    public async expectMoveFailure(elementName: string, reason: string, move: Move): Promise<void> {
         await this.expectToDisplayGameMessage(reason, async() => {
             await this.clickElement(elementName);
         });
@@ -644,6 +644,16 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
+    }
+
+    public enterMouseEnterElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseenter', new MouseEvent('mouseenter'));
+    }
+
+    public enterMouseLeaveElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseleave', new MouseEvent('mouseleave'));
     }
 
     public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {

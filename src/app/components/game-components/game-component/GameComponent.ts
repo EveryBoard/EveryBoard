@@ -11,7 +11,6 @@ import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AIConfig } from '../../../jscaip/AI/AIConfig';
 import { GameNode } from '../../../jscaip/AI/GameNode';
-import { Coord } from '../../../jscaip/Coord';
 import { Coord3D } from '../../../jscaip/Coord3D';
 import { Move } from '../../../jscaip/Move';
 import { Orthogonal } from '../../../jscaip/Orthogonal';
@@ -265,19 +264,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public setConfig(config: C): void {
         this.config = config;
         this.cdr.markForCheck();
-    }
-
-    /**
-     * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
-     */
-    public getTranslationAt(logicalCoord: Coord): string {
-        return this.getTranslationAtXY(logicalCoord.x, logicalCoord.y);
-    }
-
-    public getTranslationAtXY(logicalX: number, logicalY: number): string {
-        const svgX: number = logicalX * this.SPACE_SIZE;
-        const svgY: number = logicalY * this.SPACE_SIZE;
-        return this.getSVGTranslation(svgX, svgY);
     }
 
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {

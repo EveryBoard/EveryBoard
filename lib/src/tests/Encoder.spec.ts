@@ -53,7 +53,6 @@ describe('Encoder', () => {
             (pair: Pair): [number, number] => [pair.first, pair.second],
             (fields: [number, number]): Pair => new Pair(fields[0], fields[1]));
 
-
         const tripletEncoder: Encoder<Triplet> =
             Encoder.tuple(
                 [numberEncoder, numberEncoder, numberEncoder],

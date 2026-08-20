@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, SimpleChanges, inject, input, InputSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, SimpleChanges, inject, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -23,6 +23,7 @@ export type DemoNodeWithConfig = DemoNodeInfo & {
 @Component({
     selector: 'app-demo-card',
     template: `<div class="is-fullheight"><div #board></div></div>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 

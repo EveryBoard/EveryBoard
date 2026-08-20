@@ -7,8 +7,10 @@ import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
-import { GoConfig, GoRules } from './GoRules';
+import { GoRules } from './GoRules';
+
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -17,7 +19,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
+const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
 export class GoTutorial extends Tutorial {
 
@@ -44,10 +46,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
-        You're playing Dark. The light piece on the board only has one liberty left, play there.`,
+            $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>You're playing Dark. The light piece on the board has only one liberty left, play there.`,
             new GoState([
                 [_, _, _, _, _],
                 [_, _, O, _, _],
@@ -61,8 +60,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.fromMove(
             $localize`Capturing multiple stones`,
-            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
-        You're playing Dark. The light group here only has one liberty left, capture it.`,
+            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.<br/><br/>You're playing Dark. The light group here has only one liberty left, capture it.`,
             new GoState([
                 [_, O, _, _, _],
                 [O, X, _, _, _],
@@ -90,12 +88,7 @@ export class GoTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             $localize`Life and death (death)`,
-            $localize`From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light's territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
+            $localize`From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light's territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
             new GoState([
                 [_, _, _, _, _],
                 [O, O, O, _, _],
