@@ -1,5 +1,5 @@
 <svg:g class="data-blank-board"
-       (mouseout)="onSVGLeave()">
+       (mouseleave)="onSVGLeave()">
     <svg:rect x="0"
               y="0"
               [attr.width]="width() * SPACE_SIZE"

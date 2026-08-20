@@ -642,14 +642,9 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         element.triggerEventHandler('mouseenter', new MouseEvent('mouseenter'));
     }
 
-    public enterMouseOutElement(elementName: string): void {
-        const element: DebugElement = this.findElement(elementName);
-        element.triggerEventHandler('mouseout', new MouseEvent('mouseout'));
-    }
-
     public enterMouseLeaveElement(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        element.triggerEventHandler('mouseleave', new MouseEvent('mouseout'));
+        element.triggerEventHandler('mouseleave', new MouseEvent('mouseleave'));
     }
 
     public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {

@@ -426,7 +426,7 @@ describe('ZoomedGoComponent', () => {
             testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
 
             // when hovering away from the board
-            testUtils.enterMouseOutElement('#zoom-0 .data-blank-board');
+            testUtils.enterMouseLeaveElement('#zoom-0 .data-blank-board');
 
             // then its equivalents coords should be displayed on other zooms
             testUtils.expectElementNotToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');
@@ -440,4 +440,3 @@ describe('ZoomedGoComponent', () => {
     });
 
 });
-
