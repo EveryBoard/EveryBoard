@@ -28,7 +28,7 @@ func TestSetCurrentGame(t *testing.T) {
 	// Given an empty db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
-	user := model.MinimalUser{ID: "foo", Name: "foo", IsBot: true}
+	user := model.MinimalUser{ID: "foo", Name: "foo", IsBot: false}
 	// When setting the current game of the user
 	gameName := "Go"
 	role := model.UserRoleCreator
@@ -74,7 +74,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 	require.NoError(t, err, "error when setting current game")
 
 	// When updating the current game
-	opponent := model.MinimalUser{ID: "bar", Name: "bar", IsBot: true}
+	opponent := model.MinimalUser{ID: "bar", Name: "bar", IsBot: false}
 	currentGame.Opponent = &opponent
 	err = store.UpdateCurrentGame(user, currentGame)
 	require.NoError(t, err, "error when updating current game")
@@ -91,7 +91,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 }
 
 func TestClearCurrentGameOpponent(t *testing.T) {
-	// Given a db with acurrent game and a chosen opponent
+	// Given a db with a current game and a chosen opponent
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
@@ -130,7 +130,7 @@ func TestCurrentGameUserIDIsUnique(t *testing.T) {
 	require.NoError(t, store.SetCurrentGame(first), "error when setting current game")
 
 	// When setting another current game for the same user with different metadata
-	changedUser := model.MinimalUser{ID: user.ID, Name: "renamed", IsBot: true}
+	changedUser := model.MinimalUser{ID: user.ID, Name: "renamed", IsBot: false}
 	second := &model.CurrentGame{User: changedUser, GameID: 43, Creator: changedUser}
 	err = store.SetCurrentGame(second)
 
