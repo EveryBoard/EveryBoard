@@ -72,6 +72,27 @@ describe('LocalGameConfigurationComponent', () => {
         await expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
     }));
 
+    it('should keep custom selected until starting with a config that matches the default', fakeAsync(async() => {
+        // Given a custom configuration changed away from and back to the default config
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate').and.resolveTo();
+        testUtils.detectChanges();
+        testUtils.chooseConfig('__custom__');
+        testUtils.fillInput('#width_number_config_input', '8');
+        testUtils.fillInput('#width_number_config_input', defaultConfig.width.toString());
+        testUtils.detectChanges();
+
+        // The config should still be named custom while it is being edited
+        testUtils.expectDropdownOptionToBeSelected('#ruleSelect', '__custom__');
+
+        // When starting the game
+        await testUtils.clickElement('#start-game-with-config');
+
+        // Then it should start the game with the recognized default config
+        const expectedRoute: string[] = ['/local', 'P4'];
+        await expectValidRouting(router, expectedRoute, LocalGameWrapperComponent);
+    }));
+
 });
 
 describe('LocalGameConfigurationComponent (configless game)', () => {
