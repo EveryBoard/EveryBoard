@@ -1,6 +1,5 @@
 import { MGPValidation } from '@everyboard/lib';
 
-// TODO FOR REVIEW: Pourquoi la baise nest ce pas dans lib ?
 export type MGPValidator = (v: number | string | null) => MGPValidation;
 
 export class MGPValidators {
