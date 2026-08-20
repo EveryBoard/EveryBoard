@@ -6,7 +6,8 @@ import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
-import { GoConfig, GoRules } from '../go/GoRules';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
+import { GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
@@ -44,10 +45,12 @@ describe('GoState for Go', () => {
 
         it('should put the first two handicaps in opposite corner', () => {
             // Given a config with a 19x19 board and a handicap of two
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 width: 19,
                 height: 19,
                 handicap: 2,
+                zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it
@@ -85,10 +88,12 @@ describe('GoState for Go', () => {
 
         it('should put the first four handicaps in corner', () => {
             // Given a custom with a 19x19 board and a handicap of four
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 width: 19,
                 height: 19,
                 handicap: 4,
+                zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it
@@ -126,10 +131,12 @@ describe('GoState for Go', () => {
 
         it('should put the fifth handicap in tengen', () => {
             // Given a custom with a 19x19 board and a handicap of five
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 width: 19,
                 height: 19,
                 handicap: 5,
+                zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it
@@ -167,10 +174,12 @@ describe('GoState for Go', () => {
 
         it('should put the sixth to ninth handicaps in "edge hoshis"', () => {
             // Given a custom with a 19x19 board and a handicap of 9
-            const customConfig: GoConfig = {
+            const customConfig: RectangularGoConfig = {
                 width: 19,
                 height: 19,
                 handicap: 9,
+                zoom: 1,
+                showZooms: true,
             };
 
             // When creating an initialState with it

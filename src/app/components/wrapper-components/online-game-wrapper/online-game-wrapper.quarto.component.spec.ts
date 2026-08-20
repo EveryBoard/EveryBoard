@@ -326,7 +326,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
 
-
     describe('Late Arrival', () => {
         it('should allow user to arrive late on the game (on their turn)', fakeAsync(async() => {
             // Given a part that has already started (moves have been done)

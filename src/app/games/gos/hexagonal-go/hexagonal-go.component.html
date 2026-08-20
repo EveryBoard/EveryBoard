@@ -7,7 +7,7 @@
            [attr.transform]="getHexaCenterTranslationAt(coordAndContent.coord)"
            (click)="onClick(coordAndContent.coord)">
             @if (coordAndContent.content.isReachable()) {
-                <polygon id="polygon-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
+                <polygon id="space-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                          [attr.points]="getHexaPoints()"
                          [ngClass]="getPlayerClassAt(coordAndContent.coord)"
                          class="base mid-stroke"/>

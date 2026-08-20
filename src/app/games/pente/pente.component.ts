@@ -84,7 +84,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.lastMoved = MGPOptional.empty();
     }
 
-    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
+    @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         return this.chooseMove(PenteMove.of(coord));
     }
