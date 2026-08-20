@@ -200,9 +200,6 @@
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
       </trans-unit>
-      <trans-unit id="7680170577317084701" datatype="html">
-        <source>Search game</source>
-      </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
       </trans-unit>
@@ -338,6 +335,9 @@
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
       </trans-unit>
+      <trans-unit id="5280175192994998668" datatype="html">
+        <source>A multi-layered remix of the Go Game!</source>
+      </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
       </trans-unit>
@@ -472,6 +472,12 @@
       </trans-unit>
       <trans-unit id="5468337301522272954" datatype="html">
         <source>Bashni</source>
+      </trans-unit>
+      <trans-unit id="9017157884114080234" datatype="html">
+        <source>Zoomed Go</source>
+      </trans-unit>
+      <trans-unit id="7680170577317084701" datatype="html">
+        <source>Search game</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -759,7 +765,7 @@
         <source>You lost</source>
       </trans-unit>
       <trans-unit id="1836885699974320953" datatype="html">
-        <source><x id="PH" equiv-text="this.getPlayerName(gameStatus.winner.getValue())"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
+        <source><x id="PH" equiv-text="this.getPlayerName(gameStatus.winner)"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
@@ -806,14 +812,17 @@
       <trans-unit id="3724541577412345595" datatype="html">
         <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser?.name }}"/>&apos;s turn.</source>
       </trans-unit>
+      <trans-unit id="5277703651684233917" datatype="html">
+        <source>Players agreed to draw.</source>
+      </trans-unit>
       <trans-unit id="4830863788651301313" datatype="html">
         <source>You agreed to draw.</source>
       </trans-unit>
       <trans-unit id="5730736324595001106" datatype="html">
         <source>Your draw proposal has been accepted.</source>
       </trans-unit>
-      <trans-unit id="5277703651684233917" datatype="html">
-        <source>Players agreed to draw.</source>
+      <trans-unit id="6165538570244502951" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ getWinner().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
@@ -821,8 +830,8 @@
       <trans-unit id="860662988722297223" datatype="html">
         <source>You lost.</source>
       </trans-unit>
-      <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getWinner().name }}"/> won.</source>
+      <trans-unit id="2324913504104154958" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit. You won.</source>
@@ -830,14 +839,14 @@
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
       </trans-unit>
-      <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit.</source>
-      </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has resigned.</source>
+      </trans-unit>
+      <trans-unit id="4624707315308487849" datatype="html">
+        <source>Go back to the game list</source>
       </trans-unit>
       <trans-unit id="3492340771384313804" datatype="html">
         <source>Resign</source>
@@ -849,13 +858,10 @@
         <source>Reject</source>
       </trans-unit>
       <trans-unit id="2875203763744324408" datatype="html">
-        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
+        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[denied].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[denied].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
       <trans-unit id="1802530168433258138" datatype="html">
-        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="4624707315308487849" datatype="html">
-        <source>Go back to the game list</source>
+        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[pendingRequest].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[pendingRequest].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
       <trans-unit id="4517991218544205155" datatype="html">
         <source>You are an observer in this game, you cannot play.</source>
@@ -868,6 +874,15 @@
       </trans-unit>
       <trans-unit id="4506170566742059239" datatype="html">
         <source>00:30</source>
+      </trans-unit>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
+      </trans-unit>
+      <trans-unit id="3012694567108651369" datatype="html">
+        <source>This value is mandatory</source>
+      </trans-unit>
+      <trans-unit id="4231579860680569680" datatype="html">
+        <source>There is no such configuration element</source>
       </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
@@ -892,15 +907,6 @@
       </trans-unit>
       <trans-unit id="6874699210811358423" datatype="html">
         <source>Toric</source>
-      </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
-      </trans-unit>
-      <trans-unit id="3012694567108651369" datatype="html">
-        <source>This value is mandatory</source>
-      </trans-unit>
-      <trans-unit id="4231579860680569680" datatype="html">
-        <source>There is no such configuration element</source>
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
@@ -1755,8 +1761,8 @@
       <trans-unit id="6716022766676912093" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
       </trans-unit>
-      <trans-unit id="2623510393491755816" datatype="html">
-        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
+      <trans-unit id="1201123309681006244" datatype="html">
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
         <source>Here is the starting board. Dark plays first. Let&apos;s start with moving a single piece:&lt;ol&gt;&lt;li&gt;Click on a piece.&lt;/li&gt;&lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
@@ -1912,11 +1918,20 @@
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
       </trans-unit>
+      <trans-unit id="4586260971442685870" datatype="html">
+        <source>Territory</source>
+      </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
       </trans-unit>
       <trans-unit id="287623417167941506" datatype="html">
         <source>Handicap</source>
+      </trans-unit>
+      <trans-unit id="6421460271971606186" datatype="html">
+        <source>Zoom</source>
+      </trans-unit>
+      <trans-unit id="8484396493346861583" datatype="html">
+        <source>Show zooms</source>
       </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
@@ -1939,11 +1954,8 @@
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
       </trans-unit>
-      <trans-unit id="2047079418793425161" datatype="html">
-        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light piece on the board only has one liberty left, play there.</source>
+      <trans-unit id="258436632288646647" datatype="html">
+        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light piece on the board has only one liberty left, play there.</source>
       </trans-unit>
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
@@ -1954,9 +1966,8 @@
       <trans-unit id="8946006948417629723" datatype="html">
         <source>Capturing multiple stones</source>
       </trans-unit>
-      <trans-unit id="3197348089105327020" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light group here only has one liberty left, capture it.</source>
+      <trans-unit id="2570306403572655790" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -1976,13 +1987,8 @@
       <trans-unit id="2066383177849177665" datatype="html">
         <source>Life and death (death)</source>
       </trans-unit>
-      <trans-unit id="3595592714473441808" datatype="html">
-        <source>From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
+      <trans-unit id="7971199836923877142" datatype="html">
+        <source>From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light&apos;s territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -2028,9 +2034,6 @@
         Light has 8 territories and 1 prisoner.
         The end result is therefore 18 - 9 for Dark.</source>
       </trans-unit>
-      <trans-unit id="4586260971442685870" datatype="html">
-        <source>Territory</source>
-      </trans-unit>
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
       </trans-unit>
@@ -2069,6 +2072,60 @@
       </trans-unit>
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
+      </trans-unit>
+      <trans-unit id="6552934315157659079" datatype="html">
+        <source>Zoom <x id="PH" equiv-text="z"/></source>
+      </trans-unit>
+      <trans-unit id="1733084177692338637" datatype="html">
+        <source>(medium)</source>
+      </trans-unit>
+      <trans-unit id="4707463689820472290" datatype="html">
+        <source>(small)</source>
+      </trans-unit>
+      <trans-unit id="7789802452524788997" datatype="html">
+        <source>(large)</source>
+      </trans-unit>
+      <trans-unit id="3430912882867311505" datatype="html">
+        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
+      </trans-unit>
+      <trans-unit id="2962447017140596910" datatype="html">
+        <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
+      </trans-unit>
+      <trans-unit id="4635444715757714464" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how the pattern of atari is exactly the same as in regular Go, but here at a distance of two. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
+      </trans-unit>
+      <trans-unit id="6779631138176400609" datatype="html">
+        <source>Simple capture, with shown zoom</source>
+      </trans-unit>
+      <trans-unit id="1581530473515108605" datatype="html">
+        <source>You can chose a configuration showing a visual aid in the form of sub-boards.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
+      </trans-unit>
+      <trans-unit id="7134632842648889058" datatype="html">
+        <source>Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
+      </trans-unit>
+      <trans-unit id="5161717226000455851" datatype="html">
+        <source>What is a zoom</source>
+      </trans-unit>
+      <trans-unit id="8285899720891132557" datatype="html">
+        <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
+      </trans-unit>
+      <trans-unit id="6386757882103410531" datatype="html">
+        <source>Suicide with zooms</source>
+      </trans-unit>
+      <trans-unit id="2684174386875652712" datatype="html">
+        <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
+      </trans-unit>
+      <trans-unit id="6006075893165138386" datatype="html">
+        <source>Fake-suicide with zooms</source>
+      </trans-unit>
+      <trans-unit id="6661043680356597257" datatype="html">
+        <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
+      </trans-unit>
+      <trans-unit id="6317794074367608738" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+      </trans-unit>
+      <trans-unit id="7696235060281000608" datatype="html">
+        <source>At the end of the game, only what is marked as dead on the zoom 1 is counted.</source>
       </trans-unit>
       <trans-unit id="69616505141416052" datatype="html">
         <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>

@@ -1,8 +1,8 @@
 import { Debug } from '../utils/Debug';
 
 import { Coord } from './Coord';
-import { Ordinal } from './Ordinal';
 import { Table, TableUtils } from './TableUtils';
+import { Vector } from './Vector';
 
 export class BoardData {
 
@@ -55,7 +55,7 @@ export abstract class GroupDataFactory<T, G extends GroupData<T>> {
 
     public abstract getNewInstance(color: T): G;
 
-    public abstract getDirections(coord: Coord): ReadonlyArray<Ordinal>;
+    public abstract getDirections(coord: Coord): ReadonlyArray<Vector>;
 
     public getGroupData(coord: Coord, board: Table<T>): G {
         const color: T = board[coord.y][coord.x];

@@ -286,7 +286,6 @@ describe('LodestoneComponent', () => {
             testUtils.expectElementNotToHaveClass('#plate-square-top-0-0', 'moved-fill');
             testUtils.expectElementNotToHaveClass('#square-4-7 > .data-lodestone-square ', 'captured-fill');
 
-
             // When de-selecting your lodestone
             await testUtils.expectClickFailure('#lodestone-push-orthogonal-PLAYER_ONE');
 
