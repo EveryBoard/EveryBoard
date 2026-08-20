@@ -134,7 +134,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     /**
      * Checks if this move has a previous translation that is the opposite of (start, end)
      */
-    public hasOppositeTranslation(start: Coord, end: Coord) : boolean {
+    public hasOppositeTranslation(start: Coord, end: Coord): boolean {
         if (this.translations > 0) {
             const previousTranslation: DiaballikTranslation = this.getPreviousTranslation().get();
             return previousTranslation.getStart().equals(end) && previousTranslation.getEnd().equals(start);
@@ -160,7 +160,6 @@ export class DiaballikMoveInConstruction implements ComparableObject {
         return move;
     }
 }
-
 
 export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, DiaballikState> {
 

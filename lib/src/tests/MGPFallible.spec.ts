@@ -92,7 +92,6 @@ describe('MGPFallible', () => {
 
 });
 
-
 describe('MGPFallibleTestUtils', () => {
     it('should detect success', () => {
         MGPFallibleTestUtils.expectToBeSuccess(MGPFallible.success(42), 42);

@@ -137,4 +137,7 @@ export const clickableMethods: { [gameName: string]: { [methodName: string]: unk
         onClick: [new Coord(0, 0)],
     },
     Yinsh: { onClick: [0, 0] },
+    ZoomedGo: {
+        onClick: [new Coord(0, 0)],
+    },
 };

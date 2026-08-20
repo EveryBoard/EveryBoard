@@ -1,14 +1,13 @@
-import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+import { MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
 import { GameStatus } from '../../jscaip/GameStatus';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { Table } from '../../jscaip/TableUtils';
+import { Vector } from '../../jscaip/Vector';
 import { Debug } from '../../utils/Debug';
 
 import { GoFailure } from './GoFailure';
@@ -19,12 +18,20 @@ import { GoPhase } from './GoPhase';
 import { GoPiece } from './GoPiece';
 import { GoState } from './GoState';
 
-export type GoLegalityInformation = Coord[];
+export type GoLegalityInformation = {
+
+    readonly postCaptureState: GoState;
+
+    readonly uniqueCapture: MGPOptional<Coord>;
+
+};
 
 export class GoNode extends GameNode<GoMove, GoState> {}
 
+export type AbstractGoConfig = RulesConfig;
+
 @Debug.log
-export abstract class AbstractGoRules<C extends RulesConfig>
+export abstract class AbstractGoRules<C extends AbstractGoConfig>
     extends ConfigurableRules<GoMove, GoState, C, GoLegalityInformation>
 {
 
@@ -32,23 +39,35 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         super();
     }
 
-    public abstract getGoGroupDataFactory(): GoGroupDataFactory;
+    public abstract getGoGroupDataFactory(zoom: number): GoGroupDataFactory;
 
-    private getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
-        if (captures.length === 1) {
-            const captured: Coord = captures[0];
+    public getZoom(_config: C): number {
+        return 1;
+    }
+
+    private getNewKo(
+        move: GoMove,
+        newBoard: GoPiece[][],
+        goLegalityInformation: GoLegalityInformation,
+        config: C,
+    ): MGPOptional<Coord> {
+        if (goLegalityInformation.uniqueCapture.isPresent()) {
+            const captured: Coord = goLegalityInformation.uniqueCapture.get();
             const capturerCoord: Coord = move.coord;
             const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
-            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
-            const capturersInfo: GoGroupData = goGroupDataFactory.getGroupData(capturerCoord, newBoard);
-            const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
-            const capturersGroup: Coord[] =
-                GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.darkCoords : capturersInfo.lightCoords;
-            if (capturersFreedoms.length === 1 &&
-                capturersFreedoms[0].equals(captured) &&
-                capturersGroup.length === 1)
-            {
-                return MGPOptional.of(captured);
+            const maxZoom: number = this.getZoom(config);
+            for (let zoom: number = 1; zoom <= maxZoom; zoom++) {
+                const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
+                const capturersInfo: GoGroupData = goGroupDataFactory.getGroupData(capturerCoord, newBoard);
+                const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
+                const capturersGroup: Coord[] =
+                    GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.darkCoords : capturersInfo.lightCoords;
+                if (capturersFreedoms.length === 1 &&
+                    capturersFreedoms[0].equals(captured) &&
+                    capturersGroup.length === 1
+                ) {
+                    return MGPOptional.of(captured);
+                }
             }
         }
         return MGPOptional.empty();
@@ -76,7 +95,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                 }
             }
         }
-        return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
+        return state.withBoard(resultingBoard).withCaptures(captured);
     }
 
     private removeAndSubtractTerritory(state: GoState): GoState {
@@ -90,23 +109,23 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                 captured.add(owner, - 1);
             }
         }
-        return new GoState(resultingBoard, captured, state.turn, state.koCoord, state.phase);
+        return state.withBoard(resultingBoard).withCaptures(captured);
     }
 
     private getEmptyZones(deadlessState: GoState): GoGroupData[] {
-        return this.getGoGroupDataFactory()
+        return this.getGoGroupDataFactory(1)
             .getGroupsDataWhere(
                 deadlessState.getCopiedBoard(),
                 (piece: GoPiece) => piece.isEmpty(),
             );
     }
 
-    public switchAliveness(groupCoord: Coord, switchedState: GoState): GoState {
+    public switchLiveness(groupCoord: Coord, switchedState: GoState, zoom: number): GoState {
         const switchedBoard: GoPiece[][] = switchedState.getCopiedBoard();
         const switchedPiece: GoPiece = switchedBoard[groupCoord.y][groupCoord.x];
         Utils.assert(switchedPiece.isOccupied(), `Can't switch emptyness aliveness`);
 
-        const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
+        const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
         const group: GoGroupData = goGroupDataFactory.getGroupData(groupCoord, switchedBoard);
         const captured: PlayerNumberMap = switchedState.getCapturedCopy();
         switch (group.color) {
@@ -136,11 +155,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                 }
                 break;
         }
-        return new GoState(switchedBoard,
-                           captured,
-                           switchedState.turn,
-                           switchedState.koCoord,
-                           switchedState.phase);
+        return switchedState.withBoard(switchedBoard).withCaptures(captured);
     }
 
     private isPass(move: GoMove): boolean {
@@ -152,38 +167,45 @@ export abstract class AbstractGoRules<C extends RulesConfig>
     }
 
     private isLegalDeadMarking(move: GoMove, state: GoState): boolean {
-        return this.isOccupied(move.coord, state.getCopiedBoard()) &&
+        return state.getPieceAt(move.coord).isOccupied() &&
                (state.phase.isCounting() || state.phase.isAccept());
     }
 
-    private isLegalTranslation(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
-        const boardCopy: GoPiece[][] = state.getCopiedBoard();
+    private isLegalDrop(move: GoMove, state: GoState, config: C)
+    : MGPFallible<GoLegalityInformation> {
         if (this.isKo(move, state)) {
             return MGPFallible.failure(GoFailure.ILLEGAL_KO());
         }
         if (state.phase.isCounting() || state.phase.isAccept()) {
             state = this.resurrectStones(state);
         }
-        const captureState: CaptureState = this.getCaptureState(move, state);
-        if (captureState.isCapturing()) {
-            return MGPFallible.success(captureState.capturedCoords);
+        const goLegalityInformation: GoLegalityInformation = this.applyCaptures(move, state, config);
+        const postCaptureState: GoState = goLegalityInformation.postCaptureState;
+        const droppedPieceHasFreedom: boolean = this.doesPieceHaveFreedoms(
+            move.coord,
+            postCaptureState.withPieceAt(move.coord, GoPiece.ofPlayer(postCaptureState.getCurrentPlayer())),
+            config,
+        );
+        if (droppedPieceHasFreedom) {
+            return MGPFallible.success(goLegalityInformation);
         } else {
-            boardCopy[move.coord.y][move.coord.x] = state.turn%2 === 0 ? GoPiece.DARK : GoPiece.LIGHT;
-            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
-            const goGroupsData: GoGroupData = goGroupDataFactory.getGroupData(move.coord, boardCopy);
-            const isSuicide: boolean = goGroupsData.emptyCoords.length === 0;
-            boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
-
-            if (isSuicide) {
-                return MGPFallible.failure(GoFailure.CANNOT_COMMIT_SUICIDE());
-            } else {
-                return MGPFallible.success([]);
-            }
+            return MGPFallible.failure(GoFailure.CANNOT_COMMIT_SUICIDE());
         }
     }
 
-    private isOccupied(coord: Coord, board: Table<GoPiece>): boolean {
-        return board[coord.y][coord.x].isOccupied();
+    private doesPieceHaveFreedoms(coord: Coord, state: GoState, config: C): boolean {
+        const boardCopy: GoPiece[][] = state.getCopiedBoard();
+        boardCopy[coord.y][coord.x] = GoPiece.ofPlayer(state.getCurrentPlayer());
+        const maxZoom: number = this.getZoom(config);
+        for (let zoom: number = 1; zoom <= maxZoom; zoom++) {
+            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
+            const goGroupsData: GoGroupData = goGroupDataFactory.getGroupData(coord, boardCopy);
+            const isSuicide: boolean = goGroupsData.emptyCoords.length === 0;
+            if (isSuicide) {
+                return false;
+            }
+        }
+        return true;
     }
 
     private isKo(move: GoMove, state: GoState): boolean {
@@ -194,28 +216,48 @@ export abstract class AbstractGoRules<C extends RulesConfig>
         }
     }
 
-    private getCaptureState(move: GoMove, state: GoState): CaptureState {
-        const captureState: CaptureState = new CaptureState();
-        let capturedInDirection: Coord[];
-        for (const direction of this.getGoGroupDataFactory().getDirections(move.coord)) {
-            capturedInDirection = this.getCapturedInDirection(move.coord, direction, state);
-            if (capturedInDirection.length > 0 &&
-                captureState.capturedCoords.every((coord: Coord) => capturedInDirection[0].equals(coord) === false))
-            {
-                captureState.capturedCoords = captureState.capturedCoords.concat(capturedInDirection);
+    /**
+     * will remove captured pieces
+     * will add captured pieces count to captures
+     * will return an optional coord if there is a coord that is the only capture
+     * (if there is strictly one capture, optional will be present, else it'll be absent)
+     */
+    private applyCaptures(move: GoMove, state: GoState, config: C): GoLegalityInformation {
+        const captureds: Coord[] = [];
+        const maxZoom: number = this.getZoom(config);
+        for (let zoom: number = 1; zoom <= maxZoom; zoom++) {
+            const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory(zoom);
+            for (const direction of goGroupDataFactory.getDirections(move.coord)) {
+                const captures: Coord[] = this.getCapturedInDirection(move.coord, direction, state, goGroupDataFactory);
+                captureds.push(...captures);
             }
         }
-        return captureState;
+        const capturedSet: Set<Coord> = new Set(captureds);
+        let resultingState: GoState = state;
+        for (const captured of capturedSet) {
+            resultingState = resultingState.withPieceAt(captured, GoPiece.EMPTY);
+        }
+        resultingState = resultingState.withAddedCaptures(resultingState.getCurrentPlayer(), capturedSet.size());
+        return {
+            postCaptureState: resultingState,
+            uniqueCapture: capturedSet.size() === 1 ?
+                MGPOptional.of(capturedSet.getAnyElement().get()) :
+                MGPOptional.empty(),
+        };
     }
 
-    public getCapturedInDirection(coord: Coord, direction: Direction, state: GoState): Coord[] {
+    private getCapturedInDirection(
+        coord: Coord,
+        vector: Vector,
+        state: GoState,
+        goGroupDataFactory: GoGroupDataFactory,
+    ): Coord[] {
+        const neightbooringCoord: Coord = coord.getNext(vector);
         const copiedBoard: GoPiece[][] = state.getCopiedBoard();
-        const neightbooringCoord: Coord = coord.getNext(direction);
         if (this.isReachable(neightbooringCoord, state)) {
-            const opponent: GoPiece = state.turn%2 === 0 ? GoPiece.LIGHT : GoPiece.DARK;
-            if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === opponent) {
+            const opponent: GoPiece = GoPiece.ofPlayer(state.getCurrentOpponent());
+            if (state.getPieceAt(neightbooringCoord) === opponent) {
                 Debug.display('GoRules', 'getCapturedInDirection', 'a group could be captured');
-                const goGroupDataFactory: GoGroupDataFactory = this.getGoGroupDataFactory();
                 const neightbooringGroup: GoGroupData =
                     goGroupDataFactory.getGroupData(neightbooringCoord, copiedBoard);
                 const koCoord: MGPOptional<Coord> = state.koCoord;
@@ -249,68 +291,54 @@ export abstract class AbstractGoRules<C extends RulesConfig>
     }
 
     private applyPass(state: GoState): GoState {
-        const oldBoard: GoPiece[][] = state.getCopiedBoard();
-        const oldCaptured: PlayerNumberMap = state.getCapturedCopy();
-        const oldTurn: number = state.turn;
-        if (state.phase.isPassed()) {
-            const newPhase: GoPhase = GoPhase.COUNTING;
-            const resultingState: GoState =
-                new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
-            return this.markTerritoryAndCount(resultingState);
-        } else {
-            Utils.assert(state.phase.isPlaying(), 'Cannot pass in counting phase!');
-            const newPhase: GoPhase = GoPhase.PASSED;
-            return new GoState(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
+        const originalPhase: GoPhase = state.phase;
+        Utils.assert(originalPhase.isPlaying() || originalPhase.isPassed(), 'Cannot pass in counting phase!');
+        const newPhase: GoPhase = originalPhase.isPassed() ? GoPhase.COUNTING : GoPhase.PASSED;
+        let passedState: GoState = state
+            .incrementTurn()
+            .withKo(MGPOptional.empty())
+            .withPhase(newPhase);
+        if (originalPhase.isPassed()) {
+            passedState = this.markTerritoryAndCount(passedState);
         }
+        return passedState;
     }
 
     private applyLegalAccept(state: GoState): GoState {
-        const countingBoard: GoPiece[][] = state.getCopiedBoard();
-        let phase: GoPhase;
-        if (state.phase.isCounting()) {
-            phase = GoPhase.ACCEPT;
-        } else {
-            phase = GoPhase.FINISHED;
-        }
-        return new GoState(countingBoard,
-                           state.getCapturedCopy(),
-                           state.turn + 1,
-                           MGPOptional.empty(),
-                           phase);
+        const phase: GoPhase = state.phase.isCounting() ? GoPhase.ACCEPT : GoPhase.FINISHED;
+        return state
+            .incrementTurn()
+            .withKo(MGPOptional.empty())
+            .withPhase(phase);
     }
 
-    private applyNormalLegalMove(legalMove: GoMove, currentState: GoState, capturedCoords: GoLegalityInformation)
-    : GoState
-    {
-        let state: GoState;
-        if (currentState.phase.isCounting() || currentState.phase.isAccept()) {
-            state = this.resurrectStones(currentState);
-        } else {
-            state = currentState.copy();
+    private applyNormalLegalMove(
+        legalMove: GoMove,
+        goLegalityInformation: GoLegalityInformation,
+        config: C,
+    ): GoState {
+        let state: GoState = goLegalityInformation.postCaptureState;
+        if (state.phase.isCounting() || state.phase.isAccept()) {
+            state = this.resurrectStones(state);
         }
-        const x: number = legalMove.coord.x;
-        const y: number = legalMove.coord.y;
-
-        const newBoard: GoPiece[][] = state.getCopiedBoard();
-        const currentTurn: number = state.turn;
         const currentPlayer: Player = state.getCurrentPlayer();
         const currentPlayerPiece: GoPiece = GoPiece.ofPlayer(currentPlayer);
-        const newTurn: number = currentTurn + 1;
-        newBoard[y][x] = currentPlayerPiece;
-        for (const capturedCoord of capturedCoords) {
-            newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
-        }
-        const newKoCoord: MGPOptional<Coord> = this.getNewKo(legalMove, newBoard, capturedCoords);
-        const newCaptured: PlayerNumberMap = state.getCapturedCopy();
-        newCaptured.add(currentPlayer, capturedCoords.length);
-        return new GoState(newBoard, newCaptured, newTurn, newKoCoord, GoPhase.PLAYING);
+        const postDropState: GoState = state.withPieceAt(legalMove.coord, currentPlayerPiece);
+        const newKoCoord: MGPOptional<Coord> =
+            this.getNewKo(legalMove, postDropState.getCopiedBoard(), goLegalityInformation, config);
+        const newCaptured: PlayerNumberMap = state.captured;
+        return postDropState
+            .withCaptures(newCaptured)
+            .incrementTurn()
+            .withKo(newKoCoord)
+            .withPhase(GoPhase.PLAYING);
     }
 
     private resurrectStones(state: GoState): GoState {
         for (let y: number = 0; y < state.getHeight(); y++) {
             for (let x: number = 0; x < state.getWidth(); x++) {
                 if (state.getPieceAtXY(x, y).isDead()) {
-                    state = this.switchAliveness(new Coord(x, y), state);
+                    state = this.switchLiveness(new Coord(x, y), state, 1);
                 }
             }
         }
@@ -319,17 +347,19 @@ export abstract class AbstractGoRules<C extends RulesConfig>
 
     private applyDeadMarkingMove(legalMove: GoMove, state: GoState): GoState {
         const territorylessState: GoState = this.removeAndSubtractTerritory(state);
-        const switchedState: GoState = this.switchAliveness(legalMove.coord, territorylessState);
-        const resultingState: GoState =
-            new GoState(switchedState.getCopiedBoard(),
-                        switchedState.getCapturedCopy(),
-                        switchedState.turn + 1,
-                        MGPOptional.empty(),
-                        GoPhase.COUNTING);
+        const switchedState: GoState = this.switchLiveness(legalMove.coord, territorylessState, 1);
+        const resultingState: GoState = switchedState
+            .incrementTurn()
+            .withKo(MGPOptional.empty())
+            .withPhase(GoPhase.COUNTING);
         return this.markTerritoryAndCount(resultingState);
     }
 
-    public override isLegal(move: GoMove, state: GoState): MGPFallible<GoLegalityInformation> {
+    public override isLegal(move: GoMove, state: GoState, config: C): MGPFallible<GoLegalityInformation> {
+        const defaultSuccess: MGPFallible<GoLegalityInformation> = MGPFallible.success({
+            postCaptureState: state,
+            uniqueCapture: MGPOptional.empty(),
+        });
         if (this.isPass(move)) {
             const playing: boolean = state.phase.isPlaying();
             const passed: boolean = state.phase.isPassed();
@@ -337,7 +367,7 @@ export abstract class AbstractGoRules<C extends RulesConfig>
                           'at ' + state.phase + ((playing || passed) ? ' forbid' : ' allowed') +
                           ' passing on ' + state.getCopiedBoard());
             if (playing || passed) {
-                return MGPFallible.success([]);
+                return defaultSuccess;
             } else {
                 return MGPFallible.failure(GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE());
             }
@@ -345,15 +375,15 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             const counting: boolean = state.phase.isCounting();
             const accept: boolean = state.phase.isAccept();
             if (counting || accept) {
-                return MGPFallible.success([]);
+                return defaultSuccess;
             } else {
                 return MGPFallible.failure(GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHASE());
             }
-        } else if (this.isOccupied(move.coord, state.getCopiedBoard())) {
+        } else if (state.getPieceAt(move.coord).isOccupied()) {
             Debug.display('GoRules', 'isLegal', 'move is marking');
             const legal: boolean = this.isLegalDeadMarking(move, state);
             if (legal) {
-                return MGPFallible.success([]);
+                return defaultSuccess;
             } else {
                 if (this.playOnIntersection) {
                     return MGPFallible.failure(GoFailure.OCCUPIED_INTERSECTION());
@@ -363,36 +393,33 @@ export abstract class AbstractGoRules<C extends RulesConfig>
             }
         } else {
             Debug.display('GoRules', 'isLegal', 'move is normal stuff: ' + move.toString());
-            return this.isLegalTranslation(move, state);
+            return this.isLegalDrop(move, state, config);
         }
     }
 
     public override applyLegalMove(legalMove: GoMove,
                                    state: GoState,
-                                   _config: C,
+                                   config: C,
                                    infos: GoLegalityInformation)
     : GoState
     {
         if (this.isPass(legalMove)) {
-            Debug.display('GoRules', 'applyLegalMove', 'isPass');
             return this.applyPass(state);
         } else if (this.isAccept(legalMove)) {
-            Debug.display('GoRules', 'applyLegalMove', 'isAccept');
             return this.applyLegalAccept(state);
         } else if (this.isLegalDeadMarking(legalMove, state)) {
-            Debug.display('GoRules', 'applyLegalMove', 'isDeadMarking');
             return this.applyDeadMarkingMove(legalMove, state);
         } else {
-            Debug.display('GoRules', 'applyLegalMove', 'else it is normal move');
-            return this.applyNormalLegalMove(legalMove, state, infos);
+            return this.applyNormalLegalMove(legalMove, infos, config);
         }
     }
 
     public override getGameStatus(node: GoNode): GameStatus {
         const state: GoState = node.gameState;
         if (state.phase.isFinished()) {
-            const capturedZero: number = state.captured.get(Player.ZERO);
-            const capturedOne: number = state.captured.get(Player.ONE);
+            const captured: PlayerNumberMap = state.captured;
+            const capturedZero: number = captured.get(Player.ZERO);
+            const capturedOne: number = captured.get(Player.ONE);
             if (capturedOne < capturedZero) {
                 return GameStatus.ZERO_WON;
             } else if (capturedZero < capturedOne) {
@@ -407,12 +434,3 @@ export abstract class AbstractGoRules<C extends RulesConfig>
 
 }
 
-class CaptureState {
-
-    public capturedCoords: Coord[] = [];
-
-    public isCapturing(): boolean {
-        return this.capturedCoords.length > 0;
-    }
-
-}

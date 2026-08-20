@@ -31,7 +31,7 @@ describe('PenteComponent', () => {
         // When clicking on an empty state
         // Then a move should be done
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
-        await testUtils.expectMoveSuccess('#click-4-2', move);
+        await testUtils.expectMoveSuccess('.space-4-2', move);
     }));
 
     it('should forbid dropping on a piece already on the board', fakeAsync(async() => {
@@ -40,14 +40,14 @@ describe('PenteComponent', () => {
         const move: PenteMove = PenteMove.of(new Coord(9, 9));
 
         // Then the move should be illegal
-        await testUtils.expectMoveFailure('#click-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
+        await testUtils.expectMoveFailure('.space-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE(), move);
     }));
 
     it('should show last move', fakeAsync(async() => {
         // Given a state
         // When doing a move
         const move: PenteMove = PenteMove.of(new Coord(4, 2));
-        await testUtils.expectMoveSuccess('#click-4-2', move);
+        await testUtils.expectMoveSuccess('.space-4-2', move);
         // Then it should show the last move
         testUtils.expectElementToHaveClass('#piece-4-2', 'last-move-stroke');
     }));
@@ -79,7 +79,7 @@ describe('PenteComponent', () => {
 
         // When doing the capture
         const move: PenteMove = PenteMove.of(new Coord(9, 6));
-        await testUtils.expectMoveSuccess('#click-9-6', move);
+        await testUtils.expectMoveSuccess('.space-9-6', move);
 
         // Then it should show it
         testUtils.expectElementToExist('#capture-9-8');
@@ -125,14 +125,14 @@ describe('PenteComponent', () => {
         // Given a state
         // When displaying it
         // Then it should show the visible hoshis
-        testUtils.expectElementToExist('#hoshi-3-3');
-        testUtils.expectElementToExist('#hoshi-3-9');
-        testUtils.expectElementToExist('#hoshi-3-15');
-        testUtils.expectElementToExist('#hoshi-9-3');
-        testUtils.expectElementToExist('#hoshi-9-9');
-        testUtils.expectElementToExist('#hoshi-9-15');
-        testUtils.expectElementToExist('#hoshi-15-3');
-        testUtils.expectElementToExist('#hoshi-15-9');
-        testUtils.expectElementToExist('#hoshi-15-15');
+        testUtils.expectElementToExist('.data-hoshi-3-3');
+        testUtils.expectElementToExist('.data-hoshi-3-9');
+        testUtils.expectElementToExist('.data-hoshi-3-15');
+        testUtils.expectElementToExist('.data-hoshi-9-3');
+        testUtils.expectElementToExist('.data-hoshi-9-9');
+        testUtils.expectElementToExist('.data-hoshi-9-15');
+        testUtils.expectElementToExist('.data-hoshi-15-3');
+        testUtils.expectElementToExist('.data-hoshi-15-9');
+        testUtils.expectElementToExist('.data-hoshi-15-15');
     }));
 });

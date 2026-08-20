@@ -2,11 +2,12 @@
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AbstractGoMinimax } from '../../AbstractGoMinimax';
-import { GoHeuristic } from '../GoHeuristic';
-import { GoMoveGenerator } from '../GoMoveGenerator';
-import { GoConfig, GoRules } from '../GoRules';
+import { GoHeuristic } from '../../go/GoHeuristic';
+import { GoMoveGenerator } from '../../go/GoMoveGenerator';
+import { GoRules } from '../../go/GoRules';
+import { RectangularGoConfig } from '../AbstractRectangularGoRules';
 
-class GoMinimax extends AbstractGoMinimax<GoConfig> {
+class GoMinimax extends AbstractGoMinimax<RectangularGoConfig> {
     public constructor() {
         super(GoRules.get(), new GoMoveGenerator(), new GoHeuristic());
     }
@@ -17,7 +18,7 @@ describe('GoMinimax', () => {
     const rules: GoRules = GoRules.get();
     const minimax: GoMinimax = new GoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: GoConfig = GoRules.get().getDefaultRulesConfig();
+    const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
