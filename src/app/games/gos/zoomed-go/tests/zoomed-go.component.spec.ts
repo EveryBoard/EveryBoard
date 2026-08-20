@@ -405,12 +405,12 @@ describe('ZoomedGoComponent', () => {
             testUtils.expectElementToExist('#zoom-2-zx-1-zy-2 .data-hover-1-0');
         });
 
-        it('should hide hovered coord on multiple zooms when leaving (board)', () => {
+        it('should hide hovered coord on multiple zooms when leaving (piece)', () => {
             // given any board with a config that shows multiple zooms and an hover coord
             testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
 
-            // when hovering away from the board
-            testUtils.enterMouseOutElement('#zoom-0 .data-coord-4-2');
+            // when hovering away from the coord
+            testUtils.enterMouseLeaveElement('#zoom-0 .data-coord-4-2');
 
             // then its equivalents coords should be hidden on every zooms
             testUtils.expectElementNotToExist('#zoom-0-zx-0-zy-0 .data-hover-4-2');
@@ -421,11 +421,11 @@ describe('ZoomedGoComponent', () => {
             testUtils.expectElementNotToExist('#zoom-2-zx-1-zy-2 .data-hover');
         });
 
-        it('should hide hovered coord on multiple zooms when leaving (piece)', () => {
+        it('should hide hovered coord on multiple zooms when leaving (board)', () => {
             // given any board with a config that shows multiple zooms and an hover piece
             testUtils.enterMouseEnterElement('#zoom-0 .data-coord-4-2');
 
-            // when hovering a coord
+            // when hovering away from the board
             testUtils.enterMouseOutElement('#zoom-0 .data-blank-board');
 
             // then its equivalents coords should be displayed on other zooms

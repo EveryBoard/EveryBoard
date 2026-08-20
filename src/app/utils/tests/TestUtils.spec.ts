@@ -647,6 +647,11 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         element.triggerEventHandler('mouseout', new MouseEvent('mouseout'));
     }
 
+    public enterMouseLeaveElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseleave', new MouseEvent('mouseout'));
+    }
+
     public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {
         const dropDownName: string = player === Player.ZERO ? '#player-select-0' : '#player-select-1';
         const selectAI: HTMLSelectElement = this.findElement(dropDownName).nativeElement;
