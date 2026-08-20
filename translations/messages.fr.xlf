@@ -418,6 +418,10 @@
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
         <target>Alignez vos pièces pour marquer des points, mais attention aux retournements de pièces !</target>
       </trans-unit>
+      <trans-unit id="5280175192994998668" datatype="html">
+        <source>A multi-layered remix of the Go Game!</source>
+        <target>Un remix du jeu de Go avec plusieurs couches !</target>
+      </trans-unit>
       <trans-unit id="3012694567108651369" datatype="html">
         <source>This value is mandatory</source>
         <target>Cette valeur est obligatoire</target>
@@ -497,6 +501,14 @@
       <trans-unit id="287623417167941506" datatype="html">
         <source>Handicap</source>
         <target>Handicap</target>
+      </trans-unit>
+      <trans-unit id="6421460271971606186" datatype="html">
+        <source>Zoom</source>
+        <target>Zoom</target>
+      </trans-unit>
+      <trans-unit id="8484396493346861583" datatype="html">
+        <source>Show zooms</source>
+        <target>Afficher les zooms</target>
       </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
@@ -676,6 +688,10 @@
       <trans-unit id="8244967285264131156" datatype="html">
         <source>Hexagonal Go</source>
         <target>Go Hexagonal</target>
+      </trans-unit>
+      <trans-unit id="9017157884114080234" datatype="html">
+        <source>Zoomed Go</source>
+        <target>Zoom Go</target>
       </trans-unit>
       <trans-unit id="5468337301522272954" datatype="html">
         <source>Bashni</source>
@@ -2284,9 +2300,9 @@
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent's starting line than the number of pieces the opponent has on the player's starting line, the player wins. Here, it's Dark's turn to play: Dark has therefore won.</source>
         <target>Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c'est au tour de Foncé de jouer, il a donc gagné.</target>
       </trans-unit>
-      <trans-unit id="2623510393491755816" datatype="html">
-        <source>Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.</source>
-        <target>Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.</target>
+      <trans-unit id="1201123309681006244" datatype="html">
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
+        <target>Dans ce cas ci, c&apos;est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n&apos;en a qu&apos;une sur la ligne de départ de Clair.</target>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
         <source>Here is the starting board. Dark plays first. Let's start with moving a single piece:&lt;ol&gt;&lt;li&gt;Click on a piece.&lt;/li&gt;&lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You're playing Dark, move a piece.</source>
@@ -2527,15 +2543,9 @@
         <source>The object of the game is to have the most points at the end of the game. We call &quot;territories&quot; the intersections that are empty and isolated from the rest of the Goban by the stones of a single player. Here, Dark has 9 territories on the left, and Light has 8 on the right. The top part belongs to no one. Each player's score at the end of the game is the sum of that player's territories and captures.</source>
         <target>Le but du jeu est d'avoir le plus de points en fin de partie. On appelle territoires les intersections inoccupées et isolées du reste du Goban par les pierres d'un seul joueur. Ici, Foncé a 9 territoires à gauche, le joueur clair en a 8 à droite. La zone en haut au milieu n'appartient à personne. Le score d'un joueur en fin de partie correspond à la somme de ses territoires et captures.</target>
       </trans-unit>
-      <trans-unit id="2047079418793425161" datatype="html">
-        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        You're playing Dark. The light piece on the board only has one liberty left, play there.</source>
-        <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
-        Il est dit d'un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés.
-        Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé. Il ne reste plus qu'une liberté à la pierre claire, capturez la.</target>
+      <trans-unit id="258436632288646647" datatype="html">
+        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light piece on the board has only one liberty left, play there.</source>
+        <target>Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales). Il est dit d&apos;un groupe de pierres qui a exactement deux cases voisines libres, que ce groupe a deux libertés. Si Foncé joue sur la dernière liberté de la pierre claire, cette pierre est enlevée du goban (capturée) et rapporte un point à Foncé.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé. Il ne reste plus qu&apos;une liberté à la pierre claire, capturez la.</target>
       </trans-unit>
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
@@ -2549,11 +2559,9 @@
         <source>Capturing multiple stones</source>
         <target>Capture de plusieurs pierres</target>
       </trans-unit>
-      <trans-unit id="3197348089105327020" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        You're playing Dark. The light group here only has one liberty left, capture it.</source>
-        <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt;
-        Vous jouez Foncé. Ici, le groupe clair n'a plus qu'une liberté, capturez ce groupe.</target>
+      <trans-unit id="2570306403572655790" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
+        <target>Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.&lt;br/&gt;&lt;br/&gt; Vous jouez Foncé. Ici, le groupe clair n&apos;a plus qu&apos;une liberté, capturez ce groupe.</target>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -2581,19 +2589,9 @@
         <source>Life and death (death)</source>
         <target>Vie et mort (mort)</target>
       </trans-unit>
-      <trans-unit id="3595592714473441808" datatype="html">
-        <source>From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light's territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
-        <target>De la règle de capture découle la notion de vie et de mort :
-        des pierres mortes sont des pierres que l'on est sûr de pouvoir capturer (sans rien y perdre ailleurs).
-        Tandis que des pierres vivantes sont des pierres que l'on ne peut plus espérer capturer.
-        D'après la règle de capture, Foncé peut jouer à l'intérieur du territoire de Clair et le capturer.
-        On dit dans ce cas que Clair n'a qu'un œil (sa dernière liberté) et qu'il est mort (même si pas encore capturé).
-        En fin de partie, les pierres mortes sont comptées comme captures, et les cases qu'elles occupent comme territoires.</target>
+      <trans-unit id="7971199836923877142" datatype="html">
+        <source>From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light&apos;s territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
+        <target>De la règle de capture découle la notion de vie et de mort : des pierres mortes sont des pierres que l&apos;on est sûr de pouvoir capturer (sans rien y perdre ailleurs). Tandis que des pierres vivantes sont des pierres que l&apos;on ne peut plus espérer capturer. D&apos;après la règle de capture, Foncé peut jouer à l&apos;intérieur du territoire de Clair et le capturer. On dit dans ce cas que Clair n&apos;a qu&apos;un œil (sa dernière liberté) et qu&apos;il est mort (même si pas encore capturé). En fin de partie, les pierres mortes sont comptées comme captures, et les cases qu&apos;elles occupent comme territoires.</target>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -2715,6 +2713,78 @@
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
         <target>Étant donné que le plateau est trianguliare, les groupes de deux pièces n'ont qu'une liberté en plus (faisant d'un atari un shisho par défaut).</target>
+      </trans-unit>
+      <trans-unit id="6552934315157659079" datatype="html">
+        <source>Zoom <x id="PH" equiv-text="z"/></source>
+        <target>Zoom <x id="PH" equiv-text="z"/></target>
+      </trans-unit>
+      <trans-unit id="1733084177692338637" datatype="html">
+        <source>(medium)</source>
+        <target>(moyen)</target>
+      </trans-unit>
+      <trans-unit id="4707463689820472290" datatype="html">
+        <source>(small)</source>
+        <target>(petit)</target>
+      </trans-unit>
+      <trans-unit id="7789802452524788997" datatype="html">
+        <source>(large)</source>
+        <target>(grand)</target>
+      </trans-unit>
+      <trans-unit id="3430912882867311505" datatype="html">
+        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
+        <target>Le Zoom Go est une version en couches du Go qui ajoute un défi supplémentaire. Si vous ne connaissez pas le Go, vous pouvez apprendre à y jouer &lt;a href=&quot;/tutorial/Go&quot;&gt;ici&lt;/a&gt;. Prenons un exemple pour voir en quoi le Zoom Go diffère du Go classique.</target>
+      </trans-unit>
+      <trans-unit id="2962447017140596910" datatype="html">
+        <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
+        <target>La principale différence réside dans la manière dont vous pouvez capturer.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres foncées. Effectuez une capture comme dans une partie de Go classique.</target>
+      </trans-unit>
+      <trans-unit id="4635444715757714464" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how the pattern of atari is exactly the same as in regular Go, but here at a distance of two. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
+        <target>Félicitations, vous avez capturé la pierre que vous attendiez, mais aussi une autre à gauche. Observez comment le motif de l&apos;atari est exactement le même que au Go classique, mais içi a une distance de deux. Cette capture est appelée une capture au zoom 2, tandis que la capturez à droite est une capture au zoom 1.</target>
+      </trans-unit>
+      <trans-unit id="6779631138176400609" datatype="html">
+        <source>Simple capture, with shown zoom</source>
+        <target>Capture simple, avec le zoom affiché</target>
+      </trans-unit>
+      <trans-unit id="1581530473515108605" datatype="html">
+        <source>You can chose a configuration showing a visual aid in the form of sub-boards.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
+        <target>Vous pouvez choisir une configuration affichant une aide visuelle sous la forme de sous-plateaux.&lt;br/&gt;Qu&apos;ils soient affichés ou non, les mêmes règles s&apos;appliquent. Les mini-plateaux ne servent qu&apos;à fournir une aide visuelle.&lt;br/&gt;Observez que l&apos;intersection survolée dans un zoom apparaît également comme survolée dans l&apos;un des 4 autres sous-plateaux.&lt;br/&gt;&lt;br/&gt;Effectuez à nouveau une capture comme dans une partie de Go classique.</target>
+      </trans-unit>
+      <trans-unit id="7134632842648889058" datatype="html">
+        <source>Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
+        <target>Observez comment le plateau principal est divisé en 4 petits plateaux. Sur le plateau inférieur droit du zoom 2, vous pouvez voir la capture comme sur un plateau de Go classique. Notez que vous pouvez cliquer aussi bien sur un petit plateau que sur le grand plateau. La pierre sera placée sur tous les plateaux concernés, puisque les petits plateaux ne sont qu&apos;une aide visuelle.</target>
+      </trans-unit>
+      <trans-unit id="5161717226000455851" datatype="html">
+        <source>What is a zoom</source>
+        <target>Qu&apos;est-ce qu&apos;un zoom ?</target>
+      </trans-unit>
+      <trans-unit id="8285899720891132557" datatype="html">
+        <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
+        <target>Au Go classique, une pierre interagit avec les intersections situées directement au-dessus, au-dessous, à gauche et à droite.&lt;br/&gt;Dans le Zoom Go, le même motif existe à des distances plus grandes.&lt;br/&gt;Les quatre mini-plateaux montrent le plateau vu au zoom 2. Sur celui-ci, les intersections espacées de deux cases se comportent exactement comme des intersections adjacentes au Go classique.</target>
+      </trans-unit>
+      <trans-unit id="6386757882103410531" datatype="html">
+        <source>Suicide with zooms</source>
+        <target>Suicide avec les zooms</target>
+      </trans-unit>
+      <trans-unit id="2684174386875652712" datatype="html">
+        <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
+        <target>Comme vous pouvez le voir, en 4-4 vous pourriez déposer une pièce au Go classique, mais ici, à cause du zoom 2, vous ne pouvez pas, car ce coup constitue désormais un suicide.&lt;br/&gt;En revanche, en 7-4, vous avez un placement légal au zoom 2, mais il constitue un suicide au zoom 1. C&apos;est donc également un suicide.</target>
+      </trans-unit>
+      <trans-unit id="6006075893165138386" datatype="html">
+        <source>Fake-suicide with zooms</source>
+        <target>Faux suicide avec les zooms</target>
+      </trans-unit>
+      <trans-unit id="6661043680356597257" datatype="html">
+        <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
+        <target>Ici, le coin 1-1 constitue un suicide au zoom 2, et une capture au zoom 1, ce qui ne suffit pas à rendre le coup légal. Mais puisque cette capture au zoom 1 capturerait une partie des pierres qui provoquent le suicide au zoom 2, il s&apos;agit alors d&apos;un faux suicide, et le coup est donc légal.&lt;br/&gt;&lt;br/&gt;Vous jouez les pierres claires. Effectuez cette capture.</target>
+      </trans-unit>
+      <trans-unit id="6317794074367608738" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+        <target>Félicitations. Pour qu&apos;un coup soit légal, il faut qu&apos;après l&apos;avoir joué et effectué les captures, la pierre que vous avez placée possède au moins une liberté à chaque zoom !</target>
+      </trans-unit>
+      <trans-unit id="7696235060281000608" datatype="html">
+        <source>At the end of the game, only what is marked as dead on the zoom 1 is counted.</source>
+        <target>À la fin de la partie, seules les pierres marquées comme mortes au zoom 1 sont comptées.</target>
       </trans-unit>
       <trans-unit id="6217706486990855046" datatype="html">
         <source>Failed, try again.</source>

@@ -64,7 +64,7 @@ describe('HexagonalGoComponent', () => {
         await testUtils.expectMoveSuccess('#click-10-8', move);
 
         // Then it should be displayed as captured
-        testUtils.expectElementToHaveClass('#polygon-9-9', 'captured-fill');
+        testUtils.expectElementToHaveClass('#space-9-9', 'captured-fill');
     }));
 
     it('should show captures on the corner', fakeAsync(async() => {
@@ -92,7 +92,7 @@ describe('HexagonalGoComponent', () => {
         await testUtils.expectMoveSuccess('#click-1-12', move);
 
         // Then it should be displayed as captured
-        testUtils.expectElementToHaveClass('#polygon-0-12', 'captured-fill');
+        testUtils.expectElementToHaveClass('#space-0-12', 'captured-fill');
     }));
 
     it('should show captures on the center', fakeAsync(async() => {
@@ -120,15 +120,14 @@ describe('HexagonalGoComponent', () => {
         await testUtils.expectMoveSuccess('#click-5-7', move);
 
         // Then it should be displayed as captured
-        testUtils.expectElementToHaveClass('#polygon-6-6', 'captured-fill');
+        testUtils.expectElementToHaveClass('#space-6-6', 'captured-fill');
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {
-        // Given any boards
+        // Given any board
+        // When doing a click
+        // Then it should do a move
         const move: GoMove = new GoMove(4, 4);
-
-        // When doing a move
-        // Then the move should succeed
         await testUtils.expectMoveSuccess('#click-4-4', move);
     }));
 
