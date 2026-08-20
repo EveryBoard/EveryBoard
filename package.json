@@ -13,7 +13,7 @@
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom --configuration=ci",
     "libtest": "cd lib && npm test",
     "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
-    "lint": "eslint --ext ts ./ --quiet",
+    "lint": "eslint \"**/*.ts\" \"src/app/**/*.html\" --quiet",
     "e2e": "python ./e2e/launch.py"
   },
   "private": true,
@@ -52,19 +52,18 @@
     "@angular/compiler": "^20.3.18",
     "@angular/compiler-cli": "^20.3.18",
     "@angular/localize": "^20.3.18",
+    "@eslint/js": "^9.39.5",
     "@stylistic/eslint-plugin-ts": "^2.13.0",
     "@types/jasmine": "^6.0.0",
     "@typescript-eslint/eslint-plugin": "^8.57.1",
     "angular-cli-ghpages": "^3.0.2",
     "angular-eslint": "^20.0.0",
-    "eslint": "^8.57.1",
+    "eslint": "^9.39.5",
     "eslint-config-google": "^0.14.0",
-    "eslint-config-standard": "^17.1.0",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-jasmine": "^4.2.2",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
     "firebase-tools": "^15.11.0",
+    "globals": "^16.5.0",
     "karma": "^6.4.4",
     "karma-chrome-launcher": "^3.2.0",
     "karma-coverage": "^2.2.1",
@@ -75,6 +74,7 @@
     "nyc": "^18.0.0",
     "sass": "^1.81.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "typescript-eslint": "^8.67.0"
   }
 }
