@@ -132,12 +132,12 @@ describe('BaAwaComponent', () => {
             // Given the board displayed with the default number of houses
             const component: BaAwaComponent = testUtils.getGameComponent();
             expect(component.viewBoxWidth()).toBe(860);
+
+            // When displaying a configuration with fewer houses
             const customConfig: BaAwaConfig = {
                 ...defaultConfig,
                 width: 4,
             };
-
-            // When displaying a configuration with fewer houses
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
 
