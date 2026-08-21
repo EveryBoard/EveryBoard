@@ -39,30 +39,30 @@ interface DropArrow {
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
 
-    public board: readonly ApagosSquare[];
+    protected board: readonly ApagosSquare[];
 
-    public remainingZero: number;
-    public remainingOne: number;
+    protected remainingZero: number;
+    protected remainingOne: number;
 
-    public ARROW_COORD: string = ApagosComponent.getArrowCoord();
+    protected ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    public PIECE_RADIUS: number;
+    protected PIECE_RADIUS: number;
 
-    public PIECE_DELTA: number = 0;
+    protected PIECE_DELTA: number = 0;
 
-    public BOARD_WIDTH: number;
+    protected BOARD_WIDTH: number;
 
-    public BOARD_HEIGHT: number;
+    protected BOARD_HEIGHT: number;
 
-    public lastMoveSquares: number[];
+    protected lastMoveSquares: number[];
 
-    public lastMoveDrop: MGPOptional<PieceLocation> = MGPOptional.empty();
+    protected lastMoveDrop: MGPOptional<PieceLocation> = MGPOptional.empty();
 
-    public selectedPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
+    protected selectedPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
 
-    public leftPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
+    protected leftPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
 
-    public displayableArrow: DropArrow[] = [];
+    protected displayableArrow: DropArrow[] = [];
 
     private static getArrowCoord(): string {
         // Coordinates calculated to match with a SPACE_SIZE = 100
@@ -77,7 +77,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                lowCenter + ' ' + middleExtremeLeft + ' ' + middleMiddleLeft;
     }
 
-    public constructor() {
+    protected constructor() {
         super();
         this.setRulesAndNode('Apagos');
         this.aiConfig = {
@@ -109,12 +109,12 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         return new ViewBox(0, 0, this.BOARD_WIDTH, this.BOARD_HEIGHT).expandAll(this.STROKE_WIDTH / 2);
     }
 
-    public override cancelMoveAttempt(): void {
+    protected override cancelMoveAttempt(): void {
         this.selectedPiece = MGPOptional.empty();
         this.showPossibleDrops();
     }
 
-    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+    protected override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ApagosState = this.getState();
         this.board = state.board;
         const width: number = this.board.length;
@@ -128,7 +128,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.showPossibleDrops();
     }
 
-    public override hideLastMove(): void {
+    protected override hideLastMove(): void {
         this.lastMoveSquares = [];
         this.lastMoveDrop = MGPOptional.empty();
         this.leftPiece = MGPOptional.empty();
