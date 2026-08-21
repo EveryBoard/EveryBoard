@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -50,6 +50,7 @@ export type MartianChessPoint = 'Concentric Circles' | 'Dots' | 'Horizontal Poin
  * and one for square stroke-inside-half
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-martian-chess',
     templateUrl: './martian-chess.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -111,8 +112,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     public clockNeedlesPoints: string;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('MartianChess');
+        super('MartianChess');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -169,7 +169,7 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
         this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
     }
 
-    public override async showLastMove(move: MartianChessMove): Promise<void> {
+    protected override async showLastMove(move: MartianChessMove): Promise<void> {
         this.lastMoved = move.getCoords();
         const landing: Coord = move.getEnd();
         const previousPiece: MartianChessPiece = this.node.parent.get().gameState.getPieceAt(landing);

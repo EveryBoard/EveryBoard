@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -17,6 +17,7 @@ import { QuixoRules } from './QuixoRules';
 import { QuixoConfig, QuixoState } from './QuixoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -40,8 +41,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     private victoriousCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Quixo');
+        super('Quixo');
         this.aiConfig = {
             minimax: [{
                 id: 'Piece Count',
@@ -58,7 +58,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
         this.encoder = QuixoMove.encoder;
     }
 
-    public override async showLastMove(move: QuixoMove): Promise<void> {
+    protected override async showLastMove(move: QuixoMove): Promise<void> {
         let coord: Coord = move.coord;
         while (this.state.isOnBoard(coord)) {
             this.lastMoveCoords.push(coord);

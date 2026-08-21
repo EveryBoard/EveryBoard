@@ -1565,35 +1565,35 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
     describe('onCancelMove', () => {
-        it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
+        it('should delegate to gameComponent.showLastMoveAndRedraw', fakeAsync(async() => {
             // Given a component
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await receiveSync();
 
             await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             const component: QuartoComponent = testUtils.getGameComponent();
-            spyOn(component, 'showLastMove').and.callThrough();
+            spyOn(component, 'showLastMoveAndRedraw').and.callThrough();
 
             // When calling onCancelMove
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
+            expect(component.showLastMoveAndRedraw).toHaveBeenCalledOnceWith();
             await receiveEndGame();
         }));
 
-        it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
+        it('should not call gameComponent.showLastMoveAndRedraw if there is no move', fakeAsync(async() => {
             // Given a component without previous move
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
             const component: QuartoComponent = testUtils.getGameComponent();
-            spyOn(component, 'showLastMove').and.callThrough();
+            spyOn(component, 'showLastMoveAndRedraw').and.callThrough();
 
             // When calling onCancelMove
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should not have been called
-            expect(component.showLastMove).not.toHaveBeenCalled();
+            expect(component.showLastMoveAndRedraw).not.toHaveBeenCalled();
             await receiveEndGame();
         }));
 
