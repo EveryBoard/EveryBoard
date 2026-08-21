@@ -71,7 +71,7 @@
                         <ng-container i18n>{{ getCurrentGameName() }} by {{ currentGame.get().creator.name }}</ng-container>
                     } @else {
                         @if (currentGame.get().opponent) {
-                            <ng-container i18n>{{ getCurrentGameName() }} against {{ currentGame.get().opponent?.name }}</ng-container>
+                            <ng-container i18n>{{ getCurrentGameName() }} against {{ getOpponentName() }}</ng-container>
                         } @else {
                             <ng-container i18n>{{ getCurrentGameName() }} (waiting for opponent)</ng-container>
                         }

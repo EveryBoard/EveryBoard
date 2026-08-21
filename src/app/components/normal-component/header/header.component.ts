@@ -5,7 +5,7 @@ import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
 import { Subscription } from 'rxjs';
 
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { CurrentGame } from '../../../domain/User';
 import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
@@ -32,6 +32,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription = new Subscription();
     private currentGameSubscription: Subscription = new Subscription();
 
+    private connectedUserId: string = '';
+
     public showMenu: boolean = false;
 
     public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
@@ -39,6 +41,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
             this.loading = false;
+            this.connectedUserId = user.id;
             if (user.username.isPresent()) {
                 this.username = user.username;
             } else {
@@ -66,5 +69,14 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public getCurrentGameName(): string {
         return GameInfo.getByUrlName(this.currentGame.get().gameName).get().name;
+    }
+
+    public getOpponentName(): string {
+        const currentGame: CurrentGame = this.currentGame.get();
+        if (this.connectedUserId === currentGame.creator.id) {
+            return Utils.getNonNullable(currentGame.opponent?.name);
+        } else {
+            return currentGame.creator.name;
+        }
     }
 }

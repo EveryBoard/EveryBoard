@@ -147,6 +147,25 @@ describe('HeaderComponent', () => {
             expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' against ' + opponentName);
         }));
 
+        it(`should display '<GameName> against <Creator>' when chosen opponent`, fakeAsync(async() => {
+            // Given a connected user that is the chosen opponent
+            ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
+            testUtils.detectChanges();
+            tick(0);
+            testUtils.expectElementNotToExist('#currentGameLink');
+
+            // When user becomes linked to a  game where they are the chosen opponent
+            const currentGame: CurrentGame = CurrentGameMocks.CHOSEN_OPPONENT;
+            CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
+            testUtils.detectChanges();
+            tick(0);
+
+            // Then "<Game> against <Creator>" should be displayed
+            const currentGameLink: DebugElement = testUtils.findElement('#currentGameLink');
+            const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
+            expect(currentGameLink.nativeElement.innerText).toEqual(gameName + ' against ' + currentGame.creator.name);
+        }));
+
         it(`should display '<GameName> by <Creator>' when watching as observer`, fakeAsync(async() => {
             // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.CONNECTED_AUTH_USER);
