@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
@@ -29,6 +29,7 @@ type CoordAndClass = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -52,8 +53,7 @@ export class SixComponent
     private nextClickShouldSelectGroup: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Six');
+        super('Six');
         this.aiConfig = {
             minimax: [{
                 id: 'Shape',
@@ -128,7 +128,7 @@ export class SixComponent
             .expandRight(this.SPACE_SIZE + (2 * this.STROKE_WIDTH));
     }
 
-    public override async showLastMove(move: SixMove): Promise<void> {
+    protected override async showLastMove(move: SixMove): Promise<void> {
         this.lastDrop = MGPOptional.of(move.landing);
         if (move.isDrop() === false) {
             this.leftCoord = MGPOptional.of(move.start.get());

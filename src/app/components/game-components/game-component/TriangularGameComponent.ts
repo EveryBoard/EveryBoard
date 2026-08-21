@@ -1,5 +1,3 @@
-import { Component } from '@angular/core';
-
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
@@ -9,9 +7,6 @@ import { GameState } from '../../../jscaip/state/GameState';
 
 import { GameComponent } from './GameComponent';
 
-@Component({
-    template: '',
-})
 export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               M extends Move,
                                               S extends GameState,
@@ -20,6 +15,10 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               L = void>
     extends GameComponent<R, M, S, C, L>
 {
+    public constructor(urlName: string) {
+        super(urlName);
+    }
+
     public override SPACE_SIZE: number = 100;
 
     public board: Table<P>;

@@ -1,5 +1,3 @@
-import { Component } from '@angular/core';
-
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
@@ -9,9 +7,6 @@ import { RectangularGameComponent } from '../rectangular-game-component/Rectangu
 
 import { ModeConfig } from './ModeConfig';
 
-@Component({
-    template: '',
-})
 export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
@@ -20,6 +15,10 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
                                                  L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>
 {
+    public constructor(urlName: string) {
+        super(urlName);
+    }
+
     public getParallelogramCoords(mode: ModeConfig): Coord[] {
         const parallelogramHeight: number = mode.parallelogramHeight;
         const parallelogramWidth: number = parallelogramHeight * mode.horizontalWidthRatio;

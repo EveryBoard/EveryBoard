@@ -443,9 +443,18 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(this.getGameComponent()).withContext('Game component should be created').toBeTruthy();
     }
 
+    public override detectChanges(): void {
+        if (this.gameComponent !== undefined) {
+            this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        }
+        this.fixture.detectChanges();
+    }
+
     public override forceChangeDetection(): void {
-        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
-        this.detectChanges();
+        if (this.gameComponent !== undefined) {
+            this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        }
+        super.forceChangeDetection();
     }
 
     public async setupState(state: GameState,
@@ -474,7 +483,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         );
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
-            await this.gameComponent.showLastMove(params.previousMove);
+            await this.gameComponent.showLastMoveAndRedraw();
         }
         this.forceChangeDetection();
     }

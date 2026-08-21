@@ -55,8 +55,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     private opponentMoveIsBeingAnimated: boolean = false;
 
-    public constructor() {
-        super();
+    public constructor(urlName: string) {
+        super(urlName);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
@@ -115,7 +115,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return ry;
     }
 
-    public override async showLastMove(move: MancalaMove): Promise<void> {
+    protected override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = PlayerNumberMap.of(0, 0);
         const previousState: MancalaState = this.getPreviousState();
         const config: MancalaConfig = this.getConfig();
