@@ -121,7 +121,7 @@ func TestClearCurrentGameOpponent(t *testing.T) {
 	assert.Nil(t, currentGame.Opponent, "current game opponent should have been cleared")
 }
 
-func TestCurrentGameUserIDIsUnique(t *testing.T) {
+func TestCurrentGameUserWithSameIDButDifferentMetadata(t *testing.T) {
 	// Given a current game for a user
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
