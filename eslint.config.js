@@ -17,9 +17,9 @@ delete googleRules['valid-jsdoc'];
 
 module.exports = [{
     ignores: [
-        '**/node_modules/**',
-        '**/dist/**',
-        '**/coverage/**',
+        '**/node_modules/**', // don't lint node_modules (we are not responsible for defects in other people's code!)
+        '**/dist/**', // don't lint build output
+        '**/coverage/**', // don't lint coverage output
     ],
 }, {
     files: ['**/*.ts'],
