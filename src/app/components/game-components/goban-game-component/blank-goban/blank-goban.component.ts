@@ -2,6 +2,7 @@ import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } fr
 
 import { Coord } from '@everyboard/games';
 import { GobanUtils } from '@everyboard/games';
+import { MGPOptional } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 

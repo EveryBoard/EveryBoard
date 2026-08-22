@@ -23,6 +23,9 @@
     "test": "TS_NODE_PROJECT=tsconfig.test.json nyc -x '**/*.spec.ts' --reporter=lcov --reporter=text --reporter=text-summary npx jasmine --config=jasmine.json",
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
   },
+  "dependencies": {
+    "@everyboard/lib": "1.0.0"
+  },
   "devDependencies": {
     "@angular/localize": "^20.3.18",
     "@types/jasmine": "^6.0.0",

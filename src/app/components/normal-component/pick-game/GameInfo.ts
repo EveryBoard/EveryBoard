@@ -1,6 +1,6 @@
 import { Type } from '@angular/core';
 
-import { AbaloneRules, RulesConfigDescription } from '@everyboard/games';
+import { AbaloneRules, RulesConfigDescription, ZoomedGoRules } from '@everyboard/games';
 import { ApagosRules } from '@everyboard/games';
 import { LascaRules } from '@everyboard/games';
 import { CoerceoRules } from '@everyboard/games';
