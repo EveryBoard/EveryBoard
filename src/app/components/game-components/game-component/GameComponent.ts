@@ -1,7 +1,5 @@
 import {
-    ChangeDetectionStrategy,
     ChangeDetectorRef,
-    Component,
     computed,
     inject,
     signal,
@@ -37,11 +35,6 @@ import { ScoreName } from './ScoreName';
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({
-    template: '',
-    styleUrls: ['./game-component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-})
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
@@ -117,6 +110,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
 
+    public constructor(urlName: string) {
+        super();
+        this.setRulesAndNode(urlName);
+    }
+
     protected abstract computeViewBox(): ViewBox;
 
     public setClickInterceptor(interceptor: MoveInterceptor): void {
@@ -160,10 +158,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         if (this.hasAsymmetricBoard) {
             this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
+        this.cdr.markForCheck();
     }
 
     public setInteractive(interactive: boolean): void {
         this.interactive = interactive;
+        this.cdr.markForCheck();
     }
 
     public isInteractive(): boolean {
@@ -244,11 +244,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return this.node.parent.get().gameState;
     }
 
-    public abstract showLastMove(move: M): Promise<void>;
+    protected abstract showLastMove(move: M): Promise<void>;
 
     public abstract hideLastMove(): void;
 
-    protected setRulesAndNode(urlName: string): void {
+    private setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
         const defaultConfig: C = gameInfo.getRulesConfig() as C;
 
@@ -263,6 +263,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public setConfig(config: C): void {
         this.config = config;
+        this.cdr.markForCheck();
     }
 
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
