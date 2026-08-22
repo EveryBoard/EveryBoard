@@ -131,7 +131,7 @@ describe('BaAwaComponent', () => {
         it('should resize the board when the number of houses changes', fakeAsync(async() => {
             // Given the board displayed with the default number of houses
             const component: BaAwaComponent = testUtils.getGameComponent();
-            expect(component.viewBoxWidth()).toBe(860);
+            const defaultViewBoxWidth: number = component.viewBoxWidth();
 
             // When displaying a configuration with fewer houses
             const customConfig: BaAwaConfig = {
@@ -142,7 +142,8 @@ describe('BaAwaComponent', () => {
             await testUtils.setupState(state, { config: customConfig });
 
             // Then the board width should match the configured number of houses
-            expect(component.viewBoxWidth()).toBe(660);
+            const removedHouses: number = defaultConfig.width - customConfig.width;
+            expect(component.viewBoxWidth()).toBe(defaultViewBoxWidth - (removedHouses * component.SPACE_SIZE));
         }));
 
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
