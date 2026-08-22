@@ -9,9 +9,9 @@ import { RulesFailure } from '@everyboard/games';
 import { QuebecCastlesMove } from '@everyboard/games';
 import { QuebecCastlesConfig, QuebecCastlesRules } from '@everyboard/games';
 import { QuebecCastlesState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuebecCastlesComponent } from '../quebec-castles.component';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;

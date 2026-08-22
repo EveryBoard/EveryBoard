@@ -1,11 +1,11 @@
 import { MGPOptional } from '@everyboard/lib';
 
+import { BooleanConfig } from '../../../config/BooleanConfig';
 import { NumberConfig } from '../../../config/NumberConfig';
 import { RulesConfigDescription } from '../../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../../config/RulesConfigDescriptionLocalizable';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { AbstractRectangularGoRules, RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
-import { BooleanConfig } from '../../../config/BooleanConfig';
 
 export class GoRules extends AbstractRectangularGoRules {
 

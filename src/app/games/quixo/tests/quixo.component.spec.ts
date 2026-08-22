@@ -7,9 +7,9 @@ import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { QuixoMove } from '@everyboard/games';
 import { QuixoState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-
 import { QuixoFailure } from '@everyboard/games';
+
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuixoComponent } from '../quixo.component';
 
 describe('QuixoComponent', () => {

@@ -7,8 +7,8 @@ import { PlayerNumberMap } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { PenteMove } from '@everyboard/games';
 import { PenteState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PenteComponent } from '../pente.component';
 
 describe('PenteComponent', () => {

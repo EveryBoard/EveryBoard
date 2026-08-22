@@ -7,8 +7,8 @@ import { Table } from '@everyboard/games';
 import { PentagoMove } from '@everyboard/games';
 import { PentagoRules } from '@everyboard/games';
 import { PentagoState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../pentago.component';
 
 describe('PentagoComponent', () => {

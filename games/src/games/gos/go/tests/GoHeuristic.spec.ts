@@ -8,9 +8,9 @@ import { Table } from '../../../../jscaip/TableUtils';
 import { GoPhase } from '../../GoPhase';
 import { GoPiece } from '../../GoPiece';
 import { GoState } from '../../GoState';
+import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
 import { GoHeuristic } from '../GoHeuristic';
 import { GoRules } from '../GoRules';
-import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

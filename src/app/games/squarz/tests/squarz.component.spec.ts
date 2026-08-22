@@ -7,9 +7,9 @@ import { RulesFailure } from '@everyboard/games';
 import { SquarzMove } from '@everyboard/games';
 import { SquarzConfig, SquarzRules } from '@everyboard/games';
 import { SquarzState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-
 import { SquarzFailure } from '@everyboard/games';
+
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SquarzComponent } from '../squarz.component';
 
 describe('SquarzComponent', () => {

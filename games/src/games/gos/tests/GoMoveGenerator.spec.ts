@@ -9,9 +9,9 @@ import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 import { GoMoveGenerator } from '../go/GoMoveGenerator';
 import { GoRules } from '../go/GoRules';
-import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;

@@ -6,8 +6,8 @@ import { Table } from '@everyboard/games';
 import { P4Move } from '@everyboard/games';
 import { P4Rules, P4Config } from '@everyboard/games';
 import { P4State } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { P4Component } from '../p4.component';
 
 describe('P4Component', () => {

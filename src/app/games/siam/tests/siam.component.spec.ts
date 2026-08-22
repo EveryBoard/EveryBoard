@@ -10,10 +10,10 @@ import { SiamMove } from '@everyboard/games';
 import { SiamPiece } from '@everyboard/games';
 import { SiamRules } from '@everyboard/games';
 import { SiamState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { SiamFailure } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { SiamFailure } from '@everyboard/games';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SiamComponent } from '../siam.component';
 
 describe('SiamComponent', () => {

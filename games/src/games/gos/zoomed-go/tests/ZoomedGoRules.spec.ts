@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from '@everyboard/games';
-import { PlayerNumberMap } from '@everyboard/games';
-import { Table } from '@everyboard/games';
-import { RulesUtils } from '@everyboard/games';
-import { GoNode } from '@everyboard/games';
-import { GoFailure } from '@everyboard/games';
-import { GoMove } from '@everyboard/games';
-import { GoPhase } from '@everyboard/games';
-import { GoPiece } from '@everyboard/games';
-import { GoState } from '@everyboard/games';
-import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games';
-import { ZoomedGoRules } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { GoNode } from '../../AbstractGoRules';
+import { GoFailure } from '../../GoFailure';
+import { GoMove } from '../../GoMove';
+import { GoPhase } from '../../GoPhase';
+import { GoPiece } from '../../GoPiece';
+import { GoState } from '../../GoState';
+import { RectangularGoConfig, AbstractRectangularGoRules } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
+import { ZoomedGoRules } from '../ZoomedGoRules';
 
 describe('ZoomedGoRules', () => {
 

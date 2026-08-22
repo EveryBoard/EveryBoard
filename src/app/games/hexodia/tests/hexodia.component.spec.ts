@@ -8,8 +8,8 @@ import { Table } from '@everyboard/games';
 import { FourStatePieceGameStateWithTable } from '@everyboard/games';
 import { HexodiaMove } from '@everyboard/games';
 import { HexodiaConfig, HexodiaRules } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HexodiaComponent } from '../hexodia.component';
 
 describe('HexodiaComponent', () => {

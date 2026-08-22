@@ -6,8 +6,8 @@ import { PlayerOrNone } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
 import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '@everyboard/games';
 import { ConnectSixState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConnectSixComponent } from '../connect-six.component';
 
 describe('ConnectSixComponent', () => {

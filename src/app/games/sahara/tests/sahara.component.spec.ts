@@ -7,9 +7,9 @@ import { RulesFailure } from '@everyboard/games';
 import { Table } from '@everyboard/games';
 import { SaharaMove } from '@everyboard/games';
 import { SaharaState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-
 import { SaharaFailure } from '@everyboard/games';
+
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SaharaComponent } from '../sahara.component';
 
 describe('SaharaComponent', () => {

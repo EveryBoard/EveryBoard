@@ -8,9 +8,9 @@ import { Table } from '@everyboard/games';
 import { SixMove } from '@everyboard/games';
 import { SixConfig, SixRules } from '@everyboard/games';
 import { SixState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-
 import { SixFailure } from '@everyboard/games';
+
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
 
 describe('SixComponent', () => {

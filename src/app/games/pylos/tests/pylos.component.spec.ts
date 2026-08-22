@@ -6,9 +6,9 @@ import { RulesFailure } from '@everyboard/games';
 import { PylosCoord } from '@everyboard/games';
 import { PylosMove, PylosMoveFailure } from '@everyboard/games';
 import { PylosState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-
 import { PylosFailure } from '@everyboard/games';
+
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { PylosComponent } from '../pylos.component';
 
 describe('PylosComponent', () => {

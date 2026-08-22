@@ -7,8 +7,8 @@ import { QuartoMove } from '@everyboard/games';
 import { QuartoPiece } from '@everyboard/games';
 import { QuartoConfig, QuartoRules } from '@everyboard/games';
 import { QuartoState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { QuartoComponent } from '../quarto.component';
 
 describe('QuartoComponent', () => {

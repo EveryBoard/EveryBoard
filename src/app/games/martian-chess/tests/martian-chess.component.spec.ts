@@ -9,9 +9,9 @@ import { MartianChessMove } from '@everyboard/games';
 import { MartianChessPiece } from '@everyboard/games';
 import { MartianChessRules } from '@everyboard/games';
 import { MartianChessState } from '@everyboard/games';
-import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
 
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { MartianChessComponent, MartianChessFace } from '../martian-chess.component';
 
 describe('MartianChessComponent', () => {
