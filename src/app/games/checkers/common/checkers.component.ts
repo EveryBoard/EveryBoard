@@ -69,8 +69,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new ViewBox(-this.STROKE_WIDTH / 2, -this.SPACE_SIZE, width, height);
     }
 
-    public override setRulesAndNode(urlName: string): void {
-        super.setRulesAndNode(urlName);
+    public constructor(urlName: string) {
+        super(urlName);
         this.aiConfig = {
             minimax: [
                 {
