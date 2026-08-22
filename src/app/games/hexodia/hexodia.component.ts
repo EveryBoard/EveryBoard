@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPValidation } from '@everyboard/lib';
 
@@ -20,6 +20,7 @@ import { HexodiaMoveGenerator } from './HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaRules } from './HexodiaRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hexodia',
     templateUrl: './hexodia.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -38,8 +39,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     public victoryCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Hexodia');
+        super('Hexodia');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
@@ -89,7 +89,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
         this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
     }
 
-    public override async showLastMove(move: HexodiaMove): Promise<void> {
+    protected override async showLastMove(move: HexodiaMove): Promise<void> {
         this.lastMoved = move.coords.toList();
     }
 

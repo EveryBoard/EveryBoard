@@ -516,8 +516,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
         if (this.gameComponent.node.previousMove.isPresent()) {
-            const move: Move = this.gameComponent.node.previousMove.get();
-            await this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMoveAndRedraw();
         }
         this.cdr.detectChanges();
     }

@@ -755,25 +755,25 @@ describe('LocalGameWrapperComponent (game phase)', () => {
             // Given a component with a last move
             const component: P4Component = testUtils.getGameComponent();
             await testUtils.expectMoveSuccess('#click-4-0', P4Move.of(4));
-            spyOn(component, 'showLastMove').and.callThrough();
+            spyOn(component, 'showLastMoveAndRedraw').and.callThrough();
 
             // When calling onCancelMove
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(P4Move.of(4));
+            expect(component.showLastMoveAndRedraw).toHaveBeenCalledOnceWith();
         }));
 
         it('should not showLastMove when there is none', fakeAsync(async() => {
             // Given a component with a last move
             const component: P4Component = testUtils.getGameComponent();
-            spyOn(component, 'showLastMove').and.callThrough();
+            spyOn(component, 'showLastMoveAndRedraw').and.callThrough();
 
             // When calling onCancelMove
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should not have been called
-            expect(component.showLastMove).not.toHaveBeenCalled();
+            expect(component.showLastMoveAndRedraw).not.toHaveBeenCalled();
         }));
 
     });

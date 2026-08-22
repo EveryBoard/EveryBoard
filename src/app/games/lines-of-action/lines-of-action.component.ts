@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -17,6 +17,7 @@ import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionState } from './LinesOfActionState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-lines-of-action',
     templateUrl: './lines-of-action.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -35,8 +36,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('LinesOfAction');
+        super('LinesOfAction');
         this.aiConfig = {
             minimax: [{
                 id: 'Groups',
@@ -98,7 +98,7 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
         this.board = this.getState().board;
     }
 
-    public override async showLastMove(move: LinesOfActionMove): Promise<void> {
+    protected override async showLastMove(move: LinesOfActionMove): Promise<void> {
         if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
             this.captured = MGPOptional.of(move.getEnd());
         }
