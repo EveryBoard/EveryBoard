@@ -24,7 +24,6 @@
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
   },
   "devDependencies": {
-
     "@angular/localize": "^20.3.18",
     "@types/jasmine": "^6.0.0",
     "jasmine": "^6.2.0",
