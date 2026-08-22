@@ -17,8 +17,7 @@ export class ZoomedGoComponent extends AbstractRectangularGoComponent {
     public hover: ModelSignal<MGPOptional<Coord>> = model(MGPOptional.empty());
 
     public constructor() {
-        super();
-        this.setRulesAndNode('ZoomedGo');
+        super('ZoomedGo');
     }
 
 }

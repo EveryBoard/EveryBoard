@@ -248,7 +248,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public abstract hideLastMove(): void;
 
-    protected setRulesAndNode(urlName: string): void {
+    private setRulesAndNode(urlName: string): void {
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
         const defaultConfig: C = gameInfo.getRulesConfig() as C;
 

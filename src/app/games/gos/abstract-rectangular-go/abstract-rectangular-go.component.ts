@@ -45,8 +45,8 @@ export abstract class AbstractRectangularGoComponent
 
     private readonly ZOOM_SEPARATOR: number = this.SPACE_SIZE;
 
-    public constructor() {
-        super();
+    public constructor(urlName: string) {
+        super(urlName);
         this.encoder = GoMove.encoder;
         this.canPass = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
