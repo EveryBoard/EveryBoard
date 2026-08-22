@@ -17,10 +17,12 @@ import { NotFoundComponent } from './components/normal-component/not-found/not-f
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
+import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
@@ -33,6 +35,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['settings', SettingsComponent],
     ['account', AccountComponent],
     ['register', RegisterComponent],
+    ['reset-password', ResetPasswordComponent],
     ['notFound/errorMessage', NotFoundComponent],
     ['nextGameLoading', NextGameLoadingComponent],
     ['verify-account', VerifyAccountComponent],
@@ -40,6 +43,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['play/P4', OnlineGameCreationComponent],
     ['play/P4/part-id', OnlineGameWrapperComponent],
     ['local', LocalGameCreationComponent],
+    ['local/P4/config', LocalGameConfigurationComponent],
     ['local/P4', LocalGameWrapperComponent],
     ['tutorial', TutorialGameCreationComponent],
     ['tutorial/P4', TutorialGameWrapperComponent],
