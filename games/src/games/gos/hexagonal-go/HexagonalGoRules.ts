@@ -3,7 +3,6 @@ import { MGPOptional } from '@everyboard/lib';
 import { NumberConfig } from '../../../config/NumberConfig';
 import { RulesConfigDescription } from '../../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../../config/RulesConfigDescriptionLocalizable';
-import { RulesConfig } from '../../../config/RulesConfigUtil';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TableUtils } from '../../../jscaip/TableUtils';
 import { MGPValidators } from '../../../utils/MGPValidator';

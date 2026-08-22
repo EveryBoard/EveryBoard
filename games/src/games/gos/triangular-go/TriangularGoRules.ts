@@ -4,7 +4,6 @@ import { BooleanConfig } from '../../../config/BooleanConfig';
 import { NumberConfig } from '../../../config/NumberConfig';
 import { RulesConfigDescription } from '../../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../../config/RulesConfigDescriptionLocalizable';
-import { RulesConfig } from '../../../config/RulesConfigUtil';
 import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';

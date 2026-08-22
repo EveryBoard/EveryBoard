@@ -1,6 +1,5 @@
 import { MGPFallible } from '@everyboard/lib';
 
-import { RulesConfig } from '../../config/RulesConfigUtil';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { GroupDataFactory } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';

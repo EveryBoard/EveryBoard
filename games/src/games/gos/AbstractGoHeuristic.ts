@@ -1,4 +1,3 @@
-import { RulesConfig } from '../../config/RulesConfigUtil';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';

@@ -1,4 +1,3 @@
-import { RulesConfig } from '../../config/RulesConfigUtil';
 import { Minimax } from '../../jscaip/AI/Minimax';
 
 import { AbstractGoHeuristic } from './AbstractGoHeuristic';
