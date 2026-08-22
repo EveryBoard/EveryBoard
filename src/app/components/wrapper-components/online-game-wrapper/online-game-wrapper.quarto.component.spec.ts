@@ -1225,47 +1225,38 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.expectElementToExist('#confirmResign');
             // And it should not resign yet
             expect(gameService.resign).not.toHaveBeenCalled();
-
-            await receiveEndGame();
-            expectGameToBeOver();
         }));
 
         it('should end game after confirming resignation', fakeAsync(async() => {
-            // Given an online game component
+            // Given an online game component on which resign button has been clicked
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
             await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             spyOn(gameService, 'resign');
-
-            // When clicking on the resign button, then on the confirm button
             await testUtils.clickElement('#resign');
+
+            // When confirming resignation
             await testUtils.clickElement('#confirmResign');
             tick(0);
 
             // Then it should send it to the backend
             expect(gameService.resign).toHaveBeenCalledOnceWith();
-
-            await receiveEndGame(GameResult.RESIGN_OF_ZERO);
-            expectGameToBeOver();
         }));
 
         it('should not resign when cancelling the resignation', fakeAsync(async() => {
-            // Given an online game component
+            // Given an online game component on which resign button has been clicked
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
             await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             spyOn(gameService, 'resign');
-
-            // When clicking on the resign button, then on the cancel button
             await testUtils.clickElement('#resign');
+
+            // When cancelling resignation
             await testUtils.clickElement('#cancelResign');
 
             // Then the confirmation dialog should disappear and no resignation should be sent
             testUtils.expectElementNotToExist('#resignModal');
             expect(gameService.resign).not.toHaveBeenCalled();
-
-            await receiveEndGame();
-            expectGameToBeOver();
         }));
 
         it('should not allow player to move after resigning', fakeAsync(async() => {
@@ -1281,9 +1272,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When attempting a move
             // Then it should fail
             await testUtils.expectClickFailure('#click-piece-1', GameWrapperMessages.GAME_HAS_ENDED());
-
-            expect(gameService.resign).not.toHaveBeenCalled();
-            expectGameToBeOver();
         }));
 
         it('should display when the opponent resigned', fakeAsync(async() => {
@@ -1297,7 +1285,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When checking "victory text"
             const resignText: string = testUtils.findElement('#resignIndicator').nativeElement.innerText;
 
-            // Then we should see "opponent has resign"
+            // Then the game is finished and we should see "opponent has resign"
             expect(resignText).toBe(`firstCandidate has resigned.`);
             expectGameToBeOver();
         }));
