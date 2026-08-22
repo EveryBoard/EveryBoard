@@ -18,8 +18,7 @@ export class GoComponent extends AbstractRectangularGoComponent {
     public hover: ModelSignal<MGPOptional<Coord>> = model(MGPOptional.empty());
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Go');
+        super('Go');
     }
 
 }
