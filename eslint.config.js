@@ -7,6 +7,8 @@ const jasmine = require('eslint-plugin-jasmine');
 const globals = require('globals');
 const typescriptEslint = require('typescript-eslint');
 
+const everyboard = require('./eslint-rules/dist');
+
 const mergeRules = (configs) => Object.assign({}, ...configs.map((config) => config.rules ?? {}));
 const googleRules = { ...google.rules };
 
@@ -40,6 +42,7 @@ module.exports = [{
         '@angular-eslint': angularEslint.tsPlugin,
         '@stylistic/ts': stylisticTs,
         '@typescript-eslint': typescriptEslint.plugin,
+        everyboard,
         import: importPlugin,
         jasmine,
     },
@@ -49,6 +52,7 @@ module.exports = [{
         ...mergeRules(typescriptEslint.configs.recommended),
         ...mergeRules(angularEslint.configs.tsRecommended),
         ...jasmine.configs.recommended.rules,
+        'everyboard/no-abstract-component': 'error',
         'import/order': [
             'error', {
                 groups: [
