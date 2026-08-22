@@ -1,4 +1,4 @@
-import { Component, ComponentRef, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
+import { ComponentRef, Directive, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Move } from '@everyboard/games';
@@ -28,9 +28,7 @@ export class GameWrapperMessages {
 
 }
 
-@Component({
-    template: '',
-})
+@Directive()
 export abstract class GameWrapper<P extends Comparable> extends BaseWrapperComponent {
 
     protected readonly router: Router = inject(Router);

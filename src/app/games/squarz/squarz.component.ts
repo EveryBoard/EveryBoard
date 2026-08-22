@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
@@ -17,6 +17,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-squarz',
     templateUrl: './squarz.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -39,8 +40,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Squarz');
+        super('Squarz');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -65,7 +65,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         this.scores = MGPOptional.of(this.getState().getScores());
     }
 
-    public override async showLastMove(move: SquarzMove): Promise<void> {
+    protected override async showLastMove(move: SquarzMove): Promise<void> {
         const previousState: SquarzState = this.getPreviousState();
         const previousOpponent: Player = previousState.getCurrentOpponent();
         if (move.isJump()) {

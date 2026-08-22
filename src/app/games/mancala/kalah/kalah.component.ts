@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MancalaMove } from '@everyboard/games';
 import { KalahMoveGenerator } from '@everyboard/games';
@@ -8,6 +8,7 @@ import { MancalaComponent } from '../common/MancalaComponent';
 import { NumberedCircleComponent } from '../common/numbered-circle.component';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-kalah-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -16,8 +17,7 @@ import { NumberedCircleComponent } from '../common/numbered-circle.component';
 export class KalahComponent extends MancalaComponent<KalahRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Kalah');
+        super('Kalah');
         this.aiConfig = this.createAIConfig(new KalahMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { GroupData } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
@@ -23,6 +23,7 @@ import { ClickHandler } from '../../../components/game-components/game-component
 import { TriangularGameComponent } from '../../../components/game-components/game-component/TriangularGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-triangular-go',
     templateUrl: './triangular-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -48,8 +49,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
     public GoPiece: typeof GoPiece = GoPiece;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('TriangularGo');
+        super('TriangularGo');
         this.aiConfig = {
             minimax: [{
                 id: 'Territory',
@@ -68,7 +68,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public override async showLastMove(move: GoMove): Promise<void> {
+    protected override async showLastMove(move: GoMove): Promise<void> {
         this.last = MGPOptional.of(move.coord);
         this.showCaptures();
     }

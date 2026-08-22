@@ -93,4 +93,6 @@ export class GameDescription {
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
 
+    public static readonly ZOOMED_GO: Localized = () => $localize`A multi-layered remix of the Go Game!`;
+
 }

@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { PlayerNumberMap } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
@@ -17,6 +17,7 @@ import { GameComponent } from '../../components/game-components/game-component/G
  * You just have adapt the selector and template URL here.
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-new-game',
     templateUrl: './new-game.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -38,8 +39,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
      * The AI config can remain empty.
      */
     public constructor() {
-        super();
-        this.setRulesAndNode('NewGame');
+        super('NewGame');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',
@@ -78,7 +78,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     /**
      * This method should display the last move in the component
      */
-    public override async showLastMove(move: NewGameMove): Promise<void> {
+    protected override async showLastMove(move: NewGameMove): Promise<void> {
         return;
     }
 

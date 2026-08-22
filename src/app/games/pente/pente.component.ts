@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
@@ -18,6 +18,7 @@ import { GobanGameComponent } from '../../components/game-components/goban-game-
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-new-game',
     templateUrl: './pente.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -35,8 +36,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public captured: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Pente');
+        super('Pente');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
@@ -67,7 +67,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.createHoshis();
     }
 
-    public override async showLastMove(move: PenteMove): Promise<void> {
+    protected override async showLastMove(move: PenteMove): Promise<void> {
         this.lastMoved = MGPOptional.of(move.coord);
         const opponent: Player = this.getCurrentOpponent();
         this.captured = PenteRules.get().getCaptures(
@@ -83,7 +83,7 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
         this.lastMoved = MGPOptional.empty();
     }
 
-    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
+    @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         return this.chooseMove(PenteMove.of(coord));
     }

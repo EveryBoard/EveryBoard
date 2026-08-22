@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { CoordSet } from '@everyboard/games';
@@ -34,6 +34,7 @@ interface ViewInfo {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-yinsh',
     templateUrl: './yinsh.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -98,8 +99,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     };
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Yinsh');
+        super('Yinsh');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -287,7 +287,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.moveToInitialCaptureOrMovePhase();
     }
 
-    public override async showLastMove(move: YinshMove): Promise<void> {
+    protected override async showLastMove(move: YinshMove): Promise<void> {
         if (move.isInitialPlacement()) {
             this.lastMoved = [move.start];
         } else {

@@ -1,5 +1,3 @@
-import { Component } from '@angular/core';
-
 import { Move } from '@everyboard/games';
 import { SuperRules } from '@everyboard/games';
 import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
@@ -9,9 +7,6 @@ import { GameStateWithTable } from '@everyboard/games';
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
 
-@Component({
-    template: '',
-})
 export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
@@ -20,6 +15,10 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                L = void>
     extends GameComponent<R, M, S, C, L>
 {
+
+    public constructor(urlName: string) {
+        super(urlName);
+    }
 
     public board: Table<P>;
 
@@ -34,6 +33,10 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
     protected override computeViewBox(): ViewBox {
         const width: number = this.getWidth() * this.SPACE_SIZE;
         const height: number = this.getHeight() * this.SPACE_SIZE;
+        return this.getViewBoxFor(width, height);
+    }
+
+    public getViewBoxFor(width: number, height: number): ViewBox {
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;
         return ViewBox
             .fromLimits(0, width, 0, height)

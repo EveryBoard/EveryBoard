@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Line } from '@everyboard/games';
@@ -20,6 +20,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-diaballik',
     templateUrl: './diaballik.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -59,8 +60,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Diaballik');
+        super('Diaballik');
         this.hasAsymmetricBoard = true;
         this.WIDTH = this.getState().getWidth();
         this.HEIGHT = this.getState().getHeight();
@@ -144,7 +144,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
-    public override async showLastMove(move: DiaballikMove): Promise<void> {
+    protected override async showLastMove(move: DiaballikMove): Promise<void> {
         for (const subMove of move.getSubMoves()) {
             if (subMove instanceof DiaballikTranslation) {
                 this.lastMovedPieces.push(subMove.getStart(), subMove.getEnd());

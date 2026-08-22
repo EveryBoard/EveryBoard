@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
@@ -49,6 +49,7 @@ interface LastMoved {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-diam',
     templateUrl: './diam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -106,8 +107,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
     };
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Diam');
+        super('Diam');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',
@@ -250,7 +250,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         }
     }
 
-    public override async showLastMove(move: DiamMove): Promise<void> {
+    protected override async showLastMove(move: DiamMove): Promise<void> {
         this.showLastMoveOnSpaces(move);
         this.showLastMoveOnPieces(move);
     }

@@ -6,14 +6,14 @@ import { GroupDataFactory } from '../../jscaip/BoardData';
 import { Coord } from '../../jscaip/Coord';
 import { Debug } from '../../utils/Debug';
 
-import { GoLegalityInformation, GoNode, AbstractGoRules } from './AbstractGoRules';
+import { GoLegalityInformation, GoNode, AbstractGoRules, AbstractGoConfig } from './AbstractGoRules';
 import { GoGroupData } from './GoGroupsData';
 import { GoMove } from './GoMove';
 import { GoPiece } from './GoPiece';
 import { GoState } from './GoState';
 
 @Debug.log
-export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerator<GoMove, GoState, C> {
+export class AbstractGoMoveGenerator<C extends AbstractGoConfig> extends MoveGenerator<GoMove, GoState, C> {
 
     public constructor(private readonly rules: AbstractGoRules<C>) {
         super();
@@ -26,7 +26,7 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
             playingMoves.push(GoMove.PASS);
             return playingMoves;
         } else {
-            const markingMoves: GoMove[] = this.getCountingMovesList(currentState);
+            const markingMoves: GoMove[] = this.getCountingMovesList(currentState, config);
             if (markingMoves.length === 0) {
                 return [GoMove.ACCEPT];
             } else {
@@ -42,7 +42,7 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
             const content: GoPiece = coordAndContent.content;
             const newMove: GoMove = new GoMove(coord.x, coord.y);
             if (content === GoPiece.EMPTY) {
-                const legality: MGPFallible<GoLegalityInformation> = this.rules.isLegal(newMove, state);
+                const legality: MGPFallible<GoLegalityInformation> = this.rules.isLegal(newMove, state, config);
                 if (legality.isSuccess()) {
                     choices.push(newMove);
                 }
@@ -51,7 +51,7 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
         return choices;
     }
 
-    public getCountingMovesList(currentState: GoState): GoMove[] {
+    public getCountingMovesList(currentState: GoState, config: C): GoMove[] {
         const choices: GoMove[] = [];
 
         // 1. put all to dead
@@ -63,7 +63,8 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
 
         const correctBoard: GoPiece[][] = this.getCorrectBoard(currentState).getCopiedBoard();
 
-        const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory();
+        const zoom: number = this.rules.getZoom(config);
+        const groupDataFactory: GroupDataFactory<GoPiece, GoGroupData> = this.rules.getGoGroupDataFactory(zoom);
         const groupsData: GoGroupData[] =
             groupDataFactory.getGroupsDataWhere(
                 correctBoard,
@@ -93,11 +94,7 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
             }
         };
         const allDeadBoard: GoPiece[][] = this.mapBoard(currentState.getCopiedBoard(), markAsDead);
-        const allDeadState: GoState = new GoState(allDeadBoard,
-                                                  currentState.getCapturedCopy(),
-                                                  currentState.turn,
-                                                  currentState.koCoord,
-                                                  currentState.phase);
+        const allDeadState: GoState = currentState.withBoard(allDeadBoard);
         const territoryLikeGroups: GoGroupData[] = this.rules.getTerritoryLikeGroup(allDeadState);
 
         return this.setAliveUniqueWrapper(allDeadState, territoryLikeGroups);
@@ -115,16 +112,15 @@ export class AbstractGoMoveGenerator<C extends RulesConfig> extends MoveGenerato
     }
 
     public setAliveUniqueWrapper(allDeadState: GoState,
-                                 monoWrappedEmptyGroups: GoGroupData[])
-    : GoState
-    {
-        let resultingState: GoState = allDeadState.copy();
+                                 monoWrappedEmptyGroups: GoGroupData[],
+    ): GoState {
+        let resultingState: GoState = allDeadState;
         let aliveCoords: Coord[];
         for (const monoWrappedEmptyGroup of monoWrappedEmptyGroups) {
             aliveCoords = monoWrappedEmptyGroup.deadDarkCoords.concat(monoWrappedEmptyGroup.deadLightCoords);
             for (const aliveCoord of aliveCoords) {
                 if (resultingState.isDead(aliveCoord)) {
-                    resultingState = this.rules.switchAliveness(aliveCoord, resultingState);
+                    resultingState = this.rules.switchLiveness(aliveCoord, resultingState, 1);
                 }
             }
         }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
@@ -15,6 +15,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-teeko',
     templateUrl: './teeko.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -33,8 +34,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     public victory: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Teeko');
+        super('Teeko');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
@@ -55,7 +55,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
         this.board = this.node.gameState.board;
     }
 
-    public override async showLastMove(move: TeekoMove): Promise<void> {
+    protected override async showLastMove(move: TeekoMove): Promise<void> {
         this.last = MGPOptional.of(this.rules.getLastCoord(move));
         if (move instanceof TeekoTranslationMove) {
             this.moved = [move.getStart(), move.getEnd()];

@@ -415,6 +415,35 @@ describe('GameCreationComponent', () => {
                 testUtils.expectElementToBeDisabled('#height_number_config_input');
             }));
 
+            it('should recognize a standard rules config only after creator receives config proposal update', fakeAsync(async() => {
+                // Given a creator who selected custom and changed its values away from and back to the standard config
+                await awaitComponentInitialization();
+                configRoomService.mockCandidateJoined(candidate, 0);
+                await chooseOpponent();
+                testUtils.chooseConfig('__custom__');
+                testUtils.fillInput('#width_number_config_input', '8');
+                tick(1);
+                testUtils.fillInput('#width_number_config_input', defaultConfig.width.toString());
+                tick(1);
+
+                // The config should still be named custom while it is being edited
+                testUtils.expectDropdownOptionToBeSelected('#ruleSelect', '__custom__');
+
+                // When the proposed config is confirmed by a configRoom update from the server
+                await proposeConfig();
+                configRoomService.mockConfigRoomUpdate({
+                    ...ConfigRoomMocks.getInitialRandom(defaultConfig),
+                    chosenOpponent: candidate,
+                    status: Status.CONFIG_PROPOSED,
+                });
+                testUtils.detectChanges();
+                tick(0);
+
+                // Then the creator should see the standard config name
+                const standardConfigName: string = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().name();
+                testUtils.expectDropdownOptionToBeSelected('#ruleSelect', standardConfigName);
+            }));
+
             it('should not emit rules config when modifying field', fakeAsync(async() => {
                 // Given a component where creator selected a config and chose an opponent
                 await awaitComponentInitialization();

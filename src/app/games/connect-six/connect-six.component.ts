@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { PlayerOrNone } from '@everyboard/games';
@@ -16,6 +16,7 @@ import { GobanGameComponent } from '../../components/game-components/goban-game-
 import { BlankGobanComponent } from '../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-connect-six',
     templateUrl: './connect-six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -34,8 +35,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public victoryCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('ConnectSix');
+        super('ConnectSix');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
@@ -59,7 +59,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.createHoshis();
     }
 
-    public override async showLastMove(move: ConnectSixMove): Promise<void> {
+    protected override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
             this.lastMoved = [move.coord];
         } else {
@@ -71,7 +71,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         this.lastMoved = [];
     }
 
-    @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
+    @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         if (this.getState().turn === 0) {
             const move: ConnectSixMove = ConnectSixFirstMove.of(coord);

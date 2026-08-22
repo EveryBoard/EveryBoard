@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
@@ -30,6 +30,7 @@ type PieceData = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -53,8 +54,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
     protected pieceSizeToRadius: MGPMap<EncapsulePiece, number> = new MGPMap();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Encapsule');
+        super('Encapsule');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',
@@ -77,7 +77,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
             .expandAll((4 / 3) * this.SPACE_SIZE);
     }
 
-    public override async showLastMove(move: EncapsuleMove): Promise<void> {
+    protected override async showLastMove(move: EncapsuleMove): Promise<void> {
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastStartingCoord = move.startingCoord;
         this.renderBoardPiece();

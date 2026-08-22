@@ -443,9 +443,18 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(this.getGameComponent()).withContext('Game component should be created').toBeTruthy();
     }
 
+    public override detectChanges(): void {
+        if (this.gameComponent !== undefined) {
+            this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        }
+        this.fixture.detectChanges();
+    }
+
     public override forceChangeDetection(): void {
-        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
-        this.detectChanges();
+        if (this.gameComponent !== undefined) {
+            this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        }
+        super.forceChangeDetection();
     }
 
     public async setupState(state: GameState,
@@ -474,7 +483,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         );
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
-            await this.gameComponent.showLastMove(params.previousMove);
+            await this.gameComponent.showLastMoveAndRedraw();
         }
         this.forceChangeDetection();
     }
@@ -612,7 +621,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy.calls.reset();
     }
 
-    public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
+    public async expectMoveFailure(elementName: string, reason: string, move: Move): Promise<void> {
         await this.expectToDisplayGameMessage(reason, async() => {
             await this.clickElement(elementName);
         });
@@ -635,6 +644,16 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
+    }
+
+    public enterMouseEnterElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseenter', new MouseEvent('mouseenter'));
+    }
+
+    public enterMouseLeaveElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseleave', new MouseEvent('mouseleave'));
     }
 
     public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { DummyHeuristic } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
@@ -24,6 +24,7 @@ interface ArrowInfo {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pentago',
     templateUrl: './pentago.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -52,8 +53,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public ARROWS: ArrowInfo[];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Pentago');
+        super('Pentago');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',
@@ -100,7 +100,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
     }
 
-    public override async showLastMove(move: PentagoMove): Promise<void> {
+    protected override async showLastMove(move: PentagoMove): Promise<void> {
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
         if (move.blockTurned.isPresent()) {

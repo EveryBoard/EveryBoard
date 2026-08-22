@@ -56,7 +56,6 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
 describe('DiaballikFilteredMoveGenerator', () => {
 
-
     for (let moveLength: number = 1; moveLength <= 3; moveLength++) {
         it(`should have only the requested length moves (n = ${moveLength})`, () => {
             const moveGenerator: DiaballikFilteredMoveGenerator = new DiaballikFilteredMoveGenerator(moveLength);

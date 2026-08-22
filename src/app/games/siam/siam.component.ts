@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { CoordSet } from '@everyboard/games';
@@ -30,6 +30,7 @@ export type SiamIndicatorArrow = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-siam',
     templateUrl: './siam.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -55,8 +56,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
     private insertingPiece: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Siam');
+        super('Siam');
         this.aiConfig = {
             minimax: [{
                 id: 'Distance',
@@ -83,7 +83,7 @@ export class SiamComponent extends RectangularGameComponent<SiamRules,
         this.board = state.board;
     }
 
-    public override async showLastMove(move: SiamMove): Promise<void> {
+    protected override async showLastMove(move: SiamMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousGameState: SiamState = this.getPreviousState();
         const config: SiamConfig = this.getConfig();

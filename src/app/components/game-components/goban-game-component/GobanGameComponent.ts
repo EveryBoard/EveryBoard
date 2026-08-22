@@ -1,5 +1,3 @@
-import { Component } from '@angular/core';
-
 import { Coord } from '@everyboard/games';
 import { GobanConfig } from '@everyboard/games';
 import { GobanUtils } from '@everyboard/games';
@@ -14,9 +12,6 @@ import { RectangularGameComponent } from '../rectangular-game-component/Rectangu
  * This component is used for games that are played on a Goban.
  * It helps displaying hoshis.
  */
-@Component({
-    template: '',
-})
 export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
                                          M extends Move,
                                          S extends GameStateWithTable<P>,
@@ -25,6 +20,10 @@ export abstract class GobanGameComponent<R extends SuperRules<M, S, C, L>,
                                          L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>
 {
+
+    public constructor(urlName: string) {
+        super(urlName);
+    }
 
     public hoshis: Coord[] = [];
     /**

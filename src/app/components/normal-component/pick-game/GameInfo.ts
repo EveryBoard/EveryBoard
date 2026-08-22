@@ -84,6 +84,8 @@ import { HexagonalGoTutorial } from '../../../games/gos/hexagonal-go/HexagonalGo
 import { HexagonalGoComponent } from '../../../games/gos/hexagonal-go/hexagonal-go.component';
 import { TriangularGoTutorial } from '../../../games/gos/triangular-go/TriangularGoTutorial';
 import { TriangularGoComponent } from '../../../games/gos/triangular-go/triangular-go.component';
+import { ZoomedGoTutorial } from '../../../games/gos/zoomed-go/ZoomedGoTutorial';
+import { ZoomedGoComponent } from '../../../games/gos/zoomed-go/zoomed-go.component';
 import { HexodiaTutorial } from '../../../games/hexodia/HexodiaTutorial';
 import { HexodiaComponent } from '../../../games/hexodia/hexodia.component';
 import { HiveTutorial } from '../../../games/hive/HiveTutorial';
@@ -214,7 +216,7 @@ export class GameInfo {
             new GameInfo($localize`Hexagonal Go`,           'HexagonalGo',           HexagonalGoComponent,           new HexagonalGoTutorial(),           HexagonalGoRules.get(),           new Date('2026-02-14'), GameDescription.HEXAGONAL_GO()          ), // 42:                             * Martin
             new GameInfo($localize`Toric Reversi`,          'ToricReversi',          ToricReversiComponent,          new ToricReversiTutorial(),          ToricReversiRules.get(),          new Date('2026-08-10'), GameDescription.TORIC_REVERSI()         ), // 43:                             * Martin
             new GameInfo($localize`Bashni`,                 'Bashni',                BashniComponent,                new BashniTutorial(),                BashniRules.get(),                new Date('2026-08-17'), GameDescription.BASHNI()                ), // 44:                             * Quentin
-
+            new GameInfo($localize`Zoomed Go`,              'ZoomedGo',              ZoomedGoComponent,              new ZoomedGoTutorial(),              ZoomedGoRules.get(),              new Date('2026-08-20'), GameDescription.ZOOMED_GO()             ), // 45:                             * Martin
         ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
         // After Apagos: median = 26d; average = 53d
         // 9d 10d 12d 13d 18d - 18d 20d 22d 25d 26d - (26d) - 49d 65d 71d 76d 93d - 94j 4m 4m 7m 11m

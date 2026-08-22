@@ -7,13 +7,13 @@ import { RulesConfig } from '../../../config/RulesConfigUtil';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TableUtils } from '../../../jscaip/TableUtils';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, HexagonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type HexagonalGoConfig = RulesConfig & {
+export type HexagonalGoConfig = AbstractGoConfig & {
 
     size: number;
 
@@ -30,7 +30,8 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
                 size: new NumberConfig(
                     7,
                     RulesConfigDescriptionLocalizable.SIZE,
-                    MGPValidators.range(1, 99)),
+                    MGPValidators.range(1, 99),
+                ),
             },
         });
 
@@ -65,7 +66,7 @@ export class HexagonalGoRules extends AbstractGoRules<HexagonalGoConfig> {
         return HexagonalGoRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getGoGroupDataFactory(): GoGroupDataFactory {
+    public override getGoGroupDataFactory(_: number): GoGroupDataFactory {
         return new HexagonalGoGroupDataFactory();
     }
 

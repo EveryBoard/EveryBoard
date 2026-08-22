@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
@@ -33,6 +33,7 @@ export type PossibleMove = {
 };
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -58,8 +59,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     private capturedCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Epaminondas');
+        super('Epaminondas');
         this.aiConfig = {
             minimax: [
                 {
@@ -117,7 +117,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
         return MGPOptional.of(playerMap);
     }
 
-    public override async showLastMove(move: EpaminondasMove): Promise<void> {
+    protected override async showLastMove(move: EpaminondasMove): Promise<void> {
         this.capturedCoords = [];
         let moved: Coord = move.coord;
         this.moveds = [moved];

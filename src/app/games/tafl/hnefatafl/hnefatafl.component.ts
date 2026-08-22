@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { HnefataflMove } from '@everyboard/games';
 import { HnefataflRules } from '@everyboard/games';
@@ -7,6 +7,7 @@ import { HnefataflRules } from '@everyboard/games';
 import { TaflComponent } from '../tafl.component';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hnefatafl',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -15,8 +16,7 @@ import { TaflComponent } from '../tafl.component';
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 
     public constructor() {
-        super(HnefataflMove.from);
-        this.setRulesAndNode('Hnefatafl');
+        super('Hnefatafl', HnefataflMove.from);
         this.aiConfig = this.createAIConfig();
         this.encoder = HnefataflMove.encoder;
     }

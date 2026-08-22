@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { RulesFailure } from '@everyboard/games';
@@ -16,6 +16,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -45,8 +46,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
     }
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Quarto');
+        super('Quarto');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
@@ -115,7 +115,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         }
     }
 
-    public override async showLastMove(move: QuartoMove): Promise<void> {
+    protected override async showLastMove(move: QuartoMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
     }
 

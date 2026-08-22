@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Direction } from '@everyboard/games';
@@ -41,6 +41,7 @@ type AbaloneArrowInfo = {
 };
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -68,8 +69,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         .flatMap((coordAndContent: { coord: Coord }) => coordAndContent.coord.getOrdinalNeighbors())).toList();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Abalone');
+        super('Abalone');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -133,7 +133,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.selecteds = [];
     }
 
-    public override async showLastMove(move: AbaloneMove): Promise<void> {
+    protected override async showLastMove(move: AbaloneMove): Promise<void> {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {

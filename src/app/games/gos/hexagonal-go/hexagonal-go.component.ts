@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { GroupData } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
@@ -23,6 +23,7 @@ import { ClickHandler } from '../../../components/game-components/game-component
 import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hexagonal-go',
     templateUrl: './hexagonal-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -48,8 +49,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     public GoPiece: typeof GoPiece = GoPiece;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('HexagonalGo');
+        super('HexagonalGo');
         this.aiConfig = {
             minimax: [{
                 id: 'Territory',
@@ -81,7 +81,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
                                          PointyHexaOrientation.INSTANCE);
     }
 
-    public override async showLastMove(move: GoMove): Promise<void> {
+    protected override async showLastMove(move: GoMove): Promise<void> {
         this.last = MGPOptional.of(move.coord);
         this.showCaptures();
     }

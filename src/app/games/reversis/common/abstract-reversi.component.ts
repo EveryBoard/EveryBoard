@@ -25,8 +25,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
     private captured: Coord[] = [];
 
     public constructor(urlName: string) {
-        super();
-        this.setRulesAndNode(urlName);
+        super(urlName);
         this.aiConfig = {
             minimax: [{
                 id: 'Piece Count',
@@ -59,7 +58,7 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
         this.canPass = this.rules.playerCanOnlyPass(state, this.getConfig());
     }
 
-    public override async showLastMove(move: ReversiMove): Promise<void> {
+    protected override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentOpponent();
         this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.getConfig());

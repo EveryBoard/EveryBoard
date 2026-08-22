@@ -36,8 +36,8 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     public chosen: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(public generateMove: (start: Coord, end: Coord) => MGPFallible<M>) {
-        super();
+    public constructor(urlName: string, public generateMove: (start: Coord, end: Coord) => MGPFallible<M>) {
+        super(urlName);
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
@@ -57,7 +57,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         return ScoreName.REMAINING_PIECES;
     }
 
-    public override async showLastMove(move: M): Promise<void> {
+    protected override async showLastMove(move: M): Promise<void> {
         const previousState: TaflState = this.getPreviousState();
         const opponent: Player = this.getState().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {

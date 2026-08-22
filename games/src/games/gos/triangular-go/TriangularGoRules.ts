@@ -9,13 +9,13 @@ import { HexagonalUtils } from '../../../jscaip/HexagonalUtils';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TriangularCheckerBoard } from '../../../jscaip/state/TriangularCheckerBoard';
 import { MGPValidators } from '../../../utils/MGPValidator';
-import { AbstractGoRules } from '../AbstractGoRules';
+import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
 import { GoGroupDataFactory, TriangularGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-export type TriangularGoConfig = RulesConfig & {
+export type TriangularGoConfig = AbstractGoConfig & {
 
     size: number;
 

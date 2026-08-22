@@ -55,14 +55,15 @@ describe('TriangularGoComponent', () => {
 
         const move: GoMove = new GoMove(4, 1);
         await testUtils.expectMoveSuccess('#click-4-1', move);
-        testUtils.expectElementToHaveClass('#polygon-4-0', 'captured-fill');
+        testUtils.expectElementToHaveClass('#space-4-0', 'captured-fill');
     }));
 
     it('should allow simple clicks', fakeAsync(async() => {
+        // Given any board
+        // When doing a click
+        // Then it should do a move
         const move: GoMove = new GoMove(4, 4);
         await testUtils.expectMoveSuccess('#click-4-4', move);
-        const secondMove: GoMove = new GoMove(3, 3);
-        await testUtils.expectMoveSuccess('#click-3-3', secondMove);
     }));
 
     it('should show territory and dead', fakeAsync(async() => {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { FourStatePiece } from '@everyboard/games';
@@ -25,6 +25,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -65,8 +66,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
     private finalCaptures: GipfCapture[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Gipf');
+        super('Gipf');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -103,7 +103,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         return ScoreName.CAPTURES;
     }
 
-    public override async showLastMove(move: GipfMove): Promise<void> {
+    protected override async showLastMove(move: GipfMove): Promise<void> {
         const previousState: GipfState = this.getPreviousState();
         move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c, previousState));
         const stateAfterInitialCaptures: GipfState = GipfRules.applyCaptures(move.initialCaptures, previousState);

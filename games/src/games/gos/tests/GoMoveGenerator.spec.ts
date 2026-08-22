@@ -4,14 +4,14 @@ import { MGPOptional } from '@everyboard/lib';
 import { RulesConfig } from '../../../config/RulesConfigUtil';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';
-import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
 import { GoNode } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';
 import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 import { GoMoveGenerator } from '../go/GoMoveGenerator';
-import { GoConfig, GoRules } from '../go/GoRules';
+import { GoRules } from '../go/GoRules';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -23,12 +23,14 @@ const _: GoPiece = GoPiece.EMPTY;
 
 describe('GoMoveGenerator', () => {
 
-    let moveGenerator: AbstractGoMoveGenerator<RulesConfig>;
+    let moveGenerator: GoMoveGenerator;
 
-    const config: GoConfig = {
+    const config: RectangularGoConfig = {
         width: 5,
         height: 5,
         handicap: 0,
+        zoom: 1,
+        showZooms: true,
     };
 
     beforeEach(() => {

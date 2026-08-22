@@ -446,5 +446,4 @@ describe('ConspirateursComponent', () => {
         }));
     });
 
-
 });

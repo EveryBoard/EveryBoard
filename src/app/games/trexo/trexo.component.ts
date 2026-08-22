@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, Signal, signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Signal, WritableSignal, computed, signal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Ordinal } from '@everyboard/games';
@@ -33,6 +33,7 @@ interface PieceOnBoard {
 type ModeType = '2D' | '3D';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-trexo',
     templateUrl: './trexo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -77,8 +78,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
     public currentPlayerClass: string = 'player0';
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Trexo');
+        super('Trexo');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
@@ -159,7 +159,7 @@ export class TrexoComponent extends ParallelogramGameComponent<TrexoRules, Trexo
         this.pieceOnBoard.set(this.get3DBoard());
     }
 
-    public override async showLastMove(move: TrexoMove): Promise<void> {
+    protected override async showLastMove(move: TrexoMove): Promise<void> {
         this.lastMoved = [
             move.getZero(),
             move.getOne(),

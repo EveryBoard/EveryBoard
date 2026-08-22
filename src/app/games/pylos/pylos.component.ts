@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Player, PlayerOrNone } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
@@ -19,6 +19,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -56,8 +57,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     private remainingPieces: PlayerNumberMap = PlayerNumberMap.of(15, 15);
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Pylos');
+        super('Pylos');
         this.aiConfig = {
             minimax: [{
                 id: 'Reserve',
@@ -338,7 +338,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return ScoreName.REMAINING_PIECES;
     }
 
-    public override async showLastMove(move: PylosMove): Promise<void> {
+    protected override async showLastMove(move: PylosMove): Promise<void> {
         this.lastStartingCoord = move.startingCoord;
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastFirstCapture = move.firstCapture;

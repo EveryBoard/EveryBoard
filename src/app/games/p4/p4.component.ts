@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
 import { Player, PlayerOrNone } from '@everyboard/games';
@@ -15,6 +15,7 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-p4',
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -27,8 +28,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public victoryCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('P4');
+        super('P4');
         this.aiConfig = {
             minimax: [
                 {
@@ -88,7 +88,7 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
         this.board = state.board;
     }
 
-    public override async showLastMove(move: P4Move): Promise<void> {
+    protected override async showLastMove(move: P4Move): Promise<void> {
         const state: P4State = this.getState();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(state.board, move.x) + 1;
         this.last = MGPOptional.of(new Coord(move.x, y));

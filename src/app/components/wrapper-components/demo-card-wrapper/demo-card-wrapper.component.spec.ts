@@ -20,8 +20,7 @@ import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-g
 
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
 
-
-describe('DemoCardComponent', () => {
+describe('DemoCardWrapperComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<DemoCardWrapperComponent>;
 

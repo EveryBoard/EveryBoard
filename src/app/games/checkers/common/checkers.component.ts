@@ -59,7 +59,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
     private flownOverCoords: Coord[] = []; // Coord that where flown over during ongoing turn
     private legalMoves: CheckersMove[] = [];
-    protected moveGenerator: CheckersMoveGenerator;
+    protected moveGenerator: CheckersMoveGenerator = new CheckersMoveGenerator(this.rules);
 
     protected override computeViewBox(): ViewBox {
         const h: number = this.boardSize().y;
@@ -71,8 +71,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override setRulesAndNode(urlName: string): void {
         super.setRulesAndNode(urlName);
-        this.setConstructedState(this.getState());
-        this.moveGenerator = new CheckersMoveGenerator(this.rules);
         this.aiConfig = {
             minimax: [
                 {
@@ -158,7 +156,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return piece.isPromoted;
     }
 
-    public override async showLastMove(move: CheckersMove): Promise<void> {
+    protected override async showLastMove(move: CheckersMove): Promise<void> {
         this.lastCaptures = [];
         this.lastMoved = [];
         for (let i: number = 0; i < move.coords.length - 1; i++) {

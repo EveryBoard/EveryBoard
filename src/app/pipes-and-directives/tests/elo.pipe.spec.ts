@@ -21,5 +21,4 @@ describe('EloPipe', () => {
         expect(pipe.transform(1.5)).toBe('2');
     });
 
-
 });

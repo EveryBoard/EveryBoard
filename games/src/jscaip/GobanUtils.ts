@@ -6,6 +6,9 @@ export class GobanUtils {
 
     public static getHoshis(width: number, height: number): Coord[] {
         let hoshis: Set<Coord> = new Set<Coord>();
+        if (width < 5 || height < 5) {
+            return [];
+        }
         const horizontalMiddle: number = GobanUtils.getHorizontalCenter(width);
         const verticalMiddle: number = GobanUtils.getVerticalCenter(height);
         const left: number = GobanUtils.getHorizontalLeft(width);
