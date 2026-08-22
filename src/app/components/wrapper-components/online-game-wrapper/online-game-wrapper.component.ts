@@ -1,5 +1,16 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChildren } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    Signal,
+    WritableSignal,
+    inject,
+    signal,
+    viewChildren,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Mutex } from 'async-mutex';
@@ -91,7 +102,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private moveSentButNotReceivedYet: boolean = false;
 
-    public confirmResignation: boolean = false;
+    public readonly confirmResignation: WritableSignal<boolean> = signal(false);
 
     private extractGameIdFromURL(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('id'));
@@ -426,20 +437,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     // Called by the resign button
     public resign(): void {
-        this.confirmResignation = true;
-        this.cdr.detectChanges();
+        this.confirmResignation.set(true);
     }
 
     // Called by the confirm button of the resignation confirmation dialog
     public async confirmResign(): Promise<void> {
-        this.confirmResignation = false;
+        this.confirmResignation.set(false);
         await this.gameService.resign();
     }
 
     // Called by the cancel button of the resignation confirmation dialog
     public cancelResign(): void {
-        this.confirmResignation = false;
-        this.cdr.detectChanges();
+        this.confirmResignation.set(false);
     }
 
     // Called by the clocks
