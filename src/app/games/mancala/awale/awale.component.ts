@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MancalaComponent } from '../common/MancalaComponent';
 import { MancalaMove } from '../common/MancalaMove';
@@ -8,6 +8,7 @@ import { AwaleMoveGenerator } from './AwaleMoveGenerator';
 import { AwaleRules } from './AwaleRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-awale-component',
     templateUrl: './../common/mancala.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -16,8 +17,7 @@ import { AwaleRules } from './AwaleRules';
 export class AwaleComponent extends MancalaComponent<AwaleRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Awale');
+        super('Awale');
         this.aiConfig = this.createAIConfig(new AwaleMoveGenerator());
         this.encoder = MancalaMove.encoder;
     }

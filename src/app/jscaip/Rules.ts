@@ -24,7 +24,7 @@ export abstract class SuperRules<M extends Move,
      * the remaining piece that you can put on the board...
      */
 
-    public choose(node: GameNode<M, S>, move: M, config: C) : MGPFallible<GameNode<M, S>> {
+    public choose(node: GameNode<M, S>, move: M, config: C): MGPFallible<GameNode<M, S>> {
         /**
          * used by the rules to update board
          * return true if the move was legal, and the node updated

@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
     private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
 
-
     public loading: boolean = true;
     public username: MGPOptional<string> = MGPOptional.empty();
 
