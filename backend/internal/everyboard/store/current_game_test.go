@@ -28,15 +28,14 @@ func TestSetCurrentGame(t *testing.T) {
 	// Given an empty db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
-	user := model.MinimalUser{ID: "foo", Name: "foo"}
+	user := model.MinimalUser{ID: "foo", Name: "foo", IsBot: false}
 	// When setting the current game of the user
 	gameName := "Go"
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
 		GameName: gameName,
-		UserID:   user.ID,
-		UserName: user.Name,
+		User:     user,
 		Creator:  user,
 		Opponent: nil,
 		Role:     role,
@@ -47,6 +46,8 @@ func TestSetCurrentGame(t *testing.T) {
 	currentGame, err = store.GetCurrentGame(user)
 	require.NoError(t, err, "error when getting current game")
 	require.NotNil(t, currentGame, "invalid current game in db")
+	assert.Equal(t, user, currentGame.User, "invalid current-game user in db")
+	assert.Equal(t, user, currentGame.Creator, "invalid current-game creator in db")
 	assert.Equal(t, model.GameID(42), currentGame.GameID, "invalid current game in db")
 	assert.Equal(t, gameName, currentGame.GameName, "invalid current game in db")
 	assert.Nil(t, currentGame.Opponent, "invalid current game in db")
@@ -63,8 +64,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user.ID,
-		UserName: user.Name,
+		User:     user,
 		GameName: gameName,
 		Creator:  user,
 		Opponent: nil,
@@ -74,7 +74,7 @@ func TestUpdateCurrentGame(t *testing.T) {
 	require.NoError(t, err, "error when setting current game")
 
 	// When updating the current game
-	opponent := model.MinimalUser{ID: "bar", Name: "bar"}
+	opponent := model.MinimalUser{ID: "bar", Name: "bar", IsBot: false}
 	currentGame.Opponent = &opponent
 	err = store.UpdateCurrentGame(user, currentGame)
 	require.NoError(t, err, "error when updating current game")
@@ -86,10 +86,30 @@ func TestUpdateCurrentGame(t *testing.T) {
 	assert.Equal(t, model.GameID(42), currentGame.GameID, "invalid current game in db")
 	assert.Equal(t, gameName, currentGame.GameName, "invalid current game in db")
 	require.NotNil(t, currentGame.Opponent, "invalid current game in db")
-	assert.Equal(t, opponent.ID, currentGame.Opponent.ID, "invalid current game in db")
+	assert.Equal(t, opponent, *currentGame.Opponent, "invalid current-game opponent in db")
 	assert.Equal(t, role, currentGame.Role, "invalid current game in db")
+}
 
-	// When clearing the opponent again
+func TestClearCurrentGameOpponent(t *testing.T) {
+	// Given a db with a current game and a chosen opponent
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	user := model.MinimalUser{ID: "foo", Name: "foo"}
+	opponent := model.MinimalUser{ID: "opponent", Name: "opponent"}
+	gameName := "Go"
+	role := model.UserRoleCreator
+	currentGame := &model.CurrentGame{
+		GameID:   42,
+		User:     user,
+		GameName: gameName,
+		Creator:  user,
+		Opponent: &opponent,
+		Role:     role,
+	}
+	err = store.SetCurrentGame(currentGame)
+	require.NoError(t, err, "error when setting current game")
+
+	// When clearing the opponent
 	currentGame.Opponent = nil
 	err = store.UpdateCurrentGame(user, currentGame)
 	require.NoError(t, err, "error when updating current game")
@@ -101,6 +121,23 @@ func TestUpdateCurrentGame(t *testing.T) {
 	assert.Nil(t, currentGame.Opponent, "current game opponent should have been cleared")
 }
 
+func TestCurrentGameUserWithSameIDButDifferentMetadata(t *testing.T) {
+	// Given a current game for a user
+	store, err := InitDatabase(sqlite.Open(":memory:"))
+	require.NoError(t, err, "cannot initialize db")
+	user := model.MinimalUser{ID: "foo", Name: "foo"}
+	first := &model.CurrentGame{User: user, GameID: 42, Creator: user}
+	require.NoError(t, store.SetCurrentGame(first), "error when setting current game")
+
+	// When setting another current game for the same user with different metadata
+	changedUser := model.MinimalUser{ID: user.ID, Name: "renamed", IsBot: false}
+	second := &model.CurrentGame{User: changedUser, GameID: 43, Creator: changedUser}
+	err = store.SetCurrentGame(second)
+
+	// Then it should fail because the user is already subscribed
+	assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
+}
+
 func TestRemoveCurrentGame(t *testing.T) {
 	// Given a db with a current game
 	store, err := InitDatabase(sqlite.Open(":memory:"))
@@ -110,8 +147,7 @@ func TestRemoveCurrentGame(t *testing.T) {
 	role := model.UserRoleCreator
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user.ID,
-		UserName: user.Name,
+		User:     user,
 		GameName: gameName,
 		Creator:  user,
 		Opponent: nil,
@@ -138,8 +174,7 @@ func TestApplyToObservers(t *testing.T) {
 	user2 := model.MinimalUser{ID: "bar", Name: "bar"}
 	currentGame := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user1.ID,
-		UserName: user1.Name,
+		User:     user1,
 		GameName: "Go",
 		Creator:  user1,
 		Opponent: nil,
@@ -150,8 +185,7 @@ func TestApplyToObservers(t *testing.T) {
 
 	currentGame2 := &model.CurrentGame{
 		GameID:   42,
-		UserID:   user2.ID,
-		UserName: user2.Name,
+		User:     user2,
 		GameName: "Go",
 		Creator:  user1,
 		Opponent: nil,
@@ -187,7 +221,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 
 	errors := make(chan error, numRequests)
 
-	for i := 0; i < numRequests; i++ {
+	for i := range numRequests {
 		go func(id int) {
 			defer wg.Done()
 
@@ -209,8 +243,7 @@ func TestCreateGame_RaceCondition(t *testing.T) {
 				}
 
 				return s.SetCurrentGame(&model.CurrentGame{
-					UserID:   user.ID,
-					UserName: user.Name,
+					User:     user,
 					GameID:   cr.ID,
 					GameName: gameName,
 					Creator:  user,

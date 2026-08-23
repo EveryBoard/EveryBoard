@@ -7,7 +7,11 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
 )
 
-func withMessageArgument[T any](messageData map[string]json.RawMessage, key string, handle func(T) error) error {
+func withMessageArgument[T any](
+	messageData map[string]json.RawMessage,
+	key string,
+	handle func(T) error,
+) error {
 	value, err := getMessageArgument[T](messageData, key)
 	if err != nil {
 		return apperror.ErrorInvalidData
