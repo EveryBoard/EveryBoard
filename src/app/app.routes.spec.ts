@@ -6,7 +6,7 @@ import * as Firestore from '@firebase/firestore';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { routes } from './app.routes';
+import { initializeFirebase, routes } from './app.routes';
 import { AccountComponent } from './components/normal-component/account/account.component';
 import { DemoPageComponent } from './components/normal-component/demo-page/demo-page.component';
 import { LobbyComponent } from './components/normal-component/lobby/lobby.component';
@@ -17,10 +17,12 @@ import { NotFoundComponent } from './components/normal-component/not-found/not-f
 import { OnlineGameCreationComponent } from './components/normal-component/online-game-creation/online-game-creation.component';
 import { OnlineGameSelectionComponent } from './components/normal-component/online-game-selection/online-game-selection.component';
 import { RegisterComponent } from './components/normal-component/register/register.component';
+import { ResetPasswordComponent } from './components/normal-component/reset-password/reset-password.component';
 import { SettingsComponent } from './components/normal-component/settings/settings.component';
 import { TutorialGameCreationComponent } from './components/normal-component/tutorial-game-creation/tutorial-game-creation.component';
 import { VerifyAccountComponent } from './components/normal-component/verify-account/verify-account.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
+import { LocalGameConfigurationComponent } from './components/wrapper-components/local-game-configuration/local-game-configuration.component';
 import { LocalGameWrapperComponent } from './components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { TutorialGameWrapperComponent } from './components/wrapper-components/tutorial-game-wrapper/tutorial-game-wrapper.component';
@@ -33,6 +35,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['settings', SettingsComponent],
     ['account', AccountComponent],
     ['register', RegisterComponent],
+    ['reset-password', ResetPasswordComponent],
     ['notFound/errorMessage', NotFoundComponent],
     ['nextGameLoading', NextGameLoadingComponent],
     ['verify-account', VerifyAccountComponent],
@@ -40,6 +43,7 @@ export const routingSpecification: [string, Type<any>][] = [
     ['play/P4', OnlineGameCreationComponent],
     ['play/P4/part-id', OnlineGameWrapperComponent],
     ['local', LocalGameCreationComponent],
+    ['local/P4/config', LocalGameConfigurationComponent],
     ['local/P4', LocalGameWrapperComponent],
     ['tutorial', TutorialGameCreationComponent],
     ['tutorial/P4', TutorialGameWrapperComponent],
@@ -81,6 +85,25 @@ describe('App routes', () => {
         await setupEmulators();
         expect(Firestore.getFirestore()).toBeDefined();
         expect(Auth.getAuth()).toBeDefined();
+    });
+
+    it('should terminate Firestore when the page is closed (hidden event)', () => {
+        // Given Firebase initialization with a mocked Firestore termination function
+        const addEventListenerSpy: jasmine.Spy = spyOn(window, 'addEventListener');
+        const terminateSpy: jasmine.Spy = jasmine.createSpy('terminateFirestore').and.resolveTo();
+        initializeFirebase(terminateSpy);
+
+        // When the registered pagehide listener is called
+        const pageHideCall: unknown[] | undefined =
+            addEventListenerSpy.calls.allArgs().find((args: unknown[]) => {
+                return args[0] === 'pagehide';
+            });
+        expect(pageHideCall).toBeDefined();
+        const pageHideListener: EventListener = pageHideCall![1] as EventListener;
+        pageHideListener(new Event('pagehide'));
+
+        // Then Firestore is terminated
+        expect(terminateSpy).toHaveBeenCalledOnceWith(Firestore.getFirestore());
     });
     it('router should map all urls to their expected components', fakeAsync(async() => {
         for (const [url, expectedComponent] of routingSpecification) {
