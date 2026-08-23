@@ -5,7 +5,6 @@ import { BashniRules } from '@everyboard/games';
 
 import { CheckersComponent } from '../common/checkers.component';
 
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-bashni',

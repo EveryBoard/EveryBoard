@@ -5,7 +5,6 @@ import { Player } from '@everyboard/games';
 import { Debug } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
-
 @Component({
     selector: 'app-timer',
     templateUrl: './timer.component.html',

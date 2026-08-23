@@ -5,7 +5,6 @@ import { ReversiRules } from '@everyboard/games';
 
 import { AbstractReversiComponent } from '../common/abstract-reversi.component';
 
-
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-reversi',
