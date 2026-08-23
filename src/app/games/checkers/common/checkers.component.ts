@@ -267,6 +267,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (validation.isFailure()) {
             return validation.getReason();
         }
+        console.log('jaaj')
         const attemptedMove: CheckersMove = this.getMoveAttemptEndingAt(clicked);
         const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.getConfig());
         Utils.assert(moveValidity.isFailure(), 'A move absent from possibleClicks should be illegal');
@@ -275,6 +276,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private getMoveAttemptEndingAt(clicked: Coord): CheckersMove {
         const clickedCoords: Coord[] = this.currentMoveClicks.concat(clicked);
+        console.log(clicked, 'and', clickedCoords)
         if (clickedCoords.length === 2 && this.doesMoveAttemptCapture(clicked) === false) {
             return CheckersMove.fromStep(clickedCoords[0], clickedCoords[1]);
         } else {
