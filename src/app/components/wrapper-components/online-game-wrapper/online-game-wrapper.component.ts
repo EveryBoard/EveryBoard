@@ -440,13 +440,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.confirmResignation.set(true);
     }
 
-    // Called by the confirm button of the resignation confirmation dialog
+    // Called by the resignation confirmation button
     public async confirmResign(): Promise<void> {
         this.confirmResignation.set(false);
         await this.gameService.resign();
     }
 
-    // Called by the cancel button of the resignation confirmation dialog
+    // Called by the cancelling the resignation confirmation
     public cancelResign(): void {
         this.confirmResignation.set(false);
     }

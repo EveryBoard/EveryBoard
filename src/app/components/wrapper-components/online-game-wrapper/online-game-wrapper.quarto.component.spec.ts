@@ -1214,7 +1214,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an online game component
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
-            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             spyOn(gameService, 'resign');
 
             // When clicking on the resign button
@@ -1231,7 +1230,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an online game component on which resign button has been clicked
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
-            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             spyOn(gameService, 'resign');
             await testUtils.clickElement('#resign');
 
@@ -1247,7 +1245,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an online game component on which resign button has been clicked
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
-            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             spyOn(gameService, 'resign');
             await testUtils.clickElement('#resign');
 
@@ -1278,8 +1275,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given a board where the opponent has resigned
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
-            await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
-            await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
             await receiveEndGame(GameResult.RESIGN_OF_ONE);
 
             // When checking "victory text"
