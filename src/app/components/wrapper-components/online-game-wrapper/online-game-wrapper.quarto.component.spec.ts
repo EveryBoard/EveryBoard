@@ -246,7 +246,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await receiveEndGame();
     }));
 
-    it('should allow a human-controlled bot account to play', fakeAsync(async() => {
+    it('should allow a human-controlled bot account to play, only for development and testing purpose', fakeAsync(async() => {
         // Given a started game where the backend marks the connected user as a bot
         await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, {
             ...PreparationOptions.withoutClocks,
