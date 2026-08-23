@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { Utils } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord } from '../../../jscaip/Coord';
@@ -37,9 +38,9 @@ describe('GoGroupData', () => {
         // When adding the coord again
         // Then it should throw
         const expectedError: string = 'This group already contains (0, 0)';
-        // spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
-        // TODO FOR REVIEW: QUEUE DE FER ?
+        spyOn(Utils, 'logError').and.callThrough();
         expect(() => group.addPawn(coord, GoPiece.DARK)).toThrowError('Assertion failure: ' + expectedError);
+        expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', expectedError, undefined);
     }));
 
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
