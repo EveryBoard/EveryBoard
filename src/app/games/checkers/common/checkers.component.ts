@@ -1,4 +1,3 @@
-
 import { computed, signal, Signal, WritableSignal } from '@angular/core';
 
 import { Coord } from '@everyboard/games';
