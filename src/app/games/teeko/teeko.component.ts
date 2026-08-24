@@ -52,7 +52,7 @@ export class TeekoComponent extends RectangularGameComponent<TeekoRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.node.gameState.board;
+        this.board = this.nodeVanJaaj().gameState.board;
     }
 
     protected override async showLastMove(move: TeekoMove): Promise<void> {

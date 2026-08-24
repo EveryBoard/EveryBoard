@@ -387,9 +387,9 @@ export class LodestoneComponent
                                                   this.selectedLodestone.get().orientation),
                 preCaptureState: this.getState(),
             });
-        } else if (this.node.previousMove.isPresent()) {
+        } else if (this.nodeVanJaaj().previousMove.isPresent()) {
             return MGPOptional.of({
-                preCaptureMove: this.node.previousMove.get(),
+                preCaptureMove: this.nodeVanJaaj().previousMove.get(),
                 preCaptureState: this.getPreviousState(),
             });
         } else {
@@ -409,7 +409,7 @@ export class LodestoneComponent
                     const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
                     return MGPOptional.of(this.getLodestoneInfoFromLodestone(lodestone));
                 } else if (this.wasLastMoveLodestone(coord)) {
-                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node.previousMove.get()));
+                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.nodeVanJaaj().previousMove.get()));
                 } else if (this.isCrumbledLodestone(coord)) {
                     return MGPOptional.of(this.getCrumbledLodestoneInfo(coord));
                 }
@@ -451,19 +451,19 @@ export class LodestoneComponent
     }
 
     private wasLastMoveLodestone(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
-            return this.node.previousMove.get().coord.equals(coord);
+        if (this.nodeVanJaaj().parent.isPresent()) {
+            return this.nodeVanJaaj().previousMove.get().coord.equals(coord);
         } else {
             return false;
         }
     }
 
     private isCrumbledLodestone(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
+        if (this.nodeVanJaaj().parent.isPresent()) {
             if (this.selectedLodestone.isPresent()) {
                 return false;
             } else {
-                const state: LodestoneState = this.node.parent.get().gameState;
+                const state: LodestoneState = this.nodeVanJaaj().parent.get().gameState;
                 const piece: LodestonePiece = state.getPieceAt(coord);
                 return piece.isLodestone() &&
                        piece.owner === state.getCurrentOpponent();

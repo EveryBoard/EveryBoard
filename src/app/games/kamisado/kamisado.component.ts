@@ -76,7 +76,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         this.board = state.getCopiedBoard();
 
         this.canPass = KamisadoRules.mustPass(state);
-        const isFinished: boolean = this.rules.getGameStatus(this.node) !== GameStatus.ONGOING;
+        const isFinished: boolean = this.rules.getGameStatus(this.nodeVanJaaj()) !== GameStatus.ONGOING;
         if (this.canPass || state.coordToPlay.isAbsent() || isFinished) {
             this.chosenAutomatically = false;
             this.chosen = MGPOptional.empty();

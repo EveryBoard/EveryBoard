@@ -172,10 +172,10 @@ export class MartianChessComponent extends RectangularGameComponent<MartianChess
     protected override async showLastMove(move: MartianChessMove): Promise<void> {
         this.lastMoved = move.getCoords();
         const landing: Coord = move.getEnd();
-        const previousPiece: MartianChessPiece = this.node.parent.get().gameState.getPieceAt(landing);
+        const previousPiece: MartianChessPiece = this.nodeVanJaaj().parent.get().gameState.getPieceAt(landing);
         const wasFilled: boolean = previousPiece !== MartianChessPiece.EMPTY;
         // Since now, current player is previous opponent
-        const landingInOpponentTerritory: boolean = this.node.gameState.isInPlayerTerritory(landing);
+        const landingInOpponentTerritory: boolean = this.nodeVanJaaj().gameState.isInPlayerTerritory(landing);
         if (wasFilled) {
             if (landingInOpponentTerritory) {
                 this.captured = MGPOptional.of(landing);

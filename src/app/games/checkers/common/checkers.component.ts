@@ -117,7 +117,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.setConstructedState(this.getState());
-        this.legalMoves = this.moveGenerator.getListMoves(this.node, this.config);
+        this.legalMoves = this.moveGenerator.getListMoves(this.nodeVanJaaj(), this.config);
         this.scores = MGPOptional.of(this.constructedState().get().getScores());
         this.showPossibleClicks();
     }
