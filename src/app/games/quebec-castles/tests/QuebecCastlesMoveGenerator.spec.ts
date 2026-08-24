@@ -86,7 +86,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                 });
 
                 it('should drop last pieces by batch (first player has less piece)', () => {
-                    // Given a board in  piece-by-piece mode
+                    // Given a board in piece-by-piece mode
                     const customConfig: QuebecCastlesConfig = {
                         ...defaultConfig,
                         dropMode: 'PIECE_BY_PIECE',
@@ -118,7 +118,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                 });
 
                 it('should drop last pieces by batch (first player has more pieces)', () => {
-                    // Given a board in  piece-by-piece mode where first player has more pieces
+                    // Given a board in piece-by-piece mode where first player has more pieces
                     const customConfig: QuebecCastlesConfig = {
                         ...defaultConfig,
                         dropMode: 'PIECE_BY_PIECE',
@@ -161,7 +161,7 @@ describe('QuebecCastlesMoveGenerator', () => {
                 };
 
                 it('should drop last pieces by batch (invader has more piece)', () => {
-                    // Given a board in  piece-by-piece mode where invader has more piece
+                    // Given a board in piece-by-piece mode where invader has more piece
                     // and where you must place castle yourself
                     // where current player is the last player with pieces to drop
                     const state: QuebecCastlesState = new QuebecCastlesState([

@@ -134,7 +134,7 @@ describe('HeaderComponent', () => {
             tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user become linked to an currentGame with an opponent set
+            // When user become linked to an currentGame as creator with an opponent set
             const currentGame: CurrentGame = CurrentGameMocks.CREATOR_WITH_OPPONENT;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
@@ -148,13 +148,13 @@ describe('HeaderComponent', () => {
         }));
 
         it(`should display '<GameName> against <Creator>' when chosen opponent`, fakeAsync(async() => {
-            // Given a connected user that is the chosen opponent
+            // Given a connected user that has no currentGame
             ConnectedUserServiceMock.setUser(UserMocks.OPPONENT_AUTH_USER);
             testUtils.detectChanges();
             tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user becomes linked to a  game where they are the chosen opponent
+            // When user becomes linked to a game where they are the chosen opponent
             const currentGame: CurrentGame = CurrentGameMocks.CHOSEN_OPPONENT;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
@@ -173,7 +173,7 @@ describe('HeaderComponent', () => {
             tick(0);
             testUtils.expectElementNotToExist('#currentGameLink');
 
-            // When user become linked to an currentGame
+            // When user become linked to an currentGame as an observer
             const currentGame: CurrentGame = CurrentGameMocks.OBSERVER;
             CurrentGameServiceMock.setCurrentGame(MGPOptional.of(currentGame));
             testUtils.detectChanges();
