@@ -299,6 +299,7 @@ export * from './games/yinsh/YinshPiece';
 export * from './games/yinsh/YinshRules';
 export * from './games/yinsh/YinshScoreHeuristic';
 export * from './games/yinsh/YinshState';
+export * from './jscaip/tests/Move.spec';
 export * from './jscaip/AI/AbstractMinimax';
 export * from './jscaip/AI/AI';
 export * from './jscaip/AI/AIConfig';
