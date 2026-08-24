@@ -110,12 +110,16 @@ export class OGWCTimeManagerService {
     }
 
     public playerOfMinimalUser(user: MinimalUser): Player {
-        if (this.players.get(Player.ZERO).equalsValue(user)) {
+        if (this.isUser(Player.ZERO, user)) {
             return Player.ZERO;
         } else {
-            Utils.assert(this.players.get(Player.ONE).equalsValue(user), 'MinimalUser should match a player');
+            Utils.assert(this.isUser(Player.ONE, user), 'MinimalUser should match a player');
             return Player.ONE;
         }
+    }
+
+    private isUser(player: Player, user: MinimalUser): boolean {
+        return this.players.get(player).map((candidate: MinimalUser): string => candidate.id).equalsValue(user.id);
     }
 
     public onReceivedMove(move: GameEventMove): void {

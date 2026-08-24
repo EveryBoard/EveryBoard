@@ -218,13 +218,19 @@ export class QuebecCastlesRules extends ConfigurableRules<QuebecCastlesMove, Que
     public getInitialCoords(player: Player, state: QuebecCastlesState, config: QuebecCastlesConfig): Coord[] {
         let pieceToDrop: number = this.getNumberOfPieces(player, config);
         const coordDirection: Ordinal = config.isRhombic ? Ordinal.UP_RIGHT : Ordinal.RIGHT;
-        let { lineDirection, lineToFillIndex } = this.getLineDirectionAndIndex(player, config);
+        const lineDirectionAndIndex: { lineDirection: number; lineToFillIndex: number } =
+            this.getLineDirectionAndIndex(player, config);
+        const lineDirection: number = lineDirectionAndIndex.lineDirection;
+        let lineToFillIndex: number = lineDirectionAndIndex.lineToFillIndex;
         const coords: Coord[] = [];
         while (pieceToDrop > 0) {
             const availableSpaceAtLine: Coord[] =
                 this.getAvailableSpacesAtLine(lineToFillIndex, state, config);
             if (pieceToDrop < availableSpaceAtLine.length) {
-                let { coord, skipCenter } = this.getLineFirstCoord(availableSpaceAtLine, pieceToDrop);
+                const firstLineCoord: { coord: Coord; skipCenter: boolean } =
+                    this.getLineFirstCoord(availableSpaceAtLine, pieceToDrop);
+                let coord: Coord = firstLineCoord.coord;
+                const skipCenter: boolean = firstLineCoord.skipCenter;
                 coords.push(coord);
                 pieceToDrop--;
                 const center: Coord = availableSpaceAtLine[Math.floor(availableSpaceAtLine.length / 2)];

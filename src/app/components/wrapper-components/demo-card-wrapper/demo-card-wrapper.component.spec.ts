@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { DebugElement, SimpleChanges } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { LodestoneNode, LodestoneRules } from '@everyboard/games';
@@ -28,7 +28,7 @@ describe('DemoCardWrapperComponent', () => {
 
     async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
         testUtils.setInput('demoNodeInfo', nodeInfo);
-        await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
+        await testUtils.getComponent().ngOnChanges({});
         testUtils.detectChanges();
         tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit
     }
@@ -123,7 +123,7 @@ describe('DemoCardWrapperComponent', () => {
             node: new GameNode(stateWithPieces),
             click: MGPOptional.empty(),
         });
-        await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
+        await testUtils.getComponent().ngOnChanges({});
 
         // Then we should see that the component has indeed been changed
         testUtils.expectElementToExist('#click-0-0 > circle');
@@ -144,7 +144,7 @@ describe('DemoCardWrapperComponent', () => {
         it('should provide initial default config to game component', fakeAsync(async() => {
             // Given any demo card
             const defaultRulesConfig: RulesConfig = {
-                mais_quelles_belles_chaussettes: 42,
+                maisQuellesBellesChaussettes: 42,
             };
             await loadNode({
                 title: 'P4',

@@ -14,6 +14,7 @@ import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/
 import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomServiceMock.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { WelcomeComponent } from '../../normal-component/welcome/welcome.component';
@@ -228,7 +229,7 @@ describe('GameCreationComponent', () => {
                 expectElementToExist('#chooseOpponent');
             }));
 
-            it('should display the elo of the candidate as an integer', fakeAsync(async() => {
+            it('should display the elo of the candidate through EloComponent', fakeAsync(async() => {
                 // Given a component that is loaded and there is no candidate
                 await awaitComponentInitialization();
                 expectElementNotToExist('#chooseOpponent');
@@ -237,8 +238,8 @@ describe('GameCreationComponent', () => {
                 configRoomService.mockCandidateJoined(candidate, 42.1);
 
                 // Then the component displays the elo
-                const element: DebugElement = findElement('#candidate_' + candidate.name);
-                expect(element.nativeElement.textContent).toEqual(candidate.name + ' (42)');
+                const eloComponent: EloComponent = testUtils.findElementByDirective(EloComponent).componentInstance;
+                expect(eloComponent.elo()).toBe(42.1);
             }));
         });
 

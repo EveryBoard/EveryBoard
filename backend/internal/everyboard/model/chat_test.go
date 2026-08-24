@@ -7,7 +7,7 @@ import (
 func TestMarshalMessage(t *testing.T) {
 	original := Message{
 		GameID:    0, // GameID is not part of the marshalling
-		Sender:    MinimalUser{ID: "foo", Name: "alice"},
+		Sender:    MinimalUser{ID: "foo", Name: "alice", IsBot: false},
 		Timestamp: 1000,
 		Content:   "Hello world",
 	}

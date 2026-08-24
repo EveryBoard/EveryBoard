@@ -6,6 +6,7 @@ import { MGPOptional } from '@everyboard/lib';
 
 import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
+import { Game } from '../../../domain/Game';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
@@ -33,6 +34,7 @@ export type PreparationOptions = {
     waitForGameToStart: boolean;
     runClocks: boolean;
     config: MGPOptional<RulesConfig>;
+    game?: Game;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-redeclare
@@ -104,7 +106,7 @@ export async function prepareStartedGameFor<T extends AbstractGameComponent>(
 
         const gameService: GameServiceMock =
             TestBed.inject(GameService) as AbstractGameService as GameServiceMock;
-        await gameService.mockGameUpdate(GameMocks.STARTED);
+        await gameService.mockGameUpdate(preparationOptions.game ?? GameMocks.STARTED);
         await gameService.mockGameEvent({
             timestamp: 0,
             user: UserMocks.CREATOR_MINIMAL_USER,

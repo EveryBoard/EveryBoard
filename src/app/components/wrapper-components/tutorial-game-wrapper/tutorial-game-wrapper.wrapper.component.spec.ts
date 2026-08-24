@@ -1353,7 +1353,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
         it('should provide initial default config to game component when no config is provided', fakeAsync(async() => {
             // Given any tutorial for a game that has a specific default config
-            const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
+            const defaultRulesConfig: RulesConfig = { maisQuellesBellesChaussettes: 42 };
             spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
 
             // When calling getConfig

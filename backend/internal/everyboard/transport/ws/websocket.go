@@ -61,7 +61,8 @@ func (h *Handler) authenticate(r *http.Request) (model.MinimalUser, error) {
 		return model.MinimalUser{}, err
 	}
 	return model.MinimalUser{
-		ID:   uid,
-		Name: user.Username,
+		ID:    uid,
+		Name:  user.Username,
+		IsBot: user.IsBot,
 	}, nil
 }
