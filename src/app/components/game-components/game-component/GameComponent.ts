@@ -58,7 +58,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public rules: R;
 
-    public node: GameNode<M, S>;
+    public readonly node: WritableSignal<GameNode<M, S>>;
 
     protected config: C;
 
@@ -178,8 +178,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
-        if (this.node.previousMove.isPresent()) {
-            await this.showLastMove(this.node.previousMove.get());
+        if (this.node().previousMove.isPresent()) {
+            await this.showLastMove(this.node().previousMove.get());
         }
         if (reason == null) {
             return MGPValidation.SUCCESS;
@@ -205,7 +205,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public async showLastMoveAndRedraw(): Promise<void> {
-        const move: M = this.node.previousMove.get();
+        const move: M = this.node().previousMove.get();
         await this.showLastMove(move);
         this.refreshViewBox();
         this.cdr.detectChanges();
@@ -224,24 +224,24 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getTurn(): number {
-        return this.node.gameState.turn;
+        return this.node().gameState.turn;
     }
 
     public getCurrentPlayer(): Player {
-        return this.node.gameState.getCurrentPlayer();
+        return this.node().gameState.getCurrentPlayer();
     }
 
     public getCurrentOpponent(): Player {
-        return this.node.gameState.getCurrentOpponent();
+        return this.node().gameState.getCurrentOpponent();
     }
 
     public getState(): S {
-        return this.node.gameState;
+        return this.node().gameState;
     }
 
     public getPreviousState(): S {
-        Utils.assert(this.node.parent.isPresent(), 'getPreviousState called with no previous state');
-        return this.node.parent.get().gameState;
+        Utils.assert(this.node().parent.isPresent(), 'getPreviousState called with no previous state');
+        return this.node().parent.get().gameState;
     }
 
     protected abstract showLastMove(move: M): Promise<void>;
@@ -253,7 +253,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         const defaultConfig: C = gameInfo.getRulesConfig() as C;
 
         this.rules = gameInfo.rules as R;
-        this.node = this.rules.getInitialNode(defaultConfig);
+        this.node.set(this.rules.getInitialNode(defaultConfig));
         this.tutorial = gameInfo.tutorial.tutorial;
     }
 

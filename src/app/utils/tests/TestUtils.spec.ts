@@ -475,11 +475,13 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             this.gameComponent.setConfig(config);
             tick(0);
         }
-        this.gameComponent.node = new GameNode(
-            state,
-            MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
-                new GameNode(previousState)),
-            MGPOptional.ofNullable(params.previousMove),
+        this.gameComponent.node.set(
+            new GameNode(
+                state,
+                MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
+                    new GameNode(previousState)),
+                MGPOptional.ofNullable(params.previousMove),
+            ),
         );
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {

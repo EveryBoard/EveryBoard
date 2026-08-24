@@ -85,7 +85,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
         await this.createGameComponent(componentType);
         const config: RulesConfig = this.getConfig();
         this.gameComponent.setConfig(config);
-        this.gameComponent.node = this.gameComponent.rules.getInitialNode(config);
+        this.gameComponent.node.set(this.gameComponent.rules.getInitialNode(config));
         await this.setRole(this.role);
         await this.gameComponent.updateBoardAndRedraw(false);
     }
@@ -159,7 +159,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     public async receiveValidMove(move: Move): Promise<MGPValidation> {
         const config: RulesConfig = this.getConfig();
         const legality: MGPFallible<unknown> =
-            this.gameComponent.rules.isLegal(move, this.gameComponent.node.gameState, config);
+            this.gameComponent.rules.isLegal(move, this.gameComponent.node().gameState, config);
         if (legality.isFailure()) {
             await this.gameComponent.cancelMove(legality.getReason());
             return MGPValidation.ofFallible(legality);
@@ -233,7 +233,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     protected async showCurrentState(triggerAnimation: boolean): Promise<void> {
         this.gameComponent.cancelMoveAttempt();
         this.gameComponent.hideLastMove();
-        if (this.gameComponent.node.previousMove.isPresent()) {
+        if (this.gameComponent.node().previousMove.isPresent()) {
             await this.showNewMove(triggerAnimation);
         } else {
             // We have no previous move to animate
