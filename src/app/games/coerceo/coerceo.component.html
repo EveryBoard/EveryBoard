@@ -28,14 +28,15 @@
             }
         </g>
     }
-    @if (chosenCoord.isPresent()) {
+    @if (chosenCoord().isPresent()) {
+        @let chosen = chosenCoord().get();
         <g>
-            <polygon id="selected-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
-                     [attr.points]="getPyramidPointsAt(chosenCoord.get())"
-                     [attr.transform]="getTriangleInHexTranslation(chosenCoord.get())"
+            <polygon id="selected-{{ chosen.x }}-{{ chosen.y }}"
+                     [attr.points]="getPyramidPointsAt(chosen)"
+                     [attr.transform]="getTriangleInHexTranslation(chosen)"
                      class="base no-fill mid-stroke selected-stroke"
-                     (click)="onPyramidClick(chosenCoord.get())"/>
-            @for (possibleLanding of possibleLandings; track possibleLanding.toString()) {
+                     (click)="onPyramidClick(chosen)"/>
+            @for (possibleLanding of possibleLandings(); track possibleLanding.toString()) {
                 <polygon id="possible-landing-{{ possibleLanding.x }}-{{ possibleLanding.y }}"
                          class="base no-fill mid-stroke clickable-stroke"
                          [attr.points]="getTrianglePointsAt(possibleLanding)"
@@ -45,15 +46,17 @@
         </g>
     } @else {
         @if (lastStart.isPresent()) {
-            <polygon id="last-start-{{ lastStart.get().x }}-{{ lastStart.get().y }}"
-                     [attr.points]="getTrianglePointsAt(lastStart.get())"
-                     [attr.transform]="getTriangleInHexTranslation(lastStart.get())"
+            @let start = lastStart().get();
+            <polygon id="last-start-{{ start.x }}-{{ start.y }}"
+                     [attr.points]="getTrianglePointsAt(start)"
+                     [attr.transform]="getTriangleInHexTranslation(start)"
                      class="base no-fill mid-stroke last-move-stroke"/>
         }
         @if (lastEnd.isPresent()) {
-            <polygon id="last-end-{{ lastEnd.get().x }}-{{ lastEnd.get().y }}"
-                     [attr.points]="getTrianglePointsAt(lastEnd.get())"
-                     [attr.transform]="getTriangleInHexTranslation(lastEnd.get())"
+            @let end = lastEnd().get();
+            <polygon id="last-end-{{ end.x }}-{{ end.y }}"
+                     [attr.points]="getTrianglePointsAt(end)"
+                     [attr.transform]="getTriangleInHexTranslation(end)"
                      class="base no-fill mid-stroke last-move-stroke"/>
         }
     }
@@ -70,7 +73,7 @@
                           class="text-giant"
                           x="35"
                           y="45"
-                          [attr.font-size]="SPACE_SIZE / 2">{{ tiles.get(player) }}</text>
+                          [attr.font-size]="SPACE_SIZE / 2">{{ tiles().get(player) }}</text>
                 </g>
             }
         </g>

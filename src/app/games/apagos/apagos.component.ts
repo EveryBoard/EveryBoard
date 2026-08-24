@@ -58,7 +58,9 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     protected readonly svgTransformOne: string = this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
 
-    private readonly apagosState: WritableSignal<ApagosState> = signal(this.getState());
+    private readonly apagosState: WritableSignal<ApagosState> = signal(
+        ApagosRules.get().getInitialState(this.getConfig()),
+    );
     private readonly board: Signal<ReadonlyArray<ApagosSquare>> = computed(() => this.apagosState().board);
     private readonly width: Signal<number> = computed(() => this.board().length);
     private readonly remaining: Signal<PlayerMap<number>> = computed(() => {
@@ -242,7 +244,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
 
     private showPossibleDrops(): void {
         const displayableArrow: DropArrow[] = [];
-        const state: ApagosState = this.getState();
+        const state: ApagosState = this.apagosState();
         for (let x: number = 0; x < state.board.length; x++) {
             if (state.board[x].isFull() === false) {
                 if (state.remaining.get(Player.ZERO) > 0) {
@@ -321,7 +323,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
                 classes.push('captured-stroke');
                 return classes;
             } else {
-                const opponent: Player = this.getState().getCurrentOpponent();
+                const opponent: Player = this.apagosState().getCurrentOpponent();
                 if (opponent === Player.ZERO) zero++;
                 else one++;
             }
@@ -350,7 +352,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         if (this.selectedPiece().isPresent() && this.selectedPiece().get().square === x) {
             return this.cancelMove();
         }
-        const currentPlayer: Player = this.getState().getCurrentPlayer();
+        const currentPlayer: Player = this.apagosState().getCurrentPlayer();
         const square: ApagosSquare = this.board[x];
         const nbPiecePresent: number = square.count(currentPlayer);
         if (nbPiecePresent <= 0) {
@@ -369,7 +371,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     private showAndGetPossibleTranfers(): DropArrow[] {
         const displayableArrow: DropArrow[] = [];
         let landingX: number = this.selectedPiece().get().square - 1;
-        const currentPlayer: Player = this.getState().getCurrentPlayer();
+        const currentPlayer: Player = this.apagosState().getCurrentPlayer();
         while (0 <= landingX) {
             if (this.board[landingX].isFull() === false) {
                 displayableArrow.push({

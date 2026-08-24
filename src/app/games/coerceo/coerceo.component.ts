@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -34,16 +34,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoConfig>
 {
 
-    public tiles: PlayerNumberMap = PlayerNumberMap.of(0, 0);
+    protected readonly tiles: WritableSignal<PlayerNumberMap> = signal(PlayerNumberMap.of(0, 0));
 
-    public NONE: FourStatePiece = FourStatePiece.UNREACHABLE;
-    public INDICATOR_SIZE: number = 10;
+    protected readonly chosenCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    protected readonly lastStart: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    protected readonly lastEnd: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
-    public lastStart: MGPOptional<Coord> = MGPOptional.empty();
-    public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
-
-    public possibleLandings: Coord[] = [];
+    protected readonly possibleLandings: Coord[] = [];
 
     public constructor() {
         super();
@@ -86,47 +83,47 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
         this.scores = MGPOptional.of(this.state.captures);
-        this.tiles = this.state.tiles;
+        this.tiles.set(this.state.tiles);
         this.board = this.getState().board;
     }
 
     private showHighlight(): void {
-        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
+        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord().get());
     }
 
     public override cancelMoveAttempt(): void {
-        this.chosenCoord = MGPOptional.empty();
+        this.chosenCoord.set(MGPOptional.empty());
         this.possibleLandings = [];
     }
 
     public override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
-            this.lastStart = MGPOptional.of(move.getStart());
-            this.lastEnd = MGPOptional.of(move.getEnd());
+            this.lastStart.set(MGPOptional.of(move.getStart()));
+            this.lastEnd.set(MGPOptional.of(move.getEnd()));
         }
     }
 
     public override hideLastMove(): void {
-        this.lastStart = MGPOptional.empty();
-        this.lastEnd = MGPOptional.empty();
+        this.lastStart.set(MGPOptional.empty());
+        this.lastEnd.set(MGPOptional.empty());
     }
 
     @ClickHandler((coord: Coord) => `#pyramid-${ coord.x }-${ coord.y }`)
-    public async onPyramidClick(coord: Coord): Promise<MGPValidation> {
+    protected async onPyramidClick(coord: Coord): Promise<MGPValidation> {
         return this.onClick(coord);
     }
 
     @ClickHandler((coord: Coord) => '#space-' + coord.x + '-' + coord.y)
-    public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
+    protected async onSpaceClick(coord: Coord): Promise<MGPValidation> {
         return this.onClick(coord);
     }
 
     private async onClick(coord: Coord): Promise<MGPValidation> {
         const currentPlayer: Player = this.state.getCurrentPlayer();
-        if (this.chosenCoord.equalsValue(coord)) {
+        if (this.chosenCoord().equalsValue(coord)) {
             // Deselects the piece
             return this.cancelMove();
-        } else if (this.chosenCoord.isAbsent() ||
+        } else if (this.chosenCoord().isAbsent() ||
                    this.state.getPieceAt(coord).is(currentPlayer))
         {
             return this.firstClick(coord);
@@ -141,7 +138,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             const move: CoerceoMove = CoerceoTileExchangeMove.of(coord);
             return this.chooseMove(move);
         } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
-            this.chosenCoord = MGPOptional.of(coord);
+            this.chosenCoord.set(MGPOptional.of(coord));
             this.showHighlight();
             return MGPValidation.SUCCESS;
         } else {
@@ -151,14 +148,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     private async secondClick(coord: Coord): Promise<MGPValidation> {
         if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
-            const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord.get(), coord);
+            const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord().get(), coord);
             return this.chooseMove(move);
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE());
         }
     }
 
-    public isPyramid(coord: Coord): boolean {
+    protected isPyramid(coord: Coord): boolean {
         const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         return spaceContent.isPlayer() || this.wasOpponent(coord);
     }
@@ -173,7 +170,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getPyramidClass(coord: Coord): string {
+    protected getPyramidClass(coord: Coord): string {
         const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         if (spaceContent.isPlayer()) {
             return this.getPlayerClass(spaceContent.getPlayer());
@@ -182,7 +179,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public mustDraw(coord: Coord): boolean {
+    protected mustDraw(coord: Coord): boolean {
         const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
         if (spaceContent === FourStatePiece.UNREACHABLE) {
             // If it was just removed, we want to draw it
@@ -206,7 +203,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getSpaceClass(coord: Coord): string {
+    protected getSpaceClass(coord: Coord): string {
         if (this.wasRemoved(coord)) {
             return 'captured-alternate-fill';
         } else {
@@ -218,7 +215,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         }
     }
 
-    public getTilesCountCoordinate(): string {
+    protected getTilesCountCoordinate(): string {
         const bx: number = 0; const by: number = 0;
         const corner0x: number = bx + 25; const corner0y: number = by;
         const corner1x: number = bx + 75; const corner1y: number = by;
@@ -235,23 +232,23 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                     corner0x + ', ' + corner0y;
     }
 
-    public mustShowTilesOf(player: Player): boolean {
-        if (this.tiles.get(player) > 0) {
+    protected mustShowTilesOf(player: Player): boolean {
+        if (this.tiles().get(player) > 0) {
             return true;
         } else {
             return this.lastTurnWasTilesExchange(player);
         }
     }
 
-    public lastTurnWasTilesExchange(player: Player): boolean {
+    protected lastTurnWasTilesExchange(player: Player): boolean {
         if (this.node.parent.isAbsent()) {
             return false;
         }
         const previousTiles: number = this.getPreviousState().tiles.get(player);
-        return previousTiles > this.tiles.get(player);
+        return previousTiles > this.tiles().get(player);
     }
 
-    public getTriangleInHexTranslation(coord: Coord): string {
+    protected getTriangleInHexTranslation(coord: Coord): string {
         const x: number = coord.x;
         const y: number = coord.y;
         const triangleTranslation: Coord = this.getTriangleTranslationCoord(coord);
@@ -269,7 +266,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         );
     }
 
-    public getTilesCountTranslation(player: Player): string {
+    protected getTilesCountTranslation(player: Player): string {
         let x: number;
         let y: number;
         if (player === Player.ZERO) {
@@ -304,7 +301,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
     }
 
-    public getTilesCountClasses(player: Player): string[] {
+    protected getTilesCountClasses(player: Player): string[] {
         const classes: string[] = ['base'];
         if (this.lastTurnWasTilesExchange(player)) {
             classes.push('captured-fill');
