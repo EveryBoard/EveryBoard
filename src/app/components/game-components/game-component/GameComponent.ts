@@ -112,7 +112,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public constructor(urlName: string) {
         super();
-        this.setRulesAndNode(urlName);
+        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
+        const defaultConfig: C = gameInfo.getRulesConfig() as C;
+
+        this.rules = gameInfo.rules as R;
+        this.node = signal(this.rules.getInitialNode(defaultConfig));
+        this.tutorial = gameInfo.tutorial.tutorial;
     }
 
     protected abstract computeViewBox(): ViewBox;
@@ -247,15 +252,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     protected abstract showLastMove(move: M): Promise<void>;
 
     public abstract hideLastMove(): void;
-
-    private setRulesAndNode(urlName: string): void {
-        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
-        const defaultConfig: C = gameInfo.getRulesConfig() as C;
-
-        this.rules = gameInfo.rules as R;
-        this.node.set(this.rules.getInitialNode(defaultConfig));
-        this.tutorial = gameInfo.tutorial.tutorial;
-    }
 
     public getConfig(): C {
         return this.config;
