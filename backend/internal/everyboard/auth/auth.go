@@ -9,6 +9,7 @@ import (
 
 type User struct {
 	Username string `json:"username"`
+	IsBot    bool   `json:"-"`
 	// User may have other fields, but we don't care about them
 }
 
@@ -25,7 +26,11 @@ func FetchUserDocumentWithClient(client FirebaseLike, context context.Context, u
 	if !ok {
 		return nil, fmt.Errorf("user document does not contain a string 'username'")
 	}
-	return &User{Username: username}, nil
+	isBot, ok := doc["isBot"].(bool)
+	if !ok {
+		isBot = false
+	}
+	return &User{Username: username, IsBot: isBot}, nil
 }
 
 func VerifyTokenAndGetUser(r *http.Request) (string, *User, error) {

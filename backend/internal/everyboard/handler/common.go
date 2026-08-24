@@ -85,8 +85,7 @@ func (h *Handler) bufferBroadcastToGame(b *MsgBuffer, gameId model.GameID, messa
 }
 
 func (h *Handler) setCurrentGame(b *MsgBuffer, store store.CurrentGameStore, user model.MinimalUser, cg *model.CurrentGame) error {
-	cg.UserID = user.ID
-	cg.UserName = user.Name
+	cg.User = user
 	if err := store.SetCurrentGame(cg); err != nil {
 		return err
 	}
@@ -95,8 +94,7 @@ func (h *Handler) setCurrentGame(b *MsgBuffer, store store.CurrentGameStore, use
 }
 
 func (h *Handler) updateCurrentGame(b *MsgBuffer, store store.CurrentGameStore, user model.MinimalUser, cg *model.CurrentGame) error {
-	cg.UserID = user.ID
-	cg.UserName = user.Name
+	cg.User = user
 	if err := store.UpdateCurrentGame(user, cg); err != nil {
 		return err
 	}

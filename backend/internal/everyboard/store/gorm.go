@@ -67,7 +67,7 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 		// set it ourselves otherwise the "autoIncrement" feature of postgresql
 		// will be confused and try to allocate 1 as the next id)
 		lobby := model.ConfigRoom{
-			Creator:     model.MinimalUser{Name: "", ID: ""},
+			Creator:     model.MinimalUser{},
 			CreatorElo:  0,
 			Status:      model.StatusFinished,
 			FirstPlayer: model.FirstPlayerRandom,
@@ -91,6 +91,10 @@ func InitDatabase(dialector gorm.Dialector) (*GORMStore, error) {
 	)
 	if err != nil {
 		return nil, err
+	}
+	result = db.Exec("CREATE UNIQUE INDEX IF NOT EXISTS idx_current_games_user_id ON current_games (user_id)")
+	if result.Error != nil {
+		return nil, fmt.Errorf("cannot initialize DB (Create current-game user index): %v", result.Error)
 	}
 	return &GORMStore{db}, nil
 }
