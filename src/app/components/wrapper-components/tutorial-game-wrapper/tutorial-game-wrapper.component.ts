@@ -80,13 +80,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public override async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         const config: RulesConfig = this.getConfig();
-        const node: GameNode<Move, GameState> = this.gameComponent.node();
-        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(node, move, config);
+        const currentNode: GameNode<Move, GameState> = this.gameComponent.node();
+        const newNode: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(currentNode, move, config);
         Utils.assert(
-            node.isSuccess(),
-            'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''),
+            newNode.isSuccess(),
+            'It should be impossible to call onLegalUserMove with an illegal move, but got ' + newNode.getReasonOr(''),
         );
-        this.gameComponent.node.set(node.get());
+        this.gameComponent.node.set(newNode.get());
 
         await this.showNewMove(false);
         this.moveAttemptMade = true;
