@@ -54,7 +54,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 		defer c.Close()
 
 		encodedID, _ := model.EncodeID(model.GameID(999))
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
 		assert.Equal(t, `["Error",{"reason":"game-does-not-exist"}]`, string(msg), "expected game-does-not-exist error")
@@ -72,7 +72,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 			Status:  model.StatusStarted,
 		})
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 		// Should succeed but send minimal info
 		msg := readWithTimeout(t, c)
@@ -92,7 +92,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 			GameName: "test",
 		})
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
 		require.NotNil(t, msg, "expected message")
@@ -118,7 +118,7 @@ func TestHandleSubscribeConfigRoomEdgeCases(t *testing.T) {
 			Status:  model.StatusFinished,
 		})
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
 		require.NotNil(t, msg, "expected message")
@@ -150,7 +150,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		c := dial("user_proposed")
 		defer c.Close()
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 		msg := readWithTimeout(t, c)
 		require.NotNil(t, msg, "expected message")
@@ -171,7 +171,7 @@ func TestHandleSubscribeConfigRoomProposed(t *testing.T) {
 		c := dial("cand2")
 		defer c.Close()
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 		readWithTimeout(t, c)
 		msg := readWithTimeout(t, c)
@@ -205,11 +205,11 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 			Status:  model.StatusCreated,
 		})
 
-		err := c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		err := c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		require.NoError(t, err, "WriteMessage failed")
 
 		found := false
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), "ConfigRoomUpdate") {
 				found = true
@@ -221,7 +221,7 @@ func TestHandleAcceptConfigEdgeCases(t *testing.T) {
 		err = c.WriteMessage(websocket.TextMessage, []byte(`["AcceptConfig"]`))
 		require.NoError(t, err, "WriteMessage failed")
 		found = false
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), `"Error"`) {
 				found = true
@@ -259,9 +259,9 @@ func TestHandleSelectOpponentEdgeCases(t *testing.T) {
 			Status:  model.StatusStarted,
 		})
 
-		c.WriteMessage(websocket.TextMessage, []byte(fmt.Sprintf(`["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID)))
+		c.WriteMessage(websocket.TextMessage, fmt.Appendf(nil, `["SubscribeConfigRoom",{"gameId":"%s"}]`, encodedID))
 		found := false
-		for i := 0; i < 5; i++ {
+		for range 5 {
 			msg := readWithTimeout(t, c)
 			if strings.Contains(string(msg), "ConfigRoomUpdate") {
 				found = true
@@ -338,8 +338,8 @@ func TestForbiddenActions(t *testing.T) {
 	defer sb.Cleanup()
 
 	creator := sb.EstablishConnection("creator")
-	gameId := sb.Create(creator, "p4")
-	sb.SubscribeConfigRoom(creator, gameId)
+	gameID := sb.Create(creator, "p4")
+	sb.SubscribeConfigRoom(creator, gameID)
 	conn := sb.getConnection(creator)
 
 	// 1. ReviewConfig when not proposed

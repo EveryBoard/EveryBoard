@@ -58,7 +58,7 @@ func TestHandlersDirectEdgeCases(t *testing.T) {
 
 	t.Run("HandleCreateAlreadyInGame", func(t *testing.T) {
 		h := newH()
-		store.SetCurrentGame(&model.CurrentGame{UserID: user.ID, UserName: user.Name, GameID: 1})
+		store.SetCurrentGame(&model.CurrentGame{User: user, GameID: 1})
 		err := h.handleWithoutErrorSend("Create", map[string]json.RawMessage{"gameName": json.RawMessage(`"test"`)})
 		assert.Equal(t, apperror.ErrorAlreadySubscribed, err, "expected ErrorAlreadySubscribed")
 	})
