@@ -2,7 +2,7 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { MoveGenerator } from '@everyboard/games';
+import { MoveGenerator, MoveTestUtils } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { PlayerNumberMap } from '@everyboard/games';
