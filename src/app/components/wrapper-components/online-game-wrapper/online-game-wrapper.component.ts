@@ -586,15 +586,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     protected getLoser(): MinimalUser {
-        const result: GameResult = Utils.getNonNullable(this.game).result;
-        switch (result) {
-            case 'VictoryOfOne':
-            case 'TimeoutOfZero':
-            case 'ResignOfZero':
-                return Utils.getNonNullable(this.game).playerZero;
-            default:
-                Utils.expectToBeMultiple(result, ['VictoryOfZero', 'TimeoutOfOne', 'ResignOfOne']);
-                return Utils.getNonNullable(this.game).playerOne;
+        const game: Game = Utils.getNonNullable(this.game);
+        const winner: MinimalUser = this.getWinner();
+        if (winner.id === game.playerZero.id) {
+            return Utils.getNonNullable(game.playerOne);
+        } else {
+            return game.playerZero;
         }
     }
 }

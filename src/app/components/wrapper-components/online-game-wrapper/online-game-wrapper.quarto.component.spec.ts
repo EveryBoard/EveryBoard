@@ -1010,14 +1010,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an online game
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
+            spyOn(gameService, 'notifyTimeout').and.callThrough();
 
             // When the player runs out of move time
-            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.gameTimerComponents()[0], 'stop').and.callThrough();
             tick(wrapper.configRoom.moveDuration * 1000);
 
-            // Then it should be detected
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
+            // Then the player's timeout should be reported
+            expect(gameService.notifyTimeout).toHaveBeenCalledOnceWith(Player.ZERO);
 
             // And the game timers should be stopped upon game end
             await receiveEndGame();
@@ -1028,14 +1028,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // Given an online game with short game time limit
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             await receiveSync();
+            spyOn(gameService, 'notifyTimeout').and.callThrough();
 
             // When the player runs out of game time
-            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.moveTimerComponents()[0], 'stop').and.callThrough();
             tick(wrapper.configRoom.gameDuration * 1000);
 
-            // Then it shoud be detected
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ZERO);
+            // Then the player's timeout should be reported
+            expect(gameService.notifyTimeout).toHaveBeenCalledOnceWith(Player.ZERO);
 
             // And the move timer should be stopped upon game end
             await receiveEndGame();
@@ -1047,14 +1047,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
             await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+            spyOn(gameService, 'notifyTimeout').and.callThrough();
 
             // When they run out of move time
-            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.gameTimerComponents()[1], 'stop').and.callThrough();
             tick(wrapper.configRoom.moveDuration * 1000);
 
-            // Then it should be considered as a timeout
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
+            // Then the opponent's timeout should be reported
+            expect(gameService.notifyTimeout).toHaveBeenCalledOnceWith(Player.ONE);
 
             // And the game timer should be stopped upon game end
             await receiveEndGame();
@@ -1066,14 +1066,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.shortGlobalClock);
             await receiveSync();
             await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+            spyOn(gameService, 'notifyTimeout').and.callThrough();
 
             // When they run out of game time
-            spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
             spyOn(wrapper.moveTimerComponents()[1], 'stop').and.callThrough();
             tick(wrapper.configRoom.gameDuration * 1000);
 
-            // Then it should be detected
-            expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(Player.ONE);
+            // Then the opponent's timeout should be reported
+            expect(gameService.notifyTimeout).toHaveBeenCalledOnceWith(Player.ONE);
 
             // And the move timer should be stopped upon game end
             await receiveEndGame();
@@ -1095,7 +1095,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(gameService, 'addMoveTime').and.callThrough();
 
                 // When creator adds turn time to the opponent
-                await wrapper.addMoveTime();
+                await testUtils.clickElement('#timer-one-move .data-add-time');
 
                 // Then an add turn time action is generated
                 expect(gameService.addMoveTime).toHaveBeenCalledOnceWith();
@@ -1153,7 +1153,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 spyOn(gameService, 'addGameTime').and.callThrough();
 
                 // When the player adds global time to the opponent
-                await wrapper.addGameTime();
+                await testUtils.clickElement('#timer-one-game .data-add-time');
 
                 // Then a request to add global time to player one should be sent
                 expect(gameService.addGameTime).toHaveBeenCalledOnceWith();
@@ -1218,8 +1218,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
                 spyOn(gameService, 'addGameTime').and.callThrough();
 
-                // When countDownComponent emit addGlobalTime
-                await wrapper.addGameTime();
+                // When the opponent adds global time to the creator
+                await testUtils.clickElement('#timer-zero-game .data-add-time');
 
                 // Then a request to add global time to player zero should be sent
                 expect(gameService.addGameTime).toHaveBeenCalledOnceWith();
@@ -1469,6 +1469,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     describe('Non Player Experience', () => {
 
+        it('should reject a move attempted by an observer', fakeAsync(async() => {
+            // Given an observer
+            await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
+            await receiveSync();
+
+            // When they attempt to play on the board
+            await testUtils.expectClickFailure('#click-coord-0-0', OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
+
+            // Then the game remains unchanged
+            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+
+            await receiveEndGame();
+        }));
+
         it('should not be able to do anything', fakeAsync(async() => {
             // Given a part that we are observing
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
@@ -1515,8 +1529,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await prepareTestUtilsFor(USER_OBSERVER, PreparationOptions.withoutClocks);
             await receiveSync();
             spyOn(gameService, 'notifyTimeout').and.callThrough();
-            // When a player times out
-            await wrapper.reachedOutOfTime(Player.ZERO);
+
+            // When a player's timer reports that it ran out
+            wrapper.gameTimerComponents()[0].outOfTimeAction.emit();
+            tick(0);
+
             // Then we should not notify the timeout
             expect(gameService.notifyTimeout).not.toHaveBeenCalled();
             // But someone else will
