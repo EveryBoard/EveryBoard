@@ -220,6 +220,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private async moveClick(clicked: Coord): Promise<MGPValidation> {
+        console.log('click', clicked.toString())
         const start: Coord = this.currentMoveClicks[0];
         if (clicked.equals(start) && this.possibleClicks.contains(clicked) === false) {
             return this.cancelMove();
@@ -231,6 +232,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             return this.trySelectingPiece(clicked);
         }
         if (this.possibleClicks.contains(clicked) === false) {
+            console.log('possible clicks ?', this.possibleClicks)
             return this.cancelMove(this.getClickFailureReason(clicked));
         }
 
@@ -256,6 +258,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private getClickFailureReason(clicked: Coord): string {
+        console.log('getClickFailureReason', clicked.toString())
         const lastSegmentStart: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
         const stack: CheckersStack = this.constructedState().get().getPieceAt(lastSegmentStart);
         const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
@@ -266,7 +269,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (validation.isFailure()) {
             return validation.getReason();
         }
-        console.log('jaaj')
         const attemptedMove: CheckersMove = this.getMoveAttemptEndingAt(clicked);
         const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.getConfig());
         Utils.assert(moveValidity.isFailure(), 'A move absent from possibleClicks should be illegal');
@@ -275,7 +277,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private getMoveAttemptEndingAt(clicked: Coord): CheckersMove {
         const clickedCoords: Coord[] = this.currentMoveClicks.concat(clicked);
-        console.log(clicked, 'and', clickedCoords)
+        console.log('getMoveAttemptEndingAt', clicked.toString(), 'and', clickedCoords)
         if (clickedCoords.length === 2 && this.doesMoveAttemptCapture(clicked) === false) {
             return CheckersMove.fromStep(clickedCoords[0], clickedCoords[1]);
         } else {
