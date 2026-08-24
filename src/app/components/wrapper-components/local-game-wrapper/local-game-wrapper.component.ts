@@ -312,8 +312,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 this.aiTimeout = MGPOptional.of(setTimeout(async() => {
                     this.aiTimeout = MGPOptional.empty();
                     const config: RulesConfig = this.getConfig();
+                    const node: GameNode<Move, GameState> = this.gameComponent.node();
                     const gameIsOngoing: boolean =
-                        this.gameComponent.rules.getGameStatus(this.gameComponent.node(), config) === GameStatus.ONGOING;
+                        this.gameComponent.rules.getGameStatus(node, config) === GameStatus.ONGOING;
                     if (gameIsOngoing) {
                         await this.doAIMove(playingAI.get().ai, playingAI.get().options);
                     }
