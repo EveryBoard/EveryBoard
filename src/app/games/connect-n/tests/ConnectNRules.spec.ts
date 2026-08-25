@@ -358,10 +358,8 @@ describe('ConnectNRules (SQUARE)', () => {
             const move: ConnectNMove = ConnectNMove.of([new Coord(9, 9)]);
 
             // Then the move should be illegal
-            function trySingleDropAfterFirstTurn(): void {
-                rules.isLegal(move, state);
-            }
-            TestUtils.expectToThrowAndLog(trySingleDropAfterFirstTurn, 'ConnectNMove should only be used at first move');
+            const reason: string = ConnectNFailure.YOU_MUST_PLAY_EXACTLY(defaultConfig.dropAfterFirstTurn);
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {
