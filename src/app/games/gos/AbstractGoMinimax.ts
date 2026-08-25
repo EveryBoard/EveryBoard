@@ -1,24 +1,24 @@
 import { Minimax } from '../../jscaip/AI/Minimax';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 
 import { AbstractGoHeuristic } from './AbstractGoHeuristic';
 import { AbstractGoMoveGenerator } from './AbstractGoMoveGenerator';
-import { AbstractGoRules, GoLegalityInformation } from './AbstractGoRules';
+import { AbstractGoConfig, AbstractGoRules, GoLegalityInformation } from './AbstractGoRules';
 import { GoMove } from './GoMove';
 import { GoState } from './GoState';
 
-export abstract class AbstractGoMinimax<C extends RulesConfig>
+export abstract class AbstractGoMinimax<C extends AbstractGoConfig>
     extends Minimax<GoMove, GoState, C, GoLegalityInformation>
 {
 
     public constructor(rules: AbstractGoRules<C>,
                        moveGenerator: AbstractGoMoveGenerator<C>,
-                       heuristic: AbstractGoHeuristic<C>)
-    {
+                       heuristic: AbstractGoHeuristic<C>,
+    ) {
         super($localize`Minimax`,
               rules,
               heuristic,
-              moveGenerator);
+              moveGenerator,
+        );
     }
 
 }

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -20,6 +20,7 @@ import { KamisadoRules } from './KamisadoRules';
 import { KamisadoState } from './KamisadoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -37,8 +38,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     public chosenAutomatically: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Kamisado');
+        super('Kamisado');
         this.aiConfig = {
             minimax: [{
                 id: 'Advancement',
@@ -87,7 +87,7 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         }
     }
 
-    public override async showLastMove(move: KamisadoMove): Promise<void> {
+    protected override async showLastMove(move: KamisadoMove): Promise<void> {
         if (KamisadoMove.isPiece(move)) {
             this.lastPieceMove = MGPOptional.of(move);
         }

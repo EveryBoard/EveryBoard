@@ -11,6 +11,8 @@ export class GameDescription {
 
     public static readonly BA_AWA: Localized = () => $localize`The most widespread multiple-lap Mancala.`;
 
+    public static readonly BASHNI: Localized = () => $localize`Russian column checkers: captured pieces stack under the capturing piece, forming towers.`;
+
     public static readonly BRANDHUB: Localized = () => $localize`The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!`;
 
     public static readonly COERCEO: Localized = () => $localize`Get rid of all of your opponent's pieces on a board that shrinks little by little!`;
@@ -90,5 +92,7 @@ export class GameDescription {
     public static readonly TRIANGULAR_GO: Localized = () => $localize`A version of Go on triangular spaces!`;
 
     public static readonly YINSH: Localized = () => $localize`Align your pieces to score points, but beware, pieces can flip!`;
+
+    public static readonly ZOOMED_GO: Localized = () => $localize`A multi-layered remix of the Go Game!`;
 
 }

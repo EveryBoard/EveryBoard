@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -19,6 +19,7 @@ import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnState } from './DvonnState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -36,8 +37,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     public disconnectedSpaces: { coord: Coord; spaceContent: DvonnPieceStack }[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Dvonn');
+        super('Dvonn');
         this.aiConfig = {
             minimax: [
                 {
@@ -89,7 +89,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
         this.scores = MGPOptional.of(DvonnRules.getScores(this.state));
     }
 
-    public override async showLastMove(move: DvonnMove): Promise<void> {
+    protected override async showLastMove(move: DvonnMove): Promise<void> {
         this.lastMove = MGPOptional.of(move);
         const previousState: DvonnState = this.getPreviousState();
         const state: DvonnState = this.getState();

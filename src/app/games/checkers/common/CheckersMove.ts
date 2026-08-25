@@ -1,42 +1,16 @@
-import { ArrayUtils, Encoder, MGPFallible, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
+import { Encoder, MGPOptional, MGPUniqueList, Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 
-import { CheckersFailure } from './CheckersFailure';
-
 export class CheckersMove extends Move {
 
-    private static of(coords: Coord[], isStep: boolean): CheckersMove {
+    private static of(coords: ReadonlyArray<Coord>, isStep: boolean): CheckersMove {
         return new CheckersMove(coords, isStep);
     }
 
-    public static fromCapture(coords: Coord[]): MGPFallible<CheckersMove> {
-        const jumpsValidity: MGPFallible<MGPUniqueList<Coord>> = CheckersMove.getSteppedOverCoords(coords);
-        if (jumpsValidity.isSuccess()) {
-            return MGPFallible.success(new CheckersMove(coords, false));
-        } else {
-            return MGPFallible.failure(jumpsValidity.getReason());
-        }
-    }
-
-    public static getSteppedOverCoords(steppedOn: Coord[]): MGPFallible<MGPUniqueList<Coord>> {
-        let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
-        let jumpedOverCoords: MGPUniqueList<Coord> = new MGPUniqueList([steppedOn[0]]);
-        for (const coord of steppedOn) {
-            if (lastCoordOpt.isPresent()) {
-                const lastCoord: Coord = lastCoordOpt.get();
-                const subJumpedOverCoords: Coord[] = lastCoord.getCoordsToward(coord).concat([coord]);
-                for (const jumpedOverCoord of subJumpedOverCoords) {
-                    if (jumpedOverCoords.contains(jumpedOverCoord)) {
-                        return MGPFallible.failure(CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_COORD());
-                    }
-                    jumpedOverCoords = jumpedOverCoords.addElement(jumpedOverCoord);
-                }
-            }
-            lastCoordOpt = MGPOptional.of(coord);
-        }
-        return MGPFallible.success(jumpedOverCoords);
+    public static fromCapture(coords: ReadonlyArray<Coord>): CheckersMove {
+        return new CheckersMove(coords, false);
     }
 
     public static fromStep(start: Coord, end: Coord): CheckersMove {
@@ -45,19 +19,16 @@ export class CheckersMove extends Move {
 
     public static encoder: Encoder<CheckersMove> = Encoder.tuple(
         [Encoder.list(Coord.encoder), Encoder.identity<boolean>()],
-        (move: CheckersMove) => [move.coords.toList(), move.isStep],
+        (move: CheckersMove) => [[...move.coords], move.isStep],
         (fields: [Coord[], boolean]) => CheckersMove.of(fields[0], fields[1]),
     );
 
-    public readonly coords: MGPUniqueList<Coord>;
-
-    private constructor(coords: Coord[], public readonly isStep: boolean) {
+    private constructor(public readonly coords: ReadonlyArray<Coord>, public readonly isStep: boolean) {
         super();
-        this.coords = new MGPUniqueList(coords);
     }
 
     public override toString(): string {
-        const coordStrings: string[] = this.coords.toList().map((coord: Coord) => coord.toString());
+        const coordStrings: string[] = this.coords.map((coord: Coord) => coord.toString());
         const coordString: string = coordStrings.join(', ');
         if (this.isStep) {
             return 'CheckersStep(' + coordString + ')';
@@ -67,12 +38,15 @@ export class CheckersMove extends Move {
     }
 
     private getRelation(other: CheckersMove): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
-        return CheckersMove.getRelation(this.coords.toList(), other.coords.toList());
+        return CheckersMove.getRelation(this.coords, other.coords);
     }
 
-    public static getRelation(a: Coord[], b: Coord[]): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
+    public static getRelation(a: ReadonlyArray<Coord>, b: ReadonlyArray<Coord>): 'EQUALITY' | 'PREFIX' | 'INEQUALITY' {
         const thisLength: number = a.length;
         const otherLength: number = b.length;
+        if (thisLength > otherLength) {
+            return 'INEQUALITY';
+        }
         const minimalLength: number = Math.min(thisLength, otherLength);
         for (let i: number = 0; i < minimalLength; i++) {
             if (a[i].equals(b[i]) === false) return 'INEQUALITY';
@@ -91,25 +65,40 @@ export class CheckersMove extends Move {
     }
 
     public getStartingCoord(): Coord {
-        return this.coords.get(0);
+        return this.coords[0];
     }
 
     public getEndingCoord(): Coord {
-        return this.coords.getFromEnd(0);
+        return this.coords[this.coords.length - 1];
     }
 
-    public getSteppedOverCoords(): MGPFallible<MGPUniqueList<Coord>> {
-        return CheckersMove.getSteppedOverCoords(this.coords.toList());
+    public getSteppedOverCoordsWithDuplicates(): Coord[] {
+        let lastCoordOpt: MGPOptional<Coord> = MGPOptional.empty();
+        const allJumpedOverCoords: Coord[] = [];
+        for (const coord of this.coords) {
+            if (lastCoordOpt.isPresent()) {
+                const lastCoord: Coord = lastCoordOpt.get();
+                const subJumpedOverCoords: Coord[] = lastCoord.getCoordsToward(coord);
+                for (const jumpedOverCoord of subJumpedOverCoords) {
+                    allJumpedOverCoords.push(jumpedOverCoord);
+                }
+            }
+            allJumpedOverCoords.push(coord);
+            lastCoordOpt = MGPOptional.of(coord);
+        }
+        return allJumpedOverCoords;
     }
 
-    public concatenate(move: CheckersMove): MGPFallible<CheckersMove> {
+    public getSteppedOverCoords(): MGPUniqueList<Coord> {
+        return new MGPUniqueList(this.getSteppedOverCoordsWithDuplicates());
+    }
+
+    public concatenate(move: CheckersMove): CheckersMove {
         const lastLandingOfFirstMove: Coord = this.getEndingCoord();
-        const startOfSecondMove: Coord = move.coords.toList()[0];
+        const startOfSecondMove: Coord = move.coords[0];
         Utils.assert(lastLandingOfFirstMove.equals(startOfSecondMove), 'should not concatenate non-touching move');
-        const thisCoordList: Coord[] = this.coords.toList();
-        const firstPart: Coord[] = ArrayUtils.copy(thisCoordList);
-        const otherCoordList: Coord[] = move.coords.toList();
-        const secondPart: Coord[] = ArrayUtils.copy(otherCoordList).slice(1);
+        const firstPart: Coord[] = [...this.coords];
+        const secondPart: Coord[] = [...move.coords].slice(1);
         return CheckersMove.fromCapture(firstPart.concat(secondPart));
     }
 

@@ -386,15 +386,27 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async setRealObserverRole(): Promise<void> {
-        if (this.getPlayerAt(Player.ZERO).equalsValue(this.getPlayer())) {
+        if (this.isCurrentUser(Player.ZERO)) {
             await this.setRole(Player.ZERO);
             this.opponent = this.getPlayerAt(Player.ONE).get();
-        } else if (this.getPlayerAt(Player.ONE).equalsValue(this.getPlayer())) {
+        } else if (this.isCurrentUser(Player.ONE)) {
             await this.setRole(Player.ONE);
             this.opponent = this.getPlayerAt(Player.ZERO).get();
         } else {
             await this.setRole(PlayerOrNone.NONE);
         }
+    }
+
+    private isCurrentUser(player: Player): boolean {
+        const playerId: MGPOptional<string> = this.getPlayerAt(player).map((user: MinimalUser): string => user.id);
+        return playerId.equalsValue(this.getPlayer().id);
+    }
+
+    public override isPlayerTurn(): boolean {
+        if (this.role.isNone() || this.gameComponent == null) {
+            return false;
+        }
+        return this.role.equals(this.gameComponent.getCurrentPlayer());
     }
 
     public override async onLegalUserMove(move: Move): Promise<void> {
@@ -492,8 +504,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
         if (this.gameComponent.node.previousMove.isPresent()) {
-            const move: Move = this.gameComponent.node.previousMove.get();
-            await this.gameComponent.showLastMove(move);
+            await this.gameComponent.showLastMoveAndRedraw();
         }
         this.cdr.detectChanges();
     }

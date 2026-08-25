@@ -10,6 +10,12 @@ func TestMarshalMinimalUser(t *testing.T) {
 	ExpectMarshallingToWork(t, original, json)
 }
 
+func TestMarshalMinimalBotUser(t *testing.T) {
+	original := MinimalUser{ID: "bot", Name: "EveryBot", IsBot: true}
+	json := `{"id":"bot","name":"EveryBot","isBot":true}`
+	ExpectMarshallingToWork(t, original, json)
+}
+
 func TestMarshalCurrentGameWithoutOpponent(t *testing.T) {
 	creator := MinimalUser{
 		ID:   "foo",
@@ -19,8 +25,7 @@ func TestMarshalCurrentGameWithoutOpponent(t *testing.T) {
 		// GameID is not part of the JSON
 		GameID: 42,
 
-		UserID:   creator.ID,
-		UserName: creator.Name,
+		User:     creator,
 		Creator:  creator,
 		GameName: "Go",
 		Opponent: nil,
@@ -43,8 +48,7 @@ func TestMarshalCurrentGameWithOpponent(t *testing.T) {
 		// GameID is not part of the JSON
 		GameID: 42,
 
-		UserID:   creator.ID,
-		UserName: creator.Name,
+		User:     creator,
 		Creator:  creator,
 		Opponent: &opponent,
 		GameName: "Go",

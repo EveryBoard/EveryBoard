@@ -246,6 +246,28 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await receiveEndGame();
     }));
 
+    it('should allow a human-controlled bot account to play, only for development and testing purpose', fakeAsync(async() => {
+        // Given a started game where the backend marks the connected user as a bot
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, {
+            ...PreparationOptions.withoutClocks,
+            game: {
+                ...GameMocks.STARTED,
+                playerZero: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+            },
+        });
+        await receiveSync();
+        spyOn(gameService, 'addMove').and.callThrough();
+
+        // When the bot account plays a move from the frontend
+        await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
+        // Then the account is recognized as the player and the move is sent
+        expect(wrapper.role).toBe(Player.ZERO);
+        expect(gameService.addMove).toHaveBeenCalledOnceWith(FIRST_MOVE_ENCODED);
+
+        await receiveEndGame();
+    }));
+
     it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
         // Given a started game
         await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
@@ -325,7 +347,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveEndGame();
         }));
     });
-
 
     describe('Late Arrival', () => {
         it('should allow user to arrive late on the game (on their turn)', fakeAsync(async() => {
@@ -1566,35 +1587,35 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     });
 
     describe('onCancelMove', () => {
-        it('should delegate to gameComponent.showLastMove', fakeAsync(async() => {
+        it('should delegate to gameComponent.showLastMoveAndRedraw', fakeAsync(async() => {
             // Given a component
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, PreparationOptions.withoutClocks);
             await receiveSync();
 
             await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
             const component: QuartoComponent = testUtils.getGameComponent();
-            spyOn(component, 'showLastMove').and.callThrough();
+            spyOn(component, 'showLastMoveAndRedraw').and.callThrough();
 
             // When calling onCancelMove
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should have been called
-            expect(component.showLastMove).toHaveBeenCalledOnceWith(FIRST_MOVE);
+            expect(component.showLastMoveAndRedraw).toHaveBeenCalledOnceWith();
             await receiveEndGame();
         }));
 
-        it('should not call gameComponent.showLastMove if there is no move', fakeAsync(async() => {
+        it('should not call gameComponent.showLastMoveAndRedraw if there is no move', fakeAsync(async() => {
             // Given a component without previous move
             await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER);
             await receiveSync();
             const component: QuartoComponent = testUtils.getGameComponent();
-            spyOn(component, 'showLastMove').and.callThrough();
+            spyOn(component, 'showLastMoveAndRedraw').and.callThrough();
 
             // When calling onCancelMove
             await testUtils.getWrapper().onCancelMove();
 
             // Then showLastMove should not have been called
-            expect(component.showLastMove).not.toHaveBeenCalled();
+            expect(component.showLastMoveAndRedraw).not.toHaveBeenCalled();
             await receiveEndGame();
         }));
 

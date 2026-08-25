@@ -8,6 +8,7 @@ import (
 	"github.com/gorilla/websocket"
 
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/notification"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
@@ -23,6 +24,7 @@ type Handler struct {
 	store         store.Store
 	connections   *session.ConnectionManager[*websocket.Conn]
 	subscriptions *session.SubscriptionManager[*websocket.Conn]
+	notifier      notification.Notifier
 }
 
 func New(
@@ -31,6 +33,7 @@ func New(
 	store store.Store,
 	connections *session.ConnectionManager[*websocket.Conn],
 	subscriptions *session.SubscriptionManager[*websocket.Conn],
+	notifier notification.Notifier,
 ) Handler {
 	return Handler{
 		connection:    connection,
@@ -38,6 +41,7 @@ func New(
 		store:         store,
 		connections:   connections,
 		subscriptions: subscriptions,
+		notifier:      notifier,
 	}
 }
 
@@ -81,8 +85,7 @@ func (h *Handler) bufferBroadcastToGame(b *MsgBuffer, gameId model.GameID, messa
 }
 
 func (h *Handler) setCurrentGame(b *MsgBuffer, store store.CurrentGameStore, user model.MinimalUser, cg *model.CurrentGame) error {
-	cg.UserID = user.ID
-	cg.UserName = user.Name
+	cg.User = user
 	if err := store.SetCurrentGame(cg); err != nil {
 		return err
 	}
@@ -91,8 +94,7 @@ func (h *Handler) setCurrentGame(b *MsgBuffer, store store.CurrentGameStore, use
 }
 
 func (h *Handler) updateCurrentGame(b *MsgBuffer, store store.CurrentGameStore, user model.MinimalUser, cg *model.CurrentGame) error {
-	cg.UserID = user.ID
-	cg.UserName = user.Name
+	cg.User = user
 	if err := store.UpdateCurrentGame(user, cg); err != nil {
 		return err
 	}

@@ -14,6 +14,7 @@ import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/
 import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomServiceMock.spec';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, prepareUnsubscribeCheck, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { EloComponent } from '../../normal-component/elo/elo.component';
 import { LobbyComponent } from '../../normal-component/lobby/lobby.component';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { WelcomeComponent } from '../../normal-component/welcome/welcome.component';
@@ -228,7 +229,7 @@ describe('GameCreationComponent', () => {
                 expectElementToExist('#chooseOpponent');
             }));
 
-            it('should display the elo of the candidate as an integer', fakeAsync(async() => {
+            it('should display the elo of the candidate through EloComponent', fakeAsync(async() => {
                 // Given a component that is loaded and there is no candidate
                 await awaitComponentInitialization();
                 expectElementNotToExist('#chooseOpponent');
@@ -237,8 +238,8 @@ describe('GameCreationComponent', () => {
                 configRoomService.mockCandidateJoined(candidate, 42.1);
 
                 // Then the component displays the elo
-                const element: DebugElement = findElement('#candidate_' + candidate.name);
-                expect(element.nativeElement.textContent).toEqual(candidate.name + ' (42)');
+                const eloComponent: EloComponent = testUtils.findElementByDirective(EloComponent).componentInstance;
+                expect(eloComponent.elo()).toBe(42.1);
             }));
         });
 
@@ -413,6 +414,35 @@ describe('GameCreationComponent', () => {
                 expect(heightInputAfterProposal.value).toEqual(proposedRulesConfig.height.toString());
                 testUtils.expectElementToBeDisabled('#width_number_config_input');
                 testUtils.expectElementToBeDisabled('#height_number_config_input');
+            }));
+
+            it('should recognize a standard rules config only after creator receives config proposal update', fakeAsync(async() => {
+                // Given a creator who selected custom and changed its values away from and back to the standard config
+                await awaitComponentInitialization();
+                configRoomService.mockCandidateJoined(candidate, 0);
+                await chooseOpponent();
+                testUtils.chooseConfig('__custom__');
+                testUtils.fillInput('#width_number_config_input', '8');
+                tick(1);
+                testUtils.fillInput('#width_number_config_input', defaultConfig.width.toString());
+                tick(1);
+
+                // The config should still be named custom while it is being edited
+                testUtils.expectDropdownOptionToBeSelected('#ruleSelect', '__custom__');
+
+                // When the proposed config is confirmed by a configRoom update from the server
+                await proposeConfig();
+                configRoomService.mockConfigRoomUpdate({
+                    ...ConfigRoomMocks.getInitialRandom(defaultConfig),
+                    chosenOpponent: candidate,
+                    status: Status.CONFIG_PROPOSED,
+                });
+                testUtils.detectChanges();
+                tick(0);
+
+                // Then the creator should see the standard config name
+                const standardConfigName: string = P4Rules.RULES_CONFIG_DESCRIPTION.getDefaultConfig().name();
+                testUtils.expectDropdownOptionToBeSelected('#ruleSelect', standardConfigName);
             }));
 
             it('should not emit rules config when modifying field', fakeAsync(async() => {

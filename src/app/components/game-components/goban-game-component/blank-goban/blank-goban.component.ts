@@ -1,5 +1,7 @@
 import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
 
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../../../../jscaip/Coord';
 import { GobanUtils } from '../../../../jscaip/GobanUtils';
 import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
@@ -13,8 +15,13 @@ import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {
 
     public readonly width: InputSignal<number> = input.required<number>();
+
     public readonly height: InputSignal<number> = input.required<number>();
+
     public readonly clickCallBack: OutputEmitterRef<Coord> = output<Coord>();
+
+    public readonly mouseEnterCallback: OutputEmitterRef<MGPOptional<Coord>> = output<MGPOptional<Coord>>();
+
     public hoshis: Coord[] = [];
 
     public ngOnChanges(): void {
@@ -33,4 +40,11 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
         this.hoshis = GobanUtils.getHoshis(this.width(), this.height());
     }
 
+    public onMouseEnter(x: number, y: number): void {
+        this.mouseEnterCallback.emit(MGPOptional.of(new Coord(x, y)));
+    }
+
+    public onSVGLeave(): void {
+        this.mouseEnterCallback.emit(MGPOptional.empty());
+    }
 }

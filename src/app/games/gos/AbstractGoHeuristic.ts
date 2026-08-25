@@ -2,14 +2,13 @@ import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 
-import { GoNode, AbstractGoRules } from './AbstractGoRules';
+import { GoNode, AbstractGoConfig, AbstractGoRules } from './AbstractGoRules';
 import { GoMove } from './GoMove';
 import { GoPiece } from './GoPiece';
 import { GoState } from './GoState';
 
-export abstract class AbstractGoHeuristic<C extends RulesConfig>
+export abstract class AbstractGoHeuristic<C extends AbstractGoConfig>
     extends PlayerMetricHeuristic<GoMove, GoState, C>
 {
 
@@ -19,7 +18,7 @@ export abstract class AbstractGoHeuristic<C extends RulesConfig>
 
     public override getMetrics(node: GoNode): PlayerNumberTable {
         const goState: GoState = this.rules.markTerritoryAndCount(node.gameState);
-        const goScore: PlayerNumberMap = goState.getCapturedCopy();
+        const goScore: PlayerNumberMap = goState.captured;
         const goKilled: PlayerNumberMap = this.getDeadStones(goState);
         return PlayerNumberTable.ofSingle(
             goScore.get(Player.ZERO) + (2 * goKilled.get(Player.ONE)),

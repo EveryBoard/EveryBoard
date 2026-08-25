@@ -26,7 +26,6 @@ describe('CoerceoMove', () => {
             TestUtils.expectToThrowAndLog(createMoveWithInvalidDistance, CoerceoFailure.INVALID_DISTANCE());
         });
 
-
     });
 
     describe('Overrides', () => {

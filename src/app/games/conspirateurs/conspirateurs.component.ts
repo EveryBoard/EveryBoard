@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -38,6 +38,7 @@ interface SquareInfo {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-conspirateurs',
     templateUrl: './conspirateurs.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -75,8 +76,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
     private victoriousCoords: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Conspirateurs');
+        super('Conspirateurs');
         this.aiConfig = {
             minimax: [{
                 id: 'Jump',
@@ -240,7 +240,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
                this.jumpInConstruction.get().coords.some((c: Coord) => c.equals(coord));
     }
 
-    public override async showLastMove(move: ConspirateursMove): Promise<void> {
+    protected override async showLastMove(move: ConspirateursMove): Promise<void> {
         if (ConspirateursMove.isDrop(move)) {
             this.lastDrop = MGPOptional.of(move.coord);
         } else if (ConspirateursMove.isSimple(move)) {

@@ -6,7 +6,7 @@ import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { CheckersConfig, CheckersNode } from '../../common/AbstractCheckersRules';
 import { CheckersFailure } from '../../common/CheckersFailure';
 import { CheckersMove } from '../../common/CheckersMove';
-import { CheckersPiece, CheckersStack, CheckersState } from '../../common/CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState, OddCheckersState } from '../../common/CheckersState';
 import { LascaRules } from '../LascaRules';
 
 describe('LascaRules', () => {
@@ -19,6 +19,7 @@ describe('LascaRules', () => {
     const __U: CheckersStack = new CheckersStack([zero]);
     const __O: CheckersStack = new CheckersStack([zeroOfficer]);
     const __V: CheckersStack = new CheckersStack([one]);
+    const _VV: CheckersStack = new CheckersStack([one, one]);
     const _VU: CheckersStack = new CheckersStack([one, zero]);
     const _UV: CheckersStack = new CheckersStack([zero, one]);
     const _OV: CheckersStack = new CheckersStack([zeroOfficer, one]);
@@ -60,7 +61,7 @@ describe('LascaRules', () => {
 
         it('should forbid moving normal piece backward', () => {
             // Given any board
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
@@ -74,7 +75,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 5), new Coord(2, 6));
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
@@ -110,7 +111,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(2, 4), new Coord(3, 3));
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
@@ -149,7 +150,7 @@ describe('LascaRules', () => {
 
         it('should forbid long step', () => {
             // Given any board
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -169,7 +170,7 @@ describe('LascaRules', () => {
 
         it('should forbid capturing two allies in one jump', () => {
             // Given any board
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -193,7 +194,7 @@ describe('LascaRules', () => {
 
         it('should forbid continuing move after last capture', () => {
             // Given a board with a possible capture
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
@@ -205,7 +206,7 @@ describe('LascaRules', () => {
 
             // When doing a move that jump over an empty square after capture
             const capture: Coord[] = [new Coord(2, 2), new Coord(0, 4), new Coord(2, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+            const move: CheckersMove = CheckersMove.fromCapture(capture);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MOVE_CANNOT_CONTINUE_AFTER_NON_CAPTURE_MOVE();
@@ -219,7 +220,7 @@ describe('LascaRules', () => {
             // When trying a move going outside of the board
             const outOfBoardCoord: Coord = new Coord(8, 4);
             const captures: Coord[] = [new Coord(6, 6), outOfBoardCoord, new Coord(6, 2)];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then it should be illegal
             const reason: string = CoordFailure.OUT_OF_RANGE(outOfBoardCoord);
@@ -228,7 +229,7 @@ describe('LascaRules', () => {
 
         it('should forbid skipping capture', () => {
             // Given a board with a possible capture
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
@@ -248,7 +249,7 @@ describe('LascaRules', () => {
 
         it('should forbid partial-capture', () => {
             // Given a board on which a capture of two pieces is possible
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __U, ___, __V, ___, __V],
@@ -259,7 +260,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When capturing the first but not the second
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]);
 
             // Then the move should be illegal
             const reason: string = CheckersFailure.MUST_FINISH_CAPTURING();
@@ -268,7 +269,7 @@ describe('LascaRules', () => {
 
         it('should forbid self-capturing', () => {
             // Given a board on which a piece could try to capture its ally
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, __V, ___, ___, ___, ___, ___],
                 [___, ___, __V, ___, ___, ___, ___],
@@ -279,7 +280,7 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing so
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 1), new Coord(3, 3)]);
 
             // Then the move should be illegal
             const reason: string = RulesFailure.CANNOT_SELF_CAPTURE();
@@ -288,7 +289,7 @@ describe('LascaRules', () => {
 
         it('should forbid backward capture with normal piece', () => {
             // Given a board on which a normal-piece could try to capture backward
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, __U, ___, ___],
@@ -299,20 +300,20 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing so
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 3), new Coord(5, 1)]);
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid backward complex capture', () => {
             // Given a board on which a backward complex capture is possible
-            const state: CheckersState = CheckersState.of([
-                [___, ___, ___, ___, ___, ___, ___],
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, __U, ___, __U, ___, __U, ___],
                 [__V, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -320,21 +321,21 @@ describe('LascaRules', () => {
 
             // When doing so
             const captures: Coord[] = [
-                new Coord(0, 3),
-                new Coord(2, 1),
-                new Coord(4, 3),
-                new Coord(6, 1),
+                new Coord(0, 2),
+                new Coord(2, 0),
+                new Coord(4, 2),
+                new Coord(6, 0),
             ];
-            const move: CheckersMove = CheckersMove.fromCapture(captures).get();
+            const move: CheckersMove = CheckersMove.fromCapture(captures);
 
             // Then the move should be illegal
-            const reason: string = CheckersFailure.CANNOT_GO_BACKWARD();
+            const reason: string = CheckersFailure.ONLY_PROMOTED_PIECES_CAN_GO_BACKWARD();
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
         it('should forbid long capture for all piece', () => {
             // Given a board where a piece could try a capture with a longer jump
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, __V, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -345,7 +346,7 @@ describe('LascaRules', () => {
             ], 0);
 
             // When trying to do a capture that does too long step
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 6), new Coord(3, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.NO_PIECE_CAN_DO_LONG_JUMP();
@@ -354,7 +355,7 @@ describe('LascaRules', () => {
 
         it('should allow to do small capture when big capture available', () => {
             // Given a board where two different sized captures are possible
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, __V, ___, ___, ___, ___],
@@ -365,10 +366,10 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing the small capture
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -382,7 +383,7 @@ describe('LascaRules', () => {
 
         it('should allow to do big capture when small capture available', () => {
             // Given a board where two different sized captures are possible
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, __V, ___, ___, ___, ___],
@@ -394,12 +395,12 @@ describe('LascaRules', () => {
 
             // When doing the big capture
             const capture: Coord[] = [new Coord(2, 2), new Coord(4, 4), new Coord(6, 6)];
-            const move: CheckersMove = CheckersMove.fromCapture(capture).get();
+            const move: CheckersMove = CheckersMove.fromCapture(capture);
 
             // Then the move should succeed
             const stack: CheckersPiece[] = [CheckersPiece.ONE_PROMOTED, CheckersPiece.ZERO, CheckersPiece.ZERO];
             const Xoo: CheckersStack = new CheckersStack(stack);
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -413,7 +414,7 @@ describe('LascaRules', () => {
 
         it('should allow capturing standalone opponent piece', () => {
             // Given a board with a possible single-capture
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
@@ -424,10 +425,10 @@ describe('LascaRules', () => {
             ], 1);
 
             // When capturing the single piece
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, ___, ___, __V, ___, __V],
@@ -441,7 +442,7 @@ describe('LascaRules', () => {
 
         it('should allow capturing commander of an opponent stack', () => {
             // Given a board with a possible stack-capture
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
@@ -452,10 +453,10 @@ describe('LascaRules', () => {
             ], 1);
 
             // When capturing the commander of the stack
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, ___, ___, __V, ___, __V],
@@ -469,7 +470,7 @@ describe('LascaRules', () => {
 
         it('should allow multiple-capture', () => {
             // Given a board where a multiple captures is possible
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, __V, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -483,11 +484,11 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromCapture([
                 new Coord(2, 0),
                 new Coord(4, 2),
-                new Coord(6, 4)]).get();
+                new Coord(6, 4)]);
 
             // Then the move should succeed
             const vuu: CheckersStack = new CheckersStack([CheckersPiece.ONE, CheckersPiece.ZERO, CheckersPiece.ZERO]);
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -499,9 +500,33 @@ describe('LascaRules', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
+        it('should forbid capturing the same tower twice in one move', () => {
+            // Given an officer that can capture both commanders of the same tower
+            const state: CheckersState = EvenCheckersState.of([
+                [__O, ___, ___, ___, ___, ___, ___],
+                [___, _VV, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+                [___, ___, ___, ___, ___, ___, ___],
+            ], 0);
+
+            // When capturing one commander, then jumping back over the newly exposed commander
+            const move: CheckersMove = CheckersMove.fromCapture([
+                new Coord(0, 0),
+                new Coord(2, 2),
+                new Coord(0, 0),
+            ]);
+
+            // Then the second capture over the same tower coordinate should be illegal
+            const reason: string = CheckersFailure.CANNOT_CAPTURE_TWICE_THE_SAME_SQUARE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
+
         it('should forbid capturing two ennemies in one jump', () => {
             // Given any board
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__V, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -523,7 +548,7 @@ describe('LascaRules', () => {
 
             it('should allow backward capture with officer', () => {
                 // Given a board on which an officer can capture backward
-                const state: CheckersState = CheckersState.of([
+                const state: CheckersState = EvenCheckersState.of([
                     [___, ___, ___, ___, ___, ___, ___],
                     [___, ___, ___, ___, ___, __V, ___],
                     [___, ___, ___, ___, __O, ___, ___],
@@ -534,10 +559,10 @@ describe('LascaRules', () => {
                 ], 2);
 
                 // When doing it
-                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]).get();
+                const move: CheckersMove = CheckersMove.fromCapture([new Coord(4, 2), new Coord(6, 0)]);
 
                 // Then the move should succeed
-                const expectedState: CheckersState = CheckersState.of([
+                const expectedState: CheckersState = EvenCheckersState.of([
                     [___, ___, ___, ___, ___, ___, _OV],
                     [___, ___, ___, ___, ___, ___, ___],
                     [___, ___, ___, ___, ___, ___, ___],
@@ -557,7 +582,7 @@ describe('LascaRules', () => {
 
         it('should promote the commander of a stack that reached last line', () => {
             // Given a board where a stack is about to reach final line
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, __V, ___, __V],
                 [___, _UV, ___, __V, ___, __V, ___],
                 [___, ___, __V, ___, __V, ___, __V],
@@ -571,7 +596,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 1), new Coord(0, 0));
 
             // Then the commander of the stack should be promoted
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [_OV, ___, ___, ___, __V, ___, __V],
                 [___, ___, ___, __V, ___, __V, ___],
                 [___, ___, __V, ___, __V, ___, __V],
@@ -585,7 +610,7 @@ describe('LascaRules', () => {
 
         it('should promote piece that reached last line', () => {
             // Given a board where a single piece is about to reach final line
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, __V, ___, __V],
                 [___, __U, ___, __V, ___, __V, ___],
                 [___, ___, __V, ___, __V, ___, __V],
@@ -599,7 +624,7 @@ describe('LascaRules', () => {
             const move: CheckersMove = CheckersMove.fromStep(new Coord(1, 1), new Coord(0, 0));
 
             // Then the piece should be promoted
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [__O, ___, ___, ___, __V, ___, __V],
                 [___, ___, ___, __V, ___, __V, ___],
                 [___, ___, __V, ___, __V, ___, __V],
@@ -617,7 +642,7 @@ describe('LascaRules', () => {
 
         it(`should declare current player winner when opponent commands no more stack`, () => {
             // Given a board where Player.ONE have no more commander
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [_UV, ___, ___, ___, ___, ___, ___],
@@ -635,7 +660,7 @@ describe('LascaRules', () => {
 
         it(`should declare current player winner when blocking all opponent's pieces`, () => {
             // Given a board where the last commander(s) of Player.ZERO are stucked
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [__O, ___, __X, ___, ___, ___, ___],
                 [___, __X, ___, ___, ___, ___, ___],
                 [___, ___, __X, ___, ___, ___, ___],
@@ -662,7 +687,7 @@ describe('LascaRules', () => {
                 ...defaultConfig,
                 canStackPieces: false,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, __V, ___, ___, ___, ___],
@@ -673,10 +698,10 @@ describe('LascaRules', () => {
             ], 1);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(2, 2), new Coord(0, 4)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -699,7 +724,7 @@ describe('LascaRules', () => {
             const initialState: CheckersState = rules.getInitialState(customConfig);
 
             // Then it should be correct
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = OddCheckersState.of([
                 [___, __V, ___, __V, ___, __V, ___],
                 [__V, ___, __V, ___, __V, ___, __V],
                 [___, __V, ___, __V, ___, __V, ___],
@@ -717,7 +742,7 @@ describe('LascaRules', () => {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -728,10 +753,10 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 5), new Coord(3, 1)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, _UV, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -749,7 +774,7 @@ describe('LascaRules', () => {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -760,10 +785,10 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(5, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(5, 3)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -782,7 +807,7 @@ describe('LascaRules', () => {
                 frisianCaptureAllowed: true,
                 simplePieceCanCaptureBackwards: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __U, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -793,10 +818,10 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 1), new Coord(3, 5)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(3, 1), new Coord(3, 5)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -814,7 +839,7 @@ describe('LascaRules', () => {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __V, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -825,7 +850,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(3, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(3, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.INVALID_FRISIAN_MOVE();
@@ -838,7 +863,7 @@ describe('LascaRules', () => {
                 ...defaultConfig,
                 frisianCaptureAllowed: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, __V, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -849,7 +874,7 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(4, 3)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(1, 3), new Coord(4, 3)]);
 
             // Then it should fail
             const reason: string = CheckersFailure.FRISIAN_CAPTURE_MUST_BE_EVEN();
@@ -863,7 +888,7 @@ describe('LascaRules', () => {
                 frisianCaptureAllowed: true,
                 promotedPiecesCanFly: true,
             };
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [__O, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
@@ -874,10 +899,10 @@ describe('LascaRules', () => {
             ], 2);
 
             // When doing the move
-            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 6)]).get();
+            const move: CheckersMove = CheckersMove.fromCapture([new Coord(0, 0), new Coord(0, 6)]);
 
             // Then the move should succeed
-            const expectedState: CheckersState = CheckersState.of([
+            const expectedState: CheckersState = EvenCheckersState.of([
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],
                 [___, ___, ___, ___, ___, ___, ___],

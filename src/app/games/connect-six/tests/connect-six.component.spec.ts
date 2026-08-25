@@ -32,7 +32,7 @@ describe('ConnectSixComponent', () => {
             // When clicking anywhere
             // Then a first move should be done
             const move: ConnectSixMove = ConnectSixFirstMove.of(new Coord(9, 9));
-            await testUtils.expectMoveSuccess('#click-9-9', move);
+            await testUtils.expectMoveSuccess('.space-9-9', move);
         }));
 
         it('should cancel move when clicking on occupied piece from previous turns', fakeAsync(async() => {
@@ -61,7 +61,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.setupState(state);
             // When clicking on them
             // Then it should fail
-            await testUtils.expectClickFailure('#click-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+            await testUtils.expectClickFailure('.space-9-9', RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }));
 
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
@@ -90,7 +90,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.setupState(state);
 
             // When clicking on an empty square
-            await testUtils.expectClickSuccess('#click-8-8');
+            await testUtils.expectClickSuccess('.space-8-8');
 
             // Then the dropped piece should be displayed
             testUtils.expectElementToHaveClass('#dropped', 'moved-stroke');
@@ -123,7 +123,7 @@ describe('ConnectSixComponent', () => {
             await testUtils.setupState(state, { previousMove });
 
             // When doing a first click
-            await testUtils.expectClickSuccess('#click-8-8');
+            await testUtils.expectClickSuccess('.space-8-8');
 
             // Then the highlights from last turn should be hidden
             testUtils.expectElementNotToHaveClass('#piece-9-9', 'last-move-stroke');
@@ -157,10 +157,10 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click-8-8');
+            await testUtils.expectClickSuccess('.space-8-8');
 
             // When clicking again on this piece
-            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped', '#click-8-8');
+            await testUtils.expectClickFailureWithAsymmetricNaming('#dropped', '.space-8-8');
 
             // Then it should deselect it without toast
             testUtils.expectElementNotToExist('#dropped');
@@ -190,13 +190,13 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click-8-8');
+            await testUtils.expectClickSuccess('.space-8-8');
 
             // When clicking on a second empty square
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(8, 8), new Coord(7, 7));
 
             // Then the move should succeed
-            await testUtils.expectMoveSuccess('#click-7-7', move);
+            await testUtils.expectMoveSuccess('.space-7-7', move);
         }));
 
         it('should show last move again when cancelling move', fakeAsync(async() => {
@@ -223,10 +223,10 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click-8-8');
+            await testUtils.expectClickSuccess('.space-8-8');
 
             // When clicking on an empty square
-            await testUtils.expectClickFailure('#click-8-8');
+            await testUtils.expectClickFailure('.space-8-8');
 
             // Then the dropped piece should be displayed
             testUtils.expectElementToHaveClasses('#piece-9-9', ['base', 'player0-fill']);
@@ -260,13 +260,13 @@ describe('ConnectSixComponent', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 7);
             await testUtils.setupState(state);
-            await testUtils.expectClickSuccess('#click-6-8');
+            await testUtils.expectClickSuccess('.space-6-8');
 
             // When finishing your move
             const move: ConnectSixMove = ConnectSixDrops.of(new Coord(6, 8), new Coord(5, 8));
 
             // Then the victory squares should be highlighted
-            await testUtils.expectMoveSuccess('#click-5-8', move);
+            await testUtils.expectMoveSuccess('.space-5-8', move);
             testUtils.expectElementToHaveClass('#piece-5-8', 'victory-stroke');
             testUtils.expectElementToHaveClass('#piece-6-8', 'victory-stroke');
             testUtils.expectElementToHaveClass('#piece-7-8', 'victory-stroke');

@@ -6,7 +6,7 @@ import { OrthogonalGoGroupDataFactory } from '../GoGroupDataFactory';
 import { GoPiece } from '../GoPiece';
 import { GoState } from '../GoState';
 
-describe('GoBoardData for Go', () => {
+describe('BoardData for Go', () => {
 
     const _: GoPiece = GoPiece.EMPTY;
     const X: GoPiece = GoPiece.LIGHT;
@@ -17,7 +17,7 @@ describe('GoBoardData for Go', () => {
 
     it('should create one big group for initial board', () => {
         const board: Table<GoPiece> = GoState.getStartingBoard(width, height);
-        const data: BoardData = BoardData.ofBoard(board, new OrthogonalGoGroupDataFactory());
+        const data: BoardData = BoardData.ofBoard(board, new OrthogonalGoGroupDataFactory(1));
         const allZeroBoard: number[][] = TableUtils.create(width, height, 0);
         expect(data.groupIndices).toEqual(allZeroBoard);
         expect(data.groups.length).toBe(1);
@@ -34,7 +34,7 @@ describe('GoBoardData for Go', () => {
             [_, _, O, _, _],
             [_, _, _, _, _],
         ];
-        const data: BoardData = BoardData.ofBoard(board, new OrthogonalGoGroupDataFactory());
+        const data: BoardData = BoardData.ofBoard(board, new OrthogonalGoGroupDataFactory(1));
         const groupIndices: number[][] = [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],
