@@ -164,7 +164,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private wasOpponent(coord: Coord): boolean {
-        const parent: MGPOptional<CoerceoNode> = this.node.parent;
+        const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (parent.isPresent()) {
             const opponent: Player = parent.get().gameState.getCurrentOpponent();
             return parent.get().gameState.getPieceAt(coord).is(opponent);
@@ -195,7 +195,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     private wasRemoved(coord: Coord): boolean {
         const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
-        const parent: MGPOptional<CoerceoNode> = this.node.parent;
+        const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
             const previousState: CoerceoState = parent.get().gameState;
             const previousContent: FourStatePiece = previousState.getPieceAt(coord);
@@ -244,7 +244,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public lastTurnWasTilesExchange(player: Player): boolean {
-        if (this.node.parent.isAbsent()) {
+        if (this.node().parent.isAbsent()) {
             return false;
         }
         const previousTiles: number = this.getPreviousState().tiles.get(player);
