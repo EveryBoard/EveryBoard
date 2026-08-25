@@ -1,6 +1,6 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameNode } from '../../../jscaip/AI/GameNode';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { Move } from '../../../jscaip/Move';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
