@@ -36,8 +36,6 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
 
     public victoryCoords: WritableSignal<Coord[]> = signal([]);
 
-    private readonly NUMBER_OF_AWAITED_DROPS: number = 2;
-
     public constructor() {
         super('ConnectN');
         this.aiConfig = {
@@ -78,23 +76,19 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
         } else {
             if (this.getState().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (this.droppedCoords().length === 0) {
-                this.droppedCoords.set([coord]);
-                return MGPValidation.SUCCESS;
+            }
+            if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
+                return this.cancelMove(); // TODO: deselect
+            }
+            this.droppedCoords.set([coord]);
+            const droppedCoords: Coord[] = this.droppedCoords();
+            droppedCoords.push(coord);
+            this.droppedCoords.set(droppedCoords);
+            if (this.droppedCoords().length === this.getConfig().dropAfterFirstTurn) {
+                const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());
+                return this.chooseMove(move);
             } else {
-                if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
-                    return this.cancelMove();
-                } else {
-                    const droppedCoords: Coord[] = this.droppedCoords();
-                    droppedCoords.push(coord);
-                    this.droppedCoords.set(droppedCoords);
-                    if (this.droppedCoords().length === this.NUMBER_OF_AWAITED_DROPS) {
-                        const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());
-                        return this.chooseMove(move);
-                    } else {
-                        return MGPValidation.SUCCESS;
-                    }
-                }
+                return MGPValidation.SUCCESS;
             }
         }
     }

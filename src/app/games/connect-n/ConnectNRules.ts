@@ -90,7 +90,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
 
     public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
         return new NInARowHelper(
-            (piece: FourStatePiece) => piece.getPlayer(),
+            (piece: FourStatePiece) => {
+                console.log(typeof piece, piece, piece.getPlayer)
+                return piece.getPlayer(),
+            },
             config.n,
         ).getVictoriousCoord(state);
     }
