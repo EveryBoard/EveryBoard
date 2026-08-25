@@ -4,7 +4,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { AbstractAI, AI, AIOptions } from '../../../../jscaip/AI/AI';
-import { GameNode } from '../../../../jscaip/AI/GameNode';
+import { AbstractNode } from '../../../../jscaip/AI/GameNode';
 import { Coord } from '../../../../jscaip/Coord';
 import { Move } from '../../../../jscaip/Move';
 import { Player } from '../../../../jscaip/Player';
