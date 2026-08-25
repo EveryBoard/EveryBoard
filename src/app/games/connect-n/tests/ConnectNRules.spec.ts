@@ -1,6 +1,5 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { TestUtils } from '@everyboard/lib/testing';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
@@ -18,9 +17,9 @@ import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
+import { ConnectNFailure } from '../ConnectNFailure';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
-import { ConnectNFailure } from '../ConnectNFailure';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;

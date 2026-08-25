@@ -81,7 +81,6 @@ describe('ConnectNMoveGenerator', () => {
 
         // When listing the moves
         const moves: ConnectNMove[] = moveGenerator.getListMoves(node, defaultConfig);
-        console.log(moves.map((m: ConnectNMove) => m.toString()))
 
         // Then the answer should be 36
         expect(moves.length).toBe(36);

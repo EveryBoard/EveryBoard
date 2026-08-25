@@ -28,8 +28,8 @@ import { TriangularTopology } from '../../jscaip/topology/TriangularTopology';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
-import { ConnectNMove } from './ConnectNMove';
 import { ConnectNFailure } from './ConnectNFailure';
+import { ConnectNMove } from './ConnectNMove';
 
 export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
 

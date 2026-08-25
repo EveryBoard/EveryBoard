@@ -1,5 +1,3 @@
-import { Component } from '@angular/core';
-
 import { Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
