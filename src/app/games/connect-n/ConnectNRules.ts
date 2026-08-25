@@ -92,7 +92,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return new NInARowHelper(
             (piece: FourStatePiece) => {
                 console.log(typeof piece, piece, piece.getPlayer)
-                return piece.getPlayer(),
+                return piece.getPlayer();
             },
             config.n,
         ).getVictoriousCoord(state);
