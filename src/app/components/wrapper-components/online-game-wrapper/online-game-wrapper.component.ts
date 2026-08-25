@@ -280,7 +280,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
-        let oldNode: GameNode<Move, GameState> = this.gameComponent.node();
+        let oldNode: AbstractNode = this.gameComponent.node();
         this.gameComponent.node.set(oldNode.parent.get());
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never moved to take back');
@@ -432,9 +432,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
         Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
         const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
-        this.gameComponent.node.set(
-            new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move)),
-        );
+        const nextNode: AbstractNode = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        this.gameComponent.node.set(nextNode);
         await this.showNewMove(triggerAnimation);
     }
 

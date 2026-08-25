@@ -96,7 +96,7 @@
                             class="button is-fullwidth"
                             (click)="restartGame()"
                             i18n>Start a new game</button>
-                    @if (gameComponent.node().previousMove.isPresent() && displayAIInfo()) {
+                    @if (mustDisplayAIInfo()) {
                         <button id="viewTreeFromCurrentNode"
                                 (click)="viewTreeFromCurrentNode()"
                                 class="button is-medium is-fullwidth is-primary mb-1">

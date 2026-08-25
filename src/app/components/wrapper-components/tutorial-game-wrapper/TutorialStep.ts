@@ -68,7 +68,7 @@ export abstract class TutorialStep {
     }
 
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
-    public parent: MGPOptional<GameNode<Move, GameState>> = MGPOptional.empty();
+    public parent: MGPOptional<AbstractNode> = MGPOptional.empty();
 
     protected constructor(public readonly title: string,
                           public readonly instruction: string,

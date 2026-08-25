@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Type, inject } from '@angular/core';
+import { Component, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, OnDestroy, Type, inject, Signal, computed } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { ParamMap } from '@angular/router';
 
@@ -55,6 +55,10 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     public winnerMessage: MGPOptional<string> = MGPOptional.empty();
 
     public rulesConfig: RulesConfig; // Set in constructor and in ngAfterViewInit
+
+    protected readonly mustDisplayAIInfo: Signal<boolean> = computed(() => {
+        return this.gameComponent.node().previousMove.isPresent() && this.displayAIInfo();
+    });
 
     public constructor()
     {
@@ -254,10 +258,9 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
 
     public override async onLegalUserMove(move: Move): Promise<void> {
         const config: RulesConfig = this.getConfig();
-        const oldNode: GameNode<Move, GameState> = this.gameComponent.node();
-        this.gameComponent.node.set(
-            this.gameComponent.rules.choose(oldNode, move, config).get(),
-        );
+        const oldNode: AbstractNode = this.gameComponent.node();
+        const chosenNode: AbstractNode = this.gameComponent.rules.choose(oldNode, move, config).get();
+        this.gameComponent.node.set(chosenNode);
         await this.applyNewMove();
     }
 
@@ -312,7 +315,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
                 this.aiTimeout = MGPOptional.of(setTimeout(async() => {
                     this.aiTimeout = MGPOptional.empty();
                     const config: RulesConfig = this.getConfig();
-                    const node: GameNode<Move, GameState> = this.gameComponent.node();
+                    const node: AbstractNode = this.gameComponent.node();
                     const gameIsOngoing: boolean =
                         this.gameComponent.rules.getGameStatus(node, config) === GameStatus.ONGOING;
                     if (gameIsOngoing) {
@@ -543,7 +546,7 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
     }
 
     public async takeBack(): Promise<void> {
-        let oldNode: GameNode<Move, GameState> = this.gameComponent.node();
+        let oldNode: AbstractNode = this.gameComponent.node();
         this.gameComponent.node.set(oldNode.parent.get());
         if (this.isTurnOfPlayingAI()) {
             Utils.assert(this.gameComponent.node().parent.isPresent(),
@@ -597,11 +600,11 @@ export class LocalGameWrapperComponent extends GameWrapper<string> implements Af
         this.viewTreeFrom(this.gameComponent.node().parent.get());
     }
 
-    private viewTreeFrom(node: GameNode<Move, GameState>): void {
+    private viewTreeFrom(node: AbstractNode): void {
         // We will use the data from the previous turn's AI
         const opponentAI: MGPOptional<{ ai: AbstractAI; options: AIOptions }> = this.getOpponentAI();
         // We will annotate the trees with data from MCTS
-        function mctsLabel(nodeToLabel: GameNode<Move, GameState>): string {
+        function mctsLabel(nodeToLabel: AbstractNode): string {
             if (opponentAI.isPresent() && opponentAI.get().ai instanceof MCTS) {
                 const mcts: MCTS<Move, GameState, RulesConfig, unknown> =
                     opponentAI.get().ai as MCTS<Move, GameState, RulesConfig, unknown>;
