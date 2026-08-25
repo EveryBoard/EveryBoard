@@ -29,6 +29,7 @@ import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
 import { ConnectNMove } from './ConnectNMove';
+import { ConnectNFailure } from './ConnectNFailure';
 
 export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
 
@@ -51,6 +52,8 @@ export const Shapes: Record<ShapeEnum, Localized> = {
 export type ConnectNConfig = {
 
     n: number;
+
+    dropAfterFirstTurn: number;
 
     topology: TopologyID;
 
@@ -108,7 +111,14 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
 
     public override isLegal(move: ConnectNMove,
                             state: TopologicGameState<FourStatePiece>,
+                            config: ConnectNConfig,
     ): MGPFallible<void> {
+        if (state.turn === 0 && move.coords.size() > 1) {
+            return MGPFallible.failure(ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE());
+        }
+        if (move.coords.size() !== config.dropAfterFirstTurn) {
+            return MGPFallible.failure(ConnectNFailure.YOU_MUST_PLAY_EXACTLY(config.dropAfterFirstTurn));
+        }
         for (const coord of move.coords) {
             if (state.isNotOnBoard(coord)) {
                 return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(coord));

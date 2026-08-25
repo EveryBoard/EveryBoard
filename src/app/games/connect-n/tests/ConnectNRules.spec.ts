@@ -20,6 +20,7 @@ import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
+import { ConnectNFailure } from '../ConnectNFailure';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
@@ -96,7 +97,7 @@ describe('ConnectNRules (SQUARE)', () => {
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
-        fit('should refuse move that drops two pieces on first turn', () => {
+        it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
             const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(defaultConfig);
 
@@ -104,10 +105,8 @@ describe('ConnectNRules (SQUARE)', () => {
             const move: ConnectNMove = ConnectNMove.of([new Coord(11, 11), new Coord(10, 10)]);
 
             // Then the attempt should throw
-            function tryDoubleDropOnFirstTurn(): void {
-                rules.isLegal(move, state);
-            }
-            TestUtils.expectToThrowAndLog(tryDoubleDropOnFirstTurn, 'ConnectNMove should only be used after first move');
+            const reason: string = ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
     });
