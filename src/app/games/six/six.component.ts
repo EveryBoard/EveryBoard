@@ -105,7 +105,7 @@ export class SixComponent
     }
 
     private resetPiecesAndNeighbors(): void {
-        this.state = this.node.gameState;
+        this.state = this.node().gameState;
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
     }
@@ -136,7 +136,7 @@ export class SixComponent
             this.leftCoord = MGPOptional.empty();
         }
         const state: SixState = this.getState();
-        if (this.rules.getGameStatus(this.node, this.getConfig()).isEndGame) {
+        if (this.rules.getGameStatus(this.node(), this.getConfig()).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
         this.disconnectedCoords = this.getDisconnected();
@@ -148,7 +148,7 @@ export class SixComponent
         const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: CoordAndClass[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = this.node.previousMove.get().start;
+            const start: MGPOptional<Coord> = this.node().previousMove.get().start;
             if (start.equalsValue(oldPiece) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {
