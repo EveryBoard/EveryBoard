@@ -39,8 +39,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     private readonly NUMBER_OF_AWAITED_DROPS: number = 2;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('ConnectN');
+        super('ConnectN');
         this.aiConfig = {
             minimax: [{
                 id: 'Alignment',
