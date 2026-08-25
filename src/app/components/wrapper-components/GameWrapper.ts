@@ -3,10 +3,10 @@ import { Router } from '@angular/router';
 
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { PlayerMap } from '../../jscaip/PlayerMap';
 import { AbstractNode } from '../../jscaip/AI/GameNode';
 import { Move } from '../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
 import { Localized } from '../../utils/LocaleUtils';
