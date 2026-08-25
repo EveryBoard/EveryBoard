@@ -19,9 +19,6 @@ import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology'
 import { ViewBox } from '../GameComponentUtils';
 import { GameComponent } from '../game-component/GameComponent';
 
-@Component({
-    template: '',
-})
 export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,
                                              S extends TopologicGameState<P>,
