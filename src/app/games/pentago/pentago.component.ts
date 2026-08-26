@@ -212,7 +212,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop);
         }
-        const gameStatus: GameStatus = this.rules.getGameStatus(this.node);
+        const gameStatus: GameStatus = this.rules.getGameStatus(this.node());
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
         this.currentDrop = MGPOptional.of(coord);
         this.displayArrows(postDropState.neutralBlocks);

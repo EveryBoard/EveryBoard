@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/eslint-rules/dist
 /lib/dist
 /tmp
 /out-tsc
