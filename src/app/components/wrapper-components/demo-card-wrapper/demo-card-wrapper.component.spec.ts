@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { DebugElement, SimpleChanges } from '@angular/core';
+import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
@@ -27,7 +27,7 @@ describe('DemoCardWrapperComponent', () => {
 
     async function loadNode(nodeInfo: DemoNodeInfo): Promise<void> {
         testUtils.setInput('demoNodeInfo', nodeInfo);
-        await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
+        await testUtils.getComponent().ngOnChanges({});
         testUtils.detectChanges();
         tick(1); // Need at least 1ms because of the setTimeout in ngAfterViewInit
     }
@@ -127,7 +127,7 @@ describe('DemoCardWrapperComponent', () => {
             click: MGPOptional.empty(),
             config: defaultConfig,
         });
-        await testUtils.getComponent().ngOnChanges({} as SimpleChanges);
+        await testUtils.getComponent().ngOnChanges({});
 
         // Then we should see that the component has indeed been changed
         testUtils.expectElementToExist('#click-0-0 > circle');

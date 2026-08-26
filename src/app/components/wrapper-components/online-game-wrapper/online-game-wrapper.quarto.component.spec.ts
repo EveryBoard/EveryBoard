@@ -246,6 +246,28 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await receiveEndGame();
     }));
 
+    it('should allow a human-controlled bot account to play, only for development and testing purpose', fakeAsync(async() => {
+        // Given a started game where the backend marks the connected user as a bot
+        await prepareTestUtilsFor(UserMocks.CREATOR_AUTH_USER, {
+            ...PreparationOptions.withoutClocks,
+            game: {
+                ...GameMocks.STARTED,
+                playerZero: { ...UserMocks.CREATOR_MINIMAL_USER, isBot: true },
+            },
+        });
+        await receiveSync();
+        spyOn(gameService, 'addMove').and.callThrough();
+
+        // When the bot account plays a move from the frontend
+        await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
+
+        // Then the account is recognized as the player and the move is sent
+        expect(wrapper.role).toBe(Player.ZERO);
+        expect(gameService.addMove).toHaveBeenCalledOnceWith(FIRST_MOVE_ENCODED);
+
+        await receiveEndGame();
+    }));
+
     it('should allow sending and receiving moves (opponent)', fakeAsync(async() => {
         // Given a started game
         await prepareTestUtilsFor(UserMocks.OPPONENT_AUTH_USER);
@@ -431,7 +453,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // And when the backend propagates the update, the game should be finished
             await receiveEndGame(GameResult.VICTORY_OF_ZERO);
-            expect(wrapper.gameComponent.node.previousMove.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node().previousMove.get()).toEqual(FIRST_MOVE);
             testUtils.expectElementToExist('#youWonIndicator');
             expectGameToBeOver();
         }));
@@ -452,7 +474,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // And when the backend propagates the update, the game should be finished
             await receiveEndGame(GameResult.VICTORY_OF_ONE);
-            expect(wrapper.gameComponent.node.previousMove.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node().previousMove.get()).toEqual(FIRST_MOVE);
             testUtils.expectElementToExist('#youLostIndicator');
             expectGameToBeOver();
         }));
@@ -489,7 +511,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // And when the backend propagates the update, the game should be finished
             await receiveEndGame(GameResult.HARD_DRAW);
-            expect(wrapper.gameComponent.node.previousMove.get()).toEqual(FIRST_MOVE);
+            expect(wrapper.gameComponent.node().previousMove.get()).toEqual(FIRST_MOVE);
             testUtils.expectElementToExist('#hardDrawIndicator');
             expectGameToBeOver();
         }));

@@ -34,7 +34,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public async ngAfterViewInit(): Promise<void> {
         setTimeout(async() => {
             await this.createMatchingGameComponent();
-            this.gameComponent.node = this.demoNodeInfo().node;
+            this.gameComponent.node.set(this.demoNodeInfo().node);
             // The component needs to be interactive in order to show all possible stylistic elements
             await this.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
@@ -63,7 +63,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
             this.gameComponent.setConfig(this.getConfig());
-            this.gameComponent.node = this.demoNodeInfo().node;
+            this.gameComponent.node.set(this.demoNodeInfo().node);
             await this.gameComponent.updateBoardAndRedraw(false);
         }
     }

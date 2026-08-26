@@ -280,11 +280,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
-        this.gameComponent.node = this.gameComponent.node.parent.get();
+        let oldNode: AbstractNode = this.gameComponent.node();
+        this.gameComponent.node.set(oldNode.parent.get());
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never moved to take back');
             // Take back a second time to make sure it end up on player's turn
-            this.gameComponent.node = this.gameComponent.node.parent.get();
+            oldNode = this.gameComponent.node();
+            this.gameComponent.node.set(oldNode.parent.get());
         }
         await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
@@ -386,10 +388,10 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async setRealObserverRole(): Promise<void> {
-        if (this.getPlayerAt(Player.ZERO).equalsValue(this.getPlayer())) {
+        if (this.isCurrentUser(Player.ZERO)) {
             await this.setRole(Player.ZERO);
             this.opponent = this.getPlayerAt(Player.ONE).get();
-        } else if (this.getPlayerAt(Player.ONE).equalsValue(this.getPlayer())) {
+        } else if (this.isCurrentUser(Player.ONE)) {
             await this.setRole(Player.ONE);
             this.opponent = this.getPlayerAt(Player.ZERO).get();
         } else {
@@ -397,12 +399,24 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
+    private isCurrentUser(player: Player): boolean {
+        const playerId: MGPOptional<string> = this.getPlayerAt(player).map((user: MinimalUser): string => user.id);
+        return playerId.equalsValue(this.getPlayer().id);
+    }
+
+    public override isPlayerTurn(): boolean {
+        if (this.role.isNone() || this.gameComponent == null) {
+            return false;
+        }
+        return this.role.equals(this.gameComponent.getCurrentPlayer());
+    }
+
     public override async onLegalUserMove(move: Move): Promise<void> {
         // First, show the move in the component
         await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move
         const config: RulesConfig = this.getConfig();
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node(), config);
         const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
         this.moveSentButNotReceivedYet = true;
         await this.gameService.addMove(encodedMove);
@@ -412,13 +426,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async applyMove(move: Move, triggerAnimation: boolean): Promise<void> {
-        const oldNode: AbstractNode = this.gameComponent.node;
+        const oldNode: AbstractNode = this.gameComponent.node();
         const state: GameState = oldNode.gameState;
         const config: RulesConfig = this.getConfig();
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
         Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
         const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
-        this.gameComponent.node = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        const nextNode: AbstractNode = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        this.gameComponent.node.set(nextNode);
         await this.showNewMove(triggerAnimation);
     }
 
@@ -491,7 +506,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
-        if (this.gameComponent.node.previousMove.isPresent()) {
+        if (this.gameComponent.node().previousMove.isPresent()) {
             await this.gameComponent.showLastMoveAndRedraw();
         }
         this.cdr.detectChanges();

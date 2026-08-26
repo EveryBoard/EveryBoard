@@ -138,10 +138,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
             this.animationOngoing = true;
-            Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
-            this.changeVisibleState(this.node.parent.get().gameState);
+            Utils.assert(this.node().parent.isPresent(), 'triggerAnimation in store should be false at first turn');
+            this.changeVisibleState(this.node().parent.get().gameState);
             let indexDistribution: number = 0;
-            const move: MancalaMove = this.node.previousMove.get();
+            const move: MancalaMove = this.node().previousMove.get();
             for (const distributions of move) {
                 await this.showSeedBySeedDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
@@ -398,11 +398,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private getPreviousStableState(): MancalaState {
         if (this.opponentMoveIsBeingAnimated) {
             Utils.assert(this.getTurn() > 0, 'Kalah: Should not animate move at turn 0');
-            return this.node.parent.get().gameState;
+            return this.node().parent.get().gameState;
         } else {
             if (this.constructedState.equals(this.getState())) {
-                if (this.node.parent.isPresent()) {
-                    return this.node.parent.get().gameState;
+                if (this.node().parent.isPresent()) {
+                    return this.node().parent.get().gameState;
                 } else {
                     return this.getState();
                 }

@@ -435,7 +435,7 @@ func (s *FakeStore) GetCurrentGame(user model.MinimalUser) (*model.CurrentGame, 
 }
 
 func (s *FakeStore) SetCurrentGame(currentGame *model.CurrentGame) error {
-	s.CurrentGames[currentGame.UserID] = currentGame
+	s.CurrentGames[currentGame.User.ID] = currentGame
 	return nil
 }
 
@@ -468,7 +468,7 @@ func (s *FakeStore) ApplyToObservers(gameId model.GameID, action func(model.Mini
 	var observers []model.MinimalUser
 	for _, cg := range s.CurrentGames {
 		if cg.GameID == gameId && cg.Role == model.UserRoleObserver {
-			observers = append(observers, cg.GetUser())
+			observers = append(observers, cg.User)
 		}
 	}
 	for _, observer := range observers {

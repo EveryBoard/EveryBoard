@@ -23,14 +23,22 @@ func testWebSocketURL(path string) string {
 }
 
 type FirebaseMock struct {
+	Users map[string]map[string]any
 }
 
 func (f FirebaseMock) Initialize() error {
 	return nil
 }
 
-func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]interface{}, error) {
-	return map[string]interface{}{
+func (f FirebaseMock) Fetch(context context.Context, collection string, path string) (map[string]any, error) {
+	if f.Users != nil {
+		user, ok := f.Users[path]
+		if !ok {
+			return nil, fmt.Errorf("user %q not found", path)
+		}
+		return user, nil
+	}
+	return map[string]any{
 		"username": path, // path is the uid, and we use it as the username too here
 	}, nil
 }
