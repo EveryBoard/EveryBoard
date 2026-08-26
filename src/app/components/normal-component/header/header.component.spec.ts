@@ -37,7 +37,8 @@ describe('HeaderComponent', () => {
     }));
 
     it('should show a spinner while the connected user is loading', () => {
-        spyOn(TestBed.inject(ConnectedUserService), 'subscribeToUser').and.returnValue(new Subscription());
+        const pendingUserSubscription: Subscription = new Subscription();
+        spyOn(TestBed.inject(ConnectedUserService), 'subscribeToUser').and.returnValue(pendingUserSubscription);
         testUtils.detectChanges();
 
         testUtils.expectElementToExist('fa-icon.navbar-item');
