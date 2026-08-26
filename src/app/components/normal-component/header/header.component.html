@@ -63,17 +63,17 @@
         </div>
 
         <div class="navbar-end">
-            @if (currentGame.isPresent()) {
+            @if (currentGame().isPresent()) {
                 <a id="currentGameLink"
                    class="navbar-item"
                    (click)="navigateToPart()">
-                    @if (currentGame.get().role === 'Observer' || currentGame.get().role === 'Candidate') {
-                        <ng-container i18n>{{ getCurrentGameName() }} by {{ currentGame.get().creator.name }}</ng-container>
+                    @if (currentGame().get().role === 'Observer' || currentGame().get().role === 'Candidate') {
+                        <ng-container i18n>{{ currentGameName() }} by {{ currentGame().get().creator.name }}</ng-container>
                     } @else {
-                        @if (currentGame.get().opponent) {
-                            <ng-container i18n>{{ getCurrentGameName() }} against {{ getOpponentName() }}</ng-container>
+                        @if (currentGame().get().opponent) {
+                            <ng-container i18n>{{ currentGameName() }} against {{ opponentName() }}</ng-container>
                         } @else {
-                            <ng-container i18n>{{ getCurrentGameName() }} (waiting for opponent)</ng-container>
+                            <ng-container i18n>{{ currentGameName() }} (waiting for opponent)</ng-container>
                         }
                     }
                 </a>
@@ -85,14 +85,14 @@
                data-tooltip="Settings"><fa-icon [icon]="faCog"></fa-icon></a>
 
             <div class="navbar-item">
-                @if (loading) {
+                @if (loading()) {
                     <fa-icon [icon]="faSpinner"
                              class="navbar-item"></fa-icon>
                 } @else {
-                    @if (username.isPresent()) {
+                    @if (username().isPresent()) {
                         <div class="navbar-item has-dropdown is-hoverable">
                             <a id="connectedUserName"
-                               class="navbar-link">{{ username.get() }}</a>
+                               class="navbar-link">{{ username().get() }}</a>
                             <div class="navbar-dropdown">
                                 <a class="navbar-item"
                                    id="account"

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, OnInit, OnDestroy, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, Signal, WritableSignal, computed, inject, signal } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { faCog, faSpinner, IconDefinition } from '@fortawesome/free-solid-svg-icons';
@@ -23,33 +23,47 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private readonly connectedUserService: ConnectedUserService = inject(ConnectedUserService);
     private readonly currentGameService: CurrentGameService = inject(CurrentGameService);
 
-    public loading: boolean = true;
-    public username: MGPOptional<string> = MGPOptional.empty();
-
     public faCog: IconDefinition = faCog;
     public faSpinner: IconDefinition = faSpinner;
 
     private userSubscription: Subscription = new Subscription();
     private currentGameSubscription: Subscription = new Subscription();
 
-    private connectedUserId: string = '';
+    private readonly connectedUser: WritableSignal<MGPOptional<AuthUser>> = signal(MGPOptional.empty());
+    private readonly currentGameState: WritableSignal<MGPOptional<CurrentGame>> = signal(MGPOptional.empty());
 
     public showMenu: boolean = false;
 
-    public currentGame: MGPOptional<CurrentGame> = MGPOptional.empty();
+    public readonly currentGame: Signal<MGPOptional<CurrentGame>> = this.currentGameState.asReadonly();
+    public readonly loading: Signal<boolean> = computed(() => this.connectedUser().isAbsent());
+    public readonly username: Signal<MGPOptional<string>> = computed(() => {
+        if (this.connectedUser().isAbsent()) {
+            return MGPOptional.empty();
+        }
+        const user: AuthUser = this.connectedUser().get();
+        return user.username.isPresent() ? user.username : user.email;
+    });
+    public readonly currentGameName: Signal<string> = computed(() =>
+        GameInfo.getByUrlName(this.currentGame().get().gameName).get().name,
+    );
+
+    public readonly opponentName: Signal<string> = computed(() => {
+        const currentGame: CurrentGame = this.currentGame().get();
+        const connectedUserId: string = this.connectedUser().isPresent() ? this.connectedUser().get().id : '';
+        if (connectedUserId === currentGame.creator.id) {
+            return Utils.getNonNullable(currentGame.opponent?.name);
+        } else {
+            return currentGame.creator.name;
+        }
+    });
 
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
-            this.loading = false;
-            this.connectedUserId = user.id;
-            if (user.username.isPresent()) {
-                this.username = user.username;
-            } else {
-                this.username = user.email;
-            }});
+            this.connectedUser.set(MGPOptional.of(user));
+        });
         this.currentGameSubscription =
             this.currentGameService.subscribeToCurrentGame((currentGame: MGPOptional<CurrentGame>) => {
-                this.currentGame = currentGame;
+                this.currentGameState.set(currentGame);
             });
     }
 
@@ -59,24 +73,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public async navigateToPart(): Promise<boolean> {
-        return this.router.navigate(['/play', this.currentGame.get().gameName, this.currentGame.get().id]);
+        return this.router.navigate(['/play', this.currentGame().get().gameName, this.currentGame().get().id]);
     }
 
     public ngOnDestroy(): void {
         this.userSubscription.unsubscribe();
         this.currentGameSubscription.unsubscribe();
-    }
-
-    public getCurrentGameName(): string {
-        return GameInfo.getByUrlName(this.currentGame.get().gameName).get().name;
-    }
-
-    public getOpponentName(): string {
-        const currentGame: CurrentGame = this.currentGame.get();
-        if (this.connectedUserId === currentGame.creator.id) {
-            return Utils.getNonNullable(currentGame.opponent?.name);
-        } else {
-            return currentGame.creator.name;
-        }
     }
 }
