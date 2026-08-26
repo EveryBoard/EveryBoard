@@ -29,28 +29,23 @@ export class HeaderComponent implements OnInit, OnDestroy {
     private userSubscription: Subscription = new Subscription();
     private currentGameSubscription: Subscription = new Subscription();
 
-    private readonly connectedUser: WritableSignal<MGPOptional<AuthUser>> = signal(MGPOptional.empty());
+    private readonly connectedUser: WritableSignal<AuthUser> = signal(AuthUser.NOT_CONNECTED);
     private readonly currentGameState: WritableSignal<MGPOptional<CurrentGame>> = signal(MGPOptional.empty());
 
     public showMenu: boolean = false;
 
     public readonly currentGame: Signal<MGPOptional<CurrentGame>> = this.currentGameState.asReadonly();
-    public readonly loading: Signal<boolean> = computed(() => this.connectedUser().isAbsent());
-    public readonly username: Signal<MGPOptional<string>> = computed(() => {
-        if (this.connectedUser().isAbsent()) {
-            return MGPOptional.empty();
-        }
-        const user: AuthUser = this.connectedUser().get();
-        return user.username.isPresent() ? user.username : user.email;
-    });
+    public readonly loading: WritableSignal<boolean> = signal(true);
+    public readonly username: Signal<MGPOptional<string>> = computed(() =>
+        this.connectedUser().username.orElse(this.connectedUser().email),
+    );
     public readonly currentGameName: Signal<string> = computed(() =>
         GameInfo.getByUrlName(this.currentGame().get().gameName).get().name,
     );
 
     public readonly opponentName: Signal<string> = computed(() => {
         const currentGame: CurrentGame = this.currentGame().get();
-        const connectedUserId: string = this.connectedUser().isPresent() ? this.connectedUser().get().id : '';
-        if (connectedUserId === currentGame.creator.id) {
+        if (this.connectedUser().id === currentGame.creator.id) {
             return Utils.getNonNullable(currentGame.opponent?.name);
         } else {
             return currentGame.creator.name;
@@ -59,7 +54,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     public ngOnInit(): void {
         this.userSubscription = this.connectedUserService.subscribeToUser((user: AuthUser) => {
-            this.connectedUser.set(MGPOptional.of(user));
+            this.connectedUser.set(user);
+            this.loading.set(false);
         });
         this.currentGameSubscription =
             this.currentGameService.subscribeToCurrentGame((currentGame: MGPOptional<CurrentGame>) => {

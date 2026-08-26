@@ -2,6 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 import { MGPOptional, Utils } from '@everyboard/lib';
 
@@ -34,6 +35,16 @@ describe('HeaderComponent', () => {
         testUtils.detectChanges();
         expect(testUtils.getComponent()).toBeTruthy();
     }));
+
+    it('should show a spinner while the connected user is loading', () => {
+        spyOn(TestBed.inject(ConnectedUserService), 'subscribeToUser').and.returnValue(new Subscription());
+        testUtils.detectChanges();
+
+        testUtils.expectElementToExist('fa-icon.navbar-item');
+        testUtils.expectElementNotToExist('#connectedUserName');
+        testUtils.expectElementNotToExist('#login');
+        testUtils.expectElementNotToExist('#register');
+    });
 
     it('should bring to account settings when clicking on the account button', fakeAsync(async() => {
         // Given a connected user
