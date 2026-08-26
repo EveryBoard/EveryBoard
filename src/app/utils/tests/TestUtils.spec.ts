@@ -26,7 +26,7 @@ import { UserMocks } from '../../domain/UserMocks.spec';
 import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
 import { MinimaxConfig } from '../../jscaip/AI/AIConfig';
 import { createMinimaxFromConfig } from '../../jscaip/AI/AIConfigUtils';
-import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
+import { AbstractNode, GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
 import { Player } from '../../jscaip/Player';
@@ -475,12 +475,13 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             this.gameComponent.setConfig(config);
             tick(0);
         }
-        this.gameComponent.node = new GameNode(
+        const node: AbstractNode = new GameNode(
             state,
             MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
                 new GameNode(previousState)),
             MGPOptional.ofNullable(params.previousMove),
         );
+        this.gameComponent.node.set(node);
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
             await this.gameComponent.showLastMoveAndRedraw();
