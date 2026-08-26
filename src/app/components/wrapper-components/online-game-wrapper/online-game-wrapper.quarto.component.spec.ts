@@ -74,6 +74,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }
     }
 
+    function expectTurnToBe(turn: number): void {
+        const turnIndicator: DebugElement = testUtils.findElement('#turn-number');
+        expect(turnIndicator.nativeElement.innerText).toBe(`Turn n°${ turn + 1 }`);
+    }
+
     async function receiveRequest(player: Player, request: RequestType): Promise<void> {
         await gameService.mockGameEvent({
             eventType: 'Request',
@@ -235,13 +240,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMoveByClicks(Player.ZERO, FIRST_MOVE, FIRST_MOVE_ENCODED);
         // Then it should be sent to the game service,
         expect(gameService.addMove).toHaveBeenCalledOnceWith(FIRST_MOVE_ENCODED);
-        // and component gets updated when receiving it back
-        expect(testUtils.getGameComponent().getTurn()).toEqual(1);
+        // and the displayed turn should be updated when receiving it back
+        expectTurnToBe(1);
 
         // And when receiving a second move
         await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
-        // Then the part should also be updated
-        expect(testUtils.getGameComponent().getTurn()).toEqual(2);
+        // Then the displayed turn should also be updated
+        expectTurnToBe(2);
 
         await receiveEndGame();
     }));
@@ -275,13 +280,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // When receiving a move
         await receiveMove(Player.ZERO, FIRST_MOVE_ENCODED);
-        // Then the part should be updated
-        expect(testUtils.getGameComponent().getTurn()).toEqual(1);
+        // Then the displayed turn should be updated
+        expectTurnToBe(1);
 
         // And when doing a second move
         await receiveMove(Player.ONE, SECOND_MOVE_ENCODED);
-        // Then the part should also be updated
-        expect(testUtils.getGameComponent().getTurn()).toEqual(2);
+        // Then the displayed turn should also be updated
+        expectTurnToBe(2);
 
         await receiveEndGame();
     }));
@@ -1477,8 +1482,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             // When they attempt to play on the board
             await testUtils.expectClickFailure('#click-coord-0-0', OnlineGameWrapperMessages.CANNOT_PLAY_AS_OBSERVER());
 
-            // Then the game remains unchanged
-            expect(testUtils.getGameComponent().getTurn()).toBe(0);
+            // Then the displayed turn should remain unchanged
+            expectTurnToBe(0);
 
             await receiveEndGame();
         }));
