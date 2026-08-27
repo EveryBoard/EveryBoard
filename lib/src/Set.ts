@@ -141,4 +141,8 @@ export class Set<T extends Comparable> implements ComparableObject {
         return result;
     }
 
+    public getSubsetsOfSize(size: number): T[][] {
+        return Sets.getSubsetsOfSize(this, size);
+    }
+
 }

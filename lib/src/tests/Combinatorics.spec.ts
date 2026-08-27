@@ -3,7 +3,7 @@ import { Combinatorics } from '../Combinatorics';
 
 describe('Combinatorics', () => {
 
-    describe('getSubsetOfSize', () => {
+    describe('getSubsetsOfSize', () => {
         it('should return all subsets of a given size', () => {
             const elements: number[] = [0, 1, 2];
             const subsets: number[][] = Combinatorics.getSubsetsOfSize(elements, 2);

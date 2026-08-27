@@ -1,4 +1,6 @@
+import { Combinatorics } from './Combinatorics';
 import { Comparable, comparableEquals } from './Comparable';
+import { Set } from './Set';
 
 export class Sets {
 
@@ -12,29 +14,8 @@ export class Sets {
         return result;
     }
 
-    public static getSubset<T>(items: T[], subsetSize: number): T[][] {
-        if (subsetSize < 0 || subsetSize > items.length) {
-            return [];
-        }
-        if (subsetSize === 0) {
-            return [[]];
-        }
-        const result: T[][] = [];
-        const current: T[] = [];
-        function backtrack(start: number): void {
-            if (current.length === subsetSize) {
-                result.push([...current]);
-                return;
-            }
-            const remaining: number = subsetSize - current.length;
-            for (let i: number = start; i <= items.length - remaining; i++) {
-                current.push(items[i]);
-                backtrack(i + 1);
-                current.pop();
-            }
-        }
-        backtrack(0);
-        return result;
+    public static getSubsetsOfSize<T extends Comparable>(set: Set<T>, subsetSize: number): T[][] {
+        return Combinatorics.getSubsetsOfSize(set.toList(), subsetSize);
     }
 
 }

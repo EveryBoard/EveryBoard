@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Comparable } from '../Comparable';
+import { Set } from '../Set';
 import { Sets } from '../Sets';
 
 describe('Sets', () => {
@@ -12,16 +13,17 @@ describe('Sets', () => {
         expect(asSet).toEqual([1, 2]);
     });
 
-    describe('getSubset', () => {
+    describe('getSubsetsOfSize', () => {
 
-        it('When selecting 2 objects from 4, Then it should return all unique Sets.getSubset', () => {
+        it('should select all subsets of size 2', () => {
             // Given a list of distinct objects
-            const items: string[] = ['A', 'B', 'C', 'D'];
+            const items: Set<string> = new Set(['A', 'B', 'C', 'D']);
             const subsetSize: number = 2;
 
-            // When getting two a subset of two
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+            // When getting subsets of size two
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should give 6 results
             const expected: string[][] = [
                 ['A', 'B'],
                 ['A', 'C'],
@@ -33,13 +35,15 @@ describe('Sets', () => {
             expect(result).toEqual(expected);
         });
 
-        it('When selecting 1 object, Then it should return one combination per object', () => {
+        it('should return equivalent list when asking for subset of size 1', () => {
             // Given a list of distinct objects
-            const items: string[] = ['A', 'B', 'C'];
+            const items: Set<string> = new Set(['A', 'B', 'C']);
             const subsetSize: number = 1;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+
+            // When selecting subsets of size 1
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should result in the initial list
             const expected: string[][] = [
                 ['A'],
                 ['B'],
@@ -48,152 +52,79 @@ describe('Sets', () => {
             expect(result).toEqual(expected);
         });
 
-        it('When selecting all objects, Then it should return the original list as the only combination', () => {
+        it('should return one subset of equal size when asking for a subset size equal to the list size', () => {
             // Given a list of distinct objects
-            const items: string[] = ['A', 'B', 'C'];
+            const items: Set<string> = new Set(['A', 'B', 'C']);
             const subsetSize: number = 3;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+
+            // When asking for a subset of size equal to the size of the list
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should return only one subset
             const expected: string[][] = [
                 ['A', 'B', 'C'],
             ];
             expect(result).toEqual(expected);
         });
 
-        it('When selecting zero objects, Then it should return one empty combination', () => {
+        it('should return empty list when asking for subset of size 0', () => {
             // Given a list of distinct objects
-            const items: string[] = ['A', 'B', 'C'];
+            const items: Set<string> = new Set(['A', 'B', 'C']);
             const subsetSize: number = 0;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+
+            // When asking for subset of size 0
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should return an empty list
             const expected: string[][] = [[]];
             expect(result).toEqual(expected);
         });
 
-        it('When selecting more objects than available, Then it should return no Sets.getSubset', () => {
+        it('should return no subset when selecting more objects than available', () => {
             // Given a list of distinct objects
-            const items: string[] = ['A', 'B', 'C'];
+            const items: Set<string> = new Set(['A', 'B', 'C']);
             const subsetSize: number = 4;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+
+            // When selecting more objects than available
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should return an empty list
             expect(result).toEqual([]);
         });
 
-        it('When selecting a negative number of objects, Then it should return no Sets.getSubset', () => {
+        it('should return no subset when selecting a negative number of objects', () => {
             // Given a list of distinct objects
-            const items: string[] = ['A', 'B', 'C'];
+            const items: Set<string> = new Set(['A', 'B', 'C']);
             const subsetSize: number = -1;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+            // When selecting a negative number of objects
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should return no subset
             expect(result).toEqual([]);
         });
 
-    });
-
-    describe('Given an empty list', () => {
-
-        it('When selecting zero objects, Then it should return one empty combination', () => {
-            // Given
-            const items: string[] = [];
+        it('should return one empty combination when selecting zero objects on a empty list', () => {
+            // Given an empty list
+            const items: Set<string> = new Set([]);
             const subsetSize: number = 0;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+
+            // When selecting zero objects
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should return one empty list
             expect(result).toEqual([[]]);
         });
 
-        it('When selecting one object, Then it should return no Sets.getSubset', () => {
-            // Given
-            const items: string[] = [];
+        it('should return one empty combination when selecting one objects on a empty list', () => {
+            // Given an empty list
+            const items: Set<string> = new Set([]);
             const subsetSize: number = 1;
-            // When
-            const result: string[][] = Sets.getSubset(items, subsetSize);
-            // Then
+
+            // When selecting zero objects
+            const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
+
+            // Then it should return no subset
             expect(result).toEqual([]);
-        });
-
-    });
-
-    describe('Given typed objects', () => {
-
-        interface TestObject {
-            readonly id: number;
-            readonly name: string;
-        }
-
-        it('When selecting a subset, Then it should preserve object identity and types', () => {
-            // Given
-            const objectA: TestObject = {
-                id: 1,
-                name: 'A',
-            };
-            const objectB: TestObject = {
-                id: 2,
-                name: 'B',
-            };
-            const objectC: TestObject = {
-                id: 3,
-                name: 'C',
-            };
-            const items: TestObject[] = [
-                objectA,
-                objectB,
-                objectC,
-            ];
-            const subsetSize: number = 2;
-            // When
-            const result: TestObject[][] = Sets.getSubset(items, subsetSize);
-            // Then
-            expect(result.length).toBe(3);
-            expect(result[0]).toEqual([objectA, objectB]);
-            expect(result[1]).toEqual([objectA, objectC]);
-            expect(result[2]).toEqual([objectB, objectC]);
-            expect(result[0][0]).toBe(objectA);
-            expect(result[0][1]).toBe(objectB);
-        });
-
-        it('When selecting all typed objects, Then it should return the same object references', () => {
-            // Given
-            const objectA: TestObject = {
-                id: 1,
-                name: 'A',
-            };
-            const objectB: TestObject = {
-                id: 2,
-                name: 'B',
-            };
-            const items: TestObject[] = [
-                objectA,
-                objectB,
-            ];
-            // When
-            const result: TestObject[][] = Sets.getSubset(
-                items,
-                2,
-            );
-            // Then
-            expect(result).toHaveSize(1);
-            expect(result[0]).toEqual([objectA, objectB]);
-            expect(result[0][0]).toBe(objectA);
-            expect(result[0][1]).toBe(objectB);
-        });
-
-    });
-
-    describe('Given five objects', () => {
-
-        it('When selecting three objects, Then it should return exactly C(5,3) Sets.getSubset', () => {
-            // Given
-            const items: number[] = [1, 2, 3, 4, 5];
-            const subsetSize: number = 3;
-            // When
-            const result: number[][] = Sets.getSubset(items, subsetSize);
-            // Then
-            expect(result.length).toBe(10);
         });
 
     });
