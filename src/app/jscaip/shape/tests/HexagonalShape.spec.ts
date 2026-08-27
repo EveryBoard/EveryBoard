@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 /* eslint-disable max-lines-per-function */
 import { Set } from '@everyboard/lib';
 
@@ -5,6 +6,8 @@ import { Coord } from '../../Coord';
 import { SquareTopology } from '../../topology/SquareTopology';
 import { Topology } from '../../topology/Topology';
 import { HexagonalShape } from '../HexagonalShape';
+
+import { expectEquality } from './TriangularShape.spec';
 
 describe('HexagonalShape', () => {
 
@@ -57,7 +60,7 @@ describe('HexagonalShape', () => {
                 new Coord(0, 1), new Coord(1, 1), new Coord(2, 1),
                 new Coord(0, 2), new Coord(1, 2),
             ]);
-            expect(actualSet.equals(expectedSet)).toBeTrue();
+            expectEquality(expectedSet, actualSet);
         });
 
         it('should return the correct coordinates for side 3', () => {
@@ -65,15 +68,16 @@ describe('HexagonalShape', () => {
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([
-                                                  new Coord(2, 3), new Coord(3, 3), new Coord(4, 3),
-                                 new Coord(1, 4), new Coord(2, 4), new Coord(3, 4), new Coord(4, 4),
-                new Coord(0, 5), new Coord(1, 5), new Coord(2, 5), new Coord(3, 5), new Coord(4, 5),
-                new Coord(0, 4), new Coord(1, 4), new Coord(2, 4), new Coord(3, 4),
-                new Coord(0, 3), new Coord(1, 3), new Coord(2, 3),
+                                                  new Coord(2, 0), new Coord(3, 0), new Coord(4, 0),
+                                 new Coord(1, 1), new Coord(2, 1), new Coord(3, 1), new Coord(4, 1),
+                new Coord(0, 2), new Coord(1, 2), new Coord(2, 2), new Coord(3, 2), new Coord(4, 2),
+                new Coord(0, 3), new Coord(1, 3), new Coord(2, 3), new Coord(3, 3),
+                new Coord(0, 4), new Coord(1, 4), new Coord(2, 4),
             ]);
-            expect(actualSet.equals(expectedSet)).toBeTrue();
+            expectEquality(expectedSet, actualSet);
         });
 
     });
 
 });
+

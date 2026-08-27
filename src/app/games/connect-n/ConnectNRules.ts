@@ -91,7 +91,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
         return new NInARowHelper(
             (piece: FourStatePiece) => {
-                console.log(typeof piece, piece, piece.getPlayer)
+                // console.log(typeof piece, piece, piece.getPlayer)
                 return piece.getPlayer();
             },
             config.n,
@@ -117,11 +117,10 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                             state: TopologicGameState<FourStatePiece>,
                             config: ConnectNConfig,
     ): MGPFallible<void> {
-        console.log(move.toString(), 'is legal ?', state.turn)
         if (state.turn === 0 && move.coords.size() > 1) {
             return MGPFallible.failure(ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE());
         }
-        if (move.coords.size() !== config.dropAfterFirstTurn) {
+        if (state.turn > 0 && move.coords.size() !== config.dropAfterFirstTurn) {
             return MGPFallible.failure(ConnectNFailure.YOU_MUST_PLAY_EXACTLY(config.dropAfterFirstTurn));
         }
         for (const coord of move.coords) {
@@ -192,7 +191,9 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         const lastMove: ConnectNMove = node.previousMove.get();
         const currentPlayer: Player = state.getCurrentOpponent();
         for (const startCoord of lastMove.coords) {
+            // console.log('startCoord', startCoord.toString())
             for (const direction of state.topology.getDirections()) {
+                // console.log('direction', direction.toString())
                 const directionCount: number = this.countAlignedPieceOf(
                     state,
                     currentPlayer,
@@ -205,6 +206,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                     direction.getOpposite(),
                     startCoord,
                 );
+                // console.log(directionCount + 1 + oppositeCount, 'vs', config.n)
                 if (directionCount + 1 + oppositeCount >= config.n) {
                     return GameStatus.getVictory(currentPlayer);
                 }

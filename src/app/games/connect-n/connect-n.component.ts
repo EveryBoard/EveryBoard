@@ -70,26 +70,22 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
 
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().turn === 0) {
-            const move: ConnectNMove = ConnectNMove.of([coord]);
+        const config: ConnectNConfig = this.getConfig();
+        const awaitedClicks: number = this.getState().turn === 0 ? 1 : config.dropAfterFirstTurn;
+        if (this.getState().getPieceAt(coord).isPlayer()) {
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
+        }
+        if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
+            return this.cancelMove(); // TODO: deselect
+        }
+        const droppedCoords: Coord[] = this.droppedCoords();
+        droppedCoords.push(coord);
+        this.droppedCoords.set(droppedCoords);
+        if (this.droppedCoords().length === awaitedClicks) {
+            const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());
             return this.chooseMove(move);
         } else {
-            if (this.getState().getPieceAt(coord).isPlayer()) {
-                return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            }
-            if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
-                return this.cancelMove(); // TODO: deselect
-            }
-            this.droppedCoords.set([coord]);
-            const droppedCoords: Coord[] = this.droppedCoords();
-            droppedCoords.push(coord);
-            this.droppedCoords.set(droppedCoords);
-            if (this.droppedCoords().length === this.getConfig().dropAfterFirstTurn) {
-                const move: ConnectNMove = ConnectNMove.of(this.droppedCoords());
-                return this.chooseMove(move);
-            } else {
-                return MGPValidation.SUCCESS;
-            }
+            return MGPValidation.SUCCESS;
         }
     }
 

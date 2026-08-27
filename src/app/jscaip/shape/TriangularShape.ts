@@ -13,14 +13,32 @@ export class TriangularShape extends TopologicShape implements Shape {
     }
 
     public getCenters(): Coord[] {
-        const cxList: number[] = this.getIntegerMeans(this.side);
+        const cxList: number[] = this.getHorizontalCenters();
+        const cyList: number[] = this.getVerticalCenters();
         const centers: Coord[] = [];
         for (const cx of cxList) {
-            for (const cy of cxList) {
-                centers.push(new Coord(cx, cy)); // TODO: unit test and behavior check
+            for (const cy of cyList) {
+                centers.push(new Coord(cx, cy));
             }
         }
         return centers;
+    }
+
+    private getHorizontalCenters(): number[] {
+        if (this.side % 3 === 0) {
+            return [this.side - 2, this.side -1, this.side];
+        } else {
+            return [this.side - 1];
+        }
+    }
+
+    private getVerticalCenters(): number[] {
+        if (this.side % 3 === 0) {
+            const bottomCenter: number = 2 * this.side / 3;
+            return [bottomCenter -1, bottomCenter];
+        } else {
+            return [this.side - (Math.ceil(this.side / 3))];
+        }
     }
 
     private getIntegerMeans(value: number): number[] {

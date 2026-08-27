@@ -514,14 +514,17 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             new ToroidalShape(19, 19, hexagonalTopology),
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
-
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 8), new Coord(1, 8)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
     });
 
-    it('should notify victory when aligning 6 stones of your color (DOWN-RIGHT)', () => {
+    it('should notify victory when aligning 6 stones of your color (UP-RIGHT)', () => {
         // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
@@ -532,17 +535,17 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -554,8 +557,11 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             new ToroidalShape(19, 19, hexagonalTopology),
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
-
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 8), new Coord(1, 7)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
@@ -594,14 +600,17 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             new ToroidalShape(19, 19, hexagonalTopology),
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
-
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(5, 5), new Coord(5, 6)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
     });
 
-    it('should not notify victory when aligning 6 stones of your color (DOWN-LEFT)', () => {
+    it('should not notify victory when aligning 6 stones of your color (DOWN-RIGHT)', () => {
         // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
@@ -614,12 +623,12 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -634,10 +643,13 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             new ToroidalShape(19, 19, hexagonalTopology),
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
-
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(5, 5), new Coord(6, 6)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
         // When checking the game status
-        // Then it should be an ongoing game
+        // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeOngoing(rules, node, customConfig);
     });
 

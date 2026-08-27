@@ -12,7 +12,7 @@ export class HexagonalShape extends TopologicShape implements Shape {
         super(topology);
     }
 
-    public getCenters(): Coord[] { // TODO: unit test
+    public getCenters(): Coord[] {
         // X   s=1 c=(0, 0) m=0   min=0 max=0
         //
         // _XX
@@ -53,3 +53,6 @@ export class HexagonalShape extends TopologicShape implements Shape {
     }
 
 }
+// (0, 3), (1, 3), (2, 3), (3, 3), (4, 3),
+// (0, 4), (1, 4), (2, 4), (3, 4), (4, 4),
+// (0, 5), (1, 5), (2, 5), (3, 5), (4, 5),
