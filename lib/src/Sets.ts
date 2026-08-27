@@ -26,8 +26,8 @@ export class Sets {
                 result.push([...current]);
                 return;
             }
-            const remaining = subsetSize - current.length;
-            for (let i = start; i <= items.length - remaining; i++) {
+            const remaining: number = subsetSize - current.length;
+            for (let i: number = start; i <= items.length - remaining; i++) {
                 current.push(items[i]);
                 backtrack(i + 1);
                 current.pop();
