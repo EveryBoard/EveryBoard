@@ -119,15 +119,6 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
       </trans-unit>
-      <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().creator.name }}"/></source>
-      </trans-unit>
-      <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
-      </trans-unit>
-      <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="{{ getCurrentGameName() }}"/> (waiting for opponent)</source>
-      </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
       </trans-unit>
@@ -142,6 +133,15 @@
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
+      </trans-unit>
+      <trans-unit id="8268057237378615671" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> by <x id="PH_1" equiv-text="currentGame.creator.name"/></source>
+      </trans-unit>
+      <trans-unit id="8303888373306979913" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> (waiting for opponent)</source>
+      </trans-unit>
+      <trans-unit id="556932432824405636" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> against <x id="PH_1" equiv-text="opponentName"/></source>
       </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
