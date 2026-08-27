@@ -144,7 +144,7 @@
                                 @if (mustReply() === false) {
                                     <button id="resign"
                                             class="button is-fullwidth mb-1 is-danger"
-                                            (click)="resign()"
+                                            (click)="onClickResign()"
                                             [disabled]="canResign() === false"
                                             i18n>Resign</button>
                                     <button id="pass"
@@ -155,7 +155,7 @@
                                     @for (request of allRequests; track request) {
                                         <button id="propose{{ request }}"
                                                 class="button is-fullwidth mb-1"
-                                                (click)="propose(request)"
+                                                (click)="onClickPropose(request)"
                                                 [disabled]="requestAvailable(request) === false">{{ requestInfos[request].textForRequest() }}&nbsp;&nbsp;<fa-icon [icon]="requestInfos[request].icon"></fa-icon></button>
                                     }
                                 } @else {
@@ -167,11 +167,11 @@
                                         </p>
                                         <button class="button is-fullwidth mb-1 is-success"
                                                 id="accept"
-                                                (click)="accept()"
+                                                (click)="onClickAccept()"
                                                 i18n>Accept</button>
                                         <button class="button is-fullwidth mb-1 is-danger"
                                                 id="reject"
-                                                (click)="reject()"
+                                                (click)="onClickReject()"
                                                 i18n>Reject</button>
                                     </div>
                                 }
@@ -217,7 +217,7 @@
              class="modal is-active">
             <div id="modalBackground"
                  class="modal-background"
-                 (click)="cancelResign()"></div>
+                 (click)="onClickCancelResign()"></div>
             <div class="modal-card">
                 <header class="modal-card-head is-danger">
                     <p class="modal-card-title" i18n>Resignation</p>
@@ -228,11 +228,11 @@
                 <footer class="modal-card-foot">
                     <button id="cancelResign"
                             class="button is-light"
-                            (click)="cancelResign()"
+                            (click)="onClickCancelResign()"
                             i18n>Cancel</button>
                     <button id="confirmResign"
                             class="button is-danger"
-                            (click)="confirmResign()"
+                            (click)="onClickConfirmResign()"
                             i18n>Resign</button>
                 </footer>
             </div>

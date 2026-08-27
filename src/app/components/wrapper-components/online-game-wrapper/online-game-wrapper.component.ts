@@ -450,16 +450,16 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.showNewMove(triggerAnimation);
     }
 
-    protected resign(): void {
+    protected onClickResign(): void {
         this.confirmResignation.set(true);
     }
 
-    protected async confirmResign(): Promise<void> {
+    protected async onClickConfirmResign(): Promise<void> {
         this.confirmResignation.set(false);
         await this.gameService.resign();
     }
 
-    protected cancelResign(): void {
+    protected onClickCancelResign(): void {
         this.confirmResignation.set(false);
     }
 
@@ -470,7 +470,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.gameService.notifyTimeout(player);
     }
 
-    protected async propose(request: RequestType): Promise<void> {
+    protected async onClickPropose(request: RequestType): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot propose request if not player');
         switch (request) {
             case 'Rematch':
@@ -483,7 +483,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    protected async accept(): Promise<void> {
+    protected async onClickAccept(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot accept request if not player');
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
@@ -497,7 +497,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    protected async reject(): Promise<void> {
+    protected async onClickReject(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot reject request if not player');
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {

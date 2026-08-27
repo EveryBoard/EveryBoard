@@ -1157,7 +1157,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 await prepareStartedGameForCreator();
                 spyOn(gameService, 'addGameTime').and.callThrough();
 
-                // When the player adds global time to the opponent
+                // When creator adds global time to the opponent
                 await testUtils.clickElement('#timer-one-game .data-add-time');
 
                 // Then a request to add global time to player one should be sent
