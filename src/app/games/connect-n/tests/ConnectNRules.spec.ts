@@ -481,7 +481,8 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         rules = ConnectNRules.get();
     });
 
-    it('should notify victory when aligning 6 stones of your color', () => {
+    it('should notify victory when aligning 6 stones of your color (RIGHT)', () => {
+        // Given an hexagonal config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'HEXAGONAL',
@@ -495,9 +496,9 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, O, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, X, X, O, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X],
-            [X, O, O, O, O, O, X, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, X, X, X, X, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -513,15 +514,133 @@ describe('ConnectNRules (HEXAGONAL)', () => {
             new ToroidalShape(19, 19, hexagonalTopology),
             gameState,
         );
-        const move: ConnectNMove =
-            ConnectNMove.of([new Coord(0, 8), new Coord(0, 9)]);
-        const previousNode: ConnectNNode = new ConnectNNode(state);
-        const node: ConnectNNode =
-            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+        const node: ConnectNNode = new ConnectNNode(state);
+
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
     });
+
+    it('should notify victory when aligning 6 stones of your color (DOWN-RIGHT)', () => {
+        // Given an hexagonal config and a board with six aligned pieces
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'HEXAGONAL',
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            hexagonalTopology,
+            new ToroidalShape(19, 19, hexagonalTopology),
+            gameState,
+        );
+        const node: ConnectNNode = new ConnectNNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
+    });
+
+    it('should notify victory when aligning 6 stones of your color (DOWN)', () => {
+        // Given an hexagonal config and a board with six aligned pieces
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'HEXAGONAL',
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            hexagonalTopology,
+            new ToroidalShape(19, 19, hexagonalTopology),
+            gameState,
+        );
+        const node: ConnectNNode = new ConnectNNode(state);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
+    });
+
+    it('should not notify victory when aligning 6 stones of your color (DOWN-LEFT)', () => {
+        // Given an hexagonal config and a board with six aligned pieces
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'HEXAGONAL',
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            hexagonalTopology,
+            new ToroidalShape(19, 19, hexagonalTopology),
+            gameState,
+        );
+        const node: ConnectNNode = new ConnectNNode(state);
+
+        // When checking the game status
+        // Then it should be an ongoing game
+        RulesUtils.expectToBeOngoing(rules, node, customConfig);
+    });
+
 });
 
 describe('ConnectNRules (TRIANGULAR)', () => {
@@ -534,13 +653,14 @@ describe('ConnectNRules (TRIANGULAR)', () => {
     });
 
     it('should notify victory when aligning 6 stones of your color (DOWN-RIGHT)', () => {
+        // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'TRIANGULAR',
         };
 
         const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -578,6 +698,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
     });
 
     it('should notify victory when aligning 6 stones of your color (RIGHT)', () => {
+        // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'TRIANGULAR',
@@ -622,6 +743,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
     });
 
     it('should notify victory when aligning 6 stones of your color (UP-RIGHT)', () => {
+        // Given an triangular config and a board with six aligned pieces
         const customConfig: ConnectNConfig = {
             ...defaultConfig,
             topology: 'TRIANGULAR',
