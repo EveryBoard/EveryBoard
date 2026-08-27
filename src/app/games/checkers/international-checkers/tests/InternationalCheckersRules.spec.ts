@@ -595,7 +595,7 @@ describe('InternationalCheckersRules', () => {
         describe('King', () => {
 
             it('should allow backward capture with king', () => {
-                // Given a board on which an king can capture backward
+                // Given a board on which a king can capture backward
                 const state: CheckersState = OddCheckersState.of([
                     [_, _, _, _, _, _, _],
                     [_, _, _, _, _, _, _],

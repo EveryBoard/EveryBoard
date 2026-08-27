@@ -78,7 +78,7 @@ describe('CurrentGameService', () => {
             // When connected user logs out
             ConnectedUserServiceMock.setUser(AuthUser.NOT_CONNECTED);
 
-            // Then the service does not have an current game anymore
+            // Then the service does not have a current game anymore
             expect(currentGame.isAbsent()).toBeTrue();
             subscription.unsubscribe();
         }));
