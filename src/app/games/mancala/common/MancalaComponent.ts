@@ -65,14 +65,16 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return ScoreName.CAPTURES;
     }
 
-    public readonly viewBoxWidth: Signal<number> = computed(() =>
-        60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE),
-    );
+    public readonly viewBoxWidth: Signal<number> = computed(() => this.viewBox().width - this.STROKE_WIDTH);
+
+    private computeViewBoxWidth(): number {
+        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
+    }
 
     protected override computeViewBox(): ViewBox {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
-        const width: number = this.viewBoxWidth() + this.STROKE_WIDTH;
+        const width: number = this.computeViewBoxWidth() + this.STROKE_WIDTH;
         const height: number = this.getViewBoxHeight() + this.STROKE_WIDTH;
         return new ViewBox(left, up, width, height);
     }
