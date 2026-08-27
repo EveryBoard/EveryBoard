@@ -39,17 +39,19 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public readonly username: Signal<MGPOptional<string>> = computed(() =>
         this.connectedUser().username.orElse(this.connectedUser().email),
     );
-    public readonly currentGameName: Signal<string> = computed(() =>
-        GameInfo.getByUrlName(this.currentGame().get().gameName).get().name,
-    );
-
-    public readonly opponentName: Signal<string> = computed(() => {
+    public readonly currentGameLabel: Signal<string> = computed(() => {
         const currentGame: CurrentGame = this.currentGame().get();
-        if (this.connectedUser().id === currentGame.creator.id) {
-            return Utils.getNonNullable(currentGame.opponent?.name);
-        } else {
-            return currentGame.creator.name;
+        const gameName: string = GameInfo.getByUrlName(currentGame.gameName).get().name;
+        if (currentGame.role === 'Observer' || currentGame.role === 'Candidate') {
+            return $localize`${gameName} by ${currentGame.creator.name}`;
         }
+        if (currentGame.opponent == null) {
+            return $localize`${gameName} (waiting for opponent)`;
+        }
+        const opponentName: string = this.connectedUser().id === currentGame.creator.id ?
+            Utils.getNonNullable(currentGame.opponent.name) :
+            currentGame.creator.name;
+        return $localize`${gameName} against ${opponentName}`;
     });
 
     public ngOnInit(): void {
@@ -69,7 +71,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
 
     public async navigateToPart(): Promise<boolean> {
-        return this.router.navigate(['/play', this.currentGame().get().gameName, this.currentGame().get().id]);
+        const currentGame: CurrentGame = this.currentGame().get();
+        return this.router.navigate(['/play', currentGame.gameName, currentGame.id]);
     }
 
     public ngOnDestroy(): void {

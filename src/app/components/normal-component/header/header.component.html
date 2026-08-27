@@ -66,17 +66,7 @@
             @if (currentGame().isPresent()) {
                 <a id="currentGameLink"
                    class="navbar-item"
-                   (click)="navigateToPart()">
-                    @if (currentGame().get().role === 'Observer' || currentGame().get().role === 'Candidate') {
-                        <ng-container i18n>{{ currentGameName() }} by {{ currentGame().get().creator.name }}</ng-container>
-                    } @else {
-                        @if (currentGame().get().opponent) {
-                            <ng-container i18n>{{ currentGameName() }} against {{ opponentName() }}</ng-container>
-                        } @else {
-                            <ng-container i18n>{{ currentGameName() }} (waiting for opponent)</ng-container>
-                        }
-                    }
-                </a>
+                   (click)="navigateToPart()">{{ currentGameLabel() }}</a>
             }
 
             <a class="navbar-item"
@@ -86,7 +76,8 @@
 
             <div class="navbar-item">
                 @if (loading()) {
-                    <fa-icon [icon]="faSpinner"
+                    <fa-icon id="spinner"
+                             [icon]="faSpinner"
                              class="navbar-item"></fa-icon>
                 } @else {
                     @if (username().isPresent()) {

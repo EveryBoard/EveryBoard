@@ -37,11 +37,14 @@ describe('HeaderComponent', () => {
     }));
 
     it('should show a spinner while the connected user is loading', () => {
+        // Given a user
+        // When their connection is pending
         const pendingUserSubscription: Subscription = new Subscription();
         spyOn(TestBed.inject(ConnectedUserService), 'subscribeToUser').and.returnValue(pendingUserSubscription);
         testUtils.detectChanges();
 
-        testUtils.expectElementToExist('fa-icon.navbar-item');
+        // Then it should not display a username, login, nor register button, but the spinner instead
+        testUtils.expectElementToExist('#spinner');
         testUtils.expectElementNotToExist('#connectedUserName');
         testUtils.expectElementNotToExist('#login');
         testUtils.expectElementNotToExist('#register');
