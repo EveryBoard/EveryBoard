@@ -32,7 +32,7 @@ describe('Sets', () => {
                 ['B', 'D'],
                 ['C', 'D'],
             ];
-            expect(result).toEqual(expected);
+            expect(result.equals(expected)).toBeTrue();
         });
 
         it('should return equivalent list when asking for subset of size 1', () => {
@@ -49,7 +49,7 @@ describe('Sets', () => {
                 ['B'],
                 ['C'],
             ];
-            expect(result).toEqual(expected);
+            expect(result.equals(expected)).toBeTrue();
         });
 
         it('should return one subset of equal size when asking for a subset size equal to the list size', () => {
@@ -64,7 +64,7 @@ describe('Sets', () => {
             const expected: string[][] = [
                 ['A', 'B', 'C'],
             ];
-            expect(result).toEqual(expected);
+            expect(result.equals(expected)).toBeTrue();
         });
 
         it('should return empty list when asking for subset of size 0', () => {
@@ -77,7 +77,7 @@ describe('Sets', () => {
 
             // Then it should return an empty list
             const expected: string[][] = [[]];
-            expect(result).toEqual(expected);
+            expect(result.equals(expected)).toBeTrue();
         });
 
         it('should return no subset when selecting more objects than available', () => {
@@ -123,8 +123,8 @@ describe('Sets', () => {
             // When selecting zero objects
             const result: string[][] = Sets.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should return no subset
-            expect(result).toEqual([]);
+            // Then it should return one empty list
+            expect(result).toEqual([[]]);
         });
 
     });

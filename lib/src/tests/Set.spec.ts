@@ -397,8 +397,8 @@ describe('Set', () => {
             // When selecting zero objects
             const result: string[][] = items.getSubsetsOfSize(subsetSize);
 
-            // Then it should return no subset
-            expect(result).toEqual([]);
+            // Then it should return one empty list
+            expect(result).toEqual([[]]);
         });
 
     });
