@@ -117,6 +117,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                             state: TopologicGameState<FourStatePiece>,
                             config: ConnectNConfig,
     ): MGPFallible<void> {
+        console.log(move.toString(), 'is legal ?', state.turn)
         if (state.turn === 0 && move.coords.size() > 1) {
             return MGPFallible.failure(ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE());
         }
