@@ -16,7 +16,7 @@ export class ConnectNAlignmentHeuristic
     public getBoardValue(node: ConnectNNode, config: ConnectNConfig): BoardValue {
         const state: TopologicGameState<FourStatePiece> = node.gameState;
         let score: number = 0;
-        const currentPlayer: Player = state.getCurrentPlayer();
+        const currentPlayer: Player = state.getCurrentOpponent();
         const playerCoords: Coord[] = state
             .getCoordsAndContents()
             .filter((coordAndContent: { coord: Coord; content: FourStatePiece }) => {

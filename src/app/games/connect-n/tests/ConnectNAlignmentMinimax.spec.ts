@@ -1,4 +1,6 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
@@ -68,19 +70,24 @@ describe('ConnectNAlignmentMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            ], 3);
+            ], 4);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
             defaultTopology,
             defaultShape,
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 0), new Coord(1, 0)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
 
         // When asking what is the best move
         const bestMove: ConnectNMove = minimax.chooseNextMove(node, level1, defaultConfig);
 
         // Then it should be that victory
         expect(bestMove).toEqual(ConnectNMove.of([new Coord(4, 0), new Coord(5, 0)]));
+        // REPRENEZ L'AGLO OU ON POSE LA PIECE A puis sur le plateau résultant la pièce B, etc !
     });
 
     SlowTest.it('should block double-open fives at level two', () => {
