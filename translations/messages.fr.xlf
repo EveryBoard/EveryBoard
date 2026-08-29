@@ -973,6 +973,18 @@
         <source>Resign</source>
         <target>Abandonner</target>
       </trans-unit>
+      <trans-unit id="627419029234678391" datatype="html">
+        <source>Resignation</source>
+        <target>Abandon</target>
+      </trans-unit>
+      <trans-unit id="593989397325904316" datatype="html">
+        <source>Are you sure you want to resign from this game?</source>
+        <target>Êtes-vous sûr de vouloir abandonner cette partie ?</target>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+        <target>Annuler</target>
+      </trans-unit>
       <trans-unit id="5705819340084039896" datatype="html">
         <source>Propose a draw</source>
         <target>Proposer un match nul</target>
