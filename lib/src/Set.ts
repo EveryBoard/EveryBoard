@@ -1,4 +1,5 @@
 import { ArrayUtils } from './ArrayUtils';
+import { Combinatorics } from './Combinatorics';
 import { Comparable, ComparableObject, comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
 import { Sets } from './Sets';
@@ -142,7 +143,7 @@ export class Set<T extends Comparable> implements ComparableObject {
     }
 
     public getSubsetsOfSize(size: number): T[][] {
-        return Sets.getSubsetsOfSize(this, size);
+        return Combinatorics.getSubsetsOfSize(this.toList(), size);
     }
 
 }
