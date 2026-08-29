@@ -142,8 +142,12 @@ export class Set<T extends Comparable> implements ComparableObject {
         return result;
     }
 
-    public getSubsetsOfSize(size: number): T[][] {
-        return Combinatorics.getSubsetsOfSize(this.toList(), size);
+    public getSubsetsOfSize(size: number): Set<Set<T>> {
+        const listOfLists: T[][] = Combinatorics.getSubsetsOfSize(this.toList(), size);
+        const listOfSets: Set<T>[] = listOfLists.map((subset: T[]) => {
+            return new Set(subset);
+        });
+        return new Set(listOfSets);
     }
 
 }

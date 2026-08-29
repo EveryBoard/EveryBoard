@@ -298,7 +298,7 @@ fdescribe('Set', () => {
             spyOn(Combinatorics, 'getSubsetsOfSize').and.returnValue(combinatoricsResult);
 
             // When callings set.getSubsetsOfSize(size)
-            const result: string[][] = set.getSubsetsOfSize(2);
+            const result: Set<Set<string>> = set.getSubsetsOfSize(2);
 
             // Then Combinatorics.getSubsetsOfSize should have been called with a list and return its results
             expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList(), size);

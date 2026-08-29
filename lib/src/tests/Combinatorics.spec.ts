@@ -59,7 +59,7 @@ fdescribe('Combinatorics', () => {
         });
 
         it('should select all subsets of size 2', () => {
-            // Given a list of distinct objects
+            // Given a list of 4 distinct objects
             const items: string[] = ['A', 'B', 'C', 'D'];
             const subsetSize: number = 2;
 
@@ -78,7 +78,7 @@ fdescribe('Combinatorics', () => {
             compareUnorderedListOfUnorderedList(expected, result);
         });
 
-        it('should return equivalent list when asking for subset of size 1', () => {
+        it('should return a list of singletons when asking for subset of size 1', () => {
             // Given a list of distinct objects
             const items: string[] = ['A', 'B', 'C'];
             const subsetSize: number = 1;
@@ -86,7 +86,7 @@ fdescribe('Combinatorics', () => {
             // When selecting subsets of size 1
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should result in the initial list
+            // Then it should result in the initial list but as singletons
             const expected: string[][] = [
                 ['A'],
                 ['B'],
@@ -95,7 +95,7 @@ fdescribe('Combinatorics', () => {
             compareUnorderedListOfUnorderedList(expected, result);
         });
 
-        it('should return one subset of equal size when asking for a subset size equal to the list size', () => {
+        it('should return one subset when asking for a subset size equal to the list size', () => {
             // Given a list of distinct objects
             const items: string[] = ['A', 'B', 'C'];
             const subsetSize: number = 3;
@@ -131,7 +131,7 @@ fdescribe('Combinatorics', () => {
             // When selecting more objects than available
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should return an empty list
+            // Then it should return no subsets
             expect(result).toEqual([]);
         });
 
@@ -143,7 +143,7 @@ fdescribe('Combinatorics', () => {
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
             // Then it should return no subset
-            expect(result).toEqual([]);
+            expect(result).toEqual([[]]);
         });
 
         it('should return one empty combination when selecting zero objects on a empty list', () => {
