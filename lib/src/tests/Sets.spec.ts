@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import { Combinatorics } from '../Combinatorics';
 import { Comparable } from '../Comparable';
 import { Set } from '../Set';
 import { Sets } from '../Sets';
 
-describe('Sets', () => {
+fdescribe('Sets', () => {
 
     it('should remove duplicate (with Comparable)', () => {
         const withDuplicate: Comparable[] = [1, 2, 1];
@@ -125,6 +126,19 @@ describe('Sets', () => {
 
             // Then it should return one empty list
             expect(result).toEqual([[]]);
+        });
+
+        fit('should delegate to Combinatorics.getSubsetsOfSize', () => {
+            // Given any sets and size
+            const set: Set<string> = new Set(['A', 'B', 'C']);
+            const combinatoricsResult: string[][] = [['mocked value']]
+            spyOn(Combinatorics, 'getSubsetsOfSize').andResolveTo(combinatoricsResult);
+
+            // When callings Sets.getSubsetsOfSize(set, size)
+            const result: string[][] = Sets.getSubsetsOfSize(set, 2);
+
+            // Then Combinatorics.getSubsetsOfSize should have been called
+            expect(result).toBe(combinatoricsResult);
         });
 
     });
