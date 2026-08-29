@@ -5,7 +5,7 @@ import { Set } from '../Set';
 
 import { Pair } from './Pair.spec';
 
-fdescribe('Set', () => {
+describe('Set', () => {
 
     it('should create an empty set when not provided with argument', () => {
         const set: Set<number> = new Set<number>();

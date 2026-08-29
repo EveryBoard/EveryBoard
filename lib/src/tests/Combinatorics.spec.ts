@@ -39,7 +39,7 @@ function areUnorderedListsEqual<T extends Comparable>(expected: T[], actual: T[]
     return remainingExpected.length === 0;
 }
 
-fdescribe('Combinatorics', () => {
+describe('Combinatorics', () => {
 
     describe('getSubsetsOfSize', () => {
 

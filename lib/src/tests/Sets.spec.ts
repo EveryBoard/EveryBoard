@@ -4,7 +4,7 @@ import { Comparable } from '../Comparable';
 import { Set } from '../Set';
 import { Sets } from '../Sets';
 
-fdescribe('Sets', () => {
+describe('Sets', () => {
 
     it('should remove duplicate (with Comparable)', () => {
         const withDuplicate: Comparable[] = [1, 2, 1];
