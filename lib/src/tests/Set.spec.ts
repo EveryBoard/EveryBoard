@@ -295,6 +295,8 @@ fdescribe('Set', () => {
             const set: Set<string> = new Set(['A', 'B', 'C']);
             const size: number = 2;
             const combinatoricsResult: string[][] = [['mocked value']];
+            const mockUniqueValue: Set<string> = new Set(['mocked value']);
+            const mappedCombinatoricsResult: Set<Set<string>> = new Set([mockUniqueValue]);
             spyOn(Combinatorics, 'getSubsetsOfSize').and.returnValue(combinatoricsResult);
 
             // When callings set.getSubsetsOfSize(size)
@@ -302,7 +304,7 @@ fdescribe('Set', () => {
 
             // Then Combinatorics.getSubsetsOfSize should have been called with a list and return its results
             expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList(), size);
-            expect(result).toBe(combinatoricsResult);
+            expect(result).toBe(mappedCombinatoricsResult);
         });
 
     });
