@@ -294,7 +294,7 @@ fdescribe('Set', () => {
             // Given any sets and size
             const set: Set<string> = new Set(['A', 'B', 'C']);
             const combinatoricsResult: string[][] = [['mocked value']];
-            spyOn(Combinatorics, 'getSubsetsOfSize').andResolveTo(combinatoricsResult);
+            spyOn(Combinatorics, 'getSubsetsOfSize').and.returnValue(combinatoricsResult);
 
             // When callings set.getSubsetsOfSize(size)
             const result: string[][] = set.getSubsetsOfSize(2);
