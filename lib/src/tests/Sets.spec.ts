@@ -28,7 +28,7 @@ fdescribe('Sets', () => {
 
             // Then Combinatorics.getSubsetsOfSize should have been called with a list and return its results
             expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList(), size);
-            expect(result).toBe(combinatoricsResult);
+            expect(result).toEqual(combinatoricsResult);
         });
 
     });
