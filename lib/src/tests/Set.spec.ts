@@ -300,7 +300,7 @@ fdescribe('Set', () => {
             const result: string[][] = set.getSubsetsOfSize(2);
 
             // Then Combinatorics.getSubsetsOfSize should have been called with a list and return its results
-            expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList());
+            expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList(), 2);
             expect(result).toBe(combinatoricsResult);
         });
 
