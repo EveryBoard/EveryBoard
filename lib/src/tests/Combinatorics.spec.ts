@@ -1,5 +1,43 @@
 /* eslint-disable max-lines-per-function */
 import { Combinatorics } from '../Combinatorics';
+import { Comparable, comparableEquals } from '../Comparable';
+
+function compareUnorderedListOfUnorderedList<T extends Comparable>(expected: T[][], actual: T[][]): void {
+    expect(actual.length).toBe(expected.length);
+    const remainingExpected: T[][] = [...expected];
+    for (const actualList of actual) {
+        const index: number = remainingExpected.findIndex(
+            (expectedList: T[]) => areUnorderedListsEqual(expectedList, actualList),
+        );
+        expect(index)
+            .withContext(`Expected ${JSON.stringify(actualList)} to have a matching list`)
+            .toBeGreaterThanOrEqual(0);
+
+        if (index >= 0) {
+            remainingExpected.splice(index, 1);
+        }
+    }
+    expect(remainingExpected)
+        .withContext('Some expected lists were not found')
+        .toEqual([]);
+}
+
+function areUnorderedListsEqual<T extends Comparable>(expected: T[], actual: T[]): boolean {
+    if (expected.length !== actual.length) {
+        return false;
+    }
+    const remainingExpected: T[] = [...expected];
+    for (const actualItem of actual) {
+        const index: number = remainingExpected.findIndex(
+            (expectedItem: T) => comparableEquals(expectedItem, actualItem),
+        );
+        if (index < 0) {
+            return false;
+        }
+        remainingExpected.splice(index, 1);
+    }
+    return remainingExpected.length === 0;
+}
 
 fdescribe('Combinatorics', () => {
 
@@ -37,7 +75,7 @@ fdescribe('Combinatorics', () => {
                 ['B', 'D'],
                 ['C', 'D'],
             ];
-            expect([...result].sort()).toEqual([...expected].sort());
+            compareUnorderedListOfUnorderedList(expected, actual);
         });
 
         it('should return equivalent list when asking for subset of size 1', () => {
@@ -54,7 +92,7 @@ fdescribe('Combinatorics', () => {
                 ['B'],
                 ['C'],
             ];
-            expect([...result].sort()).toEqual([...expected].sort());
+            compareUnorderedListOfUnorderedList(expected, actual);
         });
 
         it('should return one subset of equal size when asking for a subset size equal to the list size', () => {
@@ -69,7 +107,7 @@ fdescribe('Combinatorics', () => {
             const expected: string[][] = [
                 ['A', 'B', 'C'],
             ];
-            expect([...result].sort()).toEqual([...expected].sort());
+            compareUnorderedListOfUnorderedList(expected, actual);
         });
 
         it('should return empty list when asking for subset of size 0', () => {
@@ -82,7 +120,7 @@ fdescribe('Combinatorics', () => {
 
             // Then it should return an empty list
             const expected: string[][] = [[]];
-            expect([...result].sort()).toEqual([...expected].sort());
+            compareUnorderedListOfUnorderedList(expected, actual);
         });
 
         it('should return no subset when selecting more objects than available', () => {
