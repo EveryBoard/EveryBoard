@@ -260,7 +260,7 @@ describe('ConnectedUserService', () => {
         });
 
         it('should fail when trying to register with a weak password', async() => {
-            // Given an weak password
+            // Given a weak password
             const weakPassword: string = '1';
 
             // When an user registers with that password

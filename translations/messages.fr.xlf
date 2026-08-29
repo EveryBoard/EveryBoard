@@ -158,17 +158,17 @@
         <source>Learn the rules</source>
         <target>Apprendre les règles</target>
       </trans-unit>
-      <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
-        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> de <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+      <trans-unit id="8268057237378615671" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> by <x id="PH_1" equiv-text="currentGame.creator.name"/></source>
+        <target><x id="PH" equiv-text="gameName"/> de <x id="PH_1" equiv-text="currentGame.creator.name"/></target>
       </trans-unit>
-      <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
-        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> contre <x id="INTERPOLATION_1" equiv-text="{{ observedPart.get().opponent?.name }}"/></target>
+      <trans-unit id="8303888373306979913" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> (waiting for opponent)</source>
+        <target><x id="PH" equiv-text="gameName"/> (en attente d'adversaire)</target>
       </trans-unit>
-      <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (waiting for opponent)</source>
-        <target><x id="INTERPOLATION" equiv-text="currentGame.get().typeGame }}"/> (en attente d'adversaire)</target>
+      <trans-unit id="556932432824405636" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> against <x id="PH_1" equiv-text="opponentName"/></source>
+        <target><x id="PH" equiv-text="gameName"/> contre <x id="PH_1" equiv-text="opponentName"/></target>
       </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>

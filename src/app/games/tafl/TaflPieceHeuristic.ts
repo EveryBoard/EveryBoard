@@ -32,7 +32,7 @@ export class TaflPieceHeuristic<M extends TaflMove> extends PlayerMetricHeuristi
     }
 
     private getScoreFor(player: Player, invader: Player, pawnsCount: number): number {
-        // Invaders pieces are twice as numerous, so they are twice  less valuable
+        // Invaders pieces are twice as numerous, so they are twice less valuable
         let mult: number;
         if (player === Player.ZERO) {
             if (invader === Player.ZERO) {
