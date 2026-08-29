@@ -75,7 +75,7 @@ fdescribe('Combinatorics', () => {
                 ['B', 'D'],
                 ['C', 'D'],
             ];
-            compareUnorderedListOfUnorderedList(expected, actual);
+            compareUnorderedListOfUnorderedList(expected, result);
         });
 
         it('should return equivalent list when asking for subset of size 1', () => {
@@ -92,7 +92,7 @@ fdescribe('Combinatorics', () => {
                 ['B'],
                 ['C'],
             ];
-            compareUnorderedListOfUnorderedList(expected, actual);
+            compareUnorderedListOfUnorderedList(expected, result);
         });
 
         it('should return one subset of equal size when asking for a subset size equal to the list size', () => {
@@ -107,7 +107,7 @@ fdescribe('Combinatorics', () => {
             const expected: string[][] = [
                 ['A', 'B', 'C'],
             ];
-            compareUnorderedListOfUnorderedList(expected, actual);
+            compareUnorderedListOfUnorderedList(expected, result);
         });
 
         it('should return empty list when asking for subset of size 0', () => {
@@ -120,7 +120,7 @@ fdescribe('Combinatorics', () => {
 
             // Then it should return an empty list
             const expected: string[][] = [[]];
-            compareUnorderedListOfUnorderedList(expected, actual);
+            compareUnorderedListOfUnorderedList(expected, result);
         });
 
         it('should return no subset when selecting more objects than available', () => {
