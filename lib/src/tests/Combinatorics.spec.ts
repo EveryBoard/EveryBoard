@@ -2,7 +2,7 @@
 import { Combinatorics } from '../Combinatorics';
 import { Comparable, comparableEquals } from '../Comparable';
 
-function compareUnorderedListOfUnorderedList<T extends Comparable>(expected: T[][], actual: T[][]): void {
+function expectUnorderedListOfUnorderedListsEqual<T extends Comparable>(expected: T[][], actual: T[][]): void {
     expect(actual.length).toBe(expected.length);
     const remainingExpected: T[][] = [...expected];
     for (const actualList of actual) {
@@ -75,7 +75,7 @@ describe('Combinatorics', () => {
                 ['B', 'D'],
                 ['C', 'D'],
             ];
-            compareUnorderedListOfUnorderedList(expected, result);
+            expectUnorderedListOfUnorderedListsEqual(expected, result);
         });
 
         it('should return a list of singletons when asking for subset of size 1', () => {
@@ -86,13 +86,13 @@ describe('Combinatorics', () => {
             // When selecting subsets of size 1
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should result in the initial list but as singletons
+            // Then it should result in a list containing each original element as singletons
             const expected: string[][] = [
                 ['A'],
                 ['B'],
                 ['C'],
             ];
-            compareUnorderedListOfUnorderedList(expected, result);
+            expectUnorderedListOfUnorderedListsEqual(expected, result);
         });
 
         it('should return one subset when asking for a subset size equal to the list size', () => {
@@ -107,7 +107,7 @@ describe('Combinatorics', () => {
             const expected: string[][] = [
                 ['A', 'B', 'C'],
             ];
-            compareUnorderedListOfUnorderedList(expected, result);
+            expectUnorderedListOfUnorderedListsEqual(expected, result);
         });
 
         it('should return empty list when asking for subset of size 0', () => {
@@ -118,9 +118,9 @@ describe('Combinatorics', () => {
             // When asking for subset of size 0
             const result: string[][] = Combinatorics.getSubsetsOfSize(items, subsetSize);
 
-            // Then it should return an empty list
+            // Then it should return the only possible subset of size zero: an empty list !
             const expected: string[][] = [[]];
-            compareUnorderedListOfUnorderedList(expected, result);
+            expectUnorderedListOfUnorderedListsEqual(expected, result);
         });
 
         it('should return no subset when selecting more objects than available', () => {

@@ -292,12 +292,11 @@ describe('Set', () => {
 
         it('should delegate to Combinatorics.getSubsetsOfSize', () => {
             // Given any sets and size
-            const set: Set<string> = new Set(['A', 'B', 'C']);
-            const size: number = 2;
-            const combinatoricsResult: string[][] = [['mocked value']];
-            const mockUniqueValue: Set<string> = new Set(['mocked value']);
+            const set: Set<string> = new Set(['A']);
+            const size: number = 1;
+            const mockUniqueValue: Set<string> = new Set(['1']);
             const mappedCombinatoricsResult: Set<Set<string>> = new Set([mockUniqueValue]);
-            spyOn(Combinatorics, 'getSubsetsOfSize').and.returnValue(combinatoricsResult);
+            spyOn(Combinatorics, 'getSubsetsOfSize').and.callThrough();
 
             // When callings set.getSubsetsOfSize(size)
             const result: Set<Set<string>> = set.getSubsetsOfSize(2);

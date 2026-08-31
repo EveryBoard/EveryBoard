@@ -18,17 +18,16 @@ describe('Sets', () => {
 
         it('should delegate to Combinatorics.getSubsetsOfSize', () => {
             // Given any sets and size
-            const set: Set<string> = new Set(['A', 'B', 'C']);
-            const size: number = 2;
-            const combinatoricsResult: string[][] = [['mocked value']];
-            spyOn(Combinatorics, 'getSubsetsOfSize').and.returnValue(combinatoricsResult);
+            const set: Set<string> = new Set(['A']);
+            const size: number = 1;
+            spyOn(Combinatorics, 'getSubsetsOfSize').and.callThrough();
 
             // When callings Sets.getSubsetsOfSize(set, size)
             const result: string[][] = Sets.getSubsetsOfSize(set, size);
 
             // Then Combinatorics.getSubsetsOfSize should have been called with a list and return its results
             expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList(), size);
-            expect(result).toEqual(combinatoricsResult);
+            expect(result).toEqual([['A']]);
         });
 
     });
