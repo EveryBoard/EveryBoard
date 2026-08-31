@@ -3,7 +3,6 @@ import { HttpClient, provideHttpClient } from '@angular/common/http';
 import {
     ChangeDetectorRef,
     Component,
-    CUSTOM_ELEMENTS_SCHEMA,
     DebugElement,
     provideZoneChangeDetection,
     ProviderToken,
@@ -695,7 +694,6 @@ export class ConfigureTestingModuleUtils {
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 provideZoneChangeDetection(),
                 provideRouter(routes),
@@ -721,7 +719,6 @@ export class ConfigureTestingModuleUtils {
     {
         await TestBed.configureTestingModule({
             imports: [],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 provideZoneChangeDetection(),
                 provideRouter(routes),
