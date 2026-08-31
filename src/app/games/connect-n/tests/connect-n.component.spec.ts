@@ -16,6 +16,7 @@ import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNRules } from '../ConnectNRules';
 import { ConnectNComponent } from '../connect-n.component';
 
+
 describe('ConnectNComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
@@ -154,7 +155,7 @@ describe('ConnectNComponent', () => {
             await testUtils.expectClickSuccess('#click-8-8');
 
             // Then the highlights from last turn should be hidden
-            testUtils.expectElementNotToHaveClass('#piece-9-9', 'last-move-stroke');
+            testUtils.expectElementNotToHaveClass('#click-9-9', 'last-move-stroke');
         }));
 
     });
@@ -275,7 +276,7 @@ describe('ConnectNComponent', () => {
             await testUtils.expectClickFailure('#click-8-8');
 
             // Then the dropped piece should be displayed
-            testUtils.expectElementToHaveClasses('#piece-9-9', ['base', 'player0-fill']);
+            testUtils.expectElementToHaveClasses('#click-9-9', ['base', 'player0-fill']);
         }));
 
     });
@@ -319,12 +320,12 @@ describe('ConnectNComponent', () => {
 
             // Then the victory squares should be highlighted
             await testUtils.expectMoveSuccess('#click-5-8', move);
-            testUtils.expectElementToHaveClass('#piece-5-8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece-6-8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece-7-8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece-8-8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece-9-8', 'victory-stroke');
-            testUtils.expectElementToHaveClass('#piece-10-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-5-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-6-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-7-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-8-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-9-8', 'victory-stroke');
+            testUtils.expectElementToHaveClass('#click-10-8', 'victory-stroke');
         }));
 
         it('should show previous move (first move)', fakeAsync(async() => {
@@ -362,7 +363,7 @@ describe('ConnectNComponent', () => {
             await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
-            testUtils.expectElementToHaveClass('#piece-9-9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#click-9-9', 'last-move-stroke');
         }));
 
         it('should show previous move (next moves)', fakeAsync(async() => {
@@ -400,8 +401,8 @@ describe('ConnectNComponent', () => {
             await testUtils.setupState(state, { previousMove });
 
             // Then last piece should have the highlight
-            testUtils.expectElementToHaveClass('#piece-10-9', 'last-move-stroke');
-            testUtils.expectElementToHaveClass('#piece-11-9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#click-10-9', 'last-move-stroke');
+            testUtils.expectElementToHaveClass('#click-11-9', 'last-move-stroke');
         }));
 
     });

@@ -12,6 +12,7 @@ import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
 
+
 describe('ConnectNMoveGenerator', () => {
 
     let moveGenerator: ConnectNMoveGenerator;
@@ -82,8 +83,8 @@ describe('ConnectNMoveGenerator', () => {
         // When listing the moves
         const moves: ConnectNMove[] = moveGenerator.getListMoves(node, defaultConfig);
 
-        // Then the answer should be 36
-        expect(moves.length).toBe(36);
+        // Then the answer should be 65
+        expect(moves.length).toBe(65);
     });
 
 });

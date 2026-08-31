@@ -27,6 +27,8 @@ const X: FourStatePiece = FourStatePiece.ONE;
 
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
+
+
 describe('ConnectNRules (SQUARE)', () => {
     /**
      * Naming of cases, some of them will be used
@@ -471,6 +473,8 @@ describe('ConnectNRules (SQUARE)', () => {
 
 });
 
+
+
 describe('ConnectNRules (HEXAGONAL)', () => {
 
 
@@ -654,6 +658,8 @@ describe('ConnectNRules (HEXAGONAL)', () => {
     });
 
 });
+
+
 
 describe('ConnectNRules (TRIANGULAR)', () => {
 

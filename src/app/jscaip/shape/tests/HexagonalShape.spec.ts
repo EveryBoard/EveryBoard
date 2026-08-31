@@ -9,6 +9,8 @@ import { HexagonalShape } from '../HexagonalShape';
 
 import { expectEquality } from './TriangularShape.spec';
 
+
+
 describe('HexagonalShape', () => {
 
     const topology: Topology = new SquareTopology();

@@ -7,6 +7,8 @@ import { Topology } from '../../topology/Topology';
 import { RectangularShape } from '../RectangularShape';
 import { expectEquality } from './TriangularShape.spec';
 
+
+
 describe('RectangularShape', () => {
 
     const topology: Topology = new SquareTopology();

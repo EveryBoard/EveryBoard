@@ -12,11 +12,11 @@ export class ConnectNMoveGenerator
     extends MoveGenerator<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
 {
 
-    public override getListMoves(node: ConnectNNode, _config: ConnectNConfig): ConnectNMove[] {
+    public override getListMoves(node: ConnectNNode, config: ConnectNConfig): ConnectNMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {
-            return this.getListDrops(node);
+            return this.getListDrops(node, config);
         }
     }
 
@@ -28,17 +28,38 @@ export class ConnectNMoveGenerator
         ];
     }
 
-    private getListDrops(node: ConnectNNode): ConnectNMove[] {
+    private getListDrops(node: ConnectNNode, config: ConnectNConfig): ConnectNMove[] {
         const availableFirstCoords: Set<Coord> = this.getUsefulCoordsMap(node.gameState);
-        let moves: ConnectNMove[] = [];
-        for (const firstCoord of availableFirstCoords) {
-            for (const secondCoord of availableFirstCoords) {
-                const newMove: ConnectNMove = ConnectNMove.of([firstCoord, secondCoord]);
-                moves.push(newMove);
-            }
+        let moves: Set<Set<Coord>> = availableFirstCoords.map(
+            (coord: Coord) => new Set([coord]),
+        );
+        let remainingDrops: number = config.dropAfterFirstTurn;
+        while (remainingDrops > 0) {
+            console.log('we now have moves of size', config.dropAfterFirstTurn - remainingDrops, 'have that much', moves.size(), moves.toList().map((set: Set<Coord>) => set.toString()))
+            moves = moves.flatMap(
+                (ongoingMove: Set<Coord>) => this.getBiggerMove(node.gameState, ongoingMove, availableFirstCoords),
+            );
+            remainingDrops--;
         }
-        moves = moves.filter((m: ConnectNMove) => m.coords.size() === 2);
-        return new Set(moves).toList(); // Removes duplicates
+        moves = moves.filter((m: Set<Coord>) => m.size() === 2); // TODO: assert uselessness and kill
+        return moves.map(
+            (coords: Set<Coord>) => new ConnectNMove(coords),
+        ).toList();
+    }
+
+    private getBiggerMove(
+        state: TopologicGameState<FourStatePiece>,
+        ongoingMove: Set<Coord>,
+        initialCoords: Set<Coord>,
+    ): Set<Set<Coord>> {
+        const ongoingMoveNeighbors: Coord[] = ongoingMove.toList().flatMap(
+            (coord: Coord) => this.getImmediateEmptyNeighbors(state, coord),
+        );
+        const possiblesNextDrops: Set<Coord> = initialCoords.unionList(ongoingMoveNeighbors);
+        console.log('our possibles choices are in this list of size', possiblesNextDrops.size())
+        return possiblesNextDrops.map(
+            (coord: Coord) => ongoingMove.union(new Set([coord])),
+        );
     }
 
     /**
@@ -81,6 +102,7 @@ export class ConnectNMoveGenerator
     }
 
     private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece>, coord: Coord): Coord[] {
+        console.log('jaaj kzzk', coord.toString(), state.getTopology().getNeighbors(coord))
         return state.getTopology()
             .getNeighbors(coord)
             .filter((c: Coord) => state.isOnBoard(c))
