@@ -2,7 +2,7 @@
 import { Combinatorics } from '../Combinatorics';
 import { Comparable, comparableEquals } from '../Comparable';
 
-function expectUnorderedListOfUnorderedListsEqual<T extends Comparable>(expected: T[][], actual: T[][]): void {
+function expectEqualityBetweenSetOfSets<T extends Comparable>(expected: T[][], actual: T[][]): void {
     expect(actual.length).toBe(expected.length);
     const remainingExpected: T[][] = [...expected];
     for (const actualList of actual) {
@@ -75,7 +75,7 @@ describe('Combinatorics', () => {
                 ['B', 'D'],
                 ['C', 'D'],
             ];
-            expectUnorderedListOfUnorderedListsEqual(expected, result);
+            expectEqualityBetweenSetOfSets(expected, result);
         });
 
         it('should return a list of singletons when asking for subset of size 1', () => {
@@ -92,7 +92,7 @@ describe('Combinatorics', () => {
                 ['B'],
                 ['C'],
             ];
-            expectUnorderedListOfUnorderedListsEqual(expected, result);
+            expectEqualityBetweenSetOfSets(expected, result);
         });
 
         it('should return one subset when asking for a subset size equal to the list size', () => {
@@ -107,7 +107,7 @@ describe('Combinatorics', () => {
             const expected: string[][] = [
                 ['A', 'B', 'C'],
             ];
-            expectUnorderedListOfUnorderedListsEqual(expected, result);
+            expectEqualityBetweenSetOfSets(expected, result);
         });
 
         it('should return empty list when asking for subset of size 0', () => {
@@ -120,7 +120,7 @@ describe('Combinatorics', () => {
 
             // Then it should return the only possible subset of size zero: an empty list !
             const expected: string[][] = [[]];
-            expectUnorderedListOfUnorderedListsEqual(expected, result);
+            expectEqualityBetweenSetOfSets(expected, result);
         });
 
         it('should return no subset when selecting more objects than available', () => {
