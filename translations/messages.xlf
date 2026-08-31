@@ -866,6 +866,15 @@
       <trans-unit id="1802530168433258138" datatype="html">
         <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[pendingRequest].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[pendingRequest].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
+      <trans-unit id="627419029234678391" datatype="html">
+        <source>Resignation</source>
+      </trans-unit>
+      <trans-unit id="593989397325904316" datatype="html">
+        <source>Are you sure you want to resign from this game?</source>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
+      </trans-unit>
       <trans-unit id="4517991218544205155" datatype="html">
         <source>You are an observer in this game, you cannot play.</source>
       </trans-unit>
