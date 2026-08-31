@@ -25,7 +25,6 @@
     "@angular/core": "^21.2.22",
     "@angular/forms": "^21.2.22",
     "@angular/platform-browser": "^21.2.22",
-    "@angular/platform-browser-dynamic": "^21.2.22",
     "@angular/router": "^21.2.22",
     "@everyboard/lib": "file:lib",
     "@fortawesome/angular-fontawesome": "^4.0.0",

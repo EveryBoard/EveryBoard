@@ -1,11 +1,9 @@
 import { registerLocaleData } from '@angular/common';
 import localeFr from '@angular/common/locales/fr';
-import { enableProdMode, LOCALE_ID, importProvidersFrom, provideZoneChangeDetection } from '@angular/core';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { enableProdMode, LOCALE_ID, provideZoneChangeDetection } from '@angular/core';
 import { loadTranslations } from '@angular/localize';
-import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
+import { bootstrapApplication } from '@angular/platform-browser';
 import { provideRouter } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 import { AppComponent } from './app/app.component';
 import { initializeFirebase, routes } from './app/app.routes';
@@ -28,7 +26,6 @@ function bootstrapApp(): void {
     bootstrapApplication(AppComponent, {
         providers: [
             provideZoneChangeDetection(),
-            importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
             ConnectedUserService,
             GameService,
             ConfigRoomService,

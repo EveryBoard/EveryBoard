@@ -5,16 +5,13 @@ import {
     Component,
     CUSTOM_ELEMENTS_SCHEMA,
     DebugElement,
-    importProvidersFrom,
     provideZoneChangeDetection,
     ProviderToken,
     Type,
 } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
@@ -701,7 +698,6 @@ export class ConfigureTestingModuleUtils {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 provideZoneChangeDetection(),
-                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
                 provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
@@ -728,7 +724,6 @@ export class ConfigureTestingModuleUtils {
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
                 provideZoneChangeDetection(),
-                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
                 provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
