@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import { Combinatorics } from '../Combinatorics';
 import { MGPOptional } from '../MGPOptional';
 import { Set } from '../Set';
 
@@ -283,6 +284,26 @@ describe('Set', () => {
 
             // Then it should appear than the full set miss nothing
             expect(missingElement).toEqual(MGPOptional.empty());
+        });
+
+    });
+
+    describe('getSubsetsOfSize', () => {
+
+        it('should delegate to Combinatorics.getSubsetsOfSize', () => {
+            // Given any sets and size
+            const set: Set<string> = new Set(['A']);
+            const size: number = 1;
+            const mockUniqueValue: Set<string> = new Set(['1']);
+            const mappedCombinatoricsResult: Set<Set<string>> = new Set([mockUniqueValue]);
+            spyOn(Combinatorics, 'getSubsetsOfSize').and.callThrough();
+
+            // When callings set.getSubsetsOfSize(size)
+            const result: Set<Set<string>> = set.getSubsetsOfSize(2);
+
+            // Then Combinatorics.getSubsetsOfSize should have been called with a list and return its results
+            expect(Combinatorics.getSubsetsOfSize).toHaveBeenCalledWith(set.toList(), size);
+            expect(result).toEqual(mappedCombinatoricsResult);
         });
 
     });

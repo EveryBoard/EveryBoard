@@ -1,4 +1,5 @@
 import { ArrayUtils } from './ArrayUtils';
+import { Combinatorics } from './Combinatorics';
 import { Comparable, ComparableObject, comparableEquals } from './Comparable';
 import { MGPOptional } from './MGPOptional';
 import { Sets } from './Sets';
@@ -139,6 +140,14 @@ export class Set<T extends Comparable> implements ComparableObject {
             }
         }
         return result;
+    }
+
+    public getSubsetsOfSize(size: number): Set<Set<T>> {
+        const listOfLists: T[][] = Combinatorics.getSubsetsOfSize(this.toList(), size);
+        const listOfSets: Set<T>[] = listOfLists.map((subset: T[]) => {
+            return new Set(subset);
+        });
+        return new Set(listOfSets);
     }
 
 }

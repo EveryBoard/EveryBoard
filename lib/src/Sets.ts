@@ -1,4 +1,6 @@
+import { Combinatorics } from './Combinatorics';
 import { Comparable, comparableEquals } from './Comparable';
+import { Set } from './Set';
 
 export class Sets {
 
@@ -10,6 +12,10 @@ export class Sets {
             }
         });
         return result;
+    }
+
+    public static getSubsetsOfSize<T extends Comparable>(set: Set<T>, subsetSize: number): T[][] {
+        return Combinatorics.getSubsetsOfSize(set.toList(), subsetSize);
     }
 
 }
