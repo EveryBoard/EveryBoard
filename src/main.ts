@@ -4,7 +4,6 @@ import { enableProdMode, LOCALE_ID, importProvidersFrom, provideZoneChangeDetect
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { loadTranslations } from '@angular/localize';
 import { BrowserModule, bootstrapApplication } from '@angular/platform-browser';
-import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -38,7 +37,6 @@ function bootstrapApp(): void {
             ThemeService,
             { provide: LOCALE_ID, useValue: LocaleUtils.getLocale() },
             provideRouter(routes),
-            provideAnimations(),
         ],
     })
         .catch((err: unknown) => console.error(err));
