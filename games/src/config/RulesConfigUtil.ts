@@ -1,8 +1,9 @@
 /* eslint-disable no-multi-spaces */
 import { MGPValidation } from '@everyboard/lib';
 
-import { ConfigLine } from '../config/ConfigLine';
 import { Localized } from '../utils/LocaleUtils';
+
+import { ConfigLine } from './ConfigLine';
 
 export type ConfigDescriptionType = number | boolean | string;
 

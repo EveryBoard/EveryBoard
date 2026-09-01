@@ -1,5 +1,5 @@
+import { RulesConfig } from '../../config/RulesConfigUtil';
 import { Player } from '../Player';
-import { RulesConfig } from '../RulesConfigUtil';
 
 export type GameStateAndConfig = {
     state: GameState;

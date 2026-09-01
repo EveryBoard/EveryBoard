@@ -1,11 +1,11 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
 import { P4Move } from '../../games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { GameStatus } from '../GameStatus';
 import { Rules } from '../Rules';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameStateWithTable } from '../state/GameStateWithTable';
 
 class AbstractState extends GameStateWithTable<number> {}

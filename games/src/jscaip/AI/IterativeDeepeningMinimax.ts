@@ -1,8 +1,8 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
 
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
 import { Move } from '../Move';
 import { SuperRules } from '../Rules';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { AITimeLimitOptions, MoveGenerator } from './AI';

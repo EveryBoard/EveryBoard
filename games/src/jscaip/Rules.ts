@@ -1,12 +1,12 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
 import { RulesConfigDescription } from '../config/RulesConfigDescription';
+import { EmptyRulesConfig, RulesConfig } from '../config/RulesConfigUtil';
 import { Debug } from '../utils/Debug';
 
 import { GameNode } from './AI/GameNode';
 import { GameStatus } from './GameStatus';
 import { Move } from './Move';
-import { EmptyRulesConfig, RulesConfig } from './RulesConfigUtil';
 import { GameState } from './state/GameState';
 
 export abstract class SuperRules<M extends Move,

@@ -1,11 +1,11 @@
 import { ArrayUtils, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
 import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { SuperRules } from '../Rules';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { AI, AITimeLimitOptions, MoveGenerator } from './AI';

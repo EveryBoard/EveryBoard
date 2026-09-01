@@ -1,10 +1,10 @@
 import { Utils } from '@everyboard/lib';
 
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';
 import { Player } from '../Player';
 import { SuperRules } from '../Rules';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { MoveGenerator } from './AI';

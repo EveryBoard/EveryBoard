@@ -1,6 +1,6 @@
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
 import { Move } from '../Move';
 import { PlayerNumberTable } from '../PlayerNumberTable';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { GameNode } from './GameNode';

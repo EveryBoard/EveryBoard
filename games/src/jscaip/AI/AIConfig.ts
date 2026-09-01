@@ -1,5 +1,5 @@
+import { RulesConfig } from '../../config/RulesConfigUtil';
 import { Move } from '../Move';
-import { RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { MoveGenerator } from './AI';

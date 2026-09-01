@@ -1,11 +1,11 @@
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
+import { RulesConfig } from '../../config/RulesConfigUtil';
 import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';
 import { Player, PlayerOrNone } from '../Player';
 import { AbstractRules } from '../Rules';
-import { RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 export class GameNodeStats {

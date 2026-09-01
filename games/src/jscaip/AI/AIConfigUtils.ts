@@ -1,6 +1,6 @@
+import { RulesConfig } from '../../config/RulesConfigUtil';
 import { Move } from '../Move';
 import { SuperRules } from '../Rules';
-import { RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 import { AbstractAI } from './AI';

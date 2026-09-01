@@ -1,11 +1,11 @@
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
 import { MoveGenerator } from '../AI/AI';
 import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';
 import { SuperRules } from '../Rules';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { GameState } from '../state/GameState';
 
 export class MoveTestUtils {
