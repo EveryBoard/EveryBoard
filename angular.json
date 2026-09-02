@@ -184,7 +184,7 @@
                   "with": "src/environments/environment.local.ts"
                 },
                 {
-                  "replace": "src/TestVars.spec.ts",
+                  "replace": "src/TestVars.spec.ts", // TODO: move that
                   "with": "src/TestVars.ci.spec.ts"
                 }
               ]

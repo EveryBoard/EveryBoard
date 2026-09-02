@@ -1,4 +1,6 @@
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
+import { SlowTest } from '../../../../utils/tests/TestUtils.spec';
+import { minimaxTest } from '../../../../utils/tests/TestUtils.spec';
 import { AbstractGoMinimax } from '../../AbstractGoMinimax';
 import { RectangularGoConfig } from '../../abstract-rectangular-go/AbstractRectangularGoRules';
 import { GoHeuristic } from '../GoHeuristic';
