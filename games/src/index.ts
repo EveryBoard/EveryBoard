@@ -356,6 +356,7 @@ export * from './jscaip/RulesFailure';
 export * from './jscaip/ScoreName';
 export * from './jscaip/TableUtils';
 export * from './jscaip/Vector';
+export * from './utils/tests/TestUtils.spec';
 export * from './utils/Debug';
 export * from './utils/LocaleUtils';
 export * from './utils/MGPValidator';

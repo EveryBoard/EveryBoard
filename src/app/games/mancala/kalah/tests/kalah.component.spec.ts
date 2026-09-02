@@ -2,7 +2,7 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { AbstractAI, AI, AIOptions } from '@everyboard/games';
+import { AbstractAI, AbstractNode, AI, AIOptions } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { Player } from '@everyboard/games';

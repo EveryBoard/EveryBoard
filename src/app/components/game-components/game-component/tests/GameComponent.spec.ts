@@ -11,7 +11,13 @@ import { Move } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
-import { SlowTest } from '@everyboard/games';
+import {
+    createConfiguredMinimaxForTest,
+    expectToBeAbleToPlayAgainstItself,
+    getShallowestMinimaxOptions,
+    SlowTest,
+    UNIVERSAL_SELF_PLAY_PLIES,
+} from '@everyboard/games';
 import { JSONValue, MGPValidation, Utils } from '@everyboard/lib';
 
 import { AbaloneComponent } from '../../../../games/abalone/abalone.component';
@@ -20,10 +26,6 @@ import {
     ActivatedRouteStub,
     ComponentTestUtils,
     ConfigureTestingModuleUtils,
-    createConfiguredMinimaxForTest,
-    expectToBeAbleToPlayAgainstItself,
-    getShallowestMinimaxOptions,
-    UNIVERSAL_SELF_PLAY_PLIES,
 } from '../../../../utils/tests/TestUtils.spec';
 import { GameInfo } from '../../../normal-component/pick-game/GameInfo';
 import { AbstractGameComponent } from '../AbstractGameComponent';
