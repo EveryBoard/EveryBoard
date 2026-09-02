@@ -1,4 +1,4 @@
-import { EmptyRulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../config/RulesConfig';
 
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';

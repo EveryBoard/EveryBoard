@@ -1,7 +1,7 @@
 import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
+import { EmptyRulesConfig, RulesConfig } from '../config/RulesConfig';
 import { RulesConfigDescription } from '../config/RulesConfigDescription';
-import { EmptyRulesConfig, RulesConfig } from '../config/RulesConfigUtil';
 import { Debug } from '../utils/Debug';
 
 import { GameNode } from './AI/GameNode';

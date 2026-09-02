@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { DvonnMove } from '../DvonnMove';

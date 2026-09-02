@@ -1,7 +1,7 @@
 import { JSONPrimitive, MGPValidation, Set, Utils } from '@everyboard/lib';
 
 import { ConfigLine } from './ConfigLine';
-import { DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from './RulesConfigUtil';
+import { DefaultConfigDescription, EmptyRulesConfig, NamedRulesConfig, RulesConfig } from './RulesConfig';
 
 export class RulesConfigDescription<R extends RulesConfig = EmptyRulesConfig> {
 

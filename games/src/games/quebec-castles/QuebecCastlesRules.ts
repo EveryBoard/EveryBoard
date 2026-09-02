@@ -3,9 +3,9 @@ import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib'
 import { BooleanConfig } from '../../config/BooleanConfig';
 import { EnumConfig } from '../../config/EnumConfig';
 import { NumberConfig } from '../../config/NumberConfig';
+import { RulesConfig } from '../../config/RulesConfig';
 import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../../config/RulesConfigDescriptionLocalizable';
-import { RulesConfig } from '../../config/RulesConfigUtil';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { DirectionFailure } from '../../jscaip/Direction';

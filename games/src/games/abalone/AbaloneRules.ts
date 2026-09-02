@@ -1,8 +1,8 @@
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { NumberConfig } from '../../config/NumberConfig';
+import { RulesConfig } from '../../config/RulesConfig';
 import { RulesConfigDescription } from '../../config/RulesConfigDescription';
-import { RulesConfig } from '../../config/RulesConfigUtil';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';

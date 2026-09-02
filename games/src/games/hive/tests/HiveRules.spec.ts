@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional, Set, Utils } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordSet } from '../../../jscaip/CoordSet';
 import { Player } from '../../../jscaip/Player';

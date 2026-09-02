@@ -1,6 +1,6 @@
 import { MGPOptional } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
 import { Player } from '../../../jscaip/Player';
 import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';

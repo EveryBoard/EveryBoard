@@ -1,6 +1,6 @@
 import { MGPOptional, Set } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from '../../jscaip/Player';

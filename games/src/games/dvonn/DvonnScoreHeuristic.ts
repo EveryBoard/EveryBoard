@@ -1,4 +1,4 @@
-import { EmptyRulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { HeuristicBounds } from '../../jscaip/AI/Heuristic';
 import { PlayerMetricHeuristicWithBounds } from '../../jscaip/AI/Minimax';

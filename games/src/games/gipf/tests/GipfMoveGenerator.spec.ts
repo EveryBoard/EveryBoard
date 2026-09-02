@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Table } from '../../../jscaip/TableUtils';

@@ -1,6 +1,6 @@
 import { MGPOptional, Set } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 

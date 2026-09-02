@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { DvonnOrderedMoveGenerator } from '../DvonnOrderedMoveGenerator';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 

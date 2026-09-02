@@ -2,7 +2,7 @@ import { JSONPrimitive, MGPValidation } from '@everyboard/lib';
 
 import { Localized } from '../utils/LocaleUtils';
 
-import { ConfigDescriptionType } from './RulesConfigUtil';
+import { ConfigDescriptionType } from './RulesConfig';
 
 export abstract class ConfigLine {
 

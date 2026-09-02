@@ -4,7 +4,7 @@ import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { GameStatus } from '../../GameStatus';
 import { Move } from '../../Move';
 import { Rules } from '../../Rules';
-import { EmptyRulesConfig } from '../../RulesConfigUtil';
+import { EmptyRulesConfig } from '../../RulesConfig';
 import { GameState } from '../../state/GameState';
 import { GameNode } from '../GameNode';
 

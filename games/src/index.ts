@@ -4,7 +4,7 @@ export * from './config/EnumConfig';
 export * from './config/NumberConfig';
 export * from './config/RulesConfigDescription';
 export * from './config/RulesConfigDescriptionLocalizable';
-export * from './config/RulesConfigUtil';
+export * from './config/RulesConfig';
 export * from './games/abalone/AbaloneFailure';
 export * from './games/abalone/AbaloneMove';
 export * from './games/abalone/AbaloneMoveGenerator';

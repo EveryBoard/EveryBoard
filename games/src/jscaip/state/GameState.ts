@@ -1,4 +1,4 @@
-import { RulesConfig } from '../../config/RulesConfigUtil';
+import { RulesConfig } from '../../config/RulesConfig';
 import { Player } from '../Player';
 
 export type GameStateAndConfig = {

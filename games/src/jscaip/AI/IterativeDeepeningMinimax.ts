@@ -1,6 +1,6 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfig';
 import { Move } from '../Move';
 import { SuperRules } from '../Rules';
 import { GameState } from '../state/GameState';

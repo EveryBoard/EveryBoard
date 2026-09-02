@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../../jscaip/GipfProjectHelper';

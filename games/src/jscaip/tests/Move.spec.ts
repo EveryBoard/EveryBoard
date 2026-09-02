@@ -1,7 +1,7 @@
 import { Encoder } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../AI/AI';
 import { GameNode } from '../AI/GameNode';
 import { Move } from '../Move';

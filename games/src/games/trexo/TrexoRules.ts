@@ -1,6 +1,6 @@
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';

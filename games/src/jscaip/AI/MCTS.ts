@@ -1,6 +1,6 @@
 import { ArrayUtils, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
 
-import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfig';
 import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';

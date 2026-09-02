@@ -1,6 +1,6 @@
 import { MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
 
-import { RulesConfig } from '../../config/RulesConfigUtil';
+import { RulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';

@@ -1,6 +1,6 @@
 import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
-import { RulesConfig } from '../../config/RulesConfigUtil';
+import { RulesConfig } from '../../config/RulesConfig';
 import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';

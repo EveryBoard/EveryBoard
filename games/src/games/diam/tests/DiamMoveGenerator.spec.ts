@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { DiaballikRules } from '../../diaballik/DiaballikRules';
 import { DiamMoveGenerator } from '../DiamMoveGenerator';
 import { DiamPiece } from '../DiamPiece';

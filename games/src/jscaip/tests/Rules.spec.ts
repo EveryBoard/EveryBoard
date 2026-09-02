@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
-import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfig';
 import { P4Move } from '../../games/p4/P4Move';
 import { GameNode } from '../AI/GameNode';
 import { GameStatus } from '../GameStatus';

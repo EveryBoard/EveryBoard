@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { comparableEquals, isComparableObject, MGPFallible } from '@everyboard/lib';
 
-import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfig';
 import { GameNode } from '../AI/GameNode';
 import { GameStatus } from '../GameStatus';
 import { Move } from '../Move';

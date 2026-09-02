@@ -1,6 +1,6 @@
 import { Combinatorics, MGPOptional } from '@everyboard/lib';
 
-import { EmptyRulesConfig } from '../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../config/RulesConfig';
 import { MoveGenerator } from '../../jscaip/AI/AI';
 import { Coord } from '../../jscaip/Coord';
 import { GipfCapture, GipfProjectHelper } from '../../jscaip/GipfProjectHelper';

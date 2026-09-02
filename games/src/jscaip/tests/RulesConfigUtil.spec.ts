@@ -4,9 +4,9 @@ import { TestUtils } from '@everyboard/lib/testing';
 import { NumberConfig } from '../../config/NumberConfig';
 import { RulesConfigDescription } from '../../config/RulesConfigDescription';
 import { MGPValidators } from '../../utils/MGPValidator';
-import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfig';
 
-describe('RulesConfigUtil', () => {
+describe('RulesConfig', () => {
 
     describe('RulesConfigDescription', () => {
 

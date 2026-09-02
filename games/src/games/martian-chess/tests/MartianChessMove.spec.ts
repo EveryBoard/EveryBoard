@@ -2,7 +2,7 @@
 import { MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { DirectionFailure } from '../../../jscaip/Direction';
 import { RulesFailure } from '../../../jscaip/RulesFailure';

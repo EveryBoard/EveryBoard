@@ -1,6 +1,6 @@
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
 
-import { EmptyRulesConfig, RulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig, RulesConfig } from '../../../config/RulesConfig';
 import { Move } from '../../Move';
 import { Player } from '../../Player';
 import { GameState } from '../../state/GameState';

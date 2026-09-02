@@ -2,7 +2,7 @@
 import { MGPOptional } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { EmptyRulesConfig } from '../../../config/RulesConfigUtil';
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { CoordFailure } from '../../../jscaip/Coord';
 import { Player } from '../../../jscaip/Player';

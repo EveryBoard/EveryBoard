@@ -49,9 +49,9 @@ import { YinshRules } from '../../games/yinsh/YinshRules';
 import { AbstractRules } from '../../jscaip/Rules';
 import { MGPValidators } from '../../utils/MGPValidator';
 import { NumberConfig } from '../NumberConfig';
+import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfig';
 import { RulesConfigDescription } from '../RulesConfigDescription';
 import { RulesConfigDescriptionLocalizable } from '../RulesConfigDescriptionLocalizable';
-import { DefaultConfigDescription, NamedRulesConfig, RulesConfig } from '../RulesConfigUtil';
 
 const partialGameInfo: { urlName: string; rules: AbstractRules }[] = [
     { urlName: 'P4',                    rules: P4Rules.get()                    },

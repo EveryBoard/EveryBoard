@@ -5,7 +5,7 @@ import { fakeAsync } from '@angular/core/testing';
 import { Encoder, MGPFallible } from '@everyboard/lib';
 import { EncoderTestUtils } from '@everyboard/lib/testing';
 
-import { RulesConfigUtils } from '../../../config/RulesConfigUtil';
+import { RulesConfigUtils } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { TaflConfig } from '../TaflConfig';
