@@ -145,7 +145,7 @@ describe('YinshRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid a move that starts from an non-ring', () => {
+        it('should forbid a move that starts from a non-ring', () => {
             // Given a state after turn 10 with a ring on the board
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],

@@ -1,4 +1,3 @@
-/* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
 import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, ProviderToken, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
@@ -9,7 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
-import { GameNode } from '@everyboard/games';
+import { AbstractNode, GameNode } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { Player } from '@everyboard/games';
 import { ConfigDescriptionType, RulesConfig } from '@everyboard/games';
@@ -469,12 +468,13 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             this.gameComponent.setConfig(config);
             tick(0);
         }
-        this.gameComponent.node = new GameNode(
+        const node: AbstractNode = new GameNode(
             state,
             MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
                 new GameNode(previousState)),
             MGPOptional.ofNullable(params.previousMove),
         );
+        this.gameComponent.node.set(node);
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
             await this.gameComponent.showLastMoveAndRedraw();

@@ -3,7 +3,6 @@ import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
 import { AbstractAI, AI, AIOptions } from '@everyboard/games';
-import { GameNode } from '@everyboard/games';
 import { Coord } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { Player } from '@everyboard/games';
@@ -33,10 +32,10 @@ describe('KalahComponent', () => {
         return new class extends AI<Move, GameState, AIOptions, RulesConfig> {
             public readonly name: string = 'test-AI';
             public readonly availableOptions: AIOptions[] = [];
-            public chooseNextMove(_node: GameNode<Move, GameState>, _options: AIOptions, _config: RulesConfig) : Move {
+            public chooseNextMove(_node: AbstractNode, _options: AIOptions, _config: RulesConfig) : Move {
                 return move;
             }
-            public getInfo(_node: GameNode<Move, GameState>, _config: RulesConfig): string {
+            public getInfo(_node: AbstractNode, _config: RulesConfig): string {
                 return '';
             }
         }();

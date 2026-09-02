@@ -148,7 +148,7 @@ export class ConspirateursComponent extends GameComponent<ConspirateursRules, Co
 
     private updateShelterHighlights(): void {
         const state: ConspirateursState = this.getState();
-        const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node);
+        const gameStatus: GameStatus = ConspirateursRules.get().getGameStatus(this.node());
         const gameFinished: boolean = gameStatus.isEndGame;
         this.victoriousCoords = [];
         for (const shelter of ConspirateursState.ALL_SHELTERS) {

@@ -1,5 +1,4 @@
-
-import { GameNode } from '@everyboard/games';
+import { AbstractNode, GameNode } from '@everyboard/games';
 import { Move } from '@everyboard/games';
 import { RulesConfig } from '@everyboard/games';
 import { GameState } from '@everyboard/games';
@@ -68,7 +67,7 @@ export abstract class TutorialStep {
     }
 
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
-    public parent: MGPOptional<GameNode<Move, GameState>> = MGPOptional.empty();
+    public parent: MGPOptional<AbstractNode> = MGPOptional.empty();
 
     protected constructor(public readonly title: string,
                           public readonly instruction: string,

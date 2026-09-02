@@ -15,7 +15,6 @@ import { MGPOptional, Utils } from '@everyboard/lib';
 
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
-import { RulesConfigUtils } from '../rules-configuration/RulesConfigUtils';
 import { TutorialGameWrapperMessages } from '../tutorial-game-wrapper/tutorial-game-wrapper.component';
 
 import { DemoCardWrapperComponent, DemoNodeInfo } from './demo-card-wrapper.component';
@@ -48,6 +47,7 @@ describe('DemoCardWrapperComponent', () => {
             // Current player is player 1
             node: new P4Node(new P4State(board, 1)),
             click: MGPOptional.empty(),
+            config: defaultConfig,
         });
 
         // Then it should display the game
@@ -68,6 +68,7 @@ describe('DemoCardWrapperComponent', () => {
             name: 'Lodestone',
             node: new LodestoneNode(LodestoneRules.get().getInitialState()),
             click: MGPOptional.of('#lodestone-push-orthogonal-PLAYER_ZERO'),
+            config: LodestoneRules.get().getDefaultRulesConfig(),
         });
         // Then it should have performed a click
         testUtils.expectElementToHaveClass('#lodestone-push-orthogonal-PLAYER_ZERO .data-lodestone-main-circle', 'selected-stroke');
@@ -80,6 +81,7 @@ describe('DemoCardWrapperComponent', () => {
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
+            config: defaultConfig,
         });
         const rules: AbstractRules = testUtils.getComponent().gameComponent.rules;
         spyOn(rules, 'choose').and.callThrough();
@@ -111,6 +113,7 @@ describe('DemoCardWrapperComponent', () => {
             name: 'P4',
             node: new GameNode(P4Rules.get().getInitialState(defaultConfig)),
             click: MGPOptional.empty(),
+            config: defaultConfig,
         });
         testUtils.expectElementNotToExist('#click-0-0 > circle');
 
@@ -122,6 +125,7 @@ describe('DemoCardWrapperComponent', () => {
             name: 'P4',
             node: new GameNode(stateWithPieces),
             click: MGPOptional.empty(),
+            config: defaultConfig,
         });
         await testUtils.getComponent().ngOnChanges({});
 
@@ -141,24 +145,46 @@ describe('DemoCardWrapperComponent', () => {
 
     describe('getConfig', () => {
 
-        it('should provide initial default config to game component', fakeAsync(async() => {
-            // Given any demo card
-            const defaultRulesConfig: RulesConfig = {
-                maisQuellesBellesChaussettes: 42,
-            };
+        it('should provide the demo config to the game component', fakeAsync(async() => {
+            // Given a demo card with a specific config
+            const demoConfig: P4Config = { width: 4, height: 2 };
+            await loadNode({
+                title: 'P4',
+                name: 'P4',
+                node: new P4Node(P4Rules.get().getInitialState(demoConfig)),
+                click: MGPOptional.empty(),
+                config: demoConfig,
+            });
+
+            // When calling getConfig
+            const actualConfig: RulesConfig = testUtils.getComponent().getConfig();
+
+            // Then it should return the config carried by the demo
+            expect(actualConfig).toBe(demoConfig);
+        }));
+
+        it('should update the game component config when the demo changes', fakeAsync(async() => {
+            // Given an initialized demo card
             await loadNode({
                 title: 'P4',
                 name: 'P4',
                 node: new P4Node(P4Rules.get().getInitialState(defaultConfig)),
                 click: MGPOptional.empty(),
+                config: defaultConfig,
             });
 
-            // When calling getConfig
-            spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
-            const actualDefaultRulesConfig: RulesConfig = testUtils.getComponent().getConfig();
+            // When its parent provides a demo for another selected config
+            const selectedConfig: P4Config = { width: 4, height: 2 };
+            await loadNode({
+                title: 'P4',
+                name: 'P4',
+                node: new P4Node(P4Rules.get().getInitialState(selectedConfig)),
+                click: MGPOptional.empty(),
+                config: selectedConfig,
+            });
 
-            // Then the return should be the default game config
-            expect(actualDefaultRulesConfig).toEqual(defaultRulesConfig);
+            // Then the rendered game uses the selected config as well as its initial node
+            expect(testUtils.getComponent().gameComponent.getConfig()).toBe(selectedConfig);
         }));
 
     });
