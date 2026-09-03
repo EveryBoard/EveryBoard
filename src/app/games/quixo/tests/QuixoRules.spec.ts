@@ -55,7 +55,7 @@ describe('QuixoRules', () => {
     });
 
     it('should throw when suggesting move for out of range', () => {
-        // Given an normal config board
+        // Given a normal config board
         const state: QuixoState = QuixoRules.get().getInitialState(defaultConfig);
 
         // When doing a move out of range

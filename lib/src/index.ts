@@ -6,6 +6,7 @@ export * from './JSON';
 export * from './MathUtils';
 export * from './MGPFallible';
 export * from './MGPMap';
+export * from './ReversibleMap';
 export * from './MGPOptional';
 export * from './Set';
 export * from './MGPUniqueList';

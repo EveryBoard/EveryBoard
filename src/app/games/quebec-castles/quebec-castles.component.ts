@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Set, Utils } from '@everyboard/lib';
 
@@ -18,6 +18,7 @@ import { QuebecCastlesConfig, QuebecCastlesRules } from './QuebecCastlesRules';
 import { QuebecCastlesState } from './QuebecCastlesState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-quebec-castles',
     templateUrl: './quebec-castles.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -53,8 +54,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private minY: number = 0;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('QuebecCastles');
+        super('QuebecCastles');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',
@@ -240,7 +240,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         this.updateMissingPieces();
     }
 
-    public override async showLastMove(move: QuebecCastlesMove): Promise<void> {
+    protected override async showLastMove(move: QuebecCastlesMove): Promise<void> {
         if (move instanceof QuebecCastlesTranslation) {
             this.leftSquare = MGPOptional.of(move.getStart());
             this.landingSquare = MGPOptional.of(move.getEnd());

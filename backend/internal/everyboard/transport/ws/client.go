@@ -5,6 +5,7 @@ import (
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/handler"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/logger"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/model"
+	"github.com/EveryBoard/EveryBoard/internal/everyboard/notification"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/protocol"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/session"
 	"github.com/EveryBoard/EveryBoard/internal/everyboard/store"
@@ -26,6 +27,7 @@ func newClientSession(
 	store store.Store,
 	connections *session.ConnectionManager[*websocket.Conn],
 	subscriptions *session.SubscriptionManager[*websocket.Conn],
+	notifier notification.Notifier,
 ) clientSession {
 	return clientSession{
 		connection:    connection,
@@ -33,7 +35,7 @@ func newClientSession(
 		store:         store,
 		connections:   connections,
 		subscriptions: subscriptions,
-		handlers:      handler.New(connection, user, store, connections, subscriptions),
+		handlers:      handler.New(connection, user, store, connections, subscriptions, notifier),
 	}
 }
 

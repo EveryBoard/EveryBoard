@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -20,6 +20,7 @@ import { SaharaRules } from './SaharaRules';
 import { SaharaState } from './SaharaState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-sahara',
     templateUrl: './sahara.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -48,8 +49,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     public possibleLandings: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Sahara');
+        super('Sahara');
         this.aiConfig = {
             minimax: [{
                 id: 'capture-freedom',
@@ -78,7 +78,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
         this.encoder = SaharaMove.encoder;
     }
 
-    public override async showLastMove(move: SaharaMove): Promise<void> {
+    protected override async showLastMove(move: SaharaMove): Promise<void> {
         this.lastCoord = MGPOptional.of(move.getStart());
         this.lastMoved = MGPOptional.of(move.getEnd());
     }

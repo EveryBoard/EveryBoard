@@ -48,7 +48,7 @@ type GameCreationViewInfo = {
     gameTypeName?: string;
     moveDuration?: number;
     gameDuration?: number;
-    candidates: { name: string; elo: number }[];
+    candidates: { name: string; isBot: boolean; elo: number }[];
     chosenOpponent?: string;
     candidateClasses: { [key: string]: string[] };
 }
@@ -236,6 +236,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
         this.viewInfo.candidates = this.candidates.map((c: Candidate) => {
             return {
                 name: c.user.name,
+                isBot: c.user.isBot ?? false,
                 elo: c.elo,
             };
         });
@@ -417,6 +418,7 @@ export class GameCreationComponent extends BaseWrapperComponent implements OnIni
                 name: this.getGameUrlName(),
                 title: this.getGameUrlName(),
                 node,
+                config,
             };
             this.cdr.detectChanges();
         }

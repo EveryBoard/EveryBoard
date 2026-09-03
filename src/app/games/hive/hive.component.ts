@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -101,6 +101,7 @@ class Layer extends TableWithPossibleNegativeIndices<SpaceInLayerInfo> {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hive',
     templateUrl: './hive.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -126,8 +127,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
     public inspectedStackTransform: string;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Hive');
+        super('Hive');
         this.aiConfig = {
             minimax: [{
                 id: 'Mobility',
@@ -164,7 +164,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.ground = this.getGround();
         this.remainingStacks = this.getState().remainingPieces.toListOfStacks();
         this.canPass = HiveRules.get().shouldPass(this.getState());
-        const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node);
+        const gameStatus: GameStatus = HiveRules.get().getGameStatus(this.node());
         switch (gameStatus) {
             case GameStatus.ONGOING:
                 break;
@@ -278,7 +278,7 @@ export class HiveComponent extends HexagonalGameComponent<HiveRules, HiveMove, H
         this.refreshViewBox();
     }
 
-    public override async showLastMove(move: HiveMove): Promise<void> {
+    protected override async showLastMove(move: HiveMove): Promise<void> {
         for (const coord of this.getLastMoveCoords(move)) {
             this.highlight(coord, 'last-move-stroke');
             this.ground.highlightStroke(coord, 'last-move-stroke');

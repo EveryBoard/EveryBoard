@@ -1,6 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, Type } from '@angular/core';
+import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, ProviderToken, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule, By } from '@angular/platform-browser';
@@ -14,8 +14,8 @@ import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@eve
 import { TestVars } from '../../../TestVars.spec';
 import { initializeFirebase, routes } from '../../app.routes';
 import { findMatchingRoute } from '../../app.routes.spec';
-import { AbstractGameComponent } from '../../components/game-components/game-component/GameComponent';
-import { GameInfo } from '../../components/normal-component/pick-game/pick-game.component';
+import { AbstractGameComponent } from '../../components/game-components/game-component/AbstractGameComponent';
+import { GameInfo } from '../../components/normal-component/pick-game/GameInfo';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { OGWCRequestManagerService } from '../../components/wrapper-components/online-game-wrapper/OGWCRequestManagerService';
@@ -26,7 +26,7 @@ import { UserMocks } from '../../domain/UserMocks.spec';
 import { AIDepthLimitOptions, AIOptions } from '../../jscaip/AI/AI';
 import { MinimaxConfig } from '../../jscaip/AI/AIConfig';
 import { createMinimaxFromConfig } from '../../jscaip/AI/AIConfigUtils';
-import { GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
+import { AbstractNode, GameNode, GameNodeStats } from '../../jscaip/AI/GameNode';
 import { Minimax } from '../../jscaip/AI/Minimax';
 import { Move } from '../../jscaip/Move';
 import { Player } from '../../jscaip/Player';
@@ -123,6 +123,10 @@ export class SimpleComponentTestUtils<T> {
     public prepareFixture(componentType: Type<T>): void {
         this.fixture = TestBed.createComponent(componentType);
         this.component = this.fixture.debugElement.componentInstance;
+    }
+
+    public getFromInjector<U>(token: ProviderToken<U>): U {
+        return this.fixture.debugElement.injector.get(token);
     }
 
     public getComponent(): T {
@@ -375,7 +379,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         const nullableGameInfo: GameInfo | undefined = gameInfos.find((info: GameInfo) => info.urlName === game);
         const optionalGameInfo: MGPOptional<GameInfo> = MGPOptional.ofNullable(nullableGameInfo);
         if (optionalGameInfo.isAbsent()) {
-            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in pick-game.component.ts)');
+            throw new Error(game + ' is not a game developed on EveryBoard, check if its name is in the second param of GameInfo (in GameInfo.ts)');
         }
         return ComponentTestUtils.forGameWithWrapper(game,
                                                      LocalGameWrapperComponent,
@@ -439,9 +443,18 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         expect(this.getGameComponent()).withContext('Game component should be created').toBeTruthy();
     }
 
+    public override detectChanges(): void {
+        if (this.gameComponent !== undefined) {
+            this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        }
+        this.fixture.detectChanges();
+    }
+
     public override forceChangeDetection(): void {
-        this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
-        this.detectChanges();
+        if (this.gameComponent !== undefined) {
+            this.fixture.debugElement.injector.get<ChangeDetectorRef>(ChangeDetectorRef).markForCheck();
+        }
+        super.forceChangeDetection();
     }
 
     public async setupState(state: GameState,
@@ -462,15 +475,16 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
             this.gameComponent.setConfig(config);
             tick(0);
         }
-        this.gameComponent.node = new GameNode(
+        const node: AbstractNode = new GameNode(
             state,
             MGPOptional.ofNullable(params.previousState).map((previousState: GameState) =>
                 new GameNode(previousState)),
             MGPOptional.ofNullable(params.previousMove),
         );
+        this.gameComponent.node.set(node);
         await this.gameComponent.updateBoardAndRedraw(false);
         if (params.previousMove !== undefined) {
-            await this.gameComponent.showLastMove(params.previousMove);
+            await this.gameComponent.showLastMoveAndRedraw();
         }
         this.forceChangeDetection();
     }
@@ -608,7 +622,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.onLegalUserMoveSpy.calls.reset();
     }
 
-    public async expectMoveFailure(elementName: string, reason: string, move: Move) : Promise<void> {
+    public async expectMoveFailure(elementName: string, reason: string, move: Move): Promise<void> {
         await this.expectToDisplayGameMessage(reason, async() => {
             await this.clickElement(elementName);
         });
@@ -631,6 +645,16 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         this.chooseMoveSpy.calls.reset();
         expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move);
         this.onLegalUserMoveSpy.calls.reset();
+    }
+
+    public enterMouseEnterElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseenter', new MouseEvent('mouseenter'));
+    }
+
+    public enterMouseLeaveElement(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        element.triggerEventHandler('mouseleave', new MouseEvent('mouseleave'));
     }
 
     public choose(player: Player, aiOrHuman: 'AI' | 'human'): void {

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -22,6 +22,7 @@ import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { CoerceoState } from './CoerceoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -40,11 +41,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     protected readonly lastStart: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     protected readonly lastEnd: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    protected readonly possibleLandings: Coord[] = [];
+    protected readonly possibleLandings: WritableSignal<Coord[]> = signal([]);
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Coerceo');
+        super('Coerceo');
         this.aiConfig = {
             minimax: [
                 {
@@ -88,15 +88,15 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private showHighlight(): void {
-        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord().get());
+        this.possibleLandings.set(this.state.getLegalLandings(this.chosenCoord().get()));
     }
 
     public override cancelMoveAttempt(): void {
         this.chosenCoord.set(MGPOptional.empty());
-        this.possibleLandings = [];
+        this.possibleLandings.set([]);
     }
 
-    public override async showLastMove(move: CoerceoMove): Promise<void> {
+    protected override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
             this.lastStart.set(MGPOptional.of(move.getStart()));
             this.lastEnd.set(MGPOptional.of(move.getEnd()));
@@ -147,7 +147,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private async secondClick(coord: Coord): Promise<MGPValidation> {
-        if (this.possibleLandings.some((c: Coord) => c.equals(coord))) {
+        if (this.possibleLandings().some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoRegularMove.of(this.chosenCoord().get(), coord);
             return this.chooseMove(move);
         } else {
@@ -161,7 +161,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private wasOpponent(coord: Coord): boolean {
-        const parent: MGPOptional<CoerceoNode> = this.node.parent;
+        const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (parent.isPresent()) {
             const opponent: Player = parent.get().gameState.getCurrentOpponent();
             return parent.get().gameState.getPieceAt(coord).is(opponent);
@@ -192,7 +192,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     private wasRemoved(coord: Coord): boolean {
         const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
-        const parent: MGPOptional<CoerceoNode> = this.node.parent;
+        const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
             const previousState: CoerceoState = parent.get().gameState;
             const previousContent: FourStatePiece = previousState.getPieceAt(coord);
@@ -241,7 +241,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     protected lastTurnWasTilesExchange(player: Player): boolean {
-        if (this.node.parent.isAbsent()) {
+        if (this.node().parent.isAbsent()) {
             return false;
         }
         const previousTiles: number = this.getPreviousState().tiles.get(player);

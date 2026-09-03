@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, computed, signal, Signal, WritableSignal } from '@angular/core';
+import { Component, computed, signal, Signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { ArrayUtils, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -47,6 +47,7 @@ interface DropArrow {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-apagos',
     templateUrl: './apagos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -139,8 +140,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Apagos');
+        super('Apagos');
         this.aiConfig = {
             minimax: [
                 {
@@ -186,7 +186,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         this.leftPiece.set(MGPOptional.empty());
     }
 
-    public override async showLastMove(move: ApagosMove): Promise<void> {
+    protected override async showLastMove(move: ApagosMove): Promise<void> {
         if (move.isDrop()) {
             this.showLastDrop(move);
         } else {

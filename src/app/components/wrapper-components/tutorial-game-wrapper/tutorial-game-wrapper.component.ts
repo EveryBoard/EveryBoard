@@ -80,9 +80,13 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     public override async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         const config: RulesConfig = this.getConfig();
-        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
-        Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
-        this.gameComponent.node = node.get();
+        const currentNode: AbstractNode = this.gameComponent.node();
+        const newNode: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(currentNode, move, config);
+        Utils.assert(
+            newNode.isSuccess(),
+            'It should be impossible to call onLegalUserMove with an illegal move, but got ' + newNode.getReasonOr(''),
+        );
+        this.gameComponent.node.set(newNode.get());
 
         await this.showNewMove(false);
         this.moveAttemptMade = true;
@@ -170,9 +174,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
         const state: GameState = currentStep.state;
-        this.gameComponent.node = new GameNode(state,
-                                               currentStep.parent,
-                                               currentStep.previousMove);
+        const node: AbstractNode = new GameNode(state, currentStep.parent, currentStep.previousMove);
+        this.gameComponent.node.set(node);
         const defaultConfig: RulesConfig = this.gameComponent.rules.getDefaultRulesConfig();
         this.gameComponent.setConfig(currentStep.config.getOrElse(defaultConfig));
         // Set role will update view with showCurrentState
@@ -229,12 +232,17 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const config: RulesConfig = this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
-            this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
+            const oldNode: AbstractNode = this.gameComponent.node();
+            const chosenNode: AbstractNode = this.gameComponent.rules.choose(oldNode, solution, config).get();
+            this.gameComponent.node.set(chosenNode);
             await this.showCurrentState(true);
         } else {
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;
             element.dispatchEvent(new Event('click'));
+            // Let the click handler (which awaits canUserPlay) finish before updating the view
+            await Promise.resolve();
+            await this.gameComponent.updateBoardAndRedraw(false);
         }
         this.currentMessage = solutionStep.getSuccessMessage();
         this.moveAttemptMade = true;

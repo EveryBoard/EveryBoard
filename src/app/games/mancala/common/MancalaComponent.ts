@@ -55,8 +55,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     private opponentMoveIsBeingAnimated: boolean = false;
 
-    public constructor() {
-        super();
+    public constructor(urlName: string) {
+        super(urlName);
         this.hasAsymmetricBoard = true;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
@@ -65,14 +65,16 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return ScoreName.CAPTURES;
     }
 
-    public readonly viewBoxWidth: Signal<number> = computed(() =>
-        60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE),
-    );
+    public readonly viewBoxWidth: Signal<number> = computed(() => this.viewBox().width - this.STROKE_WIDTH);
+
+    private computeViewBoxWidth(): number {
+        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
+    }
 
     protected override computeViewBox(): ViewBox {
         const left: number = - this.STROKE_WIDTH / 2;
         const up: number = - this.STROKE_WIDTH / 2;
-        const width: number = this.viewBoxWidth() + this.STROKE_WIDTH;
+        const width: number = this.computeViewBoxWidth() + this.STROKE_WIDTH;
         const height: number = this.getViewBoxHeight() + this.STROKE_WIDTH;
         return new ViewBox(left, up, width, height);
     }
@@ -113,7 +115,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         return ry;
     }
 
-    public override async showLastMove(move: MancalaMove): Promise<void> {
+    protected override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = PlayerNumberMap.of(0, 0);
         const previousState: MancalaState = this.getPreviousState();
         const config: MancalaConfig = this.getConfig();
@@ -136,10 +138,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
             this.animationOngoing = true;
-            Utils.assert(this.node.parent.isPresent(), 'triggerAnimation in store should be false at first turn');
-            this.changeVisibleState(this.node.parent.get().gameState);
+            Utils.assert(this.node().parent.isPresent(), 'triggerAnimation in store should be false at first turn');
+            this.changeVisibleState(this.node().parent.get().gameState);
             let indexDistribution: number = 0;
-            const move: MancalaMove = this.node.previousMove.get();
+            const move: MancalaMove = this.node().previousMove.get();
             for (const distributions of move) {
                 await this.showSeedBySeedDistribution(distributions);
                 if (indexDistribution + 1 < move.distributions.length) {
@@ -396,11 +398,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
     private getPreviousStableState(): MancalaState {
         if (this.opponentMoveIsBeingAnimated) {
             Utils.assert(this.getTurn() > 0, 'Kalah: Should not animate move at turn 0');
-            return this.node.parent.get().gameState;
+            return this.node().parent.get().gameState;
         } else {
             if (this.constructedState.equals(this.getState())) {
-                if (this.node.parent.isPresent()) {
-                    return this.node.parent.get().gameState;
+                if (this.node().parent.isPresent()) {
+                    return this.node().parent.get().gameState;
                 } else {
                     return this.getState();
                 }

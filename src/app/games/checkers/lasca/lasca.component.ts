@@ -1,11 +1,12 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { CheckersComponent } from '../common/checkers.component';
 
 import { LascaRules } from './LascaRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-lasca',
     templateUrl: '../common/checkers.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -14,8 +15,7 @@ import { LascaRules } from './LascaRules';
 export class LascaComponent extends CheckersComponent<LascaRules> {
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Lasca');
+        super('Lasca');
     }
 
 }

@@ -1,16 +1,16 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
-import { HexagonalGameComponent } from 'src/app/components/game-components/game-component/HexagonalGameComponent';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
+import { HexagonalGameComponent } from '../../../components/game-components/game-component/HexagonalGameComponent';
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
+import { HexaLayout } from '../../../jscaip/HexaLayout';
+import { PointyHexaOrientation } from '../../../jscaip/HexaOrientation';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
@@ -24,6 +24,7 @@ import { HexagonalGoMoveGenerator } from './HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from './HexagonalGoRules';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hexagonal-go',
     templateUrl: './hexagonal-go.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
@@ -49,8 +50,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
     public GoPiece: typeof GoPiece = GoPiece;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('HexagonalGo');
+        super('HexagonalGo');
         this.aiConfig = {
             minimax: [{
                 id: 'Territory',
@@ -82,7 +82,7 @@ export class HexagonalGoComponent extends HexagonalGameComponent<HexagonalGoRule
                                          PointyHexaOrientation.INSTANCE);
     }
 
-    public override async showLastMove(move: GoMove): Promise<void> {
+    protected override async showLastMove(move: GoMove): Promise<void> {
         this.last = MGPOptional.of(move.coord);
         this.showCaptures();
     }

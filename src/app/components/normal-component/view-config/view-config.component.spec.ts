@@ -4,7 +4,8 @@ import { fakeAsync } from '@angular/core/testing';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { MGPValidators } from '../../../utils/MGPValidator';
 import { ActivatedRouteStub, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { NumberConfig, RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
+import { NumberConfig } from '../../wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../wrapper-components/rules-configuration/RulesConfigDescription';
 import { RulesConfigurationComponent } from '../../wrapper-components/rules-configuration/rules-configuration.component';
 
 import { ViewConfigComponent } from './view-config.component';
@@ -75,5 +76,26 @@ describe('ViewConfigComponent', () => {
         const rulesConfigurationComponent: RulesConfigurationComponent =
             testUtils.findElementByDirective(RulesConfigurationComponent).componentInstance;
         expect(rulesConfigurationComponent.rulesConfigToDisplay()).toEqual(customConfig);
+    }));
+
+    it('should recognize a non-default standard config in a started game', fakeAsync(async() => {
+        // Given a started game whose config matches a non-default standard config
+        const nonDefaultStandardConfig: RulesConfig = { size: 42 };
+        const descriptionWithNonDefaultStandard: RulesConfigDescription<RulesConfig> =
+            new RulesConfigDescription(
+                rulesConfigDescription.defaultConfigDescription,
+                [{
+                    name: (): string => 'other standard',
+                    config: nonDefaultStandardConfig,
+                }],
+            );
+        testUtils.setInput('rulesConfigDescription', descriptionWithNonDefaultStandard);
+        testUtils.setInput('rulesConfig', nonDefaultStandardConfig);
+
+        // When viewing the config after the game has started
+        await testUtils.clickElement('#show-config');
+
+        // Then it should show the recognized standard config
+        testUtils.expectDropdownOptionToBeSelected('#ruleSelect', 'other standard');
     }));
 });

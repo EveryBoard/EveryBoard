@@ -17,10 +17,11 @@ import { ConfigRoomServiceMock } from '../../../services/tests/ConfigRoomService
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
 import { ComponentTestUtils, expectValidRouting, prepareUnsubscribeCheck } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { GameWrapperMessages } from '../GameWrapper';
 
+import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 describe('OnlineGameWrapper for non-existing game', () => {
@@ -118,21 +119,23 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     describe('for creator', () => {
 
-        it('should have GameCreationComponent calling startGame when config accepted', fakeAsync(async() => {
-            // Given component where the game is not started
-            spyOn(wrapper, 'startGame').and.callThrough();
+        it('should replace game creation with the game when config is accepted', fakeAsync(async() => {
+            // Given a game waiting for its configuration to be accepted
             await prepareComponent(false);
-            expect(wrapper.startGame).not.toHaveBeenCalled();
+            testUtils.expectElementToExist('#gameCreation');
+            testUtils.expectElementNotToExist('#game');
+            testUtils.expectElementNotToExist('app-p4');
 
-            // When the game starts
+            // When the configuration is accepted
             await startGame();
+            testUtils.detectChanges();
 
-            // Then startGame should be called
-            expect(wrapper.startGame).toHaveBeenCalledTimes(1);
+            // Then game creation is replaced by the configured game
+            testUtils.expectElementNotToExist('#gameCreation');
+            testUtils.expectElementToExist('#game');
+            testUtils.expectElementToExist('app-p4');
 
-            testUtils.detectChanges(); // Needed so GameCreation is destroyed and game component created
-
-            tick(wrapper.configRoom.moveDuration * 1000);
+            await finishTest();
         }));
 
         it('should have a GameCreationComponent before starting', fakeAsync(async() => {
@@ -159,19 +162,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             // Finish the game to have no timeout still running
             await finishTest();
-        }));
-
-        it('should replace GameCreationComponent by game tag upon game start', fakeAsync(async() => {
-            // Given a component where the game is started
-            await prepareComponent(true);
-            // When it is loaded
-            testUtils.detectChanges();
-
-            // Then game creation is removed and game appears
-            expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
-            testUtils.expectElementNotToExist('#gameCreation');
-            testUtils.expectElementToExist('#game');
-            testUtils.expectElementToExist('app-p4');
         }));
 
     });
@@ -204,6 +194,21 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         // Then it unsubscribed from the game
         expectUnsubscribeToHaveBeenCalled();
+    }));
+
+    it('should register timers only once', fakeAsync(async() => {
+        // Given a started game
+        const timeManager: OGWCTimeManagerService = testUtils.getFromInjector(OGWCTimeManagerService);
+        spyOn(timeManager, 'setTimers').and.callThrough();
+        await prepareComponent(true);
+
+        // When a second game update is received
+        const gameService: GameServiceMock =
+            TestBed.inject(GameService) as AbstractGameService as GameServiceMock;
+        await gameService.mockGameUpdate(GameMocks.STARTED);
+
+        // Then timers are not registered again
+        expect(timeManager.setTimers).toHaveBeenCalledTimes(1);
     }));
 
 });

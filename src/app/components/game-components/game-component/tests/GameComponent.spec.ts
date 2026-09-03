@@ -25,8 +25,8 @@ import {
     SlowTest,
     UNIVERSAL_SELF_PLAY_PLIES,
 } from '../../../../utils/tests/TestUtils.spec';
-import { GameInfo } from '../../../normal-component/pick-game/pick-game.component';
-import { AbstractGameComponent } from '../GameComponent';
+import { GameInfo } from '../../../normal-component/pick-game/GameInfo';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 
 describe('GameComponent', () => {
 
@@ -100,11 +100,11 @@ describe('GameComponent', () => {
                 expect(config.moveGenerator).withContext('moveGenerator missing for ' + config.name).toBeDefined();
                 const heuristic: Heuristic<Move, GameState, BoardValue, RulesConfig> = config.heuristic!();
                 const moveGenerator: MoveGenerator<Move, GameState, RulesConfig> = config.moveGenerator!();
-                const moves: Move[] = moveGenerator.getListMoves(component.node, component.getConfig());
+                const moves: Move[] = moveGenerator.getListMoves(component.node(), component.getConfig());
                 expect(moves.length)
                     .withContext('minimax moveGenerator returned no move for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
-                const boardValue: BoardValue = heuristic.getBoardValue(component.node, component.getConfig());
+                const boardValue: BoardValue = heuristic.getBoardValue(component.node(), component.getConfig());
                 expect(boardValue.metrics.length)
                     .withContext('heuristic returned no metric for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);
@@ -121,7 +121,7 @@ describe('GameComponent', () => {
                 expect(config.name).withContext('MCTS config name missing for ' + gameInfo.urlName).toBeTruthy();
                 const moveGenerator: MoveGenerator<Move, GameState, RulesConfig> = config.moveGenerator();
                 expect(moveGenerator).withContext('MCTS moveGenerator missing for ' + config.name).toBeDefined();
-                const moves: Move[] = moveGenerator.getListMoves(component.node, component.getConfig());
+                const moves: Move[] = moveGenerator.getListMoves(component.node(), component.getConfig());
                 expect(moves.length)
                     .withContext('MCTS moveGenerator returned no move for ' + gameInfo.urlName + '/' + config.name)
                     .toBeGreaterThan(0);

@@ -1,11 +1,12 @@
-<svg:g id="blank-board">
+<svg:g class="data-blank-board"
+       (mouseleave)="onSVGLeave()">
     <svg:rect x="0"
               y="0"
               [attr.width]="width() * SPACE_SIZE"
               [attr.height]="height() * SPACE_SIZE"
               class="base mid-small-stroke"/>
     @for (line of ArrayUtils.range(height()); track $index; let y = $index) {
-        <svg:line id="horizontal-line-{{ y }}"
+        <svg:line class="data-horizontal-line-{{ y }}"
                   [attr.x1]="0"
                   [attr.y1]="(0.5 * SPACE_SIZE) + SPACE_SIZE * y"
                   [attr.x2]="SPACE_SIZE * width()"
@@ -13,7 +14,7 @@
                   class="base"/>
     }
     @for (line of ArrayUtils.range(width()); track $index; let x = $index) {
-        <svg:line id="vertical-line-{{ x }}"
+        <svg:line class="data-vertical-line-{{ x }}"
                   [attr.x1]="(0.5 * SPACE_SIZE) + SPACE_SIZE * x"
                   [attr.y1]="0"
                   [attr.x2]="(0.5 * SPACE_SIZE) + SPACE_SIZE * x"
@@ -23,7 +24,8 @@
     @for (line of ArrayUtils.range(height()); track $index; let y = $index) {
         <svg:g>
             @for (spaceContent of ArrayUtils.range(width()); track spaceContent; let x = $index) {
-                <svg:rect id="click-{{ x }}-{{ y }}"
+                <svg:rect class="space-{{ x }}-{{ y }}"
+                          (mouseenter)="onMouseEnter(x, y)"
                           (click)="onClick(x, y)"
                           [attr.width]="SPACE_SIZE"
                           [attr.height]="SPACE_SIZE"
@@ -35,7 +37,7 @@
         </svg:g>
     }
     @for (hoshi of hoshis; track hoshi.toString()) {
-        <svg:circle id="hoshi-{{ hoshi.x }}-{{ hoshi.y }}"
+        <svg:circle class="data-hoshi-{{ hoshi.x }}-{{ hoshi.y }}"
                     class="base-no-stroke click-delegator"
                     [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.x)"
                     [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * hoshi.y)"

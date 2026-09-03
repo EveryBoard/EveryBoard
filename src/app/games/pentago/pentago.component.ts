@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -25,6 +25,7 @@ interface ArrowInfo {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pentago',
     templateUrl: './pentago.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -53,8 +54,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
     public ARROWS: ArrowInfo[];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Pentago');
+        super('Pentago');
         this.aiConfig = {
             minimax: [{
                 id: 'Dummy',
@@ -101,7 +101,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         this.victoryCoords = this.rules.getVictoryCoords(this.getState());
     }
 
-    public override async showLastMove(move: PentagoMove): Promise<void> {
+    protected override async showLastMove(move: PentagoMove): Promise<void> {
         this.movedBlock = move.blockTurned;
         const localCoord: Coord = new Coord(move.coord.x % 3 - 1, move.coord.y % 3 - 1);
         if (move.blockTurned.isPresent()) {
@@ -212,7 +212,7 @@ export class PentagoComponent extends RectangularGameComponent<PentagoRules,
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop);
         }
-        const gameStatus: GameStatus = this.rules.getGameStatus(this.node);
+        const gameStatus: GameStatus = this.rules.getGameStatus(this.node());
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
         this.currentDrop = MGPOptional.of(coord);
         this.displayArrows(postDropState.neutralBlocks);

@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, signal, WritableSignal } from '@angular/core';
+import { Component, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
@@ -42,6 +42,7 @@ type AbaloneArrowInfo = {
 };
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-abalone',
     templateUrl: './abalone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -71,8 +72,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
     ).toList();
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Abalone');
+        super('Abalone');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -136,7 +136,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneRules,
         this.selecteds.set([]);
     }
 
-    public override async showLastMove(move: AbaloneMove): Promise<void> {
+    protected override async showLastMove(move: AbaloneMove): Promise<void> {
         if (move.isSingleCoord()) {
             this.showPushingMove(move);
         } else {

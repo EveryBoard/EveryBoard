@@ -1,9 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
-import { GameInfo } from '../../../components/normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../../components/normal-component/pick-game/GameInfo';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
+import { NewGameState } from '../NewGameState';
 import { NewGameTutorial } from '../NewGameTutorial';
 import { NewGameComponent } from '../new-game.component';
 
@@ -40,7 +41,7 @@ describe('NewGameComponent', () => {
      */
     it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
         // Note: we do not want to use `getGameComponent` in game components tests
-        await testUtils.getGameComponent().showLastMove(new NewGameMove());
+        await testUtils.setupState(new NewGameState(0), { previousMove: new NewGameMove() });
         await testUtils.getGameComponent().updateBoard(false);
         testUtils.getGameComponent().hideLastMove();
         testUtils.getGameComponent().cancelMoveAttempt();

@@ -35,13 +35,17 @@ export const routes: Route[] = [
 ];
 /* eslint-enable @typescript-eslint/typedef */
 
-export function initializeFirebase(): void {
+export function initializeFirebase(
+    terminateFirestore: (firestore: Firestore.Firestore) => Promise<void> = Firestore.terminate,
+): void {
     Firebase.initializeApp(environment.firebaseConfig);
     const firestore: Firestore.Firestore = Firestore.getFirestore();
     const host: string = firestore.toJSON()['settings'].host;
     if (environment.useEmulators && host !== 'localhost:8080') {
         Firestore.connectFirestoreEmulator(firestore, 'localhost', 8080);
     }
+    // A Firestore WebChannel can otherwise outlive a full-page navigation long enough to stall later connections.
+    window.addEventListener('pagehide', () => void terminateFirestore(firestore), { once: true });
 
     const fireauth: Auth.Auth = Auth.getAuth();
     if (environment.useEmulators && fireauth.config['emulator'] == null) {

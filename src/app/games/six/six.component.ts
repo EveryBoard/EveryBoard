@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPFallible, MGPOptional, Set, MGPValidation } from '@everyboard/lib';
 
@@ -29,6 +29,7 @@ type CoordAndClass = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-six',
     templateUrl: './six.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -52,8 +53,7 @@ export class SixComponent
     private nextClickShouldSelectGroup: boolean = false;
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Six');
+        super('Six');
         this.aiConfig = {
             minimax: [{
                 id: 'Shape',
@@ -105,7 +105,7 @@ export class SixComponent
     }
 
     private resetPiecesAndNeighbors(): void {
-        this.state = this.node.gameState;
+        this.state = this.node().gameState;
         this.pieces = this.state.getPieceCoords();
         this.neighbors = this.getEmptyNeighbors();
     }
@@ -128,7 +128,7 @@ export class SixComponent
             .expandRight(this.SPACE_SIZE + (2 * this.STROKE_WIDTH));
     }
 
-    public override async showLastMove(move: SixMove): Promise<void> {
+    protected override async showLastMove(move: SixMove): Promise<void> {
         this.lastDrop = MGPOptional.of(move.landing);
         if (move.isDrop() === false) {
             this.leftCoord = MGPOptional.of(move.start.get());
@@ -136,7 +136,7 @@ export class SixComponent
             this.leftCoord = MGPOptional.empty();
         }
         const state: SixState = this.getState();
-        if (this.rules.getGameStatus(this.node, this.getConfig()).isEndGame) {
+        if (this.rules.getGameStatus(this.node(), this.getConfig()).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
         this.disconnectedCoords = this.getDisconnected();
@@ -148,7 +148,7 @@ export class SixComponent
         const newPieces: Coord[] = this.getState().getPieceCoords();
         const disconnecteds: CoordAndClass[] =[];
         for (const oldPiece of oldPieces) {
-            const start: MGPOptional<Coord> = this.node.previousMove.get().start;
+            const start: MGPOptional<Coord> = this.node().previousMove.get().start;
             if (start.equalsValue(oldPiece) === false &&
                 newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece)) === false)
             {

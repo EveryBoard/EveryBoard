@@ -1,5 +1,16 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnInit, Signal, inject, viewChild } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    OnDestroy,
+    OnInit,
+    Signal,
+    WritableSignal,
+    inject,
+    signal,
+    viewChildren,
+} from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { FaIconComponent } from '@fortawesome/angular-fontawesome';
 import { Mutex } from 'async-mutex';
@@ -14,6 +25,7 @@ import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { GameStatus } from '../../../jscaip/GameStatus';
 import { Move } from '../../../jscaip/Move';
 import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerMap } from '../../../jscaip/PlayerMap';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
 import { ConnectedUserService } from '../../../services/ConnectedUserService';
@@ -22,7 +34,7 @@ import { Debug } from '../../../utils/Debug';
 import { Localized } from '../../../utils/LocaleUtils';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { EloComponent } from '../../normal-component/elo/elo.component';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
 import { GameWrapper, GameWrapperMessages } from '../GameWrapper';
@@ -66,11 +78,8 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private readonly requestManager: OGWCRequestManagerService = inject(OGWCRequestManagerService);
     private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
 
-
-    public readonly timerZeroGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroGame');
-    public readonly timerOneGame: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneGame');
-    public readonly timerZeroMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerZeroMove');
-    public readonly timerOneMove: Signal<TimerComponent | undefined> = viewChild<TimerComponent>('timerOneMove');
+    public readonly gameTimerComponents: Signal<readonly TimerComponent[]> = viewChildren<TimerComponent>('gameTimer');
+    public readonly moveTimerComponents: Signal<readonly TimerComponent[]> = viewChildren<TimerComponent>('moveTimer');
 
     public game: Game | null = null;
     public gameId!: string; // Initialized in ngOnInit
@@ -84,23 +93,22 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private gameSubscription: Subscription = new Subscription();
 
-    public readonly OFFLINE_FONT_COLOR: { [key: string]: string } = { color: 'lightgrey' };
-
     public readonly gameTimeMessage: string = $localize`05:00`;
     public readonly moveTimeMessage: string = $localize`00:30`;
+    private timersRegistered: boolean = false;
 
     public readonly requestInfos: Record<RequestType, RequestInfo> = OGWCRequestManagerService.requestInfos;
     public readonly allRequests: RequestType[] = ['TakeBack', 'Draw', 'Rematch'];
 
     private moveSentButNotReceivedYet: boolean = false;
 
-    public viewConfig: boolean = false;
+    public readonly confirmResignation: WritableSignal<boolean> = signal(false);
 
     private extractGameIdFromURL(): string {
         return Utils.getNonNullable(this.activatedRoute.snapshot.paramMap.get('id'));
     }
 
-    public isPlaying(): boolean {
+    protected isPlaying(): boolean {
         return this.isSynced && this.role.isPlayer();
     }
 
@@ -126,16 +134,14 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.setGameIdOrRedirect();
     }
 
-    public async startGame(configRoom: ConfigRoom): Promise<void> {
+    protected async startGame(configRoom: ConfigRoom): Promise<void> {
         Utils.assert(this.gameStarted === false, 'Should not start already started game');
         this.configRoom = configRoom;
         this.gameStarted = true;
 
         setTimeout(async() => {
-            // the small waiting is there to make sure that the timers are loaded by view
+            // the small waiting is there to make sure that the game component is loaded by view
             const createdSuccessfully: boolean = await this.createMatchingGameComponent();
-            this.timeManager.setTimers([this.timerZeroMove()!, this.timerOneMove()!],
-                                       [this.timerZeroGame()!, this.timerOneGame()!]);
             Utils.assert(createdSuccessfully, 'Game should be created successfully, otherwise game-creation would have redirected');
             Utils.assert(this.gameComponent !== null, 'Game component should exist');
             this.gameComponent.setConfig(configRoom.rulesConfig);
@@ -176,6 +182,22 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     private async onGameUpdate(game: Game): Promise<void> {
         this.game = game;
         this.cdr.detectChanges();
+        this.registerTimersOnce();
+    }
+
+    private registerTimersOnce(): void {
+        if (this.timersRegistered) {
+            return;
+        }
+        const moveTimers: readonly TimerComponent[] = this.moveTimerComponents();
+        const gameTimers: readonly TimerComponent[] = this.gameTimerComponents();
+        Utils.assert(moveTimers.length === 2, 'There should be two move timers');
+        Utils.assert(gameTimers.length === 2, 'There should be two game timers');
+        this.timeManager.setTimers(
+            moveTimers as [TimerComponent, TimerComponent],
+            gameTimers as [TimerComponent, TimerComponent],
+        );
+        this.timersRegistered = true;
     }
 
     private async onGameStart(): Promise<void> {
@@ -257,12 +279,12 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         this.requestManager.onReceivedMove();
     }
 
-    public getTurn(): number {
+    protected getTurn(): number {
         return this.gameComponent.getTurn();
     }
 
     private async setCurrentPlayerAccordingToCurrentTurn(): Promise<void> {
-        this.currentUser = this.players[this.getTurn() % 2].get();
+        this.currentUser = this.getPlayerAt(Player.ofTurn(this.getTurn())).get();
         await this.setInteractive(
             this.currentUser.name === this.getPlayer().name,
             false,
@@ -271,18 +293,20 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async takeBackToPreviousPlayerTurn(player: Player): Promise<void> {
         // Take back once, in any case
-        this.gameComponent.node = this.gameComponent.node.parent.get();
+        let oldNode: AbstractNode = this.gameComponent.node();
+        this.gameComponent.node.set(oldNode.parent.get());
         if (this.gameComponent.getCurrentPlayer() !== player) {
             Utils.assert(this.gameComponent.getTurn() > 0, 'Should not allow player that never moved to take back');
             // Take back a second time to make sure it end up on player's turn
-            this.gameComponent.node = this.gameComponent.node.parent.get();
+            oldNode = this.gameComponent.node();
+            this.gameComponent.node.set(oldNode.parent.get());
         }
         await this.setCurrentPlayerAccordingToCurrentTurn();
         const triggerAnimation: boolean = this.gameComponent.getTurn() === 0;
         await this.showCurrentState(triggerAnimation);
     }
 
-    public canResign(): boolean {
+    protected canResign(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canResign');
         if (this.endGame) {
             return false;
@@ -291,7 +315,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return hasOpponent;
     }
 
-    public requestAvailable(request: RequestType): boolean {
+    protected requestAvailable(request: RequestType): boolean {
         switch (request) {
             case 'TakeBack':
                 return this.canAskTakeBack();
@@ -303,25 +327,25 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public mustReply(): boolean {
+    protected mustReply(): boolean {
         return this.getRequestAwaitingReplyFromUs().isPresent();
     }
 
-    public getRequestAwaitingReplyFromUs(): MGPOptional<RequestType> {
+    protected getRequestAwaitingReplyFromUs(): MGPOptional<RequestType> {
         Utils.assert(this.role.isPlayer(), 'User should be playing');
         return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.opponent));
     }
 
-    public getRequestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
+    protected getRequestAwaitingReplyFromOpponent(): MGPOptional<RequestType> {
         Utils.assert(this.role.isPlayer(), 'User should be playing');
         return this.requestManager.getUnrespondedRequestFrom(Utils.getNonNullable(this.currentUser));
     }
 
-    public deniedRequest(): MGPOptional<RequestType> {
+    protected deniedRequest(): MGPOptional<RequestType> {
         return this.requestManager.deniedRequest();
     }
 
-    public canPass(): boolean {
+    protected canPass(): boolean {
         Utils.assert(this.isPlaying(), 'Non playing should not call canPass');
         if (this.endGame) return false;
         if (this.currentUser?.name !== this.getPlayer().name) return false;
@@ -368,24 +392,36 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
 
     private async initializePlayersData(): Promise<void> {
         const game: Game = Utils.getNonNullable(this.game);
-        this.players = [
+        this.players = PlayerMap.ofValues(
             MGPOptional.of(game.playerZero),
             MGPOptional.ofNullable(game.playerOne),
-        ];
+        );
         await this.setCurrentPlayerAccordingToCurrentTurn();
         await this.setRealObserverRole();
     }
 
     private async setRealObserverRole(): Promise<void> {
-        if (this.players[0].equalsValue(this.getPlayer())) {
+        if (this.isCurrentUser(Player.ZERO)) {
             await this.setRole(Player.ZERO);
-            this.opponent = this.players[1].get();
-        } else if (this.players[1].equalsValue(this.getPlayer())) {
+            this.opponent = this.getPlayerAt(Player.ONE).get();
+        } else if (this.isCurrentUser(Player.ONE)) {
             await this.setRole(Player.ONE);
-            this.opponent = this.players[0].get();
+            this.opponent = this.getPlayerAt(Player.ZERO).get();
         } else {
             await this.setRole(PlayerOrNone.NONE);
         }
+    }
+
+    private isCurrentUser(player: Player): boolean {
+        const playerId: MGPOptional<string> = this.getPlayerAt(player).map((user: MinimalUser): string => user.id);
+        return playerId.equalsValue(this.getPlayer().id);
+    }
+
+    public override isPlayerTurn(): boolean {
+        if (this.role.isNone() || this.gameComponent == null) {
+            return false;
+        }
+        return this.role.equals(this.gameComponent.getCurrentPlayer());
     }
 
     public override async onLegalUserMove(move: Move): Promise<void> {
@@ -393,7 +429,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         await this.applyMove(move, false); // Move was already animated by its game component, no need to animate again
         // Then, send the move
         const config: RulesConfig = this.getConfig();
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node, config);
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.node(), config);
         const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
         this.moveSentButNotReceivedYet = true;
         await this.gameService.addMove(encodedMove);
@@ -403,31 +439,38 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
     }
 
     private async applyMove(move: Move, triggerAnimation: boolean): Promise<void> {
-        const oldNode: AbstractNode = this.gameComponent.node;
+        const oldNode: AbstractNode = this.gameComponent.node();
         const state: GameState = oldNode.gameState;
         const config: RulesConfig = this.getConfig();
         const legality: MGPFallible<unknown> = this.gameComponent.rules.isLegal(move, state, config);
         Utils.assert(legality.isSuccess(), 'OGWC.applyMove called with an illegal move');
         const stateAfterMove: GameState = this.gameComponent.rules.applyLegalMove(move, state, config, legality.get());
-        this.gameComponent.node = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        const nextNode: AbstractNode = new GameNode(stateAfterMove, MGPOptional.of(oldNode), MGPOptional.of(move));
+        this.gameComponent.node.set(nextNode);
         await this.showNewMove(triggerAnimation);
     }
 
-    // Called by the resign button
-    public async resign(): Promise<void> {
+    protected onClickResign(): void {
+        this.confirmResignation.set(true);
+    }
+
+    protected async onClickConfirmResign(): Promise<void> {
+        this.confirmResignation.set(false);
         await this.gameService.resign();
     }
 
-    // Called by the clocks
-    public async reachedOutOfTime(player: Player): Promise<void> {
+    protected onClickCancelResign(): void {
+        this.confirmResignation.set(false);
+    }
+
+    protected async reachedOutOfTime(player: Player): Promise<void> {
         if (this.isPlaying() === false) {
             return;
         }
         await this.gameService.notifyTimeout(player);
     }
 
-    // Called by the corresponding button
-    public async propose(request: RequestType): Promise<void> {
+    protected async onClickPropose(request: RequestType): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot propose request if not player');
         switch (request) {
             case 'Rematch':
@@ -440,8 +483,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    // Called by the 'accept' button
-    public async accept(): Promise<void> {
+    protected async onClickAccept(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot accept request if not player');
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
@@ -455,8 +497,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    // Called by the 'reject' button
-    public async reject(): Promise<void> {
+    protected async onClickReject(): Promise<void> {
         Utils.assert(this.role.isPlayer(), 'cannot reject request if not player');
         const request: RequestType = this.requestManager.getCurrentRequest().get().requestType;
         switch (request) {
@@ -470,21 +511,18 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    // Called by the 'AddGameTime' button
-    public addGameTime(): Promise<void> {
+    protected addGameTime(): Promise<void> {
         return this.gameService.addGameTime();
     }
 
-    // Called by the 'AddMoveTime' button
-    public addMoveTime(): Promise<void> {
+    protected addMoveTime(): Promise<void> {
         return this.gameService.addMoveTime();
     }
 
     public override async onCancelMove(reason?: string): Promise<void> {
         await super.onCancelMove(reason);
-        if (this.gameComponent.node.previousMove.isPresent()) {
-            const move: Move = this.gameComponent.node.previousMove.get();
-            await this.gameComponent.showLastMove(move);
+        if (this.gameComponent.node().previousMove.isPresent()) {
+            await this.gameComponent.showLastMoveAndRedraw();
         }
         this.cdr.detectChanges();
     }
@@ -497,12 +535,21 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         return this.configRoom.rulesConfig;
     }
 
-    public isAgreedDraw(): boolean {
+    protected getPlayerElo(player: Player): number {
+        const game: Game = Utils.getNonNullable(this.game);
+        return player === Player.ZERO ? game.playerZeroElo : game.playerOneElo;
+    }
+
+    protected isHardDraw(): boolean {
+        return Utils.getNonNullable(this.game).result === 'HardDraw';
+    }
+
+    protected isAgreedDraw(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;
         return result === 'AgreedDrawByZero' || result === 'AgreedDrawByOne';
     }
 
-    public getDrawAccepter(): MinimalUser {
+    protected getDrawAccepter(): MinimalUser {
         const result: GameResult = Utils.getNonNullable(this.game).result;
         switch (result) {
             case 'AgreedDrawByZero':
@@ -513,22 +560,22 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public isWin(): boolean {
+    protected isWin(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;
         return result === 'VictoryOfZero' || result === 'VictoryOfOne';
     }
 
-    public isTimeout(): boolean {
+    protected isTimeout(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;
         return result === 'TimeoutOfZero' || result === 'TimeoutOfOne';
     }
 
-    public isResign(): boolean {
+    protected isResign(): boolean {
         const result: GameResult = Utils.getNonNullable(this.game).result;
         return result === 'ResignOfZero' || result === 'ResignOfOne';
     }
 
-    public getWinner(): MinimalUser {
+    protected getWinner(): MinimalUser {
         const result: GameResult = Utils.getNonNullable(this.game).result;
         switch (result) {
             case 'VictoryOfOne':
@@ -541,16 +588,13 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         }
     }
 
-    public getLoser(): MinimalUser {
-        const result: GameResult = Utils.getNonNullable(this.game).result;
-        switch (result) {
-            case 'VictoryOfOne':
-            case 'TimeoutOfZero':
-            case 'ResignOfZero':
-                return Utils.getNonNullable(this.game).playerZero;
-            default:
-                Utils.expectToBeMultiple(result, ['VictoryOfZero', 'TimeoutOfOne', 'ResignOfOne']);
-                return Utils.getNonNullable(this.game).playerOne;
+    protected getLoser(): MinimalUser {
+        const game: Game = Utils.getNonNullable(this.game);
+        const winner: MinimalUser = this.getWinner();
+        if (winner.id === game.playerZero.id) {
+            return Utils.getNonNullable(game.playerOne);
+        } else {
+            return game.playerZero;
         }
     }
 }

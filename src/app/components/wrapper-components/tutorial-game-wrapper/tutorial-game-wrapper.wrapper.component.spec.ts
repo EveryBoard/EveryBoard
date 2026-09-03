@@ -13,7 +13,7 @@ import { Player } from '../../../jscaip/Player';
 import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { ComponentTestUtils, expectValidRouting } from '../../../utils/tests/TestUtils.spec';
-import { AbstractGameComponent } from '../../game-components/game-component/GameComponent';
+import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
 import { NotFoundComponent } from '../../normal-component/not-found/not-found.component';
 import { OnlineGameCreationComponent } from '../../normal-component/online-game-creation/online-game-creation.component';
 import { GameWrapperMessages } from '../GameWrapper';
@@ -121,9 +121,9 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // expect to see previous move but no parent to the node
-            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node.previousMove.get() as QuartoMove;
+            const componentPreviousMove: QuartoMove = wrapper.gameComponent.node().previousMove.get() as QuartoMove;
             expect(componentPreviousMove).toEqual(tutorialPreviousMove);
-            expect(wrapper.gameComponent.node.parent.isAbsent()).toBeTrue();
+            expect(wrapper.gameComponent.node().parent.isAbsent()).toBeTrue();
         }));
 
         it('should show title of the steps, the selected one in bold', fakeAsync(async() => {
@@ -856,7 +856,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.clickElement('#showSolutionButton', 0);
 
             // Then the first awaited move should have been done
-            expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(awaitedMove);
+            expect(testUtils.getGameComponent().node().previousMove.get()).toEqual(awaitedMove);
             expect(testUtils.getGameComponent().getTurn()).toEqual(stepInitialTurn + 1);
             // and 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -1337,7 +1337,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             tick(0);
 
             // Expect the step proposed move to have been done
-            expect(testUtils.getGameComponent().node.previousMove.get()).toEqual(solutionMove);
+            expect(testUtils.getGameComponent().node().previousMove.get()).toEqual(solutionMove);
             expect(testUtils.getGameComponent().getTurn()).toEqual(1);
             // expect 'solution' message to be shown
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
@@ -1352,7 +1352,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
 
         it('should provide initial default config to game component when no config is provided', fakeAsync(async() => {
             // Given any tutorial for a game that has a specific default config
-            const defaultRulesConfig: RulesConfig = { mais_quelles_belles_chaussettes: 42 };
+            const defaultRulesConfig: RulesConfig = { maisQuellesBellesChaussettes: 42 };
             spyOn(RulesConfigUtils, 'getGameDefaultConfig').and.returnValue(defaultRulesConfig);
 
             // When calling getConfig

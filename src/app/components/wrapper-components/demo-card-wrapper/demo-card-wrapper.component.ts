@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, SimpleChanges, inject, input, InputSignal } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, ElementRef, OnChanges, SimpleChanges, inject, input, InputSignal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -14,15 +14,13 @@ export type DemoNodeInfo = {
     title: string; // The title of the step
     node: AbstractNode; // The demo node
     click: MGPOptional<string>; // An element to click
-}
-
-export type DemoNodeWithConfig = DemoNodeInfo & {
     config: RulesConfig;
 }
 
 @Component({
     selector: 'app-demo-card',
     template: `<div class="is-fullheight"><div #board></div></div>`,
+    changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DemoCardWrapperComponent extends GameWrapper<string> implements AfterViewInit, OnChanges {
 
@@ -36,7 +34,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
     public async ngAfterViewInit(): Promise<void> {
         setTimeout(async() => {
             await this.createMatchingGameComponent();
-            this.gameComponent.node = this.demoNodeInfo().node;
+            this.gameComponent.node.set(this.demoNodeInfo().node);
             // The component needs to be interactive in order to show all possible stylistic elements
             await this.setInteractive(true);
             // The board needs to be updated to render the changed node, setRole will do it
@@ -64,7 +62,8 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // And also it is called on creation, then, this.gameComponent is not set yet
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
-            this.gameComponent.node = this.demoNodeInfo().node;
+            this.gameComponent.setConfig(this.getConfig());
+            this.gameComponent.node.set(this.demoNodeInfo().node);
             await this.gameComponent.updateBoardAndRedraw(false);
         }
     }
@@ -73,6 +72,10 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // Unlike all other BaseWrapperComponent those will share one page: everyboard.org/demo
         // Hence we cannot read the name of the game via the URL
         return this.demoNodeInfo().name;
+    }
+
+    public override getConfig(): RulesConfig {
+        return this.demoNodeInfo().config;
     }
 
     public async onLegalUserMove(_move: Move, _scores?: [number, number] | undefined): Promise<void> {

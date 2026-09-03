@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -65,6 +65,7 @@ type PreCaptureInfo = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -134,8 +135,7 @@ export class LodestoneComponent
     private lastCaptures: Coord[] = [];
 
     public constructor() {
-        super();
-        this.setRulesAndNode('Lodestone');
+        super('Lodestone');
         this.aiConfig = {
             minimax: [{
                 id: 'Score',
@@ -387,9 +387,9 @@ export class LodestoneComponent
                                                   this.selectedLodestone.get().orientation),
                 preCaptureState: this.getState(),
             });
-        } else if (this.node.previousMove.isPresent()) {
+        } else if (this.node().previousMove.isPresent()) {
             return MGPOptional.of({
-                preCaptureMove: this.node.previousMove.get(),
+                preCaptureMove: this.node().previousMove.get(),
                 preCaptureState: this.getPreviousState(),
             });
         } else {
@@ -409,7 +409,7 @@ export class LodestoneComponent
                     const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
                     return MGPOptional.of(this.getLodestoneInfoFromLodestone(lodestone));
                 } else if (this.wasLastMoveLodestone(coord)) {
-                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node.previousMove.get()));
+                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node().previousMove.get()));
                 } else if (this.isCrumbledLodestone(coord)) {
                     return MGPOptional.of(this.getCrumbledLodestoneInfo(coord));
                 }
@@ -451,19 +451,19 @@ export class LodestoneComponent
     }
 
     private wasLastMoveLodestone(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
-            return this.node.previousMove.get().coord.equals(coord);
+        if (this.node().parent.isPresent()) {
+            return this.node().previousMove.get().coord.equals(coord);
         } else {
             return false;
         }
     }
 
     private isCrumbledLodestone(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
+        if (this.node().parent.isPresent()) {
             if (this.selectedLodestone.isPresent()) {
                 return false;
             } else {
-                const state: LodestoneState = this.node.parent.get().gameState;
+                const state: LodestoneState = this.node().parent.get().gameState;
                 const piece: LodestonePiece = state.getPieceAt(coord);
                 return piece.isLodestone() &&
                        piece.owner === state.getCurrentOpponent();
@@ -615,7 +615,7 @@ export class LodestoneComponent
         return coordInfo;
     }
 
-    public override async showLastMove(move: LodestoneMove): Promise<void> {
+    protected override async showLastMove(move: LodestoneMove): Promise<void> {
         const lastState: LodestoneState = this.getPreviousState();
         const infos: LodestoneInfos =
             LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, move.coord, move);

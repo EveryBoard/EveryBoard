@@ -1,6 +1,6 @@
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { GameNode } from '../../../jscaip/AI/GameNode';
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
 import { Move } from '../../../jscaip/Move';
 import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { GameState } from '../../../jscaip/state/GameState';
@@ -68,7 +68,7 @@ export abstract class TutorialStep {
     }
 
     public previousMove: MGPOptional<Move> = MGPOptional.empty();
-    public parent: MGPOptional<GameNode<Move, GameState>> = MGPOptional.empty();
+    public parent: MGPOptional<AbstractNode> = MGPOptional.empty();
 
     protected constructor(public readonly title: string,
                           public readonly instruction: string,

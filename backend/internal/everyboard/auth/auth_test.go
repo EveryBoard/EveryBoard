@@ -109,6 +109,31 @@ func TestTokenVerificationHappyFlow(t *testing.T) {
 	// Then it should return the uid and user
 	require.Equal(t, "foo-uid", uid, "did not retrieve the correct user")
 	require.Equal(t, "foo", user.Username, "did not retrieve the correct user")
+	require.False(t, user.IsBot, "human user should not be identified as a bot")
+}
+
+func TestTokenVerificationBotHappyFlow(t *testing.T) {
+	// Given a user who is actually a bot
+	InitializeFirebaseForTest(t, &FirebaseMock{
+		errorOnInitialization:       false,
+		errorOnTokenVerification:    false,
+		uidToReturnUponVerification: "bot-uid",
+		errorOnFetch:                false,
+		documentToFetch: map[string]any{
+			"username": "everybot",
+			"isBot":    true,
+		},
+	})
+	req, err := http.NewRequest("GET", "http://whocares.com", nil)
+	require.NoError(t, err, "cannot create request")
+	req.Header.Set("Sec-WebSocket-Protocol", "Authorization, lol.lal.lql")
+	// When verifying its token and retrieving the user
+	uid, user, err := VerifyTokenAndGetUser(req)
+	require.NoError(t, err, "failed to verify token")
+	// Then it should return the uid and user, as well as the fact that this is a bot
+	require.Equal(t, "bot-uid", uid, "did not retrieve the correct user")
+	require.Equal(t, "everybot", user.Username, "did not retrieve the correct user")
+	require.True(t, user.IsBot, "did not retrieve the fact that user is a bot")
 }
 
 func waitForPort(address string, timeout time.Duration) error {

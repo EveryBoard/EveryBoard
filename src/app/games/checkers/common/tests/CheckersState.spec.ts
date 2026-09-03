@@ -1,4 +1,4 @@
-import { CheckersPiece, CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState } from '../CheckersState';
 
 describe('CheckersState', () => {
 
@@ -18,7 +18,7 @@ describe('CheckersState', () => {
     describe('toString', () => {
 
         it('should display state', () => {
-            const state: CheckersState = CheckersState.of([
+            const state: CheckersState = EvenCheckersState.of([
                 [_uv, ___, __v, ___, __v, ___, __v],
                 [___, _vu, ___, __v, ___, __v, ___],
                 [_Ov, ___, __O, ___, __v, ___, __v],

@@ -6,7 +6,7 @@ import { ConfigRoom } from '../../../domain/ConfigRoom';
 import { GameEventMove, GameEventAction, Game } from '../../../domain/Game';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { Player } from '../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { PlayerMap, PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { TimerComponent } from '../../normal-component/timer/timer.component';
 
 /**
@@ -29,7 +29,7 @@ export class OGWCTimeManagerService {
     private configRoom: MGPOptional<ConfigRoom> = MGPOptional.empty();
 
     // The players, as we need to map between minimal users and player values
-    private players: MGPOptional<MinimalUser>[] = [MGPOptional.empty(), MGPOptional.empty()];
+    private players: PlayerMap<MGPOptional<MinimalUser>> = PlayerMap.ofValues(MGPOptional.empty(), MGPOptional.empty());
     // The game time taken by each player since the beginning of the part
     private readonly takenGameTime: PlayerNumberMap = PlayerNumberMap.of(0, 0);
 
@@ -58,7 +58,7 @@ export class OGWCTimeManagerService {
     }
 
     // At the beginning of a game, set up timers and remember when the game started
-    public onGameStart(configRoom: ConfigRoom, game: Game, players: MGPOptional<MinimalUser>[]): void {
+    public onGameStart(configRoom: ConfigRoom, game: Game, players: PlayerMap<MGPOptional<MinimalUser>>): void {
         this.configRoom = MGPOptional.of(configRoom);
         this.players = players;
         this.lastMoveStart = MGPOptional.of(game.beginning);
@@ -110,12 +110,16 @@ export class OGWCTimeManagerService {
     }
 
     public playerOfMinimalUser(user: MinimalUser): Player {
-        if (this.players[0].equalsValue(user)) {
+        if (this.isUser(Player.ZERO, user)) {
             return Player.ZERO;
         } else {
-            Utils.assert(this.players[1].equalsValue(user), 'MinimalUser should match a player');
+            Utils.assert(this.isUser(Player.ONE, user), 'MinimalUser should match a player');
             return Player.ONE;
         }
+    }
+
+    private isUser(player: Player, user: MinimalUser): boolean {
+        return this.players.get(player).map((candidate: MinimalUser): string => candidate.id).equalsValue(user.id);
     }
 
     public onReceivedMove(move: GameEventMove): void {

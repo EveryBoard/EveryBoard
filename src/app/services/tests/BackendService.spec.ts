@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { JSONValue } from 'lib/dist';
 import { Subscription } from 'rxjs';
 
+import { JSONValue } from '@everyboard/lib';
 import { MGPFallible } from '@everyboard/lib';
 
 import { environment } from '../../../environments/environment';
@@ -219,6 +219,35 @@ describe('BackendService', () => {
             ws = webSocketInstances[1];
             ws.onopen!(new Event('open'));
             subscription.unsubscribe();
+        }));
+
+        it('should close the connection when the page is hidden', fakeAsync(async() => {
+            // Given a connected backend service
+            await connect();
+            const ws: WebSocket = webSocketInstances[0];
+            spyOn(ws, 'close').and.callThrough();
+
+            // When a full-page navigation starts
+            window.dispatchEvent(new Event('pagehide'));
+
+            // Then this page does not leave its WebSocket alive
+            expect(ws.close).toHaveBeenCalledOnceWith();
+        }));
+
+        it('should close a connection that opens after the page is hidden', fakeAsync(async() => {
+            // Given a connection whose handshake has not completed yet
+            const subscriptionPromise: Promise<Subscription> = backendService.connect();
+            tick(0);
+            const ws: WebSocket = webSocketInstances[0];
+            spyOn(ws, 'close').and.callThrough();
+
+            // When navigation starts before the socket opens
+            window.dispatchEvent(new Event('pagehide'));
+            ws.onopen!(new Event('open'));
+            await subscriptionPromise;
+
+            // Then the late socket is closed instead of becoming orphaned
+            expect(ws.close).toHaveBeenCalledOnceWith();
         }));
 
     });
