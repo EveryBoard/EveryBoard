@@ -432,6 +432,22 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             await mancalaTestUtils.testUtils.expectClickFailure('#store-PLAYER_ZERO', reason);
         }));
 
+        it('should have a minimax with hash', fakeAsync(async() => {
+            // Given any state
+            const mancalaComponent: MancalaComponent<MancalaRules> = mancalaTestUtils.testUtils.getGameComponent();
+            const config: MancalaConfig = mancalaComponent.rules.getDefaultRulesConfig();
+            const state: MancalaState = mancalaComponent.rules.getInitialState(config);
+            // When hashing it through the declared AI config
+            const hash: string = mancalaComponent.aiConfig.minimax[0].hash!(state);
+
+            // Then all state fields relevant to minimax identity should be encoded
+            expect(hash.split('-')).toEqual([
+                '0',
+                '[[4,4,4,4,4,4],[4,4,4,4,4,4]]',
+                '{"map":{"map":[{"key":{"value":0},"value":0},{"key":{"value":1},"value":0}],"isImmutable":false}}',
+            ]);
+        }));
+
         describe('Move Animation', () => {
 
             for (const actor of ['user', 'not_the_user']) {
