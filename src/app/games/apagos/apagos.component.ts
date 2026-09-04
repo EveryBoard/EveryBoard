@@ -1,12 +1,13 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Component, computed, signal, Signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
 
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { ArrayUtils, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
 
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosFullBoardHeuristic } from './ApagosFullBoardHeuristic';
@@ -16,6 +17,20 @@ import { ApagosRightmostHeuristic } from './ApagosRightmostHeuristic';
 import { ApagosConfig, ApagosRules } from './ApagosRules';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
+
+interface PieceInfo {
+    transform: string;
+    classes: string[];
+}
+
+interface SquareInfo {
+    square: ApagosSquare;
+    blockTransform: string;
+    canDisplayArrow: PlayerMap<boolean>;
+    arrowClasses: PlayerMap<string[]>;
+    classes: string[];
+    pieceInfos: PieceInfo[];
+}
 
 interface PieceLocation {
 
@@ -40,30 +55,78 @@ interface DropArrow {
 })
 export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, ApagosState, ApagosConfig> {
 
-    public board: readonly ApagosSquare[];
+    protected readonly svgTransformZero: string = this.getSVGTranslation(this.SPACE_SIZE / 2, - this.SPACE_SIZE / 2);
 
-    public remainingZero: number;
-    public remainingOne: number;
+    protected readonly svgTransformOne: string = this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
 
-    public ARROW_COORD: string = ApagosComponent.getArrowCoord();
+    private readonly TMP: WritableSignal<ApagosConfig> = signal(ApagosRules.get().getDefaultRulesConfig());
 
-    public PIECE_RADIUS: number;
+    private readonly apagosState: WritableSignal<ApagosState> = signal(
+        ApagosRules.get().getInitialState(this.config()),
+    );
+    private readonly board: Signal<ReadonlyArray<ApagosSquare>> = computed(() => this.apagosState().board);
+    private readonly width: Signal<number> = computed(() => this.board().length);
+    private readonly remaining: Signal<PlayerMap<number>> = computed(() => {
+        return this.apagosState().remaining;
+    });
 
-    public PIECE_DELTA: number = 0;
+    protected readonly ARROW_COORD: string = ApagosComponent.getArrowCoord();
 
-    public BOARD_WIDTH: number;
+    protected readonly pieceRadius: Signal<number> = computed(() => {
+        const nPieces: number = this.apagosState().getMaxPiecesPerPlayer();
+        return ((this.width() - 1) * this.SPACE_SIZE) / (nPieces + 1);
+    });
 
-    public BOARD_HEIGHT: number;
+    protected readonly boardWidth: Signal<number> = computed(() => this.width() * this.SPACE_SIZE);
 
-    public lastMoveSquares: number[];
+    protected readonly boardHeight: Signal<number> = computed(() => (this.width() + 0.5) * this.SPACE_SIZE);
 
-    public lastMoveDrop: MGPOptional<PieceLocation> = MGPOptional.empty();
+    private readonly lastMoveSquares: WritableSignal<number[]> = signal([]);
 
-    public selectedPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
+    private readonly lastMoveDrop: WritableSignal<MGPOptional<PieceLocation>> = signal(MGPOptional.empty());
 
-    public leftPiece: MGPOptional<PieceLocation> = MGPOptional.empty();
+    private readonly selectedPiece: WritableSignal<MGPOptional<PieceLocation>> = signal(MGPOptional.empty());
 
-    public displayableArrow: DropArrow[] = [];
+    private readonly leftPiece: WritableSignal<MGPOptional<PieceLocation>> = signal(MGPOptional.empty());
+
+    private readonly displayableArrow: WritableSignal<DropArrow[]> = signal([]);
+
+    protected readonly viewInfos: Signal<ReadonlyArray<SquareInfo>> = computed(() => {
+        return this.board().map((square: ApagosSquare, index: number) => {
+            return {
+                square,
+                blockTransform: this.getBlockTransform(index),
+                canDisplayArrow: PlayerMap.ofValues(
+                    this.canDisplayArrow(index, Player.ZERO),
+                    this.canDisplayArrow(index, Player.ONE),
+                ),
+                arrowClasses: PlayerMap.ofValues(
+                    this.getArrowClasses(Player.ZERO),
+                    this.getArrowClasses(Player.ONE),
+                ),
+                pieceInfos: ArrayUtils.range(square.count(PlayerOrNone.NONE)).map((i: number) => {
+                    return {
+                        transform: this.getCircleTransform(i, square),
+                        classes: this.getPieceClasses(index, i, square),
+                    };
+                }),
+                classes: this.getSquareClasses(index),
+
+            };
+        });
+    });
+
+    protected readonly remainingPieceZeroCxList: Signal<ReadonlyArray<number>> = computed(() => {
+        return ArrayUtils.range(this.remaining().get(Player.ZERO)).map((x: number) => {
+            return this.boardWidth() - this.getRemainingPieceCx(x);
+        });
+    });
+
+    protected readonly remainingPieceOneCxList: Signal<ReadonlyArray<number>> = computed(() => {
+        return ArrayUtils.range(this.remaining().get(Player.ONE)).map((x: number) => {
+            return this.boardWidth() - this.getRemainingPieceCx(x);
+        });
+    });
 
     private static getArrowCoord(): string {
         // Coordinates calculated to match with a SPACE_SIZE = 100
@@ -106,32 +169,23 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     protected override computeViewBox(): ViewBox {
-        return new ViewBox(0, 0, this.BOARD_WIDTH, this.BOARD_HEIGHT).expandAll(this.STROKE_WIDTH / 2);
+        return new ViewBox(0, 0, this.boardWidth(), this.boardHeight()).expandAll(this.STROKE_WIDTH / 2);
     }
 
     public override cancelMoveAttempt(): void {
-        this.selectedPiece = MGPOptional.empty();
+        this.selectedPiece.set(MGPOptional.empty());
         this.showPossibleDrops();
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: ApagosState = this.getState();
-        this.board = state.board;
-        const width: number = this.board.length;
-        this.BOARD_WIDTH = width * this.SPACE_SIZE;
-        this.BOARD_HEIGHT = (width + 0.5) * this.SPACE_SIZE;
-        const nPieces: number = state.getMaxPiecesPerPlayer();
-        this.PIECE_RADIUS = ((width - 1) * this.SPACE_SIZE) / (nPieces + 1);
-        this.PIECE_DELTA = this.PIECE_RADIUS;
-        this.remainingZero = state.remaining.get(Player.ZERO);
-        this.remainingOne = state.remaining.get(Player.ONE);
+        this.apagosState.set(this.getState());
         this.showPossibleDrops();
     }
 
     public override hideLastMove(): void {
-        this.lastMoveSquares = [];
-        this.lastMoveDrop = MGPOptional.empty();
-        this.leftPiece = MGPOptional.empty();
+        this.lastMoveSquares.set([]);
+        this.lastMoveDrop.set(MGPOptional.empty());
+        this.leftPiece.set(MGPOptional.empty());
     }
 
     protected override async showLastMove(move: ApagosMove): Promise<void> {
@@ -142,21 +196,22 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }
     }
 
-    public showLastDrop(lastMove: ApagosMove): void {
-        const width: number = this.getConfig().width;
+    private showLastDrop(lastMove: ApagosMove): void {
+        const width: number = this.config().width;
         const piece: Player = lastMove.piece.get();
         let higherIndex: number = lastMove.landing;
-        this.lastMoveSquares = [higherIndex];
+        const lastMoveSquares: number[] = [higherIndex];
         if (lastMove.landing !== width - 1) {
             higherIndex += 1;
-            this.lastMoveSquares.push(higherIndex);
+            lastMoveSquares.push(higherIndex);
         }
-        const climbingSquare: ApagosSquare = this.board[higherIndex];
+        this.lastMoveSquares.set(lastMoveSquares);
+        const climbingSquare: ApagosSquare = this.board()[higherIndex];
         const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece);
-        this.lastMoveDrop = MGPOptional.of({
+        this.lastMoveDrop.set(MGPOptional.of({
             square: higherIndex,
             piece: landingIndex,
-        });
+        }));
     }
 
     private getLowestPlayerPiece(square: ApagosSquare, player: Player): number {
@@ -169,42 +224,43 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }
     }
 
-    public showLastTransfer(lastMove: ApagosMove): void {
+    private showLastTransfer(lastMove: ApagosMove): void {
         const previousState: ApagosState = this.getPreviousState();
         const previousPlayer: Player = previousState.getCurrentPlayer();
         const leftSquare: number = lastMove.starting.get();
         const previousSquare: ApagosSquare = previousState.board[leftSquare];
         const leftPieceIndex: number = this.getLowestPlayerPiece(previousSquare, previousPlayer);
-        this.leftPiece = MGPOptional.of({
+        this.leftPiece.set(MGPOptional.of({
             square: leftSquare,
             piece: leftPieceIndex,
-        });
+        }));
 
         const landingCoord: number = lastMove.landing;
-        const landedSquare: ApagosSquare = this.board[landingCoord];
+        const landedSquare: ApagosSquare = this.board()[landingCoord];
         const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer);
-        this.lastMoveDrop = MGPOptional.of({
+        this.lastMoveDrop.set(MGPOptional.of({
             square: landingCoord,
             piece: landedPieceIndex,
-        });
+        }));
     }
 
     private showPossibleDrops(): void {
-        this.displayableArrow = [];
-        const state: ApagosState = this.getState();
+        const displayableArrow: DropArrow[] = [];
+        const state: ApagosState = this.apagosState();
         for (let x: number = 0; x < state.board.length; x++) {
             if (state.board[x].isFull() === false) {
                 if (state.remaining.get(Player.ZERO) > 0) {
-                    this.displayableArrow.push({ x, player: Player.ZERO });
+                    displayableArrow.push({ x, player: Player.ZERO });
                 }
                 if (state.remaining.get(Player.ONE) > 0) {
-                    this.displayableArrow.push({ x, player: Player.ONE });
+                    displayableArrow.push({ x, player: Player.ONE });
                 }
             }
         }
+        this.displayableArrow.set(displayableArrow);
     }
 
-    public getCircleTransform(i: number, square: ApagosSquare): string {
+    private getCircleTransform(i: number, square: ApagosSquare): string {
         const x: number = this.SPACE_SIZE / 2;
         const y: number = this.SPACE_SIZE / 2;
         if (square.count(PlayerOrNone.NONE) === 1) {
@@ -218,35 +274,35 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         return this.getSVGTranslation(x + deltaX, y + deltaY);
     }
 
-    public canDisplayArrow(x: number, player: Player): boolean {
-        return this.displayableArrow.some((a: DropArrow) => a.x === x && a.player.equals(player));
+    private canDisplayArrow(x: number, player: Player): boolean {
+        return this.displayableArrow().some((a: DropArrow) => a.x === x && a.player.equals(player));
     }
 
-    public getArrowClasses(player: Player): string[] {
+    private getArrowClasses(player: Player): string[] {
         const classes: string[] = [this.getPlayerClass(player)];
         return classes;
     }
 
-    public getBlockTransform(x: number): string {
+    private getBlockTransform(x: number): string {
         const yOffset: number = ((this.board.length - 1 - x) * this.SPACE_SIZE) + (0.5 * this.SPACE_SIZE);
         const xOffset: number = x * this.SPACE_SIZE;
         return this.getSVGTranslation(xOffset, yOffset);
     }
 
-    public getSquareClasses(x: number): string[] {
+    private getSquareClasses(x: number): string[] {
         const classes: string[] = ['base'];
-        if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
+        if (this.selectedPiece().isPresent() && this.selectedPiece().get().square === x) {
             classes.push('selected-stroke');
-        } else if (this.lastMoveSquares.includes(x)) {
+        } else if (this.lastMoveSquares().includes(x)) {
             classes.push('last-move-stroke');
         }
         return classes;
     }
 
     @ClickHandler((x: number, player: Player) => `#drop-arrow-${ player === Player.ZERO ? 'zero' : 'one' }-${ x }`)
-    public async onArrowClick(x: number, player: Player): Promise<MGPValidation> {
-        if (this.selectedPiece.isPresent()) {
-            const square: number = this.selectedPiece.get().square;
+    protected async onArrowClick(x: number, player: Player): Promise<MGPValidation> {
+        if (this.selectedPiece().isPresent()) {
+            const square: number = this.selectedPiece().get().square;
             const move: ApagosMove = ApagosMove.transfer(square, x).get();
             return this.chooseMove(move);
         } else {
@@ -255,21 +311,21 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }
     }
 
-    public getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {
+    private getPieceClasses(x: number, i: number, square: ApagosSquare): string[] {
         const pieceLocation: PieceLocation = { square: x, piece: i };
         const classes: string[] = [];
         let zero: number = square.count(Player.ZERO);
         let one: number = square.count(Player.ONE);
-        if (this.selectedPiece.equalsValue(pieceLocation)) {
+        if (this.selectedPiece().equalsValue(pieceLocation)) {
             classes.push('selected-stroke');
-        } else if (this.lastMoveDrop.equalsValue(pieceLocation)) {
+        } else if (this.lastMoveDrop().equalsValue(pieceLocation)) {
             classes.push('last-move-stroke');
-        } else if (this.leftPiece.isPresent() && this.leftPiece.get().square === x) {
-            if (this.leftPiece.get().piece === i) {
+        } else if (this.leftPiece().isPresent() && this.leftPiece().get().square === x) {
+            if (this.leftPiece().get().piece === i) {
                 classes.push('captured-stroke');
                 return classes;
             } else {
-                const opponent: Player = this.getState().getCurrentOpponent();
+                const opponent: Player = this.apagosState().getCurrentOpponent();
                 if (opponent === Player.ZERO) zero++;
                 else one++;
             }
@@ -294,20 +350,20 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     @ClickHandler((x: number) => `#square-${ x }`)
-    public async onSquareClick(x: number): Promise<MGPValidation> {
-        if (this.selectedPiece.isPresent() && this.selectedPiece.get().square === x) {
+    protected async onSquareClick(x: number): Promise<MGPValidation> {
+        if (this.selectedPiece().isPresent() && this.selectedPiece().get().square === x) {
             return this.cancelMove();
         }
-        const currentPlayer: Player = this.getState().getCurrentPlayer();
-        const square: ApagosSquare = this.board[x];
+        const currentPlayer: Player = this.apagosState().getCurrentPlayer();
+        const square: ApagosSquare = this.board()[x];
         const nbPiecePresent: number = square.count(currentPlayer);
         if (nbPiecePresent <= 0) {
             return this.cancelMove(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
         }
-        this.selectedPiece = MGPOptional.of({
+        this.selectedPiece.set(MGPOptional.of({
             square: x,
             piece: this.getLowestPlayerPiece(square, currentPlayer),
-        });
+        }));
         if (this.showAndGetPossibleTranfers().length === 0) {
             return this.cancelMove(ApagosFailure.NO_POSSIBLE_TRANSFER_REMAINS());
         }
@@ -315,23 +371,24 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     private showAndGetPossibleTranfers(): DropArrow[] {
-        this.displayableArrow = [];
-        let landingX: number = this.selectedPiece.get().square - 1;
-        const currentPlayer: Player = this.getState().getCurrentPlayer();
+        const displayableArrow: DropArrow[] = [];
+        let landingX: number = this.selectedPiece().get().square - 1;
+        const currentPlayer: Player = this.apagosState().getCurrentPlayer();
         while (0 <= landingX) {
-            if (this.board[landingX].isFull() === false) {
-                this.displayableArrow.push({
+            if (this.board()[landingX].isFull() === false) {
+                displayableArrow.push({
                     x: landingX,
                     player: currentPlayer,
                 });
             }
             landingX--;
         }
-        return this.displayableArrow;
+        this.displayableArrow.set(displayableArrow);
+        return this.displayableArrow();
     }
 
-    public getRemainingPieceCx(x: number): number {
-        return (1 + x) * this.PIECE_DELTA;
+    private getRemainingPieceCx(x: number): number {
+        return (1 + x) * this.pieceRadius();
     }
 
 }

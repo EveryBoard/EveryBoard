@@ -80,7 +80,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public getViewBoxHeight(): number {
-        const abstractHeight: number = this.config.numberOfRows * 2;
+        const abstractHeight: number = this.config().numberOfRows * 2;
         const pieceHeight: number = abstractHeight * (this.SPACE_SIZE);
         const interPieceHeight: number = (abstractHeight - 1) * MancalaComponent.SPACE_BETWEEN_PLAYER_ROW;
         return (
@@ -109,7 +109,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         let ry: number = y * (this.SPACE_SIZE + MancalaComponent.SPACE_BETWEEN_PLAYER_ROW);
         ry += 0.5 * this.SPACE_SIZE;
         ry += MancalaComponent.PADDING;
-        if (this.getConfig().numberOfRows <= y) {
+        if (this.config().numberOfRows <= y) {
             ry += MancalaComponent.SPACE_BETWEEN_PLAYERS;
         }
         return ry;
@@ -118,7 +118,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     protected override async showLastMove(move: MancalaMove): Promise<void> {
         this.droppedInStore = PlayerNumberMap.of(0, 0);
         const previousState: MancalaState = this.getPreviousState();
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.config();
         const distributionResult: MancalaDistributionResult =
             this.rules.distributeMove(move, previousState, config);
         this.filledCoords = distributionResult.filledCoords;
@@ -170,7 +170,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.config();
         if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.getState().getCurrentOpponent()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
@@ -190,10 +190,10 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const distributionResult: MancalaDistributionResult =
             await this.showSeedBySeedDistribution(MancalaDistribution.of(x, y));
         if (distributionResult.endsUpInStore &&
-            this.getConfig().mustContinueDistributionAfterStore)
+            this.config().mustContinueDistributionAfterStore)
         {
             const player: Player = this.constructedState.getCurrentPlayer();
-            if (MancalaRules.isStarving(player, distributionResult.resultingState.board, this.getConfig())) {
+            if (MancalaRules.isStarving(player, distributionResult.resultingState.board, this.config())) {
                 // Player has no more seed to distribute
                 return this.chooseMove(this.currentMove.get());
             } else {
@@ -206,14 +206,14 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     private async isDistributionLegal(x: number, y: number): Promise<MGPValidation> {
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.config();
         const distributionResult: MancalaDistributionResult =
             await this.getDistributionResult(MancalaDistribution.of(x, y));
         if (distributionResult.endsUpInStore &&
             config.mustContinueDistributionAfterStore)
         {
             const player: Player = this.constructedState.getCurrentPlayer();
-            if (MancalaRules.isStarving(player, distributionResult.resultingState.board, this.getConfig())) {
+            if (MancalaRules.isStarving(player, distributionResult.resultingState.board, this.config())) {
                 // Player has no more seed to distribute
                 return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
             } else {
@@ -239,7 +239,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         const state: MancalaState = this.constructedState;
         const coord: Coord = new Coord(distribution.x, distribution.y);
         this.lastDistributedHouses.push(coord);
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.config();
         if (showSeedBySeed) {
             await this.showSeedBySeed(coord, state);
         }
@@ -250,7 +250,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     private async showSeedBySeed(coord: Coord, state: MancalaState): Promise<void> {
-        const config: MancalaConfig = this.getConfig();
+        const config: MancalaConfig = this.config();
         const initial: Coord = coord; // to remember in order not to sow in the starting space if we make a full turn
         let mustDoOneMoreLap: boolean = true;
         let seedDropResult: SeedDropResult = {
@@ -342,7 +342,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     public getSpaceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const homeOwner: Player = this.rules.getSpaceOwner(coord, this.getConfig());
+        const homeOwner: Player = this.rules.getSpaceOwner(coord, this.config());
         const homeColor: string = this.getPlayerClass(homeOwner);
         if (this.rules.getStoreOwner(coord).isAbsent() && y < this.captured.length && this.captured[y][x] > 0) {
             return ['captured-fill', 'moved-stroke'];

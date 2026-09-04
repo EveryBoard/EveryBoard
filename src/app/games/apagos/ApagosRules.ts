@@ -51,6 +51,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
     }
 
     public override getInitialState(config: ApagosConfig): ApagosState {
+        console.log(config == null ? 'WHAT THE FUCK' : 'ok')
         const width: number = config.width;
         const increment: number = config.increment;
 
