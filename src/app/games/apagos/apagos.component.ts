@@ -62,7 +62,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     private readonly TMP: WritableSignal<ApagosConfig> = signal(ApagosRules.get().getDefaultRulesConfig());
 
     private readonly apagosState: WritableSignal<ApagosState> = signal(
-        ApagosRules.get().getInitialState(this.getConfig()),
+        ApagosRules.get().getInitialState(this.config()),
     );
     private readonly board: Signal<ReadonlyArray<ApagosSquare>> = computed(() => this.apagosState().board);
     private readonly width: Signal<number> = computed(() => this.board().length);
@@ -196,7 +196,6 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }
     }
 
-<<<<<<< HEAD
     private showLastDrop(lastMove: ApagosMove): void {
         const width: number = this.config().width;
         const piece: Player = lastMove.piece.get();
@@ -207,7 +206,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
             lastMoveSquares.push(higherIndex);
         }
         this.lastMoveSquares.set(lastMoveSquares);
-        const climbingSquare: ApagosSquare = this.board[higherIndex];
+        const climbingSquare: ApagosSquare = this.board()[higherIndex];
         const landingIndex: number = this.getLowestPlayerPiece(climbingSquare, piece);
         this.lastMoveDrop.set(MGPOptional.of({
             square: higherIndex,
@@ -237,7 +236,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         }));
 
         const landingCoord: number = lastMove.landing;
-        const landedSquare: ApagosSquare = this.board[landingCoord];
+        const landedSquare: ApagosSquare = this.board()[landingCoord];
         const landedPieceIndex: number = this.getLowestPlayerPiece(landedSquare, previousPlayer);
         this.lastMoveDrop.set(MGPOptional.of({
             square: landingCoord,
@@ -356,7 +355,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
             return this.cancelMove();
         }
         const currentPlayer: Player = this.apagosState().getCurrentPlayer();
-        const square: ApagosSquare = this.board[x];
+        const square: ApagosSquare = this.board()[x];
         const nbPiecePresent: number = square.count(currentPlayer);
         if (nbPiecePresent <= 0) {
             return this.cancelMove(ApagosFailure.NO_PIECE_OF_YOU_IN_CHOSEN_SQUARE());
@@ -376,7 +375,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
         let landingX: number = this.selectedPiece().get().square - 1;
         const currentPlayer: Player = this.apagosState().getCurrentPlayer();
         while (0 <= landingX) {
-            if (this.board[landingX].isFull() === false) {
+            if (this.board()[landingX].isFull() === false) {
                 displayableArrow.push({
                     x: landingX,
                     player: currentPlayer,

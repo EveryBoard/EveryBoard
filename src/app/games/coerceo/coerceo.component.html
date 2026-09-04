@@ -45,14 +45,14 @@
             }
         </g>
     } @else {
-        @if (lastStart.isPresent()) {
+        @if (lastStart().isPresent()) {
             @let start = lastStart().get();
             <polygon id="last-start-{{ start.x }}-{{ start.y }}"
                      [attr.points]="getTrianglePointsAt(start)"
                      [attr.transform]="getTriangleInHexTranslation(start)"
                      class="base no-fill mid-stroke last-move-stroke"/>
         }
-        @if (lastEnd.isPresent()) {
+        @if (lastEnd().isPresent()) {
             @let end = lastEnd().get();
             <polygon id="last-end-{{ end.x }}-{{ end.y }}"
                      [attr.points]="getTrianglePointsAt(end)"

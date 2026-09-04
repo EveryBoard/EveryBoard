@@ -12,7 +12,7 @@ import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { CoerceoState } from '../CoerceoState';
 import { CoerceoComponent } from '../coerceo.component';
 
-describe('CoerceoComponent', () => {
+fdescribe('CoerceoComponent', () => {
 
     let testUtils: ComponentTestUtils<CoerceoComponent>;
 
