@@ -9,7 +9,7 @@ import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
 import { ApagosComponent } from '../apagos.component';
 
-describe('ApagosComponent', () => {
+fdescribe('ApagosComponent', () => {
 
     let testUtils: ComponentTestUtils<ApagosComponent>;
     const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();

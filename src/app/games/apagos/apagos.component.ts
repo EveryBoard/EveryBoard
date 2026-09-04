@@ -1,9 +1,5 @@
 import { NgClass } from '@angular/common';
-<<<<<<< HEAD
 import { Component, computed, signal, Signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
-=======
-import { ChangeDetectionStrategy, Component } from '@angular/core';
->>>>>>> f11eafa99245f5cd7e8d8908287067bf9cef6670
 
 import { ArrayUtils, MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -62,6 +58,8 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     protected readonly svgTransformZero: string = this.getSVGTranslation(this.SPACE_SIZE / 2, - this.SPACE_SIZE / 2);
 
     protected readonly svgTransformOne: string = this.getSVGTranslation(0, - this.SPACE_SIZE / 2);
+
+    private readonly TMP: WritableSignal<ApagosConfig> = signal(ApagosRules.get().getDefaultRulesConfig());
 
     private readonly apagosState: WritableSignal<ApagosState> = signal(
         ApagosRules.get().getInitialState(this.getConfig()),

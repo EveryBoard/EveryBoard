@@ -1,9 +1,5 @@
 import { NgClass } from '@angular/common';
-<<<<<<< HEAD
 import { Component, signal, WritableSignal, ChangeDetectionStrategy } from '@angular/core';
-=======
-import { ChangeDetectionStrategy, Component } from '@angular/core';
->>>>>>> f11eafa99245f5cd7e8d8908287067bf9cef6670
 
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
