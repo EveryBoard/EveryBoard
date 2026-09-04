@@ -116,9 +116,9 @@ export abstract class AbstractRectangularGoComponent
         this.board = state.getCopiedBoard();
         const subBoards: ReadonlyArray<Table<Table<GoPiece>>> = GoSubBoardHelper.splitInSubBoards(
             this.board,
-            this.getConfig().zoom,
+            this.config().zoom,
         );
-        this.displayedZooms.set(this.getConfig().showZooms ? this.getConfig().zoom : 1);
+        this.displayedZooms.set(this.config().showZooms ? this.config().zoom : 1);
         this.zooms.set(
             subBoards.map(
                 (table: Table<Table<GoPiece>>) => {

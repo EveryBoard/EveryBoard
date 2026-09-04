@@ -143,7 +143,7 @@ export class ApagosComponent extends GameComponent<ApagosRules, ApagosMove, Apag
     }
 
     public showLastDrop(lastMove: ApagosMove): void {
-        const width: number = this.getConfig().width;
+        const width: number = this.config().width;
         const piece: Player = lastMove.piece.get();
         let higherIndex: number = lastMove.landing;
         this.lastMoveSquares = [higherIndex];

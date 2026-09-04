@@ -60,7 +60,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public readonly node: WritableSignal<GameNode<M, S>>;
 
-    protected config: C;
+    protected readonly config: WritableSignal<C>;
 
     public aiConfig: AIConfig<M, S, C> = {
         minimax: [],
@@ -111,6 +111,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         super();
         const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
         const defaultConfig: C = gameInfo.getRulesConfig() as C;
+        this.config = signal(defaultConfig);
 
         this.rules = gameInfo.rules as R;
         this.node = signal(this.rules.getInitialNode(defaultConfig));
@@ -251,12 +252,11 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public abstract hideLastMove(): void;
 
     public getConfig(): C {
-        return this.config;
+        return this.config();
     }
 
     public setConfig(config: C): void {
-        this.config = config;
-        this.cdr.markForCheck();
+        this.config.set(config);
     }
 
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
