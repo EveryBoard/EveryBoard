@@ -12,7 +12,7 @@ import { AbaloneMove } from '../AbaloneMove';
 import { AbaloneState } from '../AbaloneState';
 import { AbaloneComponent } from '../abalone.component';
 
-fdescribe('AbaloneComponent', () => {
+describe('AbaloneComponent', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
