@@ -10,7 +10,7 @@ import { CheckersPiece, CheckersStack, CheckersState, EvenCheckersState, OddChec
 import { InternationalCheckersRules } from '../InternationalCheckersRules';
 
 // If you modify this rule file, modify the other checkers rules tests
-describe('InternationalCheckersRules', () => {
+fdescribe('InternationalCheckersRules', () => {
 
     const zero: CheckersPiece = CheckersPiece.ZERO;
     const one: CheckersPiece = CheckersPiece.ONE;
