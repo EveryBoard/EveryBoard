@@ -1,6 +1,23 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
+import { FourStatePiece } from '@everyboard/games';
+import { HexaDirection } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { PointyHexaOrientation } from '@everyboard/games';
+import { Ordinal } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { AbaloneFailure } from '@everyboard/games';
+import { AbaloneMove } from '@everyboard/games';
+import { AbaloneMoveGenerator } from '@everyboard/games';
+import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from '@everyboard/games';
+import { AbaloneScoreHeuristic } from '@everyboard/games';
+import { AbaloneState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, MGPValidation, Utils, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
@@ -8,24 +25,6 @@ import { Arrow } from '../../components/game-components/arrow-component/Arrow';
 import { HexArrowComponent } from '../../components/game-components/arrow-component/hex-arrow.component';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Coord } from '../../jscaip/Coord';
-import { Direction } from '../../jscaip/Direction';
-import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { AbaloneFailure } from './AbaloneFailure';
-import { AbaloneMove } from './AbaloneMove';
-import { AbaloneMoveGenerator } from './AbaloneMoveGenerator';
-import { AbaloneConfig, AbaloneLegalityInformation, AbaloneRules } from './AbaloneRules';
-import { AbaloneScoreHeuristic } from './AbaloneScoreHeuristic';
-import { AbaloneState } from './AbaloneState';
 
 type CapturedInfo = {
     coord: Coord;

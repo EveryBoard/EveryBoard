@@ -3,6 +3,10 @@ import { DebugElement } from '@angular/core';
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { GameStatus } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { QuartoMove } from '@everyboard/games';
+import { QuartoPiece } from '@everyboard/games';
 import { JSONValue, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { Action, Game, GameResult, RequestType } from '../../../domain/Game';
@@ -10,11 +14,7 @@ import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { User } from '../../../domain/User';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { QuartoMove } from '../../../games/quarto/QuartoMove';
-import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
-import { GameStatus } from '../../../jscaip/GameStatus';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';

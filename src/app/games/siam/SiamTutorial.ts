@@ -1,13 +1,13 @@
+
+import { Orthogonal } from '@everyboard/games';
+import { SiamMove } from '@everyboard/games';
+import { SiamPiece } from '@everyboard/games';
+import { SiamConfig, SiamRules } from '@everyboard/games';
+import { SiamState } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Orthogonal } from '../../jscaip/Orthogonal';
-
-import { SiamMove } from './SiamMove';
-import { SiamPiece } from './SiamPiece';
-import { SiamConfig, SiamRules } from './SiamRules';
-import { SiamState } from './SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;

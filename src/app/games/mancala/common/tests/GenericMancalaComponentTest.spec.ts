@@ -2,22 +2,21 @@
 import { DebugElement, Type } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { MoveGenerator, MoveTestUtils } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Cell, Table } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games';
+import { MancalaDropResult, MancalaRules } from '@everyboard/games';
+import { MancalaState } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games';
+import { MancalaFailure } from '@everyboard/games';
 import { Encoder, MGPOptional, TimeUtils, Utils } from '@everyboard/lib';
 
-import { MoveGenerator } from '../../../../jscaip/AI/AI';
-import { Coord } from '../../../../jscaip/Coord';
-import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
-import { Cell, Table } from '../../../../jscaip/TableUtils';
-import { MoveTestUtils } from '../../../../jscaip/tests/Move.spec';
+import { RulesConfigUtils } from '../../../../components/wrapper-components/rules-configuration/RulesConfigUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent, SeedDropResult } from '../MancalaComponent';
-import { MancalaConfig } from '../MancalaConfig';
-import { MancalaFailure } from '../MancalaFailure';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaDropResult, MancalaRules } from '../MancalaRules';
-import { MancalaState } from '../MancalaState';
 
 type MancalaHouseContents = Cell<{ mainContent: string; secondaryContent?: string }>;
 
@@ -431,6 +430,22 @@ export function doMancalaComponentTests<C extends MancalaComponent<R>,
             // Then it should fail cause it's dumb
             const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
             await mancalaTestUtils.testUtils.expectClickFailure('#store-PLAYER_ZERO', reason);
+        }));
+
+        it('should have a minimax with hash', fakeAsync(async() => {
+            // Given any state
+            const mancalaComponent: MancalaComponent<MancalaRules> = mancalaTestUtils.testUtils.getGameComponent();
+            const config: MancalaConfig = mancalaComponent.rules.getDefaultRulesConfig();
+            const state: MancalaState = mancalaComponent.rules.getInitialState(config);
+            // When hashing it through the declared AI config
+            const hash: string = mancalaComponent.aiConfig.minimax[0].hash!(state);
+
+            // Then all state fields relevant to minimax identity should be encoded
+            expect(hash.split('-')).toEqual([
+                '0',
+                '[[4,4,4,4,4,4],[4,4,4,4,4,4]]',
+                '{"map":{"map":[{"key":{"value":0},"value":0},{"key":{"value":1},"value":0}],"isImmutable":false}}',
+            ]);
         }));
 
         describe('Move Animation', () => {

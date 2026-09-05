@@ -1,10 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from '../../../../jscaip/Coord';
-import { TaflPawn } from '../../TaflPawn';
-import { TaflState } from '../../TaflState';
+import { Coord } from '@everyboard/games';
+import { TaflPawn } from '@everyboard/games';
+import { TaflState } from '@everyboard/games';
+import { BrandhubMove } from '@everyboard/games';
+import { BrandhubRules } from '@everyboard/games';
+
 import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
-import { BrandhubMove } from '../BrandhubMove';
-import { BrandhubRules } from '../BrandhubRules';
 import { BrandhubComponent } from '../brandhub.component';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;

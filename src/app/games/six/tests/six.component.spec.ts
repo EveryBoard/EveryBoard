@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
+import { Coord } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { SixMove } from '@everyboard/games';
+import { SixConfig, SixRules } from '@everyboard/games';
+import { SixState } from '@everyboard/games';
+import { SixFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { SixFailure } from '../SixFailure';
-import { SixMove } from '../SixMove';
-import { SixConfig, SixRules } from '../SixRules';
-import { SixState } from '../SixState';
 import { SixComponent } from '../six.component';
 
 describe('SixComponent', () => {

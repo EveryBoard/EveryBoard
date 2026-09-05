@@ -1,23 +1,22 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { PylosCoord } from '@everyboard/games';
+import { PylosFailure } from '@everyboard/games';
+import { PylosHeuristic } from '@everyboard/games';
+import { PylosMove, PylosMoveFailure } from '@everyboard/games';
+import { PylosMoveGenerator } from '@everyboard/games';
+import { PylosRules } from '@everyboard/games';
+import { PylosState } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { ScoreName } from '../../components/game-components/game-component/ScoreName';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { PylosCoord } from './PylosCoord';
-import { PylosFailure } from './PylosFailure';
-import { PylosHeuristic } from './PylosHeuristic';
-import { PylosMove, PylosMoveFailure } from './PylosMove';
-import { PylosMoveGenerator } from './PylosMoveGenerator';
-import { PylosRules } from './PylosRules';
-import { PylosState } from './PylosState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

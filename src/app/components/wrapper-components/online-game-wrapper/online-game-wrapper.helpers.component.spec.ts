@@ -1,5 +1,7 @@
 import { TestBed, tick } from '@angular/core/testing';
 
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { ConfigRoom } from '../../../domain/ConfigRoom';
@@ -8,8 +10,6 @@ import { Game } from '../../../domain/Game';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
-import { Player, PlayerOrNone } from '../../../jscaip/Player';
-import { RulesConfig, RulesConfigUtils } from '../../../jscaip/RulesConfigUtil';
 import { AbstractConfigRoomService, ConfigRoomService } from '../../../services/ConfigRoomService';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { AbstractGameService, GameService } from '../../../services/GameService';
@@ -18,9 +18,11 @@ import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserS
 import { GameServiceMock } from '../../../services/tests/GameServiceMock.spec';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { AbstractGameComponent } from '../../game-components/game-component/AbstractGameComponent';
+import { RulesConfigUtils } from '../rules-configuration/RulesConfigUtils';
 
 import { OGWCTimeManagerService } from './OGWCTimeManagerService';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
+
 
 export type PreparationResult<T extends AbstractGameComponent> = {
     testUtils: ComponentTestUtils<T, MinimalUser>;

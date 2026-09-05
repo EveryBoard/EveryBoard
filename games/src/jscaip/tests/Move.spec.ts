@@ -1,0 +1,32 @@
+import { Encoder } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { EmptyRulesConfig, RulesConfig } from '../../config/RulesConfig';
+import { MoveGenerator } from '../AI/AI';
+import { GameNode } from '../AI/GameNode';
+import { Move } from '../Move';
+import { SuperRules } from '../Rules';
+import { GameState } from '../state/GameState';
+
+export class MoveTestUtils {
+
+    public static testFirstTurnMovesBijectivity<M extends Move,
+                                                S extends GameState,
+                                                L,
+                                                C extends RulesConfig = EmptyRulesConfig>(
+        rules: SuperRules<M, S, C, L>,
+        generator: MoveGenerator<M, S, C>,
+        encoder: Encoder<M>,
+        nullableConfig?: C,
+    ): void {
+        let config: C = rules.getDefaultRulesConfig();
+        if (nullableConfig !== undefined) {
+            config = nullableConfig;
+        }
+        const node: GameNode<M, S> = rules.getInitialNode(config);
+        const moves: M[] = generator.getListMoves(node, config);
+        for (const move of moves) {
+            EncoderTestUtils.expectToBeBijective(encoder, move);
+        }
+    }
+}

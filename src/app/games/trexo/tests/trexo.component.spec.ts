@@ -2,12 +2,13 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games';
+import { TrexoPiece, TrexoPieceStack, TrexoState } from '@everyboard/games';
+import { TrexoFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { TrexoFailure } from '../TrexoFailure';
-import { TrexoMove } from '../TrexoMove';
-import { TrexoPiece, TrexoPieceStack, TrexoState } from '../TrexoState';
 import { TrexoComponent } from '../trexo.component';
 
 const _____: TrexoPieceStack = TrexoPieceStack.EMPTY;

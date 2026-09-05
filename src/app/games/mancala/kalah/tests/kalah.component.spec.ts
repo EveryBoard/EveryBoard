@@ -2,25 +2,25 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { AbstractAI, AbstractNode, AI, AIOptions } from '@everyboard/games';
+import { Coord } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games';
+import { MancalaState } from '@everyboard/games';
+import { KalahRules } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games';
+import { MancalaFailure } from '@everyboard/games';
+import { KalahMoveGenerator } from '@everyboard/games';
+
 import { LocalGameWrapperComponent } from '../../../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { AbstractAI, AI, AIOptions } from '../../../../jscaip/AI/AI';
-import { AbstractNode } from '../../../../jscaip/AI/GameNode';
-import { Coord } from '../../../../jscaip/Coord';
-import { Move } from '../../../../jscaip/Move';
-import { Player } from '../../../../jscaip/Player';
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { RulesConfig } from '../../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../../jscaip/TableUtils';
-import { GameState } from '../../../../jscaip/state/GameState';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
-import { MancalaConfig } from '../../common/MancalaConfig';
-import { MancalaFailure } from '../../common/MancalaFailure';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaState } from '../../common/MancalaState';
 import { doMancalaComponentTests, MancalaComponentTestUtils } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { KalahMoveGenerator } from '../KalahMoveGenerator';
-import { KalahRules } from '../KalahRules';
 import { KalahComponent } from '../kalah.component';
 
 describe('KalahComponent', () => {
