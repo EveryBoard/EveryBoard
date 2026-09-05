@@ -21,10 +21,8 @@ import { TriangularShape } from '../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
-import { HexagonalTopology } from '../../jscaip/topology/HexagonalTopology';
-import { SquareTopology } from '../../jscaip/topology/SquareTopology';
 import { Topology } from '../../jscaip/topology/Topology';
-import { TriangularTopology } from '../../jscaip/topology/TriangularTopology';
+import { TopologyID, topologyMap } from '../../jscaip/topology/topologyMap';
 import { Localized } from '../../utils/LocaleUtils';
 import { MGPValidators } from '../../utils/MGPValidator';
 
@@ -32,8 +30,6 @@ import { ConnectNFailure } from './ConnectNFailure';
 import { ConnectNMove } from './ConnectNMove';
 
 export class ConnectNNode extends GameNode<ConnectNMove, TopologicGameState<FourStatePiece>> {}
-
-export type TopologyID = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
 
 export const TopologyNamer: Record<TopologyID, Localized> = {
     'SQUARE': () => $localize`Square`,
@@ -91,7 +87,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
         return new NInARowHelper(
             (piece: FourStatePiece) => {
-                // console.log(typeof piece, piece, piece.getPlayer)
                 return piece.getPlayer();
             },
             config.n,
@@ -108,7 +103,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         const player: FourStatePiece = FourStatePiece.ofPlayer(state.getCurrentPlayer());
         let resultingState: TopologicGameState<FourStatePiece> = state;
         for (const coord of move.coords) {
-            resultingState = resultingState.setPieceAt(coord, player);
+            resultingState = resultingState.withPieceAt(coord, player);
         }
         return resultingState.incrementTurn();
     }
@@ -154,16 +149,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     private getTopology(config: ConnectNConfig): Topology {
-        switch (config.topology) {
-            case 'SQUARE': {
-                return new SquareTopology();
-            } case 'HEXAGONAL': {
-                return new HexagonalTopology();
-            } default: {
-                Utils.expectToBe(config.topology, 'TRIANGULAR');
-                return new TriangularTopology();
-            }
-        }
+        return topologyMap.get(config.topology).get();
     }
 
     private getShape(config: ConnectNConfig, topology: Topology): Shape {

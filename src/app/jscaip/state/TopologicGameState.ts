@@ -22,7 +22,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
 
     public abstract hasPieceAt(coord: Coord, value: P): boolean;
 
-    public abstract setPieceAt(coord: Coord, value: P): this;
+    public abstract withPieceAt(coord: Coord, value: P): this;
 
     public abstract isNotOnBoard(coord: Coord): boolean;
 

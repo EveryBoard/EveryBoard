@@ -43,11 +43,11 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends
         ) as this;
     }
 
-    public setPieceAt(coord: Coord, value: P): this {
+    public withPieceAt(coord: Coord, value: P): this {
         return new TopologicGameStateWithTable(
             this.topology,
             this.shape,
-            SimpleGameStateWithTable.setPieceAt(
+            SimpleGameStateWithTable.withPieceAt(
                 this.gameStateWithTable,
                 coord,
                 value,

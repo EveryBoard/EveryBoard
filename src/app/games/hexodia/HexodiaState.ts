@@ -14,8 +14,8 @@ export class HexodiaState extends FourStatePieceGameStateWithTable { // TODO: ki
         return new HexodiaState(this.getCopiedBoard(), this.turn + 1) as this;
     }
 
-    public override setPieceAt(coord: Coord, value: FourStatePiece): HexodiaState {
-        return GameStateWithTable.setPieceAt(this,
+    public override withPieceAt(coord: Coord, value: FourStatePiece): HexodiaState {
+        return GameStateWithTable.withPieceAt(this,
                                              coord,
                                              value,
                                              HexodiaState.of);

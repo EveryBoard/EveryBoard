@@ -14,8 +14,8 @@ export class RectangularShape extends TopologicShape {
     }
 
     public getCenters(): Coord[] {
-        const cxList: number[] = this.getIntegerMeans(this.width - 1);
-        const cyList: number[] = this.getIntegerMeans(this.height - 1);
+        const cxList: number[] = this.getIntegerMidpoints(this.width - 1);
+        const cyList: number[] = this.getIntegerMidpoints(this.height - 1);
         const centers: Coord[] = [];
         for (const cx of cxList) {
             for (const cy of cyList) {
@@ -25,7 +25,7 @@ export class RectangularShape extends TopologicShape {
         return centers;
     }
 
-    private getIntegerMeans(value: number): number[] {
+    private getIntegerMidpoints(value: number): number[] {
         const half: number = value / 2;
         if (value % 2 === 0) {
             return [half];

@@ -37,8 +37,8 @@ describe('HexodiaRules', () => {
         // Given a state with pieces to evaluate
         const initialState: FourStatePieceGameStateWithTable = rules.getInitialState(defaultConfig);
         const state: FourStatePieceGameStateWithTable = initialState
-            .setPieceAt(new Coord(11, 11), O)
-            .setPieceAt(new Coord(12, 11), X);
+            .withPieceAt(new Coord(11, 11), O)
+            .withPieceAt(new Coord(12, 11), X);
         const heuristic: HexodiaAlignmentHeuristic = new HexodiaAlignmentHeuristic();
 
         // When evaluating it
@@ -489,10 +489,10 @@ describe('HexodiaRules', () => {
                 const center: Coord = new Coord(11, 11);
                 let state: FourStatePieceGameStateWithTable = rules
                     .getInitialState(defaultConfig)
-                    .setPieceAt(center, FourStatePiece.ONE)
+                    .withPieceAt(center, FourStatePiece.ONE)
                     .incrementTurn();
                 for (let distance: number = 1; distance < 6; distance++) {
-                    state = state.setPieceAt(center.getNext(dir, distance), FourStatePiece.ONE);
+                    state = state.withPieceAt(center.getNext(dir, distance), FourStatePiece.ONE);
                 }
                 state = state.incrementTurn();
                 const node: HexodiaNode = new HexodiaNode(state);

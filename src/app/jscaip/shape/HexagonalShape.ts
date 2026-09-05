@@ -13,25 +13,6 @@ export class HexagonalShape extends TopologicShape implements Shape {
     }
 
     public getCenters(): Coord[] {
-        // X   s=1 c=(0, 0) m=0   min=0 max=0
-        //
-        // _XX
-        // XXX
-        // XX_ s=2 c=(1, 1) m=2   min=1 max=3
-        //
-        // __XXX
-        // _XXXX
-        // XXXXX
-        // XXXX_
-        // XXX__ s=3 c=(2, 2) m=4 min=2 max=6
-        //
-        // ___XXXX
-        // __XXXXX
-        // _XXXXXX
-        // XXXXXXX
-        // XXXXXX_
-        // XXXXX__
-        // XXXX___ s=4 c=(3, 3) m=6 min=3 max=9
         return [
             new Coord(this.side - 1, this.side - 1),
         ];
@@ -53,6 +34,3 @@ export class HexagonalShape extends TopologicShape implements Shape {
     }
 
 }
-// (0, 3), (1, 3), (2, 3), (3, 3), (4, 3),
-// (0, 4), (1, 4), (2, 4), (3, 4), (4, 4),
-// (0, 5), (1, 5), (2, 5), (3, 5), (4, 5),

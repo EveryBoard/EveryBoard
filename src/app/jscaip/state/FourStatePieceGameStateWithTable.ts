@@ -64,8 +64,8 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         }
     }
 
-    public setPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
-        return GameStateWithTable.setPieceAt(
+    public withPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
+        return GameStateWithTable.withPieceAt(
             this,
             coord,
             value,
