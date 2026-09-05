@@ -1,9 +1,9 @@
 import { Coord } from '../../../jscaip/Coord';
-import { HexaLayout } from '../../../jscaip/HexaLayout';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { Table } from '../../../jscaip/TableUtils';
+import { HexaLayout } from '../../../jscaip/layout/HexaLayout';
 import { GameState } from '../../../jscaip/state/GameState';
 
 import { GameComponent } from './GameComponent';

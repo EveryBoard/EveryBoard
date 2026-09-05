@@ -476,6 +476,9 @@
       <trans-unit id="9017157884114080234" datatype="html">
         <source>Zoomed Go</source>
       </trans-unit>
+      <trans-unit id="8533145452055627385" datatype="html">
+        <source>Connect N</source>
+      </trans-unit>
       <trans-unit id="7680170577317084701" datatype="html">
         <source>Search game</source>
       </trans-unit>
@@ -1419,6 +1422,36 @@
       <trans-unit id="4996962520612005595" datatype="html">
         <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
+      <trans-unit id="6820617839935911342" datatype="html">
+        <source>First turns must have exactly one drop</source>
+      </trans-unit>
+      <trans-unit id="8366240299234525015" datatype="html">
+        <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
+      </trans-unit>
+      <trans-unit id="8336049305072615544" datatype="html">
+        <source>Square</source>
+      </trans-unit>
+      <trans-unit id="35620818119550087" datatype="html">
+        <source>Hexagonal</source>
+      </trans-unit>
+      <trans-unit id="5440587977382249688" datatype="html">
+        <source>Triangular</source>
+      </trans-unit>
+      <trans-unit id="2986159287834234807" datatype="html">
+        <source>N</source>
+      </trans-unit>
+      <trans-unit id="7983083284666629806" datatype="html">
+        <source>Drop after first turn</source>
+      </trans-unit>
+      <trans-unit id="4214033760774511143" datatype="html">
+        <source>Space shape</source>
+      </trans-unit>
+      <trans-unit id="4461597806169026629" datatype="html">
+        <source>Board shape</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
+      </trans-unit>
       <trans-unit id="1631778170068001983" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
       </trans-unit>
@@ -1433,9 +1466,6 @@
       </trans-unit>
       <trans-unit id="4174912343371620775" datatype="html">
         <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
-      </trans-unit>
-      <trans-unit id="8560978883976627945" datatype="html">
-        <source>Alignment</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -2066,9 +2096,6 @@
       </trans-unit>
       <trans-unit id="1525911055936719410" datatype="html">
         <source>Since the board is hexagonal, groups of two pieces have three more freedoms (making ko impossible).</source>
-      </trans-unit>
-      <trans-unit id="35620818119550087" datatype="html">
-        <source>Hexagonal</source>
       </trans-unit>
       <trans-unit id="5964817756364095565" datatype="html">
         <source>The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
@@ -2943,9 +2970,6 @@
             &lt;li&gt;Of course, you cannot move the opponent&apos;s pieces.&lt;/li&gt;
             &lt;li&gt;You can only climb when the landing square is higher than the starting square.&lt;/li&gt;
         &lt;/ol&gt;</source>
-      </trans-unit>
-      <trans-unit id="8336049305072615544" datatype="html">
-        <source>Square</source>
       </trans-unit>
       <trans-unit id="517712097339838490" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,

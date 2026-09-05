@@ -12,11 +12,11 @@ import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GipfCapture } from '../../jscaip/GipfProjectHelper';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { GipfFailure } from './GipfFailure';
 import { GipfMove, GipfPlacement } from './GipfMove';
@@ -88,10 +88,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         this.SPACE_SIZE = 40;
         this.constructedState = this.getState();
         const size: number = this.SPACE_SIZE * 1.50;
-        const origineX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
-        const origineY: number = - this.hexagonWidth;
-        const origine: Coord = new Coord(origineX, origineY);
-        this.hexaLayout = new HexaLayout(size, origine, FlatHexaOrientation.INSTANCE);
+        const originX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
+        const originY: number = - this.hexagonWidth;
+        const origin: Coord = new Coord(originX, originY);
+        this.hexaLayout = new HexaLayout(size, origin, FlatHexaOrientation.INSTANCE);
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {

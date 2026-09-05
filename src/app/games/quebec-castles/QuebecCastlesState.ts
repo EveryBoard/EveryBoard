@@ -25,8 +25,8 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
         return new QuebecCastlesState(this.getCopiedBoard(), this.turn + 1, this.castles);
     }
 
-    public setPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
-        return GameStateWithTable.setPieceAt(this,
+    public withPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
+        return GameStateWithTable.withPieceAt(this,
                                              coord,
                                              value,
                                              QuebecCastlesState.of);

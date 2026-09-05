@@ -24,8 +24,8 @@ export class SquarzState extends PlayerOrNoneGameStateWithTable {
         }
     }
 
-    public setPieceAt(coord: Coord, value: PlayerOrNone): SquarzState {
-        return GameStateWithTable.setPieceAt(this,
+    public withPieceAt(coord: Coord, value: PlayerOrNone): SquarzState {
+        return GameStateWithTable.withPieceAt(this,
                                              coord,
                                              value,
                                              SquarzState.of);
