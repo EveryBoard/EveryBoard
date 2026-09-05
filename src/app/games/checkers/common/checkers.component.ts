@@ -35,7 +35,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         parallelogramHeight: 100,
     });
 
-    public readonly constructedState: WritableSignal<MGPOptional<CheckersState>> =
+    protected readonly constructedState: WritableSignal<MGPOptional<CheckersState>> =
         signal(MGPOptional.empty());
 
     private readonly boardSize: Signal<Coord> = computed(() => {
@@ -43,18 +43,18 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new Coord(state.getWidth(), state.getHeight());
     });
 
-    public readonly basicWidth: Signal<number> = computed(() =>
+    protected readonly basicWidth: Signal<number> = computed(() =>
         this.boardSize().x * this.mode().parallelogramHeight,
     );
 
-    public readonly basicHeight: Signal<number> = computed(() =>
+    protected readonly basicHeight: Signal<number> = computed(() =>
         this.boardSize().y * this.mode().parallelogramHeight,
     );
 
     private readonly currentMoveClicks: WritableSignal<Coord[]> = signal([]);
     private readonly lastCaptures: WritableSignal<Coord[]> = signal([]);
     private readonly lastMoved: WritableSignal<Coord[]> = signal([]);
-    public readonly possibleClicks: WritableSignal<Set<Coord>> = signal(new Set());
+    protected readonly possibleClicks: WritableSignal<Set<Coord>> = signal(new Set());
     private readonly selectedStack: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     // Only the coords capture by active player during this turn
     private readonly capturedCoords: WritableSignal<Coord[]> = signal([]);
@@ -62,6 +62,31 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     private readonly flownOverCoords: WritableSignal<Coord[]> = signal([]);
     private readonly legalMoves: WritableSignal<CheckersMove[]> = signal([]);
     protected readonly moveGenerator: CheckersMoveGenerator = new CheckersMoveGenerator(this.rules);
+
+    protected readonly parallelogramPoints: Signal<string> = computed(() => {
+        return this.getParallelogramCoords(this.mode())
+            .map((coord: Coord) => coord.x + ', ' + coord.y)
+            .join(' ');
+    });
+
+    private readonly parallelogramCenter: Signal<Coord> = computed(() => {
+        const coords: Coord[] = this.getParallelogramCoords(this.mode());
+        return this.getParallelogramCenterOf(coords[0], coords[1], coords[2], coords[3]);
+    });
+
+    public readonly rightEdge: Signal<string> = computed(() => {
+        const width: number = this.basicWidth() * this.mode().horizontalWidthRatio;
+        const offset: number = this.basicHeight() * this.mode().offsetRatio;
+        const x0: number = offset + width;
+        const y0: number = 0;
+        const x1: number = offset + width;
+        const y1: number = this.THICKNESS;
+        const x2: number = width;
+        const y2: number = this.basicHeight() + this.THICKNESS;
+        const x3: number = width;
+        const y3: number = this.basicHeight();
+        return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
+    });
 
     protected override computeViewBox(): ViewBox {
         const h: number = this.boardSize().y;
@@ -125,7 +150,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.showPossibleClicks();
     }
 
-    public getSquareClass(x: number, y: number): string[] {
+    protected getSquareClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         if (this.capturedCoords().concat(this.lastCaptures()).some((c: Coord) => c.equals(coord))) {
@@ -140,7 +165,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return classes;
     }
 
-    public getPieceClasses(x: number, y: number, z: number): string[] {
+    protected getPieceClasses(x: number, y: number, z: number): string[] {
         const coord: Coord = new Coord(x, y);
         const square: CheckersStack = this.constructedState().get().getPieceAt(coord);
         const max: number = square.getStackSize() - 1;
@@ -152,7 +177,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return classes;
     }
 
-    public isPiecePromoted(x: number, y: number, z: number): boolean {
+    protected isPiecePromoted(x: number, y: number, z: number): boolean {
         const coord: Coord = new Coord(x, y);
         const square: CheckersStack = this.constructedState().get().getPieceAt(coord);
         const max: number = square.getStackSize() - 1;
@@ -204,7 +229,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     @ClickHandler((x: number, y: number) => `#coord-${ x }-${ y }`)
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
+    protected async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
         const clickedSpace: CheckersStack = this.constructedState().get().getPieceAt(clickedCoord);
         const opponent: Player = this.constructedState().get().getCurrentOpponent();
@@ -336,7 +361,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         }
     }
 
-    public getTranslationAtXYZ(x: number, y: number, z: number): string {
+    protected getTranslationAtXYZ(x: number, y: number, z: number): string {
         const adaptedCoord: Coord = this.adaptXY(x, y);
         const coordTransform: Coord = this.getCoordTranslation(adaptedCoord.x, adaptedCoord.y, z, this.mode());
         return this.getSVGTranslationAt(coordTransform);
@@ -352,17 +377,6 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         }
     }
 
-    public readonly parallelogramPoints: Signal<string> = computed(() => {
-        return this.getParallelogramCoords(this.mode())
-            .map((coord: Coord) => coord.x + ', ' + coord.y)
-            .join(' ');
-    });
-
-    private readonly parallelogramCenter: Signal<Coord> = computed(() => {
-        const coords: Coord[] = this.getParallelogramCoords(this.mode());
-        return this.getParallelogramCenterOf(coords[0], coords[1], coords[2], coords[3]);
-    });
-
     /**
      * @returns the center of the parallelogram delineated by four points, @param a, @param b, @param c, and @param d
      */
@@ -376,21 +390,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new Coord(x, y);
     }
 
-    public readonly rightEdge: Signal<string> = computed(() => {
-        const width: number = this.basicWidth() * this.mode().horizontalWidthRatio;
-        const offset: number = this.basicHeight() * this.mode().offsetRatio;
-        const x0: number = offset + width;
-        const y0: number = 0;
-        const x1: number = offset + width;
-        const y1: number = this.THICKNESS;
-        const x2: number = width;
-        const y2: number = this.basicHeight() + this.THICKNESS;
-        const x3: number = width;
-        const y3: number = this.basicHeight();
-        return [x0, y0, x1, y1, x2, y2, x3, y3].join(' ');
-    });
-
-    public getPieceTranslation(z: number): string {
+    protected getPieceTranslation(z: number): string {
         // We want the piece to be in the center of the parallelogram, here are its coords
         const cy: number = this.parallelogramCenter().y;
         // We want to center the full piece, which is width=80, height=45, so here are it's center
