@@ -69,7 +69,7 @@ export class QuartoComponent extends RectangularGameComponent<QuartoRules,
         const state: QuartoState = this.getState();
         this.board = state.getCopiedBoard();
         this.pieceInHand = state.pieceInHand;
-        const config: QuartoConfig = this.getConfig();
+        const config: QuartoConfig = this.config();
         this.victoriousCoords = this.rules.getVictoriousCoords(state, config);
     }
 
