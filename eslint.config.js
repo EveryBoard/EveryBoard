@@ -1,5 +1,5 @@
 const eslint = require('@eslint/js');
-const stylisticTs = require('@stylistic/eslint-plugin-ts');
+const stylisticTs = require('@stylistic/eslint-plugin');
 const angularEslint = require('angular-eslint');
 const google = require('eslint-config-google');
 const importPlugin = require('eslint-plugin-import');

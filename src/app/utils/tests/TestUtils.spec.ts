@@ -1,11 +1,16 @@
 /* eslint-disable max-lines-per-function */
 import { HttpClient, provideHttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, importProvidersFrom, ProviderToken, Type } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    Component,
+    DebugElement,
+    provideZoneChangeDetection,
+    ProviderToken,
+    Type,
+} from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BrowserModule, By } from '@angular/platform-browser';
+import { By } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
@@ -689,9 +694,8 @@ export class ConfigureTestingModuleUtils {
     public static async configureTestingModuleForGame(activatedRouteStub: ActivatedRouteStub): Promise<void> {
         await TestBed.configureTestingModule({
             imports: [],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideZoneChangeDetection(),
                 provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
@@ -715,9 +719,8 @@ export class ConfigureTestingModuleUtils {
     {
         await TestBed.configureTestingModule({
             imports: [],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                importProvidersFrom(BrowserModule, ReactiveFormsModule, FormsModule, FontAwesomeModule),
+                provideZoneChangeDetection(),
                 provideRouter(routes),
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: ActivatedRouteStub, useValue: activatedRouteStub },
