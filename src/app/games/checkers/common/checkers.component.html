@@ -34,7 +34,7 @@
              class="base"/>
 
     <!-- Clickable highlights -->
-    @for (coord of possibleClicks; track coord.toString()) {
+    @for (coord of possibleClicks(); track coord.toString()) {
         <polygon id="clickable-highlight-{{ coord.x }}-{{ coord.y }}"
                  [attr.transform]="getTranslationAtXYZ(coord.x, coord.y, 0)"
                  (click)="onClick(coord.x, coord.y)"

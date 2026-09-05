@@ -51,15 +51,17 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         this.boardSize().y * this.mode().parallelogramHeight,
     );
 
-    private currentMoveClicks: Coord[] = [];
-    private lastCaptures: Coord[] = [];
-    private lastMoved: Coord[] = [];
-    public possibleClicks: Set<Coord> = new Set();
-    private selectedStack: MGPOptional<Coord> = MGPOptional.empty();
-    private capturedCoords: Coord[] = []; // Only the coords capture by active player during this turn
-    private flownOverCoords: Coord[] = []; // Coord that where flown over during ongoing turn
-    private legalMoves: CheckersMove[] = [];
-    protected moveGenerator: CheckersMoveGenerator = new CheckersMoveGenerator(this.rules);
+    private readonly currentMoveClicks: WritableSignal<Coord[]> = signal([]);
+    private readonly lastCaptures: WritableSignal<Coord[]> = signal([]);
+    private readonly lastMoved: WritableSignal<Coord[]> = signal([]);
+    public readonly possibleClicks: WritableSignal<Set<Coord>> = signal(new Set());
+    private readonly selectedStack: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
+    // Only the coords capture by active player during this turn
+    private readonly capturedCoords: WritableSignal<Coord[]> = signal([]);
+    // Coord that where flown over during ongoing turn
+    private readonly flownOverCoords: WritableSignal<Coord[]> = signal([]);
+    private readonly legalMoves: WritableSignal<CheckersMove[]> = signal([]);
+    protected readonly moveGenerator: CheckersMoveGenerator = new CheckersMoveGenerator(this.rules);
 
     protected override computeViewBox(): ViewBox {
         const h: number = this.boardSize().y;
@@ -118,7 +120,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.setConstructedState(this.getState());
-        this.legalMoves = this.moveGenerator.getListMoves(this.node(), this.config());
+        this.legalMoves.set(this.moveGenerator.getListMoves(this.node(), this.config()));
         this.scores = MGPOptional.of(this.constructedState().get().getScores());
         this.showPossibleClicks();
     }
@@ -126,10 +128,12 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     public getSquareClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
-        if (this.capturedCoords.concat(this.lastCaptures).some((c: Coord) => c.equals(coord))) {
+        if (this.capturedCoords().concat(this.lastCaptures()).some((c: Coord) => c.equals(coord))) {
             classes.push('captured-fill');
         }
-        const flownOverCoords: Coord[] = this.currentMoveClicks.concat(this.lastMoved.concat(this.flownOverCoords));
+        const flownOverCoords: Coord[] = this
+            .currentMoveClicks()
+            .concat(this.lastMoved().concat(this.flownOverCoords()));
         if (flownOverCoords.some((c: Coord) => c.equals(coord))) {
             classes.push('moved-fill');
         }
@@ -142,7 +146,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const max: number = square.getStackSize() - 1;
         const piece: CheckersPiece = square.get(max - z);
         const classes: string[] = [this.getPlayerClass(piece.player)];
-        if (this.selectedStack.equalsValue(coord)) {
+        if (this.selectedStack().equalsValue(coord)) {
             classes.push('selected-stroke');
         }
         return classes;
@@ -157,43 +161,46 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     protected override async showLastMove(move: CheckersMove): Promise<void> {
-        this.lastCaptures = [];
-        this.lastMoved = [];
+        const lastCaptures: Coord[] = [];
+        const lastMoved: Coord[] = [];
         for (let i: number = 0; i < move.coords.length - 1; i++) {
             const start: Coord = move.coords[i];
             const end: Coord = move.coords[i + 1];
-            this.lastMoved.push(start);
+            lastMoved.push(start);
             for (const coord of start.getCoordsToward(end)) {
                 const isCapture: boolean = move.isStep === false &&
                     this.getPreviousState().getPieceAt(coord).isOccupied();
                 if (isCapture) {
-                    this.lastCaptures.push(coord);
+                    lastCaptures.push(coord);
                 } else {
-                    this.lastMoved.push(coord);
+                    lastMoved.push(coord);
                 }
             }
         }
-        this.lastMoved.push(move.getEndingCoord());
+        lastMoved.push(move.getEndingCoord());
+        this.lastCaptures.set(lastCaptures);
+        this.lastMoved.set(lastMoved);
     }
 
     private showPossibleClicks(): void {
-        this.possibleClicks = new Set();
+        let possibleClicks: Set<Coord> = new Set();
         if (this.interactive) {
-            for (const validMove of this.legalMoves) {
-                const numberOfClicks: number = this.currentMoveClicks.length;
+            for (const validMove of this.legalMoves()) {
+                const numberOfClicks: number = this.currentMoveClicks().length;
                 if (numberOfClicks < validMove.coords.length) {
                     const possibleCoord: Coord = validMove.coords[numberOfClicks];
-                    if (CheckersMove.getRelation(this.currentMoveClicks, validMove.coords) === 'PREFIX') {
-                        this.possibleClicks = this.possibleClicks.addElement(possibleCoord);
+                    if (CheckersMove.getRelation(this.currentMoveClicks(), validMove.coords) === 'PREFIX') {
+                        possibleClicks = possibleClicks.addElement(possibleCoord);
                     }
                 }
             }
         }
+        this.possibleClicks.set(possibleClicks);
     }
 
     public override hideLastMove(): void {
-        this.lastCaptures = [];
-        this.lastMoved = [];
+        this.lastCaptures.set([]);
+        this.lastMoved.set([]);
     }
 
     @ClickHandler((x: number, y: number) => `#coord-${ x }-${ y }`)
@@ -204,7 +211,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         if (clickedSpace.isCommandedBy(opponent)) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (this.currentMoveClicks.length === 0) {
+        if (this.currentMoveClicks().length === 0) {
             return this.trySelectingPiece(clickedCoord);
         } else {
             return this.moveClick(clickedCoord);
@@ -213,16 +220,16 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override cancelMoveAttempt(): void {
         this.setConstructedState(this.getState());
-        this.currentMoveClicks = [];
-        this.capturedCoords = [];
-        this.flownOverCoords = [];
-        this.selectedStack = MGPOptional.empty();
+        this.currentMoveClicks.set([]);
+        this.capturedCoords.set([]);
+        this.flownOverCoords.set([]);
+        this.selectedStack.set(MGPOptional.empty());
         this.showPossibleClicks();
     }
 
     private async moveClick(clicked: Coord): Promise<MGPValidation> {
-        const start: Coord = this.currentMoveClicks[0];
-        if (clicked.equals(start) && this.possibleClicks.contains(clicked) === false) {
+        const start: Coord = this.currentMoveClicks()[0];
+        if (clicked.equals(start) && this.possibleClicks().contains(clicked) === false) {
             return this.cancelMove();
         }
         const clickedSpace: CheckersStack = this.constructedState().get().getPieceAt(clicked);
@@ -231,21 +238,27 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
             this.cancelMoveAttempt();
             return this.trySelectingPiece(clicked);
         }
-        if (this.possibleClicks.contains(clicked) === false) {
+        if (this.possibleClicks().contains(clicked) === false) {
             return this.cancelMove(this.getClickFailureReason(clicked));
         }
 
-        const lastCoord: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
+        const lastCoord: Coord = this.currentMoveClicks()[this.currentMoveClicks().length - 1];
         const steppedOver: Coord[] = lastCoord.getCoordsToward(clicked);
+        const capturedCoords: Coord[] = this.capturedCoords();
+        const flownOverCoords: Coord[] = [];
         for (const coord of steppedOver) {
             if (this.constructedState().get().getPieceAt(coord).isOccupied()) {
-                this.capturedCoords.push(coord);
+                capturedCoords.push(coord);
             } else {
-                this.flownOverCoords.push(coord);
+                flownOverCoords.push(coord);
             }
         }
+        this.flownOverCoords.set(flownOverCoords);
+        this.capturedCoords.set(capturedCoords);
 
-        this.currentMoveClicks.push(clicked);
+        const currentMoveClicks: Coord[] = this.currentMoveClicks();
+        currentMoveClicks.push(clicked);
+        this.currentMoveClicks.set(currentMoveClicks);
         const matchingMove: MGPOptional<CheckersMove> = this.getMatchingLegalMove();
         if (matchingMove.isPresent()) {
             return this.chooseMove(matchingMove.get());
@@ -257,10 +270,10 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private getClickFailureReason(clicked: Coord): string {
-        const lastSegmentStart: Coord = this.currentMoveClicks[this.currentMoveClicks.length - 1];
+        const lastSegmentStart: Coord = this.currentMoveClicks()[this.currentMoveClicks().length - 1];
         const stack: CheckersStack = this.constructedState().get().getPieceAt(lastSegmentStart);
-        const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
-        const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
+        const isSimpleJump: boolean = this.currentMoveClicks().length === 1;
+        const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks()[0]);
         const validation: MGPValidation = this.rules.getSubMoveValidity(
             stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.config(),
         );
@@ -274,7 +287,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private getMoveAttemptEndingAt(clicked: Coord): CheckersMove {
-        const clickedCoords: Coord[] = this.currentMoveClicks.concat(clicked);
+        const clickedCoords: Coord[] = this.currentMoveClicks().concat(clicked);
         if (clickedCoords.length === 2 && this.doesMoveAttemptCapture(clicked) === false) {
             return CheckersMove.fromStep(clickedCoords[0], clickedCoords[1]);
         } else {
@@ -283,14 +296,14 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private doesMoveAttemptCapture(clicked: Coord): boolean {
-        const start: Coord = this.currentMoveClicks[0];
+        const start: Coord = this.currentMoveClicks()[0];
         const steppedOver: Coord[] = start.getCoordsToward(clicked);
         return steppedOver.some((coord: Coord) => this.getState().getPieceAt(coord).isOccupied());
     }
 
     private getMatchingLegalMove(): MGPOptional<CheckersMove> {
-        const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
-        for (const move of this.legalMoves) {
+        const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks());
+        for (const move of this.legalMoves()) {
             if (move.equals(currentMove)) {
                 return MGPOptional.of(move);
             }
@@ -299,7 +312,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private applyPartialCapture(): void {
-        const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
+        const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks());
         this.setConstructedState(this.rules.applyMove(currentMove, this.getState(), this.config()));
     }
 
@@ -313,9 +326,9 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     private async selectPiece(coord: Coord): Promise<MGPValidation> {
-        this.selectedStack = MGPOptional.of(coord);
-        if (this.legalMoves.some((move: CheckersMove) => move.getStartingCoord().equals(coord))) {
-            this.currentMoveClicks = [coord];
+        this.selectedStack.set(MGPOptional.of(coord));
+        if (this.legalMoves().some((move: CheckersMove) => move.getStartingCoord().equals(coord))) {
+            this.currentMoveClicks.set([coord]);
             this.showPossibleClicks();
             return MGPValidation.SUCCESS;
         } else {

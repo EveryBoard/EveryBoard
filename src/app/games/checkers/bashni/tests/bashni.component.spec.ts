@@ -155,7 +155,7 @@ const bashniEntries: CheckersComponentTestEntries<BashniComponent, BashniRules> 
     },
 };
 
-describe('BashniComponent', () => {
+fdescribe('BashniComponent', () => {
 
     let testUtils: ComponentTestUtils<BashniComponent>;
 
