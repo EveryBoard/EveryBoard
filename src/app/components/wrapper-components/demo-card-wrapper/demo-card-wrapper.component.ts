@@ -62,7 +62,7 @@ export class DemoCardWrapperComponent extends GameWrapper<string> implements Aft
         // And also it is called on creation, then, this.gameComponent is not set yet
         if (this.gameComponent != null) {
             // When it is, we want to manually update the board with the new infos and display them
-            this.gameComponent.setConfig(this.getConfig());
+            this.gameComponent.config.set(this.getConfig());
             this.gameComponent.node.set(this.demoNodeInfo().node);
             await this.gameComponent.updateBoardAndRedraw(false);
         }

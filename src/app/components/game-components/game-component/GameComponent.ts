@@ -60,7 +60,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public readonly node: WritableSignal<GameNode<M, S>>;
 
-    protected readonly config: WritableSignal<C>;
+    public readonly config: WritableSignal<C>;
 
     public aiConfig: AIConfig<M, S, C> = {
         minimax: [],
@@ -250,14 +250,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     protected abstract showLastMove(move: M): Promise<void>;
 
     public abstract hideLastMove(): void;
-
-    public getConfig(): C {
-        return this.config();
-    }
-
-    public setConfig(config: C): void {
-        this.config.set(config);
-    }
 
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
         // The triangle that forms the arrow head will be wrapped inside a square
