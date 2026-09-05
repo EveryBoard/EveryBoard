@@ -85,7 +85,7 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     protected async createGameComponentAndSetConfig(componentType: Type<AbstractGameComponent>): Promise<void> {
         await this.createGameComponent(componentType);
         const config: RulesConfig = this.getConfig();
-        this.gameComponent.setConfig(config);
+        this.gameComponent.config.set(config);
         const initialNode: AbstractNode = this.gameComponent.rules.getInitialNode(config);
         this.gameComponent.node.set(initialNode);
         await this.setRole(this.role);

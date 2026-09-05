@@ -176,7 +176,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await wrapper.startTutorial(tutorial);
 
             // Then the config of the board should be set on the game component
-            expect(wrapper.gameComponent.getConfig()).toEqual(customConfig);
+            expect(wrapper.gameComponent.config()).toEqual(customConfig);
         }));
 
         it('should change the game config to default config when going back to non-configured-step', fakeAsync(async() => {
@@ -199,13 +199,13 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
                 ),
             ];
             await wrapper.startTutorial(tutorial);
-            expect(wrapper.gameComponent.getConfig()).toEqual(customConfig);
+            expect(wrapper.gameComponent.config()).toEqual(customConfig);
 
             // When going to a step without config
             await testUtils.clickElement('#nextButton');
 
             // Then the config of the board should be set to the default config again
-            expect(wrapper.gameComponent.getConfig()).toEqual(defaultConfig);
+            expect(wrapper.gameComponent.config()).toEqual(defaultConfig);
         }));
 
         it('should call setRole according to the current player (player zero)', fakeAsync(async() => {

@@ -26,13 +26,14 @@
             </g>
         }
     </g>
-    @if (droppedCoord.isPresent()) {
+    @if (droppedCoord().isPresent()) {
+        @let coord = droppedCoord().get();
         <circle id="dropped"
-                (click)="onClick(droppedCoord.get())"
-                [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().x)"
-                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * droppedCoord.get().y)"
+                (click)="onClick(coord)"
+                [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coord.x)"
+                [attr.cy]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coord.y)"
                 [attr.r]="SPACE_SIZE * 0.44"
-                [ngClass]="getSpaceClass(droppedCoord.get().x, droppedCoord.get().y)"
+                [ngClass]="getSpaceClass(coord.x, coord.y)"
                 class="base moved-stroke"/>
     }
 </svg>

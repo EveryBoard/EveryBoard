@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
 
@@ -29,11 +29,11 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
                                                             PlayerOrNone>
 {
 
-    public droppedCoord: MGPOptional<Coord> = MGPOptional.empty();
+    protected droppedCoord: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 
-    public lastMoved: Coord[] = [];
+    private readonly lastMoved: WritableSignal<Coord[]> = signal([]);
 
-    public victoryCoords: Coord[] = [];
+    private readonly victoryCoords: WritableSignal<Coord[]> = signal([]);
 
     public constructor() {
         super('ConnectSix');
@@ -56,20 +56,20 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: ConnectSixState = this.getState();
         this.board = state.getCopiedBoard();
-        this.victoryCoords = ConnectSixRules.getVictoriousCoords(state);
+        this.victoryCoords.set(ConnectSixRules.getVictoriousCoords(state));
         this.createHoshis();
     }
 
     protected override async showLastMove(move: ConnectSixMove): Promise<void> {
         if (move instanceof ConnectSixFirstMove) {
-            this.lastMoved = [move.coord];
+            this.lastMoved.set([move.coord]);
         } else {
-            this.lastMoved = [move.getFirst(), move.getSecond()];
+            this.lastMoved.set([move.getFirst(), move.getSecond()]);
         }
     }
 
     public override hideLastMove(): void {
-        this.lastMoved = [];
+        this.lastMoved.set([]);
     }
 
     @ClickHandler((coord: Coord) => '.space-' + coord.x + '-' + coord.y)
@@ -80,33 +80,34 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
         } else {
             if (this.getState().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
-            } else if (this.droppedCoord.isPresent()) {
-                if (this.droppedCoord.equalsValue(coord)) {
+            } else if (this.droppedCoord().isPresent()) {
+                const droppedCoord: Coord = this.droppedCoord().get();
+                if (droppedCoord.equals(coord)) {
                     return this.cancelMove();
                 } else {
-                    const move: ConnectSixMove = ConnectSixDrops.of(this.droppedCoord.get(), coord);
+                    const move: ConnectSixMove = ConnectSixDrops.of(droppedCoord, coord);
                     return this.chooseMove(move);
                 }
             } else {
-                this.droppedCoord = MGPOptional.of(coord);
+                this.droppedCoord.set(MGPOptional.of(coord));
                 return MGPValidation.SUCCESS;
             }
         }
     }
 
-    public getSpaceClass(x: number, y: number): string[] {
+    protected getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         const owner: PlayerOrNone = this.getState().getPieceAt(coord);
         const classes: string[] = [];
-        if (this.droppedCoord.equalsValue(coord)) {
+        if (this.droppedCoord().equalsValue(coord)) {
             classes.push(this.getPlayerClass(this.getState().getCurrentPlayer()));
             classes.push('highlighted-stroke');
         } else {
             classes.push(this.getPlayerClass(owner));
-            if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {
+            if (this.victoryCoords().some((c: Coord) => c.equals(coord))) {
                 classes.push('victory-stroke');
             }
-            if (this.lastMoved.some((c: Coord) => c.equals(coord))) {
+            if (this.lastMoved().some((c: Coord) => c.equals(coord))) {
                 classes.push('last-move-stroke');
             }
         }
@@ -114,7 +115,7 @@ export class ConnectSixComponent extends GobanGameComponent<ConnectSixRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.droppedCoord = MGPOptional.empty();
+        this.droppedCoord.set(MGPOptional.empty());
     }
 
 }
