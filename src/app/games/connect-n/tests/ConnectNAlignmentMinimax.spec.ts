@@ -32,7 +32,6 @@ class ConnectNAlignmentMinimax
 }
 
 
-
 describe('ConnectNAlignmentMinimax', () => {
 
     let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;

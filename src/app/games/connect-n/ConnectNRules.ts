@@ -178,7 +178,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         const currentPlayer: Player = state.getCurrentOpponent();
         for (const startCoord of lastMove.coords) {
             // console.log('startCoord', startCoord.toString())
-            for (const direction of state.topology.getDirections()) {
+            for (const direction of state.getTopology().getDirections()) {
                 // console.log('direction', direction.toString())
                 const directionCount: number = this.countAlignedPieceOf(
                     state,

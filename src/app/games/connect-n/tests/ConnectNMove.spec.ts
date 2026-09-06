@@ -5,7 +5,6 @@ import { Coord } from '../../../jscaip/Coord';
 import { ConnectNMove } from '../ConnectNMove';
 
 
-
 describe('ConnectNMove', () => {
 
     describe('ConnectNMove with one coord', () => {

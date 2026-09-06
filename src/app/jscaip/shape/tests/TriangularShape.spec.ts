@@ -22,7 +22,6 @@ export function expectEquality<T extends Comparable>(expected: Set<T>, actual: S
 }
 
 
-
 describe('TriangularShape', () => {
 
     const topology: Topology = new SquareTopology();

@@ -27,9 +27,9 @@ export class QuebecCastlesState extends PlayerOrNoneGameStateWithTable {
 
     public withPieceAt(coord: Coord, value: PlayerOrNone): QuebecCastlesState {
         return GameStateWithTable.withPieceAt(this,
-                                             coord,
-                                             value,
-                                             QuebecCastlesState.of);
+                                              coord,
+                                              value,
+                                              QuebecCastlesState.of);
     }
 
     public isCastleAt(coord: Coord): boolean {

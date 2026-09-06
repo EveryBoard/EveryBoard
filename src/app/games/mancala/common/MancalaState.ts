@@ -21,9 +21,9 @@ export class MancalaState extends GameStateWithTable<number> {
 
     public withPieceAt(coord: Coord, value: number): MancalaState {
         return GameStateWithTable.withPieceAt(this,
-                                             coord,
-                                             value,
-                                             MancalaState.of);
+                                              coord,
+                                              value,
+                                              MancalaState.of);
     }
 
     public feedStore(player: Player): MancalaState {

@@ -7,7 +7,7 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
 
     public constructor(
         turn: number,
-        public readonly topology: Topology,
+        private readonly topology: Topology,
     ) {
         super(turn);
     }

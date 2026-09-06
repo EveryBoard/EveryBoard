@@ -37,7 +37,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends
 
     public override incrementTurn(): this {
         return new TopologicGameStateWithTable(
-            this.topology,
+            this.getTopology(),
             this.shape,
             this.gameStateWithTable.incrementTurn(),
         ) as this;
@@ -45,7 +45,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends
 
     public withPieceAt(coord: Coord, value: P): this {
         return new TopologicGameStateWithTable(
-            this.topology,
+            this.getTopology(),
             this.shape,
             SimpleGameStateWithTable.withPieceAt(
                 this.gameStateWithTable,
