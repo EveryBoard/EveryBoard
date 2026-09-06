@@ -465,7 +465,7 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
                 },
             );
             await wrapper.setConfigFromParams();
-            this.gameComponent.setConfig(config);
+            this.gameComponent.config.set(config);
             tick(0);
         }
         const node: AbstractNode = new GameNode(

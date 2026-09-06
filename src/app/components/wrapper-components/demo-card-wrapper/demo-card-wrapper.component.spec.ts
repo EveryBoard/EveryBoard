@@ -184,7 +184,7 @@ describe('DemoCardWrapperComponent', () => {
             });
 
             // Then the rendered game uses the selected config as well as its initial node
-            expect(testUtils.getComponent().gameComponent.getConfig()).toBe(selectedConfig);
+            expect(testUtils.getComponent().gameComponent.config()).toBe(selectedConfig);
         }));
 
     });

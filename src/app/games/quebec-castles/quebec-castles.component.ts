@@ -88,7 +88,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const state: QuebecCastlesState = this.constructedState;
         const width: number = state.getWidth();
         const height: number = state.getHeight();
-        if (this.getConfig().isRhombic) {
+        if (this.config().isRhombic) {
             const rotationInRadius: number = -45 * Math.PI / 180;
             const upperCoord: Coord = new Coord(0, 0);
             const leftCoord: Coord = upperCoord.getNext(new Coord(0, height), this.SPACE_SIZE);
@@ -134,7 +134,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     private updateMissingPieces(): void {
-        const config: QuebecCastlesConfig = this.getConfig();
+        const config: QuebecCastlesConfig = this.config();
         const nbDefender: number = this.constructedState.countPieceOnBoard(Player.ZERO);
         const nbInvader: number = this.constructedState.countPieceOnBoard(Player.ONE);
         this.missingPieces = PlayerNumberMap.of(
@@ -146,7 +146,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
 
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const config: QuebecCastlesConfig = this.getConfig();
+        const config: QuebecCastlesConfig = this.config();
         if (this.isPlayerDropping() && this.getNumberOfAwaitedDrop() === 0) {
             if (this.dropped.contains(coord)) {
                 return this.onDrop(coord, config);
@@ -164,7 +164,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private async onDrop(coord: Coord, config: QuebecCastlesConfig): Promise<MGPValidation> {
         Utils.assert(config.dropMode !== 'AUTO' || config.playersPlaceCastle, 'enterred "onDrop" on a non-dropping-config');
         const expectedDropThisTurn: number =
-            this.rules.getExpectedDropsThisTurn(this.getState(), this.getConfig());
+            this.rules.getExpectedDropsThisTurn(this.getState(), this.config());
         if (expectedDropThisTurn === 1) {
             const chosenMove: QuebecCastlesDrop = QuebecCastlesDrop.of([coord]);
             return await this.chooseMove(chosenMove);
@@ -265,7 +265,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
 
     public getSquareClasses(coord: Coord): string[] {
         const classes: string[] = [];
-        const config: QuebecCastlesConfig = this.getConfig();
+        const config: QuebecCastlesConfig = this.config();
         if (this.rules.isDropPhase(this.constructedState, config)) {
             if (this.rules.isDropInPlayerTerritory(coord, Player.ZERO, config)) {
                 classes.push(Player.ZERO.getHTMLClass('-fill'), 'territory-opacity');
@@ -293,7 +293,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const classes: string[] = [
             this.getPlayerClass(this.constructedState.getPieceAt(coord)),
         ];
-        const config: QuebecCastlesConfig = this.getConfig();
+        const config: QuebecCastlesConfig = this.config();
         if (this.selected.equalsValue(coord) || this.dropped.contains(coord)) {
             classes.push('selected-stroke');
         }
@@ -312,7 +312,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         const cx: number = (state.getWidth() / 2) * this.SPACE_SIZE;
         const cy: number = (state.getHeight() / 2) * this.SPACE_SIZE;
         let angle: number = this.getPointOfView().getValue() * 180;
-        if (this.getConfig().isRhombic) {
+        if (this.config().isRhombic) {
             angle += 45;
         }
         return `rotate(${ angle }, ${ cx }, ${ cy })`;
@@ -325,9 +325,9 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     private getTotalPieceToDrop(): number {
         const player: Player = this.constructedState.getCurrentPlayer();
         if (player === Player.ZERO) {
-            return this.getConfig().defenders;
+            return this.config().defenders;
         } else {
-            return this.getConfig().invaders;
+            return this.config().invaders;
         }
     }
 
@@ -358,7 +358,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         let x: number;
         let y: number;
         const halfRadius: number = this.SPACE_SIZE / 2;
-        if (this.getConfig().isRhombic) {
+        if (this.config().isRhombic) {
             if (this.getCurrentPlayer() === Player.ZERO) {
                 x = this.lowerCorner.x;
                 y = this.lowerCorner.y + halfRadius;
