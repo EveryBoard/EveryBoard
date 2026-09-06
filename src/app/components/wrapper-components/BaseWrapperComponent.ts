@@ -1,14 +1,14 @@
 import { inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 
+import { RulesConfig } from '@everyboard/games';
+import { GameState } from '@everyboard/games';
+import { RulesConfigDescription } from '@everyboard/games';
 import { MGPOptional, Utils } from '@everyboard/lib';
 
-import { RulesConfig } from '../../jscaip/RulesConfigUtil';
-import { GameState } from '../../jscaip/state/GameState';
 import { BaseComponent } from '../BaseComponent';
 import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
-import { RulesConfigDescription } from './rules-configuration/RulesConfigDescription';
 
 export abstract class BaseWrapperComponent extends BaseComponent {
 

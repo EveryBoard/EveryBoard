@@ -1,14 +1,15 @@
 import { NgClass } from '@angular/common';
 import { Component, computed, input, InputSignal, output, OutputEmitterRef, Signal } from '@angular/core';
 
+
+import { Coord } from '@everyboard/games';
+import { GoPiece } from '@everyboard/games';
+import { GoState } from '@everyboard/games';
+import { GoSubBoardHelper } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../../../components/game-components/base-game-component/BaseGameComponent';
 import { BlankGobanComponent } from '../../../../components/game-components/goban-game-component/blank-goban/blank-goban.component';
-import { Coord } from '../../../../jscaip/Coord';
-import { GoPiece } from '../../GoPiece';
-import { GoState } from '../../GoState';
-import { GoSubBoardHelper } from '../GoSubBoardHelper';
 
 @Component({
     selector: '[app-go-board]',

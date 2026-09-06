@@ -2,15 +2,16 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { PlayerMap } from '../../../jscaip/PlayerMap';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
+import { EncapsuleMove } from '@everyboard/games';
+import { EncapsulePiece } from '@everyboard/games';
+import { EncapsuleConfig, EncapsuleRules } from '@everyboard/games';
+import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '@everyboard/games';
+import { EncapsuleFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { EncapsuleFailure } from '../EncapsuleFailure';
-import { EncapsuleMove } from '../EncapsuleMove';
-import { EncapsulePiece } from '../EncapsulePiece';
-import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
-import { EncapsuleRemainingPieces, EncapsuleSizeToNumberMap, EncapsuleSpace, EncapsuleState } from '../EncapsuleState';
 import { EncapsuleComponent } from '../encapsule.component';
 
 describe('EncapsuleComponent', () => {

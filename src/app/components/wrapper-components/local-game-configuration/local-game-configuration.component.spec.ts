@@ -2,9 +2,9 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 
+import { P4Config, P4Rules } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
 import { AuthUser } from '../../../services/ConnectedUserService';
 import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
 import { ActivatedRouteStub, expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';

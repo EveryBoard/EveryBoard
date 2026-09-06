@@ -1,20 +1,20 @@
 import { ComponentRef, Directive, Signal, Type, ViewContainerRef, inject, viewChild } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AbstractNode, Move } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap } from '@everyboard/games';
+import { RulesConfig } from '@everyboard/games';
+import { Localized } from '@everyboard/games';
 import { Comparable, MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
-import { AbstractNode } from '../../jscaip/AI/GameNode';
-import { Move } from '../../jscaip/Move';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerMap } from '../../jscaip/PlayerMap';
-import { RulesConfig, RulesConfigUtils } from '../../jscaip/RulesConfigUtil';
 import { MessageDisplayer } from '../../services/MessageDisplayer';
-import { Localized } from '../../utils/LocaleUtils';
 import { AbstractGameComponent } from '../game-components/game-component/AbstractGameComponent';
 import { AnyFunction, ClickNamer } from '../game-components/game-component/ClickHandler';
 import { GameInfo } from '../normal-component/pick-game/GameInfo';
 
 import { BaseWrapperComponent } from './BaseWrapperComponent';
+import { RulesConfigUtils } from './rules-configuration/RulesConfigUtils';
 
 export class GameWrapperMessages {
 

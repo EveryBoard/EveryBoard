@@ -1,8 +1,8 @@
 import { Component, ModelSignal, model } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
 import { AbstractRectangularGoComponent } from '../abstract-rectangular-go/abstract-rectangular-go.component';
 import { GoBoardComponent } from '../abstract-rectangular-go/go-board/go-board.component';
 

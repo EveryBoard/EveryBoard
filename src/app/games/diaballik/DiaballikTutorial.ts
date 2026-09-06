@@ -1,12 +1,12 @@
+
+import { Coord } from '@everyboard/games';
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from '@everyboard/games';
+import { DiaballikRules } from '@everyboard/games';
+import { DiaballikPiece, DiaballikState } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikRules } from './DiaballikRules';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 const O: DiaballikPiece = DiaballikPiece.ZERO;
 const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;

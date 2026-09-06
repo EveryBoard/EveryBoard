@@ -1,11 +1,11 @@
 import { NgClass } from '@angular/common';
 import { AfterContentChecked, Component, input, InputSignal } from '@angular/core';
 
-import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { HexaLayout } from '../../jscaip/HexaLayout';
+import { Coord } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { HivePiece } from '@everyboard/games';
 
-import { HivePiece } from './HivePiece';
+import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 
 @Component({
     selector: '[app-hive-piece]',

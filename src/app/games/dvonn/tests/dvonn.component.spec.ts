@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { Player } from '../../../jscaip/Player';
-import { Table } from '../../../jscaip/TableUtils';
+import { Coord } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { DvonnMove } from '@everyboard/games';
+import { DvonnPieceStack } from '@everyboard/games';
+import { DvonnState } from '@everyboard/games';
+import { DvonnFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { DvonnFailure } from '../DvonnFailure';
-import { DvonnMove } from '../DvonnMove';
-import { DvonnPieceStack } from '../DvonnPieceStack';
-import { DvonnState } from '../DvonnState';
 import { DvonnComponent } from '../dvonn.component';
 
 describe('DvonnComponent', () => {

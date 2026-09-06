@@ -1,28 +1,28 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { GameStatus } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { Player } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { TableWithPossibleNegativeIndices } from '@everyboard/games';
+import { HiveFailure } from '@everyboard/games';
+import { HiveHeuristic } from '@everyboard/games';
+import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from '@everyboard/games';
+import { HiveMoveGenerator } from '@everyboard/games';
+import { HivePiece, HivePieceStack } from '@everyboard/games';
+import { HiveSpiderRules } from '@everyboard/games';
+import { HiveRules } from '@everyboard/games';
+import { HiveState } from '@everyboard/games';
 import { ArrayUtils, MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { GameStatus } from '../../jscaip/GameStatus';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { Player } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-import { TableWithPossibleNegativeIndices } from '../../jscaip/TableUtils';
 
-import { HiveFailure } from './HiveFailure';
-import { HiveHeuristic } from './HiveHeuristic';
-import { HiveMove, HiveCoordToCoordMove, HiveDropMove, HiveSpiderMove } from './HiveMove';
-import { HiveMoveGenerator } from './HiveMoveGenerator';
-import { HivePiece, HivePieceStack } from './HivePiece';
-import { HiveSpiderRules } from './HivePieceRules';
-import { HiveRules } from './HiveRules';
-import { HiveState } from './HiveState';
 import { HivePieceComponent } from './hive-piece.component';
 
 interface GroundInfo {

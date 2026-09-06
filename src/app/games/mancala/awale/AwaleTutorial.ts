@@ -1,12 +1,13 @@
+import { PlayerNumberMap } from '@everyboard/games';
+import { MancalaDistribution, MancalaMove } from '@everyboard/games';
+import { MancalaConfig } from '@everyboard/games';
+import { MancalaState } from '@everyboard/games';
+import { AwaleRules } from '@everyboard/games';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { MancalaConfig } from '../common/MancalaConfig';
-import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
-import { MancalaState } from '../common/MancalaState';
 import { MancalaTutorial } from '../common/MancalaTutorial';
 
-import { AwaleRules } from './AwaleRules';
 
 const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 

@@ -1,24 +1,24 @@
 import { ModelSignal, signal, WritableSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { GoLegalityInformation } from '@everyboard/games';
+import { ScoreName } from '@everyboard/games';
+import { GoMove } from '@everyboard/games';
+import { GoPhase } from '@everyboard/games';
+import { GoPiece } from '@everyboard/games';
+import { GoState } from '@everyboard/games';
+import { GoHeuristic } from '@everyboard/games';
+import { GoMoveGenerator } from '@everyboard/games';
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table, TableUtils } from '@everyboard/games';
+import { RectangularGoConfig, AbstractRectangularGoRules } from '@everyboard/games';
+import { GoSubBoardHelper } from '@everyboard/games';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../../components/game-components/game-component/ClickHandler';
-import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GobanGameComponent } from '../../../components/game-components/goban-game-component/GobanGameComponent';
-import { Coord } from '../../../jscaip/Coord';
-import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
-import { Table, TableUtils } from '../../../jscaip/TableUtils';
-import { GoLegalityInformation } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
-import { GoPhase } from '../GoPhase';
-import { GoPiece } from '../GoPiece';
-import { GoState } from '../GoState';
-import { GoHeuristic } from '../go/GoHeuristic';
-import { GoMoveGenerator } from '../go/GoMoveGenerator';
 
-import { RectangularGoConfig, AbstractRectangularGoRules } from './AbstractRectangularGoRules';
-import { GoSubBoardHelper } from './GoSubBoardHelper';
 
 export abstract class AbstractRectangularGoComponent
     extends GobanGameComponent<AbstractRectangularGoRules,

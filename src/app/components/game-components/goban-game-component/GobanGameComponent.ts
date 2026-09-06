@@ -1,11 +1,11 @@
+import { Coord } from '@everyboard/games';
+import { GobanConfig } from '@everyboard/games';
+import { GobanUtils } from '@everyboard/games';
+import { Move } from '@everyboard/games';
+import { SuperRules } from '@everyboard/games';
+import { GameStateWithTable } from '@everyboard/games';
 import { Comparable } from '@everyboard/lib';
 
-import { Coord } from '../../../jscaip/Coord';
-import { GobanConfig } from '../../../jscaip/GobanConfig';
-import { GobanUtils } from '../../../jscaip/GobanUtils';
-import { Move } from '../../../jscaip/Move';
-import { SuperRules } from '../../../jscaip/Rules';
-import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
 
 /**

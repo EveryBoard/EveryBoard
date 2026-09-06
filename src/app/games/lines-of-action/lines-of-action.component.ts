@@ -1,20 +1,19 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { LinesOfActionFailure } from '@everyboard/games';
+import { LinesOfActionHeuristic } from '@everyboard/games';
+import { LinesOfActionMove } from '@everyboard/games';
+import { LinesOfActionMoveGenerator } from '@everyboard/games';
+import { LinesOfActionRules } from '@everyboard/games';
+import { LinesOfActionState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { PlayerOrNone } from '../../jscaip/Player';
-import { RulesFailure } from '../../jscaip/RulesFailure';
-
-import { LinesOfActionFailure } from './LinesOfActionFailure';
-import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
-import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
-import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionState } from './LinesOfActionState';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

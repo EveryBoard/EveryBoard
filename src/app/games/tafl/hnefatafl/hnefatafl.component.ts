@@ -1,10 +1,10 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { TaflComponent } from '../tafl.component';
+import { HnefataflMove } from '@everyboard/games';
+import { HnefataflRules } from '@everyboard/games';
 
-import { HnefataflMove } from './HnefataflMove';
-import { HnefataflRules } from './HnefataflRules';
+import { TaflComponent } from '../tafl.component';
 
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -1,27 +1,26 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { CoordSet } from '@everyboard/games';
+import { HexaLayout } from '@everyboard/games';
+import { FlatHexaOrientation } from '@everyboard/games';
+import { Player, PlayerOrNone } from '@everyboard/games';
+import { PlayerMap, PlayerNumberMap } from '@everyboard/games';
+import { EmptyRulesConfig } from '@everyboard/games';
+import { YinshFailure } from '@everyboard/games';
+import { YinshCapture, YinshMove } from '@everyboard/games';
+import { YinshMoveGenerator } from '@everyboard/games';
+import { YinshPiece } from '@everyboard/games';
+import { YinshLegalityInformation, YinshRules } from '@everyboard/games';
+import { YinshScoreHeuristic } from '@everyboard/games';
+import { YinshState } from '@everyboard/games';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
 import { ViewBox } from '../../components/game-components/GameComponentUtils';
 import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
-import { Coord } from '../../jscaip/Coord';
-import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaLayout } from '../../jscaip/HexaLayout';
-import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
-import { Player, PlayerOrNone } from '../../jscaip/Player';
-import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
-import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RingComponent } from '../common/ring/ring.component';
-
-import { YinshFailure } from './YinshFailure';
-import { YinshCapture, YinshMove } from './YinshMove';
-import { YinshMoveGenerator } from './YinshMoveGenerator';
-import { YinshPiece } from './YinshPiece';
-import { YinshLegalityInformation, YinshRules } from './YinshRules';
-import { YinshScoreHeuristic } from './YinshScoreHeuristic';
-import { YinshState } from './YinshState';
 
 interface ViewInfo {
     targets: Coord[];

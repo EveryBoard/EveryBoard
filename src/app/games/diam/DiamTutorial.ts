@@ -1,11 +1,11 @@
+import { Coord } from '@everyboard/games';
+import { DiamMoveDrop, DiamMoveShift } from '@everyboard/games';
+import { DiamPiece } from '@everyboard/games';
+import { DiamRules } from '@everyboard/games';
+import { DiamState } from '@everyboard/games';
+
 import { TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Coord } from '../../jscaip/Coord';
-
-import { DiamMoveDrop, DiamMoveShift } from './DiamMove';
-import { DiamPiece } from './DiamPiece';
-import { DiamRules } from './DiamRules';
-import { DiamState } from './DiamState';
 
 const __: DiamPiece = DiamPiece.EMPTY;
 const A1: DiamPiece = DiamPiece.ZERO_FIRST;

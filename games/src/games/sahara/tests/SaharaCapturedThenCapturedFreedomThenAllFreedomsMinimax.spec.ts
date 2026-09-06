@@ -1,0 +1,39 @@
+/* eslint-disable max-lines-per-function */
+import { EmptyRulesConfig } from '../../../config/RulesConfig';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic } from '../SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic';
+import { SaharaMove } from '../SaharaMove';
+import { SaharaMoveGenerator } from '../SaharaMoveGenerator';
+import { SaharaRules } from '../SaharaRules';
+import { SaharaState } from '../SaharaState';
+import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+
+class SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax extends Minimax<SaharaMove, SaharaState> {
+    public constructor() {
+        super('Capture > Captured Freedom > All Freedoms',
+              SaharaRules.get(),
+              new SaharaCapturedThenCapturedFreedomThenAllFreedomsHeuristic(SaharaRules.get()),
+              new SaharaMoveGenerator());
+    }
+}
+
+describe('SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax', () => {
+
+    const rules: SaharaRules = SaharaRules.get();
+    const minimax: SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax =
+        new SaharaCapturedThenCapturedFreedomThenAllFreedomsMinimax();
+    const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
+    const defaultConfig: EmptyRulesConfig = SaharaRules.get().getDefaultRulesConfig();
+
+    SlowTest.it('should be able play against itself', () => {
+        minimaxTest({
+            rules,
+            minimax,
+            options: minimaxOptions,
+            config: defaultConfig,
+            shouldFinish: true,
+        });
+    });
+
+});
