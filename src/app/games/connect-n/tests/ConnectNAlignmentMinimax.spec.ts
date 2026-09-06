@@ -32,7 +32,7 @@ class ConnectNAlignmentMinimax
 }
 
 
-fdescribe('ConnectNAlignmentMinimax', () => {
+describe('ConnectNAlignmentMinimax', () => {
 
     let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
