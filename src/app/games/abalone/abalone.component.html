@@ -37,7 +37,7 @@
         </g>
     }
 
-    @for (captured of captureds; track captured.coord.toString()) {
+    @for (captured of captureds(); track captured.coord.toString()) {
         <g [attr.transform]="getHexaCenterTranslationAt(captured.coord)">
             <polygon id="captured-space-{{ captured.coord.x }}-{{ captured.coord.y }}"
                      [ngClass]="getSquareClassesAt(captured.coord)"
@@ -53,7 +53,7 @@
         </g>
     }
 
-    @for (arrow of directions; track arrow.start.toString() + arrow.landing.toString()) {
+    @for (arrow of directions(); track arrow.start.toString() + arrow.landing.toString()) {
         <g id="arrow-{{ arrow.start.x }}-{{ arrow.start.y }}-to-{{ arrow.landing.x }}-{{ arrow.landing.y }}"
            (click)="chooseDirection(arrow.dir)"
            app-hex-arrow
