@@ -1,5 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { Set } from '@everyboard/lib';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
