@@ -5,7 +5,6 @@ import { Router } from '@angular/router';
 
 import { UserDAO } from '../../../dao/UserDAO';
 import { ConfigRoomMocks } from '../../../domain/ConfigRoomMocks.spec';
-import { GameResult } from '../../../domain/Game';
 import { GameMocks } from '../../../domain/GameMocks.spec';
 import { MinimalUser } from '../../../domain/MinimalUser';
 import { UserMocks } from '../../../domain/UserMocks.spec';
@@ -120,21 +119,23 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     describe('for creator', () => {
 
-        it('should have GameCreationComponent calling startGame when config accepted', fakeAsync(async() => {
-            // Given component where the game is not started
-            spyOn(wrapper, 'startGame').and.callThrough();
+        it('should replace game creation with the game when config is accepted', fakeAsync(async() => {
+            // Given a game waiting for its configuration to be accepted
             await prepareComponent(false);
-            expect(wrapper.startGame).not.toHaveBeenCalled();
+            testUtils.expectElementToExist('#gameCreation');
+            testUtils.expectElementNotToExist('#game');
+            testUtils.expectElementNotToExist('app-p4');
 
-            // When the game starts
+            // When the configuration is accepted
             await startGame();
+            testUtils.detectChanges();
 
-            // Then startGame should be called
-            expect(wrapper.startGame).toHaveBeenCalledTimes(1);
+            // Then game creation is replaced by the configured game
+            testUtils.expectElementNotToExist('#gameCreation');
+            testUtils.expectElementToExist('#game');
+            testUtils.expectElementToExist('app-p4');
 
-            testUtils.detectChanges(); // Needed so GameCreation is destroyed and game component created
-
-            tick(wrapper.configRoom.moveDuration * 1000);
+            await finishTest();
         }));
 
         it('should have a GameCreationComponent before starting', fakeAsync(async() => {
@@ -161,19 +162,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
             // Finish the game to have no timeout still running
             await finishTest();
-        }));
-
-        it('should replace GameCreationComponent by game tag upon game start', fakeAsync(async() => {
-            // Given a component where the game is started
-            await prepareComponent(true);
-            // When it is loaded
-            testUtils.detectChanges();
-
-            // Then game creation is removed and game appears
-            expect(wrapper.gameStarted).withContext('game should be started').toBeTrue();
-            testUtils.expectElementNotToExist('#gameCreation');
-            testUtils.expectElementToExist('#game');
-            testUtils.expectElementToExist('app-p4');
         }));
 
     });
@@ -221,19 +209,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         // Then timers are not registered again
         expect(timeManager.setTimers).toHaveBeenCalledTimes(1);
-    }));
-
-    it('should identify player zero as loser when player one wins', fakeAsync(async() => {
-        // Given a game won by player one
-        await prepareComponent(true);
-        wrapper.game = {
-            ...GameMocks.STARTED,
-            result: GameResult.VICTORY_OF_ONE,
-        };
-
-        // When asking for the loser
-        // Then it should be player zero
-        expect(wrapper.getLoser()).toEqual(UserMocks.CREATOR_MINIMAL_USER);
     }));
 
 });

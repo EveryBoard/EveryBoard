@@ -188,7 +188,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
         if (this.chosen.isPresent()) {
             const coord: Coord = this.chosen.get();
             const state: TaflState = this.getState();
-            return this.rules.getPossibleDestinations(coord, state, this.config);
+            return this.rules.getPossibleDestinations(coord, state, this.config());
         } else {
             return this.getInteractivePlayerPieces();
         }
