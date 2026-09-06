@@ -43,11 +43,11 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new Coord(state.getWidth(), state.getHeight());
     });
 
-    protected readonly basicWidth: Signal<number> = computed(() =>
+    public readonly basicWidth: Signal<number> = computed(() =>
         this.boardSize().x * this.mode().parallelogramHeight,
     );
 
-    protected readonly basicHeight: Signal<number> = computed(() =>
+    public readonly basicHeight: Signal<number> = computed(() =>
         this.boardSize().y * this.mode().parallelogramHeight,
     );
 
@@ -361,7 +361,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         }
     }
 
-    protected getTranslationAtXYZ(x: number, y: number, z: number): string {
+    public getTranslationAtXYZ(x: number, y: number, z: number): string {
         const adaptedCoord: Coord = this.adaptXY(x, y);
         const coordTransform: Coord = this.getCoordTranslation(adaptedCoord.x, adaptedCoord.y, z, this.mode());
         return this.getSVGTranslationAt(coordTransform);
@@ -390,7 +390,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         return new Coord(x, y);
     }
 
-    protected getPieceTranslation(z: number): string {
+    public getPieceTranslation(z: number): string {
         // We want the piece to be in the center of the parallelogram, here are its coords
         const cy: number = this.parallelogramCenter().y;
         // We want to center the full piece, which is width=80, height=45, so here are it's center

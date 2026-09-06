@@ -4,7 +4,7 @@ import { JSONValue } from '@everyboard/lib';
 import { Coord } from '../../../../jscaip/Coord';
 import { CheckersMove } from '../CheckersMove';
 
-fdescribe('CheckersMove', () => {
+describe('CheckersMove', () => {
 
     describe('Move', () => {
 

@@ -48,7 +48,7 @@ for (const rule of rules) {
 
 }
 
-fdescribe('CheckersMoveGenerator for International Checkers', () => {
+describe('CheckersMoveGenerator for International Checkers', () => {
 
     let moveGenerator: CheckersMoveGenerator;
     const defaultConfig: CheckersConfig = InternationalCheckersRules.get().getDefaultRulesConfig();
@@ -112,7 +112,7 @@ fdescribe('CheckersMoveGenerator for International Checkers', () => {
     });
 });
 
-fdescribe('CheckersMoveGenerator for Lasca', () => {
+describe('CheckersMoveGenerator for Lasca', () => {
 
     let moveGenerator: CheckersMoveGenerator;
     const defaultConfig: CheckersConfig = LascaRules.get().getDefaultRulesConfig();
@@ -182,7 +182,7 @@ fdescribe('CheckersMoveGenerator for Lasca', () => {
 
 });
 
-fdescribe('CheckersMoveGenerator for Bashni', () => {
+describe('CheckersMoveGenerator for Bashni', () => {
 
     let moveGenerator: CheckersMoveGenerator;
     const bashniRules: BashniRules = BashniRules.get();
