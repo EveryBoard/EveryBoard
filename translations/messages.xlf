@@ -1449,9 +1449,6 @@
       <trans-unit id="4461597806169026629" datatype="html">
         <source>Board shape</source>
       </trans-unit>
-      <trans-unit id="8560978883976627945" datatype="html">
-        <source>Alignment</source>
-      </trans-unit>
       <trans-unit id="1631778170068001983" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
       </trans-unit>
@@ -1466,6 +1463,9 @@
       </trans-unit>
       <trans-unit id="4174912343371620775" datatype="html">
         <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>

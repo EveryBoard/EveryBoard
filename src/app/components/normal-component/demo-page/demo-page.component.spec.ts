@@ -5,7 +5,7 @@ import { DemoNodeInfo } from '../../wrapper-components/demo-card-wrapper/demo-ca
 
 import { DemoPageComponent } from './demo-page.component';
 
-fdescribe('DemoPageComponent', () => {
+describe('DemoPageComponent', () => {
 
     let testUtils: SimpleComponentTestUtils<DemoPageComponent>;
 
@@ -36,7 +36,7 @@ fdescribe('DemoPageComponent', () => {
             .toBeFalse();
     });
 
-    fit('should adapt the number of columns upon change', fakeAsync(() => {
+    it('should adapt the number of columns upon change', fakeAsync(() => {
         // Given a demo page component
         // When changing the number of columns
         const newNumberOfColumns: number = 3;

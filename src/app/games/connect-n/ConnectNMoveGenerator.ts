@@ -33,15 +33,13 @@ export class ConnectNMoveGenerator
         let moves: Set<Set<Coord>> = availableFirstCoords.map(
             (coord: Coord) => new Set([coord]),
         );
-        let remainingDrops: number = config.dropAfterFirstTurn;
+        let remainingDrops: number = config.dropAfterFirstTurn - 1;
         while (remainingDrops > 0) {
-            console.log('we now have moves of size', config.dropAfterFirstTurn - remainingDrops, 'have that much', moves.size(), moves.toList().map((set: Set<Coord>) => set.toString()));
             moves = moves.flatMap(
                 (ongoingMove: Set<Coord>) => this.getBiggerMove(node.gameState, ongoingMove, availableFirstCoords),
             );
             remainingDrops--;
         }
-        moves = moves.filter((m: Set<Coord>) => m.size() === 2); // TODO: assert uselessness and kill
         return moves.map(
             (coords: Set<Coord>) => new ConnectNMove(coords),
         ).toList();
@@ -52,11 +50,12 @@ export class ConnectNMoveGenerator
         ongoingMove: Set<Coord>,
         initialCoords: Set<Coord>,
     ): Set<Set<Coord>> {
-        const ongoingMoveNeighbors: Coord[] = ongoingMove.toList().flatMap(
+        const ongoingMoveNeighbors: Set<Coord> = ongoingMove.flatMap(
             (coord: Coord) => this.getImmediateEmptyNeighbors(state, coord),
         );
-        const possiblesNextDrops: Set<Coord> = initialCoords.unionList(ongoingMoveNeighbors);
-        console.log('our possibles choices are in this list of size', possiblesNextDrops.size());
+        const possiblesNextDrops: Set<Coord> = initialCoords
+            .union(ongoingMoveNeighbors)
+            .filter((coord: Coord) => ongoingMove.contains(coord) === false);
         return possiblesNextDrops.map(
             (coord: Coord) => ongoingMove.union(new Set([coord])),
         );
@@ -93,16 +92,14 @@ export class ConnectNMoveGenerator
             ...this.getImmediateEmptyNeighbors(state, coord),
         ]);
         for (let i: number = 1; i < usefulDistance; i++) {
-            neighboringCoords = new Set(
-                neighboringCoords.toList()
-                    .flatMap((c: Coord) => this.getImmediateEmptyNeighbors(state, c)),
+            neighboringCoords = neighboringCoords.flatMap(
+                (c: Coord) => this.getImmediateEmptyNeighbors(state, c),
             );
         }
         return neighboringCoords;
     }
 
-    private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece>, coord: Coord): Coord[] {
-        console.log('jaaj kzzk', coord.toString(), state.getTopology().getNeighbors(coord));
+    private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece>, coord: Coord): Set<Coord> {
         return state.getTopology()
             .getNeighbors(coord)
             .filter((c: Coord) => state.isOnBoard(c))

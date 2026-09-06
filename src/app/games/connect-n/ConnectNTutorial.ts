@@ -2,7 +2,6 @@ import { Tutorial, TutorialStep } from '../../components/wrapper-components/tuto
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { PlayerOrNone } from '../../jscaip/Player';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
 import { Shape } from '../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
@@ -12,7 +11,6 @@ import { Topology } from '../../jscaip/topology/Topology';
 
 import { ConnectNMove } from './ConnectNMove';
 import { ConnectNConfig, ConnectNRules } from './ConnectNRules';
-
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;

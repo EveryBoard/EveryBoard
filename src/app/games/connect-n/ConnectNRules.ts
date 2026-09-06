@@ -112,8 +112,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                             state: TopologicGameState<FourStatePiece>,
                             config: ConnectNConfig,
     ): MGPFallible<void> {
-        console.log('config', JSON.stringify(config))
-        console.log(move, move.coords)
         if (state.turn === 0 && move.coords.size() > 1) {
             return MGPFallible.failure(ConnectNFailure.FIRST_TURN_MEANS_ONE_MOVE());
         }
@@ -179,9 +177,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         const lastMove: ConnectNMove = node.previousMove.get();
         const currentPlayer: Player = state.getCurrentOpponent();
         for (const startCoord of lastMove.coords) {
-            // console.log('startCoord', startCoord.toString())
             for (const direction of state.getTopology().getDirections()) {
-                // console.log('direction', direction.toString())
                 const directionCount: number = this.countAlignedPieceOf(
                     state,
                     currentPlayer,
@@ -194,7 +190,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                     direction.getOpposite(),
                     startCoord,
                 );
-                // console.log(directionCount + 1 + oppositeCount, 'vs', config.n)
                 if (directionCount + 1 + oppositeCount >= config.n) {
                     return GameStatus.getVictory(currentPlayer);
                 }
@@ -221,9 +216,9 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                                 coord: Coord,
     ): number {
         let count: number = 0;
-        let testedCoord: Coord = state.getTopology().getNextCoord(coord, direction);
+        let testedCoord: Coord = state.getTopology().getNextCoord(coord, direction, 1);
         while (state.hasPieceAt(testedCoord, FourStatePiece.ofPlayer(currentPlayer))) {
-            testedCoord = state.getTopology().getNextCoord(testedCoord, direction);
+            testedCoord = state.getTopology().getNextCoord(testedCoord, direction, 1);
             count++;
         }
         return count;

@@ -16,7 +16,7 @@ export abstract class TopologicShape {
 
     public constructor(private readonly topology: Topology) {}
 
-    public getNextCoord(coord: Coord, direction: Direction): Coord {
-        return this.topology.getNextCoord(coord, direction);
+    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
+        return this.topology.getNextCoord(coord, direction, distance);
     }
 }

@@ -1,14 +1,11 @@
 /* eslint-disable indent */
 /* eslint-disable max-lines-per-function */
-import { Set } from '@everyboard/lib';
+import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { SquareTopology } from '../../topology/SquareTopology';
 import { Topology } from '../../topology/Topology';
 import { HexagonalShape } from '../HexagonalShape';
-
-import { expectEquality } from './TriangularShape.spec';
-
 
 describe('HexagonalShape', () => {
 

@@ -4,7 +4,7 @@ import { Table } from '../../jscaip/TableUtils';
 import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 import { GameStateWithTable } from '../../jscaip/state/GameStateWithTable';
 
-export class HexodiaState extends FourStatePieceGameStateWithTable { // TODO: kill class, it adds nothing ?
+export class HexodiaState extends FourStatePieceGameStateWithTable {
 
     public static override of(oldState: HexodiaState, newBoard: Table<FourStatePiece>): HexodiaState {
         return new HexodiaState(newBoard, oldState.turn);

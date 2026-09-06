@@ -7,7 +7,7 @@ import { TriangularTopology } from './TriangularTopology';
 
 export type TopologyID = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
 
-export const topologyMap: MGPMap<TopologyID, Topology> = new MGPMap([
+export const topologyMap: MGPMap<TopologyID, Topology> = new MGPMap<TopologyID, Topology>([
     { key: 'SQUARE', value: new SquareTopology() },
     { key: 'HEXAGONAL', value: new HexagonalTopology() },
     { key: 'TRIANGULAR', value: new TriangularTopology() },

@@ -1,26 +1,11 @@
 /* eslint-disable indent */
 /* eslint-disable max-lines-per-function */
-import { Comparable, Set } from '@everyboard/lib';
+import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
 import { SquareTopology } from '../../topology/SquareTopology';
 import { Topology } from '../../topology/Topology';
 import { TriangularShape } from '../TriangularShape';
-
-export function expectEquality<T extends Comparable>(expected: Set<T>, actual: Set<T>): void { // TODO: move it
-    const missingInExpected: string | undefined = expected.getMissingElementFrom(actual)
-        .map((element: T) => element?.toString())
-        .getOrElse('');
-    const unexpectedInActual: string | undefined = actual.getMissingElementFrom(expected)
-        .map((element: T) => element?.toString())
-        .getOrElse('');
-    const context: string = `expected: ${ expected.toString() }` +
-        `\nto be: ${ actual.toString() }` +
-        `\nMissing in expected: ${ missingInExpected }` +
-        `\nUnexpected in actual: ${ unexpectedInActual }`;
-    expect(actual.equals(expected)).withContext(context).toBeTrue();
-}
-
 
 describe('TriangularShape', () => {
 
