@@ -32,7 +32,7 @@ class ConnectNAlignmentMinimax
 }
 
 
-describe('ConnectNAlignmentMinimax', () => {
+fdescribe('ConnectNAlignmentMinimax', () => {
 
     let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
@@ -121,7 +121,12 @@ describe('ConnectNAlignmentMinimax', () => {
             defaultShape,
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
+        const previousMove: ConnectNMove = new ConnectNMove(new Set([new Coord(2, 0), new Coord(3, 0)]));
+        const node: ConnectNNode = new ConnectNNode(
+            state,
+            MGPOptional.empty(),
+            MGPOptional.of(previousMove),
+        );
 
         // When asking what is the best move
         const bestMove: ConnectNMove = minimax.chooseNextMove(node, level2, defaultConfig);
@@ -137,7 +142,9 @@ describe('ConnectNAlignmentMinimax', () => {
                 (coords: Coord[]) => new ConnectNMove(new Set(coords)),
             ),
         );
-        expect(possibleMoves.contains(bestMove)).toBeTrue();
+        expect(possibleMoves.contains(bestMove))
+            .withContext(`chosen move was supposed to be in ${ possibleMoves.map((m: ConnectNMove) => m.toString()) } but was ${ bestMove.toString() }`)
+            .toBeTrue();
     });
 
     SlowTest.it('should block double-open five at level two', () => {
@@ -170,7 +177,12 @@ describe('ConnectNAlignmentMinimax', () => {
             defaultShape,
             gameState,
         );
-        const node: ConnectNNode = new ConnectNNode(state);
+        const previousMove: ConnectNMove = new ConnectNMove(new Set([new Coord(2, 0), new Coord(3, 0)]));
+        const node: ConnectNNode = new ConnectNNode(
+            state,
+            MGPOptional.empty(),
+            MGPOptional.of(previousMove),
+        );
 
         // When asking what is the best move
         const bestMove: ConnectNMove = minimax.chooseNextMove(node, level2, defaultConfig);
