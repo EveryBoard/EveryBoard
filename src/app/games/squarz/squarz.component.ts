@@ -131,7 +131,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         return MGPValidation.SUCCESS;
     }
     private showIndicators(): void {
-        this.moves = this.rules.getPossiblesMoves(this.getState(), this.selected.get(), this.getConfig());
+        this.moves = this.rules.getPossiblesMoves(this.getState(), this.selected.get(), this.config());
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {

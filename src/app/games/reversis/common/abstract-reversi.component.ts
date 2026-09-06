@@ -55,13 +55,13 @@ export abstract class AbstractReversiComponent<R extends AbstractReversiRules>
         this.board = state.getCopiedBoard();
 
         this.scores = MGPOptional.of(state.countScore());
-        this.canPass = this.rules.playerCanOnlyPass(state, this.getConfig());
+        this.canPass = this.rules.playerCanOnlyPass(state, this.config());
     }
 
     protected override async showLastMove(move: ReversiMove): Promise<void> {
         this.lastMove = MGPOptional.of(move.coord);
         const player: Player = this.getState().getCurrentOpponent();
-        this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.getConfig());
+        this.captured = this.rules.getAllSwitchedCoords(move, player, this.getPreviousState(), this.config());
     }
 
     public override hideLastMove(): void {

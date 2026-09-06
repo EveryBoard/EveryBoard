@@ -109,7 +109,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
     }
 
     protected override getScoreName(): ScoreName {
-        if (this.config.canStackPieces) {
+        if (this.config().canStackPieces) {
             return ScoreName.STACKS_UNDER_CONTROL;
         } else {
             return ScoreName.PIECES_UNDER_CONTROL;
@@ -118,7 +118,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.setConstructedState(this.getState());
-        this.legalMoves = this.moveGenerator.getListMoves(this.node(), this.config);
+        this.legalMoves = this.moveGenerator.getListMoves(this.node(), this.config());
         this.scores = MGPOptional.of(this.constructedState().get().getScores());
         this.showPossibleClicks();
     }
@@ -262,13 +262,13 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
         const isSimpleJump: boolean = this.currentMoveClicks.length === 1;
         const stateWithoutStarting: CheckersState = this.getState().remove(this.currentMoveClicks[0]);
         const validation: MGPValidation = this.rules.getSubMoveValidity(
-            stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.getConfig(),
+            stack, isSimpleJump, lastSegmentStart, clicked, stateWithoutStarting, this.config(),
         );
         if (validation.isFailure()) {
             return validation.getReason();
         }
         const attemptedMove: CheckersMove = this.getMoveAttemptEndingAt(clicked);
-        const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.getConfig());
+        const moveValidity: MGPValidation = this.rules.isLegal(attemptedMove, this.getState(), this.config());
         Utils.assert(moveValidity.isFailure(), 'A move absent from possibleClicks should be illegal');
         return moveValidity.getReason();
     }
@@ -300,7 +300,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private applyPartialCapture(): void {
         const currentMove: CheckersMove = CheckersMove.fromCapture(this.currentMoveClicks);
-        this.setConstructedState(this.rules.applyMove(currentMove, this.getState(), this.getConfig()));
+        this.setConstructedState(this.rules.applyMove(currentMove, this.getState(), this.config()));
     }
 
     private async trySelectingPiece(clicked: Coord): Promise<MGPValidation> {

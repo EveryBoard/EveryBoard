@@ -75,7 +75,7 @@ export class SixComponent
     }
 
     protected override getScoreName(): ScoreName {
-        if (this.rules.isInDropPhase(this.getState(), this.getConfig())) {
+        if (this.rules.isInDropPhase(this.getState(), this.config())) {
             return ScoreName.PIECES_TO_DROP;
         } else {
             return ScoreName.REMAINING_PIECES;
@@ -97,8 +97,8 @@ export class SixComponent
 
     private getScores(): MGPOptional<PlayerNumberMap> {
         const state: SixState = this.getState();
-        if (this.rules.isInDropPhase(state, this.getConfig())) {
-            return MGPOptional.of(state.countPiecesToDrop(this.getConfig()));
+        if (this.rules.isInDropPhase(state, this.config())) {
+            return MGPOptional.of(state.countPiecesToDrop(this.config()));
         } else {
             return MGPOptional.of(state.countPiecesOnBoard());
         }
@@ -136,7 +136,7 @@ export class SixComponent
             this.leftCoord = MGPOptional.empty();
         }
         const state: SixState = this.getState();
-        if (this.rules.getGameStatus(this.node(), this.getConfig()).isEndGame) {
+        if (this.rules.getGameStatus(this.node(), this.config()).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(move, state);
         }
         this.disconnectedCoords = this.getDisconnected();
@@ -186,7 +186,7 @@ export class SixComponent
 
     @ClickHandler((piece: Coord) => `#piece-${ piece.x }-${ piece.y }`)
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
-        const config: SixConfig = this.getConfig();
+        const config: SixConfig = this.config();
         const maxPiece: number = 2 * config.piecesPerPlayer;
         if (this.state.turn < maxPiece) {
             return this.cancelMove(SixFailure.CANNOT_MOVE_YET());
@@ -212,7 +212,7 @@ export class SixComponent
         if (this.nextClickShouldSelectGroup) {
             return this.cancelMove(SixFailure.MUST_CUT());
         }
-        const config: SixConfig = this.getConfig();
+        const config: SixConfig = this.config();
         const maxPiece: number = 2 * config.piecesPerPlayer;
         if (this.state.turn < maxPiece) {
             return this.chooseMove(SixMove.ofDrop(neighbor));
