@@ -57,7 +57,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece> = this.getState();
         this.coordsAndContents.set(state.getCoordsAndContents());
-        this.victoryCoords.set(ConnectNRules.getVictoriousCoords(state, this.getConfig()));
+        this.victoryCoords.set(ConnectNRules.getVictoriousCoords(state, this.config()));
     }
 
     public override async showLastMove(move: ConnectNMove): Promise<void> {
@@ -70,7 +70,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
 
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const config: ConnectNConfig = this.getConfig();
+        const config: ConnectNConfig = this.config();
         const awaitedClicks: number = this.getState().turn === 0 ? 1 : config.dropAfterFirstTurn;
         if (this.getState().getPieceAt(coord).isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
