@@ -85,7 +85,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: FourStatePieceGameStateWithTable = this.getState();
         this.hexaBoard = state.getCopiedBoard();
-        const config: HexodiaConfig = this.getConfig();
+        const config: HexodiaConfig = this.config();
         this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
     }
 
@@ -99,7 +99,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
 
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
-        const totalDrop: number = this.getConfig().numberOfDrops;
+        const totalDrop: number = this.config().numberOfDrops;
         if (this.getState().turn === 0) {
             const move: HexodiaMove = HexodiaMove.of([coord]);
             return this.chooseMove(move);
