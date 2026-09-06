@@ -56,24 +56,21 @@ describe('HexagonalTopology', () => {
         it('should return all 6 neighboring coordinates', () => {
             // Given
             const topology: HexagonalTopology = new HexagonalTopology();
-            const coord: Coord = new Coord(2, 3);
+            const coord: Coord = new Coord(0, 0);
 
             // When evaluating neighbors
             const result: Set<Coord> = topology.getNeighbors(coord);
 
             // Then
-            expect(
-                result.equals(
-                    new Set([
-                        new Coord(2, 4),
-                        new Coord(3, 4),
-                        new Coord(3, 3),
-                        new Coord(2, 2),
-                        new Coord(1, 2),
-                        new Coord(1, 3),
-                    ]),
-                ),
-            ).toBeTrue();
+            const expected: Set<Coord> = new Set([
+                new Coord(0, 1),
+                new Coord(1, -1),
+                new Coord(1, 0),
+                new Coord(0, -1),
+                new Coord(-1, 1),
+                new Coord(-1, 0),
+            ]);
+            expect(result.equals(expected)).withContext(`expected ${ expected.toString() } but got ${ result.toString() }`).toBeTrue();
         });
     });
 });

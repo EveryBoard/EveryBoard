@@ -23,9 +23,14 @@ export class HexagonalTopology implements Topology {
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
-        return this.getDirections().map(
-            (direction: Direction) => this.getNextCoord(coord, direction),
-        );
+        return new Set([
+            ...this.getDirections().map(
+                (direction: Direction) => this.getNextCoord(coord, direction),
+            ),
+            ...this.getDirections().map(
+                (direction: Direction) => this.getNextCoord(coord, direction, -1),
+            ),
+        ]);
     }
 
 }
