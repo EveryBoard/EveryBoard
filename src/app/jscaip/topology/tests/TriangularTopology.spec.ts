@@ -53,23 +53,45 @@ describe('TriangularTopology', () => {
     });
 
     describe('getNeighbors', () => {
-        it('should return all 6 neighboring coordinates', () => {
+
+        it('should return all 3 neighboring coordinates (even coord)', () => {
             // Given
             const topology: TriangularTopology = new TriangularTopology();
-            const coord: Coord = new Coord(2, 3);
+            const coord: Coord = new Coord(0, 1);
 
             // When evaluating neighbors
             const result: Set<Coord> = topology.getNeighbors(coord);
 
             // Then
-            expect(result).toEqual(new Set([
-                new Coord(2, 4),
-                new Coord(3, 4),
-                new Coord(3, 3),
-                new Coord(2, 2),
-                new Coord(1, 2),
-                new Coord(1, 3),
-            ]));
+            expect(
+                result.equals(
+                    new Set([
+                        new Coord(-1, 1),
+                        new Coord(1, 1),
+                        new Coord(0, 0),
+                    ]),
+                ),
+            ).toBeTrue();
+        });
+
+        it('should return all 3 neighboring coordinates (odd coord)', () => {
+            // Given
+            const topology: TriangularTopology = new TriangularTopology();
+            const coord: Coord = new Coord(0, 0);
+
+            // When evaluating neighbors
+            const result: Set<Coord> = topology.getNeighbors(coord);
+
+            // Then
+            expect(
+                result.equals(
+                    new Set([
+                        new Coord(-1, 0),
+                        new Coord(1, 0),
+                        new Coord(0, 1),
+                    ]),
+                ),
+            ).toBeTrue();
         });
     });
 });

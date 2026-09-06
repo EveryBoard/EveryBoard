@@ -76,7 +76,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
             return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }
         if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
-            return this.cancelMove(); // TODO: deselect
+            return this.cancelMove();
         }
         const droppedCoords: Coord[] = this.droppedCoords();
         droppedCoords.push(coord);

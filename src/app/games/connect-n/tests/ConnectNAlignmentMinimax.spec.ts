@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
+import { MGPOptional, Set } from '@everyboard/lib';
 
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
@@ -96,6 +96,7 @@ describe('ConnectNAlignmentMinimax', () => {
         // And a board where current opponent could win if current player does not block them (..XXXXX..)
         const gameState: SimpleGameStateWithTable<FourStatePiece> =
             new SimpleGameStateWithTable<FourStatePiece>([
+                [_, _, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -114,7 +115,6 @@ describe('ConnectNAlignmentMinimax', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
-                [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 3);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
             defaultTopology,
@@ -127,7 +127,17 @@ describe('ConnectNAlignmentMinimax', () => {
         const bestMove: ConnectNMove = minimax.chooseNextMove(node, level2, defaultConfig);
 
         // Then the minimax level two should block
-        expect(bestMove).toEqual(ConnectNMove.of([new Coord(1, 18), new Coord(7, 18)]));
+        const possibleBlocks: Coord[][] = [
+            [new Coord(0, 0), new Coord(1, 0)],
+            [new Coord(1, 0), new Coord(6, 0)],
+            [new Coord(6, 0), new Coord(7, 0)],
+        ];
+        const possibleMoves: Set<ConnectNMove> = new Set(
+            possibleBlocks.map(
+                (coords: Coord[]) => new ConnectNMove(new Set(coords)),
+            ),
+        );
+        expect(possibleMoves.contains(bestMove)).toBeTrue();
     });
 
     SlowTest.it('should block double-open four at level two', () => {

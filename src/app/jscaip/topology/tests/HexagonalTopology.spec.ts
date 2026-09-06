@@ -62,14 +62,18 @@ describe('HexagonalTopology', () => {
             const result: Set<Coord> = topology.getNeighbors(coord);
 
             // Then
-            expect(result).toEqual(new Set([
-                new Coord(2, 4),
-                new Coord(3, 4),
-                new Coord(3, 3),
-                new Coord(2, 2),
-                new Coord(1, 2),
-                new Coord(1, 3),
-            ]));
+            expect(
+                result.equals(
+                    new Set([
+                        new Coord(2, 4),
+                        new Coord(3, 4),
+                        new Coord(3, 3),
+                        new Coord(2, 2),
+                        new Coord(1, 2),
+                        new Coord(1, 3),
+                    ]),
+                ),
+            ).toBeTrue();
         });
     });
 });
