@@ -2,8 +2,8 @@ import { BoardValue } from '../../jscaip/AI/BoardValue';
 import { Heuristic } from '../../jscaip/AI/Heuristic';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player } from '../../jscaip/Player';
+import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
 import { ConnectNMove } from '../connect-n/ConnectNMove';
 
@@ -24,9 +24,10 @@ export class ConnectNAlignmentHeuristic
             })
             .map((coordAndContent: { coord: Coord; content: FourStatePiece }) => coordAndContent.coord);
         for (const coord of playerCoords) {
-            const squareScore: number = new NInARowHelper(
+            const squareScore: number = new TopologicNInARowHelper(
                 (piece: FourStatePiece) => piece.getPlayer(),
                 config.n,
+                node.gameState.getTopology(),
             ).getSquareScore(state, coord);
             score += squareScore;
         }

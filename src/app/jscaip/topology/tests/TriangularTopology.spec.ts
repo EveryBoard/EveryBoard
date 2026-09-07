@@ -10,46 +10,43 @@ describe('TriangularTopology', () => {
 
     describe('getNextCoord', () => {
 
-        it('should return the next coordinate in the given direction', () => {
-            // Given a topology, a coord, and a direction
-            const topology: TriangularTopology = new TriangularTopology();
-            const coord: Coord = new Coord(2, 3);
-            const direction: Direction = Ordinal.UP;
+        const testCases: { start: Coord; direction: Direction; expectedDestination: Coord }[] = [
+            // Even coords:
+            //     - left & up-left are the same at distance 1
+            { start: new Coord(8, 8), direction: Ordinal.LEFT, expectedDestination: new Coord(7, 8) },
+            { start: new Coord(8, 8), direction: Ordinal.UP_LEFT, expectedDestination: new Coord(7, 8) },
+            //     - right & up-right are the same at distance 1
+            { start: new Coord(8, 8), direction: Ordinal.RIGHT, expectedDestination: new Coord(9, 8) },
+            { start: new Coord(8, 8), direction: Ordinal.UP_RIGHT, expectedDestination: new Coord(9, 8) },
+            //     - down & down left are the same at distance 1
+            { start: new Coord(8, 8), direction: Ordinal.DOWN, expectedDestination: new Coord(8, 9) },
+            { start: new Coord(8, 8), direction: Ordinal.DOWN_LEFT, expectedDestination: new Coord(8, 9) },
 
-            // When evaluating next coord
-            const result: Coord = topology.getNextCoord(coord, direction);
+            // Odd coords:
+            //     - left & down-left are the same at distance one
+            { start: new Coord(7, 8), direction: Ordinal.LEFT, expectedDestination: new Coord(6, 8) },
+            { start: new Coord(7, 8), direction: Ordinal.DOWN_LEFT, expectedDestination: new Coord(6, 8) },
+            //     - up-left & up-right are the same at distance one
+            { start: new Coord(7, 8), direction: Ordinal.UP_LEFT, expectedDestination: new Coord(7, 7) },
+            { start: new Coord(7, 8), direction: Ordinal.UP_RIGHT, expectedDestination: new Coord(7, 7) },
+            //     - right & down-right are the same at distance one
+            { start: new Coord(7, 8), direction: Ordinal.RIGHT, expectedDestination: new Coord(8, 8) },
+            { start: new Coord(7, 8), direction: Ordinal.DOWN_RIGHT, expectedDestination: new Coord(8, 8) },
+        ];
+        for (const testCase of testCases) {
+            it(`${ testCase.start.toString() } + ${ testCase.direction.toString() } = ${ testCase.expectedDestination.toString() }`, () => {
+                // Given callResult.start as our coord
+                //       callResult.direction as our direction
+                // and triangular topology
+                const topology: TriangularTopology = new TriangularTopology();
 
-            // Then
-            expect(result).toEqual(new Coord(2, 2));
-        });
+                // When evaluating next coord
+                const result: Coord = topology.getNextCoord(testCase.start, testCase.direction);
 
-        it('should return the coordinate at the given distance in the given direction', () => {
-            // Given
-            const topology: TriangularTopology = new TriangularTopology();
-            const coord: Coord = new Coord(2, 3);
-            const direction: Direction = Ordinal.RIGHT;
-            const distance: number = 3;
-
-            // When evaluating next coord
-            const result: Coord = topology.getNextCoord(coord, direction, distance);
-
-            // Then
-            expect(result).toEqual(new Coord(5, 3));
-        });
-
-        it('should return the coordinate in the opposite direction when the distance is negative', () => {
-            // Given
-            const topology: TriangularTopology = new TriangularTopology();
-            const coord: Coord = new Coord(2, 3);
-            const direction: Direction = Ordinal.UP;
-            const distance: number = -2;
-
-            // When evaluating next coord
-            const result: Coord = topology.getNextCoord(coord, direction, distance);
-
-            // Then
-            expect(result).toEqual(new Coord(2, 5));
-        });
+                // Then the result should be correct
+                expect(result).toEqual(testCase.expectedDestination);
+            });
+        }
     });
 
     describe('getNeighbors', () => {

@@ -1,4 +1,4 @@
-import { MGPMap, Utils } from '@everyboard/lib';
+import { MGPMap, Utils, Set } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
@@ -7,24 +7,31 @@ import { Ordinal } from './Ordinal';
 import { Player, PlayerOrNone } from './Player';
 import { GameStateWithCoords } from './state/GameStateWithCoords';
 
-export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Direction = Ordinal> {
+export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Direction> {
 
-    private readonly doubleDirections: Set<D>;
+    private doubleDirections: Set<D> | undefined;
 
-    public constructor(private readonly getOwner: (piece: T, state?: GameStateWithCoords<T>) => PlayerOrNone,
-                       private readonly N: number,
-                       private readonly directions: ReadonlyArray<D>)
-    {
-        // The aim of this loop is to count down and up as only one "double direction"
-        const doubleDirections: D[] = [];
-        for (const direction of directions) {
-            if (doubleDirections.includes(direction) || doubleDirections.includes(direction.getOpposite())) {
-                continue;
-            } else {
-                doubleDirections.push(direction);
+    public constructor(
+        private readonly getOwner: (piece: T, state?: GameStateWithCoords<T>) => PlayerOrNone,
+        private readonly N: number,
+    ) {
+    }
+
+    protected abstract getDirections(): Set<D>;
+
+    protected getDoubleDirections(): Set<D> {
+        if (this.doubleDirections === undefined) {
+            const doubleDirections: D[] = [];
+            for (const direction of this.getDirections()) {
+                if (doubleDirections.includes(direction) || doubleDirections.includes(direction.getOpposite())) {
+                    continue;
+                } else {
+                    doubleDirections.push(direction);
+                }
             }
+            this.doubleDirections = new Set(doubleDirections);
         }
-        this.doubleDirections = new Set(doubleDirections);
+        return this.doubleDirections;
     }
 
     public getBoardValue(state: GameStateWithCoords<T>): BoardValue {
@@ -49,11 +56,12 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
         const player: Player = this.getOwner(piece, state) as Player;
         Utils.assert(player.isPlayer(), 'getSquareScore should not be called with PlayerOrNone.NONE piece');
 
-        const freeSpaceByDirs: MGPMap<D, number> = new MGPMap();
-        const alliesByDirs: MGPMap<D, number> = new MGPMap();
+        const freeSpaceByDirs: MGPMap<Ordinal, number> = new MGPMap();
+        const alliesByDirs: MGPMap<Ordinal, number> = new MGPMap();
 
-        for (const dir of this.directions) {
+        for (const dir of this.getDirections()) {
             const freeSpaceAndAllies: [number, number] = this.getNumberOfFreeSpacesAndAllies(state, coord, dir, player);
+            if (coord.x === 0) console.log('jaja', dir, 'gives', freeSpaceAndAllies)
             freeSpaceByDirs.set(dir, freeSpaceAndAllies[0]);
             alliesByDirs.set(dir, freeSpaceAndAllies[1]);
         }
@@ -61,12 +69,12 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
         return score * player.getScoreModifier();
     }
 
-    public getScoreFromDirectionAlliesAndFreeSpaces(alliesByDirs: MGPMap<D, number>,
-                                                    freeSpaceByDirs: MGPMap<D, number>)
-    : number
-    {
+    public getScoreFromDirectionAlliesAndFreeSpaces(
+        alliesByDirs: MGPMap<Ordinal, number>,
+        freeSpaceByDirs: MGPMap<Ordinal, number>,
+    ): number {
         let score: number = 0;
-        for (const dir of this.doubleDirections) {
+        for (const dir of this.getDoubleDirections()) {
             // for each pair of opposite directions
             const directionAllies: number = alliesByDirs.get(dir).get();
             const oppositeDirectionAllies: number = alliesByDirs.get(dir.getOpposite()).get();
@@ -86,10 +94,9 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
 
     public getNumberOfFreeSpacesAndAllies(state: GameStateWithCoords<T>,
                                           i: Coord,
-                                          dir: D,
-                                          player: Player)
-    : [number, number]
-    {
+                                          dir: Ordinal,
+                                          player: Player,
+    ) : [number, number] {
         /**
          * for a square at the coord i, containing an ally
          * we go through the board from this coord in the direction dir
@@ -123,27 +130,23 @@ export class AbstractNInARowHelper<T extends NonNullable<unknown>, D extends Dir
         return [freeSpaces, allies];
     }
 
+    protected getNextCoord(coord: Coord, dir: Direction, distance: number = 1): Coord {
+        return coord.getNext(dir, distance);
+    }
+
     public getVictoriousCoord(state: GameStateWithCoords<T>): Coord[] {
         const coords: Coord[] = [];
         for (const coordAndContents of state.getCoordsAndContents()) {
             if (this.getOwner(coordAndContents.content, state).isPlayer()) {
                 const coord: Coord = coordAndContents.coord;
                 const squareScore: number = this.getSquareScore(state, coord);
+                if (coord.x === 0) console.log('value at zozo', squareScore);
                 if (BoardValue.isVictoryValue(squareScore)) {
                     coords.push(coord);
                 }
             }
         }
         return coords;
-    }
-
-}
-
-export class NInARowHelper<T extends NonNullable<unknown>> extends AbstractNInARowHelper<T> {
-
-    public constructor(getOwner: (piece: T) => PlayerOrNone,
-                       N: number) {
-        super(getOwner, N, Ordinal.ORDINALS);
     }
 
 }

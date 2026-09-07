@@ -9,11 +9,11 @@ import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { Player } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesFailure } from '../../jscaip/RulesFailure';
 import { TableUtils } from '../../jscaip/TableUtils';
+import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
 import { HexagonalShape } from '../../jscaip/shape/HexagonalShape';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
 import { Shape } from '../../jscaip/shape/Shape';
@@ -85,11 +85,13 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
-        return new NInARowHelper(
+        console.log('jaaj, let us getVictoriousCoords')
+        return new TopologicNInARowHelper(
             (piece: FourStatePiece) => {
                 return piece.getPlayer();
             },
             config.n,
+            state.getTopology(),
         ).getVictoriousCoord(state);
     }
 
@@ -169,6 +171,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece>>,
         config: ConnectNConfig,
     ): GameStatus {
+        console.log('getGameStatus')
         const state: TopologicGameState<FourStatePiece> = node.gameState;
         if (state.turn === 0) {
             return GameStatus.ONGOING;
@@ -190,6 +193,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                     direction.getOpposite(),
                     startCoord,
                 );
+                console.log(startCoord.toString(), direction.toString(), directionCount + 1 + oppositeCount)
                 if (directionCount + 1 + oppositeCount >= config.n) {
                     return GameStatus.getVictory(currentPlayer);
                 }

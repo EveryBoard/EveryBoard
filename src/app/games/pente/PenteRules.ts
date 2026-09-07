@@ -6,7 +6,7 @@ import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-comp
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
@@ -128,8 +128,8 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public getHelper(config: PenteConfig): NInARowHelper<PlayerOrNone> {
-        return new NInARowHelper(Utils.identity, config.nInARow);
+    public getHelper(config: PenteConfig): OrdinalNInARowHelper<PlayerOrNone> {
+        return new OrdinalNInARowHelper(Utils.identity, config.nInARow);
     }
 
     private stillHaveEmptySquare(state: PenteState): boolean {

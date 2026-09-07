@@ -2,7 +2,7 @@ import { Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../AI/BoardValue';
 import { GameStatus } from '../GameStatus';
-import { NInARowHelper } from '../NInARowHelper';
+import { OrdinalNInARowHelper } from '../OrdinalNInaRowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';
@@ -17,7 +17,7 @@ describe('N In A Row Helper', () => {
 
     it('should count exactly one victory', () => {
         // Given a helper
-        const helper: NInARowHelper<PlayerOrNone> = new NInARowHelper(Utils.identity, 4);
+        const helper: OrdinalNInARowHelper<PlayerOrNone> = new OrdinalNInARowHelper<PlayerOrNone>(Utils.identity, 4);
 
         // When asking it the board value of a board with a victory
         const board: Table<PlayerOrNone> = [

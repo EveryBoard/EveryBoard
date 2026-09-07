@@ -10,9 +10,12 @@ import { Topology } from './Topology';
 export class TriangularTopology implements Topology {
 
     private readonly directions: Set<Direction> = new Set([
+        Ordinal.LEFT,
+        Ordinal.UP_LEFT,
         Ordinal.UP_RIGHT,
         Ordinal.RIGHT,
         Ordinal.DOWN_RIGHT,
+        Ordinal.DOWN_LEFT,
     ]);
 
     public getDirections(): Set<Direction> {
@@ -20,7 +23,8 @@ export class TriangularTopology implements Topology {
     }
 
     public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
-        if (direction.y === 0) {
+        // TODO: ensure that you cannot end up calling this with illegal direction (UP or DOWN, here)
+        if (direction.y === 0) { // No weird behavior for LEFT and RIGHT
             return coord.getNext(direction, distance);
         }
         if (this.canGoUp(coord)) {

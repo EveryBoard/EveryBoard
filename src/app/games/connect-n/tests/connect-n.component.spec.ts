@@ -17,14 +17,16 @@ import { ConnectNConfig, ConnectNRules } from '../ConnectNRules';
 import { ConnectNComponent } from '../connect-n.component';
 
 
-describe('ConnectNComponent', () => {
+const _: FourStatePiece = FourStatePiece.EMPTY;
+const O: FourStatePiece = FourStatePiece.ZERO;
+const X: FourStatePiece = FourStatePiece.ONE;
+const N: FourStatePiece = FourStatePiece.UNREACHABLE;
+const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
+const defaultTopology: Topology = new SquareTopology();
+const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
+const smallerShape: Shape = new RectangularShape(5, 5, defaultTopology);
 
-    const _: FourStatePiece = FourStatePiece.EMPTY;
-    const O: FourStatePiece = FourStatePiece.ZERO;
-    const X: FourStatePiece = FourStatePiece.ONE;
-    const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const defaultTopology: Topology = new SquareTopology();
-    const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
+describe('ConnectNComponent (SQUARE)', () => {
 
     let testUtils: ComponentTestUtils<ConnectNComponent>;
 
@@ -406,5 +408,105 @@ describe('ConnectNComponent', () => {
         }));
 
     });
+
+});
+
+fdescribe('ConnectNComponent (TRIANGULAR)', () => {
+
+    let testUtils: ComponentTestUtils<ConnectNComponent>;
+
+    beforeEach(fakeAsync(async() => {
+        testUtils = await ComponentTestUtils.forGame<ConnectNComponent>('ConnectN');
+    }));
+
+    fit('should show highlight when victory occur (triangular)', fakeAsync(async() => {
+        // Given a board where current player is about to win
+        // on a triangular config
+        const customConfig: ConnectNConfig = {
+            ...ConnectNRules.get().getDefaultRulesConfig(),
+            topology: 'TRIANGULAR',
+            shape: 'TRIANGULAR',
+            boardSize: 5,
+        };
+        const gameState: SimpleGameStateWithTable<FourStatePiece> =
+            new SimpleGameStateWithTable<FourStatePiece>([
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, X, X, _, _, _, N],
+                [_, _, X, X, _, _, _, _, _],
+            ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+            defaultTopology,
+            smallerShape,
+            gameState,
+        );
+        await testUtils.setupState(state, { config: customConfig });
+        await testUtils.expectClickSuccess('#click-4-2');
+
+        // When finishing your move
+        const move: ConnectNMove = ConnectNMove.of([new Coord(4, 2), new Coord(5, 2)]);
+
+        // Then the victory squares should be highlighted
+        await testUtils.expectMoveSuccess('#click-5-2', move);
+        testUtils.expectElementToHaveClass('#click-2-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-3-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-3-3', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-4-3', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-4-2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-5-2', 'victory-stroke');
+    }));
+
+});
+
+describe('ConnectNComponent (HEXAGONAL)', () => {
+
+    let testUtils: ComponentTestUtils<ConnectNComponent>;
+
+    beforeEach(fakeAsync(async() => {
+        testUtils = await ComponentTestUtils.forGame<ConnectNComponent>('ConnectN');
+    }));
+
+
+    it('should show highlight when victory occur (hexagonal)', fakeAsync(async() => {
+        // Given a board where current player is about to win
+        // on a hexagonal config
+        const customConfig: ConnectNConfig = {
+            ...ConnectNRules.get().getDefaultRulesConfig(),
+            topology: 'HEXAGONAL',
+            shape: 'HEXAGONAL',
+            boardSize: 5,
+        };
+        const gameState: SimpleGameStateWithTable<FourStatePiece> =
+            new SimpleGameStateWithTable<FourStatePiece>([
+                [N, N, N, N, _, _, _, _, _],
+                [N, N, N, _, _, _, _, _, _],
+                [N, N, _, _, _, _, _, _, _],
+                [N, _, _, _, _, _, _, _, _],
+                [_, _, _, _, O, O, O, O, _],
+                [_, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, N, N],
+                [_, _, _, _, _, _, N, N, N],
+                [_, _, _, _, _, N, N, N, N],
+            ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+            defaultTopology,
+            smallerShape,
+            gameState,
+        );
+        await testUtils.setupState(state, { config: customConfig });
+        await testUtils.expectClickSuccess('#click-3-4');
+
+        // When finishing your move
+        const move: ConnectNMove = ConnectNMove.of([new Coord(3, 4), new Coord(8, 4)]);
+        // Then the victory squares should be highlighted
+        await testUtils.expectMoveSuccess('#click-8-4', move);
+        testUtils.expectElementToHaveClass('#click-3-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-4-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-5-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-6-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-7-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-8-4', 'victory-stroke');
+    }));
 
 });
