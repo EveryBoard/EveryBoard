@@ -16,8 +16,8 @@ export class TopologicNInARowHelper<T extends NonNullable<unknown>> extends NInA
         super(getOwner, N);
     }
 
-    protected override getDirections(): Set<Direction> {
-        return this.topology.getDirections();
+    protected override getDirections(): ReadonlyArray<Direction> {
+        return this.topology.getDirections().toList();
     }
 
     protected override getNextCoord(coord: Coord, dir: Direction, distance: number = 1): Coord {

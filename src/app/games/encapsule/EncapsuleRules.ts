@@ -6,7 +6,7 @@ import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-comp
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { OrdinalNInaRowHelper } from '../../jscaip/OrdinalNInaRowHelper';
+import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -107,7 +107,7 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
     }
 
     public getVictoriousCoords(state: EncapsuleState, config: EncapsuleConfig): Coord[] {
-        const helper: OrdinalNInaRowHelper<EncapsuleSpace> = new OrdinalNInaRowHelper(
+        const helper: OrdinalNInARowHelper<EncapsuleSpace> = new OrdinalNInARowHelper(
             (piece: EncapsuleSpace) => piece.getBiggest().getPlayer(),
             config.nInARow,
         );

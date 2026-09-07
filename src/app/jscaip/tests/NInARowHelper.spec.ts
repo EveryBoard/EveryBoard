@@ -2,7 +2,7 @@ import { Utils } from '@everyboard/lib';
 
 import { BoardValue } from '../AI/BoardValue';
 import { GameStatus } from '../GameStatus';
-import { OrdinalNInARowHelper } from '../OrdinalNInaRowHelper';
+import { OrdinalNInARowHelper } from '../OrdinalNInARowHelper';
 import { PlayerOrNone } from '../Player';
 import { Table } from '../TableUtils';
 import { PlayerOrNoneGameStateWithTable } from '../state/PlayerOrNoneGameStateWithTable';

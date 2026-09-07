@@ -33,8 +33,8 @@ export class HexodiaNode extends GameNode<HexodiaMove, FourStatePieceGameStateWi
 
 class HexodiaNInARowHelper extends NInARowHelper<FourStatePiece, DodecaHexaDirection> {
 
-    protected override getDirections(): Set<DodecaHexaDirection> {
-        return new Set(DodecaHexaDirection.factory.all);
+    protected override getDirections(): ReadonlyArray<DodecaHexaDirection> {
+        return DodecaHexaDirection.factory.all;
     }
 }
 export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {

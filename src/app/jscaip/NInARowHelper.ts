@@ -1,4 +1,4 @@
-import { MGPMap, Utils, Set } from '@everyboard/lib';
+import { MGPMap, Utils } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
@@ -9,7 +9,7 @@ import { GameStateWithCoords } from './state/GameStateWithCoords';
 
 export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Direction> {
 
-    private doubleDirections: Set<D> | undefined;
+    private doubleDirections: ReadonlyArray<D> | undefined;
 
     public constructor(
         private readonly getOwner: (piece: T, state?: GameStateWithCoords<T>) => PlayerOrNone,
@@ -17,9 +17,9 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
     ) {
     }
 
-    protected abstract getDirections(): Set<D>;
+    protected abstract getDirections(): ReadonlyArray<D>;
 
-    protected getDoubleDirections(): Set<D> {
+    protected getDoubleDirections(): ReadonlyArray<D> {
         if (this.doubleDirections === undefined) {
             const doubleDirections: D[] = [];
             for (const direction of this.getDirections()) {
@@ -29,7 +29,7 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
                     doubleDirections.push(direction);
                 }
             }
-            this.doubleDirections = new Set(doubleDirections);
+            this.doubleDirections = doubleDirections;
         }
         return this.doubleDirections;
     }

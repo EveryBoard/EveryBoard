@@ -5,7 +5,7 @@ import { RulesConfigDescription } from '../../components/wrapper-components/rule
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { OrdinalNInaRowHelper } from '../../jscaip/OrdinalNInaRowHelper';
+import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
