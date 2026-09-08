@@ -1,4 +1,4 @@
-import { MGPValidation, MGPOptional, Utils, MGPMap, Set } from '@everyboard/lib';
+import { MGPValidation, MGPOptional, Utils, MGPMap } from '@everyboard/lib';
 
 import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';

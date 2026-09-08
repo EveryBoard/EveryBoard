@@ -1,7 +1,6 @@
 import {
     ChangeDetectorRef,
     computed,
-    effect,
     inject,
     signal,
     Signal,
