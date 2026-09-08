@@ -1,5 +1,3 @@
-import { Set } from '@everyboard/lib';
-
 import { Coord } from './Coord';
 import { Direction } from './Direction';
 import { NInARowHelper } from './NInARowHelper';

@@ -85,7 +85,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public static getVictoriousCoords(state: TopologicGameState<FourStatePiece>, config: ConnectNConfig): Coord[] {
-        console.log('jaaj, let us getVictoriousCoords')
         return new TopologicNInARowHelper(
             (piece: FourStatePiece) => {
                 return piece.getPlayer();
@@ -171,7 +170,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         node: GameNode<ConnectNMove, TopologicGameState<FourStatePiece>>,
         config: ConnectNConfig,
     ): GameStatus {
-        console.log('getGameStatus')
         const state: TopologicGameState<FourStatePiece> = node.gameState;
         if (state.turn === 0) {
             return GameStatus.ONGOING;
@@ -193,7 +191,6 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                     direction.getOpposite(),
                     startCoord,
                 );
-                console.log(startCoord.toString(), direction.toString(), directionCount + 1 + oppositeCount)
                 if (directionCount + 1 + oppositeCount >= config.n) {
                     return GameStatus.getVictory(currentPlayer);
                 }

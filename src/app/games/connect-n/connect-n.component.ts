@@ -57,7 +57,6 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: TopologicGameState<FourStatePiece> = this.getState();
         this.coordsAndContents.set(state.getCoordsAndContents());
-        console.log('now we should getVictoriousCoords')
         this.victoryCoords.set(ConnectNRules.getVictoriousCoords(state, this.config()));
     }
 

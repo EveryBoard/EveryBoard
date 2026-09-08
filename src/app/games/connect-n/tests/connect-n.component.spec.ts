@@ -6,11 +6,13 @@ import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { Shape } from '../../../jscaip/shape/Shape';
+import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { Topology } from '../../../jscaip/topology/Topology';
+import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNConfig, ConnectNRules } from '../ConnectNRules';
@@ -22,9 +24,10 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-const defaultTopology: Topology = new SquareTopology();
-const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
-const smallerShape: Shape = new RectangularShape(5, 5, defaultTopology);
+const squareTopology: Topology = new SquareTopology();
+const triangularTopology: Topology = new TriangularTopology();
+const rectangularShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, squareTopology);
+const smallerRectangularShape: Shape = new RectangularShape(5, 5, squareTopology);
 
 describe('ConnectNComponent (SQUARE)', () => {
 
@@ -73,8 +76,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             await testUtils.setupState(state);
@@ -108,8 +111,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             await testUtils.setupState(state);
@@ -146,8 +149,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             const previousMove: ConnectNMove = ConnectNMove.of([new Coord(9, 9)]);
@@ -189,8 +192,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             await testUtils.setupState(state);
@@ -228,8 +231,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             await testUtils.setupState(state);
@@ -267,8 +270,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             await testUtils.setupState(state);
@@ -310,8 +313,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 7);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             await testUtils.setupState(state);
@@ -355,8 +358,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
 
@@ -393,8 +396,8 @@ describe('ConnectNComponent (SQUARE)', () => {
                     [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 ], 1);
             const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-                defaultTopology,
-                defaultShape,
+                squareTopology,
+                rectangularShape,
                 gameState,
             );
             const previousMove: ConnectNMove = ConnectNMove.of([new Coord(10, 9), new Coord(11, 9)]);
@@ -411,7 +414,7 @@ describe('ConnectNComponent (SQUARE)', () => {
 
 });
 
-fdescribe('ConnectNComponent (TRIANGULAR)', () => {
+describe('ConnectNComponent (TRIANGULAR)', () => {
 
     let testUtils: ComponentTestUtils<ConnectNComponent>;
 
@@ -419,7 +422,7 @@ fdescribe('ConnectNComponent (TRIANGULAR)', () => {
         testUtils = await ComponentTestUtils.forGame<ConnectNComponent>('ConnectN');
     }));
 
-    fit('should show highlight when victory occur (triangular)', fakeAsync(async() => {
+    it('should show highlight when victory occur (triangular)', fakeAsync(async() => {
         // Given a board where current player is about to win
         // on a triangular config
         const customConfig: ConnectNConfig = {
@@ -432,29 +435,29 @@ fdescribe('ConnectNComponent (TRIANGULAR)', () => {
             new SimpleGameStateWithTable<FourStatePiece>([
                 [N, N, N, N, _, N, N, N, N],
                 [N, N, N, _, _, _, N, N, N],
-                [N, N, _, _, _, _, _, N, N],
-                [N, _, _, X, X, _, _, _, N],
-                [_, _, X, X, _, _, _, _, _],
-            ], 8);
+                [N, N, X, _, _, _, _, N, N],
+                [N, X, X, _, _, _, _, _, N],
+                [_, X, _, _, _, _, _, _, _],
+            ], 7);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-            defaultTopology,
-            smallerShape,
+            triangularTopology,
+            new TriangularShape(5, triangularTopology),
             gameState,
         );
         await testUtils.setupState(state, { config: customConfig });
-        await testUtils.expectClickSuccess('#click-4-2');
+        await testUtils.expectClickSuccess('#click-3-2');
 
         // When finishing your move
-        const move: ConnectNMove = ConnectNMove.of([new Coord(4, 2), new Coord(5, 2)]);
+        const move: ConnectNMove = ConnectNMove.of([new Coord(3, 2), new Coord(0, 4)]);
 
         // Then the victory squares should be highlighted
-        await testUtils.expectMoveSuccess('#click-5-2', move);
-        testUtils.expectElementToHaveClass('#click-2-4', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#click-3-4', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#click-3-3', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#click-4-3', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#click-4-2', 'victory-stroke');
-        testUtils.expectElementToHaveClass('#click-5-2', 'victory-stroke');
+        await testUtils.expectMoveSuccess('#click-0-4', move);
+        testUtils.expectElementToHaveClass('#click-0-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-1-4', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-1-3', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-2-3', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-2-2', 'victory-stroke');
+        testUtils.expectElementToHaveClass('#click-3-2', 'victory-stroke');
     }));
 
 });
@@ -490,8 +493,8 @@ describe('ConnectNComponent (HEXAGONAL)', () => {
                 [_, _, _, _, _, N, N, N, N],
             ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-            defaultTopology,
-            smallerShape,
+            squareTopology,
+            smallerRectangularShape,
             gameState,
         );
         await testUtils.setupState(state, { config: customConfig });

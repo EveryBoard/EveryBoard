@@ -12,6 +12,9 @@ export class HexagonalTopology implements Topology {
         Ordinal.UP_RIGHT,
         Ordinal.RIGHT,
         Ordinal.DOWN,
+        Ordinal.DOWN_LEFT,
+        Ordinal.LEFT,
+        Ordinal.UP,
     ]);
 
     public getDirections(): Set<Direction> {

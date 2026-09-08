@@ -13,6 +13,10 @@ export class SquareTopology implements Topology {
         Ordinal.UP_RIGHT,
         Ordinal.RIGHT,
         Ordinal.DOWN_RIGHT,
+        Ordinal.DOWN,
+        Ordinal.DOWN_LEFT,
+        Ordinal.LEFT,
+        Ordinal.UP_LEFT,
     ]);
 
     public getDirections(): Set<Direction> {
