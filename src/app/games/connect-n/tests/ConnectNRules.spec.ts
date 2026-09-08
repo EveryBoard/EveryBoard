@@ -7,7 +7,6 @@ import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { Shape } from '../../../jscaip/shape/Shape';
-import { ToroidalShape } from '../../../jscaip/shape/ToroidalShape';
 import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
@@ -512,7 +511,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             hexagonalTopology,
-            new ToroidalShape(19, 19, hexagonalTopology),
+            new RectangularShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -555,7 +554,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             hexagonalTopology,
-            new ToroidalShape(19, 19, hexagonalTopology),
+            new RectangularShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -598,7 +597,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             hexagonalTopology,
-            new ToroidalShape(19, 19, hexagonalTopology),
+            new RectangularShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -642,7 +641,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             hexagonalTopology,
-            new ToroidalShape(19, 19, hexagonalTopology),
+            new RectangularShape(19, 19, hexagonalTopology),
             gameState,
         );
         const move: ConnectNMove =
