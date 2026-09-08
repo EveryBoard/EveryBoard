@@ -1,6 +1,7 @@
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
 import { Coord } from '../../jscaip/Coord';
+import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
 import { Shape } from '../../jscaip/shape/Shape';
@@ -16,7 +17,7 @@ const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-const defaultTopology: Topology = new SquareTopology();
+const defaultTopology: Topology<Direction> = new SquareTopology();
 const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
 export class ConnectNTutorial extends Tutorial {
 

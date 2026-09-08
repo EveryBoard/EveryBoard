@@ -3,27 +3,27 @@ import { Set } from '@everyboard/lib';
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { Ordinal } from '../Ordinal';
+import { TriangularDirection } from '../TriangularDirection';
 import { Vector } from '../Vector';
 
 import { Topology } from './Topology';
 
-export class TriangularTopology implements Topology {
+export class TriangularTopology implements Topology<TriangularDirection> {
 
     private readonly directions: Set<Direction> = new Set([
-        Ordinal.LEFT,
-        Ordinal.UP_LEFT,
-        Ordinal.UP_RIGHT,
-        Ordinal.RIGHT,
-        Ordinal.DOWN_RIGHT,
-        Ordinal.DOWN_LEFT,
+        TriangularDirection.LEFT,
+        TriangularDirection.UP_LEFT,
+        TriangularDirection.UP_RIGHT,
+        TriangularDirection.RIGHT,
+        TriangularDirection.DOWN_RIGHT,
+        TriangularDirection.DOWN_LEFT,
     ]);
 
     public getDirections(): Set<Direction> {
         return this.directions;
     }
 
-    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
-        // TODO: ensure that you cannot end up calling this with illegal direction (UP or DOWN, here)
+    public getNextCoord(coord: Coord, direction: TriangularDirection, distance: number = 1): Coord {
         if (direction.y === 0) { // No weird behavior for LEFT and RIGHT
             return coord.getNext(direction, distance);
         }

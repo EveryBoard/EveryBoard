@@ -131,7 +131,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
     }
 
     public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece> {
-        const topology: Topology = this.getTopology(config);
+        const topology: Topology<Direction> = this.getTopology(config);
         const shape: Shape = this.getShape(config, topology);
         let maxX: number = 0;
         let maxY: number = 0;
@@ -149,11 +149,11 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return new TopologicGameStateWithTable(topology, shape, gameStateWithTable);
     }
 
-    private getTopology(config: ConnectNConfig): Topology {
+    private getTopology(config: ConnectNConfig): Topology<Direction> {
         return topologyMap.get(config.topology).get();
     }
 
-    private getShape(config: ConnectNConfig, topology: Topology): Shape {
+    private getShape(config: ConnectNConfig, topology: Topology<Direction>): Shape {
         switch (config.shape) {
             case 'SQUARE': {
                 return new RectangularShape(config.boardSize, config.boardSize, topology);

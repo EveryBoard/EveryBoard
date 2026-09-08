@@ -1,37 +1,36 @@
 import { Set } from '@everyboard/lib';
 
 import { Coord } from '../Coord';
-import { Direction } from '../Direction';
-import { Ordinal } from '../Ordinal';
+import { HexaDirection } from '../HexaDirection';
 
 import { Topology } from './Topology';
 
-export class HexagonalTopology implements Topology {
+export class HexagonalTopology implements Topology<HexaDirection> {
 
-    private readonly directions: Set<Direction> = new Set([
-        Ordinal.UP_RIGHT,
-        Ordinal.RIGHT,
-        Ordinal.DOWN,
-        Ordinal.DOWN_LEFT,
-        Ordinal.LEFT,
-        Ordinal.UP,
+    private readonly directions: Set<HexaDirection> = new Set([
+        HexaDirection.UP_RIGHT,
+        HexaDirection.RIGHT,
+        HexaDirection.DOWN,
+        HexaDirection.DOWN_LEFT,
+        HexaDirection.LEFT,
+        HexaDirection.UP,
     ]);
 
-    public getDirections(): Set<Direction> {
+    public getDirections(): Set<HexaDirection> {
         return this.directions;
     }
 
-    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
+    public getNextCoord(coord: Coord, direction: HexaDirection, distance: number = 1): Coord {
         return coord.getNext(direction, distance);
     }
 
     public getNeighbors(coord: Coord): Set<Coord> {
         return new Set([
             ...this.getDirections().map(
-                (direction: Direction) => this.getNextCoord(coord, direction),
+                (direction: HexaDirection) => this.getNextCoord(coord, direction),
             ),
             ...this.getDirections().map(
-                (direction: Direction) => this.getNextCoord(coord, direction, -1),
+                (direction: HexaDirection) => this.getNextCoord(coord, direction, -1),
             ),
         ]);
     }

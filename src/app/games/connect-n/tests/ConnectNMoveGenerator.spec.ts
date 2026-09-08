@@ -7,7 +7,6 @@ import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateW
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
-import { Topology } from '../../../jscaip/topology/Topology';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
@@ -21,7 +20,7 @@ describe('ConnectNMoveGenerator', () => {
     const O: FourStatePiece = FourStatePiece.ZERO;
 
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const defaultTopology: Topology = new SquareTopology();
+    const defaultTopology: SquareTopology = new SquareTopology();
     const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
 
     beforeEach(() => {

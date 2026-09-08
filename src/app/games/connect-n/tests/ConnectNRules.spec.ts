@@ -15,7 +15,6 @@ import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGame
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
-import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ConnectNFailure } from '../ConnectNFailure';
 import { ConnectNMove } from '../ConnectNMove';
@@ -38,7 +37,7 @@ describe('ConnectNRules (SQUARE)', () => {
      */
 
     let rules: ConnectNRules;
-    const defaultTopology: Topology = new SquareTopology();
+    const defaultTopology: SquareTopology = new SquareTopology();
     const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
 
     beforeEach(() => {
@@ -477,7 +476,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
 
 
     let rules: ConnectNRules;
-    const hexagonalTopology: Topology = new HexagonalTopology();
+    const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -607,6 +606,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
@@ -650,6 +650,7 @@ describe('ConnectNRules (HEXAGONAL)', () => {
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeOngoing(rules, node, customConfig);
@@ -696,7 +697,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const topology: Topology = new TriangularTopology();
+        const topology: TriangularTopology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             topology,
             new TriangularShape(19, topology),
@@ -707,6 +708,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
@@ -741,7 +743,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const topology: Topology = new TriangularTopology();
+        const topology: TriangularTopology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             topology,
             new TriangularShape(19, topology),
@@ -752,6 +754,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
@@ -786,7 +789,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const topology: Topology = new TriangularTopology();
+        const topology: TriangularTopology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
             topology,
             new TriangularShape(19, topology),
@@ -797,6 +800,7 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         const previousNode: ConnectNNode = new ConnectNNode(state);
         const node: ConnectNNode =
             new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);

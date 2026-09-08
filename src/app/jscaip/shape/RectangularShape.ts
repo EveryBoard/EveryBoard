@@ -1,4 +1,5 @@
 import { Coord } from '../Coord';
+import { Direction } from '../Direction';
 import { Topology } from '../topology/Topology';
 
 import { TopologicShape } from './Shape';
@@ -8,7 +9,7 @@ export class RectangularShape extends TopologicShape {
     public constructor(
         public readonly width: number,
         public readonly height: number,
-        topology: Topology,
+        topology: Topology<Direction>,
     ) {
         super(topology);
     }

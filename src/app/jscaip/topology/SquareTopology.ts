@@ -6,7 +6,7 @@ import { Ordinal } from '../Ordinal';
 
 import { Topology } from './Topology';
 
-export class SquareTopology implements Topology {
+export class SquareTopology implements Topology<Ordinal> {
 
     private readonly directions: Set<Direction> = new Set([
         Ordinal.UP,

@@ -1,14 +1,17 @@
 import { Coord } from '../Coord';
+import { Direction } from '../Direction';
 import { Shape } from '../shape/Shape';
 import { Topology } from '../topology/Topology';
 
 import { SimpleGameStateWithTable } from './SimpleGameStateWithTable';
 import { TopologicGameState } from './TopologicGameState';
 
-export class TopologicGameStateWithTable<P extends NonNullable<unknown>> extends TopologicGameState<P> {
+export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
+    extends TopologicGameState<P>
+{
 
     public constructor(
-        topology: Topology,
+        topology: Topology<Direction>,
         private readonly shape: Shape,
         private readonly gameStateWithTable: SimpleGameStateWithTable<P>,
     ) {

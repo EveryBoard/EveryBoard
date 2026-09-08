@@ -11,7 +11,6 @@ import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateW
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
-import { Topology } from '../../../jscaip/topology/Topology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNMove } from '../ConnectNMove';
@@ -24,8 +23,8 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-const squareTopology: Topology = new SquareTopology();
-const triangularTopology: Topology = new TriangularTopology();
+const squareTopology: SquareTopology = new SquareTopology();
+const triangularTopology: TriangularTopology = new TriangularTopology();
 const rectangularShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, squareTopology);
 const smallerRectangularShape: Shape = new RectangularShape(5, 5, squareTopology);
 

@@ -1,4 +1,5 @@
 import { Coord } from '../Coord';
+import { Direction } from '../Direction';
 import { Topology } from '../topology/Topology';
 
 import { GameState } from './GameState';
@@ -7,12 +8,12 @@ export abstract class TopologicGameState<P extends NonNullable<unknown>> extends
 
     public constructor(
         turn: number,
-        private readonly topology: Topology,
+        private readonly topology: Topology<Direction>,
     ) {
         super(turn);
     }
 
-    public getTopology(): Topology {
+    public getTopology(): Topology<Direction> {
         return this.topology;
     }
 

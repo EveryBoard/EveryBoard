@@ -11,7 +11,6 @@ import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateW
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
-import { Topology } from '../../../jscaip/topology/Topology';
 import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
@@ -37,7 +36,7 @@ describe('ConnectNAlignmentMinimax', () => {
     let minimax: Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>;
     const level1: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
-    const defaultTopology: Topology = new SquareTopology();
+    const defaultTopology: SquareTopology = new SquareTopology();
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
     const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
 

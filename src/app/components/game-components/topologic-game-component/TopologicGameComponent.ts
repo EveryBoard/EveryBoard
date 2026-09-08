@@ -1,6 +1,7 @@
 import { Utils } from '@everyboard/lib';
 
 import { Coord } from '../../../jscaip/Coord';
+import { Direction } from '../../../jscaip/Direction';
 import { FlatHexaOrientation } from '../../../jscaip/HexaOrientation';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
@@ -64,7 +65,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
 
     private getLayout(): Layout {
         const state: TopologicGameState<P> = this.getState();
-        const topology: Topology = state.getTopology();
+        const topology: Topology<Direction> = state.getTopology();
         if (topology instanceof SquareTopology) {
             return this.squareLayout;
         } else if (topology instanceof TriangularTopology) {

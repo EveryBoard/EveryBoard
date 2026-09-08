@@ -2,13 +2,14 @@
 import { Set, expectEquality } from '@everyboard/lib';
 
 import { Coord } from '../../Coord';
+import { Direction } from '../../Direction';
 import { SquareTopology } from '../../topology/SquareTopology';
 import { Topology } from '../../topology/Topology';
 import { RectangularShape } from '../RectangularShape';
 
 describe('RectangularShape', () => {
 
-    const topology: Topology = new SquareTopology();
+    const topology: Topology<Direction> = new SquareTopology();
 
     describe('getCenters', () => {
 
