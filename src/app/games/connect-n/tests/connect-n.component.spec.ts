@@ -4,12 +4,14 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from '../../../jscaip/Coord';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
 import { Shape } from '../../../jscaip/shape/Shape';
 import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
+import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
 import { SquareTopology } from '../../../jscaip/topology/SquareTopology';
 import { TriangularTopology } from '../../../jscaip/topology/TriangularTopology';
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
@@ -25,8 +27,8 @@ const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 const squareTopology: SquareTopology = new SquareTopology();
 const triangularTopology: TriangularTopology = new TriangularTopology();
+const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
 const rectangularShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, squareTopology);
-const smallerRectangularShape: Shape = new RectangularShape(5, 5, squareTopology);
 
 describe('ConnectNComponent (SQUARE)', () => {
 
@@ -492,8 +494,8 @@ describe('ConnectNComponent (HEXAGONAL)', () => {
                 [_, _, _, _, _, N, N, N, N],
             ], 8);
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
-            squareTopology,
-            smallerRectangularShape,
+            hexagonalTopology,
+            new HexagonalShape(5, hexagonalTopology),
             gameState,
         );
         await testUtils.setupState(state, { config: customConfig });

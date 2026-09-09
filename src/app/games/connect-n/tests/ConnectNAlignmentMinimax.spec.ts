@@ -16,6 +16,8 @@ import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
+import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
+import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
 
 class ConnectNAlignmentMinimax
     extends Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
@@ -42,6 +44,8 @@ describe('ConnectNAlignmentMinimax', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
+    const X: FourStatePiece = FourStatePiece.ONE;
+    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     beforeEach(() => {
         minimax = new ConnectNAlignmentMinimax();
@@ -87,7 +91,6 @@ describe('ConnectNAlignmentMinimax', () => {
 
         // Then it should be that victory
         expect(bestMove).toEqual(ConnectNMove.of([new Coord(4, 0), new Coord(5, 0)]));
-        // REPRENEZ L'AGLO OU ON POSE LA PIECE A puis sur le plateau résultant la pièce B, etc !
     });
 
     SlowTest.it('should block double-open four at level two', () => {
@@ -201,6 +204,23 @@ describe('ConnectNAlignmentMinimax', () => {
             config: defaultConfig,
             shouldFinish: false, // not a fast minimax, actually one of the slowest
         });
+    });
+
+    it('should start in the center with hexagonal config', () => {
+        // Given the initial board and a hexagonal shape
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            shape: 'HEXAGONAL',
+            boardSize: 5,
+        };
+        const state: TopologicGameState<FourStatePiece> = ConnectNRules.get().getInitialState(customConfig);
+        const node: ConnectNNode = new ConnectNNode(state);
+
+        // When asking and applying best move
+        const bestMove: ConnectNMove = minimax.chooseNextMove(node, level1, customConfig);
+
+        // Then it should be put in the middle
+        expect(bestMove).toEqual(ConnectNMove.of([new Coord(4, 4)]));
     });
 
 });

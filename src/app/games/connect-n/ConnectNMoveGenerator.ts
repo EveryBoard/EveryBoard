@@ -87,16 +87,9 @@ export class ConnectNMoveGenerator
         state: TopologicGameState<FourStatePiece>,
         coord: Coord,
     ): Set<Coord> {
-        const usefulDistance: number = 1; // At two, it's already too much calculation for the minimax sadly
-        let neighboringCoords: Set<Coord> = new Set([
+        return new Set([
             ...this.getImmediateEmptyNeighbors(state, coord),
         ]);
-        for (let i: number = 1; i < usefulDistance; i++) {
-            neighboringCoords = neighboringCoords.flatMap(
-                (c: Coord) => this.getImmediateEmptyNeighbors(state, c),
-            );
-        }
-        return neighboringCoords;
     }
 
     private getImmediateEmptyNeighbors(state: TopologicGameState<FourStatePiece>, coord: Coord): Set<Coord> {

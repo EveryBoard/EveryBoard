@@ -22,6 +22,7 @@ import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
+const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 
@@ -473,7 +474,6 @@ describe('ConnectNRules (SQUARE)', () => {
 
 describe('ConnectNRules (HEXAGONAL)', () => {
 
-
     let rules: ConnectNRules;
     const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
 
@@ -660,8 +660,8 @@ describe('ConnectNRules (HEXAGONAL)', () => {
 
 describe('ConnectNRules (TRIANGULAR)', () => {
 
-
     let rules: ConnectNRules;
+    const triangularTopology: TriangularTopology = new TriangularTopology();
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -696,10 +696,9 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const topology: TriangularTopology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            topology,
-            new TriangularShape(19, topology),
+            triangularTopology,
+            new TriangularShape(19, triangularTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -742,10 +741,9 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const topology: TriangularTopology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            topology,
-            new TriangularShape(19, topology),
+            triangularTopology,
+            new TriangularShape(19, triangularTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -788,10 +786,9 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ], 8);
-        const topology: TriangularTopology = new TriangularTopology();
         const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
-            topology,
-            new TriangularShape(19, topology),
+            triangularTopology,
+            new TriangularShape(19, triangularTopology),
             gameState,
         );
         const move: ConnectNMove =
@@ -803,5 +800,34 @@ describe('ConnectNRules (TRIANGULAR)', () => {
         // When checking the game status
         // Then it should be a victory for Player.ONE
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
+    });
+
+    it('should make a correct triangle as initial state', () => {
+        // Given custom config with triangular shape
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            boardSize: 5,
+            shape: 'TRIANGULAR',
+            topology: 'TRIANGULAR',
+        };
+
+        // When rendering initial state
+        const expectedInitialState: TopologicGameState<FourStatePiece> = rules.getInitialState(customConfig);
+
+        // Then it should be a good sized triangle
+        const gameState: SimpleGameStateWithTable<FourStatePiece> =
+            new SimpleGameStateWithTable<FourStatePiece>([
+                [N, N, N, N, _, N, N, N, N],
+                [N, N, N, _, _, _, N, N, N],
+                [N, N, _, _, _, _, _, N, N],
+                [N, _, _, _, _, _, _, _, N],
+                [_, _, _, _, _, _, _, _, _],
+            ], 0);
+        const actualInitialState: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable(
+            triangularTopology,
+            new TriangularShape(5, triangularTopology),
+            gameState,
+        );
+        expect(actualInitialState).toEqual(expectedInitialState);
     });
 });

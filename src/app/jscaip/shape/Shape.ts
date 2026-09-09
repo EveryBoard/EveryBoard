@@ -8,15 +8,14 @@ export interface Shape {
 
     getAllCoords(): Coord[];
 
-    getNextCoord(coord: Coord, direction: Direction): Coord;
-
 }
 
-export abstract class TopologicShape {
+export abstract class TopologicShape implements Shape {
 
     public constructor(private readonly topology: Topology<Direction>) {}
 
-    public getNextCoord(coord: Coord, direction: Direction, distance: number = 1): Coord {
-        return this.topology.getNextCoord(coord, direction, distance);
-    }
+    public abstract getCenters(): Coord[];
+
+    public abstract getAllCoords(): Coord[];
+
 }
