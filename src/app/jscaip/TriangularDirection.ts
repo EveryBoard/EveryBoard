@@ -6,10 +6,10 @@ export class TriangularDirection extends Direction {
 
     public static readonly LEFT: TriangularDirection = new TriangularDirection(-1, 0);
     public static readonly UP_LEFT: TriangularDirection = new TriangularDirection(-1, -1);
-    public static readonly UP_RIGHT: TriangularDirection = new TriangularDirection(-1, 1);
+    public static readonly UP_RIGHT: TriangularDirection = new TriangularDirection(1, -1);
     public static readonly RIGHT: TriangularDirection = new TriangularDirection(1, 0);
     public static readonly DOWN_RIGHT: TriangularDirection = new TriangularDirection(1, 1);
-    public static readonly DOWN_LEFT: TriangularDirection = new TriangularDirection(1, -1);
+    public static readonly DOWN_LEFT: TriangularDirection = new TriangularDirection(-1, 1);
 
     public static readonly factory: DirectionFactory<TriangularDirection> =
         new class extends DirectionFactory<TriangularDirection> {
@@ -44,14 +44,14 @@ export class TriangularDirection extends Direction {
 
     public override getAngle(): number {
         switch (this) {
-            case TriangularDirection.LEFT: return 0;
-            case TriangularDirection.UP_LEFT: return 10;
-            case TriangularDirection.UP_RIGHT: return 20;
-            case TriangularDirection.RIGHT: return 30;
-            case TriangularDirection.DOWN_RIGHT: return 40;
+            case TriangularDirection.LEFT: return 270;
+            case TriangularDirection.UP_LEFT: return 300;
+            case TriangularDirection.UP_RIGHT: return 60;
+            case TriangularDirection.RIGHT: return 90;
+            case TriangularDirection.DOWN_RIGHT: return 120;
             default:
                 Utils.expectToBe(this, TriangularDirection.DOWN_LEFT);
-                return 50;
+                return 240;
         }
     }
 

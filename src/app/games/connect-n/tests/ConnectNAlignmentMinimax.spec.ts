@@ -16,8 +16,6 @@ import { ConnectNAlignmentHeuristic } from '../ConnectNAlignmentHeuristic';
 import { ConnectNMove } from '../ConnectNMove';
 import { ConnectNMoveGenerator } from '../ConnectNMoveGenerator';
 import { ConnectNConfig, ConnectNNode, ConnectNRules } from '../ConnectNRules';
-import { HexagonalTopology } from '../../../jscaip/topology/HexagonalTopology';
-import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
 
 class ConnectNAlignmentMinimax
     extends Minimax<ConnectNMove, TopologicGameState<FourStatePiece>, ConnectNConfig>
@@ -44,8 +42,6 @@ describe('ConnectNAlignmentMinimax', () => {
 
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
-    const X: FourStatePiece = FourStatePiece.ONE;
-    const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     beforeEach(() => {
         minimax = new ConnectNAlignmentMinimax();

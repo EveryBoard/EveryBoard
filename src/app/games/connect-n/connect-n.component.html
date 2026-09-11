@@ -2,12 +2,6 @@
      class="board"
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
-    <rect [attr.x]="viewBox().left"
-          [attr.y]="viewBox().up"
-          [attr.width]="viewBox().width"
-          [attr.height]="viewBox().height"
-          fill="purple"
-    />
     <g id="pieces">
         @for (coordAndContent of coordsAndContents(); track $index) {
             @if (coordAndContent.content.isReachable()) {
