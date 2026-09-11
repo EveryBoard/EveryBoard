@@ -8,10 +8,10 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 import { FourStatePieceGameStateWithTable } from '../../jscaip/state/FourStatePieceGameStateWithTable';
 
 import { HexodiaAlignmentHeuristic } from './HexodiaAlignmentHeuristic';

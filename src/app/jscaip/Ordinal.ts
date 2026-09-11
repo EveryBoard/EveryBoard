@@ -6,6 +6,7 @@ import { Direction, DirectionFactory } from './Direction';
  * Ordinal as in both orthogonal and diagonal
  */
 export class Ordinal extends Direction {
+    // TODO FOR REVIEW: review this OrdinalDirection or we talked about it and it already means "orthogonal or diagonal Direction" :D ?
 
     public static readonly UP: Ordinal = new Ordinal(0, -1);
     public static readonly UP_RIGHT: Ordinal = new Ordinal(1, -1);

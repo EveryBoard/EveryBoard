@@ -13,12 +13,12 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { HexaDirection } from '../../jscaip/HexaDirection';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Ordinal } from '../../jscaip/Ordinal';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { AbaloneFailure } from './AbaloneFailure';
 import { AbaloneMove } from './AbaloneMove';

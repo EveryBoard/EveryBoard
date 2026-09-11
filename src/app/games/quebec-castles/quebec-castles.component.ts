@@ -172,13 +172,13 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
         } else {
             const currentPlayer: Player = this.constructedState.getCurrentPlayer();
             if (this.dropped.contains(coord)) {
-                this.constructedState = this.constructedState.setPieceAt(coord, PlayerOrNone.NONE);
+                this.constructedState = this.constructedState.withPieceAt(coord, PlayerOrNone.NONE);
                 this.dropped = this.dropped.removeElement(coord);
             } else {
                 if (0 < this.getNumberOfAwaitedDrop()) {
                     const dropValidity: boolean = this.rules.isValidDrop(this.getState(), coord, currentPlayer, config);
                     if (dropValidity) {
-                        this.constructedState = this.constructedState.setPieceAt(coord, currentPlayer);
+                        this.constructedState = this.constructedState.withPieceAt(coord, currentPlayer);
                         this.dropped = this.dropped.addElement(coord);
                     }
                 }

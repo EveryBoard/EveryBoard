@@ -107,10 +107,10 @@ export class GoState extends GameStateWithTable<GoPiece> {
     }
 
     public withPieceAt(coord: Coord, value: GoPiece): GoState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             GoState.of,
+        return GameStateWithTable.withPieceAt(this,
+                                              coord,
+                                              value,
+                                              GoState.of,
         );
     }
 

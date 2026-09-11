@@ -263,7 +263,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
             seedDropResult.seedsInHand =
                 seedDropResult.resultingState.getPieceAt(seedDropResult.houseToDistribute);
             seedDropResult.resultingState =
-                seedDropResult.resultingState.setPieceAt(seedDropResult.houseToDistribute, 0);
+                seedDropResult.resultingState.withPieceAt(seedDropResult.houseToDistribute, 0);
             // Changing immediately the chosen house
             this.changeVisibleState(seedDropResult.resultingState);
             await TimeUtils.sleep(MancalaComponent.TIMEOUT_BETWEEN_SEEDS);

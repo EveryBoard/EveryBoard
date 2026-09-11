@@ -9,9 +9,9 @@ import { HexagonalGameComponent } from '../../../components/game-components/game
 import { ScoreName } from '../../../components/game-components/game-component/ScoreName';
 import { GroupData } from '../../../jscaip/BoardData';
 import { Coord } from '../../../jscaip/Coord';
-import { HexaLayout } from '../../../jscaip/HexaLayout';
 import { PointyHexaOrientation } from '../../../jscaip/HexaOrientation';
 import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { HexaLayout } from '../../../jscaip/layout/HexaLayout';
 import { Debug } from '../../../utils/Debug';
 import { GoLegalityInformation } from '../AbstractGoRules';
 import { GoMove } from '../GoMove';

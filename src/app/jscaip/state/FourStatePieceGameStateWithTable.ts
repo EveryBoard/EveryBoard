@@ -9,6 +9,16 @@ import { GameStateWithTable } from './GameStateWithTable';
 
 export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourStatePiece> {
 
+    public static of(
+        oldState: FourStatePieceGameStateWithTable,
+        newBoard: Table<FourStatePiece>,
+    ): FourStatePieceGameStateWithTable {
+        return new FourStatePieceGameStateWithTable(
+            newBoard,
+            oldState.turn,
+        );
+    }
+
     public getPlayerCoordsAndContent(): { coord: Coord; content: Player }[] {
         return this
             .getCoordsAndContents()
@@ -54,24 +64,17 @@ export class FourStatePieceGameStateWithTable extends GameStateWithTable<FourSta
         }
     }
 
-    public static of(
-        oldState: FourStatePieceGameStateWithTable,
-        newBoard: Table<FourStatePiece>,
-    ): FourStatePieceGameStateWithTable {
-        return new FourStatePieceGameStateWithTable(newBoard, oldState.turn);
-    }
-
-    public incrementTurn(): FourStatePieceGameStateWithTable {
-        return new FourStatePieceGameStateWithTable(this.getCopiedBoard(), this.turn + 1);
-    }
-
-    public setPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
-        return GameStateWithTable.setPieceAt(
+    public withPieceAt(coord: Coord, value: FourStatePiece): FourStatePieceGameStateWithTable {
+        return GameStateWithTable.withPieceAt(
             this,
             coord,
             value,
             FourStatePieceGameStateWithTable.of,
         );
+    }
+
+    public incrementTurn(): FourStatePieceGameStateWithTable {
+        return new FourStatePieceGameStateWithTable(this.getCopiedBoard(), this.turn + 1);
     }
 
 }

@@ -693,6 +693,10 @@
         <source>Zoomed Go</source>
         <target>Zoom Go</target>
       </trans-unit>
+      <trans-unit id="8533145452055627385" datatype="html">
+        <source>Connect N</source>
+        <target>Connect N</target>
+      </trans-unit>
       <trans-unit id="5468337301522272954" datatype="html">
         <source>Bashni</source>
         <target>Bashni</target>
@@ -1809,6 +1813,18 @@
         <source>Pieces &gt; Tiles &gt; Freedom</source>
         <target>Pièces &gt; Tuiles &gt; Libertés</target>
       </trans-unit>
+      <trans-unit id="6820617839935911342" datatype="html">
+        <source>First turns must have exactly one drop</source>
+        <target>Le premier tour doit contenir exactmenent une pièce</target>
+      </trans-unit>
+      <trans-unit id="8366240299234525015" datatype="html">
+        <source>You must drop exactly <x id="PH" equiv-text="numberOfPiece"/> pieces.</source>
+        <target>Vous devez placer exactement <x id="PH" equiv-text="numberOfPiece"/> pièces.</target>
+      </trans-unit>
+      <trans-unit id="8336049305072615544" datatype="html">
+        <source>Square</source>
+        <target>Carré</target>
+      </trans-unit>
       <trans-unit id="8560978883976627945" datatype="html">
         <source>Alignment</source>
         <target>Alignement</target>
@@ -2685,6 +2701,26 @@
       <trans-unit id="35620818119550087" datatype="html">
         <source>Hexagonal</source>
         <target>Hexagonal</target>
+      </trans-unit>
+      <trans-unit id="5440587977382249688" datatype="html">
+        <source>Triangular</source>
+        <target>Triangulaire</target>
+      </trans-unit>
+      <trans-unit id="2986159287834234807" datatype="html">
+        <source>N</source>
+        <target>N</target>
+      </trans-unit>
+      <trans-unit id="7983083284666629806" datatype="html">
+        <source>Drop after first turn</source>
+        <target>Pièce par tour (après le 1er)</target>
+      </trans-unit>
+      <trans-unit id="4214033760774511143" datatype="html">
+        <source>Space shape</source>
+        <target>Forme des cases</target>
+      </trans-unit>
+      <trans-unit id="4461597806169026629" datatype="html">
+        <source>Board shape</source>
+        <target>Forme du plateau</target>
       </trans-unit>
       <trans-unit id="5964817756364095565" datatype="html">
         <source>The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
@@ -3993,10 +4029,6 @@
             &lt;li&gt;Naturellement, on ne peut pas déplacer les pièces adverses.&lt;/li&gt;
             &lt;li&gt;Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.&lt;/li&gt;
         &lt;/ol&gt;</target>
-      </trans-unit>
-      <trans-unit id="8336049305072615544" datatype="html">
-        <source>Square</source>
-        <target>Carré</target>
       </trans-unit>
       <trans-unit id="517712097339838490" datatype="html">
         <source>When the piece you just moved or dropped is the fourth one of a square of your color,

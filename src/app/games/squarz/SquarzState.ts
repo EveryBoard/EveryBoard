@@ -24,11 +24,11 @@ export class SquarzState extends PlayerOrNoneGameStateWithTable {
         }
     }
 
-    public setPieceAt(coord: Coord, value: PlayerOrNone): SquarzState {
-        return GameStateWithTable.setPieceAt(this,
-                                             coord,
-                                             value,
-                                             SquarzState.of);
+    public withPieceAt(coord: Coord, value: PlayerOrNone): SquarzState {
+        return GameStateWithTable.withPieceAt(this,
+                                              coord,
+                                              value,
+                                              SquarzState.of);
     }
 
     public getScores(): PlayerNumberMap {
