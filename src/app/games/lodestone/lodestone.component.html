@@ -62,7 +62,7 @@
         </g>
     }
 
-    @if (isInteractive()) {
+    @if (interactive()) {
         <g id="available-lodestones">
             @for (lodestone of viewInfo.availableLodestones; track $index; let x = $index) {
                 <g id="lodestone-{{ lodestone.direction }}-{{ lodestone.orientation }}-{{ lodestone.owner.toString() }}"
