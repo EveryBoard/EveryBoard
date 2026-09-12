@@ -11,6 +11,7 @@ import {
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, NavigationExtras, provideRouter, Route, Router } from '@angular/router';
+import * as FireAuth from '@firebase/auth';
 import { FirebaseError } from 'firebase/app';
 import { firstValueFrom, Subscription } from 'rxjs';
 
@@ -740,6 +741,9 @@ export class ConfigureTestingModuleUtils {
 
 export async function setupEmulators(): Promise<unknown> {
     initializeFirebase();
+    // Browser lifecycle events may close Firebase Auth's IndexedDB connection while Karma is still running.
+    // Tests do not need to persist authentication across page loads, so keep their auth state in memory.
+    await FireAuth.setPersistence(FireAuth.getAuth(), FireAuth.inMemoryPersistence);
     await TestBed.configureTestingModule({
         providers: [
             provideHttpClient(),
