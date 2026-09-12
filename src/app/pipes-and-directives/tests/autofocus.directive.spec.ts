@@ -1,5 +1,5 @@
 /* eslint-disable max-lines-per-function */
-import { Component, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, provideZoneChangeDetection } from '@angular/core';
 import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { ConnectedUserService } from '../../services/ConnectedUserService';
@@ -21,6 +21,7 @@ describe('AutofocusDirective', () => {
             imports: [AutofocusTestComponent],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
+                provideZoneChangeDetection(),
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
             ],
         }).compileComponents();
