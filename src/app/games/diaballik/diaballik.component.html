@@ -67,7 +67,7 @@
     @if (isInteractive()) {
         <g>
             <g id="translationCountIndicator"
-               [attr.transform]="getTranslationAtXY(0, HEIGHT + 0.3) + ' scale(0.5)'">
+               [attr.transform]="getTranslationAtXY(0, height()+ 0.3) + ' scale(0.5)'">
                 <rect class="base"
                       [attr.x]="0"
                       [attr.y]="0"
@@ -96,7 +96,7 @@
                       [attr.font-size]="SPACE_SIZE / 2">{{ translationsMade }}</text>
             </g>
             <g id="passCountIndicator"
-               [attr.transform]="getTranslationAtXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
+               [attr.transform]="getTranslationAtXY(width() - 1, height() + 0.3) + ' scale(0.5)'">
                 <rect class="base"
                       [attr.x]="0"
                       [attr.y]="0"
@@ -140,7 +140,7 @@
     @if (showDoneButton()) {
         <g id="done"
            (click)="done()"
-           [attr.transform]="getTranslationAtXY(WIDTH / 2, HEIGHT + 0.5)">
+           [attr.transform]="getTranslationAtXY(width() / 2, height() + 0.5)">
             <circle [attr.cx]="STROKE_WIDTH / 2"
                     [attr.cy]="STROKE_WIDTH / 2"
                     [attr.r]="SPACE_SIZE / 2.5"

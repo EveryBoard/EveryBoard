@@ -83,9 +83,9 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
         this.board = this.state().getCopiedBoard();
-        for (let y: number = 0; y < this.getHeight(); y++) {
+        for (let y: number = 0; y < this.height(); y++) {
             const newLine: string[][] = [];
-            for (let x: number = 0; x < this.getWidth(); x++) {
+            for (let x: number = 0; x < this.width(); x++) {
                 let newSpace: string[] = [];
                 if (this.board[y][x].getOwner().isNone()) {
                     newSpace = [''];
@@ -199,7 +199,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
             return [];
         }
         const coords: Coord[] = [];
-        for (let y: number = 0; y < this.getHeight(); y++) {
+        for (let y: number = 0; y < this.height(); y++) {
             for (let x: number = 0; x < this.board[y].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (this.pieceBelongsToCurrentPlayer(coord)) {

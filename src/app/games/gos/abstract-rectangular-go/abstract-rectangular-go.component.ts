@@ -84,9 +84,9 @@ export abstract class AbstractRectangularGoComponent
         const zooms: number = this.zooms().length;
         const zoomSeparatorCount: number = zooms - 1;
         const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
-        const normalWidth: number = this.state().getWidth() * this.SPACE_SIZE;
+        const normalWidth: number = this.width() * this.SPACE_SIZE;
         const width: number = normalWidth + ((zooms - 1) * this.SUB_BOARD_SEPARATOR);
-        const normalHeight: number = this.state().getHeight() * this.SPACE_SIZE;
+        const normalHeight: number = this.height() * this.SPACE_SIZE;
         let height: number = zooms * normalHeight;
         height += this.SUB_BOARD_SEPARATOR * verticalSubBoardSeparatorCount;
         height += this.ZOOM_SEPARATOR * zoomSeparatorCount;
@@ -147,8 +147,8 @@ export abstract class AbstractRectangularGoComponent
     private showCaptures(): void {
         const previousState: GoState = this.getPreviousState();
         const captures: Coord[] = [];
-        for (let y: number = 0; y < this.getHeight(); y++) {
-            for (let x: number = 0; x < this.getWidth(); x++) {
+        for (let y: number = 0; y < this.height(); y++) {
+            for (let x: number = 0; x < this.width(); x++) {
                 const coord: Coord = new Coord(x, y);
                 const wasOccupied: boolean = previousState.getPieceAt(coord).isOccupied();
                 const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY;
@@ -183,7 +183,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     private yZoomTranslate(zoom: number): number {
-        const normalheight: number = this.state().getHeight() * this.SPACE_SIZE;
+        const normalheight: number = this.height() * this.SPACE_SIZE;
         let translate: number = (zoom) * normalheight;
         translate += (zoom) * this.ZOOM_SEPARATOR;
         translate += (zoom) * ((zoom) - 1) * 0.5 * this.SUB_BOARD_SEPARATOR;

@@ -368,11 +368,11 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
                 y = this.upperCorner.y - halfRadius;
             }
         } else {
-            x = this.state().getWidth() * 0.5 * this.SPACE_SIZE;
+            x = this.width() * 0.5 * this.SPACE_SIZE;
             if (this.getCurrentPlayer() === Player.ZERO) {
                 y = -halfRadius;
             } else {
-                y = (this.state().getHeight() + 0.5) * this.SPACE_SIZE;
+                y = (this.height() + 0.5) * this.SPACE_SIZE;
             }
         }
         return 'translate(' + x + ', ' + y + ')';

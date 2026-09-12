@@ -331,8 +331,8 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private adaptXY(x: number, y: number): Coord {
         if (this.getPointOfView() === Player.ONE) {
-            const maxX: number = this.state().getWidth() - 1;
-            const maxY: number = this.state().getHeight() - 1;
+            const maxX: number = this.width() - 1;
+            const maxY: number = this.height() - 1;
             return new Coord(maxX - x, maxY - y);
         } else {
             return new Coord(x, y);

@@ -271,8 +271,8 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
          *   4 5 6
          */
         this.remainingPieceCenterCoords = new MGPMap();
-        const height: number = this.state().getHeight();
-        const maxX: number = this.state().getWidth() - 1;
+        const height: number = this.height();
+        const maxX: number = this.width() - 1;
         const maxY: number = height - 1;
         for (const player of Player.PLAYERS) {
             const playersRemainingPieceLeftPieceCoords: Coord[] = [];
@@ -322,7 +322,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
         const offsetX: number = 0.7 * this.SPACE_SIZE;
         let cx: number = - offsetX;
         let cy: number = 0;
-        if (pieceIdx > this.state().getHeight()) {
+        if (pieceIdx > this.height()) {
             cx = 0;
             cy = offsetX;
         }

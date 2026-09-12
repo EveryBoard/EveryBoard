@@ -68,7 +68,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public readonly viewBoxWidth: Signal<number> = computed(() => this.viewBox().width - this.STROKE_WIDTH);
 
     private computeViewBoxWidth(): number {
-        return 60 + ((2 + this.state().getWidth()) * this.SPACE_SIZE);
+        return 60 + ((2 + this.width()) * this.SPACE_SIZE);
     }
 
     protected override computeViewBox(): ViewBox {
@@ -324,8 +324,8 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override hideLastMove(): void {
-        const width: number = this.state().getWidth();
-        const height: number = this.state().getHeight();
+        const width: number = this.width();
+        const height: number = this.height();
         this.captured = TableUtils.create(width, height, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
