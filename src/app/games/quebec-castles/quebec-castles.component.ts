@@ -121,7 +121,7 @@ export class QuebecCastlesComponent extends RectangularGameComponent<QuebecCastl
     }
 
     public isPlayerDropping(): boolean {
-        return this.isInteractive() && this.isDroppingGroup;
+        return this.interactive() && this.isDroppingGroup;
     }
 
     private getRotated(coord: Coord, center: Coord, rotationInRadius: number): Coord {

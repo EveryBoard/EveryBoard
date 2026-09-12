@@ -1677,7 +1677,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             // When displaying it
             // Then it should be interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeTrue();
+            expect(testUtils.getGameComponent().interactive()).toBeTrue();
 
             await receiveEndGame();
         }));
@@ -1692,7 +1692,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             testUtils.detectChanges();
 
             // Then it should not be interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
+            expect(testUtils.getGameComponent().interactive()).toBeFalse();
 
             await receiveEndGame();
         }));
@@ -1707,7 +1707,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveEndGame();
 
             // Then it should not be interactive
-            expect(testUtils.getGameComponent().isInteractive()).toBeFalse();
+            expect(testUtils.getGameComponent().interactive()).toBeFalse();
 
             await receiveEndGame();
         }));

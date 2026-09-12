@@ -255,7 +255,7 @@ describe('LascaComponent', () => {
         it('should show possible selections when interactive', fakeAsync(async() => {
             // Given a state
             // When it is interactive
-            testUtils.getGameComponent().setInteractive(true);
+            testUtils.getGameComponent().interactive.set(true);
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-0-4', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-2-4', 'clickable-stroke');
@@ -268,7 +268,7 @@ describe('LascaComponent', () => {
             const state: CheckersState = LascaRules.get().getInitialState(defaultConfig);
 
             // When it is not interactive
-            testUtils.getGameComponent().setInteractive(false);
+            testUtils.getGameComponent().interactive.set(false);
             await testUtils.setupState(state);
 
             // Then it should not show possible selections
