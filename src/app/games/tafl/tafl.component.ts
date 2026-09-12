@@ -41,13 +41,13 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().getCopiedBoard();
+        this.board = this.state().getCopiedBoard();
         this.updateViewInfo();
         this.updateScores();
     }
 
     private updateScores(): void {
-        const state: TaflState = this.getState();
+        const state: TaflState = this.state();
         const scoreZero: number = this.rules.getPlayerListPawns(Player.ZERO, state).length;
         const scoreOne: number = this.rules.getPlayerListPawns(Player.ONE, state).length;
         this.scores = MGPOptional.of(PlayerNumberMap.of(scoreZero, scoreOne));
@@ -59,13 +59,13 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     protected override async showLastMove(move: M): Promise<void> {
         const previousState: TaflState = this.getPreviousState();
-        const opponent: Player = this.getState().getCurrentOpponent();
+        const opponent: Player = this.state().getCurrentOpponent();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = move.getEnd().getNext(orthogonal, 1);
             if (previousState.isOnBoard(captured)) {
                 const previousOwner: RelativePlayer = previousState.getRelativeOwner(opponent, captured);
                 const wasOpponent: boolean = previousOwner === RelativePlayer.OPPONENT;
-                const currentPiece: TaflPawn = this.getState().getPieceAt(captured);
+                const currentPiece: TaflPawn = this.state().getPieceAt(captured);
                 const isEmpty: boolean = currentPiece === TaflPawn.UNOCCUPIED;
                 if (wasOpponent && isEmpty) {
                     this.capturedCoords.push(captured);
@@ -82,7 +82,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
 
     private updateViewInfo(): void {
         const pieceClasses: string[][][] = [];
-        this.board = this.getState().getCopiedBoard();
+        this.board = this.state().getCopiedBoard();
         for (let y: number = 0; y < this.getHeight(); y++) {
             const newLine: string[][] = [];
             for (let x: number = 0; x < this.getWidth(); x++) {
@@ -139,7 +139,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     private pieceBelongsToCurrentPlayer(coord: Coord): boolean {
-        const state: TaflState = this.getState();
+        const state: TaflState = this.state();
         const player: Player = state.getCurrentPlayer();
         return state.getRelativeOwner(player, coord) === RelativePlayer.PLAYER;
     }
@@ -150,19 +150,19 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     }
 
     public isThrone(x: number, y: number): boolean {
-        const state: TaflState = this.getState();
+        const state: TaflState = this.state();
         return this.rules.isThrone(state, new Coord(x, y));
     }
 
     public isCentralThrone(x: number, y: number): boolean {
-        return this.getState().isCentralThrone(new Coord(x, y));
+        return this.state().isCentralThrone(new Coord(x, y));
     }
 
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: PlayerOrNone = this.getState().getAbsoluteOwner(coord);
+        const owner: PlayerOrNone = this.state().getAbsoluteOwner(coord);
         classes.push(this.getPlayerClass(owner));
 
         if (this.chosen.equalsValue(coord)) {
@@ -187,7 +187,7 @@ export abstract class TaflComponent<R extends TaflRules<M>, M extends TaflMove>
     public getClickables(): Coord[] {
         if (this.chosen.isPresent()) {
             const coord: Coord = this.chosen.get();
-            const state: TaflState = this.getState();
+            const state: TaflState = this.state();
             return this.rules.getPossibleDestinations(coord, state, this.config());
         } else {
             return this.getInteractivePlayerPieces();

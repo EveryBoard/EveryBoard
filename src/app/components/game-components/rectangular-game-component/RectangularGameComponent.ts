@@ -22,11 +22,11 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
     public board: Table<P>;
 
     public getWidth(): number {
-        return this.getState().getWidth();
+        return this.state().getWidth();
     }
 
     public getHeight(): number {
-        return this.getState().getHeight();
+        return this.state().getHeight();
     }
 
     protected override computeViewBox(): ViewBox {

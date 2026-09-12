@@ -4,10 +4,10 @@
      preserveAspectRatio="xMidYMid meet">
     <g app-blank-goban
        id="blank-goban"
-       [width]="getState().getWidth()"
-       [height]="getState().getHeight()"
+       [width]="state().getWidth()"
+       [height]="state().getHeight()"
        (clickCallBack)="onClick($event)"/>
-    @for (coordAndContent of getState().getPlayerCoordsAndContent(); track coordAndContent.coord.toString()) {
+    @for (coordAndContent of state().getPlayerCoordsAndContent(); track coordAndContent.coord.toString()) {
         <circle (click)="onClick(coordAndContent.coord)"
                 id="piece-{{ coordAndContent.coord.x }}-{{ coordAndContent.coord.y }}"
                 [attr.cx]="(SPACE_SIZE * 0.5) + (SPACE_SIZE * coordAndContent.coord.x)"

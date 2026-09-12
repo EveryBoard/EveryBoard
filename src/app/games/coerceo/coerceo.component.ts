@@ -84,14 +84,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.scores = MGPOptional.of(this.state.captures);
-        this.tiles = this.state.tiles;
-        this.board = this.getState().board;
+        this.scores = MGPOptional.of(this.state().captures);
+        this.tiles = this.state().tiles;
+        this.board = this.state().board;
     }
 
     private showHighlight(): void {
-        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
+        this.possibleLandings = this.state().getLegalLandings(this.chosenCoord.get());
     }
 
     public override cancelMoveAttempt(): void {
@@ -122,12 +121,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private async onClick(coord: Coord): Promise<MGPValidation> {
-        const currentPlayer: Player = this.state.getCurrentPlayer();
+        const currentPlayer: Player = this.state().getCurrentPlayer();
         if (this.chosenCoord.equalsValue(coord)) {
             // Deselects the piece
             return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
-                   this.state.getPieceAt(coord).is(currentPlayer))
+                   this.state().getPieceAt(coord).is(currentPlayer))
         {
             return this.firstClick(coord);
         } else {
@@ -136,11 +135,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private async firstClick(coord: Coord): Promise<MGPValidation> {
-        const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
-        if (clickedPiece.is(this.state.getCurrentOpponent())) {
+        const clickedPiece: FourStatePiece = this.state().getPieceAt(coord);
+        if (clickedPiece.is(this.state().getCurrentOpponent())) {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(coord);
             return this.chooseMove(move);
-        } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
+        } else if (clickedPiece.is(this.state().getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
             return MGPValidation.SUCCESS;
@@ -159,7 +158,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public isPyramid(coord: Coord): boolean {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         return spaceContent.isPlayer() || this.wasOpponent(coord);
     }
 
@@ -174,7 +173,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getPyramidClass(coord: Coord): string {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         if (spaceContent.isPlayer()) {
             return this.getPlayerClass(spaceContent.getPlayer());
         } else {
@@ -183,7 +182,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public mustDraw(coord: Coord): boolean {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         if (spaceContent === FourStatePiece.UNREACHABLE) {
             // If it was just removed, we want to draw it
             return this.wasRemoved(coord);
@@ -194,7 +193,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private wasRemoved(coord: Coord): boolean {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
             const previousState: CoerceoState = parent.get().gameState;
@@ -292,14 +291,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private getWidth(): number {
-        const abstractWidth: number = this.getState().getWidth();
+        const abstractWidth: number = this.state().getWidth();
         const blockWidth: number = abstractWidth / 3; // The number of hexagonal blocks horizontally
         const horizontalInterPiecesSum: number = 2 * (blockWidth - 1) * this.STROKE_WIDTH;
         return (this.SPACE_SIZE * (0.5 * (abstractWidth + 1))) + horizontalInterPiecesSum;
     }
 
     private getHeight(): number {
-        const abstractHeight: number = this.getState().getHeight();
+        const abstractHeight: number = this.state().getHeight();
         const verticalInterPiecesSum: number = (abstractHeight - 2) * this.STROKE_WIDTH;
         return this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
     }

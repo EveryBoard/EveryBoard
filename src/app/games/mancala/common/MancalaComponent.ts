@@ -68,7 +68,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
     public readonly viewBoxWidth: Signal<number> = computed(() => this.viewBox().width - this.STROKE_WIDTH);
 
     private computeViewBoxWidth(): number {
-        return 60 + ((2 + this.getState().getWidth()) * this.SPACE_SIZE);
+        return 60 + ((2 + this.state().getWidth()) * this.SPACE_SIZE);
     }
 
     protected override computeViewBox(): ViewBox {
@@ -130,11 +130,11 @@ export abstract class MancalaComponent<R extends MancalaRules>
             captureResult = this.rules.monsoon(Player.ZERO, captureResult); // Who captures here is not important
             this.captured = captureResult.captureMap;
         }
-        this.changeVisibleState(this.getState());
+        this.changeVisibleState(this.state());
     }
 
     public override async updateBoard(triggerAnimation: boolean): Promise<void> {
-        const state: MancalaState = this.getState();
+        const state: MancalaState = this.state();
         if (triggerAnimation) {
             this.opponentMoveIsBeingAnimated = true;
             this.animationOngoing = true;
@@ -171,7 +171,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
 
     public async onLegalClick(x: number, y: number): Promise<MGPValidation> {
         const config: MancalaConfig = this.config();
-        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.getState().getCurrentOpponent()) {
+        if (this.rules.getSpaceOwner(new Coord(x, y), config) === this.state().getCurrentOpponent()) {
             return this.cancelMove(MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES());
         }
         this.updateOrCreateCurrentMove(x, y);
@@ -215,13 +215,13 @@ export abstract class MancalaComponent<R extends MancalaRules>
             const player: Player = this.constructedState.getCurrentPlayer();
             if (MancalaRules.isStarving(player, distributionResult.resultingState.board, this.config())) {
                 // Player has no more seed to distribute
-                return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+                return this.rules.isLegal(this.currentMove.get(), this.state(), config);
             } else {
                 // Player can still distribute
                 return MGPValidation.SUCCESS;
             }
         } else {
-            return this.rules.isLegal(this.currentMove.get(), this.getState(), config);
+            return this.rules.isLegal(this.currentMove.get(), this.state(), config);
         }
     }
 
@@ -324,12 +324,12 @@ export abstract class MancalaComponent<R extends MancalaRules>
     }
 
     public override hideLastMove(): void {
-        const width: number = this.getState().getWidth();
-        const height: number = this.getState().getHeight();
+        const width: number = this.state().getWidth();
+        const height: number = this.state().getHeight();
         this.captured = TableUtils.create(width, height, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
-        this.changeVisibleState(this.getState());
+        this.changeVisibleState(this.state());
     }
 
     public override cancelMoveAttempt(): void {
@@ -337,7 +337,7 @@ export abstract class MancalaComponent<R extends MancalaRules>
         this.droppedInStore = PlayerNumberMap.of(0, 0);
         this.filledCoords = [];
         this.lastDistributedHouses = [];
-        this.changeVisibleState(this.getState());
+        this.changeVisibleState(this.state());
     }
 
     public getSpaceClasses(x: number, y: number): string[] {
@@ -400,14 +400,14 @@ export abstract class MancalaComponent<R extends MancalaRules>
             Utils.assert(this.getTurn() > 0, 'Kalah: Should not animate move at turn 0');
             return this.node().parent.get().gameState;
         } else {
-            if (this.constructedState.equals(this.getState())) {
+            if (this.constructedState.equals(this.state())) {
                 if (this.node().parent.isPresent()) {
                     return this.node().parent.get().gameState;
                 } else {
-                    return this.getState();
+                    return this.state();
                 }
             } else {
-                return this.getState();
+                return this.state();
             }
         }
     }

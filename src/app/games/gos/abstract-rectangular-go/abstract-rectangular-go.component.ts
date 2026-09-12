@@ -84,9 +84,9 @@ export abstract class AbstractRectangularGoComponent
         const zooms: number = this.zooms().length;
         const zoomSeparatorCount: number = zooms - 1;
         const verticalSubBoardSeparatorCount: number = zooms * (zooms - 1) * 0.5;
-        const normalWidth: number = this.getState().getWidth() * this.SPACE_SIZE;
+        const normalWidth: number = this.state().getWidth() * this.SPACE_SIZE;
         const width: number = normalWidth + ((zooms - 1) * this.SUB_BOARD_SEPARATOR);
-        const normalHeight: number = this.getState().getHeight() * this.SPACE_SIZE;
+        const normalHeight: number = this.state().getHeight() * this.SPACE_SIZE;
         let height: number = zooms * normalHeight;
         height += this.SUB_BOARD_SEPARATOR * verticalSubBoardSeparatorCount;
         height += this.ZOOM_SEPARATOR * zoomSeparatorCount;
@@ -110,7 +110,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: GoState = this.getState();
+        const state: GoState = this.state();
         const phase: GoPhase = state.phase;
 
         this.board = state.getCopiedBoard();
@@ -137,11 +137,11 @@ export abstract class AbstractRectangularGoComponent
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.getState().captured);
+        this.scores = MGPOptional.of(this.state().captured);
     }
 
     protected override getScoreName(): ScoreName {
-        return this.getState().phase.getScoreName();
+        return this.state().phase.getScoreName();
     }
 
     private showCaptures(): void {
@@ -162,7 +162,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     public override async pass(): Promise<MGPValidation> {
-        const phase: GoPhase = this.getState().phase;
+        const phase: GoPhase = this.state().phase;
         if (phase.isPlaying() || phase.isPassed()) {
             return this.onClick(GoMove.PASS.coord);
         }
@@ -183,7 +183,7 @@ export abstract class AbstractRectangularGoComponent
     }
 
     private yZoomTranslate(zoom: number): number {
-        const normalheight: number = this.getState().getHeight() * this.SPACE_SIZE;
+        const normalheight: number = this.state().getHeight() * this.SPACE_SIZE;
         let translate: number = (zoom) * normalheight;
         translate += (zoom) * this.ZOOM_SEPARATOR;
         translate += (zoom) * ((zoom) - 1) * 0.5 * this.SUB_BOARD_SEPARATOR;

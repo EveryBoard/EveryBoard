@@ -23,7 +23,7 @@
                  (click)="onPieceClick(chosenLanding.get())"
                  [attr.points]="getHexaPoints()"
                  [attr.transform]="getHexaCenterTranslationAtXY(chosenLanding.get().x, chosenLanding.get().y)"
-                 [ngClass]="getPlayerClass(state.getCurrentPlayer())"
+                 [ngClass]="getPlayerClass(state().getCurrentPlayer())"
                  class="base round"/>
     }
     <!-- LAST MOVE -->
