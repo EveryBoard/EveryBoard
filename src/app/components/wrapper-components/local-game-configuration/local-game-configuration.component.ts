@@ -40,6 +40,7 @@ export class LocalGameConfigurationComponent extends BaseWrapperComponent {
                 click: MGPOptional.empty(),
                 name: this.getGameUrlName(),
                 node,
+                config,
             };
             this.cdr.detectChanges();
         }

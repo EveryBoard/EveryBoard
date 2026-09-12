@@ -94,7 +94,7 @@ export class EncapsuleComponent extends RectangularGameComponent<EncapsuleRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.state = this.getState();
-        const config: EncapsuleConfig = this.getConfig();
+        const config: EncapsuleConfig = this.config();
         this.board = this.state.getCopiedBoard();
         this.renderBoardPiece();
         this.calculateLeftPieceCoords();

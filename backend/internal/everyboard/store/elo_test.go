@@ -45,7 +45,7 @@ func TestGetEloEmptyDB(t *testing.T) {
 	// Given a empty db
 	store, err := InitDatabase(sqlite.Open(":memory:"))
 	require.NoError(t, err, "cannot initialize db")
-	// When retrieving an model.Elo which does not exists
+	// When retrieving a model.Elo which does not exists
 	user := model.MinimalUser{ID: "foo", Name: "foo"}
 	gameName := "Go"
 	elo, err := store.GetElo(gameName, user)
