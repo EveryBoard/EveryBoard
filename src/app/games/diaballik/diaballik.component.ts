@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, signal, Signal, WritableSignal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal, WritableSignal } from '@angular/core';
 
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
 
@@ -280,6 +280,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private async onFirstClick(clickedCoord: Coord): Promise<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
+        console.log(clickedPiece, this.translationsMade(), 'jaaj')
         if (clickedPiece.owner === this.getCurrentPlayer()) {
             if (this.hasMadePass() && clickedPiece.holdsBall) {
                 // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
@@ -344,7 +345,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
             const translationLegality: MGPFallible<DiaballikState> =
                 this.rules.isLegalTranslation(this.stateInConstruction, translation.get());
             if (translationLegality.isSuccess()) {
-                this.translationsMade.update((oldValue: number) => oldValue++);
+                this.translationsMade.update((oldValue: number) => oldValue + 1);
                 return this.addSubMove(translation.get(), translationLegality.get());
             } else {
                 return this.cancelMove(translationLegality.getReason());
