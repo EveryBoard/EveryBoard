@@ -125,7 +125,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         const possibleVictory: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
         this.victoryCoord.set(MGPOptional.empty());
         this.loserCoords.set([]);
-        this.blockedLines.set([]);
+        const blockedLines: Line[] = [];
         if (possibleVictory.isPresent()) {
             const victory: VictoryOrDefeatCoords = possibleVictory.get();
             if (victory instanceof VictoryCoord) {
@@ -135,16 +135,15 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
                 // If Player.ZERO won, the line will be placed in front of their piece directly.
                 // If Player.ONE won, we need to shift them by one space size so that they appear in front of the piece
                 const shift: number = victory.winner === Player.ZERO ? 0 : this.SPACE_SIZE;
-                const blockedLines: Line[] = [];
                 for (const blockedPiece of victory.opponentPiecesInContact) {
                     const x: number = blockedPiece.x * this.SPACE_SIZE;
                     const y: number = blockedPiece.y * this.SPACE_SIZE + shift;
                     const line: Line = new Line(x, y, x + this.SPACE_SIZE, y);
                     blockedLines.push(line);
                 }
-                this.blockedLines.set(blockedLines);
             }
         }
+        this.blockedLines.set(blockedLines);
     }
 
     protected override async showLastMove(move: DiaballikMove): Promise<void> {
