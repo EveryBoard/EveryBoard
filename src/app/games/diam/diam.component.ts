@@ -99,13 +99,13 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     private readonly selected: WritableSignal<MGPOptional<Selected>> = signal(MGPOptional.empty());
 
-    public viewInfo: ViewInfo = {
+    protected readonly viewInfo: WritableSignal<ViewInfo> = signal({
         boardInfo: [],
         remainingPieces: new MGPMap([
             { key: Player.ZERO, value: [] },
             { key: Player.ONE, value: [] },
         ]),
-    };
+    });
 
     public constructor() {
         super('Diam');
@@ -243,11 +243,18 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
 
     private updateBoardInfo(): void {
         for (let x: number = 0; x < DiamState.WIDTH; x++) {
-            this.viewInfo.boardInfo[x] = {
+            const boardInfo: SpaceInfo[] = this.ArrayUtils.copy(this.viewInfo().boardInfo);
+            boardInfo[x] = {
                 x,
                 spaceClasses: [], // will be filled in showLastMove
                 pieces: this.getPieces(x),
             };
+            this.viewInfo.update((viewInfo: ViewInfo) => {
+                return {
+                    ...viewInfo,
+                    boardInfo,
+                };
+            });
         }
     }
 
@@ -273,7 +280,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     classes.push('moved-fill');
                 }
             }
-            this.viewInfo.boardInfo[x].spaceClasses = classes;
+            this.viewInfo().boardInfo[x].spaceClasses = classes;
         }
     }
 
@@ -288,16 +295,21 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         for (const movedPiece of lastMoved) {
             const x: number = movedPiece.end.x;
             const y: number = movedPiece.end.y;
-            this.viewInfo.boardInfo[x].pieces[y].foregroundClasses.push('last-move-stroke');
+            this.viewInfo().boardInfo[x].pieces[y].foregroundClasses.push('last-move-stroke');
         }
     }
 
     private updateRemainingPiecesInfo(): void {
         const currentPlayer: Player = this.getCurrentPlayer();
-        this.viewInfo.remainingPieces = new MGPMap([
-            { key: Player.ZERO, value: [] },
-            { key: Player.ONE, value: [] },
-        ]);
+        this.viewInfo.update((viewInfo: ViewInfo) => {
+            return {
+                ...viewInfo,
+                remainingPieces: new MGPMap([
+                    { key: Player.ZERO, value: [] },
+                    { key: Player.ONE, value: [] },
+                ]),
+            };
+        });
         const isPlayerTurn: boolean = this.isPlayerTurn();
         for (const piece of DiamPiece.PLAYER_PIECES) {
             const remaining: number = this.getState().getRemainingPiecesOf(piece);
@@ -310,7 +322,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     // Only let the top piece be clickable
                     foregroundClasses.push('clickable-stroke-hover');
                 }
-                const pieceInfos: PieceInfo[] = this.viewInfo.remainingPieces.get(piece.owner).get();
+                const pieceInfos: PieceInfo[] = this.viewInfo().remainingPieces.get(piece.owner).get();
                 const backgroundClasses: string[] = [];
                 if (piece.otherPieceType) {
                     backgroundClasses.push('player' + (piece.owner.getValue()) + '-alternate-fill');
@@ -324,7 +336,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
                     drawPosition: this.getDrawPositionRemainingPiece(piece, y),
                     actualPiece: piece,
                 });
-                this.viewInfo.remainingPieces.put(piece.owner, pieceInfos);
+                this.viewInfo().remainingPieces.put(piece.owner, pieceInfos);
             }
         }
     }
