@@ -18,7 +18,7 @@
                 @for (player of Player.PLAYERS; track player.getValue()) {
                     <ng-container>
                         @if (isPlayerCastle(player, coordAndContent.coord)) {
-                            <g id="castle-{{ player.toString() }}-{{ getState().castles.get(player).get().x }}-{{ getState().castles.get(player).get().y }}"
+                            <g id="castle-{{ player.toString() }}-{{ state().castles.get(player).get().x }}-{{ state().castles.get(player).get().y }}"
                                style="pointer-events: none">
                                 <polyline points="0 0, 100 100, 50 50, 100 0, 0, 100, 50 50, 0 50, 100 50, 50 50, 50 0, 50 100, 50 50"
                                           class="base-no-fill"/>

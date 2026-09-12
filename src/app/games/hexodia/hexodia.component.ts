@@ -60,7 +60,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
 
     private setHexaLayout(): void {
         const halfStroke: number = this.STROKE_WIDTH / 2;
-        const configSize: number = Math.floor(this.getState().getWidth() / 2);
+        const configSize: number = Math.floor(this.state().getWidth() / 2);
         const hexaLayoutStartX: number =
             (- halfStroke * (configSize + 1)) + (Math.sqrt(2) * this.SPACE_SIZE);
         const hexaLayoutStartY: number = this.SPACE_SIZE + halfStroke;
@@ -71,7 +71,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     }
 
     protected override computeViewBox(): ViewBox {
-        const abstractSize: number = this.getState().getWidth();
+        const abstractSize: number = this.state().getWidth();
         const pieceSize: number = this.SPACE_SIZE * 1.5;
         const size: number = (this.SPACE_SIZE * 0.5) + (abstractSize * pieceSize);
         const configSize: number = Math.floor(abstractSize / 2);
@@ -83,7 +83,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: FourStatePieceGameStateWithTable = this.getState();
+        const state: FourStatePieceGameStateWithTable = this.state();
         this.hexaBoard = state.getCopiedBoard();
         const config: HexodiaConfig = this.config();
         this.victoryCoords = HexodiaRules.getVictoriousCoords(state, config);
@@ -100,11 +100,11 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const totalDrop: number = this.config().numberOfDrops;
-        if (this.getState().turn === 0) {
+        if (this.state().turn === 0) {
             const move: HexodiaMove = HexodiaMove.of([coord]);
             return this.chooseMove(move);
         } else {
-            if (this.getState().getPieceAt(coord).isPlayer()) {
+            if (this.state().getPieceAt(coord).isPlayer()) {
                 return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
             } else if (this.droppedCoords.some((c: Coord) => c.equals(coord))) {
                 return this.cancelMove();
@@ -121,7 +121,7 @@ export class HexodiaComponent extends HexagonalGameComponent<HexodiaRules,
     }
 
     public getSquareClassesAt(coord: Coord): string[] {
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord).getPlayer();
+        const owner: PlayerOrNone = this.state().getPieceAt(coord).getPlayer();
         const classes: string[] = [];
         classes.push(this.getPlayerClass(owner));
         if (this.victoryCoords.some((c: Coord) => c.equals(coord))) {

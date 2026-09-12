@@ -4,8 +4,8 @@
      preserveAspectRatio="xMidYMid meet">
 
     <g app-blank-goban
-       [width]="getState().getWidth()"
-       [height]="getState().getHeight()"
+       [width]="width()"
+       [height]="height()"
        (clickCallBack)="onClick($event)"/>
 
     <g id="pieces">
