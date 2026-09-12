@@ -341,7 +341,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public showDoneButton(): boolean {
-        return this.interactive && this.subMoves.length >= 1;
+        return this.interactive() && this.subMoves.length >= 1;
     }
 
     @ClickHandler(() => `#done`)

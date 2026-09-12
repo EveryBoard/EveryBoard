@@ -457,7 +457,7 @@ describe('InternationalCheckersComponent', () => {
         it('should show possible selections when interactive', fakeAsync(async() => {
             // Given a state
             // When it is interactive
-            testUtils.getGameComponent().setInteractive(true);
+            testUtils.getGameComponent().interactive.set(true);
             // Then it should show possible selections
             testUtils.expectElementToHaveClass('#clickable-highlight-1-6', 'clickable-stroke');
             testUtils.expectElementToHaveClass('#clickable-highlight-3-6', 'clickable-stroke');
@@ -471,7 +471,7 @@ describe('InternationalCheckersComponent', () => {
             const state: CheckersState = InternationalCheckersRules.get().getInitialState(defaultConfig);
 
             // When it is not interactive
-            testUtils.getGameComponent().setInteractive(false);
+            testUtils.getGameComponent().interactive.set(false);
             await testUtils.setupState(state);
 
             // Then it should not show possible selections

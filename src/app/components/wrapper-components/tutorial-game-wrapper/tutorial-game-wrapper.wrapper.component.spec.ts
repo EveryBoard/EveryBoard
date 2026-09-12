@@ -920,7 +920,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             await testUtils.expectMoveSuccess('#click-piece-15', new QuartoMove(0, 0, QuartoPiece.BBBB));
 
             // Then the opponent should not be displayed as interactive
-            expect(gameComponent.isInteractive()).toBeFalse();
+            expect(gameComponent.interactive()).toBeFalse();
         }));
 
     });

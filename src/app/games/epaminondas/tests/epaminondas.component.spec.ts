@@ -219,7 +219,8 @@ describe('EpaminondasComponent', () => {
     it('should not highlight any piece when observing', fakeAsync(async() => {
         // Given a state with clickable pieces and an observer, i.e., when it is not interactive
         testUtils.expectElementToHaveClass('#clickable-0-11', 'clickable-stroke');
-        testUtils.getGameComponent().setInteractive(false);
+        testUtils.getGameComponent().interactive.set(false);
+
         // When displaying the state
         // Then no coordinate should be clickable
         testUtils.expectElementNotToExist('#clickable-0-11');

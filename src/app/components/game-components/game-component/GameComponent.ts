@@ -92,7 +92,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     private pointOfView: Player = Player.ZERO;
 
     // This is true when the view is interactive, e.g., to display clickable pieces
-    protected interactive: boolean = false;
+    public readonly interactive: WritableSignal<boolean> = signal(false);
 
     public animationOngoing: boolean = false;
 
@@ -162,15 +162,6 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
             this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
         this.cdr.markForCheck();
-    }
-
-    public setInteractive(interactive: boolean): void {
-        this.interactive = interactive;
-        this.cdr.markForCheck();
-    }
-
-    public isInteractive(): boolean {
-        return this.interactive;
     }
 
     /**
