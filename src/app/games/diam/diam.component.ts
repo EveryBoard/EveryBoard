@@ -62,7 +62,7 @@ export class DiamComponent extends GameComponent<DiamRules, DiamMove, DiamState>
         return new ViewBox(-110, -120, 800, 710);
     }
 
-    private static readonly CENTER: Coord[] = [
+    private static readonly CENTER: ReadonlyArray<Coord> = [
         new Coord(40, 160),
         new Coord(100, 50),
         new Coord(255, 2),

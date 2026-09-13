@@ -250,11 +250,11 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     private async addSubMove(subMove: DiaballikSubMove, stateAfterSubMove: DiaballikState): Promise<MGPValidation> {
         this.currentSelection.set(MGPOptional.empty());
         this.indicators.set([]);
-        const subMovesTTT: DiaballikSubMove[] = this.subMoves();
-        subMovesTTT.push(subMove);
-        this.subMoves.set(subMovesTTT);
+        const subMoves: DiaballikSubMove[] = this.subMoves();
+        subMoves.push(subMove);
+        this.subMoves.set(subMoves);
         this.stateInConstruction = stateAfterSubMove;
-        if (this.subMoves.length === 3) {
+        if (this.subMoves().length === 3) {
             const move: DiaballikMove = new DiaballikMove(
                 this.subMoves()[0],
                 MGPOptional.of(this.subMoves()[1]),
@@ -280,7 +280,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private async onFirstClick(clickedCoord: Coord): Promise<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
-        console.log(clickedPiece, this.translationsMade(), 'jaaj')
         if (clickedPiece.owner === this.getCurrentPlayer()) {
             if (this.hasMadePass() && clickedPiece.holdsBall) {
                 // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
