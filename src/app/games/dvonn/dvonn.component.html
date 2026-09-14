@@ -27,8 +27,7 @@
                              [attr.transform]="getSourceSymbolTransform(spaceContent)"/>
                 }
                 @if (spaceContent.getSize() > 1) {
-                    <text (click)="onClick(coord.x, coord.y)"
-                          [attr.transform]="getTextTransform(spaceContent)"
+                    <text [attr.transform]="getTextTransform(spaceContent)"
                           class="text-center"
                           [ngClass]="getTextSizeClass(spaceContent)"
                           dy="13">{{ spaceContent.getSize() }}</text>

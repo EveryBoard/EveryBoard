@@ -122,6 +122,25 @@ describe('DvonnComponent', () => {
         testUtils.expectElementNotToExist('#chosen-2-0');
     }));
 
+    it(`should select a piece when clicking on it's text`, fakeAsync(async() => {
+        // Given any board with clickable text (size > 1)
+        const board: Table<DvonnPieceStack> = [
+            [__, __, OO, __, __, __, __, __, __, __, __],
+            [__, __, S_, O_, OO, __, __, __, __, __, __],
+            [__, __, S_, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ];
+        const state: DvonnState = new DvonnState(board, 0, false);
+        await testUtils.setupState(state);
+
+        // When clicking on the text of some piece
+        await testUtils.expectClickSuccessWithAsymmetricNaming('#click-2-0 > text', '#click-2-0');
+
+        // Then it should be selected
+        testUtils.expectElementToExist('#chosen-2-0');
+    }));
+
     it('should forbid making non-straight-line move', fakeAsync(async() => {
         // Given that the user has selected a piece
         await testUtils.expectClickSuccess('#click-2-0');
