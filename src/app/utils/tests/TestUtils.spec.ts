@@ -195,7 +195,11 @@ export class SimpleComponentTestUtils<T> {
 
     public async clickElement(elementName: string, waitInMs?: number): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        element.triggerEventHandler('click', null);
+        const nativeElement: HTMLElement = element.nativeElement;
+        const mouseEvent: MouseEvent = new MouseEvent('click', {
+            bubbles: true,
+        });
+        nativeElement.dispatchEvent(mouseEvent);
         tick(0);
         if (waitInMs !== undefined) {
             tick(waitInMs);
