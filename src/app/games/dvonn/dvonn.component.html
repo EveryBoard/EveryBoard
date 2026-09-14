@@ -37,7 +37,7 @@
         </g>
     }
     <!-- Show disconnecteds -->
-    @for (disconnected of disconnectedSpaces; track disconnected.coord.toString()) {
+    @for (disconnected of disconnectedSpaces(); track disconnected.coord.toString()) {
         <g id="disconnected-{{ disconnected.coord.x }}-{{ disconnected.coord.y }}">
             <polygon [attr.points]="getHexaPoints()"
                      [attr.transform]="getHexaCenterTranslationAt(disconnected.coord)"
@@ -57,20 +57,20 @@
         </g>
     }
     <!-- Highlight last move -->
-    @if (lastMove.isPresent()) {
+    @if (lastMove().isPresent()) {
         <ng-container>
             <polygon [attr.points]="getHexaPoints()"
-                     [attr.transform]="getHexaCenterTranslationAt(lastMove.get().getStart())"
+                     [attr.transform]="getHexaCenterTranslationAt(lastMove().get().getStart())"
                      class="base no-fill last-move-stroke"/>
             <polygon [attr.points]="getHexaPoints()"
-                     [attr.transform]="getHexaCenterTranslationAt(lastMove.get().getEnd())"
+                     [attr.transform]="getHexaCenterTranslationAt(lastMove().get().getEnd())"
                      class="base no-fill last-move-stroke"/>
         </ng-container>
     }
     <!-- Highlight selected piece -->
-    @if (chosen.isPresent()) {
-        <polygon id="chosen-{{ chosen.get().x }}-{{ chosen.get().y }}"
-                 [attr.transform]="getHexaCenterTranslationAt(chosen.get())"
+    @if (chosen().isPresent()) {
+        <polygon id="chosen-{{ chosen().get().x }}-{{ chosen().get().y }}"
+                 [attr.transform]="getHexaCenterTranslationAt(chosen().get())"
                  [attr.points]="getHexaPoints()"
                  class="base no-fill selected-stroke"/>
     }

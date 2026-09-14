@@ -46,14 +46,14 @@
                 }
             </g>
         }
-        @for (line of blockedLines; track $index) {
+        @for (line of blockedLines(); track $index) {
             <line [attr.x1]="line.x1"
                   [attr.y1]="line.y1"
                   [attr.x2]="line.x2"
                   [attr.y2]="line.y2"
                   class="defeat-stroke normal-stroke"/>
         }
-        @for (coord of indicators; track coord.toString()) {
+        @for (coord of indicators(); track coord.toString()) {
             <rect [attr.transform]="getTranslationAt(coord)"
                   id="indicator-{{ coord.x }}-{{ coord.y }}"
                   [attr.x]="SPACE_SIZE/2 - INDICATOR_SIZE/2"
@@ -93,7 +93,7 @@
                       class="base-no-stroke text-giant"
                       [attr.x]="2.3 * SPACE_SIZE"
                       [attr.y]="SPACE_SIZE/2"
-                      [attr.font-size]="SPACE_SIZE / 2">{{ translationsMade }}</text>
+                      [attr.font-size]="SPACE_SIZE / 2">{{ translationsMade() }}</text>
             </g>
             <g id="passCountIndicator"
                [attr.transform]="getTranslationAtXY(WIDTH - 1, HEIGHT + 0.3) + ' scale(0.5)'">
@@ -132,7 +132,7 @@
                       class="base-no-stroke text-giant"
                       [attr.x]="- 0.6 * SPACE_SIZE"
                       [attr.y]="SPACE_SIZE/2"
-                      [attr.font-size]="SPACE_SIZE / 2">{{ hasMadePass ? 1 : 0 }}</text>
+                      [attr.font-size]="SPACE_SIZE / 2">{{ hasMadePass() ? 1 : 0 }}</text>
             </g>
         </g>
     }
