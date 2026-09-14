@@ -18,6 +18,11 @@ import { DvonnRules } from './DvonnRules';
 import { DvonnScoreHeuristic } from './DvonnScoreHeuristic';
 import { DvonnState } from './DvonnState';
 
+type CoordAndContent = {
+    coord: Coord;
+    spaceContent: DvonnPieceStack;
+}
+
 @Component({
     changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-dvonn',
@@ -25,12 +30,6 @@ import { DvonnState } from './DvonnState';
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
     imports: [NgClass],
 })
-
-type CoordAndContent = {
-    coord: Coord;
-    spaceContent: DvonnPieceStack;
-}
-
 export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove, DvonnState, DvonnPieceStack> {
 
     protected readonly lastMove: WritableSignal<MGPOptional<DvonnMove>> = signal(MGPOptional.empty());
