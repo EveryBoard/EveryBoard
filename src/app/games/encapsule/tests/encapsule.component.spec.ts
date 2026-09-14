@@ -356,8 +356,7 @@ describe('EncapsuleComponent', () => {
             // (0.5, 3.5) -> so the piece coord would be (1, 4), right below the 3x3 board
             const abstractCenter: Coord = new Coord(0.5, 3.5);
             const concreteCenter: Coord = new Coord(0, 0).getNext(abstractCenter, 100);
-            const concreteCenterString: string = testUtils.getGameComponent().getSVGTranslationAt(concreteCenter);
-            expect(transform).toEqual(concreteCenterString);
+            expect(transform).toEqual(`translate(${ concreteCenter.x }, ${ concreteCenter.y })`);
         }));
 
     });

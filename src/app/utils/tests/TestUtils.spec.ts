@@ -505,6 +505,10 @@ export class ComponentTestUtils<C extends AbstractGameComponent, P extends Compa
         return (this.gameComponent as unknown) as C;
     }
 
+    public setInteractive(interactive: boolean): void {
+        this.getGameComponent().setInteractive(interactive);
+    }
+
     /**
      * @param nameInHtml The real name (id) of the element in the XML
      * @param nameInFunction Its name inside the code

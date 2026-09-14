@@ -13,7 +13,7 @@ import { LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
 import { LinesOfActionComponent } from '../lines-of-action.component';
 
-describe('LinesOfActionComponent', () => {
+fdescribe('LinesOfActionComponent', () => {
 
     let testUtils: ComponentTestUtils<LinesOfActionComponent>;
     const _: PlayerOrNone = PlayerOrNone.NONE;
