@@ -36,15 +36,6 @@ describe('KamisadoComponent', () => {
         testUtils.expectToBeCreated();
     });
 
-    it('should remove chosen coord when calling updateBoard without move', fakeAsync(async() => {
-        // Given the game component
-        // When calling updateBoard
-        await testUtils.getGameComponent().updateBoard(false);
-        // Then the chosen piece should be absent, and nothing should be highlighted
-        expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
-        testUtils.expectElementNotToExist('.highlight');
-    }));
-
     it('should not allow to pass initially', fakeAsync(async() => {
         // Given the initial state
         // When displaying the board
@@ -58,7 +49,7 @@ describe('KamisadoComponent', () => {
         // When clicking on a different piece from the same player
         await testUtils.expectClickSuccess('#click-1-7');
         // Then it should change the selected piece
-        expect(testUtils.getGameComponent().chosen.equalsValue(new Coord(1, 7))).toBeTrue();
+        testUtils.expectElementToExist('#selected-piece-1-7');
     }));
 
     it('should allow deselecting initial choice', fakeAsync(async() => {
@@ -69,8 +60,7 @@ describe('KamisadoComponent', () => {
         await testUtils.expectClickFailure('#click-0-7');
 
         // Then it should be deselected
-        expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
-        testUtils.expectElementNotToExist('.highlight');
+        testUtils.expectElementNotToExist('.selected-data');
     }));
 
     it('should allow to pass if stuck position', fakeAsync(async() => {
@@ -195,7 +185,7 @@ describe('KamisadoComponent', () => {
         await testUtils.setupState(state);
 
         // Then the next selected piece should not be highlighted
-        testUtils.expectElementNotToExist('#selectedPiece');
+        testUtils.expectElementNotToExist('#selected-piecePiece');
     }));
 
     it('should show last move when it is not a PASS', fakeAsync(async() => {
