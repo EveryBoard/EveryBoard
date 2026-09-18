@@ -1,4 +1,4 @@
-import { ArrayUtils, MGPFallible, MGPMap, MGPOptional } from '@everyboard/lib';
+import { ArrayUtils, MGPFallible, MGPMap, MGPOptional, Set } from '@everyboard/lib';
 
 import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
 import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
@@ -46,6 +46,8 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
                                                       EncapsuleLegalityInformation>
 {
     private static singleton: MGPOptional<EncapsuleRules> = MGPOptional.empty();
+
+    private static readonly helpers: MGPMap<number, NInARowHelper<EncapsuleSpace>> = new MGPMap();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<EncapsuleConfig> =
         new RulesConfigDescription<EncapsuleConfig>({
@@ -96,6 +98,17 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return PlayerMap.ofValues(playerZero, playerOne);
     }
 
+    public getHelper(config: EncapsuleConfig): NInARowHelper<EncapsuleSpace> {
+        if (EncapsuleRules.helpers.containsKey(config.nInARow) === false) {
+            const helper: NInARowHelper<EncapsuleSpace> = new NInARowHelper<EncapsuleSpace>(
+                (piece: EncapsuleSpace) => piece.getBiggest().getPlayer(),
+                config.nInARow,
+            );
+            EncapsuleRules.helpers.set(config.nInARow, helper);
+        }
+        return EncapsuleRules.helpers.get(config.nInARow).get();
+    }
+
     private getSizeToNumberMap(nbOfEachPieces: number[]): EncapsuleSizeToNumberMap {
         const map: EncapsuleSizeToNumberMap = new EncapsuleSizeToNumberMap();
         for (let i: number = 0; i < nbOfEachPieces.length; i++) {
@@ -106,12 +119,28 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
         return map;
     }
 
+    private getPlayersCoords(coords: Coord[], state: EncapsuleState, player: Player): Coord[] {
+        return coords.filter((coord: Coord) => {
+            return state.getPieceAt(coord).getBiggest().getPlayer().equals(player);
+        });
+    }
+
     public getVictoriousCoords(state: EncapsuleState, config: EncapsuleConfig): Coord[] {
-        const helper: NInARowHelper<EncapsuleSpace> = new NInARowHelper(
-            (piece: EncapsuleSpace) => piece.getBiggest().getPlayer(),
-            config.nInARow,
-        );
-        return helper.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
+        const opponentCoords: Coord[] = this.getPlayersCoords(victoriousCoord, state, state.getPreviousOpponent());
+        const playerCoords: Coord[] = this.getPlayersCoords(victoriousCoord, state, state.getPreviousPlayer());
+        if (opponentCoords.length === 0) {
+            if (playerCoords.length === 0) {
+                return []; // Nobody won
+            } else {
+                return playerCoords; // Player won
+            }
+        } else {
+            // if there is no player coords, then opponent won
+            // if there is both player coords,
+            // Then player made opponent win by making two victories
+            return opponentCoords;
+        }
     }
 
     public isVictory(state: EncapsuleState, config: EncapsuleConfig): MGPOptional<Player> {
@@ -188,11 +217,17 @@ export class EncapsuleRules extends ConfigurableRules<EncapsuleMove,
 
     public override getGameStatus(node: EncapsuleNode, config: EncapsuleConfig): GameStatus {
         const state: EncapsuleState = node.gameState;
-        const winner: MGPOptional<Player> = this.isVictory(state, config);
-        if (winner.isPresent()) {
-            return GameStatus.getVictory(winner.get());
-        } else {
+        const victoriousCoord: Coord[] = EncapsuleRules.helpers.get(config.nInARow).get().getVictoriousCoord(state);
+        const unreducedWinners: PlayerOrNone[] = victoriousCoord.map(
+            (coord: Coord) => state.getPieceAt(coord).getBiggest().getPlayer(),
+        );
+        const winners: Set<PlayerOrNone> = new Set(unreducedWinners);
+        if (winners.size() === 0) {
             return GameStatus.ONGOING;
+        } else if (winners.size() === 1) {
+            return GameStatus.getVictory(winners.getAnyElement().get() as Player);
+        } else {
+            return GameStatus.getVictory(state.getCurrentPlayer());
         }
     }
 

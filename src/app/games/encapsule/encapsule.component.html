@@ -9,9 +9,9 @@
                    (click)="onPieceClick(piece)"
                    [attr.transform]="getRemainingPieceTranslate(player, pieceIdX)">
                     <g app-ring
-                       [outsideRadius]="pieceSizeToRadius.get(piece).get()"
-                       [width]="ringStrokeWidth / 2"
-                       [strokeWidth]="ringStrokeWidth / 4"
+                       [outsideRadius]="pieceSizeToRadius().get(piece).get()"
+                       [width]="ringStrokeWidth() / 2"
+                       [strokeWidth]="ringStrokeWidth() / 4"
                        [midRingClasses]="getSidePieceClasses(piece)"
                        pointer-events="fill" />
                     <text id="player-{{ player.toString() }}-pieces-{{ piece.toString() }}-count"
@@ -37,31 +37,32 @@
                               [attr.height]="SPACE_SIZE"
                               [ngClass]="boardPieces[y][x].coordClasses"
                               class="base"/>
-                        @for (pieceData of boardPieces[y][x].piecesData; track $index) {
+                        @for (pieceData of boardPieces()[y][x].piecesData; track $index) {
                             <g app-ring
                                id="piece-{{ x }}-{{ y }}"
                                (click)="onBoardClick(x, y)"
                                [attr.transform]="pieceData.translate"
                                [outsideRadius]="pieceData.radius"
-                               [width]="ringStrokeWidth / 2"
-                               [strokeWidth]="ringStrokeWidth / 4"
+                               [width]="ringStrokeWidth() / 2"
+                               [strokeWidth]="ringStrokeWidth() / 4"
                                [midRingClasses]="pieceData.classes" />
                         }
                     </g>
                 }
             </g>
         }
-        @if (chosenCoord.isPresent()) {
-            <rect id="chosen-{{ chosenCoord.get().x }}-{{ chosenCoord.get().y }}"
-                  (click)="onBoardClick(chosenCoord.get().x, chosenCoord.get().y)"
-                  [attr.x]="SPACE_SIZE * chosenCoord.get().x"
-                  [attr.y]="SPACE_SIZE * chosenCoord.get().y"
+        @if (chosenCoord().isPresent()) {
+            @let chosen = chosenCoord().get();
+            <rect id="chosen-{{ chosen.x }}-{{ chosen.y }}"
+                  (click)="onBoardClick(chosen.x, chosen.y)"
+                  [attr.x]="SPACE_SIZE * chosen.x"
+                  [attr.y]="SPACE_SIZE * chosen.y"
                   [attr.width]="SPACE_SIZE"
                   [attr.height]="SPACE_SIZE"
                   class="base no-fill selected-stroke"
                   pointer-events="fill"/>
         }
-        @for (coord of victoryCoords; track coord.toString()) {
+        @for (coord of victoryCoords(); track coord.toString()) {
             <rect id="victory-{{ coord.x }}-{{ coord.y }}"
                   class="base no-fill victory-stroke mid-stroke"
                   [attr.x]="SPACE_SIZE * coord.x"

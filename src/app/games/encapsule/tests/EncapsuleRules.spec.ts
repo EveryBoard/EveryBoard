@@ -88,6 +88,22 @@ describe('EncapsuleRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
+    it('should know last player loose by creating victory for both player at once', () => {
+        // Given a board on which Player.ZERO just gave alignment to both player
+        const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 1, 1]);
+        const expectedBoard: EncapsuleSpace[][] = [
+            [X__, _X_, __X],
+            [O__, _O_, __O],
+            [___, ___, ___],
+        ];
+        const expectedState: EncapsuleState = new EncapsuleState(expectedBoard, 3, remainingPieces, 3);
+        const node: EncapsuleNode = new EncapsuleNode(expectedState);
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
+    });
+
     it('should allow moving pieces on empty coord', () => {
         // Given a board with piece on it
         const board: EncapsuleSpace[][] = [
