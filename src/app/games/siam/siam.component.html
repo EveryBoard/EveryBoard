@@ -41,7 +41,7 @@
     </g>
     @for (coord of clickableCoords; track $index) {
         <g>
-            @if (getState().isNotOnBoard(coord)) {
+            @if (state().isNotOnBoard(coord)) {
                 <rect id="square-{{ coord.x }}-{{ coord.y }}"
                       (click)="clickSquare(coord.x, coord.y)"
                       [attr.x]="SPACE_SIZE * coord.x"
