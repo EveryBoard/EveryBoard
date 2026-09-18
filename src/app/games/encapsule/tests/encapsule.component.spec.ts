@@ -19,18 +19,26 @@ describe('EncapsuleComponent', () => {
     const rules: EncapsuleRules = EncapsuleRules.get();
     const defaultConfig: EncapsuleConfig = rules.getDefaultRulesConfig();
 
-    const _: EncapsuleSpace = EncapsuleSpace.EMPTY;
-    const emptyBoard: EncapsuleSpace[][] = [
-        [_, _, _],
-        [_, _, _],
-        [_, _, _],
-    ];
     const noMorePieces: EncapsuleRemainingPieces =
         PlayerMap.ofValues(new EncapsuleSizeToNumberMap(), new EncapsuleSizeToNumberMap());
     const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
     const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO);
+    const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ONE);
+    const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
     const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
     const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ONE);
+    const ___: EncapsuleSpace = EncapsuleSpace.EMPTY;
+    const X__: EncapsuleSpace = ___.put(smallLight);
+    const _X_: EncapsuleSpace = ___.put(mediumLight);
+    const __X: EncapsuleSpace = ___.put(bigLight);
+    const O__: EncapsuleSpace = ___.put(smallDark);
+    const _O_: EncapsuleSpace = ___.put(mediumDark);
+    const __O: EncapsuleSpace = ___.put(bigDark);
+    const emptyBoard: EncapsuleSpace[][] = [
+        [___, ___, ___],
+        [___, ___, ___],
+        [___, ___, ___],
+    ];
     const P0Turn: number = 6;
 
     beforeEach(fakeAsync(async() => {
@@ -102,11 +110,10 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should forbid moving from a space that the player is not controlling', fakeAsync(async() => {
-            const x: EncapsuleSpace = _.put(mediumLight);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_X_, ___, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
 
@@ -124,11 +131,10 @@ describe('EncapsuleComponent', () => {
 
         it('should select starting coord when clicking on occupied coord', fakeAsync(async() => {
             // Given a board on which one piece is owned by current player
-            const x: EncapsuleSpace = _.put(mediumLight);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_X_, ___, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
 
@@ -152,11 +158,10 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
-            const x: EncapsuleSpace = _.put(smallLight);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [__X, ___, ___],
+                [___, ___, ___],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([0, 1], []);
             await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces, 3));
@@ -168,11 +173,10 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should forbid dropping a piece on a bigger one', fakeAsync(async() => {
-            const x: EncapsuleSpace = _.put(mediumLight);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_X_, ___, ___],
+                [___, ___, ___],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1], []);
             await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces, 3));
@@ -184,11 +188,10 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
-            const x: EncapsuleSpace = _.put(mediumDark);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_O_, ___, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
 
@@ -200,12 +203,10 @@ describe('EncapsuleComponent', () => {
 
         it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
             // Given a board with a selected piece movable on top of another one
-            const x: EncapsuleSpace = _.put(mediumDark);
-            const X: EncapsuleSpace = _.put(bigDark);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, X, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_O_, O__, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
             await testUtils.expectClickSuccess('#click-1-1');
@@ -219,12 +220,10 @@ describe('EncapsuleComponent', () => {
 
         it('should display moved piece', fakeAsync(async() => {
             // Given a board with a selected piece movable on top of another one
-            const x: EncapsuleSpace = _.put(mediumDark);
-            const X: EncapsuleSpace = _.put(bigDark);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, X, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_O_, O__, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
             await testUtils.expectClickSuccess('#click-1-1');
@@ -239,12 +238,10 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should forbid moving a piece on top of a bigger one', fakeAsync(async() => {
-            const x: EncapsuleSpace = _.put(mediumDark);
-            const X: EncapsuleSpace = _.put(bigDark);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, X, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_O_, O__, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
 
@@ -255,11 +252,10 @@ describe('EncapsuleComponent', () => {
         }));
 
         it('should forbid selecting a remaining piece when a move is being constructed', fakeAsync(async() => {
-            const x: EncapsuleSpace = _.put(mediumDark);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_O_, ___, ___],
+                [___, ___, ___],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1], []);
             await testUtils.setupState(new EncapsuleState(board, P0Turn, remainingPieces, 3));
@@ -294,11 +290,10 @@ describe('EncapsuleComponent', () => {
 
         it('should deselect starting coord when clicking on it again', fakeAsync(async() => {
             // Given a board on which one piece is owned by current player and one is selected
-            const x: EncapsuleSpace = _.put(mediumLight);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_X_, ___, ___],
+                [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
             await testUtils.expectClickSuccess('#click-0-1');
@@ -312,30 +307,59 @@ describe('EncapsuleComponent', () => {
 
     });
 
-    it('should display victory highlight', fakeAsync(async() => {
-        // Given a board with a victory
-        const x: EncapsuleSpace = _.put(mediumLight);
-        const board: EncapsuleSpace[][] = [
-            [x, _, _],
-            [_, x, _],
-            [_, _, x],
-        ];
-        // When displaying it
+    describe('victory highlight', () => {
 
-        await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
+        it('should display victory highlight', fakeAsync(async() => {
+            // Given a board with a victory
+            const board: EncapsuleSpace[][] = [
+                [_X_, ___, ___],
+                [___, _X_, ___],
+                [___, ___, _X_],
+            ];
+            // When displaying it
 
-        // Then the victory coords should be highlighted
-        testUtils.expectElementToExist('#victory-0-0');
-        testUtils.expectElementToExist('#victory-1-1');
-        testUtils.expectElementToExist('#victory-2-2');
-        // And other coords should not be highlighted
-        testUtils.expectElementNotToExist('#victory-1-0');
-        testUtils.expectElementNotToExist('#victory-2-0');
-        testUtils.expectElementNotToExist('#victory-0-1');
-        testUtils.expectElementNotToExist('#victory-2-1');
-        testUtils.expectElementNotToExist('#victory-0-2');
-        testUtils.expectElementNotToExist('#victory-1-2');
-    }));
+            await testUtils.setupState(new EncapsuleState(board, 1, noMorePieces, 3));
+
+            // Then the victory coords should be highlighted
+            testUtils.expectElementToExist('#victory-0-0');
+            testUtils.expectElementToExist('#victory-1-1');
+            testUtils.expectElementToExist('#victory-2-2');
+            // And other coords should not be highlighted
+            testUtils.expectElementNotToExist('#victory-1-0');
+            testUtils.expectElementNotToExist('#victory-2-0');
+            testUtils.expectElementNotToExist('#victory-0-1');
+            testUtils.expectElementNotToExist('#victory-2-1');
+            testUtils.expectElementNotToExist('#victory-0-2');
+            testUtils.expectElementNotToExist('#victory-1-2');
+        }));
+
+        it(`should display opponent's non-victory highlight`, fakeAsync(async() => {
+            // Given a board with both player having 3 pieces aligned
+            const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([1, 1, 1], [1, 1, 1]);
+            const board: EncapsuleSpace[][] = [
+                [X__, _X_, __X],
+                [O__, _O_, __O],
+                [___, ___, ___],
+            ];
+            const state: EncapsuleState = new EncapsuleState(board, 9, remainingPieces, 3);
+            // When displaying it
+
+            await testUtils.setupState(state);
+
+            // Then the victory coords should be highlighted only for winner
+            testUtils.expectElementToExist('#victory-0-0');
+            testUtils.expectElementToExist('#victory-1-0');
+            testUtils.expectElementToExist('#victory-2-0');
+            // And other coords should not be highlighted
+            testUtils.expectElementNotToExist('#victory-0-1');
+            testUtils.expectElementNotToExist('#victory-1-1');
+            testUtils.expectElementNotToExist('#victory-2-1');
+            testUtils.expectElementNotToExist('#victory-0-2');
+            testUtils.expectElementNotToExist('#victory-1-2');
+            testUtils.expectElementNotToExist('#victory-2-2');
+        }));
+
+    });
 
     describe('Custom Config', () => {
 
@@ -366,11 +390,10 @@ describe('EncapsuleComponent', () => {
 
         it('should hide last move when selecting a piece to drop', fakeAsync(async() => {
             // Given a state with a last move
-            const x: EncapsuleSpace = _.put(mediumLight);
             const board: EncapsuleSpace[][] = [
-                [_, _, _],
-                [x, _, _],
-                [_, _, _],
+                [___, ___, ___],
+                [_X_, ___, ___],
+                [___, ___, ___],
             ];
             const previousMove: EncapsuleMove = EncapsuleMove.ofDrop(mediumLight, new Coord(0, 1));
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([], [1, 1]);
