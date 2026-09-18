@@ -50,7 +50,7 @@ jobs:
       - name: Setup dependencies (install dependencies)
         run: npm ci
       - name: Build lib
-        run: cd lib && npm run build
+        run: npm run libtest:ci && npm run gamestest:ci && npm run test:ci
       - name: Setup dependencies (setup dummy Firebase config)
         run: cp ./src/app/firebaseConfig.ts.dummy ./src/app/firebaseConfig.ts
       - name: Run test suites

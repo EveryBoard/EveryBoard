@@ -20,7 +20,9 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "test": "TS_NODE_PROJECT=tsconfig.test.json nyc -x '**/*.spec.ts' --reporter=lcov --reporter=text --reporter=text-summary npx jasmine --config=jasmine.json",
+    "test:runner": "TS_NODE_PROJECT=tsconfig.test.json nyc -x '**/*.spec.ts' --reporter=lcov --reporter=text --reporter=text-summary jasmine",
+    "test": "npm run test:runner -- --config=jasmine.json",
+    "test:ci": "npm run test:runner -- --config=jasmine.ci.json",
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
   },
   "dependencies": {
@@ -29,6 +31,7 @@
   "devDependencies": {
     "@angular/localize": "^20.3.18",
     "@types/jasmine": "^6.0.0",
+    "@types/node": "^22.0.0",
     "jasmine": "^6.2.0",
     "nyc": "^18.0.0",
     "ts-node": "^10.9.2"

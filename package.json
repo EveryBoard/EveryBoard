@@ -23,6 +23,7 @@
     "test:ci": "bash ./scripts/test.sh --watch=false --browsers=ChromeHeadlessCustom --configuration=ci",
     "libtest": "cd lib && npm test",
     "libtest:ci": "cd lib && npm ci && npm test && npm run coverage",
+    "gamestest:ci": "cd games && npm ci && npm run test:ci && npm run coverage",
     "prelint": "npm run eslint-rules:test",
     "lint": "eslint \"**/*.ts\" \"src/app/**/*.html\" --quiet",
     "e2e": "python ./e2e/launch.py"
