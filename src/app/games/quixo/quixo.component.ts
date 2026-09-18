@@ -60,7 +60,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
 
     protected override async showLastMove(move: QuixoMove): Promise<void> {
         let coord: Coord = move.coord;
-        while (this.state.isOnBoard(coord)) {
+        while (this.state().isOnBoard(coord)) {
             this.lastMoveCoords.push(coord);
             coord = coord.getNext(move.direction);
         }
@@ -71,9 +71,8 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.board = this.state.board;
-        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state);
+        this.board = this.state().board;
+        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.state());
     }
 
     public override cancelMoveAttempt(): void {
@@ -100,12 +99,12 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
-        const state: QuixoState = this.getState();
+        const state: QuixoState = this.state();
         const coordLegality: MGPValidation = this.rules.isValidCoord(state, clickedCoord);
         if (coordLegality.isFailure()) {
             return this.cancelMove(coordLegality.getReason());
         }
-        if (this.board[y][x] === this.state.getCurrentOpponent()) {
+        if (this.board[y][x] === this.state().getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         } else {
             if (this.chosenCoord.equalsValue(clickedCoord)) {
@@ -120,7 +119,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     public getPossiblesDirections(): Orthogonal[] {
         const directions: Orthogonal[] = [];
         const chosenCoord: Coord = this.chosenCoord.get();
-        const state: QuixoState = this.getState();
+        const state: QuixoState = this.state();
         if (chosenCoord.x < state.getWidth() - 1) directions.push(Orthogonal.RIGHT);
         if (0 < chosenCoord.x) directions.push(Orthogonal.LEFT);
         if (chosenCoord.y < state.getHeight() - 1) directions.push(Orthogonal.DOWN);
@@ -143,7 +142,7 @@ export class QuixoComponent extends RectangularGameComponent<QuixoRules,
     }
 
     public getQuixoArrowTransform(orientation: Orthogonal): string {
-        const state: QuixoState = this.getState();
+        const state: QuixoState = this.state();
         const boardWidth: number = state.getWidth() * this.SPACE_SIZE;
         const boardHeight: number = state.getHeight() * this.SPACE_SIZE;
         return this.getArrowTransform(boardWidth, boardHeight, orientation);
