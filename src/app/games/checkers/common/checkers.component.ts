@@ -178,7 +178,7 @@ export abstract class CheckersComponent<R extends AbstractCheckersRules>
 
     private showPossibleClicks(): void {
         this.possibleClicks = new Set();
-        if (this.interactive) {
+        if (this.interactive()) {
             for (const validMove of this.legalMoves) {
                 const numberOfClicks: number = this.currentMoveClicks.length;
                 if (numberOfClicks < validMove.coords.length) {

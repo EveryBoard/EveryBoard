@@ -149,9 +149,9 @@ export abstract class GameWrapper<P extends Comparable> extends BaseWrapperCompo
     }
 
     public async setInteractive(interactive: boolean, updateBoard: boolean = true): Promise<void> {
-        const interactivityChanged: boolean = this.gameComponent.isInteractive() !== interactive;
+        const interactivityChanged: boolean = this.gameComponent.interactive() !== interactive;
         if (interactivityChanged) {
-            this.gameComponent.setInteractive(interactive);
+            this.gameComponent.interactive.set(interactive);
             if (updateBoard) {
                 await this.gameComponent.updateBoardAndRedraw(false);
             }
