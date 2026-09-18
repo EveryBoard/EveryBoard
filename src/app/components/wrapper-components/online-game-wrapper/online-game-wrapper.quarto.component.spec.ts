@@ -364,7 +364,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveSync();
 
             // Then the game is up to date
-            expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(2);
+            expect(testUtils.getWrapper().gameComponent.state().turn).toBe(2);
 
             await receiveEndGame();
         }));
@@ -380,7 +380,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveSync();
 
             // Then the game is up to date
-            expect(testUtils.getWrapper().gameComponent.getState().turn).toBe(3);
+            expect(testUtils.getWrapper().gameComponent.state().turn).toBe(3);
 
             await receiveEndGame();
         }));

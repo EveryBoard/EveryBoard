@@ -47,7 +47,7 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
         const spaceHeight: number = mode.parallelogramHeight;
         const spaceWidth: number = spaceHeight * mode.horizontalWidthRatio;
         const spaceOffset: number = mode.offsetRatio * spaceHeight;
-        const numberOfOffset: number = this.getState().getHeight()-y;
+        const numberOfOffset: number = this.state().getHeight()-y;
         const xBase: number = (x * spaceWidth) + (numberOfOffset * spaceOffset);
         const yBase: number = (y * spaceHeight) - (mode.pieceHeightRatio * spaceHeight * z);
         return new Coord(xBase, yBase);
