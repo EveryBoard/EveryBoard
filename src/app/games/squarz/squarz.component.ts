@@ -60,9 +60,9 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: SquarzState = this.getState();
+        const state: SquarzState = this.state();
         this.board = state.getCopiedBoard();
-        this.scores = MGPOptional.of(this.getState().getScores());
+        this.scores = MGPOptional.of(this.state().getScores());
     }
 
     protected override async showLastMove(move: SquarzMove): Promise<void> {
@@ -112,13 +112,13 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     }
 
     private pieceBelongsToCurrentPlayer(coord: Coord): boolean {
-        const state: SquarzState = this.getState();
+        const state: SquarzState = this.state();
         const player: Player = state.getCurrentPlayer();
         return state.getPieceAt(coord) === player;
     }
 
     private async choosePiece(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().getPieceAt(coord).isNone()) {
+        if (this.state().getPieceAt(coord).isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (this.pieceBelongsToCurrentPlayer(coord) === false) {
@@ -130,7 +130,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         return MGPValidation.SUCCESS;
     }
     private showIndicators(): void {
-        this.moves = this.rules.getPossiblesMoves(this.getState(), this.selected.get(), this.config());
+        this.moves = this.rules.getPossiblesMoves(this.state(), this.selected.get(), this.config());
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
@@ -156,7 +156,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord);
+        const owner: PlayerOrNone = this.state().getPieceAt(coord);
         classes.push(this.getPlayerClass(owner));
 
         if (this.selected.equalsValue(coord)) {

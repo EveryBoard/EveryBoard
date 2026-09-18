@@ -37,8 +37,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public stateInConstruction: DiaballikState;
 
-    public WIDTH: number;
-    public HEIGHT: number;
     public INDICATOR_SIZE: number = 20;
 
     public victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -62,8 +60,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     public constructor() {
         super('Diaballik');
         this.hasAsymmetricBoard = true;
-        this.WIDTH = this.getState().getWidth();
-        this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
         this.aiConfig = {
             minimax: [
@@ -170,7 +166,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.stateInConstruction = this.getState();
+        this.stateInConstruction = this.state();
         this.currentSelection = MGPOptional.empty();
         this.hasMadePass = false;
         this.translationsMade = 0;
@@ -358,8 +354,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public getBoardRotation(): string {
         const rotation: number = this.getPointOfView().getValue() * 180;
-        const boardWidth: number = this.getState().getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
-        const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardWidth: number = this.width() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardHeight: number = this.height() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;
         const centerY: number = boardHeight / 2;
         return `rotate(${rotation} ${centerX} ${centerY})`;

@@ -94,7 +94,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const expectedMessage: string = 'instruction';
             const currentMessage: string = testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualState: QuartoState = testUtils.getGameComponent().getState();
+            const actualState: QuartoState = testUtils.getGameComponent().state();
             expect(actualState).toEqual(state);
         }));
 
@@ -314,7 +314,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(testUtils.getGameComponent().getState())
+            expect(testUtils.getGameComponent().state())
                 .toEqual(QuartoRules.get().getInitialState(defaultConfig));
         }));
 
@@ -341,7 +341,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(testUtils.getGameComponent().getState())
+            expect(testUtils.getGameComponent().state())
                 .toEqual(QuartoRules.get().getInitialState(defaultConfig));
         }));
 
@@ -400,7 +400,7 @@ describe('TutorialGameWrapperComponent (wrapper)', () => {
             const currentMessage: string =
                 testUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(TutorialStepMessage.CONGRATULATIONS());
-            expect(testUtils.getGameComponent().getState())
+            expect(testUtils.getGameComponent().state())
                 .toEqual(QuartoRules.get().getInitialState(defaultConfig));
         }));
 

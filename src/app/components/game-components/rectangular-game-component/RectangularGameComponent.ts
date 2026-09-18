@@ -1,3 +1,5 @@
+import { computed, Signal } from '@angular/core';
+
 import { Move } from '@everyboard/games';
 import { SuperRules } from '@everyboard/games';
 import { EmptyRulesConfig, RulesConfig } from '@everyboard/games';
@@ -22,17 +24,13 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
 
     public board: Table<P>;
 
-    public getWidth(): number {
-        return this.getState().getWidth();
-    }
+    protected readonly width: Signal<number> = computed(() => this.state().getWidth());
 
-    public getHeight(): number {
-        return this.getState().getHeight();
-    }
+    protected readonly height: Signal<number> = computed(() => this.state().getHeight());
 
     protected override computeViewBox(): ViewBox {
-        const width: number = this.getWidth() * this.SPACE_SIZE;
-        const height: number = this.getHeight() * this.SPACE_SIZE;
+        const width: number = this.width() * this.SPACE_SIZE;
+        const height: number = this.height() * this.SPACE_SIZE;
         return this.getViewBoxFor(width, height);
     }
 
