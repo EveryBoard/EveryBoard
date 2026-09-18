@@ -53,7 +53,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
     // Data linked to the move attempt
     private readonly firstPiece: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
     private readonly lastPiece: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
-    private readonly possibleMoves: WritableSignal<PossibleMove[]> = signal([]);
+    protected readonly possibleMoves: WritableSignal<PossibleMove[]> = signal([]);
 
     // Data linked to the last move
     private moveds: Coord[] = [];
