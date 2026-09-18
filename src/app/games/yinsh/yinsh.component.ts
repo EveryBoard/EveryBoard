@@ -120,11 +120,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         this.hexaLayout = new HexaLayout(YinshComponent.RING_OUTER_SIZE * 1.50,
                                          new Coord(YinshComponent.RING_OUTER_SIZE * 2, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: YinshState = this.getState();
+        const state: YinshState = this.state();
         this.constructedState = state;
         this.hexaBoard = this.constructedState.board;
         this.scores = MGPOptional.of(state.countScores());
@@ -153,7 +153,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
                     this.selectableCoords.unionList(this.constructedState.getRingCoords(currentPlayer));
                 break;
             case 'MOVE_START':
-                if (this.getState().isInitialPlacementPhase() === false) {
+                if (this.state().isInitialPlacementPhase() === false) {
                     this.selectableCoords =
                         this.selectableCoords.unionList(this.constructedState.getRingCoords(currentPlayer));
                 }
@@ -274,7 +274,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.constructedState = this.getState();
+        this.constructedState = this.state();
         this.possibleCaptures = [];
         this.initialCaptures = [];
         this.finalCaptures = [];
@@ -486,7 +486,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshRules,
         if (this.moveStart.equalsValue(coord)) {
             return this.cancelMove();
         }
-        const currentPlayerRing: YinshPiece = YinshPiece.RINGS.get(this.getState().getCurrentPlayer());
+        const currentPlayerRing: YinshPiece = YinshPiece.RINGS.get(this.state().getCurrentPlayer());
         if (this.constructedState.getPieceAt(coord) === currentPlayerRing) {
             this.cancelMoveAttempt();
             return this.selectMoveStart(coord);
