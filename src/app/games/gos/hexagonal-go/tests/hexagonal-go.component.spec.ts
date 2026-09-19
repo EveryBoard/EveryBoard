@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
+import { PlayerNumberMap } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { GoMove } from '@everyboard/games';
+import { GoPhase } from '@everyboard/games';
+import { GoPiece } from '@everyboard/games';
+import { GoState } from '@everyboard/games';
 import { MGPOptional } from '@everyboard/lib';
 
-import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
-import { Table } from '../../../../jscaip/TableUtils';
 import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
-import { GoMove } from '../../GoMove';
-import { GoPhase } from '../../GoPhase';
-import { GoPiece } from '../../GoPiece';
-import { GoState } from '../../GoState';
 import { HexagonalGoComponent } from '../hexagonal-go.component';
 
 describe('HexagonalGoComponent', () => {

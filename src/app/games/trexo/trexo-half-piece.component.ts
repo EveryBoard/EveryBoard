@@ -1,15 +1,14 @@
 import { NgClass } from '@angular/common';
 import { Component, input, InputSignal } from '@angular/core';
 
+import { Coord } from '@everyboard/games';
+import { Coord3D } from '@everyboard/games';
+import { Vector } from '@everyboard/games';
+import { TrexoMove } from '@everyboard/games';
 import { Utils } from '@everyboard/lib';
 
 import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
 import { ModeConfig } from '../../components/game-components/parallelogram-game-component/ModeConfig';
-import { Coord } from '../../jscaip/Coord';
-import { Coord3D } from '../../jscaip/Coord3D';
-import { Vector } from '../../jscaip/Vector';
-
-import { TrexoMove } from './TrexoMove';
 
 @Component({
     selector: '[app-trexo-half-piece]',

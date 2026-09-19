@@ -1,6 +1,7 @@
 import { Component, input, InputSignal } from '@angular/core';
 
-import { HexaDirection } from '../../../jscaip/HexaDirection';
+import { HexaDirection } from '@everyboard/games';
+
 import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
 import { Arrow } from './Arrow';

@@ -1,13 +1,13 @@
+
+import { Ordinal } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { EpaminondasMove } from '@everyboard/games';
+import { EpaminondasConfig, EpaminondasRules } from '@everyboard/games';
+import { EpaminondasState } from '@everyboard/games';
 import { MGPValidation } from '@everyboard/lib';
 
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
 import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { Ordinal } from '../../jscaip/Ordinal';
-import { PlayerOrNone } from '../../jscaip/Player';
-
-import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
-import { EpaminondasState } from './EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

@@ -2,9 +2,9 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
+import { Player } from '@everyboard/games';
 import { TestUtils } from '@everyboard/lib/testing';
 
-import { Player } from '../../../jscaip/Player';
 import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 
 import { TimerComponent } from './timer.component';

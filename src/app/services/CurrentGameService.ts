@@ -1,10 +1,10 @@
 import { Injectable, OnDestroy, inject } from '@angular/core';
 import { Observable, ReplaySubject, Subscription } from 'rxjs';
 
+import { Localized } from '@everyboard/games';
 import { MGPMap, MGPOptional, MGPValidation } from '@everyboard/lib';
 
 import { CurrentGame, UserRoleInPart } from '../domain/User';
-import { Localized } from '../utils/LocaleUtils';
 
 import { BackendService, BackendMessage } from './BackendService';
 import { AuthUser, ConnectedUserService } from './ConnectedUserService';

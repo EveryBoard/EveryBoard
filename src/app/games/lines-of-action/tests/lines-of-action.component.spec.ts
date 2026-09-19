@@ -1,16 +1,17 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
 
-import { Coord } from '../../../jscaip/Coord';
-import { DirectionFailure } from '../../../jscaip/Direction';
-import { PlayerOrNone } from '../../../jscaip/Player';
-import { RulesFailure } from '../../../jscaip/RulesFailure';
-import { Table } from '../../../jscaip/TableUtils';
+import { Coord } from '@everyboard/games';
+import { DirectionFailure } from '@everyboard/games';
+import { PlayerOrNone } from '@everyboard/games';
+import { RulesFailure } from '@everyboard/games';
+import { Table } from '@everyboard/games';
+import { LinesOfActionMove } from '@everyboard/games';
+import { LinesOfActionRules } from '@everyboard/games';
+import { LinesOfActionState } from '@everyboard/games';
+import { LinesOfActionFailure } from '@everyboard/games';
+
 import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
-import { LinesOfActionFailure } from '../LinesOfActionFailure';
-import { LinesOfActionMove } from '../LinesOfActionMove';
-import { LinesOfActionRules } from '../LinesOfActionRules';
-import { LinesOfActionState } from '../LinesOfActionState';
 import { LinesOfActionComponent } from '../lines-of-action.component';
 
 describe('LinesOfActionComponent', () => {

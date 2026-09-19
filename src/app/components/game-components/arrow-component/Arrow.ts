@@ -1,5 +1,5 @@
-import { Coord } from '../../../jscaip/Coord';
-import { Direction } from '../../../jscaip/Direction';
+import { Coord } from '@everyboard/games';
+import { Direction } from '@everyboard/games';
 
 export class Arrow<T extends Direction> {
 
