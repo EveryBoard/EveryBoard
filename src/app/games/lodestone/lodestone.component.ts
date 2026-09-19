@@ -1,57 +1,62 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { LodestoneFailure } from './LodestoneFailure';
 import { LodestoneCaptures, LodestoneMove } from './LodestoneMove';
+import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
 import { LodestoneOrientation, LodestoneDirection, LodestonePiece, LodestonePieceNone, LodestonePieceLodestone, LodestoneDescription } from './LodestonePiece';
 import { LodestoneInfos, PressurePlatePositionInformation, LodestoneRules, PressurePlateViewPosition } from './LodestoneRules';
+import { LodestoneScoreHeuristic } from './LodestoneScoreHeuristic';
 import { LodestonePositions, LodestonePressurePlate, LodestonePressurePlateGroup, LodestonePressurePlatePosition, LodestonePressurePlates, LodestoneState } from './LodestoneState';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { LodestoneMoveGenerator } from './LodestoneMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { LodestoneScoreMinimax } from './LodestoneScoreMinimax';
+import { LodestoneLodestoneComponent } from './lodestone-lodestone.component';
 
 export type LodestoneInfo = {
-    direction: LodestoneDirection,
-    owner: Player,
-    selectedClass: string,
-    movingClass: string,
-    orientation: LodestoneOrientation,
+    direction: LodestoneDirection;
+    owner: Player;
+    selectedClass: string;
+    movingClass: string;
+    orientation: LodestoneOrientation;
 };
 
 type PressurePlateGroupInfo = {
-    groupPosition: LodestonePressurePlatePosition,
-    plateInfos: PressurePlateInfo[],
+    groupPosition: LodestonePressurePlatePosition;
+    plateInfos: PressurePlateInfo[];
 };
 
 type PressurePlateInfo = {
-    plateIndex: number,
-    coords: PressurePlateCoordInfo[],
+    plateIndex: number;
+    coords: PressurePlateCoordInfo[];
 };
 
 type PressurePlateCoordInfo = {
-    coord: Coord,
-    hasPiece: boolean,
-    pieceClasses: string[],
-    squareClasses: string[],
-    temporary: boolean,
+    coord: Coord;
+    hasPiece: boolean;
+    pieceClasses: string[];
+    squareClasses: string[];
+    temporary: boolean;
 };
 
 type CaptureInfo = {
-    pieceClasses: string[],
+    pieceClasses: string[];
 };
 
 type ViewInfo = {
-    availableLodestones: LodestoneInfo[],
-    capturesToPlace: CaptureInfo[],
-    pressurePlateGroupInfos: PressurePlateGroupInfo[],
+    availableLodestones: LodestoneInfo[];
+    capturesToPlace: CaptureInfo[];
+    pressurePlateGroupInfos: PressurePlateGroupInfo[];
 };
 
 type PreCaptureInfo = {
@@ -60,9 +65,11 @@ type PreCaptureInfo = {
 }
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-lodestone',
     templateUrl: './lodestone.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass, LodestoneLodestoneComponent],
 })
 export class LodestoneComponent
     extends GameComponent<LodestoneRules, LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos>
@@ -110,7 +117,6 @@ export class LodestoneComponent
         pressurePlateGroupInfos: [],
     };
 
-    public viewBox: ViewBox;
     public platesGroupSize: number;
     public boardSize: number;
 
@@ -128,20 +134,32 @@ export class LodestoneComponent
     private lastMoves: Coord[] = [];
     private lastCaptures: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('Lodestone');
-        this.availableAIs = [
-            new LodestoneScoreMinimax(),
-            new MCTS($localize`MCTS`, new LodestoneMoveGenerator(), this.rules),
-        ];
+    public constructor() {
+        super('Lodestone');
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: $localize`Score`,
+                heuristic: (): LodestoneScoreHeuristic => new LodestoneScoreHeuristic(),
+                moveGenerator: (): LodestoneMoveGenerator => new LodestoneMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): LodestoneMoveGenerator => new LodestoneMoveGenerator(),
+            }],
+        };
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
-        this.displayedState = this.getState();
+        this.displayedState = this.state();
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public getViewBox(): ViewBox {
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
+    protected override computeViewBox(): ViewBox {
         const left: number = - this.platesGroupSize;
         const up: number = - (this.platesGroupSize + this.SPACE_SIZE + this.STROKE_WIDTH);
         const width: number = this.boardSize + (2 * this.platesGroupSize);
@@ -149,16 +167,13 @@ export class LodestoneComponent
         return new ViewBox(left, up, width, height);
     }
 
+    @ClickHandler((x: number, y: number) => `#square-${ x }-${ y }`)
     public async selectCoord(x: number, y: number): Promise<MGPValidation> {
         const coord: Coord = new Coord(x, y);
-        const clickValidity: MGPValidation = await this.canUserPlay('#square-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.capturesToPlace > 0) {
             return this.cancelMove(LodestoneFailure.MUST_PLACE_CAPTURES());
         }
-        const targetValidity: MGPValidation = LodestoneRules.get().isTargetLegal(this.getState(), coord);
+        const targetValidity: MGPValidation = LodestoneRules.get().isTargetLegal(this.state(), coord);
         if (targetValidity.isFailure()) {
             return this.cancelMove(targetValidity.getReason());
         }
@@ -174,13 +189,8 @@ export class LodestoneComponent
         }
     }
 
+    @ClickHandler((lodestone: LodestoneInfo) => `#lodestone-${ lodestone.direction }-${ lodestone.orientation }-${ lodestone.owner }`)
     public async selectLodestone(lodestone: LodestoneDescription): Promise<MGPValidation> {
-        const owner: string = this.getCurrentPlayer().toString();
-        const clickedElement: string = '#lodestone-' + lodestone.direction + '-' + lodestone.orientation + '-' + owner;
-        const clickValidity: MGPValidation = await this.canUserPlay(clickedElement);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         Utils.assert(this.capturesToPlace === 0,
                      'should not be able to click on a lodestone when captures need to be placed');
         const player: Player = this.getCurrentPlayer();
@@ -208,7 +218,7 @@ export class LodestoneComponent
         Utils.assert(this.selectedLodestone.isPresent(), 'lodestone should have been selected');
         const coord: Coord = this.selectedCoord.get();
         const lodestone: LodestoneDescription = this.selectedLodestone.get();
-        const state: LodestoneState = this.getState();
+        const state: LodestoneState = this.state();
         const validity: MGPValidation = LodestoneRules.get().isLegalWithoutCaptures(state, coord, lodestone.direction);
         Utils.assert(validity.isSuccess(), 'Lodestone component should only allow creation of legal moves');
         const infos: LodestoneInfos = LodestoneRules.get().applyMoveWithoutPlacingCaptures(state, coord, lodestone);
@@ -234,33 +244,16 @@ export class LodestoneComponent
         return this.chooseMove(move);
     }
 
+    @ClickHandler(
+        (position: LodestonePressurePlatePosition,
+         plateIndex: number,
+         pieceIndex: number,
+        ) => `#plate-${ position }-${ plateIndex }-${ pieceIndex}`,
+    )
     public async onPressurePlateClick(position: LodestonePressurePlatePosition,
-                                      plateIndex: number,
-                                      pieceIndex: number)
-    : Promise<MGPValidation>
-    {
-        const squareName: string = '#plate-' + position + '-' + plateIndex + '-' + pieceIndex;
-        const clickValidity: MGPValidation = await this.canUserPlay(squareName);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        return this.selectPressurePlate(position);
-    }
-
-    public async onTemporaryPressurePlateClick(position: LodestonePressurePlatePosition,
-                                               plateIndex: number,
-                                               pieceIndex: number)
-    : Promise<MGPValidation>
-    {
-        const squareName: string = '#plate-' + position + '-' + plateIndex + '-' + pieceIndex;
-        const clickValidity: MGPValidation = await this.canUserPlay(squareName);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        return this.deselectPressurePlate(position);
-    }
-
-    private async selectPressurePlate(position: LodestonePressurePlatePosition): Promise<MGPValidation> {
+                                      _plateIndex: number,
+                                      _pieceIndex: number,
+    ): Promise<MGPValidation> {
         if (this.capturesToPlace === 0) {
             return this.cancelMove(LodestoneFailure.NO_CAPTURES_TO_PLACE_YET());
         }
@@ -277,12 +270,21 @@ export class LodestoneComponent
             return this.applyMove();
         } else {
             this.updateViewInfo();
-            this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
+            this.showPressurePlateDifferences(this.state(), this.displayedState, true);
         }
         return MGPValidation.SUCCESS;
     }
 
-    public async deselectPressurePlate(position: LodestonePressurePlatePosition): Promise<MGPValidation> {
+    @ClickHandler(
+        (position: LodestonePressurePlatePosition,
+         plateIndex: number,
+         pieceIndex: number,
+        ) => `#plate-${ position }-${ plateIndex }-${ pieceIndex}`,
+    )
+    public async onTemporaryPressurePlateClick(position: LodestonePressurePlatePosition,
+                                               _plateIndex: number,
+                                               _pieceIndex: number)
+    : Promise<MGPValidation> {
         this.capturesToPlace++;
         this.captures[position]--;
         const state: LodestoneState = this.stateAfterPlacingLodestone.get();
@@ -293,22 +295,22 @@ export class LodestoneComponent
         LodestoneRules.get().updatePressurePlates(board, pressurePlates, lodestones, opponent, this.captures);
         this.displayedState = new LodestoneState(board, state.turn, lodestones, pressurePlates);
         this.updateViewInfo();
-        this.showPressurePlateDifferences(this.getState(), this.displayedState, true);
+        this.showPressurePlateDifferences(this.state(), this.displayedState, true);
         return MGPValidation.SUCCESS;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.displayedState = this.getState();
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.displayedState = this.state();
         this.removePlayerLodestoneFromDisplayedState();
-        this.scores = MGPOptional.of(this.getState().getScores());
-        this.boardSize = this.getState().board.length * this.SPACE_SIZE;
-        const abstractPlateWidth: number = this.getState().pressurePlates.top.plates.length;
+        this.scores = MGPOptional.of(this.state().getScores());
+        this.boardSize = this.state().board.length * this.SPACE_SIZE;
+        const abstractPlateWidth: number = this.state().pressurePlates.top.plates.length;
         this.platesGroupSize = abstractPlateWidth * this.SPACE_SIZE * 1.2;
         this.updateViewInfo();
     }
 
     public override cancelMoveAttempt(): void {
-        this.displayedState = this.getState();
+        this.displayedState = this.state();
         this.stateAfterPlacingLodestone = MGPOptional.empty();
         this.ongoingCaptures = [];
         this.ongoingMoves = [];
@@ -383,11 +385,11 @@ export class LodestoneComponent
                 preCaptureMove: new LodestoneMove(this.selectedCoord.get(),
                                                   this.selectedLodestone.get().direction,
                                                   this.selectedLodestone.get().orientation),
-                preCaptureState: this.getState(),
+                preCaptureState: this.state(),
             });
-        } else if (this.node.previousMove.isPresent()) {
+        } else if (this.node().previousMove.isPresent()) {
             return MGPOptional.of({
-                preCaptureMove: this.node.previousMove.get(),
+                preCaptureMove: this.node().previousMove.get(),
                 preCaptureState: this.getPreviousState(),
             });
         } else {
@@ -407,7 +409,7 @@ export class LodestoneComponent
                     const lodestone: LodestonePieceLodestone = this.selectedLodestone.get();
                     return MGPOptional.of(this.getLodestoneInfoFromLodestone(lodestone));
                 } else if (this.wasLastMoveLodestone(coord)) {
-                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node.previousMove.get()));
+                    return MGPOptional.of(this.getDroppedThenCrumbedLodestoneInfo(this.node().previousMove.get()));
                 } else if (this.isCrumbledLodestone(coord)) {
                     return MGPOptional.of(this.getCrumbledLodestoneInfo(coord));
                 }
@@ -449,19 +451,19 @@ export class LodestoneComponent
     }
 
     private wasLastMoveLodestone(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
-            return this.node.previousMove.get().coord.equals(coord);
+        if (this.node().parent.isPresent()) {
+            return this.node().previousMove.get().coord.equals(coord);
         } else {
             return false;
         }
     }
 
     private isCrumbledLodestone(coord: Coord): boolean {
-        if (this.node.parent.isPresent()) {
+        if (this.node().parent.isPresent()) {
             if (this.selectedLodestone.isPresent()) {
                 return false;
             } else {
-                const state: LodestoneState = this.node.parent.get().gameState;
+                const state: LodestoneState = this.node().parent.get().gameState;
                 const piece: LodestonePiece = state.getPieceAt(coord);
                 return piece.isLodestone() &&
                        piece.owner === state.getCurrentOpponent();
@@ -509,8 +511,8 @@ export class LodestoneComponent
             // Here, we rely on the state after the move, as the lodestones don't change during a move
             // Moreover, since we remove the lodestone from the board (for displaying purposes),
             // we break an assumption of nextLodestoneDirection
-            const player: Player = this.getState().getCurrentPlayer();
-            const nextDirection: MGPOptional<LodestoneDirection> = this.getState().nextLodestoneDirection();
+            const player: Player = this.state().getCurrentPlayer();
+            const nextDirection: MGPOptional<LodestoneDirection> = this.state().nextLodestoneDirection();
             if (nextDirection.isPresent()) {
                 const direction: LodestoneDirection = nextDirection.get();
                 this.viewInfo.availableLodestones = [
@@ -613,14 +615,14 @@ export class LodestoneComponent
         return coordInfo;
     }
 
-    public override async showLastMove(move: LodestoneMove): Promise<void> {
+    protected override async showLastMove(move: LodestoneMove): Promise<void> {
         const lastState: LodestoneState = this.getPreviousState();
         const infos: LodestoneInfos =
             LodestoneRules.get().applyMoveWithoutPlacingCaptures(lastState, move.coord, move);
         this.lastCaptures = infos.captures;
         this.lastMoves = infos.moved;
         this.updateViewInfo();
-        const currentState: LodestoneState = this.getState();
+        const currentState: LodestoneState = this.state();
         this.showPressurePlateDifferences(lastState, currentState, false);
     }
 

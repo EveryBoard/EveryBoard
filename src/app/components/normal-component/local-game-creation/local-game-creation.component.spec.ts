@@ -1,6 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { fakeAsync, TestBed } from '@angular/core/testing';
+import { Router } from '@angular/router';
+
+import { SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+
 import { LocalGameCreationComponent } from './local-game-creation.component';
 
 describe('LocalGameCreationComponent', () => {
@@ -13,10 +16,11 @@ describe('LocalGameCreationComponent', () => {
     });
     it('should create and redirect to chosen game', fakeAsync(async() => {
         // Given a local game creation component
-        spyOn(testUtils.getComponent().router, 'navigate');
+        const router: Router = TestBed.inject(Router);
+        spyOn(router, 'navigate');
         // When picking a game
         await testUtils.getComponent().pickGame('whateverGame');
         // Then we should navigate to that game
-        expect(testUtils.getComponent().router.navigate).toHaveBeenCalledOnceWith(['local/whateverGame']);
+        expect(router.navigate).toHaveBeenCalledOnceWith(['/local', 'whateverGame', 'config']);
     }));
 });

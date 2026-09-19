@@ -1,27 +1,12 @@
-import { Component } from '@angular/core';
+import { Coord } from '../../../jscaip/Coord';
+import { Move } from '../../../jscaip/Move';
+import { SuperRules } from '../../../jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
 import { RectangularGameComponent } from '../rectangular-game-component/RectangularGameComponent';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { Move } from 'src/app/jscaip/Move';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { Coord } from 'src/app/jscaip/Coord';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
 
-export interface ModeConfig {
+import { ModeConfig } from './ModeConfig';
 
-    offsetRatio: number;
-
-    horizontalWidthRatio: number;
-
-    pieceHeightRatio: number;
-
-    parallelogramHeight: number,
-
-    abstractBoardSize: number,
-}
-
-@Component({
-    template: '',
-})
 export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L>,
                                                  M extends Move,
                                                  S extends GameStateWithTable<P>,
@@ -30,6 +15,10 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
                                                  L = void>
     extends RectangularGameComponent<R, M, S, P, C, L>
 {
+    public constructor(urlName: string) {
+        super(urlName);
+    }
+
     public getParallelogramCoords(mode: ModeConfig): Coord[] {
         const parallelogramHeight: number = mode.parallelogramHeight;
         const parallelogramWidth: number = parallelogramHeight * mode.horizontalWidthRatio;
@@ -58,7 +47,7 @@ export abstract class ParallelogramGameComponent<R extends SuperRules<M, S, C, L
         const spaceHeight: number = mode.parallelogramHeight;
         const spaceWidth: number = spaceHeight * mode.horizontalWidthRatio;
         const spaceOffset: number = mode.offsetRatio * spaceHeight;
-        const numberOfOffset: number = mode.abstractBoardSize - y;
+        const numberOfOffset: number = this.state().getHeight()-y;
         const xBase: number = (x * spaceWidth) + (numberOfOffset * spaceOffset);
         const yBase: number = (y * spaceHeight) - (mode.pieceHeightRatio * spaceHeight * z);
         return new Coord(xBase, yBase);

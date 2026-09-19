@@ -1,4 +1,4 @@
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from '../../jscaip/Player';
 
 export class TaflPawn {
 
@@ -23,6 +23,10 @@ export class TaflPawn {
 
     public getOwner(): PlayerOrNone {
         return this.owner;
+    }
+
+    public equals(other: TaflPawn): boolean {
+        return this === other;
     }
 
 }

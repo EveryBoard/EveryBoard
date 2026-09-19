@@ -1,13 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
+import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
+import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { MGPOptional } from '@everyboard/lib';
 
 describe('ConnectSixMoveGenerator', () => {
 
@@ -16,7 +15,7 @@ describe('ConnectSixMoveGenerator', () => {
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
 
-    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
+    const defaultConfig: GobanConfig = ConnectSixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new ConnectSixMoveGenerator();
@@ -24,8 +23,8 @@ describe('ConnectSixMoveGenerator', () => {
 
     it('should propose only one move at first turn', () => {
         // Given the initial node
-        const width: number = defaultConfig.get().width;
-        const height: number = defaultConfig.get().height;
+        const width: number = defaultConfig.width;
+        const height: number = defaultConfig.height;
         const state: ConnectSixState = ConnectSixRules.get().getInitialState(defaultConfig);
         const node: ConnectSixNode = new ConnectSixNode(state);
 

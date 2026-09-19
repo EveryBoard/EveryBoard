@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { KamisadoState } from 'src/app/games/kamisado/KamisadoState';
-import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
-import { MGPOptional } from '@everyboard/lib';
-import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { KamisadoComponent } from '../kamisado.component';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/Coord';
-import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
+import { KamisadoColor } from '../KamisadoColor';
+import { KamisadoFailure } from '../KamisadoFailure';
+import { KamisadoMove } from '../KamisadoMove';
+import { KamisadoPiece } from '../KamisadoPiece';
+import { KamisadoState } from '../KamisadoState';
+import { KamisadoComponent } from '../kamisado.component';
 
 describe('KamisadoComponent', () => {
 
@@ -36,7 +38,7 @@ describe('KamisadoComponent', () => {
 
     it('should remove chosen coord when calling updateBoard without move', fakeAsync(async() => {
         // Given the game component
-        // When calling updateBoard()
+        // When calling updateBoard
         await testUtils.getGameComponent().updateBoard(false);
         // Then the chosen piece should be absent, and nothing should be highlighted
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
@@ -52,19 +54,19 @@ describe('KamisadoComponent', () => {
 
     it('should allow changing initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
-        await testUtils.expectClickSuccess('#click_0_7');
+        await testUtils.expectClickSuccess('#click-0-7');
         // When clicking on a different piece from the same player
-        await testUtils.expectClickSuccess('#click_1_7');
+        await testUtils.expectClickSuccess('#click-1-7');
         // Then it should change the selected piece
         expect(testUtils.getGameComponent().chosen.equalsValue(new Coord(1, 7))).toBeTrue();
     }));
 
     it('should allow deselecting initial choice', fakeAsync(async() => {
         // Given a component where a piece has been selected
-        await testUtils.expectClickSuccess('#click_0_7'); // Select initial piece
+        await testUtils.expectClickSuccess('#click-0-7'); // Select initial piece
 
         // When clicking on the same piece
-        await testUtils.expectClickFailure('#click_0_7');
+        await testUtils.expectClickFailure('#click-0-7');
 
         // Then it should be deselected
         expect(testUtils.getGameComponent().chosen.isAbsent()).toBeTrue();
@@ -111,7 +113,7 @@ describe('KamisadoComponent', () => {
 
         // When clicking anywhere
         // Then it should fail and say that player must pass
-        await testUtils.expectClickFailure('#click_1_7', RulesFailure.MUST_PASS());
+        await testUtils.expectClickFailure('#click-1-7', RulesFailure.MUST_PASS());
     }));
 
     it('should forbid de-selecting a piece that is pre-selected', fakeAsync(async() => {
@@ -132,7 +134,7 @@ describe('KamisadoComponent', () => {
 
         // When clicking on the piece to deselect it
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
+        await testUtils.expectClickFailure('#click-0-7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
     }));
 
     it('should forbid selecting a piece if one is already pre-selected', fakeAsync(async() => {
@@ -153,25 +155,25 @@ describe('KamisadoComponent', () => {
 
         // When clicking on another of its pieces
         // Then it should fail
-        await testUtils.expectClickFailure('#click_1_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
+        await testUtils.expectClickFailure('#click-1-7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE());
     }));
 
     it('should forbid moving to invalid location', fakeAsync(async() => {
         // Given a board (here, the initial board) with a selected piece
-        await testUtils.expectClickSuccess('#click_0_7');
+        await testUtils.expectClickSuccess('#click-0-7');
 
         // When trying to perform an invalid move
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(5, 4));
 
         // Then the move should be illegal
-        await testUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
+        await testUtils.expectMoveFailure('#click-5-4', KamisadoFailure.DIRECTION_NOT_ALLOWED(), move);
     }));
 
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // Given a board (here, the initial board)
         // When clicking on an opponent's piece
         // Then it should fail
-        await testUtils.expectClickFailure('#click_0_0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        await testUtils.expectClickFailure('#click-0-0', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
     }));
 
     it('should not highlight selected piece if game has ended', fakeAsync(async() => {
@@ -216,7 +218,7 @@ describe('KamisadoComponent', () => {
         await testUtils.setupState(state, { previousMove });
 
         // Then it should display last move
-        testUtils.expectElementToHaveClass('#last_move_start_0_7', 'last-move-stroke');
-        testUtils.expectElementToHaveClass('#last_move_start_0_6', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#last-move-start-0-7', 'last-move-stroke');
+        testUtils.expectElementToHaveClass('#last-move-start-0-6', 'last-move-stroke');
     }));
 });

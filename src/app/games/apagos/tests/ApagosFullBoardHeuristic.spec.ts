@@ -1,15 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
 import { ApagosFullBoardHeuristic } from '../ApagosFullBoardHeuristic';
-import { ApagosState } from '../ApagosState';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
+import { ApagosState } from '../ApagosState';
 
 describe('ApagosFullBoardHeuristic', () => {
 
     let heuristic: ApagosFullBoardHeuristic;
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ApagosFullBoardHeuristic();

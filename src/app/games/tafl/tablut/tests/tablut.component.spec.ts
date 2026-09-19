@@ -1,20 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { TablutMove } from 'src/app/games/tafl/tablut/TablutMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { TablutRules } from '../TablutRules';
-import { TaflPawn } from '../../TaflPawn';
-import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
-import { TablutComponent } from '../tablut.component';
+import { Coord } from '../../../../jscaip/Coord';
 import { TaflConfig } from '../../TaflConfig';
+import { TaflPawn } from '../../TaflPawn';
 import { TaflState } from '../../TaflState';
-import { MGPOptional } from '@everyboard/lib';
+import { DoTaflTests, TaflTestEntries } from '../../tests/GenericTaflTest.spec';
+import { TablutMove } from '../TablutMove';
+import { TablutRules } from '../TablutRules';
+import { TablutComponent } from '../tablut.component';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const x: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const i: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 
 const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> = {
     component: TablutComponent,
@@ -22,7 +21,16 @@ const tablutEntries: TaflTestEntries<TablutComponent, TablutRules, TablutMove> =
     secondPlayerPiece: new Coord(4, 4),
     validFirstCoord: new Coord(4, 1),
     moveProvider: TablutMove.from,
-    validSecondCoord: new Coord(1, 1),
+    validSecondCoords: [
+        new Coord(0, 1),
+        new Coord(1, 1),
+        new Coord(2, 1),
+        new Coord(3, 1),
+        new Coord(5, 1),
+        new Coord(6, 1),
+        new Coord(7, 1),
+        new Coord(8, 1),
+    ],
     diagonalSecondCoord: new Coord(5, 2),
     stateReadyForCapture: new TaflState([
         [_, A, _, _, _, _, _, _, _],

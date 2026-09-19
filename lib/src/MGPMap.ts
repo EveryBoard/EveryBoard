@@ -1,5 +1,5 @@
-import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
+import { MGPOptional } from './MGPOptional';
 import { Set } from './Set';
 import { Utils } from './Utils';
 
@@ -16,7 +16,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         return map;
     }
 
-    public constructor(private map: {key: K, value: V}[] = [],
+    public constructor(private map: {key: K; value: V}[] = [],
                        private isImmutable: boolean = false)
     {
     }
@@ -34,7 +34,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         return MGPOptional.empty();
     }
 
-    public getAnyPair(): MGPOptional<{key: K, value: V}> {
+    public getAnyPair(): MGPOptional<{key: K; value: V}> {
         if (this.size() > 0) {
             return MGPOptional.of(this.map[0]);
         } else {
@@ -42,10 +42,30 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
         }
     }
 
-    public forEach(callback: (item: {key: K, value: V}) => void): void {
-        for (const element of this.map) {
-            callback(element);
-        }
+    public [Symbol.iterator](): IterableIterator<[K, V]> {
+        const entries: {key: K; value: V}[] = this.map; // cache the current entries
+        let index: number = 0;
+
+        return {
+            /* istanbul ignore next */
+            [Symbol.iterator](): IterableIterator<[K, V]> {
+                // No idea how this can be covered?
+                return this;
+            },
+            next(): IteratorResult<[K, V]> {
+                if (index < entries.length) {
+                    const entry: {key: K; value: V} = entries[index];
+                    index += 1;
+                    return { value: [entry.key, entry.value], done: false };
+                }
+                return { value: undefined as unknown as [K, V], done: true };
+            },
+        };
+    }
+
+    public clear(): void {
+        this.assertImmutability('clear');
+        this.map = [];
     }
 
     public putAll(m: MGPMap<K, V>): void {
@@ -74,7 +94,7 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public containsKey(key: K): boolean {
-        return this.map.some((entry: {key: K, value: V}) => comparableEquals(entry.key, key));
+        return this.map.some((entry: {key: K; value: V}) => comparableEquals(entry.key, key));
     }
 
     public size(): number {
@@ -82,11 +102,11 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     }
 
     public getKeyList(): K[] {
-        return this.map.map((entry: {key: K, value: V}) => entry.key);
+        return this.map.map((entry: {key: K; value: V}) => entry.key);
     }
 
     public getValueList(): V[] {
-        return this.map.map((entry: {key: K, value: V}) => entry.value);
+        return this.map.map((entry: {key: K; value: V}) => entry.value);
     }
 
     public getKeySet(): Set<K> {
@@ -126,11 +146,11 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
     public delete(key: K): V {
         this.assertImmutability('delete');
         for (let i: number = 0; i < this.map.length; i++) {
-            const entry: {key: K, value: V} = this.map[i];
+            const entry: {key: K; value: V} = this.map[i];
             if (comparableEquals(entry.key, key)) {
                 const oldValue: V = this.map[i].value;
-                const beforeDeleted: {key: K, value: V}[] = this.map.slice(0, i);
-                const afterDeleted: {key: K, value: V}[] = this.map.slice(i + 1);
+                const beforeDeleted: {key: K; value: V}[] = this.map.slice(0, i);
+                const afterDeleted: {key: K; value: V}[] = this.map.slice(i + 1);
                 this.map = beforeDeleted.concat(afterDeleted);
                 return oldValue;
             }
@@ -162,23 +182,5 @@ export class MGPMap<K extends NonNullable<Comparable>, V extends NonNullable<unk
             }
         }
         return true;
-    }
-}
-
-export class ReversibleMap<K extends NonNullable<Comparable>, V extends NonNullable<Comparable>> extends MGPMap<K, V> {
-
-    public reverse(): ReversibleMap<V, Set<K>> {
-        const reversedMap: ReversibleMap<V, Set<K>> = new ReversibleMap<V, Set<K>>();
-        for (const key of this.getKeyList()) {
-            const value: V = this.get(key).get();
-            if (reversedMap.containsKey(value)) {
-                const newSet: Set<K> = reversedMap.get(value).get().addElement(key);
-                reversedMap.put(value, newSet);
-            } else {
-                const newSet: Set<K> = new Set<K>([key]);
-                reversedMap.set(value, newSet);
-            }
-        }
-        return reversedMap;
     }
 }

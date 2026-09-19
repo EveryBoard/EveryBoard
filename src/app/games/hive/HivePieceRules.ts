@@ -1,12 +1,14 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPFallible, MGPOptional, Set, MGPValidation, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+
 import { HiveFailure } from './HiveFailure';
 import { HiveCoordToCoordMove, HiveSpiderMove } from './HiveMove';
 import { HivePiece, HivePieceKind, HivePieceStack } from './HivePiece';
 import { HiveState } from './HiveState';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export abstract class HivePieceRules {
 
@@ -119,7 +121,7 @@ export class HiveGrasshopperRules extends HivePieceRules {
         if (direction.isFailure()) {
             return MGPValidation.failure(HiveFailure.GRASSHOPPER_MUST_MOVE_IN_STRAIGHT_LINE());
         }
-        const jumpedCoords: Coord[] = move.getStart().getCoordsToward(move.getEnd());
+        const jumpedCoords: Coord[] = move.getJumpedOverCoords();
         if (jumpedCoords.length === 0) {
             return MGPValidation.failure(HiveFailure.GRASSHOPPER_MUST_JUMP_OVER_PIECES());
         }

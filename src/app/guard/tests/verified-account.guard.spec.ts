@@ -1,36 +1,33 @@
 /* eslint-disable max-lines-per-function */
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { Router } from '@angular/router';
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { VerifiedAccountGuard } from '../verified-account.guard';
+import { provideRouter, Router } from '@angular/router';
+
 import { MGPOptional } from '@everyboard/lib';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
+
+import { UserMocks } from '../../domain/UserMocks.spec';
+import { ConnectedUserService, AuthUser } from '../../services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../services/tests/ConnectedUserService.spec';
+import { BlankComponent } from '../../utils/tests/TestUtils.spec';
+import { VerifiedAccountGuard } from '../verified-account.guard';
 
 describe('VerifiedAccountGuard', () => {
     let guard: VerifiedAccountGuard;
-
-    let connectedUserService: ConnectedUserService;
-
     let router: Router;
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule.withRoutes([
+            imports: [],
+            providers: [
+                provideRouter([
                     { path: '**', component: BlankComponent },
                 ]),
-            ],
-            providers: [
                 { provide: ConnectedUserService, useClass: ConnectedUserServiceMock },
+                VerifiedAccountGuard,
             ],
         }).compileComponents();
         router = TestBed.inject(Router);
         spyOn(router, 'navigate').and.resolveTo(true);
-        connectedUserService = TestBed.inject(ConnectedUserService);
-        guard = new VerifiedAccountGuard(connectedUserService, router);
+        guard = TestBed.inject(VerifiedAccountGuard);
     }));
     it('should create', () => {
         expect(guard).toBeDefined();

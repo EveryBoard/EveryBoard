@@ -1,0 +1,18 @@
+import { TestBed } from '@angular/core/testing';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { CurrentGame } from '../../domain/User';
+import { AbstractCurrentGameService, CurrentGameService } from '../CurrentGameService';
+
+export class CurrentGameServiceMock extends AbstractCurrentGameService {
+    public static setCurrentGame(currentGame: MGPOptional<CurrentGame>): void {
+        (TestBed.inject(CurrentGameService) as AbstractCurrentGameService as CurrentGameServiceMock)
+            .setCurrentGame(currentGame);
+    }
+
+    private setCurrentGame(currentGame: MGPOptional<CurrentGame>): void {
+        this.changeCurrentGame(currentGame);
+    }
+
+}

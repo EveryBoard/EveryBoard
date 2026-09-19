@@ -1,13 +1,14 @@
-import { YinshState } from './YinshState';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { YinshMove } from './YinshMove';
 import { YinshNode } from './YinshRules';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { YinshState } from './YinshState';
 
 export class YinshScoreHeuristic extends PlayerMetricHeuristic<YinshMove, YinshState> {
 
-    public override getMetrics(node: YinshNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: YinshNode, _config: EmptyRulesConfig): PlayerNumberTable {
         return node.gameState.sideRings.toTable();
     }
 

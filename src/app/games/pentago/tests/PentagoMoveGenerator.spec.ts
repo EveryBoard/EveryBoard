@@ -1,18 +1,19 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
+
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoNode, PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('PentagoMoveGenerator', () => {
 
     let rules: PentagoRules;
     let moveGenerator: PentagoMoveGenerator;
-    const defaultConfig: NoConfig = PentagoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PentagoRules.get().getDefaultRulesConfig();
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;

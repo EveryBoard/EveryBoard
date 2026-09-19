@@ -1,15 +1,28 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { TaflPawn } from '../TaflPawn';
-import { TablutNode, TablutRules } from '../tablut/TablutRules';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { TablutMove } from '../tablut/TablutMove';
-import { TaflPieceMinimax } from '../TaflPieceMinimax';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Coord } from '../../../jscaip/Coord';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
-import { MGPOptional } from '@everyboard/lib';
+import { TaflMove } from '../TaflMove';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflPawn } from '../TaflPawn';
+import { TaflPieceHeuristic } from '../TaflPieceHeuristic';
+import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { TablutMove } from '../tablut/TablutMove';
+import { TablutNode, TablutRules } from '../tablut/TablutRules';
+
+class TaflPieceMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
+    public constructor(rules: TaflRules<M>) {
+        super('Pieces',
+              rules,
+              new TaflPieceHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
+    }
+}
 
 describe('TaflPieceMinimax', () => {
 
@@ -17,7 +30,7 @@ describe('TaflPieceMinimax', () => {
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
     const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
     const minimax: TaflPieceMinimax<TablutMove> = new TaflPieceMinimax(TablutRules.get());
 
     it('should try to make the king escape when it can', () => {
@@ -50,4 +63,5 @@ describe('TaflPieceMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

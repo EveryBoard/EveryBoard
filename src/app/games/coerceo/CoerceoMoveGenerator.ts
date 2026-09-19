@@ -1,15 +1,15 @@
-import { Coord } from 'src/app/jscaip/Coord';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
-import { CoerceoState } from './CoerceoState';
 import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Player } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MGPOptional } from '@everyboard/lib';
+import { CoerceoState } from './CoerceoState';
 
 export class CoerceoMoveGenerator extends MoveGenerator<CoerceoMove, CoerceoState, CoerceoConfig> {
 
-    public override getListMoves(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): CoerceoMove[] {
+    public override getListMoves(node: CoerceoNode, _config: CoerceoConfig): CoerceoMove[] {
         let moves: CoerceoMove[] = this.getListExchanges(node);
         moves = moves.concat(this.getListMovement(node));
         return moves;

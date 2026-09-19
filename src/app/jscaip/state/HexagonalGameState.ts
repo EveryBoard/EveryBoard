@@ -1,9 +1,11 @@
 import { Comparable, MGPValidation, Utils } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
-import { GameStateWithTable } from '../state/GameStateWithTable';
 import { HexaDirection } from '../HexaDirection';
 import { HexaLine } from '../HexaLine';
 import { Table } from '../TableUtils';
+
+import { GameStateWithTable } from './GameStateWithTable';
 
 export abstract class HexagonalGameState<P extends NonNullable<Comparable>> extends GameStateWithTable<P> {
 
@@ -49,20 +51,9 @@ export abstract class HexagonalGameState<P extends NonNullable<Comparable>> exte
                 return false;
             }
         }
-        for (const coord of this.allCoords()) {
-            if (equal(this.getPieceAt(coord), other.getPieceAt(coord)) === false) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public allCoords(): Coord[] {
-        const coords: Coord[] = [];
-        this.forEachCoord((coord: Coord) => {
-            coords.push(coord);
-        });
-        return coords;
+        return this.findMatchingCoord((coord: Coord, content: P) => {
+            return equal(content, other.getPieceAt(coord)) === false;
+        }).isAbsent();
     }
 
     public allLines(): ReadonlyArray<HexaLine> {

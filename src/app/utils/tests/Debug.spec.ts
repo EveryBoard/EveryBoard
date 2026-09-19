@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { Utils } from '@everyboard/lib';
+
 import { Debug } from '../Debug';
 
 @Debug.log
@@ -154,4 +155,5 @@ describe('Debug', () => {
         // We need to forget our debug settings after each test
         localStorage.clear();
     });
+
 });

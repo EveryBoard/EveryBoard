@@ -1,22 +1,24 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from '@everyboard/lib';
-import { AbstractGoRules } from '../AbstractGoRules';
-import { GoMove } from '../GoMove';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { MoveTestUtils } from '../../../jscaip/tests/Move.spec';
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
+import { AbstractGoConfig, AbstractGoRules } from '../AbstractGoRules';
+import { GoMove } from '../GoMove';
 import { GoRules } from '../go/GoRules';
-import { TrigoRules } from '../trigo/TrigoRules';
-import { MoveTestUtils } from 'src/app/jscaip/tests/Move.spec';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { HexagonalGoRules } from '../hexagonal-go/HexagonalGoRules';
+import { TriangularGoRules } from '../triangular-go/TriangularGoRules';
 
 describe('GoMove', () => {
 
-    const rules: AbstractGoRules<RulesConfig>[] = [
+    const rules: AbstractGoRules<AbstractGoConfig>[] = [
         GoRules.get(),
-        TrigoRules.get(),
+        HexagonalGoRules.get(),
+        TriangularGoRules.get(),
     ];
     for (const rule of rules) {
         it('should have a bijective encoder', () => {
-            const moveGenerator: AbstractGoMoveGenerator<RulesConfig> = new AbstractGoMoveGenerator(rule);
+            const moveGenerator: AbstractGoMoveGenerator<AbstractGoConfig> = new AbstractGoMoveGenerator(rule);
             const passAndAccept: GoMove[] = [
                 GoMove.PASS,
                 GoMove.ACCEPT,

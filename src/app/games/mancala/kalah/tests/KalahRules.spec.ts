@@ -1,26 +1,28 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { KalahRules } from '../KalahRules';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MancalaState } from '../../common/MancalaState';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
-import { Player } from 'src/app/jscaip/Player';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { MancalaConfig } from '../../common/MancalaConfig';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode, MancalaRules } from '../../common/MancalaRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaState } from '../../common/MancalaState';
+import { DoMancalaRulesTests } from '../../common/tests/GenericMancalaRulesTest.spec';
+import { KalahRules } from '../KalahRules';
 
 describe('KalahRules', () => {
 
     const rules: MancalaRules = KalahRules.get();
-    const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
     describe('generic tests', () => {
         DoMancalaRulesTests({
             gameName: 'Kalah',
             rules,
-            simpleMove: MancalaMove.of(MancalaDistribution.of(5)),
+            simpleMove: MancalaMove.of(MancalaDistribution.of(5, 1)),
         });
 
     });
@@ -32,7 +34,7 @@ describe('KalahRules', () => {
             const state: MancalaState = KalahRules.get().getInitialState(defaultConfig);
 
             // When doing a simple move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 1));
 
             // Then the seeds should be distributed
             const expectedBoard: Table<number> = [
@@ -51,7 +53,7 @@ describe('KalahRules', () => {
             ], 0, PlayerNumberMap.of(0, 0));
 
             // When doing a simple move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
 
             // Then the seeds should be distributed (and then by default that means a capture)
             const expectedBoard: Table<number> = [
@@ -67,7 +69,7 @@ describe('KalahRules', () => {
             const state: MancalaState = KalahRules.get().getInitialState(defaultConfig);
 
             // When doing the double distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(5)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(5, 1)]);
 
             // Then two distributions must have been done and one piece dropped in the Kalah
             const expectedBoard: Table<number> = [
@@ -83,7 +85,7 @@ describe('KalahRules', () => {
             const state: MancalaState = KalahRules.get().getInitialState(defaultConfig);
 
             // When doing the double distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(2)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 1), [MancalaDistribution.of(2, 1)]);
 
             // Then the move should be wildly considered as illegal, you scumbag hacker !
             const reason: string = 'Cannot play after non kalah move';
@@ -97,7 +99,7 @@ describe('KalahRules', () => {
             const state: MancalaState = KalahRules.get().getInitialState(defaultConfig);
 
             // When doing it
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
 
             // Then one of your seeds would be dropped in your Kalah
             // YEAH YOU READ THAT RIGHT, UP YOURS !!
@@ -118,7 +120,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
 
             // When doing it
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
 
             // Then one of your seeds would be dropped in your Kalah but not in the opponent's
             const expectedBoard: Table<number> = [
@@ -134,7 +136,7 @@ describe('KalahRules', () => {
             const state: MancalaState = KalahRules.get().getInitialState(defaultConfig);
 
             // When doing the move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then the move should be illegal
             const reason: string = 'Must continue playing after kalah move';
@@ -152,16 +154,16 @@ describe('KalahRules', () => {
 
             // When doing that complex move
             const move: MancalaMove =
-            MancalaMove.of(MancalaDistribution.of(0),
+            MancalaMove.of(MancalaDistribution.of(0, 1),
                            [
-                               MancalaDistribution.of(4),
-                               MancalaDistribution.of(0),
-                               MancalaDistribution.of(1),
-                               MancalaDistribution.of(0),
-                               MancalaDistribution.of(5),
+                               MancalaDistribution.of(4, 1),
+                               MancalaDistribution.of(0, 1),
+                               MancalaDistribution.of(1, 1),
+                               MancalaDistribution.of(0, 1),
+                               MancalaDistribution.of(5, 1),
                            ]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [0, 1, 6, 3, 1, 0],
@@ -177,7 +179,7 @@ describe('KalahRules', () => {
             ], 10, PlayerNumberMap.of(13, 9));
 
             // When doing the only move possible for the remaining sub-move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
 
             // Then that normally-illegal move should be accepted
             // And since player gave their last seeds, monsoon follows
@@ -202,7 +204,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(22, 22));
 
             // When current player player gives its last seed
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
@@ -221,7 +223,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(22, 22));
 
             // When current player capture opponent last seeds
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 1));
 
             // Then the move should be the last of the game and Player.ZERO should monsoon
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
@@ -240,7 +242,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 1, PlayerNumberMap.of(10, 22));
 
             // When player gives its last seed
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
 
             // Then, since the other player can't distribute, all its pieces should be monsooned
             const expectedBoard: Table<number> = TableUtils.create(6, 2, 0);
@@ -265,7 +267,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
 
             // When doing a move that end up in this house of your
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
 
             // Then you should capture both houses
             const expectedBoard: Table<number> = [
@@ -285,7 +287,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
 
             // When doing a move that end up in this house of yours but after doing a full turn first
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
 
             // Then you should not capture anything
             const expectedBoard: Table<number> = [
@@ -305,7 +307,7 @@ describe('KalahRules', () => {
             const state: MancalaState = new MancalaState(board, 0, PlayerNumberMap.of(0, 0));
 
             // When doing the move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1));
 
             // Then the capture should be done too
             const expectedBoard: Table<number> = [
@@ -325,16 +327,16 @@ describe('KalahRules', () => {
 
             // When doing that complex move
             const move: MancalaMove =
-            MancalaMove.of(MancalaDistribution.of(0),
+            MancalaMove.of(MancalaDistribution.of(0, 1),
                            [
-                               MancalaDistribution.of(1),
-                               MancalaDistribution.of(0),
-                               MancalaDistribution.of(2),
-                               MancalaDistribution.of(0),
-                               MancalaDistribution.of(1),
+                               MancalaDistribution.of(1, 1),
+                               MancalaDistribution.of(0, 1),
+                               MancalaDistribution.of(2, 1),
+                               MancalaDistribution.of(0, 1),
+                               MancalaDistribution.of(1, 1),
                            ]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 1, 9, 0, 0],
                 [1, 0, 0, 0, 0, 0],
@@ -348,14 +350,14 @@ describe('KalahRules', () => {
 
         it('should not require additionnal distribution when not allowed by config (mustContinueDistributionAfterStore)', () => {
             // Given a mancala state with a config with mustContinueDistributionAfterStore set to false
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 mustContinueDistributionAfterStore: false,
-            });
+            };
             const state: MancalaState = KalahRules.get().getInitialState(customConfig);
 
             // When doing simple distribution ending in store
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then the move should succeed and the store should contain one (so, the score)
             const expectedBoard: Table<number> = [
@@ -369,27 +371,170 @@ describe('KalahRules', () => {
         it('should allow to do second distribution when multi-lap mancala ends-up in store', () => {
             // Given any board where a move doing a first distribution ending in store, then another distribution
             // and a config allowing to do that
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
                 continueLapUntilCaptureOrEmptyHouse: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 2, 2, 0, 2, 0],
                 [2, 0, 2, 1, 1, 0],
             ], 10, PlayerNumberMap.of(14, 9));
 
             // When applying that move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(4)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(4, 1)]);
 
-            // Then it should be legal
+            // Then the move should succeed
             const expectedState: MancalaState = new MancalaState([
                 [0, 2, 2, 0, 2, 0],
                 [3, 1, 0, 1, 0, 0],
             ], 11, PlayerNumberMap.of(15, 9));
 
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+        });
+
+        describe('multi row', () => {
+
+            it('should sow correctly inner row', () => {
+                // Given a board with several rows
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 2));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                    [0, 0, 0, 0, 0, 2],
+                ], 11, PlayerNumberMap.of(23, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it('should sow correctly outer row', () => {
+                // Given a board with several rows
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                const state: MancalaState = new MancalaState([
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 3, 0, 0, 2, 0],
+                ], 10, PlayerNumberMap.of(22, 22));
+
+                // When
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(1, 3));
+
+                // Then the move should succeed
+                const expectedState: MancalaState = new MancalaState([
+                    [1, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [0, 0, 0, 0, 0, 2],
+                    [1, 0, 0, 0, 2, 0],
+                ], 11, PlayerNumberMap.of(23, 22));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it(`should capture inner row`, () => {
+                // Given a board with several rows
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                // and board with an opponent's house full of seeds and your paralel house being empty
+                const board: Table<number> = [
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [0, 0, 0, 0, 2, 0],
+                    [4, 4, 4, 4, 4, 4],
+                ];
+                const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
+
+                // When doing a move that end up in this house of your
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 2));
+
+                // Then you should capture both houses
+                const expectedBoard: Table<number> = [
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 0, 4, 4, 4],
+                    [0, 0, 0, 1, 0, 0],
+                    [4, 4, 4, 4, 4, 4],
+                ];
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 5, PlayerNumberMap.of(5, 0));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it(`should capture outer row`, () => {
+                // Given a board with several rows
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                // and board with an opponent's house full of seeds and your paralel house being empty
+                const board: Table<number> = [
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [0, 0, 0, 0, 2, 0],
+                ];
+                const state: MancalaState = new MancalaState(board, 4, PlayerNumberMap.of(0, 0));
+
+                // When doing a move that end up in this house of your
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 3));
+
+                // Then you should capture both houses
+                const expectedBoard: Table<number> = [
+                    [4, 4, 0, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [0, 0, 0, 1, 0, 0],
+                ];
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 5, PlayerNumberMap.of(5, 0));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
+            it(`should not capture itself`, () => {
+                // Given a board with several rows
+                const customConfig: MancalaConfig = {
+                    ...defaultConfig,
+                    numberOfRows: 2,
+                };
+                // and board where you outer row could capture your inner row
+                const board: Table<number> = [
+                    [0, 0, 2, 0, 0, 0],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 0, 0],
+                ];
+                const state: MancalaState = new MancalaState(board, 5, PlayerNumberMap.of(0, 0));
+
+                // When doing a move that end up in this house of your
+                const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(2, 0));
+
+                // Then you should not capture your own stones
+                const expectedBoard: Table<number> = [
+                    [0, 0, 0, 1, 1, 0],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 4, 4],
+                    [4, 4, 4, 4, 0, 0],
+                ];
+                const expectedState: MancalaState = new MancalaState(expectedBoard, 6, PlayerNumberMap.of(0, 0));
+                RulesUtils.expectMoveSuccess(rules, state, move, expectedState, customConfig);
+            });
+
         });
 
     });

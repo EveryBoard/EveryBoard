@@ -1,14 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -30,7 +31,7 @@ describe('DvonnMoveGenerator', () => {
 
     let rules: DvonnRules;
     let moveGenerator: DvonnMoveGenerator;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = DvonnRules.get();
@@ -86,7 +87,7 @@ describe('DvonnMoveGenerator', () => {
         const node: DvonnNode = new DvonnNode(state);
         const moves: DvonnMove[] = moveGenerator.getListMoves(node, defaultConfig);
         for (const move of moves) {
-            expect(move.length()).toEqual(state.getPieceAt(move.getStart()).getSize());
+            expect(move.getDistance()).toEqual(state.getPieceAt(move.getStart()).getSize());
         }
     });
 

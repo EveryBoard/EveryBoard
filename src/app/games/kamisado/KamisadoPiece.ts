@@ -1,16 +1,18 @@
 import { ComparableObject } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
 import { KamisadoColor } from './KamisadoColor';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 
 type KamisadoPieceList = {
-    ORANGE: KamisadoPiece,
-    BLUE: KamisadoPiece,
-    PURPLE: KamisadoPiece,
-    PINK: KamisadoPiece,
-    YELLOW: KamisadoPiece,
-    RED: KamisadoPiece,
-    GREEN: KamisadoPiece,
-    BROWN: KamisadoPiece,
+    ORANGE: KamisadoPiece;
+    BLUE: KamisadoPiece;
+    PURPLE: KamisadoPiece;
+    PINK: KamisadoPiece;
+    YELLOW: KamisadoPiece;
+    RED: KamisadoPiece;
+    GREEN: KamisadoPiece;
+    BROWN: KamisadoPiece;
 };
 
 export class KamisadoPiece implements ComparableObject {

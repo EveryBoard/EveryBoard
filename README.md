@@ -5,3 +5,4 @@
 If you like EveryBoard, please star this repository!
 
 If you would like to help, see [how to contribute](CONTRIBUTING.md)
+

@@ -1,19 +1,23 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { QuixoConfig, QuixoState } from './QuixoState';
-import { QuixoMove } from './QuixoMove';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
 import { MGPMap, MGPOptional, Set, MGPValidation, NumberMap, Utils } from '@everyboard/lib';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+
 import { QuixoFailure } from './QuixoFailure';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { QuixoMove } from './QuixoMove';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 export class QuixoNode extends GameNode<QuixoMove, QuixoState> {}
 
@@ -90,7 +94,28 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
     }
 
     public static getVictoriousCoords(state: QuixoState): Coord[] {
-        return QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = QuixoRules.QUIXO_HELPER.getVictoriousCoord(state);
+        const opponentCoords: Coord[] =
+            QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousOpponent());
+        const playerCoords: Coord[] = QuixoRules.getPlayersCoords(victoriousCoord, state, state.getPreviousPlayer());
+        if (opponentCoords.length === 0) {
+            if (playerCoords.length === 0) {
+                return []; // Nobody won
+            } else {
+                return playerCoords; // Player won
+            }
+        } else {
+            // if there is no player coords, then opponent won
+            // if there is both player coords,
+            // Then player made opponent win by making two victories
+            return opponentCoords;
+        }
+    }
+
+    public static getPlayersCoords(coords: Coord[], state: QuixoState, player: Player): Coord[] {
+        return coords.filter((coord: Coord) => {
+            return state.getPieceAt(coord).equals(player);
+        });
     }
 
     public static getFullestLine(playerLinesInfo: MGPMap<string, NumberMap<number>>): number {
@@ -108,13 +133,13 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
         return QuixoRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<QuixoConfig>> {
-        return MGPOptional.of(QuixoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<QuixoConfig> {
+        return QuixoRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<QuixoConfig>): QuixoState {
-        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.get().width,
-                                                                 config.get().height,
+    public override getInitialState(config: QuixoConfig): QuixoState {
+        const initialBoard: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                                 config.height,
                                                                  PlayerOrNone.NONE);
         return new QuixoState(initialBoard, 0);
     }
@@ -155,7 +180,7 @@ export class QuixoRules extends ConfigurableRules<QuixoMove, QuixoState, QuixoCo
                      `Invalid direction: piece on the top side can't be moved up.`);
     }
 
-    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: MGPOptional<QuixoConfig>, _info: void)
+    public override applyLegalMove(move: QuixoMove, state: QuixoState, _config: QuixoConfig, _info: void)
     : QuixoState
     {
         return state.applyLegalMove(move);

@@ -1,8 +1,8 @@
-import { GameNode } from './GameNode';
-import { GameState } from '../state/GameState';
 import { Move } from '../Move';
 import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { MGPOptional } from '@everyboard/lib';
+import { GameState } from '../state/GameState';
+
+import { GameNode } from './GameNode';
 
 /**
  * A move generator should have a method that generates move from a node.
@@ -12,11 +12,11 @@ import { MGPOptional } from '@everyboard/lib';
 export abstract class MoveGenerator<M extends Move, S extends GameState, C extends RulesConfig = EmptyRulesConfig> {
     /**
      * Gives the list of all the possible moves.
-     * Has to be implemented for each rule so that the AI can choose among theses moves.
+     * Has to be implemented for each rule so that the AI can choose among these moves.
      * This function could give an incomplete set of data if some of them are redundant
      * or if some of them are too bad to be interesting to count, as a matter of performance.
      */
-    public abstract getListMoves(node: GameNode<M, S>, config: MGPOptional<C>): M[];
+    public abstract getListMoves(node: GameNode<M, S>, config: C): M[];
 }
 
 /**
@@ -41,7 +41,7 @@ export type AITimeLimitOptions = AIOptions & {
 }
 
 export class AIStats {
-    public static aiTime: number = 0;
+    public static aiTime: Map<string, number> = new Map();
 }
 /**
  * An AI selects a move from a game node.
@@ -55,10 +55,10 @@ export abstract class AI<M extends Move,
     public abstract readonly availableOptions: O[];
 
     // This lets the AI choose the next move to play, given a game node and some options
-    public abstract chooseNextMove(node: GameNode<M, S>, options: O, config: MGPOptional<C>): M;
+    public abstract chooseNextMove(node: GameNode<M, S>, options: O, config: C): M;
 
     // This returns useful information to display on the local game page for developers
-    public abstract getInfo(node: GameNode<M, S>, config: MGPOptional<C>): string;
+    public abstract getInfo(node: GameNode<M, S>, config: C): string;
 
 }
 

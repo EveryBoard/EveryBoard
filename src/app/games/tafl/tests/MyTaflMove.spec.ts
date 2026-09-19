@@ -1,7 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { TaflMove } from '../TaflMove';
 import { MGPFallible } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { TaflMove } from '../TaflMove';
 
 export class MyTaflMove extends TaflMove {
 

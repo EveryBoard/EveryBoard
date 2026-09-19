@@ -1,23 +1,30 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
+import { MGPOptional, MGPValidation, Set } from '@everyboard/lib';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
 import { GameComponent } from '../../components/game-components/game-component/GameComponent';
-import { PylosMove, PylosMoveFailure } from 'src/app/games/pylos/PylosMove';
-import { PylosState } from 'src/app/games/pylos/PylosState';
-import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Set, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
+import { PylosCoord } from './PylosCoord';
 import { PylosFailure } from './PylosFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { PylosHeuristic } from './PylosHeuristic';
+import { PylosMove, PylosMoveFailure } from './PylosMove';
 import { PylosMoveGenerator } from './PylosMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PylosMinimax } from './PylosMinimax';
+import { PylosRules } from './PylosRules';
+import { PylosState } from './PylosState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosState> {
 
@@ -25,6 +32,11 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     public boardWidth: number = (4 * this.SPACE_SIZE) + this.STROKE_WIDTH;
     public pieceRowHeight: number = this.SPACE_SIZE / 2;
     public boardHeight: number = this.boardWidth + 2 * this.pieceRowHeight;
+
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, this.boardWidth, this.boardHeight);
+    }
+
     public constructedState: PylosState;
 
     public lastLandingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
@@ -45,13 +57,21 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private remainingPieces: PlayerNumberMap = PlayerNumberMap.of(15, 15);
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('Pylos');
-        this.availableAIs = [
-            new PylosMinimax(),
-            new MCTS($localize`MCTS`, new PylosMoveGenerator(), this.rules),
-        ];
+    public constructor() {
+        super('Pylos');
+        this.aiConfig = {
+            minimax: [{
+                id: 'Reserve',
+                name: $localize`Reserve`,
+                heuristic: (): PylosHeuristic => new PylosHeuristic(),
+                moveGenerator: (): PylosMoveGenerator => new PylosMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): PylosMoveGenerator => new PylosMoveGenerator(),
+            }],
+        };
         this.encoder = PylosMove.encoder;
         this.hasAsymmetricBoard = true;
     }
@@ -87,31 +107,28 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
                this.chosenSecondCapture.equalsValue(coord);
     }
 
+    @ClickHandler((x: number, y: number, z: number) => `#piece-${ x }-${ y }-${ z }`)
     public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: PlayerOrNone = this.state.getPieceAt(clickedCoord);
-        const pieceBelongToOpponent: boolean = clickedPiece === this.state.getCurrentOpponent();
+        const coord: PylosCoord = new PylosCoord(x, y, z);
+        const clickedPiece: PlayerOrNone = this.state().getPieceAt(coord);
+        const pieceBelongToOpponent: boolean = clickedPiece === this.state().getCurrentOpponent();
         if (pieceBelongToOpponent) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
-        if (this.chosenStartingCoord.equalsValue(clickedCoord)) {
+        if (this.chosenStartingCoord.equalsValue(coord)) {
             return this.cancelMove();
         }
         if (this.chosenLandingCoord.isPresent()) {
             // Starting to select capture
-            if (this.isSupporting(clickedCoord, this.constructedState)) {
+            if (this.isSupporting(coord, this.constructedState)) {
                 return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
-            return this.onCaptureClick(clickedCoord);
+            return this.onCaptureClick(coord);
         } else {
-            if (this.isSupporting(clickedCoord, this.getState())) {
+            if (this.isSupporting(coord, this.state())) {
                 return this.cancelMove(PylosFailure.CANNOT_MOVE_SUPPORTING_PIECE());
             }
-            return this.onClimbClick(clickedCoord);
+            return this.onClimbClick(coord);
         }
     }
 
@@ -166,11 +183,8 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         }
     }
 
+    @ClickHandler(() => `#capture-validation`)
     public async validateCapture(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#capture_validation');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         if (this.chosenFirstCapture.isAbsent() && this.chosenSecondCapture.isAbsent()) {
             return MGPValidation.SUCCESS;
         }
@@ -196,7 +210,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     public override cancelMoveAttempt(): void {
-        this.constructedState = this.state;
+        this.constructedState = this.state();
         this.chosenStartingCoord = MGPOptional.empty();
         this.chosenLandingCoord = MGPOptional.empty();
         this.chosenFirstCapture = MGPOptional.empty();
@@ -204,19 +218,16 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         this.capturables = new Set();
     }
 
+    @ClickHandler((x: number, y: number, z: number) => `#drop-${ x }-${ y }-${ z }`)
     public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        if (PylosRules.canCapture(this.constructedState, clickedCoord)) {
-            this.chosenLandingCoord = MGPOptional.of(clickedCoord);
-            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(clickedCoord);
+        const coord: PylosCoord = new PylosCoord(x, y, z);
+        if (PylosRules.canCapture(this.constructedState, coord)) {
+            this.chosenLandingCoord = MGPOptional.of(coord);
+            this.constructedState = this.constructedState.dropCurrentPlayersPieceAt(coord);
             this.updateCapturableList();
-            return MGPValidation.SUCCESS; // now player can click on his captures
+            return MGPValidation.SUCCESS; // now player can click on their captures
         } else {
-            this.chosenLandingCoord = MGPOptional.of(clickedCoord);
+            this.chosenLandingCoord = MGPOptional.of(coord);
             return this.concludeMoveWithCapture([]);
         }
     }
@@ -273,7 +284,7 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         if (this.justClimbed(coord)) {
             return false;
         }
-        const reallyOccupied: boolean = this.getState().getPieceAt(coord).isPlayer();
+        const reallyOccupied: boolean = this.state().getPieceAt(coord).isPlayer();
         const landingCoord: boolean = this.chosenLandingCoord.equalsValue(coord);
         return reallyOccupied || landingCoord;
     }
@@ -295,9 +306,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
 
     private getPieceFillClass(c: PylosCoord): string {
         if (this.chosenLandingCoord.equalsValue(c)) {
-            return this.getPlayerClass(this.state.getCurrentPlayer());
+            return this.getPlayerClass(this.state().getCurrentPlayer());
         }
-        return this.getPlayerClass(this.state.getPieceAt(c));
+        return this.getPlayerClass(this.state().getPieceAt(c));
     }
 
     public getPlayerSidePieces(player: Player): number[] {
@@ -309,17 +320,25 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
         return pieces;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.constructedState = this.state;
-        const repartition: PlayerNumberMap = this.state.getPiecesRepartition();
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.constructedState = this.state();
+        const repartition: PlayerNumberMap = this.state().getPiecesRepartition();
         this.remainingPieces = PlayerNumberMap.of(
             15 - repartition.get(Player.ZERO),
             15 - repartition.get(Player.ONE),
         );
+        this.updateScores();
     }
 
-    public override async showLastMove(move: PylosMove): Promise<void> {
+    private updateScores(): void {
+        this.scores = MGPOptional.of(this.remainingPieces);
+    }
+
+    protected override getScoreName(): ScoreName {
+        return ScoreName.REMAINING_PIECES;
+    }
+
+    protected override async showLastMove(move: PylosMove): Promise<void> {
         this.lastStartingCoord = move.startingCoord;
         this.lastLandingCoord = MGPOptional.of(move.landingCoord);
         this.lastFirstCapture = move.firstCapture;

@@ -1,14 +1,16 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { MancalaState } from '../common/MancalaState';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { KalahRules } from './KalahRules';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { MancalaConfig } from '../common/MancalaConfig';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { MancalaTutorial } from '../common/MancalaTutorial';
-import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
+import { MGPValidation } from '@everyboard/lib';
 
-const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { MancalaConfig } from '../common/MancalaConfig';
+import { MancalaDistribution, MancalaMove } from '../common/MancalaMove';
+import { MancalaState } from '../common/MancalaState';
+import { MancalaTutorial } from '../common/MancalaTutorial';
+
+import { KalahRules } from './KalahRules';
+
+const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
 export class KalahTutorial extends Tutorial {
 
@@ -30,9 +32,9 @@ export class KalahTutorial extends Tutorial {
             $localize`The houses on the extreme left and right, unaligned with the others, are the Kalah. Yours is on the left, the opponent's on the right. When sowing, before passing from your leftmost house to the leftmost house of the opponent, you must drop one seed in your Kalah, but you won't have to drop seed in your opponent's Kalah. When you make a capture, the captured seeds are put in your Kalah.<br/><br/>You're playing Dark. Make a move that passes through your Kalah then feeds opponent's houses.`,
             KalahRules.get().getInitialState(defaultConfig),
             [
-                MancalaMove.of(MancalaDistribution.of(0)),
-                MancalaMove.of(MancalaDistribution.of(1)),
-                MancalaMove.of(MancalaDistribution.of(2)),
+                MancalaMove.of(MancalaDistribution.of(0, 1)),
+                MancalaMove.of(MancalaDistribution.of(1, 1)),
+                MancalaMove.of(MancalaDistribution.of(2, 1)),
             ],
             $localize`As you see, three houses have been fed in addition to your Kalah.`,
             $localize`Failed. Choose the three leftmost house on the bottom.`,
@@ -41,7 +43,7 @@ export class KalahTutorial extends Tutorial {
             $localize`The Kalah` + ' (2/2)',
             $localize`When ending in the Kalah, you must distribute again.<br/><br/>You're playing Dark, play the house that ends up in the Kalah then do a second distribution!`,
             KalahRules.get().getInitialState(defaultConfig),
-            MancalaMove.of(MancalaDistribution.of(3), [MancalaDistribution.of(1)]),
+            MancalaMove.of(MancalaDistribution.of(3, 1), [MancalaDistribution.of(1, 1)]),
             (move: MancalaMove, _previous: MancalaState, _result: MancalaState) => {
                 if (move.distributions.length === 1) {
                     return MGPValidation.failure($localize`This move only distributed one house, do one distribution that ends in the Kalah, then do a second one!`);
@@ -58,7 +60,7 @@ export class KalahTutorial extends Tutorial {
                 [0, 4, 4, 4, 4, 4],
                 [0, 2, 0, 2, 4, 0],
             ], 4, PlayerNumberMap.of(0, 0)),
-            MancalaMove.of(MancalaDistribution.of(1), [MancalaDistribution.of(0), MancalaDistribution.of(3)]),
+            MancalaMove.of(MancalaDistribution.of(1, 1), [MancalaDistribution.of(0, 1), MancalaDistribution.of(3, 1)]),
             (_move: MancalaMove, _state: MancalaState, resultingState: MancalaState) => {
                 if (resultingState.getPieceAtXY(1, 0) === 0) {
                     return MGPValidation.SUCCESS;
@@ -76,7 +78,7 @@ export class KalahTutorial extends Tutorial {
                 [2, 0, 0, 0, 0, 1],
             ], 0, PlayerNumberMap.of(19, 24)),
             [
-                MancalaMove.of(MancalaDistribution.of(5)),
+                MancalaMove.of(MancalaDistribution.of(5, 1)),
             ],
             $localize`Since there is no longer seeds in the opponent houses, all your seeds have been captured by you. Congratulations, you won!`,
             $localize`Failed, you gave the opponent a seed! Try again.`,

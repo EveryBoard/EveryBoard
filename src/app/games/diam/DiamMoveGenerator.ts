@@ -1,15 +1,16 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { DiamMove, DiamMoveDrop, DiamMoveShift } from './DiamMove';
 import { DiamPiece } from './DiamPiece';
 import { DiamNode, DiamRules } from './DiamRules';
 import { DiamState } from './DiamState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
 
-    public override getListMoves(node: DiamNode, _config: NoConfig): DiamMove[] {
+    public override getListMoves(node: DiamNode, _config: EmptyRulesConfig): DiamMove[] {
         const state: DiamState = node.gameState;
         const drops: DiamMove[] = this.getListDrops(state);
         const shifts: DiamMove[] = this.getListShifts(state);
@@ -51,7 +52,7 @@ export class DiamMoveGenerator extends MoveGenerator<DiamMove, DiamState> {
     }
     private currentPlayerCanDropPiece(state: DiamState, piece: DiamPiece): boolean {
         return state.getCurrentPlayer() === piece.owner &&
-            state.getRemainingPiecesOf(piece) > 0;
+               state.getRemainingPiecesOf(piece) > 0;
     }
     private getShiftSources(state: DiamState): Coord[] {
         const sources: Coord[] = [];

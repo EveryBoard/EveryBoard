@@ -11,16 +11,16 @@ export class GameStatus {
 
     public static readonly ONGOING: GameStatus = new GameStatus(false, PlayerOrNone.NONE);
 
-    public static getVictory(nonNonePlayer: Player): GameStatus {
-        if (nonNonePlayer === Player.ZERO) {
+    public static getVictory(player: Player): GameStatus {
+        if (player === Player.ZERO) {
             return GameStatus.ZERO_WON;
         } else {
             return GameStatus.ONE_WON;
         }
     }
 
-    public static getDefeat(nonNonePlayer: Player): GameStatus {
-        if (nonNonePlayer === Player.ZERO) {
+    public static getDefeat(player: Player): GameStatus {
+        if (player === Player.ZERO) {
             return GameStatus.ONE_WON;
         } else {
             return GameStatus.ZERO_WON;
@@ -32,7 +32,7 @@ export class GameStatus {
 
     public toBoardValue(): BoardValue {
         if (this.winner.isPlayer()) {
-            return BoardValue.of(this.winner.getVictoryValue());
+            return BoardValue.of(BoardValue.getVictoryValueOf(this.winner));
         } else {
             return BoardValue.of(0);
         }

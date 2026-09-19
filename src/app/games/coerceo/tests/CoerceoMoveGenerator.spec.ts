@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-import { CoerceoState } from '../CoerceoState';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { CoerceoMoveGenerator } from '../CoerceoMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoState } from '../CoerceoState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -14,7 +13,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('CoerceoMoveGenerator', () => {
 
     let moveGenerator: CoerceoMoveGenerator;
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new CoerceoMoveGenerator();

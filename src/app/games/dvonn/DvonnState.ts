@@ -1,8 +1,11 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexagonalGameState } from 'src/app/jscaip/state/HexagonalGameState';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { HexagonalGameState } from '../../jscaip/state/HexagonalGameState';
+
 import { DvonnPieceStack } from './DvonnPieceStack';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
 
 export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
 
@@ -19,15 +22,15 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
      */
     public static balancedBoard(): Table<DvonnPieceStack> {
         const _: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
-        const W: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
-        const B: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
-        const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
+        const O: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+        const X: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
+        const S: DvonnPieceStack = DvonnPieceStack.SOURCE;
         return [
-            [_, _, W, B, B, B, W, W, B, D, B],
-            [_, B, B, W, W, W, B, B, W, B, B],
-            [B, B, B, B, W, D, B, W, W, W, W],
-            [W, W, B, W, W, B, B, B, W, W, _],
-            [W, D, W, B, B, W, W, W, B, _, _],
+            [_, _, O, X, X, X, O, O, X, S, X],
+            [_, X, X, O, O, O, X, X, O, X, X],
+            [X, X, X, X, O, S, X, O, O, O, O],
+            [O, O, X, O, O, X, X, X, O, O, _],
+            [O, S, O, X, X, O, O, O, X, _, _],
         ];
     }
 
@@ -36,6 +39,10 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
             return false;
         }
         return DvonnState.balancedBoard()[coord.y][coord.x] !== DvonnPieceStack.UNREACHABLE;
+    }
+
+    public static isNotOnBoard(coord: Coord): boolean {
+        return DvonnState.isOnBoard(coord) === false;
     }
 
     public constructor(board: Table<DvonnPieceStack>,
@@ -51,7 +58,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
         for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
             for (let x: number = 0; x < DvonnState.WIDTH; x++) {
                 const coord: Coord = new Coord(x, y);
-                if (this.isOnBoard(coord) && this.getPieceAt(coord).hasPieces()) {
+                if (this.coordHasPieces(coord)) {
                     pieces.push(coord);
                 }
             }
@@ -62,7 +69,7 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
     public numberOfNeighbors(coord: Coord): number {
         const neighbors: Coord[] = HexagonalUtils.getNeighbors(coord, 1);
         const occupiedNeighbors: Coord[] = neighbors.filter((c: Coord): boolean =>
-            this.isOnBoard(c) && this.getPieceAt(c).hasPieces());
+            this.coordHasPieces(c));
         return occupiedNeighbors.length;
     }
 
@@ -75,7 +82,18 @@ export class DvonnState extends HexagonalGameState<DvonnPieceStack> {
     public override isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(this.width, this.height)) {
             return false;
+        } else {
+            return this.getUnsafe(coord) !== DvonnPieceStack.UNREACHABLE;
         }
-        return this.board[coord.y][coord.x] !== DvonnPieceStack.UNREACHABLE;
     }
+
+    public coordHasPieces(coord: Coord): boolean {
+        const optional: MGPOptional<DvonnPieceStack> = this.getOptionalPieceAt(coord);
+        if (optional.isPresent()) {
+            return optional.get().hasPieces();
+        } else {
+            return false;
+        }
+    }
+
 }

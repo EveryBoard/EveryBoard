@@ -1,10 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { GoState } from '../GoState';
+
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { GoPhase } from '../GoPhase';
 import { GoPiece } from '../GoPiece';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GoConfig, GoRules } from '../go/GoRules';
+import { GoState } from '../GoState';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
+import { GoRules } from '../go/GoRules';
 
 const O: GoPiece = GoPiece.DARK;
 const _: GoPiece = GoPiece.EMPTY;
@@ -42,7 +45,13 @@ describe('GoState for Go', () => {
 
         it('should put the first two handicaps in opposite corner', () => {
             // Given a config with a 19x19 board and a handicap of two
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 2 });
+            const customConfig: RectangularGoConfig = {
+                width: 19,
+                height: 19,
+                handicap: 2,
+                zoom: 1,
+                showZooms: true,
+            };
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -73,13 +82,19 @@ describe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       'PLAYING');
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
         it('should put the first four handicaps in corner', () => {
             // Given a custom with a 19x19 board and a handicap of four
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 4 });
+            const customConfig: RectangularGoConfig = {
+                width: 19,
+                height: 19,
+                handicap: 4,
+                zoom: 1,
+                showZooms: true,
+            };
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -110,13 +125,19 @@ describe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       'PLAYING');
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
         it('should put the fifth handicap in tengen', () => {
             // Given a custom with a 19x19 board and a handicap of five
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 5 });
+            const customConfig: RectangularGoConfig = {
+                width: 19,
+                height: 19,
+                handicap: 5,
+                zoom: 1,
+                showZooms: true,
+            };
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -147,13 +168,19 @@ describe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       'PLAYING');
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 
         it('should put the sixth to ninth handicaps in "edge hoshis"', () => {
             // Given a custom with a 19x19 board and a handicap of 9
-            const customConfig: MGPOptional<GoConfig> = MGPOptional.of({ width: 19, height: 19, handicap: 9 });
+            const customConfig: RectangularGoConfig = {
+                width: 19,
+                height: 19,
+                handicap: 9,
+                zoom: 1,
+                showZooms: true,
+            };
 
             // When creating an initialState with it
             const state: GoState = GoRules.get().getInitialState(customConfig);
@@ -184,7 +211,7 @@ describe('GoState for Go', () => {
                                                        PlayerNumberMap.of(0, 0),
                                                        1,
                                                        MGPOptional.empty(),
-                                                       'PLAYING');
+                                                       GoPhase.PLAYING);
             expect(expectedState).toEqual(state);
         });
 

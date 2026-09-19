@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { TeekoHeuristic } from '../TeekoHeuristic';
 import { TeekoConfig, TeekoNode, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { TeekoHeuristic } from '../TeekoHeuristic';
-import { MGPOptional } from '@everyboard/lib';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -12,7 +11,7 @@ const O: PlayerOrNone = PlayerOrNone.ZERO;
 describe('TeekoHeuristic', () => {
 
     let heuristic: TeekoHeuristic;
-    const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TeekoConfig = TeekoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new TeekoHeuristic();

@@ -1,11 +1,12 @@
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { ConspirateursMove } from './ConspirateursMove';
 import { ConspirateursMoveGenerator } from './ConspirateursMoveGenerator';
 import { ConspirateursNode } from './ConspirateursRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class ConspirateursOrderedMoveGenerator extends ConspirateursMoveGenerator {
 
-    public override getListMoves(node: ConspirateursNode, config: NoConfig): ConspirateursMove[] {
+    public override getListMoves(node: ConspirateursNode, config: EmptyRulesConfig): ConspirateursMove[] {
         return this.sortByNumberOfJumps(super.getListMoves(node, config));
     }
 

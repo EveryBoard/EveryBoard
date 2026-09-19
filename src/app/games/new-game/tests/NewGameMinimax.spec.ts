@@ -1,20 +1,34 @@
-import { NewGameState } from '../NewGameState';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { NewGameHeuristic } from '../NewGameHeuristic';
 import { NewGameMove } from '../NewGameMove';
+import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
 import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
-import { NewGameMinimax } from '../NewGameMinimax';
-import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { NewGameState } from '../NewGameState';
 
 /**
  * These are the tests for the minimax.
  * We want to test that it selects a certain move on a specific board.
+ * Note that most minimax tests should actually be heuristic tests, so use these tests sparingly.
  */
+
+class NewGameMinimax extends Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo> {
+
+    public constructor() {
+        super('Dummy',
+              NewGameRules.get(),
+              new NewGameHeuristic(), // Or "new DummyHeuristic()" if you did not create NewGameHeuristic
+              new NewGameMoveGenerator(),
+        );
+    }
+}
+
 describe('NewGameMinimax', () => {
 
     let minimax: Minimax<NewGameMove, NewGameState, EmptyRulesConfig, NewGameLegalityInfo>;
-    const defaultConfig: NoConfig = NewGameRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = NewGameRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new NewGameMinimax();
@@ -22,7 +36,7 @@ describe('NewGameMinimax', () => {
 
     it('should select some move', () => {
         // Given state
-        const state: NewGameState = NewGameRules.get().getInitialState();
+        const state: NewGameState = NewGameRules.get().getInitialState(defaultConfig);
         const node: NewGameNode = new NewGameNode(state);
 
         // When selecting the best move

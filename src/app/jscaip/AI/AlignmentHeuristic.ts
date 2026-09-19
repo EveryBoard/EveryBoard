@@ -1,12 +1,13 @@
 import { MGPOptional, Utils } from '@everyboard/lib';
-import { Heuristic } from './Minimax';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
-import { BoardValue } from './BoardValue';
+
 import { Coord } from '../Coord';
 import { Move } from '../Move';
-import { GameState } from '../state/GameState';
 import { Player } from '../Player';
-import { GameStatus } from '../GameStatus';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameState } from '../state/GameState';
+
+import { BoardValue } from './BoardValue';
+import { Heuristic } from './Heuristic';
 
 /**
  * Represents possible alignment configurations
@@ -14,15 +15,15 @@ import { GameStatus } from '../GameStatus';
 export class AlignmentStatus {
 
     // There's no particular alignment
-    public static NOTHING: AlignmentStatus = new AlignmentStatus();
+    public static NOTHING: AlignmentStatus = new AlignmentStatus('NOTHING');
 
     // The player could win at this turn
-    public static PRE_VICTORY: AlignmentStatus = new AlignmentStatus();
+    public static PRE_VICTORY: AlignmentStatus = new AlignmentStatus('PRE_VICTORY');
 
     // The game is finished with a victory
-    public static VICTORY: AlignmentStatus = new AlignmentStatus();
+    public static VICTORY: AlignmentStatus = new AlignmentStatus('VICTORY');
 
-    private constructor() {}
+    private constructor(public readonly name: string) {}
 
     // Convert to a board value (only for heuristics, will not consider victories)
     public toBoardValue(turn: number): BoardValue {
@@ -31,25 +32,17 @@ export class AlignmentStatus {
         } else {
             Utils.assert(this === AlignmentStatus.PRE_VICTORY, 'alignment status can only be pre-victory or default');
             const player: Player = Player.of(turn % 2);
-            return BoardValue.of(player.getPreVictory());
+            return BoardValue.of(BoardValue.getPreVictoryValueOf(player));
         }
-    }
-
-    public toGameStatus(turn: number): GameStatus {
-        const loser: Player = Player.of(turn % 2);
-        if (this === AlignmentStatus.VICTORY) {
-            return GameStatus.getDefeat(loser);
-        }
-        return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
 
 }
 
 export interface BoardInfo {
-    status: AlignmentStatus,
-    victory: MGPOptional<Coord[]>,
-    preVictory: MGPOptional<Coord>,
-    sum: number,
+    status: AlignmentStatus;
+    victory: MGPOptional<Coord[]>;
+    preVictory: MGPOptional<Coord>;
+    sum: number;
 }
 
 export abstract class AlignmentHeuristic<M extends Move,
@@ -86,6 +79,7 @@ export abstract class AlignmentHeuristic<M extends Move,
         }
         return boardInfo;
     }
+
     public abstract startSearchingVictorySources(): void;
 
     public abstract hasNextVictorySource(): boolean;

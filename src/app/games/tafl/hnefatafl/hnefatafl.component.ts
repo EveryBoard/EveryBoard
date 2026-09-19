@@ -1,21 +1,23 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 
-import { HnefataflMove } from 'src/app/games/tafl/hnefatafl/HnefataflMove';
-import { HnefataflRules } from './HnefataflRules';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
 import { TaflComponent } from '../tafl.component';
 
+import { HnefataflMove } from './HnefataflMove';
+import { HnefataflRules } from './HnefataflRules';
+
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-hnefatafl',
     templateUrl: '../tafl.component.html',
     styleUrls: ['../../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class HnefataflComponent extends TaflComponent<HnefataflRules, HnefataflMove> {
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr, HnefataflMove.from);
-        this.setRulesAndNode('Hnefatafl');
-        this.availableAIs = this.createAIs();
+    public constructor() {
+        super('Hnefatafl', HnefataflMove.from);
+        this.aiConfig = this.createAIConfig();
         this.encoder = HnefataflMove.encoder;
     }
 }

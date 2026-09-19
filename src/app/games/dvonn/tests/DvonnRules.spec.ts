@@ -1,23 +1,25 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { DvonnPieceStack } from '../DvonnPieceStack';
-import { DvonnState } from '../DvonnState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { DvonnMove } from '../DvonnMove';
-import { Player } from 'src/app/jscaip/Player';
-import { DvonnNode, DvonnRules } from '../DvonnRules';
-import { DvonnFailure } from '../DvonnFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
+
 import { Utils } from '@everyboard/lib';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { DvonnFailure } from '../DvonnFailure';
+import { DvonnMove } from '../DvonnMove';
+import { DvonnPieceStack } from '../DvonnPieceStack';
+import { DvonnNode, DvonnRules } from '../DvonnRules';
+import { DvonnState } from '../DvonnState';
 
 describe('DvonnRules', () => {
 
     let rules: DvonnRules;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     const N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
     const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -38,15 +40,9 @@ describe('DvonnRules', () => {
 
     it('initial stacks should be of size 1', () => {
         const state: DvonnState = DvonnRules.get().getInitialState();
-        for (let y: number = 0; y < DvonnState.HEIGHT; y++) {
-            for (let x: number = 0; x < DvonnState.WIDTH; x++) {
-                const coord: Coord = new Coord(x, y);
-                if (state.isOnBoard(coord)) {
-                    const stack: DvonnPieceStack = state.getPieceAt(coord);
-                    expect(stack.getSize()).toEqual(1);
-                    expect(stack.isEmpty()).toBeFalse();
-                }
-            }
+        for (const coordAndContent of state.getCoordsAndContents()) {
+            expect(coordAndContent.content.getSize()).toEqual(1);
+            expect(coordAndContent.content.isEmpty()).toBeFalse();
         }
     });
 
@@ -260,6 +256,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -273,6 +272,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
@@ -286,6 +288,9 @@ describe('DvonnRules', () => {
             ];
             const state: DvonnState = new DvonnState(board, 0, false);
             const node: DvonnNode = new DvonnNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 

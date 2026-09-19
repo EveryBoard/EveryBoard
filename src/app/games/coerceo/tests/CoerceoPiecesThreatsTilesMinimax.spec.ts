@@ -1,16 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { CoerceoMove } from '../CoerceoMove';
+import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
+import { CoerceoPiecesThreatsTilesHeuristic } from '../CoerceoPiecesThreatsTilesHeuristic';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { CoerceoPiecesThreatsTilesMinimax } from '../CoerceoPiecesThreatsTilesMinimax';
+import { CoerceoState } from '../CoerceoState';
+
+class CoerceoPiecesThreatsTilesMinimax extends Minimax<CoerceoMove, CoerceoState, CoerceoConfig> {
+    public constructor() {
+        super(`Pieces > Threats > Tiles`, CoerceoRules.get(), new CoerceoPiecesThreatsTilesHeuristic(), new CoerceoOrderedMoveGenerator());
+    }
+}
 
 describe('CoerceoPiecesThreatsTilesMinimax', () => {
 
     const rules: CoerceoRules = CoerceoRules.get();
     const minimax: CoerceoPiecesThreatsTilesMinimax = new CoerceoPiecesThreatsTilesMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -21,4 +30,5 @@ describe('CoerceoPiecesThreatsTilesMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

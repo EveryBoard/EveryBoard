@@ -1,21 +1,27 @@
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
+import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+
 import { TeekoDropMove, TeekoMove, TeekoTranslationMove } from './TeekoMove';
 import { TeekoState } from './TeekoState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { ArrayUtils, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 export class TeekoNode extends GameNode<TeekoMove, TeekoState> {}
 
-export type TeekoConfig = {
+export type TeekoConfig = RulesConfig & {
+
     teleport: boolean;
+
 };
 
 export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoConfig> {
@@ -46,8 +52,8 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
         new NInARowHelper(Utils.identity, 4);
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TeekoConfig>> {
-        return MGPOptional.of(TeekoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TeekoConfig> {
+        return TeekoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override getInitialState(): TeekoState {
@@ -57,7 +63,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return new TeekoState(board, 0);
     }
 
-    public override isLegal(move: TeekoMove, state: TeekoState, optionalConfig: MGPOptional<TeekoConfig>)
+    public override isLegal(move: TeekoMove, state: TeekoState, config: TeekoConfig)
     : MGPValidation
     {
         if (state.isInDropPhase()) {
@@ -65,11 +71,14 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
             return this.isLegalDrop(move as TeekoDropMove, state);
         } else {
             Utils.assert(move instanceof TeekoTranslationMove, 'Cannot drop in translation phase !');
-            return this.isLegalTranslation(move as TeekoTranslationMove, state, optionalConfig.get());
+            return this.isLegalTranslation(move as TeekoTranslationMove, state, config);
         }
     }
 
     private isLegalDrop(move: TeekoDropMove, state: TeekoState): MGPValidation {
+        if (state.isNotOnBoard(move.coord)) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
+        }
         if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_SPACE());
         }
@@ -77,6 +86,12 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
     }
 
     private isLegalTranslation(move: TeekoTranslationMove, state: TeekoState, config: TeekoConfig): MGPValidation {
+        if (state.isNotOnBoard(move.getStart())) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getStart()));
+        }
+        if (state.isNotOnBoard(move.getEnd())) {
+            return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.getEnd()));
+        }
         const translatedPiece: PlayerOrNone = state.getPieceAt(move.getStart());
         if (translatedPiece === state.getCurrentOpponent()) {
             return MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
@@ -94,7 +109,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         return MGPValidation.SUCCESS;
     }
 
-    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: MGPOptional<TeekoConfig>, _info: void)
+    public override applyLegalMove(move: TeekoMove, state: TeekoState, _config: TeekoConfig, _info: void)
     : TeekoState
     {
         if (move instanceof TeekoDropMove) {
@@ -135,7 +150,7 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
         }
     }
 
-    public getSquareInfo(state: TeekoState): { score: number, victoriousCoords: Coord[] } {
+    public getSquareInfo(state: TeekoState): { score: number; victoriousCoords: Coord[] } {
         const victoriousCoords: Coord[] = [];
         const possibilies: PlayerNumberMap = PlayerNumberMap.of(0, 0);
         for (let cx: number = 0; cx < TeekoState.WIDTH - 1; cx++) {

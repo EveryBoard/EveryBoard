@@ -1,12 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync, TestBed } from '@angular/core/testing';
-import { ConnectedUserService, AuthUser } from 'src/app/services/ConnectedUserService';
-import { expectValidRouting, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { VerifyAccountComponent } from './verify-account.component';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
 import { Router } from '@angular/router';
+
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { ConnectedUserService, AuthUser } from '../../../services/ConnectedUserService';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { expectValidRouting, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { LobbyComponent } from '../lobby/lobby.component';
+
+import { VerifyAccountComponent } from './verify-account.component';
 
 describe('VerifyAccountComponent', () => {
     let testUtils: SimpleComponentTestUtils<VerifyAccountComponent>;
@@ -63,6 +66,7 @@ describe('VerifyAccountComponent', () => {
             testUtils.expectElementToExist('#errorMessage');
             expect(testUtils.findElement('#errorMessage').nativeElement.innerHTML).toEqual(failure);
         }));
+
     });
     describe('email user', () => {
         beforeEach(() => {
@@ -121,8 +125,9 @@ describe('VerifyAccountComponent', () => {
 
             // Then no failure message is shown and user is redirected to the lobby
             testUtils.expectElementNotToExist('#errorMessage');
-            expectValidRouting(router, ['/lobby'], LobbyComponent);
+            await expectValidRouting(router, ['/lobby'], LobbyComponent);
         }));
 
     });
+
 });

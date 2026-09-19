@@ -1,19 +1,21 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/HexaLine';
-import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { HexaDirection } from '../../jscaip/HexaDirection';
+import { HexaLine } from '../../jscaip/HexaLine';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table } from '../../jscaip/TableUtils';
+
 import { YinshFailure } from './YinshFailure';
-import { YinshState } from './YinshState';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { YinshState } from './YinshState';
 
 export type YinshLegalityInformation = YinshState;
 
@@ -49,7 +51,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         return new YinshState(board, PlayerNumberMap.of(5, 5), 0);
     }
 
-    public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: NoConfig, info: YinshState)
+    public override applyLegalMove(_move: YinshMove, _state: YinshState, _config: EmptyRulesConfig, info: YinshState)
     : YinshState
     {
         const stateWithoutTurn: YinshState = info;
@@ -239,7 +241,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
 
     private noMoreCapturesValidity(state: YinshState): MGPValidation {
         const player: Player = state.getCurrentPlayer();
-        const linePortions: ReadonlyArray<{ start: Coord, end: Coord, dir: HexaDirection}> =
+        const linePortions: ReadonlyArray<{ start: Coord; end: Coord; dir: HexaDirection}> =
             this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player);
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
@@ -249,11 +251,11 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     private getLinePortionsWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player)
-    : ReadonlyArray<{ start: Coord, end: Coord, dir: HexaDirection}>
+    : ReadonlyArray<{ start: Coord; end: Coord; dir: HexaDirection}>
     {
-        const linePortions: { start: Coord, end: Coord, dir: HexaDirection}[] = [];
+        const linePortions: { start: Coord; end: Coord; dir: HexaDirection}[] = [];
         state.allLines().forEach((line: HexaLine) => {
-            const linePortion: MGPOptional<{ start: Coord, end: Coord, dir: HexaDirection}> =
+            const linePortion: MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}> =
                 this.getLinePortionWithAtLeastFivePiecesOfPlayer(state, player, line);
             if (linePortion.isPresent()) {
                 linePortions.push(linePortion.get());
@@ -263,7 +265,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
     }
 
     private getLinePortionWithAtLeastFivePiecesOfPlayer(state: YinshState, player: Player, line: HexaLine)
-    : MGPOptional<{ start: Coord, end: Coord, dir: HexaDirection}>
+    : MGPOptional<{ start: Coord; end: Coord; dir: HexaDirection}>
     {
         let consecutives: number = 0;
         const coord: Coord = state.getEntranceOnLine(line);
@@ -295,7 +297,7 @@ export class YinshRules extends Rules<YinshMove, YinshState, YinshLegalityInform
         const player: Player = state.getCurrentPlayer();
         const captures: YinshCapture[] = [];
         this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player)
-            .forEach((linePortion: { start: Coord, end: Coord, dir: HexaDirection}) => {
+            .forEach((linePortion: { start: Coord; end: Coord; dir: HexaDirection}) => {
                 for (let cur: Coord = linePortion.start;
                     5 <= cur.getLinearDistanceToward(linePortion.end);
                     cur = cur.getNext(linePortion.dir)) {

@@ -1,19 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { MancalaState } from '../../common/MancalaState';
-import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { AwaleRules } from '../AwaleRules';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table } from '../../../../jscaip/TableUtils';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { MGPOptional } from '@everyboard/lib';
+import { MancalaState } from '../../common/MancalaState';
 import { KalahMoveGenerator } from '../../kalah/KalahMoveGenerator';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { AwaleMoveGenerator } from '../AwaleMoveGenerator';
+import { AwaleRules } from '../AwaleRules';
 
 describe('AwaleMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const defaultConfig: MGPOptional<MancalaConfig> = AwaleRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = AwaleRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new AwaleMoveGenerator();
@@ -33,18 +32,18 @@ describe('AwaleMoveGenerator', () => {
 
         // Then only the legal moves should be present
         expect(moves.length).toBe(1);
-        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5)));
+        expect(moves[0]).toEqual(MancalaMove.of(MancalaDistribution.of(5, 0)));
     });
 
     describe('Custom Config', () => {
 
         it('should provide move with several distributions when possible by config', () => {
             // Given a state with a config allowing multiple sowing
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            });
+            };
             const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
 
             const node: MancalaNode = new MancalaNode(state);
@@ -62,6 +61,23 @@ describe('AwaleMoveGenerator', () => {
             expect(storeMoves.length).toBe(5);
             // Hence a total of 10 choices
             expect(moves.length).toBe(10);
+        });
+
+        it('should provide move from all rows', () => {
+            // Given a state with a config with several rows
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                numberOfRows: 2,
+            };
+            const state: MancalaState = AwaleRules.get().getInitialState(customConfig);
+
+            const node: MancalaNode = new MancalaNode(state);
+
+            // When listing the moves
+            const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
+
+            // Then there should be the 12 moves
+            expect(moves.length).toBe(12);
         });
 
     });

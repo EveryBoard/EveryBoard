@@ -1,14 +1,16 @@
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { DiaballikNode, DiaballikRules } from './DiaballikRules';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { ArrayUtils, ComparableObject, MGPFallible, MGPOptional, Set, Utils } from '@everyboard/lib';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation, isTranslation } from './DiaballikMove';
+import { DiaballikNode, DiaballikRules } from './DiaballikRules';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 export class DiaballikMoveInConstruction implements ComparableObject {
 
@@ -112,7 +114,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     public passPathContains(coord: Coord): boolean {
         for (const subMove of this.subMoves) {
             if (subMove instanceof DiaballikBallPass) {
-                const passPath: Coord[] = subMove.getStart().getCoordsToward(subMove.getEnd());
+                const passPath: Coord[] = subMove.getJumpedOverCoords();
                 return passPath.some((c: Coord): boolean => c.equals(coord));
             }
         }
@@ -132,7 +134,7 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     /**
      * Checks if this move has a previous translation that is the opposite of (start, end)
      */
-    public hasOppositeTranslation(start: Coord, end: Coord) : boolean {
+    public hasOppositeTranslation(start: Coord, end: Coord): boolean {
         if (this.translations > 0) {
             const previousTranslation: DiaballikTranslation = this.getPreviousTranslation().get();
             return previousTranslation.getStart().equals(end) && previousTranslation.getEnd().equals(start);
@@ -159,14 +161,13 @@ export class DiaballikMoveInConstruction implements ComparableObject {
     }
 }
 
-
 export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, DiaballikState> {
 
     public constructor(private readonly avoidDuplicates: boolean = true) {
         super();
     }
 
-    public override getListMoves(node: DiaballikNode, config: NoConfig): DiaballikMove[] {
+    public override getListMoves(node: DiaballikNode, config: EmptyRulesConfig): DiaballikMove[] {
         const emptyMove: DiaballikMoveInConstruction =
             new DiaballikMoveInConstruction([], node.gameState, node.gameState);
         let movesInConstruction: DiaballikMoveInConstruction[] = [emptyMove];
@@ -183,7 +184,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         return this.removeDuplicates(node.gameState, moves, config);
     }
 
-    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: NoConfig)
+    private removeDuplicates(state: DiaballikState, moves: Set<DiaballikMove>, config: EmptyRulesConfig)
     : DiaballikMove[]
     {
         if (this.avoidDuplicates === false) {
@@ -258,17 +259,15 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
      */
     public getPassEnds(state: DiaballikState, start: Coord): Coord[] {
         const player: Player = state.getCurrentPlayer();
+        const opponent: Player = state.getCurrentOpponent();
         const ends: Coord[] = [];
         // A pass is in any direction, as long as it reaches a player piece and is not obstructed
         for (const direction of Ordinal.factory.all) {
             let coord: Coord = start.getNext(direction);
-            while (state.isOnBoard(coord)) {
+            while (state.coordIsNotOwnedBy(coord, opponent)) {
                 const piece: DiaballikPiece = state.getPieceAt(coord);
                 if (piece.owner === player) {
                     ends.push(coord);
-                    break;
-                } else if (piece.owner !== PlayerOrNone.NONE) {
-                    // This pass is obstructed
                     break;
                 }
                 coord = coord.getNext(direction);
@@ -285,7 +284,7 @@ export class DiaballikMoveGenerator extends MoveGenerator<DiaballikMove, Diaball
         // A legal translation is an orthogonal translation that ends on an empty space
         for (const direction of Orthogonal.factory.all) {
             const end: Coord = start.getNext(direction);
-            if (state.isOnBoard(end) && state.getPieceAt(end).owner.isNone()) {
+            if (state.isEmptyAt(end)) {
                 ends.push(end);
             }
         }

@@ -1,16 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { ErrorLoggerServiceMock } from 'src/app/services/tests/ErrorLoggerServiceMock.spec';
-import { EncoderTestUtils, MGPFallible, Utils } from '@everyboard/lib';
+import { MGPFallible, Utils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoNode, TrexoRules } from '../TrexoRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('TrexoMove', () => {
 
-    const defaultConfig: NoConfig = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = TrexoRules.get().getDefaultRulesConfig();
 
     it('should refuse to create out of board move (Player.ZERO piece)', () => {
         const error: string = '(-1, 0) is out of the TrexoBoard!';

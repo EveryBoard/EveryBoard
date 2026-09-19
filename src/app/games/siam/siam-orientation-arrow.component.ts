@@ -1,32 +1,36 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { BaseGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
+import { NgClass } from '@angular/common';
+import { Component, InputSignal, OutputEmitterRef, input, output } from '@angular/core';
+
+import { BaseGameComponent } from '../../components/game-components/base-game-component/BaseGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+
 import { SiamMove } from './SiamMove';
-import { Player } from 'src/app/jscaip/Player';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { SiamConfig } from './SiamRules';
-import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: '[app-siam-orientation-arrow]',
     templateUrl: './siam-orientation-arrow.component.svg',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SiamOrientationArrowComponent extends BaseGameComponent {
 
-    @Input() orientations: SiamMove[];
-    @Input() currentPlayer: Player;
-    @Input() config: SiamConfig;
-    @Output() moveEmitter: EventEmitter<SiamMove> = new EventEmitter<SiamMove>();
+    public readonly orientations: InputSignal<SiamMove[]> = input.required<SiamMove[]>();
+    public readonly currentPlayer: InputSignal<Player> = input.required<Player>();
+    public readonly config: InputSignal<SiamConfig> = input.required<SiamConfig>();
+    public readonly moveEmitter: OutputEmitterRef<SiamMove> = output<SiamMove>();
 
     public getCurrentPlayerClass(): string {
-        return this.getPlayerClass(this.currentPlayer);
+        return this.getPlayerClass(this.currentPlayer());
     }
 
     public getOrientationTransform(orientation: Orthogonal): string {
-        const config: SiamConfig = this.config;
+        const config: SiamConfig = this.config();
 
-        // Thoses are the calculation for a min size of 5
+        // Those are the calculation for a min size of 5
         const sizeRatio: number = Math.min(config.width, config.height) / 5;
         // Our arrow base needs a width of SPACE_SIZE, they currently have 40
         const arrowRatio: number = this.SPACE_SIZE / 40;

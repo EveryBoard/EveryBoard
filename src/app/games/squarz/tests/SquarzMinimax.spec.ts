@@ -1,16 +1,26 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { SquarzHeuristic } from '../SquarzHeuristic';
+import { SquarzMove } from '../SquarzMove';
+import { SquarzMoveGenerator } from '../SquarzMoveGenerator';
 import { SquarzConfig, SquarzRules } from '../SquarzRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { SquarzMinimax } from '../SquarzMinimax';
-import { MGPOptional } from '@everyboard/lib';
+import { SquarzState } from '../SquarzState';
+
+class SquarzMinimax extends Minimax<SquarzMove, SquarzState, SquarzConfig> {
+    public constructor() {
+        const rules: SquarzRules = SquarzRules.get();
+        super('Score', rules, new SquarzHeuristic(), new SquarzMoveGenerator(rules));
+    }
+}
 
 describe('SquarzMinimax', () => {
 
     const rules: SquarzRules = SquarzRules.get();
     const minimax: SquarzMinimax = new SquarzMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -21,4 +31,5 @@ describe('SquarzMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

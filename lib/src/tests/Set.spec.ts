@@ -1,6 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { MGPOptional } from '../MGPOptional';
 import { Set } from '../Set';
+
 import { Pair } from './Pair.spec';
 
 describe('Set', () => {
@@ -105,7 +106,7 @@ describe('Set', () => {
 
     describe('toList', () => {
 
-        it('should provide a copy of the set and disallow set modifications', () => {
+        it('should provide a copy of the set and forbid set modifications', () => {
             const originalData: Pair[] = [new Pair(0, 0), new Pair(1, 1)];
             const set: Set<Pair> = new Set(originalData);
             const copiedData: Pair[] = set.toList();

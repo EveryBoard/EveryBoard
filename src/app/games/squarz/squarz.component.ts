@@ -1,23 +1,28 @@
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { SquarzConfig, SquarzRules } from './SquarzRules';
+
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
+import { SquarzHeuristic } from './SquarzHeuristic';
 import { SquarzMove as SquarzMove } from './SquarzMove';
-import { SquarzState } from './SquarzState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
 import { SquarzMoveGenerator } from './SquarzMoveGenerator';
-import { SquarzMinimax } from './SquarzMinimax';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
+import { SquarzConfig, SquarzRules } from './SquarzRules';
+import { SquarzState } from './SquarzState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-squarz',
     templateUrl: './squarz.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class SquarzComponent extends RectangularGameComponent<SquarzRules,
                                                                  SquarzMove,
@@ -35,27 +40,35 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
 
     public selected: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('Squarz');
-        this.availableAIs = [
-            new SquarzMinimax(),
-            new MCTS($localize`MCTS`, new SquarzMoveGenerator(), this.rules),
-        ];
+    public constructor() {
+        super('Squarz');
+        this.aiConfig = {
+            minimax: [{
+                id: 'Score',
+                name: 'Score',
+                heuristic: (): SquarzHeuristic => new SquarzHeuristic(),
+                moveGenerator: (): SquarzMoveGenerator => new SquarzMoveGenerator(this.rules),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): SquarzMoveGenerator => new SquarzMoveGenerator(this.rules),
+            }],
+        };
         this.encoder = SquarzMove.encoder;
 
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: SquarzState = this.getState();
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        const state: SquarzState = this.state();
         this.board = state.getCopiedBoard();
-        this.scores = MGPOptional.of(this.getState().getScores());
+        this.scores = MGPOptional.of(this.state().getScores());
     }
 
-    public override async showLastMove(move: SquarzMove): Promise<void> {
+    protected override async showLastMove(move: SquarzMove): Promise<void> {
         const previousState: SquarzState = this.getPreviousState();
-        const opponent: Player = previousState.getCurrentOpponent();
+        const previousOpponent: Player = previousState.getCurrentOpponent();
         if (move.isJump()) {
             this.movedSpaces.push(move.getStart());
         } else {
@@ -66,7 +79,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         this.movedSpaces.push(moveEnd);
         for (const direction of Ordinal.ORDINALS) {
             const neighbor: Coord = moveEnd.getNext(direction);
-            if (previousState.isOnBoard(neighbor) && previousState.getPieceAt(neighbor) === opponent) {
+            if (previousState.hasPieceAt(neighbor, previousOpponent)) {
                 this.captured.push(neighbor);
             }
         }
@@ -83,11 +96,8 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         this.moves = [];
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click-' + x + '-' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         const clicked: Coord = new Coord(x, y);
         if (this.selected.equalsValue(clicked)) {
             await this.cancelMove();
@@ -103,13 +113,13 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
     }
 
     private pieceBelongsToCurrentPlayer(coord: Coord): boolean {
-        const state: SquarzState = this.getState();
+        const state: SquarzState = this.state();
         const player: Player = state.getCurrentPlayer();
         return state.getPieceAt(coord) === player;
     }
 
     private async choosePiece(coord: Coord): Promise<MGPValidation> {
-        if (this.getState().getPieceAt(coord).isNone()) {
+        if (this.state().getPieceAt(coord).isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         }
         if (this.pieceBelongsToCurrentPlayer(coord) === false) {
@@ -121,7 +131,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         return MGPValidation.SUCCESS;
     }
     private showIndicators(): void {
-        this.moves = this.rules.getPossiblesMoves(this.getState(), this.selected.get(), this.getConfig());
+        this.moves = this.rules.getPossiblesMoves(this.state(), this.selected.get(), this.config());
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
@@ -147,7 +157,7 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
 
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord);
+        const owner: PlayerOrNone = this.state().getPieceAt(coord);
         classes.push(this.getPlayerClass(owner));
 
         if (this.selected.equalsValue(coord)) {

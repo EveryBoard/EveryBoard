@@ -1,7 +1,7 @@
-import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikFilteredMoveGenerator } from '../DiaballikFilteredMoveGenerator';
+import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation, isTranslation } from '../DiaballikMove';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 function expectNoBackAndForth(move: DiaballikMove): void {
     const subMoves: DiaballikSubMove[] = move.getSubMoves();
@@ -27,7 +27,7 @@ function hasNSteps(n: number): (move: DiaballikMove) => boolean {
     };
 }
 
-const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikFilteredMoveGenerator of length 3', () => {
 
@@ -55,7 +55,6 @@ describe('DiaballikFilteredMoveGenerator of length 3', () => {
 });
 
 describe('DiaballikFilteredMoveGenerator', () => {
-
 
     for (let moveLength: number = 1; moveLength <= 3; moveLength++) {
         it(`should have only the requested length moves (n = ${moveLength})`, () => {

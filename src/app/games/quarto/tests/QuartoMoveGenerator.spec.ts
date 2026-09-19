@@ -1,16 +1,15 @@
 /* eslint-disable max-lines-per-function */
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Table } from '../../../jscaip/TableUtils';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';
-import { QuartoNode, QuartoRules } from '../QuartoRules';
+import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('QuartoMoveGenerator', () => {
 
     let moveGenerator: QuartoMoveGenerator;
-    const defaultConfig: NoConfig = QuartoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuartoConfig = QuartoRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new QuartoMoveGenerator();

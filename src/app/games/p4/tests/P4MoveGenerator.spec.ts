@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { P4State } from '../P4State';
-import { P4Config, P4Node, P4Rules } from '../P4Rules';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
 import { P4MoveGenerator } from '../P4MoveGenerator';
-import { MGPOptional } from '@everyboard/lib';
+import { P4Config, P4Node, P4Rules } from '../P4Rules';
+import { P4State } from '../P4State';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -13,7 +12,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('P4MoveGenerator', () => {
 
     let moveGenerator: P4MoveGenerator;
-    const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+    const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new P4MoveGenerator();

@@ -1,17 +1,27 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { GipfMove } from '../GipfMove';
+import { GipfMoveGenerator } from '../GipfMoveGenerator';
 import { GipfRules } from '../GipfRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { GipfScoreMinimax } from '../GipfScoreMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { GipfLegalityInformation } from '../GipfRules';
+import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
+import { GipfState } from '../GipfState';
+
+class GipfScoreMinimax extends Minimax<GipfMove, GipfState, EmptyRulesConfig, GipfLegalityInformation> {
+    public constructor() {
+        super('Score', GipfRules.get(), new GipfScoreHeuristic(), new GipfMoveGenerator());
+    }
+}
 
 describe('GipfScoreMinimax', () => {
 
     const rules: GipfRules = GipfRules.get();
     const minimax: GipfScoreMinimax = new GipfScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = GipfRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = GipfRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +32,5 @@ describe('GipfScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

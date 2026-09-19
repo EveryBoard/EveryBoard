@@ -1,7 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import { Component } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { SimpleComponentTestUtils } from '../../utils/tests/TestUtils.spec';
+import { ToggleVisibilityDirective } from '../toggle-visibility.directive';
 
 @Component({
     template: `<input id="password" type="password"/>
@@ -9,6 +11,7 @@ import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 <p id="toggle" class="clickable-icon" toggleVisibility>show</p>
 </span>
 `,
+    imports: [ToggleVisibilityDirective],
 })
 class ToggleVisibilityTestComponent {}
 
@@ -43,4 +46,5 @@ describe('ToggleVisibilityDirective', () => {
         // Then the input is again a password
         expect(testUtils.findElement('#password').nativeElement.getAttribute('type')).toBe('password');
     });
+
 });

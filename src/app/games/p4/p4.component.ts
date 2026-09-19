@@ -1,20 +1,26 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { P4State } from './P4State';
-import { P4Config, P4Rules } from './P4Rules';
-import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+
+import { P4Heuristic } from './P4Heuristic';
+import { P4Move } from './P4Move';
 import { P4MoveGenerator } from './P4MoveGenerator';
-import { P4Minimax } from './P4Minimax';
+import { P4OrderedMoveGenerator } from './P4OrderedMoveGenerator';
+import { P4Config, P4Rules } from './P4Rules';
+import { P4State } from './P4State';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-p4',
     templateUrl: './p4.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4State, PlayerOrNone, P4Config> {
 
@@ -22,34 +28,69 @@ export class P4Component extends RectangularGameComponent<P4Rules, P4Move, P4Sta
     public last: MGPOptional<Coord> = MGPOptional.empty();
     public victoryCoords: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('P4');
-        this.availableAIs = [
-            new P4Minimax(),
-            new MCTS($localize`MCTS`, new P4MoveGenerator(), this.rules),
-        ];
+    public constructor() {
+        super('P4');
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                    hash: P4Component.hash,
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`Default`,
+                    moveGenerator: (): P4MoveGenerator => new P4MoveGenerator(),
+                },
+                {
+                    id: 'alignment',
+                    name: $localize`Alignment`,
+                    heuristic: (): P4Heuristic => new P4Heuristic(),
+                    moveGenerator: (): P4OrderedMoveGenerator => new P4OrderedMoveGenerator(),
+                },
+            ],
+        };
         this.encoder = P4Move.encoder;
     }
 
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay(`#click-${ x }-${ y }`);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
+    private static hash(state: P4State): string {
+        let result: string = '';
+        for (const line of state.board) {
+            for (const cell of line) {
+                switch (cell) {
+                    case Player.ZERO:
+                        result += '0';
+                        break;
+                    case Player.ONE:
+                        result += '1';
+                        break;
+                    default:
+                        result += '_';
+                }
+            }
         }
+        return result;
+    }
+
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove);
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: P4State = this.getState();
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        const state: P4State = this.state();
 
         this.victoryCoords = P4Rules.get().getVictoriousCoords(state);
         this.board = state.board;
     }
 
-    public override async showLastMove(move: P4Move): Promise<void> {
-        const state: P4State = this.getState();
+    protected override async showLastMove(move: P4Move): Promise<void> {
+        const state: P4State = this.state();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(state.board, move.x) + 1;
         this.last = MGPOptional.of(new Coord(move.x, y));
     }

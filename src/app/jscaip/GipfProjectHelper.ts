@@ -1,4 +1,5 @@
 import { ArrayUtils, Encoder, MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 import { HexaLine } from './HexaLine';
 import { Table } from './TableUtils';
@@ -115,7 +116,7 @@ export class GipfProjectHelper {
                     const combinationIntersectsWithIndex: boolean = combination.some((c: number) => {
                         return intersections[index].some((c2: number) => c === c2);
                     });
-                    if (combinationIntersectsWithIndex === true) {
+                    if (combinationIntersectsWithIndex) {
                         // Don't add it if there is an intersection
                         newCombinations.push(ArrayUtils.copy(combination));
                     } else if (intersectsWithFutureIndex) {

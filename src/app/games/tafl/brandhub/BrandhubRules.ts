@@ -1,11 +1,14 @@
-import { TaflState } from '../TaflState';
-import { TaflNode, TaflRules } from '../TaflRules';
-import { BrandhubMove } from './BrandhubMove';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
+import { TaflNode, TaflRules } from '../TaflRules';
+import { TaflState } from '../TaflState';
+
+import { BrandhubMove } from './BrandhubMove';
 
 export class BrandhubNode extends TaflNode<BrandhubMove> {}
 
@@ -17,7 +20,7 @@ export class BrandhubRules extends TaflRules<BrandhubMove> {
         new RulesConfigDescription<TaflConfig>({
             name: (): string => $localize`Brandhub`,
             config: {
-                castleIsLeftForGood: new BooleanConfig(true, TaflRules.CASTLE_IS_LEFT_FOR_GOOD),
+                canReturnToCastle: new BooleanConfig(false, TaflRules.CAN_RETURN_TO_CASTLE),
                 edgesAreKingsEnnemy: new BooleanConfig(false, TaflRules.EDGE_ARE_KING_S_ENNEMY),
                 centralThroneCanSurroundKing: new BooleanConfig(true, TaflRules.CENTRAL_THRONE_CAN_SURROUND_KING),
                 kingFarFromHomeCanBeSandwiched: new BooleanConfig(true, TaflRules.KING_FAR_FROM_HOME_CAN_BE_SANDWICHED),
@@ -36,12 +39,12 @@ export class BrandhubRules extends TaflRules<BrandhubMove> {
         super(BrandhubMove.from);
     }
 
-    public override getInitialState(config: MGPOptional<TaflConfig>): TaflState {
+    public override getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-        if (config.get().invaderStarts === false) {
+        if (config.invaderStarts === false) {
             I = TaflPawn.PLAYER_ONE_PAWN;
             D = TaflPawn.PLAYER_ZERO_PAWN;
             K = TaflPawn.PLAYER_ZERO_KING;
@@ -58,8 +61,8 @@ export class BrandhubRules extends TaflRules<BrandhubMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
-        return MGPOptional.of(BrandhubRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
+        return BrandhubRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

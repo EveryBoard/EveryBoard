@@ -1,15 +1,16 @@
 import { MGPOptional } from '@everyboard/lib';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikDistanceHeuristic } from '../DiaballikDistanceHeuristic';
-import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { Player } from 'src/app/jscaip/Player';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { DiaballikRules } from '../DiaballikRules';
+import { DiaballikPiece, DiaballikState } from '../DiaballikState';
 
 describe('DiaballikDistanceHeuristic', () => {
 
     let heuristic: DiaballikDistanceHeuristic;
-    const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
     const O: DiaballikPiece = DiaballikPiece.ZERO;
     const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible } from '@everyboard/lib';
+
 import { Orthogonal } from '../Orthogonal';
 
 describe('Orthogonal', () => {

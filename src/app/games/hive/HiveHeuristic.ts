@@ -1,16 +1,18 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional, Set } from '@everyboard/lib';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { HiveMove, HiveCoordToCoordMove } from './HiveMove';
 import { HiveNode, HiveRules } from './HiveRules';
 import { HiveState } from './HiveState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class HiveHeuristic extends PlayerMetricHeuristic<HiveMove, HiveState> {
 
-    public override getMetrics(node: HiveNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: HiveNode, _config: EmptyRulesConfig): PlayerNumberTable {
         // The board value is based on the number of neighbors to the queen
         const scoreZero: number = this.queenBeeMobility(node.gameState, Player.ZERO);
         const scoreOne: number = this.queenBeeMobility(node.gameState, Player.ONE);

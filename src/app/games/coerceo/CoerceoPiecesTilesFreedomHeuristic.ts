@@ -1,14 +1,16 @@
-import { Player } from 'src/app/jscaip/Player';
-import { MGPMap, MGPOptional } from '@everyboard/lib';
-import { CoerceoState } from './CoerceoState';
-import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
+import { MGPMap } from '@everyboard/lib';
+
+import { CoordSet } from '../../jscaip/CoordSet';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
 import { CoerceoHeuristic } from './CoerceoHeuristic';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { CoerceoConfig, CoerceoNode } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 export class CoerceoPiecesTilesFreedomHeuristic extends CoerceoHeuristic {
 
-    public override getMetrics(node: CoerceoNode, _config: MGPOptional<CoerceoConfig>): PlayerNumberTable {
+    public override getMetrics(node: CoerceoNode, _config: CoerceoConfig): PlayerNumberTable {
         const state: CoerceoState = node.gameState;
         const metrics: PlayerNumberTable = PlayerNumberTable.of([0, 0, 0], [0, 0, 0]);
         const pieceMap: MGPMap<Player, CoordSet> = this.getPiecesMap(state);

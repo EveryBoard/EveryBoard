@@ -1,11 +1,12 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { PlayerOrNoneGameStateWithTable } from '../../jscaip/state/PlayerOrNoneGameStateWithTable';
+
 import { QuixoMove } from './QuixoMove';
-import { PlayerOrNoneGameStateWithTable } from 'src/app/jscaip/state/PlayerOrNoneGameStateWithTable';
 
 export type QuixoConfig = {
-    width: number,
-    height: number,
+    width: number;
+    height: number;
 };
 
 export class QuixoState extends PlayerOrNoneGameStateWithTable {

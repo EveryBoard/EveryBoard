@@ -1,12 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Router, UrlTree } from '@angular/router';
-import { ConnectedUserService, AuthUser } from '../services/ConnectedUserService';
+
+import { AuthUser } from '../services/ConnectedUserService';
+
 import { AccountGuard } from './account-guard';
 
 @Injectable({
     providedIn: 'root',
 })
 export class VerifiedAccountGuard extends AccountGuard {
+
+    protected readonly router: Router = inject(Router);
 
     public static async evaluateUserPermission(router: Router, user: AuthUser): Promise<boolean | UrlTree> {
         if (user.isConnected() === false) {
@@ -19,11 +23,7 @@ export class VerifiedAccountGuard extends AccountGuard {
             return true;
         }
     }
-    public constructor(connectedUserService: ConnectedUserService,
-                       protected readonly router: Router)
-    {
-        super(connectedUserService);
-    }
+
     public async evaluateUserPermission(user: AuthUser): Promise<boolean | UrlTree> {
         return VerifiedAccountGuard.evaluateUserPermission(this.router, user);
     }

@@ -1,0 +1,24 @@
+Steps to setup a postgres database for everyboard:
+
+0. Setup a root password for the db: `POSTGRES_PASSWORD=$(openssl rand -hex 32)`
+1. Setup a volume for persistence: `docker volume create everyboard`
+2. Setup a network that will contain the backend and database: `docker network create everyboard`
+3. Launch a docker container for postgresql: `docker run -d --name db --network everyboard -e POSTGRES_PASSWORD=$POSTGRES_PASSWORD -it postgres:17`
+4. Initialize the DB with the users. Run the following to generate the SQL commands:
+```
+USERS="everyboard_master everyboard_dev everyboard_test"
+for USER in $USERS; do
+    PASSWORD="$(openssl rand -hex 32)"
+    echo "CREATE USER ${USER} WITH CREATEDB PASSWORD '${PASSWORD}';"
+    echo "CREATE DATABASE ${USER} OWNER ${USER};"
+done
+```
+Then, paste them into `docker run -it --rm --network everyboard postgres psql -h db -U postgres` (it does not seem to work properly when done in a pipe).
+5. Make sure the backend uses the right credentials
+
+To test locally:
+0. Set up a dummy root password for the db
+1. Launch a docker container for postgresql: `docker run -d -p 5432:5432 -e POSTGRES_PASSWORD=password -it postgres:17`
+2. Create the database: `echo 'CREATE DATABASE everyboard' | psql -h localhost postgres postgres`
+2. Run the backend: `DB_USERNAME=postgres DB_PASSWORD=password DB_HOST=localhost DB_NAME=everyboard make run-postgres`
+  

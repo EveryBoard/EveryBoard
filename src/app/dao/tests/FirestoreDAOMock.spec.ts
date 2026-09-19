@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { FirestoreJSONObject, FirestoreJSONValue, MGPMap, MGPOptional, ObservableSubject, Utils } from '@everyboard/lib';
-import { FirestoreCollectionObserver } from '../FirestoreCollectionObserver';
-import { FirestoreCondition, FirestoreDocument, IFirestoreDAO } from '../FirestoreDAO';
 import { FieldValue, UpdateData } from '@firebase/firestore';
 import { Timestamp } from 'firebase/firestore';
-import { Debug } from 'src/app/utils/Debug';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
+import { Debug } from '../../utils/Debug';
+import { ObservableSubject } from '../../utils/ObservableSubject';
+import { FirestoreCondition, FirestoreDocument, FirestoreJSONObject, FirestoreJSONValue, IFirestoreDAO } from '../FirestoreDAO';
 
 type DocumentSubject<T> = ObservableSubject<MGPOptional<FirestoreDocument<T>>>;
 
@@ -19,10 +21,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         const nanoseconds: number = ms * 1000 * 1000;
         return new Timestamp(seconds, nanoseconds);
     }
-
-    public callbacks: [FirestoreCondition[], FirestoreCollectionObserver<T>][] = [];
-
-    private readonly subDAOs: MGPMap<string, IFirestoreDAO<FirestoreJSONObject>> = new MGPMap();
 
     public constructor(public readonly collectionName: string) {
         this.reset();
@@ -48,9 +46,8 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         await this.set(elemName, element);
         return elemName;
     }
-    private replaceFieldValueWith<N extends FirestoreJSONObject>(elementWithFieldValue: N,
-                                                                 replacement: FirestoreJSONValue)
-    : N
+    private replaceFieldValueWith<V extends object>(elementWithFieldValue: V, replacement: FirestoreJSONValue)
+    : V
     {
         const elementWithReplacement: FirestoreJSONObject = {};
         for (const key of Object.keys(elementWithFieldValue)) {
@@ -60,13 +57,13 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 elementWithReplacement[key] = elementWithFieldValue[key];
             }
         }
-        return elementWithReplacement as N;
+        return elementWithReplacement as V;
     }
-    private updateFieldValueWith<N extends FirestoreJSONObject>(element: N,
-                                                                replacement: FirestoreJSONValue)
+    private updateFieldValueWith<N extends object>(element: N,
+                                                   replacement: FirestoreJSONValue)
     : UpdateData<N>
     {
-        const update: FirestoreJSONObject = {};
+        const update: object = {};
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
                 update[key] = replacement;
@@ -75,7 +72,7 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
         return update as UpdateData<N>;
     }
 
-    private hasFieldValue(element: FirestoreJSONObject): boolean {
+    private hasFieldValue(element: object): boolean {
         for (const key of Object.keys(element)) {
             if (element[key] instanceof FieldValue) {
                 return true;
@@ -111,11 +108,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
                 new BehaviorSubject(MGPOptional.of(tid));
             const observable: Observable<MGPOptional<FirestoreDocument<T>>> = subject.asObservable();
             this.getStaticDB().put(id, new ObservableSubject(subject, observable));
-            for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], subject.value.get().data)) {
-                    callback[1].onDocumentCreated([subject.value.get()]);
-                }
-            }
         }
         return Promise.resolve();
     }
@@ -135,11 +127,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             const oldDoc: T = observableSubject.subject.getValue().get().data;
             const newDoc: T = { ...oldDoc, ...update };
             observableSubject.subject.next(MGPOptional.of({ id, data: newDoc }));
-            for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], observableSubject.subject.value.get().data)) {
-                    callback[1].onDocumentModified([observableSubject.subject.value.get()]);
-                }
-            }
             return Promise.resolve();
         } else {
             throw new Error(`Cannot update element '${id}' absent from '${this.collectionName}'`);
@@ -148,43 +135,11 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     public async delete(id: string): Promise<void> {
         const optionalOS: MGPOptional<DocumentSubject<T>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
-            const removed: FirestoreDocument<T> = optionalOS.get().subject.value.get();
             optionalOS.get().subject.next(MGPOptional.empty());
             this.getStaticDB().delete(id);
-            for (const callback of this.callbacks) {
-                if (this.conditionsHold(callback[0], removed.data)) {
-                    callback[1].onDocumentDeleted([removed]);
-                }
-            }
         } else {
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
-    }
-    public observingWhere(conditions: FirestoreCondition[],
-                          callback: FirestoreCollectionObserver<T>): Subscription
-    {
-        return this.subscribeToMatchers(conditions, callback);
-    }
-    private subscribeToMatchers(conditions: FirestoreCondition[],
-                                callback: FirestoreCollectionObserver<T>)
-    : Subscription
-    {
-        const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
-        this.callbacks.push([conditions, callback]);
-        const matchingDocs: FirestoreDocument<T>[] = [];
-        db.forEach((item: {key: string, value: DocumentSubject<T> }) => {
-            if (this.conditionsHold(conditions, item.value.subject.value.get().data)) {
-                matchingDocs.push(item.value.subject.value.get());
-            }
-        });
-        callback.onDocumentCreated(matchingDocs);
-        return new Subscription(() => {
-            // Upon unsubscription, remove this callback from the callbacks
-            this.callbacks = this.callbacks.filter(
-                (value: [FirestoreCondition[], FirestoreCollectionObserver<T>]): boolean => {
-                    return (value[0] === conditions && value[1] === callback) === false;
-                });
-        });
     }
     private conditionsHold(conditions: FirestoreCondition[], doc: T): boolean {
         for (const condition of conditions) {
@@ -201,13 +156,14 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
     : Promise<FirestoreDocument<T>[]>
     {
         const matchingDocs: FirestoreDocument<T>[] = [];
-        this.getStaticDB().forEach((item: {key: string, value: DocumentSubject<T>}) => {
-            const id: string = item.value.subject.value.get().id;
-            const data: T = item.value.subject.value.get().data;
+        const db: MGPMap<string, DocumentSubject<T>> = this.getStaticDB();
+        for (const value of db.getValueList()) {
+            const id: string = value.subject.value.get().id;
+            const data: T = value.subject.value.get().data;
             if (this.conditionsHold(conditions, data)) {
                 matchingDocs.push({ id, data });
             }
-        });
+        }
         if (order != null) {
             matchingDocs.sort((a: FirestoreDocument<T>, b: FirestoreDocument<T>) => a[order] - b[order]);
         }
@@ -215,29 +171,6 @@ export abstract class FirestoreDAOMock<T extends FirestoreJSONObject> implements
             return matchingDocs.slice(0, limit);
         } else {
             return matchingDocs;
-        }
-    }
-    public subCollectionDAO<U extends FirestoreJSONObject>(id: string, name: string): IFirestoreDAO<U> {
-        if (this.subDAOs.containsKey(name)) {
-            return this.subDAOs.get(name).get() as IFirestoreDAO<U>;
-        } else {
-            const superName: string = this.collectionName;
-            type OS = ObservableSubject<MGPOptional<FirestoreDocument<U>>>;
-            class CustomMock extends FirestoreDAOMock<U> {
-                private static db: MGPMap<string, OS>;
-                public getStaticDB(): MGPMap<string, OS> {
-                    return CustomMock.db;
-                }
-                public resetStaticDB(): void {
-                    CustomMock.db = new MGPMap();
-                }
-                public constructor() {
-                    super(`${superName}/${id}/${name}`);
-                }
-            }
-            const mock: FirestoreDAOMock<U> = new CustomMock();
-            this.subDAOs.set(name, mock);
-            return mock;
         }
     }
 }

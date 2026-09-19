@@ -1,15 +1,15 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { HexodiaMove } from '../HexodiaMove';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { HexodiaComponent } from '../hexodia.component';
-import { HexodiaState } from '../HexodiaState';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Coord } from 'src/app/jscaip/Coord';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MGPOptional } from 'lib/dist';
 import { HexodiaConfig, HexodiaRules } from '../HexodiaRules';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { HexodiaComponent } from '../hexodia.component';
 
 describe('HexodiaComponent', () => {
 
@@ -39,7 +39,7 @@ describe('HexodiaComponent', () => {
 
         it('should cancel move when clicking on occupied piece from previous turns', fakeAsync(async() => {
             // Given a component with pieces on it, from previous turns
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -68,7 +68,7 @@ describe('HexodiaComponent', () => {
 
         it('should drop the first of two pieces when clicking empty coord', fakeAsync(async() => {
             // Given a component with one move already done
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -100,7 +100,7 @@ describe('HexodiaComponent', () => {
 
         it('should hide last move when doing first click', fakeAsync(async() => {
             // Given a board with a last move
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -137,7 +137,7 @@ describe('HexodiaComponent', () => {
 
         it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
             // Given a component where you already dropped your first piece
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -170,7 +170,7 @@ describe('HexodiaComponent', () => {
 
         it('should do move when clicking on a second empty square', fakeAsync(async() => {
             // Given a component where you already dropped your first piece
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -203,7 +203,7 @@ describe('HexodiaComponent', () => {
 
         it('should show last move again when cancelling move', fakeAsync(async() => {
             // Given a component with one move already done, and a first click done
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -240,7 +240,7 @@ describe('HexodiaComponent', () => {
 
         it('should show highlight when victory occur', fakeAsync(async() => {
             // Given a board where current player is about to win
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -279,7 +279,7 @@ describe('HexodiaComponent', () => {
 
         it('should show previous move (first move)', fakeAsync(async() => {
             // Given a board with a last move
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -311,7 +311,7 @@ describe('HexodiaComponent', () => {
 
         it('should show previous move (next moves)', fakeAsync(async() => {
             // Given a board with a last move
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -347,17 +347,17 @@ describe('HexodiaComponent', () => {
 
     describe('alternative configs', () => {
 
-        const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+        const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 
         it('should accept more drops', fakeAsync(async() => {
             // Given a board with a config with 3 drops
-            const alternativeConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const alternativeConfig: HexodiaConfig = {
+                ...defaultConfig,
                 numberOfDrops: 3,
-            });
+            };
             const board: Table<FourStatePiece> =
                 HexodiaRules.get().getInitialState(alternativeConfig).board;
-            const state: HexodiaState = new HexodiaState(board, 1);
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 1);
             await testUtils.setupState(state, { config: alternativeConfig });
 
             // When dropping 3 stones
@@ -372,6 +372,7 @@ describe('HexodiaComponent', () => {
             ]);
             await testUtils.expectMoveSuccess('#click-7-7', move);
         }));
+
     });
 
 });

@@ -1,20 +1,28 @@
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { MGPValidators } from '../../utils/MGPValidator';
+
 import { ApagosFailure } from './ApagosFailure';
 import { ApagosMove } from './ApagosMove';
 import { ApagosSquare } from './ApagosSquare';
 import { ApagosState } from './ApagosState';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
 
-export type ApagosConfig = {
+export type ApagosConfig = RulesConfig & {
+
     width: number;
+
     increment: number;
-}
+
+};
 
 export class ApagosNode extends GameNode<ApagosMove, ApagosState> {}
 
@@ -38,13 +46,13 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         return ApagosRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<ApagosConfig>> {
-        return MGPOptional.of(ApagosRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<ApagosConfig> {
+        return ApagosRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<ApagosConfig>): ApagosState {
-        const width: number = config.get().width;
-        const increment: number = config.get().increment;
+    public override getInitialState(config: ApagosConfig): ApagosState {
+        const width: number = config.width;
+        const increment: number = config.increment;
 
         const zeroPieces: number[] = [];
         const onePieces: number[] = [];
@@ -55,7 +63,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
             zeroPieces.push(0);
             onePieces.push(0);
             sizes.push(currentSize);
-            numberOfPieces += Math.floor(currentSize / 2) + 1;
+            numberOfPieces += Math.ceil(currentSize / 2);
             currentSize += increment;
         }
 
@@ -68,12 +76,12 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
 
     public override applyLegalMove(move: ApagosMove,
                                    state: ApagosState,
-                                   config: MGPOptional<ApagosConfig>,
+                                   config: ApagosConfig,
                                    _info: void)
     : ApagosState
     {
         if (move.isDrop()) {
-            return this.applyLegalDrop(move, state, config.get());
+            return this.applyLegalDrop(move, state, config);
         } else {
             return this.applyLegalTransfer(move, state);
         }
@@ -98,7 +106,7 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
     private applyLegalTransfer(move: ApagosMove, state: ApagosState): ApagosState {
         const currentPlayer: Player = state.getCurrentPlayer();
         const starting: number = move.starting.get();
-        const newStartingSquare: ApagosSquare = state.getPieceAt(starting).substractPiece(currentPlayer);
+        const newStartingSquare: ApagosSquare = state.getPieceAt(starting).subtractPiece(currentPlayer);
         const newLandingSquare: ApagosSquare = state.getPieceAt(move.landing).addPiece(currentPlayer);
         let resultingState: ApagosState = state.updateAt(starting, newStartingSquare);
         resultingState = resultingState.updateAt(move.landing, newLandingSquare);
@@ -132,8 +140,8 @@ export class ApagosRules extends ConfigurableRules<ApagosMove, ApagosState, Apag
         return MGPValidation.SUCCESS;
     }
 
-    public override getGameStatus(node: ApagosNode, config: MGPOptional<ApagosConfig>): GameStatus {
-        const width: number = config.get().width;
+    public override getGameStatus(node: ApagosNode, config: ApagosConfig): GameStatus {
+        const width: number = config.width;
         const state: ApagosState = node.gameState;
         for (let x: number = 0; x < width; x++) {
             if (state.getPieceAt(x).isFull() === false) {

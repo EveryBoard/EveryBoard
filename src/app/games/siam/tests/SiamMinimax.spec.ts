@@ -1,15 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
-import { SiamMove } from '../SiamMove';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
 import { MGPOptional } from '@everyboard/lib';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { SiamMinimax } from '../SiamMinimax';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { SiamHeuristic } from '../SiamHeuristic';
+import { SiamMove } from '../SiamMove';
+import { SiamMoveGenerator } from '../SiamMoveGenerator';
+import { SiamPiece } from '../SiamPiece';
+import { SiamNode, SiamLegalityInformation, SiamConfig, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -18,11 +20,18 @@ const L: SiamPiece = SiamPiece.LIGHT_LEFT;
 const R: SiamPiece = SiamPiece.LIGHT_RIGHT;
 const d: SiamPiece = SiamPiece.DARK_DOWN;
 
+class SiamMinimax extends Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation> {
+    public constructor() {
+        super('Minimax', SiamRules.get(), new SiamHeuristic(), new SiamMoveGenerator(),
+        );
+    }
+}
+
 describe('SiamMinimax', () => {
 
     let minimax: Minimax<SiamMove, SiamState, SiamConfig, SiamLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SiamMinimax();

@@ -1,4 +1,5 @@
 import { ArrayUtils, Comparable, MGPMap, MGPOptional, Utils } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
@@ -88,12 +89,23 @@ export class TableUtils {
         return MGPOptional.empty();
     }
 
+    public static find<T>(table: Table<T>, predicate: (element: T) => boolean): MGPOptional<T> {
+        for (const line of table) {
+            for (const element of line) {
+                if (predicate(element)) {
+                    return MGPOptional.of(element);
+                }
+            }
+        }
+        return MGPOptional.empty();
+    }
+
 }
 
 export type Cell<T> = {
-    x: number,
-    y: number,
-    content: T,
+    x: number;
+    y: number;
+    content: T;
 };
 
 export class TableWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
@@ -118,7 +130,8 @@ export class TableWithPossibleNegativeIndices<T extends NonNullable<unknown>> {
         }
         line.set(coord.x, value);
     }
-    [Symbol.iterator](): IterableIterator<Cell<T>> {
+
+    public [Symbol.iterator](): IterableIterator<Cell<T>> {
         const elements: Cell<T>[] = [];
         const ys: number[] = this.content.getKeySet().toList();
         ys.sort(ArrayUtils.smallerFirst);

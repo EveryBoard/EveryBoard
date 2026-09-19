@@ -1,11 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { HeuristicBounds } from '../../../jscaip/AI/Heuristic';
+import { Player } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnNode, DvonnRules } from '../DvonnRules';
 import { DvonnScoreHeuristic } from '../DvonnScoreHeuristic';
 import { DvonnState } from '../DvonnState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _N: DvonnPieceStack = DvonnPieceStack.UNREACHABLE;
 const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
@@ -16,7 +18,7 @@ const X2: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 describe('DvonnScoreHeuristic', () => {
 
     let heuristic: DvonnScoreHeuristic;
-    const defaultConfig: NoConfig = DvonnRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = DvonnRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new DvonnScoreHeuristic();
@@ -39,6 +41,15 @@ describe('DvonnScoreHeuristic', () => {
 
         // Then it should be 2 - 1 = 1
         expect(value).toEqual([1]);
+    });
+
+    it('should define heuristic bounds', () => {
+        // Given the heuristic
+        // When computing its bounds on the default config
+        const bounds: HeuristicBounds<BoardValue> = heuristic.getBounds(defaultConfig);
+        // Then it should be the maximal score (49) for each player
+        expect(bounds.player0Best).toEqual(BoardValue.ofSingle(49, 0));
+        expect(bounds.player1Best).toEqual(BoardValue.ofSingle(0, 49));
     });
 
 });

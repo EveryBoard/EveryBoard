@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MancalaState } from '../MancalaState';
-import { MancalaDistribution, MancalaMove } from '../MancalaMove';
-import { MancalaFailure } from '../MancalaFailure';
-import { Player } from 'src/app/jscaip/Player';
-import { MancalaConfig } from '../MancalaConfig';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { MancalaNode, MancalaRules } from '../MancalaRules';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
+import { TestUtils } from '@everyboard/lib/testing';
 
-export class MancalaRulesTestEntries {
+import { GameNode } from '../../../../jscaip/AI/GameNode';
+import { Player } from '../../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { Table, TableUtils } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
+import { MancalaConfig } from '../MancalaConfig';
+import { MancalaFailure } from '../MancalaFailure';
+import { MancalaDistribution, MancalaMove } from '../MancalaMove';
+import { MancalaNode, MancalaRules } from '../MancalaRules';
+import { MancalaState } from '../MancalaState';
+
+export type MancalaRulesTestEntries = {
     gameName: string; // 'Awale', 'Kalah', etc
     rules: MancalaRules;
     simpleMove: MancalaMove;
@@ -20,9 +21,25 @@ export class MancalaRulesTestEntries {
 export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
     const rules: MancalaRules = entries.rules;
-    const defaultConfig: MGPOptional<MancalaConfig> = rules.getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = rules.getDefaultRulesConfig();
 
     describe(entries.gameName + 'Rules generic tests', () => {
+
+        it('should generate initial board according to config', () => {
+            // Given an initial board with unusual width and height
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
+                width: 4,
+                numberOfRows: 7,
+            };
+
+            // When rendering it
+            const initialState: MancalaState = rules.getInitialState(customConfig);
+
+            // Then it should have according dimension
+            expect(initialState.getWidth()).toBe(customConfig.width);
+            expect(initialState.getHeight()).toBe(customConfig.numberOfRows * 2);
+        });
 
         it('should refuse distributing empty space', () => {
             // Given a board where 'simpleMove' would be illegal, distributing an empty house
@@ -37,20 +54,32 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
             RulesUtils.expectMoveFailure(rules, state, entries.simpleMove, reason, defaultConfig);
         });
 
+        it('should refuse distributing opponent space', () => {
+            // Given any board
+            const state: MancalaState = rules.getInitialState(defaultConfig);
+
+            // When attempting to distribute opponent space
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 0));
+
+            // Then it should be illegal
+            const reason: string = MancalaFailure.MUST_DISTRIBUTE_YOUR_OWN_HOUSES();
+            RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
+        });
+
         it('should refuse starving when custom config refuse starvation', () => {
             // Given a state where you have to feed and pass by store
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustFeed: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [2, 0, 0, 0, 2, 0],
             ], 10, PlayerNumberMap.of(0, 0));
 
             // When attempting starving move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
 
             // Then it should be refused
             const reason: string = MancalaFailure.SHOULD_DISTRIBUTE();
@@ -59,18 +88,18 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should allow starving when custom config allows it', () => {
             // Given a state where you don't have to feed and pass by store
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustFeed: false,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 0],
                 [2, 0, 0, 0, 2, 0],
             ], 10, PlayerNumberMap.of(22, 22));
 
             // When attempting starving move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(4, 1));
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
@@ -82,19 +111,19 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         });
 
         it('should know when to monsoon', () => {
-            // Given a state where player is about to cede his last seed, and won't be feedable
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            // Given a state where player is about to cede their last seed, and won't be feedable
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustFeed: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 0, 0, 0, 0, 1],
                 [1, 0, 0, 0, 2, 0],
             ], 11, PlayerNumberMap.of(22, 22));
 
             // When doing the last move
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(5, 0));
 
             // Then the move should succeed
             const expectedState: MancalaState = new MancalaState(
@@ -107,15 +136,15 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
 
         it('should refuse ending move in store when config requires to continue', () => {
             // Given a mancala state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<MancalaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: MancalaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            });
+            };
             const state: MancalaState = rules.getInitialState(customConfig);
 
             // When attempting a store-ending single distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then the move should succeed and the store should contain one (so, the score)
             const reason: string = 'Must continue playing after kalah move';
@@ -126,44 +155,47 @@ export function DoMancalaRulesTests(entries: MancalaRulesTestEntries): void {
         });
 
         describe('getGameStatus', () => {
-            const smallerConfig: MGPOptional<MancalaConfig> =
-                MGPOptional.of({ ...defaultConfig.get(), seedsByHouse: 2 });
-            const biggerConfig: MGPOptional<MancalaConfig> =
-                MGPOptional.of({ ...defaultConfig.get(), seedsByHouse: 6 });
-            for (const optionalConfig of [smallerConfig, defaultConfig, biggerConfig]) {
-                const config: MancalaConfig = optionalConfig.get();
-                const halfOfTotalSeeds: number = config.width * config.seedsByHouse;
+            const smallerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 2 };
+            const biggerConfig: MancalaConfig = { ...defaultConfig, seedsByHouse: 6 };
+            const multiRowConfig: MancalaConfig = { ...defaultConfig, numberOfRows: 2 };
+            for (const config of [smallerConfig, defaultConfig, biggerConfig, multiRowConfig]) {
+                const halfOfTotalSeeds: number = config.width * config.seedsByHouse * config.numberOfRows;
 
                 describe(`Config with ${ config.seedsByHouse } seeds by house`, () => {
 
                     it(`should identify victory for player 0`, () => {
                         // Given a state with no more seeds and where player 0 has captured more seeds
-                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, config.numberOfRows * 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
+                            new MancalaState(board, 0, PlayerNumberMap.of(halfOfTotalSeeds + 2, halfOfTotalSeeds - 2));
                         const node: MancalaNode = new GameNode(state);
-                        // Then it should be a victory for player 0
-                        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, MGPOptional.of(config));
+                        // When checking the game status
+                        // Then it should be a victory for Player.ZERO
+                        RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, config);
                     });
 
                     it('should identify victory for player 1', () => {
                         // Given a state with no more seeds and where player 1 has captured more seeds
-                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, config.numberOfRows * 2, 0);
                         const state: MancalaState =
-                            new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
+                            new MancalaState(board, 0, PlayerNumberMap.of(halfOfTotalSeeds - 2, halfOfTotalSeeds + 2));
                         const node: MancalaNode = new GameNode(state);
-                        // Then it should be a victory for player 1
-                        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, MGPOptional.of(config));
+
+                        // When checking the game status
+                        // Then it should be a victory for Player.ONE
+                        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, config);
                     });
 
                     it('should identify draw', () => {
                         // Given a state with no more seeds and both players have captured the same number of seeds
-                        const board: Table<number> = TableUtils.create(config.width, 2, 0);
+                        const board: Table<number> = TableUtils.create(config.width, config.numberOfRows * 2, 0);
                         const state: MancalaState =
                             new MancalaState(board, 6, PlayerNumberMap.of(halfOfTotalSeeds, halfOfTotalSeeds));
                         const node: MancalaNode = new GameNode(state);
+
+                        // When checking the game status
                         // Then it should be a draw
-                        RulesUtils.expectToBeDraw(rules, node, MGPOptional.of(config));
+                        RulesUtils.expectToBeDraw(rules, node, config);
                     });
 
                 });

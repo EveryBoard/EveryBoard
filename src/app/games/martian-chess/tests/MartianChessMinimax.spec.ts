@@ -1,17 +1,28 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { MartianChessMove } from '../MartianChessMove';
+import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
 import { MartianChessRules } from '../MartianChessRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { MartianChessScoreMinimax } from '../MartianChessScoreMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { MartianChessMoveResult } from '../MartianChessRules';
+import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
+import { MartianChessState } from '../MartianChessState';
+
+class MartianChessScoreMinimax
+    extends Minimax<MartianChessMove, MartianChessState, EmptyRulesConfig, MartianChessMoveResult> {
+    public constructor() {
+        super('Score', MartianChessRules.get(), new MartianChessScoreHeuristic(), new MartianChessMoveGenerator());
+    }
+}
 
 describe('MartianChessScoreMinimax', () => {
 
     const rules: MartianChessRules = MartianChessRules.get();
     const minimax: MartianChessScoreMinimax = new MartianChessScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +33,5 @@ describe('MartianChessScoreMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

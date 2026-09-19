@@ -1,13 +1,13 @@
 /* eslint-disable max-lines-per-function */
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { AbaloneState } from '../AbaloneState';
 import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
 import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { AbaloneRules } from '../AbaloneRules';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+import { AbaloneState } from '../AbaloneState';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -17,7 +17,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneScoreHeuristic', () => {
 
     let heuristic: AbaloneScoreHeuristic;
-    const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: AbaloneConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new AbaloneScoreHeuristic();

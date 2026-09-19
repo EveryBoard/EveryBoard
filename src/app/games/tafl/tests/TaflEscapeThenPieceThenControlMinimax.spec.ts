@@ -1,18 +1,32 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { TaflEscapeThenPieceThenControlMinimax } from '../TaflEscapeThenPieceThenControlMinimax';
-import { TablutRules } from '../tablut/TablutRules';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 import { TaflConfig } from '../TaflConfig';
+import { TaflEscapeThenPieceThenControlHeuristic } from '../TaflEscapeThenPieceThenControlHeuristic';
+import { TaflMove } from '../TaflMove';
+import { TaflMoveGenerator } from '../TaflMoveGenerator';
+import { TaflRules } from '../TaflRules';
+import { TaflState } from '../TaflState';
 import { TablutMove } from '../tablut/TablutMove';
+import { TablutRules } from '../tablut/TablutRules';
+
+class TaflEscapeThenPieceThenControlMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
+    public constructor(rules: TaflRules<M>) {
+        super('Escape > Pieces > Control',
+              rules,
+              new TaflEscapeThenPieceThenControlHeuristic(rules),
+              new TaflMoveGenerator(rules),
+        );
+    }
+}
 
 describe('TaflEscapeThenPieceThenControlMinimax', () => {
 
     const minimax: TaflEscapeThenPieceThenControlMinimax<TablutMove> =
         new TaflEscapeThenPieceThenControlMinimax(TablutRules.get());
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<TaflConfig> = TablutRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -23,4 +37,5 @@ describe('TaflEscapeThenPieceThenControlMinimax', () => {
             shouldFinish: false, // not always a finisher
         });
     });
+
 });

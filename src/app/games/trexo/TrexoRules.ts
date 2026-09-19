@@ -1,16 +1,18 @@
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { Rules } from '../../jscaip/Rules';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoMove } from './TrexoMove';
 import { TrexoPieceStack, TrexoState } from './TrexoState';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 export class TrexoNode extends GameNode<TrexoMove, TrexoState> {}
 
@@ -37,7 +39,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
     public static getVictoriousCoords(state: TrexoState): Coord[] {
         const victoryOfLastPlayer: Coord[] = [];
         const victoryOfNextPlayer: Coord[] = [];
-        const lastPlayer: Player = state.getCurrentOpponent();
+        const previousPlayer: Player = state.getPreviousPlayer();
         for (const coordAndContent of state.getCoordsAndContents()) {
             // for every column, starting from the bottom of each column
             // while we haven't reached the top or an empty space
@@ -45,8 +47,8 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = state.getPieceAt(coord).getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (BoardValue.isVictory(squareScore)) {
-                    if (pieceOwner === lastPlayer) {
+                if (BoardValue.isVictoryValue(squareScore)) {
+                    if (pieceOwner === previousPlayer) {
                         victoryOfLastPlayer.push(coord);
                     } else {
                         victoryOfNextPlayer.push(coord);
@@ -66,7 +68,12 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
         return new TrexoState(board, 0);
     }
 
-    public override applyLegalMove(move: TrexoMove, state: TrexoState, _config: NoConfig, _info: void): TrexoState {
+    public override applyLegalMove(
+        move: TrexoMove,
+        state: TrexoState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): TrexoState {
         return state
             .drop(move.getZero(), Player.ZERO)
             .drop(move.getOne(), Player.ONE)
@@ -100,7 +107,7 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
 
     public override getGameStatus(node: TrexoNode): GameStatus {
         const state: TrexoState = node.gameState;
-        const lastPlayer: Player = state.getCurrentOpponent();
+        const previousPlayer: Player = state.getPreviousPlayer();
         let lastPlayerAligned5: boolean = false;
         for (const coordAndContent of state.getCoordsAndContents()) {
             // for every column, starting from the bottom of each column
@@ -109,19 +116,19 @@ export class TrexoRules extends Rules<TrexoMove, TrexoState> {
             const pieceOwner: PlayerOrNone = coordAndContent.content.getOwner();
             if (pieceOwner.isPlayer()) {
                 const squareScore: number = TrexoRules.getSquareScore(state, coord);
-                if (BoardValue.isVictory(squareScore)) {
-                    if (pieceOwner === lastPlayer) {
+                if (BoardValue.isVictoryValue(squareScore)) {
+                    if (pieceOwner === previousPlayer) {
                         // Cannot return right away
                         // because the last player only wins if the other does not get an alignment
                         lastPlayerAligned5 = true;
                     } else {
-                        return GameStatus.getDefeat(lastPlayer);
+                        return GameStatus.getDefeat(previousPlayer);
                     }
                 }
             }
         }
         if (lastPlayerAligned5) {
-            return GameStatus.getVictory(lastPlayer);
+            return GameStatus.getVictory(previousPlayer);
         }
         return GameStatus.ONGOING;
     }

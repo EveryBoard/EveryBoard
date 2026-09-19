@@ -1,17 +1,19 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Vector } from 'src/app/jscaip/Vector';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { Vector } from '../../jscaip/Vector';
+
 import { PentagoFailure } from './PentagoFailure';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
 
 export class PentagoNode extends GameNode<PentagoMove, PentagoState> {}
 
@@ -58,7 +60,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         [new Coord(1, 5), new Vector(1, 0), true],
     ];
 
-    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: NoConfig, _info: void)
+    public override applyLegalMove(move: PentagoMove, state: PentagoState, _config: EmptyRulesConfig, _info: void)
     : PentagoState
     {
         return state.applyLegalMove(move);
@@ -126,14 +128,14 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState> {
         for (let i: number = 0; i < victoryCoords.length; i += 5) {
             victoryFound.put(state.getPieceAt(victoryCoords[i]) as Player, true);
         }
-        if (victoryFound.get(Player.ZERO) === true) {
-            if (victoryFound.get(Player.ONE) === true) {
+        if (victoryFound.get(Player.ZERO)) {
+            if (victoryFound.get(Player.ONE)) {
                 return GameStatus.DRAW;
             } else {
                 return GameStatus.ZERO_WON;
             }
         }
-        if (victoryFound.get(Player.ONE) === true) {
+        if (victoryFound.get(Player.ONE)) {
             return GameStatus.ONE_WON;
         }
         if (state.turn === PentagoState.SIZE * PentagoState.SIZE) {

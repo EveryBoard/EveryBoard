@@ -1,23 +1,27 @@
-import { AfterViewInit, ChangeDetectorRef, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { AbstractNode, GameNode } from 'src/app/jscaip/AI/GameNode';
-import { Move } from 'src/app/jscaip/Move';
-import { ConnectedUserService } from 'src/app/services/ConnectedUserService';
+import { NgClass } from '@angular/common';
+import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
+
+import { AbstractNode, GameNode } from '../../../jscaip/AI/GameNode';
+import { Move } from '../../../jscaip/Move';
+import { RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { Debug } from '../../../utils/Debug';
+import { Localized } from '../../../utils/LocaleUtils';
+import { ViewConfigComponent } from '../../normal-component/view-config/view-config.component';
+import { GameWrapper } from '../GameWrapper';
+
 import { TutorialFailure } from './TutorialFailure';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { Debug } from 'src/app/utils/Debug';
+import { Click, TutorialStep, TutorialStepClick, TutorialStepMove, TutorialStepWithSolution } from './TutorialStep';
 
 export class TutorialGameWrapperMessages {
 
     public static readonly COMPLETED_TUTORIAL_MESSAGE: Localized = () => $localize`Congratulations, you completed the tutorial.`;
 
     public static readonly THIS_IS_A_DEMO: Localized = () => $localize`You cannot click, this is a demo.`;
+
 }
 
 type TutorialPlayer = 'tutorial-player';
@@ -25,27 +29,22 @@ type TutorialPlayer = 'tutorial-player';
 @Component({
     selector: 'app-tutorial-game-wrapper',
     templateUrl: './tutorial-game-wrapper.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [ViewConfigComponent, ReactiveFormsModule, NgClass],
 })
 @Debug.log
 export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> implements AfterViewInit {
 
+    private readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     public steps: TutorialStep[] = [];
     public successfulSteps: number = 0;
-    public stepIndex: number = -1;
+    public stepIndex: number = 0;
     public currentMessage: string = ''; // Initially empty, will always be set once tutorial has started
     public currentReason: MGPOptional<string> = MGPOptional.empty();
     public moveAttemptMade: boolean = false;
     public stepFinished: boolean[] = [];
     public tutorialOver: boolean = false;
-
-    public constructor(activatedRoute: ActivatedRoute,
-                       router: Router,
-                       messageDisplayer: MessageDisplayer,
-                       public cdr: ChangeDetectorRef,
-                       connectedUserService: ConnectedUserService)
-    {
-        super(activatedRoute, connectedUserService, router, messageDisplayer);
-    }
 
     public override async canUserPlay(elementName: string): Promise<MGPValidation> {
         this.currentReason = MGPOptional.empty();
@@ -80,16 +79,20 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public override async onLegalUserMove(move: Move): Promise<void> {
         const currentStep: TutorialStep = this.steps[this.stepIndex];
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
-        const node: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(this.gameComponent.node, move, config);
-        Utils.assert(node.isSuccess(), 'It should be impossible to call onLegalUserMove with an illegal move, but got ' + node.getReasonOr(''));
-        this.gameComponent.node = node.get();
+        const config: RulesConfig = this.getConfig();
+        const currentNode: AbstractNode = this.gameComponent.node();
+        const newNode: MGPFallible<AbstractNode> = this.gameComponent.rules.choose(currentNode, move, config);
+        Utils.assert(
+            newNode.isSuccess(),
+            'It should be impossible to call onLegalUserMove with an illegal move, but got ' + newNode.getReasonOr(''),
+        );
+        this.gameComponent.node.set(newNode.get());
 
         await this.showNewMove(false);
         this.moveAttemptMade = true;
         if (currentStep.isPredicate()) {
             const previousState: GameState = this.gameComponent.getPreviousState();
-            const resultingState: GameState = this.gameComponent.getState();
+            const resultingState: GameState = this.gameComponent.state();
             const moveValidity: MGPValidation =
                 Utils.getNonNullable(currentStep.predicate)(move, previousState, resultingState);
             if (moveValidity.isSuccess()) {
@@ -114,6 +117,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             Utils.assert(currentStep.isClick(), 'Here, we should have a click');
         }
         // We don't cover the click case here, it is covered in canUserPlay
+        await this.setInteractive(false);
         this.cdr.detectChanges();
     }
 
@@ -133,11 +137,8 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
     }
 
     public getCurrentStepTitle(): string {
-        if (this.steps.length > 0) {
-            return this.steps[this.stepIndex].title;
-        } else {
-            return '';
-        }
+        Utils.assert(this.steps.length > 0, 'Tutorial has no step');
+        return this.steps[this.stepIndex].title;
     }
 
     public async start(): Promise<void> {
@@ -172,9 +173,11 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const currentStep: TutorialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = MGPOptional.empty();
-        this.gameComponent.node = new GameNode(currentStep.state,
-                                               currentStep.parent,
-                                               currentStep.previousMove);
+        const state: GameState = currentStep.state;
+        const node: AbstractNode = new GameNode(state, currentStep.parent, currentStep.previousMove);
+        this.gameComponent.node.set(node);
+        const defaultConfig: RulesConfig = this.gameComponent.rules.getDefaultRulesConfig();
+        this.gameComponent.config.set(currentStep.config.getOrElse(defaultConfig));
         // Set role will update view with showCurrentState
         await this.setRole(this.gameComponent.getCurrentPlayer());
         // All steps but informational ones are interactive
@@ -213,7 +216,7 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
             this.tutorialOver = true;
         } else {
             let indexUndone: number = (this.stepIndex + 1) % this.steps.length;
-            while (this.stepFinished[indexUndone] === true) {
+            while (this.stepFinished[indexUndone]) {
                 indexUndone = (indexUndone + 1) % this.steps.length;
             }
             await this.showStep(indexUndone);
@@ -226,15 +229,20 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
         const solutionStep: TutorialStepWithSolution | TutorialStepClick =
             step as TutorialStepWithSolution | TutorialStepClick;
         const solution: Move | Click = solutionStep.getSolution();
-        const config: MGPOptional<RulesConfig> = await this.getConfig();
+        const config: RulesConfig = this.getConfig();
         if (solution instanceof Move) {
             await this.showStep(this.stepIndex);
-            this.gameComponent.node = this.gameComponent.rules.choose(this.gameComponent.node, solution, config).get();
+            const oldNode: AbstractNode = this.gameComponent.node();
+            const chosenNode: AbstractNode = this.gameComponent.rules.choose(oldNode, solution, config).get();
+            this.gameComponent.node.set(chosenNode);
             await this.showCurrentState(true);
         } else {
             await this.showStep(this.stepIndex);
             const element: HTMLElement = window.document.querySelector(solution) as HTMLElement;
             element.dispatchEvent(new Event('click'));
+            // Let the click handler (which awaits canUserPlay) finish before updating the view
+            await Promise.resolve();
+            await this.gameComponent.updateBoardAndRedraw(false);
         }
         this.currentMessage = solutionStep.getSuccessMessage();
         this.moveAttemptMade = true;
@@ -243,12 +251,25 @@ export class TutorialGameWrapperComponent extends GameWrapper<TutorialPlayer> im
 
     public async playLocally(): Promise<void> {
         const urlName: string = this.getGameUrlName();
-        await this.router.navigate(['/local', urlName]);
+        await this.router.navigate(['/local', urlName, 'config']);
     }
 
     public async createGame(): Promise<void> {
         const urlName: string = this.getGameUrlName();
         await this.router.navigate(['/play', urlName]);
+    }
+
+    public override getConfig(): RulesConfig {
+        if (this.steps.length === 0) {
+            return super.getConfig();
+        }
+        const step: TutorialStep = this.steps[this.stepIndex];
+        const config: MGPOptional<RulesConfig> = step.config;
+        if (config.isPresent()) {
+            return config.get();
+        } else {
+            return super.getConfig();
+        }
     }
 
 }

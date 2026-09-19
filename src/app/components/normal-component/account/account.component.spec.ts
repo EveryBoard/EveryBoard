@@ -1,10 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { DebugElement } from '@angular/core';
 import { fakeAsync } from '@angular/core/testing';
-import { UserMocks } from 'src/app/domain/UserMocks.spec';
-import { ConnectedUserServiceMock } from 'src/app/services/tests/ConnectedUserService.spec';
-import { expectValidRoutingLink, SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+
+import { UserMocks } from '../../../domain/UserMocks.spec';
+import { ConnectedUserServiceMock } from '../../../services/tests/ConnectedUserService.spec';
+import { expectValidRoutingLink, SimpleComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { ResetPasswordComponent } from '../reset-password/reset-password.component';
+
 import { AccountComponent } from './account.component';
 
 describe('AccountComponent', () => {
@@ -25,6 +27,6 @@ describe('AccountComponent', () => {
         // When displaying the page
         // Then it should show a reset link pointing to the reset password component
         const button: DebugElement = testUtils.findElement('#reset');
-        expectValidRoutingLink(button, '/reset-password', ResetPasswordComponent);
+        await expectValidRoutingLink(button, '/reset-password', ResetPasswordComponent);
     }));
 });

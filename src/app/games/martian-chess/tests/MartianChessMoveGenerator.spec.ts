@@ -1,13 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
 import { MartianChessMove } from '../MartianChessMove';
+import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
+import { MartianChessPiece } from '../MartianChessPiece';
 import { MartianChessNode, MartianChessRules } from '../MartianChessRules';
 import { MartianChessState } from '../MartianChessState';
-import { MartianChessPiece } from '../MartianChessPiece';
-import { MartianChessMoveGenerator } from '../MartianChessMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('MartianChessMoveGenerator', () => {
 
@@ -17,7 +18,7 @@ describe('MartianChessMoveGenerator', () => {
     const C: MartianChessPiece = MartianChessPiece.QUEEN;
 
     let moveGenerator: MartianChessMoveGenerator;
-    const defaultConfig: NoConfig = MartianChessRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = MartianChessRules.get().getDefaultRulesConfig();
 
     function isPawnMove(move: MartianChessMove, state: MartianChessState): boolean {
         return state.getPieceAt(move.getStart()) === MartianChessPiece.PAWN;

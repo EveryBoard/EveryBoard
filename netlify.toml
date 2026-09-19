@@ -1,6 +1,6 @@
 [build]
   publish = "dist/everyboard"
-  command = "sh scripts/build.sh"
+  command = "npm run build:netlify"
 
 [[redirects]]
   from = "/*"

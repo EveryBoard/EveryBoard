@@ -1,14 +1,17 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
-import { HexodiaState } from '../HexodiaState';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { DodecaHexaDirection } from '../../../jscaip/DodecaHexaDirection';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { DodecaHexaDirection } from 'src/app/jscaip/DodecaHexaDirection';
+import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 
 describe('HexodiaRules', () => {
     /**
@@ -24,17 +27,32 @@ describe('HexodiaRules', () => {
     const N: FourStatePiece = FourStatePiece.UNREACHABLE;
 
     let rules: HexodiaRules;
-    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = HexodiaRules.get();
+    });
+
+    it('should score occupied squares in alignment heuristic', () => {
+        // Given a state with pieces to evaluate
+        const initialState: FourStatePieceGameStateWithTable = rules.getInitialState(defaultConfig);
+        const state: FourStatePieceGameStateWithTable = initialState
+            .setPieceAt(new Coord(11, 11), O)
+            .setPieceAt(new Coord(12, 11), X);
+        const heuristic: HexodiaAlignmentHeuristic = new HexodiaAlignmentHeuristic();
+
+        // When evaluating it
+        const value: BoardValue = heuristic.getBoardValue(new HexodiaNode(state), defaultConfig);
+
+        // Then the heuristic should inspect occupied squares
+        expect(value.metrics.length).toBe(1);
     });
 
     describe('first turn', () => {
 
         it('should not create move when coord is out of board', () => {
             // Given the initial state
-            const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+            const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
 
             // When dropping out of the board
             const move: HexodiaMove = HexodiaMove.of([new Coord(-1, -1)]);
@@ -46,13 +64,13 @@ describe('HexodiaRules', () => {
 
         it('should allow the first player play only one piece', () => {
             // Given the initial state
-            const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+            const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
 
             // When dropping one piece
             const move: HexodiaMove = HexodiaMove.of([new Coord(11, 11)]);
 
             // Then the move should succeed
-            const expectedState: HexodiaState = new HexodiaState([
+            const expectedState: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [N, N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [N, N, N, N, N, N, N, N, N, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -82,7 +100,7 @@ describe('HexodiaRules', () => {
 
         it('should refuse move that drops two pieces on first turn', () => {
             // Given the first turn
-            const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+            const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
 
             // When dropping two pieces
             const move: HexodiaMove = HexodiaMove.of([new Coord(11, 11), new Coord(10, 10)]);
@@ -100,7 +118,7 @@ describe('HexodiaRules', () => {
 
         it('should forbid move where second coord is out of range', () => {
             // Given any board on second turn
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -132,7 +150,7 @@ describe('HexodiaRules', () => {
 
         it('should forbid move where first coord is out of range', () => {
             // Given any board on second turn
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -164,7 +182,7 @@ describe('HexodiaRules', () => {
 
         it('should refuse dropping first coord on another piece', () => {
             // Given a board with pieces on it
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -196,7 +214,7 @@ describe('HexodiaRules', () => {
 
         it('should refuse dropping second coord on another piece', () => {
             // Given a board with pieces on it
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -228,7 +246,7 @@ describe('HexodiaRules', () => {
 
         it('should allow move that drops two pieces on empty pieces', () => {
             // Given a board with pieces on it
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -252,7 +270,7 @@ describe('HexodiaRules', () => {
 
             // When dropping pieces on empty squares
             const move: HexodiaMove = HexodiaMove.of([new Coord(7, 7), new Coord(8, 8)]);
-            const expectedState: HexodiaState = new HexodiaState([
+            const expectedState: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -274,13 +292,13 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
 
-            // Then it should succeed
+            // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
         it('should refuse dropping only one piece after first turn', () => {
             // Given a board that is not first turn
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -312,7 +330,7 @@ describe('HexodiaRules', () => {
         });
 
         it('should notify victory when aligning 6 stones of your color', () => {
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -334,12 +352,15 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 
         it('should draw when no one can play anymore', () => {
             // Given the wildly unlikely case in which in 91 turns no one wins
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
@@ -360,17 +381,17 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X, O, O, O, O, O, X, X, X, X, X, O, O, O, O],
                 [X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, X, O, O],
             ], 91);
-
-            // When evaluating the node
-            // Then the board should be a draw
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
 
-        it('should include the diagonals', () => {
+        it('should include the "rectangular" diagonals', () => {
             // Given a board where the square alignment
             // (the line that looks like an alignment on that square board but that is not on a hexagonal board)
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -392,6 +413,44 @@ describe('HexodiaRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 1);
             const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
+            RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
+        });
+
+        it('should include the "hexagonal" diagonals', () => {
+            // Given a board with the following alignment:
+            // the line that passes trough the hexagonal edges,
+            // two such diagonals don't have their pieces corner touching each other like in a rectangle board
+            //     but they share the mathematical aspect:
+            //         if you add two vector representing the direction UP-LEFT(0,-1) and UP-RIGHT(1,-1),
+            //         then you would end up in (1, -2)
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, O, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ], 1);
+            const node: HexodiaNode = new HexodiaNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -410,7 +469,7 @@ describe('HexodiaRules', () => {
 
         it('should recognize hard-draw', () => {
             // Given a board full of pieces
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [X, X, X, X, X],
                 [X, X, X, X, X],
                 [X, X, X, X, X],
@@ -418,7 +477,8 @@ describe('HexodiaRules', () => {
                 [X, X, X, X, X],
             ], 25);
             const node: HexodiaNode = new HexodiaNode(state);
-            // When checking it game status
+
+            // When checking the game status
             // Then it should be a draw
             RulesUtils.expectToBeDraw(rules, node, defaultConfig);
         });
@@ -427,7 +487,7 @@ describe('HexodiaRules', () => {
             it('should include alignment of ' + dir.toString(), () => {
                 // Given a board with 6 pieces aligned in direction 'dir'
                 const center: Coord = new Coord(11, 11);
-                let state: HexodiaState = rules
+                let state: FourStatePieceGameStateWithTable = rules
                     .getInitialState(defaultConfig)
                     .setPieceAt(center, FourStatePiece.ONE)
                     .incrementTurn();
@@ -437,8 +497,8 @@ describe('HexodiaRules', () => {
                 state = state.incrementTurn();
                 const node: HexodiaNode = new HexodiaNode(state);
 
-                // When evaluating its board status
-                // Then it should be a victory
+                // When checking the game status
+                // Then it should be a victory for Player.ONE
                 RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
             });
         }
@@ -449,17 +509,17 @@ describe('HexodiaRules', () => {
 
         it('should allow to play only N pieces at last turn if there is less than N spaces remaining', () => {
             // Given a board with only 4 space remaining but where 5 drop are needed
-            const state: HexodiaState = new HexodiaState([
+            const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [O, X, O, X, O],
                 [_, X, O, X, O],
                 [_, X, O, X, O],
                 [_, X, O, X, O],
                 [_, X, O, X, O],
             ], 5);
-            const customConfig: MGPOptional<HexodiaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: HexodiaConfig = {
+                ...defaultConfig,
                 numberOfDrops: 5,
-            });
+            };
 
             // When doing a move with one drop only
             const move: HexodiaMove = HexodiaMove.of([
@@ -470,7 +530,7 @@ describe('HexodiaRules', () => {
             ]);
 
             // Then it should be a legal final move
-            const expectedState: HexodiaState = new HexodiaState([
+            const expectedState: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable([
                 [O, X, O, X, O],
                 [X, X, O, X, O],
                 [X, X, O, X, O],

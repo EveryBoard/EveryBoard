@@ -1,12 +1,17 @@
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { MGPOptional } from '@everyboard/lib';
-import { BaAwaConfig } from './BaAwaConfig';
+
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { MGPValidators } from '../../../utils/MGPValidator';
 import { MancalaCaptureResult, MancalaDistributionResult, MancalaDropResult, MancalaRules } from '../common/MancalaRules';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
 import { MancalaState } from '../common/MancalaState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+
+import { BaAwaConfig } from './BaAwaConfig';
 
 export class BaAwaRules extends MancalaRules<BaAwaConfig> {
 
@@ -23,6 +28,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
                 continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(true, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                numberOfRows: new NumberConfig(1, MancalaRules.NUMBER_OF_ROWS, MGPValidators.range(1, 99)),
                 splitFinalSeedsEvenly: new BooleanConfig(false, () => $localize`Split final seeds evenly`),
             },
         }, [{
@@ -35,6 +41,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
                 continueLapUntilCaptureOrEmptyHouse: true,
                 seedsByHouse: 4,
                 width: 6,
+                numberOfRows: 1,
                 splitFinalSeedsEvenly: true,
             },
         }]);
@@ -46,8 +53,8 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
         return BaAwaRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<BaAwaConfig>> {
-        return MGPOptional.of(BaAwaRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<BaAwaConfig> {
+        return BaAwaRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override applyCapture(distributionResult: MancalaDistributionResult)
@@ -55,15 +62,15 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
     {
         const captureMap: number[][] = TableUtils.copy(distributionResult.captureMap);
         const lastDrop: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
-        const captureIsPossible: boolean =
-            distributionResult.endsUpInStore === false &&
-            distributionResult.resultingState.getPieceAt(lastDrop) === 4;
-        if (captureIsPossible) {
-            const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
-            distributionResult.capturedSum += 4;
-            captureMap[lastDrop.y][lastDrop.x] += 4;
-            distributionResult.resultingState =
-                distributionResult.resultingState.capture(currentPlayer, lastDrop);
+        if (distributionResult.endsUpInStore === false) {
+            const lastHouseContent: number = distributionResult.resultingState.getPieceAt(lastDrop);
+            if (this.isCapturableValue(lastHouseContent)) {
+                const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
+                distributionResult.capturedSum += lastHouseContent;
+                captureMap[lastDrop.y][lastDrop.x] += lastHouseContent;
+                distributionResult.resultingState =
+                    distributionResult.resultingState.capture(currentPlayer, lastDrop);
+            }
         }
         return {
             capturedSum: distributionResult.capturedSum,
@@ -77,7 +84,7 @@ export class BaAwaRules extends MancalaRules<BaAwaConfig> {
     {
         let resultingState: MancalaState = state.feed(coord);
         const previousValue: number = resultingState.getPieceAt(coord);
-        const captureMap: number[][] = TableUtils.create(state.getWidth(), 2, 0);
+        const captureMap: number[][] = TableUtils.create(state.getWidth(), state.getHeight(), 0);
         if (previousValue === 4 && seedsInHand > 1) {
             captureMap[coord.y][coord.x] = 4;
             const houseOwner: Player = Player.of(coord.y).getOpponent();

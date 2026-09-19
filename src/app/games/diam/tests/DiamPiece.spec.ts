@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
 import { DiamPiece } from '../DiamPiece';
 
 describe('DiamPiece', () => {
@@ -21,4 +22,5 @@ describe('DiamPiece', () => {
             expect(DiamPiece.ZERO_FIRST.equals(DiamPiece.ZERO_SECOND)).toBeFalse();
         });
     });
+
 });

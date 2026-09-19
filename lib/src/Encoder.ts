@@ -8,8 +8,8 @@ type EncoderArray<T> = { [P in keyof T]: Encoder<T[P]> };
 export abstract class Encoder<T> {
 
     public static fromFunctions<U>(toJSON: (value: U) => JSONValueWithoutArray,
-                                   fromJSON: (json: JSONValueWithoutArray) => U)
-    : Encoder<U> {
+                                   fromJSON: (json: JSONValueWithoutArray) => U,
+    ) : Encoder<U> {
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
                 return toJSON(value);
@@ -52,11 +52,13 @@ export abstract class Encoder<T> {
             }
             public decode(encoded: NonNullable<JSONValueWithoutArray>): T {
                 const fields: Record<string, unknown> = {};
-                Object.keys(encoders).reverse().forEach((key: string): void => {
+                Object.keys(encoders).forEach((key: string): void => {
                     const field: JSONValue = encoded[key] as NonNullable<JSONValue>;
                     fields[key] = encoders[key].decode(field);
                 });
-                return decode(Object.values(fields) as Fields);
+                // We rely on the ordering of the encoders, hence Object.keys(encoders)
+                const actualFields: Fields = Object.keys(encoders).map((k: string) => fields[k]) as Fields;
+                return decode(actualFields);
             }
         };
     }
@@ -66,14 +68,13 @@ export abstract class Encoder<T> {
      */
     public static disjunction<U>(typePredicates: ((value: unknown) => boolean)[],
                                  encoders: Encoder<unknown>[],
-    ): Encoder<U>
-    {
+    ): Encoder<U> {
         Utils.assert(typePredicates.length === encoders.length, 'typePredicates and encoders should have same length');
         return new class extends Encoder<U> {
             public encode(value: U): JSONValueWithoutArray {
                 let indexClass: number = 0;
                 for (const identifier of typePredicates) {
-                    if (identifier(value) === true) {
+                    if (identifier(value)) {
                         return {
                             type: indexClass,
                             encoded: encoders[indexClass].encode(value),
@@ -81,12 +82,14 @@ export abstract class Encoder<T> {
                     }
                     indexClass++;
                 }
+                throw new Error(`cannot encode value: ${value}`);
             }
             public decode(encoded: JSONValueWithoutArray): U {
                 // eslint-disable-next-line dot-notation
                 const type_: number = Utils.getNonNullable(encoded)['type'];
                 // eslint-disable-next-line dot-notation
                 const content: JSONValue = Utils.getNonNullable(encoded)['encoded'] as JSONValue;
+                Utils.assert(type_ <= encoders.length, `Encoders.disjunction got invalid data: ${type_} is not an existing type`);
                 return encoders[type_].decode(content) as U;
             }
         };
@@ -103,6 +106,7 @@ export abstract class Encoder<T> {
                 });
             }
             public decode(encoded: JSONValue): T[] {
+                Utils.assert(Array.isArray(encoded), `Encoders.list got invalid data ${encoded} is not an array`);
                 const casted: Array<JSONValue> = encoded as Array<JSONValue>;
                 return casted.map(encoder.decode);
             }
@@ -114,13 +118,3 @@ export abstract class Encoder<T> {
     public abstract decode(encodedMove: JSONValue): T;
 }
 
-/**
- * This is a helper class to test encoders
- */
-export class EncoderTestUtils {
-    public static expectToBeBijective<T>(encoder: Encoder<T>, value: T): void {
-        const encoded: JSONValue = encoder.encode(value);
-        const decoded: T = encoder.decode(encoded);
-        expect(decoded).withContext(`Expected decoded value (${decoded}) to be ${value}`).toEqual(value);
-    }
-}

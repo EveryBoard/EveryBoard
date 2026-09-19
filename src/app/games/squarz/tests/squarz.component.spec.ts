@@ -1,22 +1,22 @@
 /* eslint-disable max-lines-per-function */
 import { fakeAsync } from '@angular/core/testing';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { SquarzComponent } from '../squarz.component';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { SquarzState } from '../SquarzState';
-import { SquarzConfig, SquarzRules } from '../SquarzRules';
-import { SquarzMove } from '../SquarzMove';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { SquarzFailure } from '../SquarzFailure';
-import { MGPOptional } from '@everyboard/lib';
+import { SquarzMove } from '../SquarzMove';
+import { SquarzConfig, SquarzRules } from '../SquarzRules';
+import { SquarzState } from '../SquarzState';
+import { SquarzComponent } from '../squarz.component';
 
 describe('SquarzComponent', () => {
 
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
-    const defaultConfig: MGPOptional<SquarzConfig> = SquarzRules.get().getDefaultRulesConfig();
+    const defaultConfig: SquarzConfig = SquarzRules.get().getDefaultRulesConfig();
 
     let testUtils: ComponentTestUtils<SquarzComponent>;
 
@@ -195,7 +195,7 @@ describe('SquarzComponent', () => {
             testUtils.expectElementToHaveClasses('#space-0-5', ['base', 'captured-fill']);
         }));
 
-        it('should should show left square when doing a jump', fakeAsync(async() => {
+        it('should show left square when doing a jump', fakeAsync(async() => {
             // Given a board with a selected piece
             await testUtils.expectClickSuccess('#click-0-0');
 

@@ -3,6 +3,13 @@ import { Utils } from './Utils';
 
 export class ArrayUtils {
 
+    /**
+     * Create an array of size width containing initValue.
+     * Watch out: initValue is repeated without copy,
+     * so if it is an object that will be mutated,
+     * it will also change the values of all fields.
+     * General rule: don't mutate objects stored in such arrays.
+     */
     public static create<T>(width: number, initValue: T): T[] {
         const array: Array<T> = [];
         for (let x: number = 0; x < width; x++) {
@@ -39,7 +46,6 @@ export class ArrayUtils {
         return true;
     }
 
-
     public static isPrefix<T extends Comparable>(prefix: ReadonlyArray<T>, list: ReadonlyArray<T>): boolean {
         if (prefix.length > list.length) return false;
         return ArrayUtils.equals(prefix, list.slice(0, prefix.length));
@@ -61,12 +67,13 @@ export class ArrayUtils {
      * A method that can be used to sort an array with the smallest number first with xs.sort(ArrayUtils.smallerFirst);
      */
     public static smallerFirst(a: number, b: number): number {
-        return a-b;
+        return a - b;
     }
 
     /**
      * Gets a random element from an array.
      * Throws if the array is empty.
+     * Does not use a cryptographically secure random selection.
      */
     public static getRandomElement<T>(array: T[]): T {
         Utils.assert(array.length > 0, 'ArrayUtils.getRandomElement must be called on an array containing elements');
@@ -80,7 +87,7 @@ export class ArrayUtils {
      */
     public static maximumsBy<T>(array: T[], metric: (value: T) => number): T[] {
         let maximums: T[] = [];
-        let maxMetricValue: number = -Infinity;
+        let maxMetricValue: number = Number.NEGATIVE_INFINITY;
         for (const element of array) {
             const currentMetricValue: number = metric(element);
             if (currentMetricValue >= maxMetricValue) {
@@ -98,9 +105,16 @@ export class ArrayUtils {
      * Counts the number of element in an array that have the provided value
      */
     public static count<T>(array: ReadonlyArray<T>, value: T): number {
+        return ArrayUtils.countByPredicate(
+            array,
+            (element: T) => comparableEquals(element, value),
+        );
+    }
+
+    public static countByPredicate<T>(array: ReadonlyArray<T>, predicate: (value: T) => boolean): number {
         let total: number = 0;
         for (const element of array) {
-            if (comparableEquals(element, value)) {
+            if (predicate(element)) {
                 total++;
             }
         }

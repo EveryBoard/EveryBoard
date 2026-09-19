@@ -1,0 +1,15 @@
+<svg:circle [attr.r]="outsideStrokeRadius()"
+            [attr.stroke-width]="strokeWidth()"
+            [attr.stroke]="strokeColor()"
+            class="no-fill"
+/>
+<svg:circle [attr.r]="midRingRadius()"
+            [attr.stroke-width]="width()"
+            [ngClass]="midRingClasses()"
+            class="no-fill"
+/>
+<svg:circle [attr.r]="insideStrokeRadius()"
+            [attr.stroke-width]="strokeWidth()"
+            [attr.stroke]="strokeColor()"
+            class="no-fill"
+/>

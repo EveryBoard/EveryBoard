@@ -1,11 +1,12 @@
-import { BoardValue } from '../BoardValue';
 import { ArrayUtils, MGPOptional } from '@everyboard/lib';
-import { GameState } from '../../state/GameState';
+
 import { Move } from '../../Move';
-import { Heuristic } from '../Minimax';
 import { Player } from '../../Player';
 import { EmptyRulesConfig, RulesConfig } from '../../RulesConfigUtil';
+import { GameState } from '../../state/GameState';
+import { BoardValue } from '../BoardValue';
 import { GameNode } from '../GameNode';
+import { Heuristic } from '../Heuristic';
 
 export class HeuristicUtils {
 
@@ -18,7 +19,7 @@ export class HeuristicUtils {
         strongState: S,
         strongMove: MGPOptional<M>,
         player: Player,
-        config: MGPOptional<C>)
+        config: C)
     : void
     {
         const weakNode: GameNode<M, S> = new GameNode(weakState, undefined, weakMove);
@@ -41,14 +42,14 @@ export class HeuristicUtils {
         previousMove: M,
         player: Player,
         heuristics: Heuristic<M, S, BoardValue, C>[],
-        config: MGPOptional<C>)
+        config: C)
     : void
     {
         for (const heuristic of heuristics) {
             const node: GameNode<M, S> = new GameNode(state, MGPOptional.empty(), MGPOptional.of(previousMove));
             for (const boardSubValue of heuristic.getBoardValue(node, config).metrics) {
-                const expectedValue: number = player.getPreVictory();
-                expect(BoardValue.isPreVictory(boardSubValue)).toBeTrue();
+                expect(BoardValue.isPreVictoryValue(boardSubValue)).toBeTrue();
+                const expectedValue: number = BoardValue.getPreVictoryValueOf(player);
                 expect(boardSubValue).toBe(expectedValue);
             }
         }
@@ -58,7 +59,7 @@ export class HeuristicUtils {
         heuristic: Heuristic<M, S, BoardValue, C>,
         leftState: S,
         rightState: S,
-        config: MGPOptional<C>)
+        config: C)
     : void {
         const leftNode: GameNode<M, S> = new GameNode(leftState);
         const leftValue: readonly number[] = heuristic.getBoardValue(leftNode, config).metrics;

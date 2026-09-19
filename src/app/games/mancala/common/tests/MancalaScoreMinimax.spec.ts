@@ -1,13 +1,22 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { AIDepthLimitOptions, MoveGenerator } from '../../../../jscaip/AI/AI';
+import { Minimax } from '../../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
+import { MancalaConfig } from '../MancalaConfig';
+import { MancalaMove } from '../MancalaMove';
 import { MancalaMoveGenerator } from '../MancalaMoveGenerator';
 import { MancalaRules } from '../MancalaRules';
-import { MancalaScoreMinimax } from '../MancalaScoreMinimax';
+import { MancalaScoreHeuristic } from '../MancalaScoreHeuristic';
+import { MancalaState } from '../MancalaState';
+
+export class MancalaScoreMinimax extends Minimax<MancalaMove, MancalaState, MancalaConfig> {
+    public constructor(rules: MancalaRules, moveGenerator: MoveGenerator<MancalaMove, MancalaState, MancalaConfig>) {
+        super('Score', rules, new MancalaScoreHeuristic(), moveGenerator);
+    }
+}
 
 describe('MancalaScoreMinimax', () => {
 
@@ -33,10 +42,10 @@ describe('MancalaScoreMinimax', () => {
                 rules,
                 minimax,
                 options: minimaxOptions,
-                config: MGPOptional.of({
-                    ...rules.getDefaultRulesConfig().get(),
+                config: {
+                    ...rules.getDefaultRulesConfig(),
                     width: 4,
-                }),
+                },
                 shouldFinish: true,
             });
         });

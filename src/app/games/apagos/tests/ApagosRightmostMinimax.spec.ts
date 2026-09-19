@@ -1,16 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { ApagosMove } from '../ApagosMove';
+import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
+import { ApagosRightmostHeuristic } from '../ApagosRightmostHeuristic';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { ApagosRightmostMinimax } from '../ApagosRightmostMinimax';
+import { ApagosState } from '../ApagosState';
+
+class ApagosRightmostMinimax extends Minimax<ApagosMove, ApagosState, ApagosConfig> {
+    public constructor() {
+        super('Rightmost Focus', ApagosRules.get(), new ApagosRightmostHeuristic(), new ApagosMoveGenerator());
+    }
+}
 
 describe('ApagosRightmostMinimax', () => {
 
     const rules: ApagosRules = ApagosRules.get();
     const minimax: ApagosRightmostMinimax = new ApagosRightmostMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<ApagosConfig> = ApagosRules.get().getDefaultRulesConfig();
+    const defaultConfig: ApagosConfig = ApagosRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -21,4 +30,5 @@ describe('ApagosRightmostMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

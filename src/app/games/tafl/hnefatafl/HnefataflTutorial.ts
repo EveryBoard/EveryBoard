@@ -1,19 +1,19 @@
-import { HnefataflMove } from 'src/app/games/tafl/hnefatafl/HnefataflMove';
-import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
-import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { HnefataflRules } from './HnefataflRules';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../../jscaip/Coord';
 import { TaflConfig } from '../TaflConfig';
+import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
-import { MGPOptional } from '@everyboard/lib';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+
+import { HnefataflMove } from './HnefataflMove';
+import { HnefataflRules } from './HnefataflRules';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = HnefataflRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = HnefataflRules.get().getDefaultRulesConfig();
 
 export class HnefataflTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

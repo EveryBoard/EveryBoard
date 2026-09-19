@@ -1,21 +1,23 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { TaflConfig } from '../TaflConfig';
 import { TaflFailure } from '../TaflFailure';
 import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
+
 import { MyTaflMove } from './MyTaflMove.spec';
 import { MyTaflNode, MyTaflRules } from './MyTaflRules.spec';
-import { TaflConfig } from '../TaflConfig';
 
 export const myTaflConfig: TaflConfig = {
 
-    castleIsLeftForGood: true,
+    canReturnToCastle: false,
 
     invaderStarts: true,
 
@@ -29,7 +31,7 @@ export const myTaflConfig: TaflConfig = {
 describe('TaflRules', () => {
 
     let rules: MyTaflRules;
-    const defaultConfig: MGPOptional<TaflConfig> = MyTaflRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = MyTaflRules.get().getDefaultRulesConfig();
 
     const _: TaflPawn = TaflPawn.UNOCCUPIED;
     const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
@@ -173,17 +175,62 @@ describe('TaflRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
+    it('should consider defender winner when king reaches an external throne', () => {
+        // Given a board where the king escaped to a corner throne
+        const board: Table<TaflPawn> = [
+            [A, _, _, _, _, _, _, _, O],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, O],
+        ];
+        const state: TaflState = new TaflState(board, 3);
+
+        // When checking the winner
+        const winner: MGPOptional<Player> = rules.getWinner(state, defaultConfig);
+
+        // Then the defender should win
+        expect(winner.get()).toBe(rules.getDefender(defaultConfig));
+    });
+
+    it('should not capture a pawn backed by another opponent', () => {
+        // Given a moved invader threatening a defender backed by another defender
+        const board: Table<TaflPawn> = [
+            [_, _, _, _, _, _, _, _, _],
+            [O, X, X, _, A, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+        ];
+        const state: TaflState = new TaflState(board, 2);
+
+        // When checking capture to the right
+        const captured: MGPOptional<Coord> =
+            rules.tryCapture(Player.ZERO, new Coord(0, 1), Orthogonal.RIGHT, state, defaultConfig);
+
+        // Then no pawn should be captured
+        expect(captured.isAbsent()).toBeTrue();
+    });
+
     describe('getInvader', () => {
 
         it('should return Player.ZERO when invader starts', () => {
             // Given a rules instance configured with a starting invader
-            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: TaflConfig = {
+                ...defaultConfig,
                 invaderStarts: true,
-            });
+            };
 
             // When calling getInvader
-            const invader: Player = rules.getInvader(customConfig.get());
+            const invader: Player = rules.getInvader(customConfig);
 
             // Then the response should be Player.ZERO
             expect(invader).toEqual(Player.ZERO);
@@ -191,16 +238,43 @@ describe('TaflRules', () => {
 
         it(`should return Player.ONE when invader doesn't start`, () => {
             // Given a state instance configured with a starting defender
-            const customConfig: MGPOptional<TaflConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: TaflConfig = {
+                ...defaultConfig,
                 invaderStarts: false,
-            });
+            };
 
             // When calling getInvader
-            const invader: Player = rules.getInvader(customConfig.get());
+            const invader: Player = rules.getInvader(customConfig);
 
             // Then the response should be Player.ONE
             expect(invader).toEqual(Player.ONE);
+        });
+
+    });
+
+    describe('getPossibleDestinations', () => {
+
+        it('should have the right number of move for soldier', () => {
+            // Given a board where a soldier has 16 destinations but 3 are thrones
+            const board: Table<TaflPawn> = [
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, O],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _],
+            ];
+            const state: TaflState = new TaflState(board, 24);
+
+            // When calling getPossibleDestinations
+            const possibleDestinations: Coord[] =
+                rules.getPossibleDestinations(new Coord(8, 4), state, defaultConfig);
+
+            // Then the result should have 13 coords
+            expect(possibleDestinations.length).toBe(13);
         });
 
     });

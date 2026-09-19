@@ -1,17 +1,29 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { TrexoAlignmentHeuristic } from '../TrexoAlignmentHeuristic';
+import { TrexoMove } from '../TrexoMove';
+import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoRules } from '../TrexoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { TrexoAlignmentMinimax } from '../TrexoAlignmentMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { TrexoState } from '../TrexoState';
+
+class TrexoAlignmentMinimax extends Minimax<TrexoMove, TrexoState> {
+    public constructor() {
+        super('Alignment',
+              TrexoRules.get(),
+              new TrexoAlignmentHeuristic(),
+              new TrexoMoveGenerator());
+    }
+}
 
 describe('TrexoAlignmentMinimax', () => {
 
     const rules: TrexoRules = TrexoRules.get();
     const minimax: TrexoAlignmentMinimax = new TrexoAlignmentMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = TrexoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = TrexoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +34,5 @@ describe('TrexoAlignmentMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

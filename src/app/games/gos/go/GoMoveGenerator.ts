@@ -1,9 +1,11 @@
 import { AbstractGoMoveGenerator } from '../AbstractGoMoveGenerator';
-import { GoConfig, GoRules } from './GoRules';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
 
-export class GoMoveGenerator extends AbstractGoMoveGenerator<GoConfig> {
+import { GoRules } from './GoRules';
 
-    constructor() {
+export class GoMoveGenerator extends AbstractGoMoveGenerator<RectangularGoConfig> {
+
+    public constructor() {
         super(GoRules.get());
     }
 

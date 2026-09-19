@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional } from '@everyboard/lib';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { ConspirateursHeuristic } from '../ConspirateursHeuristic';
-import { ConspirateursState } from '../ConspirateursState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 import { ConspirateursRules } from '../ConspirateursRules';
+import { ConspirateursState } from '../ConspirateursState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
@@ -14,7 +15,7 @@ const X: PlayerOrNone = PlayerOrNone.ONE;
 describe('ConspirateursHeuristic', () => {
 
     let heuristic: ConspirateursHeuristic;
-    const defaultConfig: NoConfig = ConspirateursRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = ConspirateursRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         heuristic = new ConspirateursHeuristic();

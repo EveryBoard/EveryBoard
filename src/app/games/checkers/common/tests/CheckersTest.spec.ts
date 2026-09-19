@@ -1,0 +1,604 @@
+/* eslint-disable max-lines-per-function */
+import { Type } from '@angular/core';
+import { fakeAsync } from '@angular/core/testing';
+
+import { Encoder } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../../jscaip/Coord';
+import { Direction, DirectionFailure } from '../../../../jscaip/Direction';
+import { Player } from '../../../../jscaip/Player';
+import { RulesConfigUtils } from '../../../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../../../jscaip/RulesFailure';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
+import { AbstractCheckersRules, CheckersConfig, CheckersNode } from '../AbstractCheckersRules';
+import { CheckersFailure } from '../CheckersFailure';
+import { CheckersMove } from '../CheckersMove';
+import { CheckersMoveGenerator } from '../CheckersMoveGenerator';
+import { CheckersStack, CheckersState } from '../CheckersState';
+import { CheckersComponent } from '../checkers.component';
+
+export type CheckersComponentTestEntries<C extends CheckersComponent<R>, R extends AbstractCheckersRules> = {
+    component: Type<C>; // InternationalCheckersComponent, LascaComponent, etc
+    gameName: string; // 'InternationalCheckers', 'Lasca', etc
+
+    // Informations about the first moves, needed by multiple tests
+    // Put the lefter one first so that it.next(new Coord(2, -1)) is a empty coord
+    firstPlayerCoords: Coord[];
+    // after clicking on firstPlayerCoords[0], firstPlayerSecondClick are a valids second clicks
+    firstPlayerSecondClicks: Coord[];
+    // Move that Player.ONE can do after firstPlayerCoord[0] then firstPlayerSecondClics[0] has been done
+    secondMove: CheckersMove;
+
+    promotedPieceTest: {
+        // a state on which the promoted piece can do many moves
+        state: CheckersState;
+        // The coordinates of the promoted piece on promotedPieceOrientedState
+        coord: Coord;
+        // The coordinates on which the promoted piece can land
+        landings: Coord[];
+    };
+
+    forcedCaptureTest: {
+        state: CheckersState;
+        coord: Coord;
+    };
+
+    unmovableTest: {
+        // Coord of a piece that cannot move at first turn
+        coord: Coord;
+    };
+
+    invalidVerticalMoveTest: {
+        // A state on which a vertical step of 2 would be possible, if it was legal
+        state: CheckersState;
+        // The coord of the piece able to move (0, 2), of Player.ONE on stateWithInvalidVerticalMove
+        coord: Coord;
+    };
+
+    simpleCaptureTest: {
+        // A state on which a simple capture is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    promotionTest: {
+        // A state on which a promotion is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    complexCaptureTest: {
+        // A state on which a complex capture is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    returnToStartCaptureTest: {
+        // A state on which a multiple capture can end on its starting coordinate
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    invalidCaptureTest: {
+        // A state on which an invalid capture is possible
+        state: CheckersState;
+        move: CheckersMove;
+    };
+
+    // A move that can be done after secondMove but that is not orthogonal (described as two coords)
+    invalidThirdMoveTest: {
+        start: Coord;
+        end: Coord;
+    };
+}
+
+export function DoCheckersTests<C extends CheckersComponent<R>,
+                                R extends AbstractCheckersRules>(
+    getTestUtils: () => ComponentTestUtils<C>,
+    entries: CheckersComponentTestEntries<C, R>,
+): void {
+
+    let testUtils: ComponentTestUtils<C>;
+
+    const defaultConfig: CheckersConfig = RulesConfigUtils.getGameDefaultConfig(entries.gameName);
+
+    describe(entries.gameName + ' component generic tests', () => {
+
+        beforeEach(fakeAsync(async() => {
+            // bind test utils, which we cannot take as a parameter from DoCheckersTests,
+            // as it is not instantiated outside beforeEach/it
+            testUtils = getTestUtils();
+        }));
+
+        it('should create', () => {
+            testUtils.expectToBeCreated();
+        });
+
+        async function clickOnOpponentPieceAndFail(): Promise<void> {
+            const state: CheckersState = testUtils.getGameComponent().state();
+            const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT();
+            for (const coord of state.allCoords()) {
+                const stack: CheckersStack = state.getPieceAt(coord);
+                if (stack.isOccupied() && stack.getCommander().player === Player.ONE) {
+                    await testUtils.expectClickFailure(`#coord-${ coord.x }-${ coord.y }`, reason);
+                    break;
+                }
+            }
+        }
+
+        function expectCoordsToBeTheOnlyClickable(state: CheckersState, coords: Coord[]): void {
+            state.forEachCoord((coord: Coord) => {
+                const id: string = `#clickable-highlight-${ coord.x }-${ coord.y }`;
+                // Then only some pieces should be highlighted
+                if (coords.some((c: Coord) => c.equals(coord))) {
+                    testUtils.expectElementToHaveClass(id, 'clickable-stroke');
+                } else {
+                    testUtils.expectElementNotToExist(id);
+                }
+            });
+        }
+
+        async function setupSecondTurn(): Promise<void> {
+            const rules: AbstractCheckersRules = testUtils.getGameComponent().rules;
+            const previousState: CheckersState = rules.getInitialState(defaultConfig);
+            const firstClick: Coord = entries.firstPlayerCoords[0];
+            const secondClick: Coord = entries.firstPlayerSecondClicks[0];
+            const previousMove: CheckersMove = CheckersMove.fromStep(firstClick, secondClick);
+            const state: CheckersState = rules.applyLegalMove(previousMove, previousState, defaultConfig);
+            await testUtils.setupState(state, { previousState, previousMove });
+        }
+
+        describe('First click', () => {
+
+            it('should highlight possible clicks (at first turn)', fakeAsync(async() => {
+                // Given any board (here the initial step)
+                const state: CheckersState = testUtils.getGameComponent().state();
+
+                // When displaying it
+                expectCoordsToBeTheOnlyClickable(state, entries.firstPlayerCoords);
+            }));
+
+            it('should highlight possible step-landing after selecting normal piece', fakeAsync(async() => {
+                // Given any board where steps are possible (initial board)
+                const state: CheckersState = testUtils.getGameComponent().state();
+
+                // When selecting a piece
+                const first: Coord = entries.firstPlayerCoords[0];
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+
+                for (const coordAndContent of state.getCoordsAndContents()) {
+                    const coord: Coord = coordAndContent.coord;
+                    if (entries.firstPlayerSecondClicks.some((c: Coord) => c.equals(coord))) {
+                        // Then its landing coord should be landable
+                        testUtils.expectElementToHaveClass(`#clickable-highlight-${ coord.x }-${ coord.y }`, 'clickable-stroke');
+                    } else {
+                        // And no other pieces should be
+                        testUtils.expectElementNotToExist(`#clickable-highlight-${ coord.x }-${ coord.y }`);
+                    }
+                }
+            }));
+
+            it('should show clicked stack as selected', fakeAsync(async() => {
+                // Given any board
+                // When clicking on one of your pieces
+                const coord: Coord = entries.firstPlayerCoords[0];
+                await testUtils.expectClickSuccess(`#coord-${ coord.x }-${ coord.y }`);
+
+                // Then it should show the clicked piece as 'selected'
+                testUtils.expectElementToHaveClass(`#square-${ coord.x }-${ coord.y }-piece-0`, 'selected-stroke');
+            }));
+
+            it('should highlight possible step-landing after selecting king', fakeAsync(async() => {
+                // Given any board where long steps are possible for a king
+                await testUtils.setupState(entries.promotedPieceTest.state);
+
+                // When selecting a piece
+                await testUtils.expectClickSuccess(`#coord-${ entries.promotedPieceTest.coord.x }-${ entries.promotedPieceTest.coord.y }`);
+
+                // Then its landing coord should be landable
+                for (const landing of entries.promotedPieceTest.landings) {
+                    testUtils.expectElementToHaveClass(
+                        `#clickable-highlight-${ landing.x }-${ landing.y }`,
+                        'clickable-stroke',
+                    );
+                }
+            }));
+
+            it('should highlight piece that can move this turn (when forced capture)', fakeAsync(async() => {
+                // Given a board where current player have 3 "mobile" pieces but one must capture
+                // When displaying the board
+                await testUtils.setupState(entries.forcedCaptureTest.state);
+
+                // Then only the one that must capture must be "clickable-stroke"
+                for (const coordAndContent of entries.forcedCaptureTest.state.getCoordsAndContents()) {
+                    const coord: Coord = coordAndContent.coord;
+                    if (coord.equals(entries.forcedCaptureTest.coord)) {
+                        testUtils.expectElementToHaveClass(`#clickable-highlight-${ coord.x }-${ coord.y }`, 'clickable-stroke');
+                    } else {
+                        testUtils.expectElementNotToExist(`#clickable-highlight-${ coord.x }-${ coord.y }`);
+                    }
+                }
+            }));
+
+            it(`should forbid clicking on opponent's pieces`, fakeAsync(async() => {
+                // Given any board
+                // When clicking on the opponent's piece
+                // Then it should fail
+                await clickOnOpponentPieceAndFail();
+            }));
+
+            it('should forbid clicking on empty square', fakeAsync(async() => {
+                // Given any board
+                const state: CheckersState = testUtils.getGameComponent().state();
+
+                // When clicking on an empty square
+                // Then it should fail
+                const reason: string = RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY();
+                for (const coord of state.allCoords()) {
+                    if (state.getPieceAt(coord).isEmpty()) {
+                        await testUtils.expectClickFailure(`#coord-${ coord.x }-${ coord.y }`, reason);
+                        break;
+                    }
+                }
+            }));
+
+            it('should forbid clicking on an unmovable stack', fakeAsync(async() => {
+                // Given any board
+                // When clicking a piece that could not move
+                // Then it should fail
+                await testUtils.expectClickFailure(
+                    `#coord-${ entries.unmovableTest.coord.x }-${ entries.unmovableTest.coord.y }`,
+                    CheckersFailure.THIS_PIECE_CANNOT_MOVE(),
+                );
+            }));
+
+            it('should hide last move when selecting stack', fakeAsync(async() => {
+                // Given a board with a last move
+                await setupSecondTurn();
+
+                // When selecting stack
+                const secondPlayerClick: Coord = entries.secondMove.getStartingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ secondPlayerClick.x }-${ secondPlayerClick.y }`);
+
+                // Then start and end coord of last move should not be highlighted
+                const firstClick: Coord = entries.firstPlayerCoords[0];
+                const secondClick: Coord = entries.firstPlayerSecondClicks[0];
+                testUtils.expectElementNotToHaveClass(`#square-${ firstClick.x }-${ firstClick.y }`, 'moved-fill');
+                testUtils.expectElementNotToHaveClass(`#square-${ secondClick.x }-${ secondClick.y }`, 'moved-fill');
+            }));
+
+        });
+
+        describe('Second click', () => {
+
+            it('should fail when clicking on opponent', fakeAsync(async() => {
+                // Given any board with a selected piece
+                const firstClick: Coord = entries.firstPlayerCoords[0];
+                await testUtils.expectClickSuccess(`#coord-${ firstClick.x }-${ firstClick.y }`);
+
+                // When clicking on an opponent
+                // Then it should fail
+                await clickOnOpponentPieceAndFail();
+            }));
+
+            it('should fail when doing impossible click (non ordinal direction)', fakeAsync(async() => {
+                // Given any board with a selected piece
+                const firstCoord: Coord = entries.firstPlayerCoords[0];
+                await testUtils.expectClickSuccess(`#coord-${ firstCoord.x }-${ firstCoord.y }`);
+
+                // When clicking on an empty square in (+2; +1) of selected piece
+                // Then it should fail
+                const reason: string = DirectionFailure.DIRECTION_MUST_BE_LINEAR();
+                await testUtils.expectClickFailure(`#coord-${ firstCoord.x + 2 }-${ firstCoord.y - 1 }`, reason);
+            }));
+
+            it('should fail when doing impossible click (ordinal direction)', fakeAsync(async() => {
+                // Given any board with a selected piece
+                const state: CheckersState = entries.invalidVerticalMoveTest.state;
+                const coord: Coord = entries.invalidVerticalMoveTest.coord;
+                await testUtils.setupState(state);
+                await testUtils.expectClickSuccess(`#coord-${ coord.x }-${ coord.y }`);
+
+                // When clicking on an empty square in (+0; +2) of selected piece
+                // Then it should fail
+                const reason: string = CheckersFailure.CANNOT_MOVE_ORTHOGONALLY();
+                await testUtils.expectClickFailure(`#coord-${ coord.x }-${ coord.y + 2 }`, reason);
+            }));
+
+            it('should deselect piece when clicking a second time on it', fakeAsync(async() => {
+                // Given any board with a selected piece
+                const coord: Coord = entries.firstPlayerCoords[0];
+                const coordId: string = `#coord-${ coord.x }-${ coord.y }`;
+                await testUtils.expectClickSuccess(coordId);
+                testUtils.expectElementToHaveClass(`#square-${ coord.x }-${ coord.y }-piece-0`, 'selected-stroke');
+
+                // When clicking on one of your pieces
+                await testUtils.expectClickFailure(coordId);
+
+                // Then it should show the clicked piece as 'selected'
+            }));
+
+            it('should show possible first-selection again when deselecting piece', fakeAsync(async() => {
+                // Given any board with a selected piece
+                const state: CheckersState = testUtils.getGameComponent().state();
+                const firstClick: Coord = entries.firstPlayerCoords[0];
+                const firstClickId: string = `#coord-${ firstClick.x }-${ firstClick.y }`;
+                await testUtils.expectClickSuccess(firstClickId);
+                testUtils.expectElementToHaveClass(`#square-${ firstClick.x }-${ firstClick.y }-piece-0`, 'selected-stroke');
+
+                // When clicking on the selected piece again
+                await testUtils.expectClickFailure(firstClickId);
+
+                // Then the possible first choices should be shown again
+                expectCoordsToBeTheOnlyClickable(state, entries.firstPlayerCoords);
+            }));
+
+            it('should change selected piece when clicking on another one of your pieces', fakeAsync(async() => {
+                // Given any board with a selected piece
+                const first: Coord = entries.firstPlayerCoords[0];
+                const second: Coord = entries.firstPlayerCoords[1];
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+
+                // When clicking on another piece
+                await testUtils.expectClickSuccess(`#coord-${ second.x }-${ second.y }`);
+
+                // Then it should deselect the previous and select the new
+                testUtils.expectElementNotToHaveClass(`#square-${ first.x }-${ first.y }-piece-0`, 'selected-stroke');
+                testUtils.expectElementToHaveClass(`#square-${ second.x }-${ second.y }-piece-0`, 'selected-stroke');
+            }));
+
+            it('should allow simple step', fakeAsync(async() => {
+                // Given any board on which a step could be done and with a selected piece
+                const first: Coord = entries.firstPlayerCoords[0];
+                const second: Coord = entries.firstPlayerSecondClicks[0];
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+
+                // When doing a step
+                const move: CheckersMove = CheckersMove.fromStep(first, second);
+
+                // Then it should succeed
+                await testUtils.expectMoveSuccess(`#coord-${ second.x }-${ second.y }`, move);
+            }));
+
+            it('should show left square after single step', fakeAsync(async() => {
+                // Given any board on which a step could be done and with a selected piece
+                const first: Coord = entries.firstPlayerCoords[0];
+                const second: Coord = entries.firstPlayerSecondClicks[0];
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+
+                // When doing simple step
+                const move: CheckersMove = CheckersMove.fromStep(first, second);
+                await testUtils.expectMoveSuccess(`#coord-${ second.x }-${ second.y }`, move);
+
+                // Then left square and landed square should be showed as moved
+                testUtils.expectElementToHaveClass(`#square-${ first.x }-${ first.y }`, 'moved-fill');
+                testUtils.expectElementToHaveClass(`#square-${ second.x }-${ second.y }`, 'moved-fill');
+            }));
+
+            it('should allow simple capture', fakeAsync(async() => {
+                // Given a board with a selected piece and a possible capture
+                const state: CheckersState = entries.simpleCaptureTest.state;
+                await testUtils.setupState(state);
+                const start: Coord = entries.simpleCaptureTest.move.getStartingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
+
+                // When doing a capture
+                const move: CheckersMove = entries.simpleCaptureTest.move;
+
+                // Then it should be a success
+                const end: Coord = entries.simpleCaptureTest.move.getEndingCoord();
+                await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, move);
+            }));
+
+            it(`should have a promotion's symbol on the piece that just got promoted`, fakeAsync(async() => {
+                // Given any board with a selected soldier about to become promoted
+                const state: CheckersState = entries.promotionTest.state;
+                await testUtils.setupState(state);
+                const start: Coord = entries.promotionTest.move.getStartingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ start.x }-${ start.y }`);
+
+                // When doing the promoting-move
+                const end: Coord = entries.promotionTest.move.getEndingCoord();
+                await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, entries.promotionTest.move);
+
+                // Then the officier-logo should be on the piece
+                testUtils.expectElementToExist(`#square-${ end.x }-${ end.y }-piece-0-promoted-symbol`);
+            }));
+
+            it('should highlight next possible capture and show the captured piece as captured already', fakeAsync(async() => {
+                // Given any board with a selected piece that could do a multiple capture
+                const state: CheckersState = entries.complexCaptureTest.state;
+                await testUtils.setupState(state);
+                const move: CheckersMove = entries.complexCaptureTest.move;
+                expect(move.coords.length).withContext('a "complex" capture should have more than 2 elements').toBeGreaterThan(2);
+                const first: Coord = move.coords[0];
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y }`);
+
+                // When doing the first capture
+                const second: Coord = move.coords[1];
+                await testUtils.expectClickSuccess(`#coord-${ second.x }-${ second.y }`);
+
+                // Then it should already be shown as captured
+                const firstCaptureDirection: Direction = first.getDirectionToward(second).get();
+                const firstCapture: Coord = first.getNext(firstCaptureDirection, 1);
+                testUtils.expectElementToHaveClass(`#square-${ firstCapture.x }-${ firstCapture.y }`, 'captured-fill');
+                // And the next possibles ones displayed
+                const third: Coord = move.coords[2];
+                testUtils.expectElementToHaveClass(`#clickable-highlight-${ third.x }-${ third.y }`, 'clickable-stroke');
+            }));
+
+            it('should allow a multiple capture to return to its starting coordinate', fakeAsync(async() => {
+                // Given an officer that can capture four distinct pieces and return to its starting coordinate
+                const state: CheckersState = entries.returnToStartCaptureTest.state;
+                const move: CheckersMove = entries.returnToStartCaptureTest.move;
+                await testUtils.setupState(state);
+                await testUtils.expectClickSuccess(`#coord-${ move.coords[0].x }-${ move.coords[0].y }`);
+
+                // When performing the circular capture
+                for (let i: number = 1; i < move.coords.length - 1; i++) {
+                    await testUtils.expectClickSuccess(`#coord-${ move.coords[i].x }-${ move.coords[i].y }`);
+                }
+
+                // Then landing on the starting coordinate should complete the move
+                const end: Coord = move.getEndingCoord();
+                await testUtils.expectMoveSuccess(`#coord-${ end.x }-${ end.y }`, move);
+            }));
+
+            it('should cancel capturing a piece you cannot capture', fakeAsync(async() => {
+                // Given a board on which an illegal capture could be made
+                const state: CheckersState = entries.invalidCaptureTest.state;
+                await testUtils.setupState(state);
+                const first: Coord = entries.invalidCaptureTest.move.getStartingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ first.x }-${ first.y}`);
+
+                // When doing that illegal capture
+                // Then it should fail
+                const second: Coord = entries.invalidCaptureTest.move.getEndingCoord();
+                await testUtils.expectClickFailure(`#coord-${ second.x }-${ second.y}`, RulesFailure.CANNOT_SELF_CAPTURE());
+            }));
+
+        });
+
+        describe('experience as second player (reversed board)', () => {
+
+            function reverseCoord(coord: Coord): Coord {
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                const state: CheckersState = gameComponent.state();
+                const x: number = state.getWidth() - (1 + coord.x);
+                const y: number = state.getHeight() - (1 + coord.y);
+                return new Coord(x, y);
+            }
+
+            function expectBoardToBeSwitched(): void {
+                const lowerRight: Coord = reverseCoord(new Coord(0, 0));
+                testUtils.expectTranslationYToBe(`#coord-${ lowerRight.x }-${ lowerRight.y }`, 0);
+                testUtils.expectTranslationYToBe('#coord-0-0', lowerRight.y * 100);
+            }
+
+            it('should have first player on top', fakeAsync(async() => {
+                // Given a board that has been reversed
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                gameComponent.setPointOfView(Player.ONE);
+
+                // When displaying it
+                // We need to force the updateBoard to trigger the redrawing of the board
+                await gameComponent.updateBoard(false);
+                testUtils.detectChanges();
+
+                // Then the square at (0, 0) should be coord (N, N)
+                expectBoardToBeSwitched();
+            }));
+
+            it('should not duplicate highlight when doing incorrect second click', fakeAsync(async() => {
+                // Given a board where you are player two and a moving piece has been selected
+                await setupSecondTurn();
+                const move: CheckersMove = entries.secondMove;
+                const secondPlayerStart: Coord = move.getStartingCoord();
+                const secondPlayerEnd: Coord = move.getEndingCoord();
+                await testUtils.expectClickSuccess(`#coord-${ secondPlayerStart.x }-${ secondPlayerStart.y }`);
+
+                await testUtils.expectMoveSuccess(`#coord-${ secondPlayerEnd.x }-${ secondPlayerEnd.y }`, move); // First move is set
+                await testUtils.getWrapper().setRole(Player.ONE); // changing role
+                const thirdMoveStart: Coord = entries.invalidThirdMoveTest.start;
+                await testUtils.expectClickSuccess(`#coord-${ thirdMoveStart.x }-${ thirdMoveStart.y }`); // Making the first click
+
+                // When clicking on an invalid landing piece
+                const invalidThirdMoveEnd: Coord = entries.invalidThirdMoveTest.end;
+                await testUtils.expectClickFailure(`#coord-${ invalidThirdMoveEnd.x }-${ invalidThirdMoveEnd.y }`, DirectionFailure.DIRECTION_MUST_BE_LINEAR());
+
+                // Then the highlight should be at the expected place only, not at their symmetric point
+                testUtils.expectElementToHaveClass(`#clickable-highlight-${ thirdMoveStart.x }-${ thirdMoveStart.y }`, 'clickable-stroke');
+                const reversedCoord: Coord = reverseCoord(thirdMoveStart);
+                testUtils.expectElementNotToExist(`#clickable-highlight-${ reversedCoord.x }-${ reversedCoord.y }`);
+            }));
+
+            it('should show last move reversed', fakeAsync(async() => {
+                // Given a board with a last move
+                await setupSecondTurn();
+
+                // When reversing the board view
+                await testUtils.getWrapper().setRole(Player.ONE);
+
+                // Then the last move should be shown at the expected place
+                expectBoardToBeSwitched();
+            }));
+
+        });
+
+        describe('design', () => {
+
+            it('should adapt square translation to point of view', fakeAsync(async() => {
+                // Given the default point of view
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                const state: CheckersState = gameComponent.state();
+                const maxX: number = state.getWidth() - 1;
+                const maxY: number = state.getHeight() - 1;
+                const expectedTranslation: string = gameComponent.getTranslationAtXYZ(maxX, maxY, 0);
+
+                // When viewing the board as player one
+                gameComponent.setPointOfView(Player.ONE);
+
+                // Then coordinates should be adapted before translation
+                expect(gameComponent.getTranslationAtXYZ(0, 0, 0)).toBe(expectedTranslation);
+            }));
+
+            it('should compute piece translation from stack depth', fakeAsync(async() => {
+                // Given any checkers component
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+
+                // When computing piece translations
+                // Then each piece should be drawn 15px above the previous one
+                expect(gameComponent.getPieceTranslation(0)).toBe('translate(0, 17.5)');
+                expect(gameComponent.getPieceTranslation(1)).toBe('translate(0, 2.5)');
+            }));
+
+            it('should update board geometry when displaying a custom-sized state', fakeAsync(async() => {
+                // Given a custom config with non-default board dimensions
+                const gameComponent: CheckersComponent<AbstractCheckersRules> = testUtils.getGameComponent();
+                const customConfig: CheckersConfig = {
+                    ...defaultConfig,
+                    width: defaultConfig.width + 1,
+                    playerRows: defaultConfig.playerRows + 1,
+                    emptyRows: defaultConfig.emptyRows + 1,
+                };
+                const state: CheckersState = gameComponent.rules.getInitialState(customConfig);
+
+                // When displaying that state
+                await testUtils.setupState(state, { config: customConfig });
+
+                // Then SVG geometry should be derived from the displayed state
+                const expectedWidth: number = state.getWidth() * gameComponent.mode().parallelogramHeight;
+                const expectedHeight: number = state.getHeight() * gameComponent.mode().parallelogramHeight;
+                const expectedViewBoxWidth: number =
+                    (expectedWidth * gameComponent.mode().horizontalWidthRatio) +
+                    (expectedHeight * gameComponent.mode().offsetRatio) +
+                    gameComponent.STROKE_WIDTH;
+                const expectedViewBoxHeight: number =
+                    expectedHeight + gameComponent.THICKNESS + gameComponent.STROKE_WIDTH + gameComponent.SPACE_SIZE;
+
+                expect(gameComponent.basicWidth()).toBe(expectedWidth);
+                expect(gameComponent.basicHeight()).toBe(expectedHeight);
+                expect(gameComponent.viewBox().width).toBe(expectedViewBoxWidth);
+                expect(gameComponent.viewBox().height).toBe(expectedViewBoxHeight);
+            }));
+
+        });
+
+        it('should have a bijective encoder', () => {
+            // Given any turn (here we test only the first unfortunately)
+            const rules: R = testUtils.getGameComponent().rules;
+            const encoder: Encoder<CheckersMove> = testUtils.getGameComponent().encoder;
+            const moveGenerator: CheckersMoveGenerator = new CheckersMoveGenerator(rules);
+            const initialNode: CheckersNode = rules.getInitialNode(defaultConfig);
+            const firstTurnMoves: CheckersMove[] = moveGenerator.getListMoves(initialNode, defaultConfig);
+            for (const move of firstTurnMoves) {
+                // When checking if they are bijective
+                // Then they should be
+                EncoderTestUtils.expectToBeBijective(encoder, move);
+            }
+        });
+
+    });
+
+}

@@ -1,4 +1,5 @@
 import { Encoder, JSONValue, MGPFallible, Utils } from '@everyboard/lib';
+
 import { Direction, DirectionFactory } from './Direction';
 
 /**

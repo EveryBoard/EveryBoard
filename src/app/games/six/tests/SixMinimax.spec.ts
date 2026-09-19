@@ -1,25 +1,32 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { SixState } from '../SixState';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { Coord } from '../../../jscaip/Coord';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { Table } from '../../../jscaip/TableUtils';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { SixFilteredMoveGenerator } from '../SixFilteredMoveGenerator';
+import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { SixLegalityInformation, SixNode, SixRules } from '../SixRules';
-import { Minimax } from 'src/app/jscaip/AI/Minimax';
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { SixMinimax } from '../SixMinimax';
-import { EmptyRulesConfig, NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
+import { SixConfig, SixLegalityInformation, SixNode, SixRules } from '../SixRules';
+import { SixState } from '../SixState';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;
 const _: PlayerOrNone = PlayerOrNone.NONE;
 
+class SixMinimax extends Minimax<SixMove, SixState, SixConfig, SixLegalityInformation> {
+    public constructor() {
+        const rules: SixRules = SixRules.get();
+        super('Minimax', rules, new SixHeuristic(), new SixFilteredMoveGenerator(rules));
+    }
+}
+
 describe('SixMinimax', () => {
 
-    let minimax: Minimax<SixMove, SixState, EmptyRulesConfig, SixLegalityInformation>;
+    let minimax: Minimax<SixMove, SixState, SixConfig, SixLegalityInformation>;
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: NoConfig = SixRules.get().getDefaultRulesConfig();
+    const defaultConfig: SixConfig = SixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         minimax = new SixMinimax();
@@ -52,4 +59,5 @@ describe('SixMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

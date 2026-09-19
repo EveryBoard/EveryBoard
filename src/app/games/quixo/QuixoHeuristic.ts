@@ -1,15 +1,17 @@
-import { Player } from 'src/app/jscaip/Player';
-import { QuixoConfig, QuixoState } from './QuixoState';
+import { MGPMap, NumberMap } from '@everyboard/lib';
+
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
+import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
 import { QuixoMove } from './QuixoMove';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { QuixoNode, QuixoRules } from './QuixoRules';
-import { MGPMap, MGPOptional, NumberMap } from '@everyboard/lib';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
+import { QuixoConfig, QuixoState } from './QuixoState';
 
 export class QuixoHeuristic extends PlayerMetricHeuristic<QuixoMove, QuixoState, QuixoConfig> {
 
-    public override getMetrics(node: QuixoNode, _config: MGPOptional<QuixoConfig>): PlayerNumberTable {
+    public override getMetrics(node: QuixoNode, _config: QuixoConfig): PlayerNumberTable {
         const state: QuixoState = node.gameState;
         const linesSums: PlayerMap<MGPMap<string, NumberMap<number>>> = QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums.get(Player.ZERO));

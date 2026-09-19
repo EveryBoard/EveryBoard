@@ -1,20 +1,21 @@
-import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
-import { EpaminondasState } from 'src/app/games/epaminondas/EpaminondasState';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
+import { MGPValidation } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasConfig, EpaminondasRules } from './EpaminondasRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { EpaminondasState } from './EpaminondasState';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-const defaultConfig: MGPOptional<EpaminondasConfig> = EpaminondasRules.get().getDefaultRulesConfig();
+const defaultConfig: EpaminondasConfig = EpaminondasRules.get().getDefaultRulesConfig();
 
 export class EpaminondasTutorial extends Tutorial {
-
 
     public tutorial: TutorialStep[] = [
         TutorialStep.informational(
@@ -42,7 +43,7 @@ export class EpaminondasTutorial extends Tutorial {
         ),
         TutorialStep.informational(
             TutorialStepMessage.OBJECT_OF_THE_GAME() + ' (2/2)',
-            $localize`Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.`,
+            $localize`Here, it is Light's turn. Light wins because they have two pieces on Dark's starting line, and Dark has only one on Light's starting line.`,
             new EpaminondasState([
                 [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
                 [_, _, _, _, _, O, _, _, _, _, _, _, _, _],

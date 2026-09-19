@@ -1,27 +1,32 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { TriangularGameComponent }
-    from 'src/app/components/game-components/game-component/TriangularGameComponent';
-import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from 'src/app/games/coerceo/CoerceoMove';
-import { CoerceoState } from 'src/app/games/coerceo/CoerceoState';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoConfig, CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
-import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { ScoreName } from '../../components/game-components/game-component/ScoreName';
+import { TriangularGameComponent } from '../../components/game-components/game-component/TriangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+
+import { CoerceoCapturesAndFreedomHeuristic } from './CoerceoCapturesAndFreedomHeuristic';
+import { CoerceoFailure } from './CoerceoFailure';
+import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoMoveGenerator } from './CoerceoMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { CoerceoPiecesThreatsTilesMinimax } from './CoerceoPiecesThreatsTilesMinimax';
-import { CoerceoCapturesAndFreedomMinimax } from './CoerceoCapturesAndFreedomMinimax';
-import { CoerceoPiecesTilesFreedomMinimax } from './CoerceoPiecesTilesFreedomMinimax';
+import { CoerceoPiecesThreatsTilesHeuristic } from './CoerceoPiecesThreatsTilesHeuristic';
+import { CoerceoPiecesTilesFreedomHeuristic } from './CoerceoPiecesTilesFreedomHeuristic';
+import { CoerceoConfig, CoerceoNode, CoerceoRules } from './CoerceoRules';
+import { CoerceoState } from './CoerceoState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,
@@ -41,30 +46,51 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
 
     public possibleLandings: Coord[] = [];
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('Coerceo');
-        this.availableAIs = [
-            new CoerceoPiecesThreatsTilesMinimax(),
-            new CoerceoCapturesAndFreedomMinimax(),
-            new CoerceoPiecesTilesFreedomMinimax(),
-            new MCTS($localize`MCTS`,
-                     new CoerceoMoveGenerator(),
-                     this.rules),
-        ];
+    public constructor() {
+        super('Coerceo');
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'Pieces > Threats > Tiles',
+                    name: $localize`Pieces > Threats > Tiles`,
+                    heuristic: (): CoerceoPiecesThreatsTilesHeuristic => new CoerceoPiecesThreatsTilesHeuristic(),
+                    moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+                },
+                {
+                    id: 'Captures > Freedom',
+                    name: $localize`Captures > Freedom`,
+                    heuristic: (): CoerceoCapturesAndFreedomHeuristic => new CoerceoCapturesAndFreedomHeuristic(),
+                    moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+                },
+                {
+                    id: 'Pieces > Tiles > Freedom',
+                    name: $localize`Pieces > Tiles > Freedom`,
+                    heuristic: (): CoerceoPiecesTilesFreedomHeuristic => new CoerceoPiecesTilesFreedomHeuristic(),
+                    moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+                },
+            ],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): CoerceoMoveGenerator => new CoerceoMoveGenerator(),
+            }],
+        };
         this.encoder = CoerceoMove.encoder;
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.state = this.getState();
-        this.scores = MGPOptional.of(this.state.captures);
-        this.tiles = this.state.tiles;
-        this.board = this.getState().board;
+    protected override getScoreName(): ScoreName {
+        return ScoreName.CAPTURES;
+    }
+
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.scores = MGPOptional.of(this.state().captures);
+        this.tiles = this.state().tiles;
+        this.board = this.state().board;
     }
 
     private showHighlight(): void {
-        this.possibleLandings = this.state.getLegalLandings(this.chosenCoord.get());
+        this.possibleLandings = this.state().getLegalLandings(this.chosenCoord.get());
     }
 
     public override cancelMoveAttempt(): void {
@@ -72,7 +98,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.possibleLandings = [];
     }
 
-    public override async showLastMove(move: CoerceoMove): Promise<void> {
+    protected override async showLastMove(move: CoerceoMove): Promise<void> {
         if (move instanceof CoerceoRegularMove) {
             this.lastStart = MGPOptional.of(move.getStart());
             this.lastEnd = MGPOptional.of(move.getEnd());
@@ -84,29 +110,23 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         this.lastEnd = MGPOptional.empty();
     }
 
+    @ClickHandler((coord: Coord) => `#pyramid-${ coord.x }-${ coord.y }`)
     public async onPyramidClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#pyramid-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.onClick(coord);
     }
 
+    @ClickHandler((coord: Coord) => '#space-' + coord.x + '-' + coord.y)
     public async onSpaceClick(coord: Coord): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#space-' + coord.x + '-' + coord.y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
         return this.onClick(coord);
     }
 
     private async onClick(coord: Coord): Promise<MGPValidation> {
-        const currentPlayer: Player = this.state.getCurrentPlayer();
+        const currentPlayer: Player = this.state().getCurrentPlayer();
         if (this.chosenCoord.equalsValue(coord)) {
             // Deselects the piece
             return this.cancelMove();
         } else if (this.chosenCoord.isAbsent() ||
-                   this.state.getPieceAt(coord).is(currentPlayer))
+                   this.state().getPieceAt(coord).is(currentPlayer))
         {
             return this.firstClick(coord);
         } else {
@@ -115,11 +135,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private async firstClick(coord: Coord): Promise<MGPValidation> {
-        const clickedPiece: FourStatePiece = this.state.getPieceAt(coord);
-        if (clickedPiece.is(this.state.getCurrentOpponent())) {
+        const clickedPiece: FourStatePiece = this.state().getPieceAt(coord);
+        if (clickedPiece.is(this.state().getCurrentOpponent())) {
             const move: CoerceoMove = CoerceoTileExchangeMove.of(coord);
             return this.chooseMove(move);
-        } else if (clickedPiece.is(this.state.getCurrentPlayer())) {
+        } else if (clickedPiece.is(this.state().getCurrentPlayer())) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
             return MGPValidation.SUCCESS;
@@ -138,12 +158,12 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public isPyramid(coord: Coord): boolean {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         return spaceContent.isPlayer() || this.wasOpponent(coord);
     }
 
     private wasOpponent(coord: Coord): boolean {
-        const parent: MGPOptional<CoerceoNode> = this.node.parent;
+        const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (parent.isPresent()) {
             const opponent: Player = parent.get().gameState.getCurrentOpponent();
             return parent.get().gameState.getPieceAt(coord).is(opponent);
@@ -153,7 +173,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public getPyramidClass(coord: Coord): string {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         if (spaceContent.isPlayer()) {
             return this.getPlayerClass(spaceContent.getPlayer());
         } else {
@@ -162,7 +182,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public mustDraw(coord: Coord): boolean {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
         if (spaceContent === FourStatePiece.UNREACHABLE) {
             // If it was just removed, we want to draw it
             return this.wasRemoved(coord);
@@ -173,12 +193,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private wasRemoved(coord: Coord): boolean {
-        const spaceContent: FourStatePiece = this.state.getPieceAt(coord);
-        const parent: MGPOptional<CoerceoNode> = this.node.parent;
+        const spaceContent: FourStatePiece = this.state().getPieceAt(coord);
+        const parent: MGPOptional<CoerceoNode> = this.node().parent;
         if (spaceContent === FourStatePiece.UNREACHABLE && parent.isPresent()) {
-            const previousContent: FourStatePiece = parent.get().gameState.getPieceAt(coord);
+            const previousState: CoerceoState = parent.get().gameState;
+            const previousContent: FourStatePiece = previousState.getPieceAt(coord);
             return previousContent === FourStatePiece.EMPTY ||
-                   previousContent.is(parent.get().gameState.getCurrentPlayer());
+                   previousContent.is(previousState.getCurrentPlayer());
         } else {
             return false;
         }
@@ -222,7 +243,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public lastTurnWasTilesExchange(player: Player): boolean {
-        if (this.node.parent.isAbsent()) {
+        if (this.node().parent.isAbsent()) {
             return false;
         }
         const previousTiles: number = this.getPreviousState().tiles.get(player);
@@ -260,7 +281,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
         return this.getSVGTranslation(x, y);
     }
 
-    public getViewBox(): ViewBox {
+    protected override computeViewBox(): ViewBox {
         const left: number = 0;
         const up: number = 0;
         const width: number = this.getWidth();
@@ -270,14 +291,14 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     private getWidth(): number {
-        const abstractWidth: number = this.getState().getWidth();
+        const abstractWidth: number = this.state().getWidth();
         const blockWidth: number = abstractWidth / 3; // The number of hexagonal blocks horizontally
         const horizontalInterPiecesSum: number = 2 * (blockWidth - 1) * this.STROKE_WIDTH;
         return (this.SPACE_SIZE * (0.5 * (abstractWidth + 1))) + horizontalInterPiecesSum;
     }
 
     private getHeight(): number {
-        const abstractHeight: number = this.getState().getHeight();
+        const abstractHeight: number = this.state().getHeight();
         const verticalInterPiecesSum: number = (abstractHeight - 2) * this.STROKE_WIDTH;
         return this.SPACE_SIZE * abstractHeight + verticalInterPiecesSum;
     }

@@ -1,21 +1,29 @@
-import { Coord } from '../../jscaip/Coord';
-import { GameNode } from '../../jscaip/AI/GameNode';
-import { ConfigurableRules } from '../../jscaip/Rules';
-import { P4State } from './P4State';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { P4Move } from './P4Move';
-import { Table, TableUtils } from 'src/app/jscaip/TableUtils';
-import { P4Failure } from './P4Failure';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Debug } from 'src/app/utils/Debug';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
 
-export type P4Config = {
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { Table, TableUtils } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { P4Failure } from './P4Failure';
+import { P4Move } from './P4Move';
+import { P4State } from './P4State';
+
+export type P4Config = RulesConfig & {
+
     width: number;
+
     height: number;
+
 };
 
 export class P4Node extends GameNode<P4Move, P4State> {}
@@ -48,18 +56,18 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
         this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<P4Config>> {
-        return MGPOptional.of(P4Rules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<P4Config> {
+        return P4Rules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(config: MGPOptional<P4Config>): P4State {
-        const board: PlayerOrNone[][] = TableUtils.create(config.get().width,
-                                                          config.get().height,
+    public override getInitialState(config: P4Config): P4State {
+        const board: PlayerOrNone[][] = TableUtils.create(config.width,
+                                                          config.height,
                                                           PlayerOrNone.NONE);
         return new P4State(board, 0);
     }
 
-    public override applyLegalMove(move: P4Move, state: P4State, _config: MGPOptional<P4Config>, _info: void): P4State {
+    public override applyLegalMove(move: P4Move, state: P4State, _config: P4Config, _info: void): P4State {
         const x: number = move.x;
         const board: PlayerOrNone[][] = state.getCopiedBoard();
         const y: number = P4Rules.get().getLowestUnoccupiedSpace(board, x);

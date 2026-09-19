@@ -1,18 +1,20 @@
-import { ConnectSixState } from './ConnectSixState';
-import { ConnectSixNode } from './ConnectSixRules';
+import { Set } from '@everyboard/lib';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { GobanConfig } from '../../jscaip/GobanConfig';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { TableUtils } from '../../jscaip/TableUtils';
+
 import { ConnectSixMove } from './ConnectSixMove';
-import { Coord } from 'src/app/jscaip/Coord';
 import { ConnectSixFirstMove } from './ConnectSixMove';
 import { ConnectSixDrops } from './ConnectSixMove';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MGPOptional, Set } from '@everyboard/lib';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
+import { ConnectSixNode } from './ConnectSixRules';
+import { ConnectSixState } from './ConnectSixState';
 
 export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, ConnectSixState, GobanConfig> {
 
-    public override getListMoves(node: ConnectSixNode, _config: MGPOptional<GobanConfig>): ConnectSixMove[] {
+    public override getListMoves(node: ConnectSixNode, _config: GobanConfig): ConnectSixMove[] {
         if (node.gameState.turn === 0) {
             return this.getFirstMove(node.gameState);
         } else {
@@ -52,7 +54,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
         const availableCoords: Coord[] = [];
         for (const coordAndContent of state.getCoordsAndContents()) {
             const coord: Coord = coordAndContent.coord;
-            if (usefulCoord[coord.y][coord.x] === true && coordAndContent.content.isNone()) {
+            if (usefulCoord[coord.y][coord.x] && coordAndContent.content.isNone()) {
                 availableCoords.push(coord);
             }
         }
@@ -60,7 +62,7 @@ export class ConnectSixMoveGenerator extends MoveGenerator<ConnectSixMove, Conne
     }
 
     /**
-     * This function returns a table on which table[y][x] === true only if:
+     * This function returns a table on which table[y][x] is true only if:
      *     (x, y) is empty but has occupied neighbors
      */
     private getUsefulCoordsMap(state: ConnectSixState): boolean[][] {

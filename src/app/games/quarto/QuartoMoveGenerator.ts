@@ -1,13 +1,13 @@
-import { QuartoState } from './QuartoState';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { QuartoNode } from './QuartoRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { QuartoConfig, QuartoNode } from './QuartoRules';
+import { QuartoState } from './QuartoState';
 
-export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState> {
+export class QuartoMoveGenerator extends MoveGenerator<QuartoMove, QuartoState, QuartoConfig> {
 
-    public override getListMoves(node: QuartoNode, _config: NoConfig): QuartoMove[] {
+    public override getListMoves(node: QuartoNode, _config: QuartoConfig): QuartoMove[] {
         const listMoves: QuartoMove[] = [];
 
         const state: QuartoState = node.gameState;

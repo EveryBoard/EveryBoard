@@ -97,9 +97,6 @@
 .indicator-fill {
     fill: var(--indicator);
 }
-.selectable-fill {
-    fill: var(--selectable);
-}
 .selectable-stroke {
     stroke: var(--selectable);
 }
@@ -174,8 +171,10 @@
     stroke-width: 12;
 }
 .semi-transparent {
-    fill-opacity: 0.5;
-    stroke-opacity: 0.5;
+    opacity: 0.5;
+}
+.territory-opacity {
+    fill-opacity: 0.7;
 }
 .round {
     stroke-linecap: round;
@@ -189,11 +188,20 @@
 .text-big {
     font: 50px sans-serif;
 }
+.backgrounded-text {
+    fill: var(--backgrounded-text-color);
+}
+.text-medium-plus {
+    font: 38px sans-serif;
+}
 .text-medium {
     font: 35px sans-serif;
 }
-.text-20 {
-    font: 20px sans-serif;
+.text-small-plus {
+    font: 28px sans-serif;
+}
+.text-small {
+    font: 25px sans-serif;
 }
 .text-bold {
     font-weight: bold;

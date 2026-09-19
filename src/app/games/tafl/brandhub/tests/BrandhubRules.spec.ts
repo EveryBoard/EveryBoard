@@ -1,15 +1,14 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { BrandhubNode, BrandhubRules } from '../BrandhubRules';
-import { TaflFailure } from '../../TaflFailure';
-import { BrandhubMove } from '../BrandhubMove';
-import { TaflPawn } from '../../TaflPawn';
+import { Coord } from '../../../../jscaip/Coord';
+import { Player } from '../../../../jscaip/Player';
+import { Table } from '../../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../../jscaip/tests/RulesUtils.spec';
 import { TaflConfig } from '../../TaflConfig';
-import { MGPOptional } from '@everyboard/lib';
+import { TaflFailure } from '../../TaflFailure';
+import { TaflPawn } from '../../TaflPawn';
 import { TaflState } from '../../TaflState';
+import { BrandhubMove } from '../BrandhubMove';
+import { BrandhubNode, BrandhubRules } from '../BrandhubRules';
 
 describe('BrandhubRules', () => {
 
@@ -19,7 +18,7 @@ describe('BrandhubRules', () => {
     const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
     let rules: BrandhubRules;
-    const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+    const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = BrandhubRules.get();

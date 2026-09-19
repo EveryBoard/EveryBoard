@@ -1,10 +1,12 @@
 import { MGPFallible, MGPOptional } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Rules } from '../../jscaip/Rules';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { NewGameMove } from './NewGameMove';
 import { NewGameState } from './NewGameState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Rules } from 'src/app/jscaip/Rules';
 
 /**
  * This class is optional.
@@ -49,7 +51,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
     /**
      * This method returns the initial state of a game
      */
-    public override getInitialState(): NewGameState {
+    public override getInitialState(config: EmptyRulesConfig): NewGameState {
         return new NewGameState(0);
     }
 
@@ -74,7 +76,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      */
     public override applyLegalMove(_move: NewGameMove,
                                    state: NewGameState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    _info: NewGameLegalityInfo)
     : NewGameState
     {
@@ -86,7 +88,7 @@ export class NewGameRules extends Rules<NewGameMove, NewGameState, NewGameLegali
      * @param node the node for which we check the game status
      * @returns a GameStatus (ZERO_WON, ONE_WON, DRAW, ONGOING)
      */
-    public override getGameStatus(node: NewGameNode, _config: NoConfig): GameStatus {
+    public override getGameStatus(node: NewGameNode, _config: EmptyRulesConfig): GameStatus {
         if (node.gameState.turn < 42) {
             return GameStatus.ONGOING;
         } else {

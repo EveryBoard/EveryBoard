@@ -1,4 +1,5 @@
 import { MGPMap, MGPOptional } from '@everyboard/lib';
+
 import { Player } from './Player';
 import { PlayerNumberTable } from './PlayerNumberTable';
 
@@ -45,6 +46,11 @@ export class PlayerNumberMap extends PlayerMap<number> {
     public add(player: Player, value: number): MGPOptional<number> {
         const oldValue: number = this.get(player);
         return this.map.put(player, oldValue + value);
+    }
+
+    public subtract(player: Player, value: number): MGPOptional<number> {
+        const oldValue: number = this.get(player);
+        return this.map.put(player, oldValue - value);
     }
 
     public toTable(): PlayerNumberTable {

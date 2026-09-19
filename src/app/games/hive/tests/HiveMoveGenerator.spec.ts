@@ -1,16 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { HiveMove } from '../HiveMove';
 import { HiveMoveGenerator } from '../HiveMoveGenerator';
 import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('HiveMoveGenerator', () => {
 
     let moveGenerator: HiveMoveGenerator;
-    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');

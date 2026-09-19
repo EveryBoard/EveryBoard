@@ -1,14 +1,13 @@
-import { Component } from '@angular/core';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { HexaLayout } from 'src/app/jscaip/HexaLayout';
-import { Move } from 'src/app/jscaip/Move';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { GameComponent } from './GameComponent';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { Coord } from '../../../jscaip/Coord';
+import { HexaLayout } from '../../../jscaip/HexaLayout';
+import { Move } from '../../../jscaip/Move';
+import { SuperRules } from '../../../jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { GameState } from '../../../jscaip/state/GameState';
 
-@Component({ template: '' })
+import { GameComponent } from './GameComponent';
+
 export abstract class HexagonalGameComponent<R extends SuperRules<M, S, C, L>,
                                              M extends Move,
                                              S extends GameState,
@@ -17,6 +16,10 @@ export abstract class HexagonalGameComponent<R extends SuperRules<M, S, C, L>,
                                              L = void>
     extends GameComponent<R, M, S, C, L>
 {
+
+    public constructor(urlName: string) {
+        super(urlName);
+    }
 
     public hexaLayout: HexaLayout;
 

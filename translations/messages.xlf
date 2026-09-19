@@ -5,6 +5,69 @@
       <trans-unit id="4894728399261164928" datatype="html">
         <source>If you like <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/>EveryBoard<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/>, follow us!</source>
       </trans-unit>
+      <trans-unit id="2330911039423728715" datatype="html">
+        <source>0 points</source>
+      </trans-unit>
+      <trans-unit id="3615868699392073675" datatype="html">
+        <source>1 point</source>
+      </trans-unit>
+      <trans-unit id="5859970255480348780" datatype="html">
+        <source><x id="PH" equiv-text="n"/> points</source>
+      </trans-unit>
+      <trans-unit id="5338644563389793015" datatype="html">
+        <source>0 captures</source>
+      </trans-unit>
+      <trans-unit id="4285343428589620223" datatype="html">
+        <source>1 capture</source>
+      </trans-unit>
+      <trans-unit id="3582401300259379730" datatype="html">
+        <source><x id="PH" equiv-text="n"/> captures</source>
+      </trans-unit>
+      <trans-unit id="1477756554987205959" datatype="html">
+        <source>0 remaining pieces</source>
+      </trans-unit>
+      <trans-unit id="1621210823826499525" datatype="html">
+        <source>1 remaining piece</source>
+      </trans-unit>
+      <trans-unit id="3762170440311046861" datatype="html">
+        <source><x id="PH" equiv-text="n"/> remaining pieces</source>
+      </trans-unit>
+      <trans-unit id="4877261268986191253" datatype="html">
+        <source>0 pieces to drop</source>
+      </trans-unit>
+      <trans-unit id="4536404072544955370" datatype="html">
+        <source>1 piece to drop</source>
+      </trans-unit>
+      <trans-unit id="3974299801183550747" datatype="html">
+        <source><x id="PH" equiv-text="n"/> pieces to drop</source>
+      </trans-unit>
+      <trans-unit id="4263400138524138884" datatype="html">
+        <source>0 protected pieces</source>
+      </trans-unit>
+      <trans-unit id="7720479219163238747" datatype="html">
+        <source>1 protected piece</source>
+      </trans-unit>
+      <trans-unit id="386205842328325911" datatype="html">
+        <source><x id="PH" equiv-text="n"/> protected pieces</source>
+      </trans-unit>
+      <trans-unit id="5643570775222920843" datatype="html">
+        <source>0 pieces under control</source>
+      </trans-unit>
+      <trans-unit id="7442652741075415834" datatype="html">
+        <source>1 piece under control</source>
+      </trans-unit>
+      <trans-unit id="5472957127368349716" datatype="html">
+        <source><x id="PH" equiv-text="n"/> pieces under control</source>
+      </trans-unit>
+      <trans-unit id="2259880720558443999" datatype="html">
+        <source>0 stacks under control</source>
+      </trans-unit>
+      <trans-unit id="3096894933609558247" datatype="html">
+        <source>1 stack under control</source>
+      </trans-unit>
+      <trans-unit id="6608381869213568684" datatype="html">
+        <source><x id="PH" equiv-text="n"/> stacks under control</source>
+      </trans-unit>
       <trans-unit id="6153797048311741939" datatype="html">
         <source>User settings</source>
       </trans-unit>
@@ -18,7 +81,7 @@
         <source>Hide chat</source>
       </trans-unit>
       <trans-unit id="3331424259701651496" datatype="html">
-        <source>Show chat (<x id="INTERPOLATION" equiv-text="{{ this.unreadMessagesText }}"/>)</source>
+        <source>Show chat (<x id="INTERPOLATION" equiv-text="{{ unreadMessagesText }}"/>)</source>
       </trans-unit>
       <trans-unit id="8403075591877274055" datatype="html">
         <source>Type your message here</source>
@@ -56,15 +119,6 @@
       <trans-unit id="3468367367164457633" datatype="html">
         <source>Learn the rules</source>
       </trans-unit>
-      <trans-unit id="7164690325767499813" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> by <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
-      </trans-unit>
-      <trans-unit id="172167399786281724" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> against <x id="INTERPOLATION_1" equiv-text="{{ currentGame.get().opponent?.name }}"/></source>
-      </trans-unit>
-      <trans-unit id="5678362140621139107" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="getCurrentGameName() }}"/> (waiting for opponent)</source>
-      </trans-unit>
       <trans-unit id="4930506384627295710" datatype="html">
         <source>Settings</source>
       </trans-unit>
@@ -79,6 +133,15 @@
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
+      </trans-unit>
+      <trans-unit id="8268057237378615671" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> by <x id="PH_1" equiv-text="currentGame.creator.name"/></source>
+      </trans-unit>
+      <trans-unit id="8303888373306979913" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> (waiting for opponent)</source>
+      </trans-unit>
+      <trans-unit id="556932432824405636" datatype="html">
+        <source><x id="PH" equiv-text="gameName"/> against <x id="PH_1" equiv-text="opponentName"/></source>
       </trans-unit>
       <trans-unit id="7656395805241225659" datatype="html">
         <source>Games</source>
@@ -98,8 +161,8 @@
       <trans-unit id="4060021930998903329" datatype="html">
         <source>Second player</source>
       </trans-unit>
-      <trans-unit id="8503767092684163333" datatype="html">
-        <source>Turn</source>
+      <trans-unit id="5611592591303869712" datatype="html">
+        <source>Status</source>
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
@@ -137,9 +200,6 @@
       <trans-unit id="7017932994058745268" datatype="html">
         <source>Creating online game, please wait, it should not take long.</source>
       </trans-unit>
-      <trans-unit id="7680170577317084701" datatype="html">
-        <source>Search game</source>
-      </trans-unit>
       <trans-unit id="5561648955936795459" datatype="html">
         <source>Use simple mechanics to push 6 of the opponent&apos;s pieces out of the board!</source>
       </trans-unit>
@@ -151,6 +211,9 @@
       </trans-unit>
       <trans-unit id="1675508830863089385" datatype="html">
         <source>The most widespread multiple-lap Mancala.</source>
+      </trans-unit>
+      <trans-unit id="7751928094372476864" datatype="html">
+        <source>Russian column checkers: captured pieces stack under the capturing piece, forming towers.</source>
       </trans-unit>
       <trans-unit id="5716165296000343717" datatype="html">
         <source>The Irish version of the Tafl game family! Invaders must capture the king, defender must make him escape!</source>
@@ -185,11 +248,17 @@
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
       </trans-unit>
+      <trans-unit id="7977813156502087485" datatype="html">
+        <source>A version of Go on a hexagonal board!</source>
+      </trans-unit>
       <trans-unit id="7267838821174516266" datatype="html">
         <source>A hexagonal alignment game with weird &quot;diagonals&quot;!</source>
       </trans-unit>
       <trans-unit id="4865500405661191388" datatype="html">
         <source>You are in charge of a hive full of insects. Use the abilities of your insects to block the opponent&apos;s queen in order to win!</source>
+      </trans-unit>
+      <trans-unit id="7855356453914220059" datatype="html">
+        <source>The famous checkers game (international version)</source>
       </trans-unit>
       <trans-unit id="3778423604946977624" datatype="html">
         <source>The Viking board game! Invaders must capture the king, defender must make him escape!</source>
@@ -227,6 +296,9 @@
       <trans-unit id="3383193846061013912" datatype="html">
         <source>Create a winning alignment. The problem: you don&apos;t pick the piece that you&apos;re placing on the board!</source>
       </trans-unit>
+      <trans-unit id="7654735708945652840" datatype="html">
+        <source>EveryBoard&apos;s first game: an asymmetric game where each player moves differently. Be the first one to capture the opponent&apos;s throne!</source>
+      </trans-unit>
       <trans-unit id="3529667957993318888" datatype="html">
         <source>Align 5 of your pieces on a board where pieces slide!</source>
       </trans-unit>
@@ -251,6 +323,9 @@
       <trans-unit id="6432141756227180076" datatype="html">
         <source>Align your 4 pieces or form a square with them to win!</source>
       </trans-unit>
+      <trans-unit id="2856851705672899185" datatype="html">
+        <source>A toric version of Reversi!</source>
+      </trans-unit>
       <trans-unit id="265614119354246271" datatype="html">
         <source>Align 5 pieces of your color in a row, but beware, the pieces can be put on top of other pieces!</source>
       </trans-unit>
@@ -259,6 +334,9 @@
       </trans-unit>
       <trans-unit id="7926456268600574942" datatype="html">
         <source>Align your pieces to score points, but beware, pieces can flip!</source>
+      </trans-unit>
+      <trans-unit id="5280175192994998668" datatype="html">
+        <source>A multi-layered remix of the Go Game!</source>
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
@@ -377,8 +455,29 @@
       <trans-unit id="2686476818050661110" datatype="html">
         <source>Hexodia</source>
       </trans-unit>
-      <trans-unit id="6233664534580457703" datatype="html">
-        <source>Trigo</source>
+      <trans-unit id="7666378010332934902" datatype="html">
+        <source>Triangular Go</source>
+      </trans-unit>
+      <trans-unit id="5226075040149407867" datatype="html">
+        <source>International Checkers</source>
+      </trans-unit>
+      <trans-unit id="7549008463336671286" datatype="html">
+        <source>Quebec Castles</source>
+      </trans-unit>
+      <trans-unit id="8244967285264131156" datatype="html">
+        <source>Hexagonal Go</source>
+      </trans-unit>
+      <trans-unit id="3697715893908807208" datatype="html">
+        <source>Toric Reversi</source>
+      </trans-unit>
+      <trans-unit id="5468337301522272954" datatype="html">
+        <source>Bashni</source>
+      </trans-unit>
+      <trans-unit id="9017157884114080234" datatype="html">
+        <source>Zoomed Go</source>
+      </trans-unit>
+      <trans-unit id="7680170577317084701" datatype="html">
+        <source>Search game</source>
       </trans-unit>
       <trans-unit id="2218572265318708454" datatype="html">
         <source>Registering</source>
@@ -461,6 +560,12 @@
       <trans-unit id="3862672024084051383" datatype="html">
         <source>You have not verified your email! Click on the link in the verification email.</source>
       </trans-unit>
+      <trans-unit id="4780631467843839550" datatype="html">
+        <source>Rules configuration</source>
+      </trans-unit>
+      <trans-unit id="1781858426685447922" datatype="html">
+        <source>View configuration</source>
+      </trans-unit>
       <trans-unit id="5723949445116321937" datatype="html">
         <source>EveryBoard</source>
       </trans-unit>
@@ -488,6 +593,141 @@
       <trans-unit id="443650994975920138" datatype="html">
         <source>This game (<x id="PH" equiv-text="gameName"/>) does not exist.</source>
       </trans-unit>
+      <trans-unit id="3923856758825729241" datatype="html">
+        <source>Creation of a game of <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/> </source>
+      </trans-unit>
+      <trans-unit id="4247449258896721566" datatype="html">
+        <source>Opponents</source>
+      </trans-unit>
+      <trans-unit id="2561597132169540579" datatype="html">
+        <source>Potential opponents will appear here. If no one comes, you can:</source>
+      </trans-unit>
+      <trans-unit id="1406698782162165226" datatype="html">
+        <source>Look for other games</source>
+      </trans-unit>
+      <trans-unit id="5070629625537228486" datatype="html">
+        <source>Play against AI</source>
+      </trans-unit>
+      <trans-unit id="5056292777668083757" datatype="html">
+        <source>Click on the opponent against which you would like to play.</source>
+      </trans-unit>
+      <trans-unit id="8953033926734869941" datatype="html">
+        <source>Name</source>
+      </trans-unit>
+      <trans-unit id="3193976279273491157" datatype="html">
+        <source>Actions</source>
+      </trans-unit>
+      <trans-unit id="2597866491429942649" datatype="html">
+        <source>bot</source>
+      </trans-unit>
+      <trans-unit id="8698515801873408462" datatype="html">
+        <source>Pick</source>
+      </trans-unit>
+      <trans-unit id="7709161982270147002" datatype="html">
+        <source>Random first player</source>
+      </trans-unit>
+      <trans-unit id="5246623381325349376" datatype="html">
+        <source>You start</source>
+      </trans-unit>
+      <trans-unit id="7738132709044699358" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.chosenOpponent }}"/> starts</source>
+      </trans-unit>
+      <trans-unit id="4492847529610715272" datatype="html">
+        <source>The opponent starts</source>
+      </trans-unit>
+      <trans-unit id="8926567047186783072" datatype="html">
+        <source>Standard time</source>
+      </trans-unit>
+      <trans-unit id="3120304451891406993" datatype="html">
+        <source>Maximal turn duration: </source>
+      </trans-unit>
+      <trans-unit id="6773728044030876768" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ GameDuration.STANDARD_GAME_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="4073116770334354573" datatype="html">
+        <source>Blitz</source>
+      </trans-unit>
+      <trans-unit id="3154403333894623756" datatype="html">
+        <source>Custom time</source>
+      </trans-unit>
+      <trans-unit id="594218318757354614" datatype="html">
+        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.gameDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="1612262766071402559" datatype="html">
+        <source>Propose configuration</source>
+      </trans-unit>
+      <trans-unit id="326145407473587685" datatype="html">
+        <source>Change configuration</source>
+      </trans-unit>
+      <trans-unit id="6482290849972032593" datatype="html">
+        <source>Cancel game</source>
+      </trans-unit>
+      <trans-unit id="9099721398759347967" datatype="html">
+        <source>Configuration proposal for <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/></source>
+      </trans-unit>
+      <trans-unit id="7416818230860591701" datatype="html">
+        <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
+      </trans-unit>
+      <trans-unit id="6747612030990351046" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.gameTypeName }}"/> game</source>
+      </trans-unit>
+      <trans-unit id="7215535622740824911" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first</source>
+      </trans-unit>
+      <trans-unit id="8496859383343230204" datatype="html">
+        <source>you play first</source>
+      </trans-unit>
+      <trans-unit id="8194858011161710862" datatype="html">
+        <source>the first player is selected randomly</source>
+      </trans-unit>
+      <trans-unit id="3649232689954543597" datatype="html">
+        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.moveDuration || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="7852346564484185703" datatype="html">
+        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="{{ (viewInfo.gameDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
+      </trans-unit>
+      <trans-unit id="1012784993066568401" datatype="html">
+        <source>Accept and start</source>
+      </trans-unit>
+      <trans-unit id="7265061399015519876" datatype="html">
+        <source>One moment...</source>
+      </trans-unit>
+      <trans-unit id="5068486659312004369" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
+      </trans-unit>
+      <trans-unit id="4218388977213486334" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
+      </trans-unit>
+      <trans-unit id="7593355192491237220" datatype="html">
+        <source>The game you tried to join does not exist. Its config room may have existed in the past, but its creator left before the game actually started.</source>
+      </trans-unit>
+      <trans-unit id="5405832111463837320" datatype="html">
+        <source>You already have another tab open.</source>
+      </trans-unit>
+      <trans-unit id="3167850208641058102" datatype="html">
+        <source>Unexpected error from backend: <x id="PH" equiv-text="error"/></source>
+      </trans-unit>
+      <trans-unit id="9113418610979201447" datatype="html">
+        <source>The game has been cancelled.</source>
+      </trans-unit>
+      <trans-unit id="4412958068611913614" datatype="html">
+        <source>custom</source>
+      </trans-unit>
+      <trans-unit id="4002042094548821129" datatype="html">
+        <source>blitz</source>
+      </trans-unit>
+      <trans-unit id="4301395065979241317" datatype="html">
+        <source>standard</source>
+      </trans-unit>
+      <trans-unit id="7137133530752645682" datatype="html">
+        <source><x id="PH" equiv-text="userName"/> left the game, please pick another opponent.</source>
+      </trans-unit>
+      <trans-unit id="3852843717175527075" datatype="html">
+        <source>The game has been canceled!</source>
+      </trans-unit>
+      <trans-unit id="5171566373349249449" datatype="html">
+        <source>Start with this configuration</source>
+      </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
         <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ gameComponent.getTurn() + 1 }}"/></source>
       </trans-unit>
@@ -500,11 +740,11 @@
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
       </trans-unit>
+      <trans-unit id="3307352846832849992" datatype="html">
+        <source>Pick the profile</source>
+      </trans-unit>
       <trans-unit id="3795472118461355324" datatype="html">
         <source>Pick the options</source>
-      </trans-unit>
-      <trans-unit id="3272612818120648715" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="gameComponent.scores.get().get(player) }}"/> points</source>
       </trans-unit>
       <trans-unit id="6267418979719843573" datatype="html">
         <source>Pass a turn</source>
@@ -514,9 +754,6 @@
       </trans-unit>
       <trans-unit id="2981217201452500939" datatype="html">
         <source>Start a new game</source>
-      </trans-unit>
-      <trans-unit id="342909021169073473" datatype="html">
-        <source>Start with this config</source>
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.getValue() + 1"/></source>
@@ -531,10 +768,19 @@
         <source>You lost</source>
       </trans-unit>
       <trans-unit id="1836885699974320953" datatype="html">
-        <source><x id="PH" equiv-text="this.players[gameStatus.winner.getValue()].get()"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
+        <source><x id="PH" equiv-text="this.getPlayerName(gameStatus.winner)"/> (Player <x id="PH_1" equiv-text="gameStatus.winner.getValue() + 1"/>) won</source>
       </trans-unit>
       <trans-unit id="7464693809033181033" datatype="html">
         <source>The AI chose an illegal move! This is an unexpected situation that we logged, we will try to solve this as soon as possible. In the meantime, consider that you won!</source>
+      </trans-unit>
+      <trans-unit id="8400174784913655582" datatype="html">
+        <source>Minimax</source>
+      </trans-unit>
+      <trans-unit id="2520878109295407247" datatype="html">
+        <source>Iterative deepening</source>
+      </trans-unit>
+      <trans-unit id="7183112140529419891" datatype="html">
+        <source>MCTS</source>
       </trans-unit>
       <trans-unit id="7003355968351203755" datatype="html">
         <source>Ask to take back one move</source>
@@ -569,14 +815,17 @@
       <trans-unit id="3724541577412345595" datatype="html">
         <source>It is <x id="INTERPOLATION" equiv-text="{{ currentUser?.name }}"/>&apos;s turn.</source>
       </trans-unit>
+      <trans-unit id="5277703651684233917" datatype="html">
+        <source>Players agreed to draw.</source>
+      </trans-unit>
       <trans-unit id="4830863788651301313" datatype="html">
         <source>You agreed to draw.</source>
       </trans-unit>
       <trans-unit id="5730736324595001106" datatype="html">
         <source>Your draw proposal has been accepted.</source>
       </trans-unit>
-      <trans-unit id="5277703651684233917" datatype="html">
-        <source>Players agreed to draw.</source>
+      <trans-unit id="6165538570244502951" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ getWinner().name }}"/> won.</source>
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
@@ -584,23 +833,23 @@
       <trans-unit id="860662988722297223" datatype="html">
         <source>You lost.</source>
       </trans-unit>
-      <trans-unit id="6165538570244502951" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getWinner().get().name }}"/> won.</source>
+      <trans-unit id="2324913504104154958" datatype="html">
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit. You won.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has reached their time limit. You won.</source>
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
-      </trans-unit>
-      <trans-unit id="2324913504104154958" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has reached their time limit.</source>
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="currentPart.getLoser().get().name }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ getLoser().name }}"/> has resigned.</source>
+      </trans-unit>
+      <trans-unit id="4624707315308487849" datatype="html">
+        <source>Go back to the game list</source>
       </trans-unit>
       <trans-unit id="3492340771384313804" datatype="html">
         <source>Resign</source>
@@ -612,16 +861,19 @@
         <source>Reject</source>
       </trans-unit>
       <trans-unit id="2875203763744324408" datatype="html">
-        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[deniedRequest().get()].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[deniedRequest().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <source>Your <x id="INTERPOLATION" equiv-text="{{ requestInfos[denied].name() }}"/> request has been rejected.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[denied].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
       <trans-unit id="1802530168433258138" datatype="html">
-        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[getRequestAwaitingReplyFromOpponent().get()].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[getRequestAwaitingReplyFromOpponent().get()].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/span&gt;&lt;/p&gt;"/></source>
+        <source>Your request for a <x id="INTERPOLATION" equiv-text="{{ requestInfos[pendingRequest].name() }}"/> has been sent.  <x id="START_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;fa-icon [icon]=&quot;requestInfos[pendingRequest].icon&quot;&gt;"/><x id="CLOSE_TAG_FA_ICON" ctype="x-fa_icon" equiv-text="&lt;/fa-icon&gt;"/></source>
       </trans-unit>
-      <trans-unit id="4624707315308487849" datatype="html">
-        <source>Go back to the game list</source>
+      <trans-unit id="627419029234678391" datatype="html">
+        <source>Resignation</source>
       </trans-unit>
-      <trans-unit id="777716481777788338" datatype="html">
-        <source>The game you tried to join does not exist.</source>
+      <trans-unit id="593989397325904316" datatype="html">
+        <source>Are you sure you want to resign from this game?</source>
+      </trans-unit>
+      <trans-unit id="2159130950882492111" datatype="html">
+        <source>Cancel</source>
       </trans-unit>
       <trans-unit id="4517991218544205155" datatype="html">
         <source>You are an observer in this game, you cannot play.</source>
@@ -635,122 +887,14 @@
       <trans-unit id="4506170566742059239" datatype="html">
         <source>00:30</source>
       </trans-unit>
-      <trans-unit id="3923856758825729241" datatype="html">
-        <source>Creation of a game of <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/> </source>
+      <trans-unit id="5607669932062416162" datatype="html">
+        <source>Default</source>
       </trans-unit>
-      <trans-unit id="4247449258896721566" datatype="html">
-        <source>Opponents</source>
+      <trans-unit id="3012694567108651369" datatype="html">
+        <source>This value is mandatory</source>
       </trans-unit>
-      <trans-unit id="2561597132169540579" datatype="html">
-        <source>Potential opponents will appear here. If no one comes, you can:</source>
-      </trans-unit>
-      <trans-unit id="1406698782162165226" datatype="html">
-        <source>Look for other games</source>
-      </trans-unit>
-      <trans-unit id="5070629625537228486" datatype="html">
-        <source>Play against AI</source>
-      </trans-unit>
-      <trans-unit id="5056292777668083757" datatype="html">
-        <source>Click on the opponent against which you would like to play.</source>
-      </trans-unit>
-      <trans-unit id="8953033926734869941" datatype="html">
-        <source>Name</source>
-      </trans-unit>
-      <trans-unit id="3193976279273491157" datatype="html">
-        <source>Actions</source>
-      </trans-unit>
-      <trans-unit id="8698515801873408462" datatype="html">
-        <source>Pick</source>
-      </trans-unit>
-      <trans-unit id="7709161982270147002" datatype="html">
-        <source>Random first player</source>
-      </trans-unit>
-      <trans-unit id="5246623381325349376" datatype="html">
-        <source>You start</source>
-      </trans-unit>
-      <trans-unit id="7738132709044699358" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.chosenOpponent }}"/> starts</source>
-      </trans-unit>
-      <trans-unit id="4492847529610715272" datatype="html">
-        <source>The opponent starts</source>
-      </trans-unit>
-      <trans-unit id="8926567047186783072" datatype="html">
-        <source>Standard time</source>
-      </trans-unit>
-      <trans-unit id="3120304451891406993" datatype="html">
-        <source>Maximal turn duration: </source>
-      </trans-unit>
-      <trans-unit id="6773728044030876768" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="RT_DURATION | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="4073116770334354573" datatype="html">
-        <source>Blitz</source>
-      </trans-unit>
-      <trans-unit id="3154403333894623756" datatype="html">
-        <source>Custom time</source>
-      </trans-unit>
-      <trans-unit id="594218318757354614" datatype="html">
-        <source>Maximal game duration: <x id="START_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;output&gt;"/><x id="INTERPOLATION" equiv-text="tDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_OUTPUT" ctype="x-output" equiv-text="&lt;/output&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="1612262766071402559" datatype="html">
-        <source>Propose configuration</source>
-      </trans-unit>
-      <trans-unit id="326145407473587685" datatype="html">
-        <source>Change configuration</source>
-      </trans-unit>
-      <trans-unit id="6482290849972032593" datatype="html">
-        <source>Cancel game</source>
-      </trans-unit>
-      <trans-unit id="9099721398759347967" datatype="html">
-        <source>Configuration proposal for <x id="INTERPOLATION" equiv-text="{{ getGameName().getOrElse(&apos;&apos;) }}"/></source>
-      </trans-unit>
-      <trans-unit id="7416818230860591701" datatype="html">
-        <source>You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration.</source>
-      </trans-unit>
-      <trans-unit id="6747612030990351046" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> proposes to play a <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.partTypeName }}"/> game</source>
-      </trans-unit>
-      <trans-unit id="7215535622740824911" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> plays first</source>
-      </trans-unit>
-      <trans-unit id="8496859383343230204" datatype="html">
-        <source>you play first</source>
-      </trans-unit>
-      <trans-unit id="8194858011161710862" datatype="html">
-        <source>the first player is selected randomly</source>
-      </trans-unit>
-      <trans-unit id="3649232689954543597" datatype="html">
-        <source>a turn lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="oveDuration || 0) | humanDuration }}"/> <x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="7852346564484185703" datatype="html">
-        <source>the game lasts at most <x id="START_TAG_STRONG" ctype="x-strong" equiv-text="&lt;strong&gt;"/><x id="INTERPOLATION" equiv-text="tDuration || 0) | humanDuration }}"/> per player<x id="CLOSE_TAG_STRONG" ctype="x-strong" equiv-text="&lt;/strong&gt;"/></source>
-      </trans-unit>
-      <trans-unit id="1012784993066568401" datatype="html">
-        <source>Accept and start</source>
-      </trans-unit>
-      <trans-unit id="7265061399015519876" datatype="html">
-        <source>One moment...</source>
-      </trans-unit>
-      <trans-unit id="5068486659312004369" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> is configuring the game.</source>
-      </trans-unit>
-      <trans-unit id="4218388977213486334" datatype="html">
-        <source><x id="INTERPOLATION" equiv-text="viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
-      </trans-unit>
-      <trans-unit id="4412958068611913614" datatype="html">
-        <source>custom</source>
-      </trans-unit>
-      <trans-unit id="4002042094548821129" datatype="html">
-        <source>blitz</source>
-      </trans-unit>
-      <trans-unit id="4301395065979241317" datatype="html">
-        <source>standard</source>
-      </trans-unit>
-      <trans-unit id="7137133530752645682" datatype="html">
-        <source><x id="PH" equiv-text="userName"/> left the game, please pick another opponent.</source>
-      </trans-unit>
-      <trans-unit id="3852843717175527075" datatype="html">
-        <source>The game has been canceled!</source>
+      <trans-unit id="4231579860680569680" datatype="html">
+        <source>There is no such configuration element</source>
       </trans-unit>
       <trans-unit id="2018922024247045709" datatype="html">
         <source>Width</source>
@@ -767,8 +911,14 @@
       <trans-unit id="6974294157928395807" datatype="html">
         <source>Number of pieces dropped per turn</source>
       </trans-unit>
-      <trans-unit id="5607669932062416162" datatype="html">
-        <source>Default</source>
+      <trans-unit id="5348930337239726346" datatype="html">
+        <source>Number of empty rows</source>
+      </trans-unit>
+      <trans-unit id="4053624367526659457" datatype="html">
+        <source>Number of pieces rows</source>
+      </trans-unit>
+      <trans-unit id="6874699210811358423" datatype="html">
+        <source>Toric</source>
       </trans-unit>
       <trans-unit id="3008420115644088420" datatype="html">
         <source>Configuration</source>
@@ -803,6 +953,12 @@
       <trans-unit id="8893431763975992974" datatype="html">
         <source>Initial board and object of the game</source>
       </trans-unit>
+      <trans-unit id="488799603315113699" datatype="html">
+        <source>Translations</source>
+      </trans-unit>
+      <trans-unit id="4948237861189298097" datatype="html">
+        <source>Congratulations! You know everything you need to start a game!</source>
+      </trans-unit>
       <trans-unit id="6439401135646542284" datatype="html">
         <source>Failure</source>
       </trans-unit>
@@ -830,8 +986,8 @@
       <trans-unit id="1930146585049479552" datatype="html">
         <source>You cannot click, this is a demo.</source>
       </trans-unit>
-      <trans-unit id="6050846802280051862" datatype="html">
-        <source>You cannot move more than 3 of your pieces!</source>
+      <trans-unit id="2467835697178117742" datatype="html">
+        <source>You cannot move more than <x id="PH" equiv-text="n"/> of your pieces!</source>
       </trans-unit>
       <trans-unit id="4278049889323552316" datatype="html">
         <source>You don&apos;t have enough pieces to push that group!</source>
@@ -848,8 +1004,14 @@
       <trans-unit id="6088417909306773667" datatype="html">
         <source>This space is not aligned with the current line.</source>
       </trans-unit>
-      <trans-unit id="7123653594948067002" datatype="html">
-        <source>Score</source>
+      <trans-unit id="7060616157443124451" datatype="html">
+        <source>Number of pieces to capture in order to win</source>
+      </trans-unit>
+      <trans-unit id="1103013531201615772" datatype="html">
+        <source>Maximum pushing group size</source>
+      </trans-unit>
+      <trans-unit id="1280308994802128299" datatype="html">
+        <source>Deadly Abalone</source>
       </trans-unit>
       <trans-unit id="5878048397926852057" datatype="html">
         <source>At Abalone, the object of the game is to be the first player to push 6 opponent&apos;s pieces out of the board. Let us see how!</source>
@@ -857,28 +1019,26 @@
       <trans-unit id="4612562967450553112" datatype="html">
         <source>Moving a piece</source>
       </trans-unit>
-      <trans-unit id="980251877705717270" datatype="html">
-        <source>At each turn, move one, two, or three pieces either along their line, or on their side.
-        For your moves you can therefore choose between up to 6 directions.
-        The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
-        To make a move, click on one of your pieces, then click on an arrow to choose the move direction.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, make any move!</source>
+      <trans-unit id="5190193689067477069" datatype="html">
+        <source>At each turn, move one, two, or three pieces either along their line, or on their side. For your moves you can therefore choose between up to 6 directions. The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later). To make a move, click on one of your pieces, then click on an arrow to choose the move direction.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, make any move!</source>
       </trans-unit>
       <trans-unit id="272253201636921624" datatype="html">
         <source>Pushing</source>
       </trans-unit>
-      <trans-unit id="718434962091480596" datatype="html">
-        <source>To push one opponent piece, you must move at least two of your pieces.
-        To push two opponent pieces, you must move three of your pieces.
-        If one of your pieces is in the way, it will be impossible to push.
-        You cannot move more than three pieces.&lt;br/&gt;&lt;br/&gt;
-        Only one push towards the right is possible here, find it. (You&apos;re playing Dark).</source>
+      <trans-unit id="5786541673114174680" datatype="html">
+        <source>To push one opponent piece, you must move at least two of your pieces. To push two opponent pieces, you must move three of your pieces. If one of your pieces is in the way, it will be impossible to push. You cannot move more than three pieces.&lt;br/&gt;&lt;br/&gt; Only one push toward the right is possible here, find it. (You&apos;re playing Dark).</source>
       </trans-unit>
-      <trans-unit id="4948237861189298097" datatype="html">
-        <source>Congratulations! You know everything you need to start a game!</source>
+      <trans-unit id="1578933364998292635" datatype="html">
+        <source>To translate a group of pieces, first select the first piece, then the last piece, and finally click on one of the four lateral directions in which the group can move without touching opponent pieces.&lt;br/&gt;&lt;br/&gt;Go ahead, translate some pieces.</source>
       </trans-unit>
-      <trans-unit id="7183112140529419891" datatype="html">
-        <source>MCTS</source>
+      <trans-unit id="3110387991397245428" datatype="html">
+        <source>This is not a translation, this is a &quot;pushing move&quot;, try a translation.</source>
+      </trans-unit>
+      <trans-unit id="2565981183757255753" datatype="html">
+        <source>You will see when creating a game that you can configure two things.&lt;br/&gt;&lt;ul&gt;&lt;li&gt;First, the number of captures needed to win. The default is 6, changing it will help changing the game&apos;s duration if wanted.&lt;/li&gt;&lt;li&gt;Last, the maximum size of a moved group. The default is 3 but if you want a more chaotic and fun game, you could increase that limit and play a more powerful alternative version of the game!&lt;/li&gt;&lt;/ul&gt;</source>
+      </trans-unit>
+      <trans-unit id="7123653594948067002" datatype="html">
+        <source>Score</source>
       </trans-unit>
       <trans-unit id="4382056880714150954" datatype="html">
         <source>Pieces should only move downward!</source>
@@ -894,12 +1054,6 @@
       </trans-unit>
       <trans-unit id="139135108801629927" datatype="html">
         <source>There is no possible transfer from that square!</source>
-      </trans-unit>
-      <trans-unit id="6180360850656792663" datatype="html">
-        <source>Full Board</source>
-      </trans-unit>
-      <trans-unit id="6434791622277704389" datatype="html">
-        <source>Rightmost Focus</source>
       </trans-unit>
       <trans-unit id="529510153551286303" datatype="html">
         <source>Increment</source>
@@ -934,8 +1088,245 @@
       <trans-unit id="6535908388530528403" datatype="html">
         <source>Wrong choice, your opponent will win in the next turn no matter which piece is dropped!</source>
       </trans-unit>
-      <trans-unit id="7668715639068435496" datatype="html">
-        <source>Captures &gt; Freedom</source>
+      <trans-unit id="6434791622277704389" datatype="html">
+        <source>Rightmost Focus</source>
+      </trans-unit>
+      <trans-unit id="6180360850656792663" datatype="html">
+        <source>Full Board</source>
+      </trans-unit>
+      <trans-unit id="6999105537978094771" datatype="html">
+        <source>Bashni: origins</source>
+      </trans-unit>
+      <trans-unit id="1795254043608057032" datatype="html">
+        <source>Bashni (Russian: башни, towers), also known as column draughts, is a Russian checkers variant. Captured pieces are not removed but stacked under the capturing piece, forming towers.</source>
+      </trans-unit>
+      <trans-unit id="8402752246011864012" datatype="html">
+        <source>The goal of Bashni is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="1534367694207535197" datatype="html">
+        <source>Steps</source>
+      </trans-unit>
+      <trans-unit id="5216257512116603462" datatype="html">
+        <source>Captures</source>
+      </trans-unit>
+      <trans-unit id="3182705657358075075" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece. In Bashni, the captured piece is not removed: it goes under your piece, forming a tower. You have to capture when you can.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="5185460173069548908" datatype="html">
+        <source>Congratulations! Notice that the captured piece was not removed from the board, but put below the capturing piece, forming a tower controlled the player at the top of the tower.</source>
+      </trans-unit>
+      <trans-unit id="6522624192206928831" datatype="html">
+        <source>Minority capture is allowed</source>
+      </trans-unit>
+      <trans-unit id="4060948936151379193" datatype="html">
+        <source>In Bashni, unlike International Checkers, you may choose any legal capture sequence. If one choice captures one piece and another captures two, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="3134181849403890425" datatype="html">
+        <source>You made the majority capture, but you were asked to do the minority one here!</source>
+      </trans-unit>
+      <trans-unit id="2170682009266275861" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king. Only the top piece of a tower is promoted. One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="2350466795039227682" datatype="html">
+        <source>You did not choose the correct piece, and got no promotion.</source>
+      </trans-unit>
+      <trans-unit id="3494718669384677623" datatype="html">
+        <source>King move</source>
+      </trans-unit>
+      <trans-unit id="4704865038249414760" datatype="html">
+        <source>Kings can move and capture backward as well as forward. They can also &quot;fly&quot;: move over multiple squares or jump over one opponent piece to capture it and land anywhere on the same diagonal.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king to capture two pieces of the opponent!</source>
+      </trans-unit>
+      <trans-unit id="7512547184362316069" datatype="html">
+        <source>You should capture twice!</source>
+      </trans-unit>
+      <trans-unit id="8405108678014314848" datatype="html">
+        <source>Promotion mid-capture</source>
+      </trans-unit>
+      <trans-unit id="424666200826678371" datatype="html">
+        <source>In Bashni, if a piece reaches the last line &lt;strong&gt;during a capture sequence&lt;/strong&gt;, it immediately becomes a king and may continue capturing with king capabilities (backward and long-range).&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Capture two light pieces. Your piece will promote mid-sequence and continue as a king!</source>
+      </trans-unit>
+      <trans-unit id="2675066422650988607" datatype="html">
+        <source>Tower capture</source>
+      </trans-unit>
+      <trans-unit id="3957194373025613682" datatype="html">
+        <source>In Bashni, when a tower is captured, only the top piece is removed. After the capture, the old tower can therefore be commanded by the opponent, depending on the new piece at the top of the tower. But you can also recover a captured king. This is the case here, recover your king!</source>
+      </trans-unit>
+      <trans-unit id="2755311753913057003" datatype="html">
+        <source>Capture rule</source>
+      </trans-unit>
+      <trans-unit id="7127492795528845730" datatype="html">
+        <source>When making multiple captures, you cannot jump twice over the same tower. The captured commander is immediately placed under your capturing tower, while the rest of the captured tower stays on its square. Even if this exposes another opposing commander, you cannot capture that tower again during the same move.&lt;br/&gt;Here you must also use your king&apos;s backward and flying capture abilities.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture all remaining pieces.</source>
+      </trans-unit>
+      <trans-unit id="3989795384384835435" datatype="html">
+        <source>You did not capture everything!</source>
+      </trans-unit>
+      <trans-unit id="2406587628849019715" datatype="html">
+        <source>Stack pieces instead of capturing them</source>
+      </trans-unit>
+      <trans-unit id="5703694246153191852" datatype="html">
+        <source>You must capture the highest number of pieces</source>
+      </trans-unit>
+      <trans-unit id="5513887234495231304" datatype="html">
+        <source>Simple pieces can capture backward</source>
+      </trans-unit>
+      <trans-unit id="5102353447213251496" datatype="html">
+        <source>Promoted pieces can travel long distance</source>
+      </trans-unit>
+      <trans-unit id="2785965642347214758" datatype="html">
+        <source>Occupy upper-left corner</source>
+      </trans-unit>
+      <trans-unit id="3072414657519570345" datatype="html">
+        <source>Can do frisian captures</source>
+      </trans-unit>
+      <trans-unit id="8702370392264661270" datatype="html">
+        <source>Piece that reaches the last line during a capture continues capturing as king</source>
+      </trans-unit>
+      <trans-unit id="3260884512753946998" datatype="html">
+        <source>Only promoted pieces can go backward.</source>
+      </trans-unit>
+      <trans-unit id="1347067654692503433" datatype="html">
+        <source>You must capture when it is possible!</source>
+      </trans-unit>
+      <trans-unit id="3183138660002989080" datatype="html">
+        <source>You must finish this capture!</source>
+      </trans-unit>
+      <trans-unit id="6689969573280113485" datatype="html">
+        <source>This piece cannot move!</source>
+      </trans-unit>
+      <trans-unit id="3726954835052044930" datatype="html">
+        <source>Frisian capture must be of even length!</source>
+      </trans-unit>
+      <trans-unit id="3645639684924416367" datatype="html">
+        <source>This is an invalid orthogonal move, a frisian capture must be at least steps of 4. Look at the indicators to help you!</source>
+      </trans-unit>
+      <trans-unit id="964675748683334375" datatype="html">
+        <source>Normal pieces cannot move like this!</source>
+      </trans-unit>
+      <trans-unit id="4897086529827321658" datatype="html">
+        <source>Flying capture is forbidden for normal pieces!</source>
+      </trans-unit>
+      <trans-unit id="5556528437720213364" datatype="html">
+        <source>No piece is allowed to do a long jump</source>
+      </trans-unit>
+      <trans-unit id="7678886963795480068" datatype="html">
+        <source>You cannot move orthogonally!</source>
+      </trans-unit>
+      <trans-unit id="4624388853987508390" datatype="html">
+        <source>You cannot capture the same square several times!</source>
+      </trans-unit>
+      <trans-unit id="8795923620032980614" datatype="html">
+        <source>You must do the longest capture possible!</source>
+      </trans-unit>
+      <trans-unit id="4849176470407657635" datatype="html">
+        <source>You cannot jump over several pieces!</source>
+      </trans-unit>
+      <trans-unit id="4596314344113953334" datatype="html">
+        <source>You have done a step after a capture. A move that starts with a capture can only contain captures.</source>
+      </trans-unit>
+      <trans-unit id="3181357103919988717" datatype="html">
+        <source>A simple step is made by one diagonal move forward left or forward right. Click on a piece to choose it, then click on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
+      </trans-unit>
+      <trans-unit id="7318689477424356735" datatype="html">
+        <source>Backward captures</source>
+      </trans-unit>
+      <trans-unit id="1323130710227979862" datatype="html">
+        <source>A capture can also be done backward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a backward capture.</source>
+      </trans-unit>
+      <trans-unit id="5943278728548812168" datatype="html">
+        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="3104604410220998192" datatype="html">
+        <source>Multiple captures</source>
+      </trans-unit>
+      <trans-unit id="7126317503040718590" datatype="html">
+        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a double capture.</source>
+      </trans-unit>
+      <trans-unit id="2693455583384082674" datatype="html">
+        <source>Promotion</source>
+      </trans-unit>
+      <trans-unit id="7668804973365582935" datatype="html">
+        <source>Control and Domination</source>
+      </trans-unit>
+      <trans-unit id="318262165361158083" datatype="html">
+        <source>Control</source>
+      </trans-unit>
+      <trans-unit id="1163551794419030546" datatype="html">
+        <source>The goal of checkers is to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="7360724816457427020" datatype="html">
+        <source>Maximum capture</source>
+      </trans-unit>
+      <trans-unit id="8944110142689384190" datatype="html">
+        <source>If at some turn you have several capture choices, you have to capture the maximal number of pieces.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the maximal capture.</source>
+      </trans-unit>
+      <trans-unit id="8886795079238941207" datatype="html">
+        <source>When a piece reaches the last line, it is promoted and becomes a king, and gains abilities that will be explained in next step! One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="7943272134877911783" datatype="html">
+        <source>Kings can, like any other piece, move forward and capture backward. They have extra abilities. First, they can move backward without capturing. Second, they are able to &quot;fly&quot;: they can move over multiple squares without jumping over any piece, or by jumping over exactly one opponent piece to capture it, and finally landing wherever in the same line.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your king!</source>
+      </trans-unit>
+      <trans-unit id="6253946314470341234" datatype="html">
+        <source>You did not move your king.</source>
+      </trans-unit>
+      <trans-unit id="2683903961757093456" datatype="html">
+        <source>No promotion mid-capture</source>
+      </trans-unit>
+      <trans-unit id="6992466040069837979" datatype="html">
+        <source>If, during a multiple capture, a piece reaches the last line but does not stop there, this piece will not be promoted and will remain a simple piece.&lt;br/&gt;&lt;br/&gt;You are playing Dark, capture the remaining opponent&apos;s piece.</source>
+      </trans-unit>
+      <trans-unit id="1172092152887347450" datatype="html">
+        <source>Observe how your piece did not get a promotion despite having reached the last line.</source>
+      </trans-unit>
+      <trans-unit id="5638867880438059400" datatype="html">
+        <source>When you do multiple jumps, you cannot jump twice over the same piece. The captured pieces are actually removed after your full move.&lt;br/&gt;Here you have to apply all the different capturing rules: backward, maximal, flying, and not jumping twice over the same piece.&lt;br/&gt;&lt;br/&gt;You are playing Dark, go ahead.</source>
+      </trans-unit>
+      <trans-unit id="8274439231274366704" datatype="html">
+        <source>Lasca: origins</source>
+      </trans-unit>
+      <trans-unit id="4990290643353374393" datatype="html">
+        <source>Lasca is a game based on checkers, created in 1911 by Emanuel Lasker, a chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
+      </trans-unit>
+      <trans-unit id="383124132464771052" datatype="html">
+        <source>The goal of Lasca is, like for checkers, to render the opponent unable to move, either by capturing all their pieces, or by blocking them.</source>
+      </trans-unit>
+      <trans-unit id="3662184238859847370" datatype="html">
+        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
+      </trans-unit>
+      <trans-unit id="1553562216851898831" datatype="html">
+        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do the shortest capture here!</source>
+      </trans-unit>
+      <trans-unit id="4202110740728265051" datatype="html">
+        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your pieces could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
+      </trans-unit>
+      <trans-unit id="3052116389115675860" datatype="html">
+        <source>You did not choose the correct stack, and got no promotion.</source>
+      </trans-unit>
+      <trans-unit id="4252782057421264089" datatype="html">
+        <source>Officer move</source>
+      </trans-unit>
+      <trans-unit id="2208486977407370994" datatype="html">
+        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officer!</source>
+      </trans-unit>
+      <trans-unit id="7994037258587314442" datatype="html">
+        <source>You did not move your officer.</source>
+      </trans-unit>
+      <trans-unit id="7985068829745395027" datatype="html">
+        <source>Stack capture</source>
+      </trans-unit>
+      <trans-unit id="556454886843041764" datatype="html">
+        <source>In Lasca, when a stack is captured, only the top piece is removed. After the capture, the stack can therefore be commanded by the opponent, depending on the new piece at the top of the stack. But you can also recover a captured king. This is the case here, recover your king!</source>
+      </trans-unit>
+      <trans-unit id="5396877629075826495" datatype="html">
+        <source>You did not capture the right piece.</source>
+      </trans-unit>
+      <trans-unit id="2841090669908192003" datatype="html">
+        <source>If, during a multiple capture, a piece reaches the last line, this piece will stop there and be promoted. But it cannot continue its capture as it is only promoted after the capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do a capture.</source>
+      </trans-unit>
+      <trans-unit id="6441891554333297114" datatype="html">
+        <source>Observe how your piece got promoted but could not continue its capture further.</source>
+      </trans-unit>
+      <trans-unit id="6354536314365385481" datatype="html">
+        <source>When making multiple captures, you cannot jump twice over the same stack. The captured commander is immediately placed under your capturing stack, while the rest of the captured stack stays on its square. Even if this exposes another opposing commander, you cannot capture that stack again during the same move.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Capture as much pieces as possible.</source>
       </trans-unit>
       <trans-unit id="6011590532570079359" datatype="html">
         <source>Your piece must land on one of the closest six triangles with the same color as the triangle on which the piece is.</source>
@@ -948,12 +1339,6 @@
       </trans-unit>
       <trans-unit id="7341385722923686160" datatype="html">
         <source>You cannot capture from an empty space.</source>
-      </trans-unit>
-      <trans-unit id="8182472154276317003" datatype="html">
-        <source>Pieces &gt; Threats &gt; Tiles</source>
-      </trans-unit>
-      <trans-unit id="4996962520612005595" datatype="html">
-        <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="5853742640794164153" datatype="html">
         <source>Use small board</source>
@@ -976,9 +1361,6 @@
       </trans-unit>
       <trans-unit id="3313068005460528101" datatype="html">
         <source>Congratulations! Let&apos;s see captures now.</source>
-      </trans-unit>
-      <trans-unit id="5216257512116603462" datatype="html">
-        <source>Captures</source>
       </trans-unit>
       <trans-unit id="4864789526486078372" datatype="html">
         <source>Every piece has three neighboring triangular spaces (2 on the sides).
@@ -1028,8 +1410,14 @@
         <source>Congratulations! See, your piece no longer had any empty neighboring space after you have gained the tile, but it stayed on the board as it was your turn.
         However, the opponent&apos;s piece has disappeared because the tile&apos;s capture has removed its last empty neighboring space.</source>
       </trans-unit>
-      <trans-unit id="8560978883976627945" datatype="html">
-        <source>Alignment</source>
+      <trans-unit id="8182472154276317003" datatype="html">
+        <source>Pieces &gt; Threats &gt; Tiles</source>
+      </trans-unit>
+      <trans-unit id="7668715639068435496" datatype="html">
+        <source>Captures &gt; Freedom</source>
+      </trans-unit>
+      <trans-unit id="4996962520612005595" datatype="html">
+        <source>Pieces &gt; Tiles &gt; Freedom</source>
       </trans-unit>
       <trans-unit id="1631778170068001983" datatype="html">
         <source>Connect Six is played on a 19x19 board, on which stones are put on the intersections. The object of the game is to align 6 of your pieces.</source>
@@ -1045,6 +1433,9 @@
       </trans-unit>
       <trans-unit id="4174912343371620775" datatype="html">
         <source>On all following turns, the players play two pieces, until a victory or a draw is reached.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, do the winning move.</source>
+      </trans-unit>
+      <trans-unit id="8560978883976627945" datatype="html">
+        <source>Alignment</source>
       </trans-unit>
       <trans-unit id="4237198021995785268" datatype="html">
         <source>Your piece should land on a neighboring square.</source>
@@ -1066,9 +1457,6 @@
       </trans-unit>
       <trans-unit id="309495911608325428" datatype="html">
         <source>You are visiting the same location twice in a move, you are not allowed to do so.</source>
-      </trans-unit>
-      <trans-unit id="4649711232397678200" datatype="html">
-        <source>Jump</source>
       </trans-unit>
       <trans-unit id="2678466693137107679" datatype="html">
         <source>Conspirateurs is played on a 17x17 board. The object of the game is to place all of your pieces in shelters, which are the special squares on the edge of the board. Note the central zone in the middle of the board, where each player will put their pieces initially.</source>
@@ -1109,6 +1497,9 @@
       <trans-unit id="5361555826660205972" datatype="html">
         <source>You have not performed a triple jump. Try again!</source>
       </trans-unit>
+      <trans-unit id="4649711232397678200" datatype="html">
+        <source>Jump</source>
+      </trans-unit>
       <trans-unit id="2724052802065983013" datatype="html">
         <source>You cannot move the piece holding the ball.</source>
       </trans-unit>
@@ -1133,9 +1524,6 @@
       <trans-unit id="6598638598311685089" datatype="html">
         <source>The goal of Diaballik is to bring your ball, represented by the small circle, into the home line of the opponent (i.e, its starting position). The ball is currently being held by your center piece.</source>
       </trans-unit>
-      <trans-unit id="488799603315113699" datatype="html">
-        <source>Translations</source>
-      </trans-unit>
       <trans-unit id="1549947696122814495" datatype="html">
         <source>During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step of any piece that does not hold the ball.&lt;br/&gt;&lt;br/&gt;Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.</source>
       </trans-unit>
@@ -1154,6 +1542,15 @@
       <trans-unit id="6691085433163106876" datatype="html">
         <source>AllMoves</source>
       </trans-unit>
+      <trans-unit id="4770227794604983198" datatype="html">
+        <source>Distance (1)</source>
+      </trans-unit>
+      <trans-unit id="8648592362460976351" datatype="html">
+        <source>Distance (2)</source>
+      </trans-unit>
+      <trans-unit id="32621127018559651" datatype="html">
+        <source>Distance (3)</source>
+      </trans-unit>
       <trans-unit id="8328626778107972059" datatype="html">
         <source>MCTS (3 only)</source>
       </trans-unit>
@@ -1162,12 +1559,6 @@
       </trans-unit>
       <trans-unit id="5930186357813280917" datatype="html">
         <source>MCTS (3, no dups)</source>
-      </trans-unit>
-      <trans-unit id="1337900792840930042" datatype="html">
-        <source>Distance (<x id="PH" equiv-text="i"/>)</source>
-      </trans-unit>
-      <trans-unit id="7535479567631818273" datatype="html">
-        <source>Dummy</source>
       </trans-unit>
       <trans-unit id="3460005588993308010" datatype="html">
         <source>You do not have any pieces of this type anymore.</source>
@@ -1214,6 +1605,9 @@
       <trans-unit id="3765076912748475454" datatype="html">
         <source>Failed, try to shift a stack of pieces to the left.</source>
       </trans-unit>
+      <trans-unit id="7535479567631818273" datatype="html">
+        <source>Dummy</source>
+      </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
       </trans-unit>
@@ -1234,9 +1628,6 @@
       </trans-unit>
       <trans-unit id="9221962864929282978" datatype="html">
         <source>A stack must move in a straight line.</source>
-      </trans-unit>
-      <trans-unit id="5456673610183497320" datatype="html">
-        <source>Stacks</source>
       </trans-unit>
       <trans-unit id="5010267418211867946" datatype="html">
         <source>Moving</source>
@@ -1302,6 +1693,9 @@
       <trans-unit id="8876232297721386956" datatype="html">
         <source>Bad idea, by moving on the source you would have won a point.</source>
       </trans-unit>
+      <trans-unit id="5456673610183497320" datatype="html">
+        <source>Stacks</source>
+      </trans-unit>
       <trans-unit id="6059738106874378452" datatype="html">
         <source>You do not have pieces of this type anymore.</source>
       </trans-unit>
@@ -1316,6 +1710,12 @@
       </trans-unit>
       <trans-unit id="2209428336874697936" datatype="html">
         <source>You are performing a move, you must select a landing square.</source>
+      </trans-unit>
+      <trans-unit id="3734443501087651549" datatype="html">
+        <source>Number of different piece sizes</source>
+      </trans-unit>
+      <trans-unit id="893013149323570447" datatype="html">
+        <source>Number of pieces for each size</source>
       </trans-unit>
       <trans-unit id="7821413127222759201" datatype="html">
         <source>The goal of Encapsule is to align three of your pieces. Here, Dark wins.</source>
@@ -1334,21 +1734,11 @@
       <trans-unit id="7502910762990406647" datatype="html">
         <source>Particularity</source>
       </trans-unit>
-      <trans-unit id="5705047859470313792" datatype="html">
-        <source>At Encapsule, pieces encapsulate each other.
-        It is therefore possible to have up to three pieces per square!
-        However, only the biggest piece of each square counts:
-        you cannot win with a piece that is &quot;hidden&quot; by a bigger piece.
-        Similarly, you cannot move a piece if it is encapsulated by a bigger piece.
-        Finally, you cannot encapsulate a piece with a smaller piece.
-        Here, Dark can win now in various ways.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark, try to win by making a move, and not by putting a new piece on the board.</source>
+      <trans-unit id="3463587376927829861" datatype="html">
+        <source>At Encapsule, pieces encapsulate each other. It is therefore possible to have up to three pieces per square! However, only the biggest piece of each square counts: you cannot win with a piece that is &quot;hidden&quot; by a bigger piece. Similarly, you cannot move a piece if it is encapsulated by a bigger piece. Finally, you cannot encapsulate a piece with a smaller piece. Here, Dark can win now in various ways.&lt;br/&gt;&lt;br/&gt; You&apos;re playing Dark, try to win by making a move, and not by putting a new piece on the board.</source>
       </trans-unit>
       <trans-unit id="6204412729347708092" datatype="html">
         <source>You won, but the exercise is to win while moving a piece!</source>
-      </trans-unit>
-      <trans-unit id="360730166369316579" datatype="html">
-        <source>Attack</source>
       </trans-unit>
       <trans-unit id="5530182224164938313" datatype="html">
         <source>The move distance of your phalanx puts it out of the board.</source>
@@ -1374,18 +1764,6 @@
       <trans-unit id="2183903120219891237" datatype="html">
         <source>A phalanx cannot contain a piece of the opponent.</source>
       </trans-unit>
-      <trans-unit id="5986717000369124597" datatype="html">
-        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
-      </trans-unit>
-      <trans-unit id="4563771339790181195" datatype="html">
-        <source>Positional</source>
-      </trans-unit>
-      <trans-unit id="5348930337239726346" datatype="html">
-        <source>Number of empty rows</source>
-      </trans-unit>
-      <trans-unit id="7516610645583911732" datatype="html">
-        <source>Number of soldier rows</source>
-      </trans-unit>
       <trans-unit id="8733936607898144583" datatype="html">
         <source>Initial board</source>
       </trans-unit>
@@ -1395,8 +1773,8 @@
       <trans-unit id="6716022766676912093" datatype="html">
         <source>After multiple moves, if at the beginning of its turn, a player has more pieces on the opponent&apos;s starting line than the number of pieces the opponent has on the player&apos;s starting line, the player wins. Here, it&apos;s Dark&apos;s turn to play: Dark has therefore won.</source>
       </trans-unit>
-      <trans-unit id="2623510393491755816" datatype="html">
-        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark only has one on Light&apos;s starting line.</source>
+      <trans-unit id="1201123309681006244" datatype="html">
+        <source>Here, it is Light&apos;s turn. Light wins because they have two pieces on Dark&apos;s starting line, and Dark has only one on Light&apos;s starting line.</source>
       </trans-unit>
       <trans-unit id="2973098153638160177" datatype="html">
         <source>Here is the starting board. Dark plays first. Let&apos;s start with moving a single piece:&lt;ol&gt;&lt;li&gt;Click on a piece.&lt;/li&gt;&lt;li&gt;Click on a empty neighboring square.&lt;/li&gt;&lt;/ol&gt;&lt;br/&gt;You&apos;re playing Dark, move a piece.</source>
@@ -1427,6 +1805,15 @@
       </trans-unit>
       <trans-unit id="4418812710815829575" datatype="html">
         <source>Failed, you have not captured the phalanx.</source>
+      </trans-unit>
+      <trans-unit id="5986717000369124597" datatype="html">
+        <source>Piece &gt; Row Domination &gt; Alignment &gt; Row Presence</source>
+      </trans-unit>
+      <trans-unit id="4563771339790181195" datatype="html">
+        <source>Positional</source>
+      </trans-unit>
+      <trans-unit id="360730166369316579" datatype="html">
+        <source>Attack</source>
       </trans-unit>
       <trans-unit id="7226802484619632640" datatype="html">
         <source>You can only capture when 4 or more of your pieces are aligned, and it is not the case.</source>
@@ -1525,9 +1912,6 @@
       <trans-unit id="2182334345707735267" datatype="html">
         <source>Congratulations, you have gotten 12 of your pieces back and captured 2 of your opponent&apos;s pieces.</source>
       </trans-unit>
-      <trans-unit id="8400174784913655582" datatype="html">
-        <source>Minimax</source>
-      </trans-unit>
       <trans-unit id="4172293183843503071" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this intersection again.</source>
       </trans-unit>
@@ -1540,14 +1924,26 @@
       <trans-unit id="7258684846942631624" datatype="html">
         <source>This intersection is already occupied.</source>
       </trans-unit>
+      <trans-unit id="7089556689288687433" datatype="html">
+        <source>This space is already occupied.</source>
+      </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
+      </trans-unit>
+      <trans-unit id="4586260971442685870" datatype="html">
+        <source>Territory</source>
       </trans-unit>
       <trans-unit id="2969677193390047071" datatype="html">
         <source>19 x 19</source>
       </trans-unit>
       <trans-unit id="287623417167941506" datatype="html">
         <source>Handicap</source>
+      </trans-unit>
+      <trans-unit id="6421460271971606186" datatype="html">
+        <source>Zoom</source>
+      </trans-unit>
+      <trans-unit id="8484396493346861583" datatype="html">
+        <source>Show zooms</source>
       </trans-unit>
       <trans-unit id="6402320009813668873" datatype="html">
         <source>13 x 13</source>
@@ -1570,11 +1966,8 @@
       <trans-unit id="6009621890963077533" datatype="html">
         <source>Simple capture</source>
       </trans-unit>
-      <trans-unit id="2047079418793425161" datatype="html">
-        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light piece on the board only has one liberty left, play there.</source>
+      <trans-unit id="258436632288646647" datatype="html">
+        <source>An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light piece on the board has only one liberty left, play there.</source>
       </trans-unit>
       <trans-unit id="4986672646268662936" datatype="html">
         <source>Congratulations, you have earned one point.</source>
@@ -1585,9 +1978,8 @@
       <trans-unit id="8946006948417629723" datatype="html">
         <source>Capturing multiple stones</source>
       </trans-unit>
-      <trans-unit id="3197348089105327020" datatype="html">
-        <source>Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.&lt;br/&gt;&lt;br/&gt;
-        You&apos;re playing Dark. The light group here only has one liberty left, capture it.</source>
+      <trans-unit id="2570306403572655790" datatype="html">
+        <source>Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. The light group here has only one liberty left, capture it.</source>
       </trans-unit>
       <trans-unit id="2022880801532921915" datatype="html">
         <source>Congratulations, you have earned three points and formed a territory.</source>
@@ -1607,13 +1999,8 @@
       <trans-unit id="2066383177849177665" datatype="html">
         <source>Life and death (death)</source>
       </trans-unit>
-      <trans-unit id="3595592714473441808" datatype="html">
-        <source>From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light&apos;s territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
+      <trans-unit id="7971199836923877142" datatype="html">
+        <source>From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light&apos;s territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.</source>
       </trans-unit>
       <trans-unit id="6721138878022657917" datatype="html">
         <source>Life and death (eyes)</source>
@@ -1662,14 +2049,29 @@
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
       </trans-unit>
-      <trans-unit id="35620818119550087" datatype="html">
-        <source>Hexagonal</source>
-      </trans-unit>
-      <trans-unit id="5525890868343399241" datatype="html">
-        <source>The game of Trigo is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;a/&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
+      <trans-unit id="4651970609990845575" datatype="html">
+        <source>The game of Hexagonal Go is a hexagonal adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="3616229206195726198" datatype="html">
         <source>Freedom</source>
+      </trans-unit>
+      <trans-unit id="4774531702496891777" datatype="html">
+        <source>Since the board is hexagonal, pieces have three freedom in the corners.</source>
+      </trans-unit>
+      <trans-unit id="7911591321429642830" datatype="html">
+        <source>Since the board is hexagonal, pieces have four freedoms on the edges.</source>
+      </trans-unit>
+      <trans-unit id="4071554112464432613" datatype="html">
+        <source>Since the board is hexagonal, pieces have six freedoms when they don&apos;t touch the edge.</source>
+      </trans-unit>
+      <trans-unit id="1525911055936719410" datatype="html">
+        <source>Since the board is hexagonal, groups of two pieces have three more freedoms (making ko impossible).</source>
+      </trans-unit>
+      <trans-unit id="35620818119550087" datatype="html">
+        <source>Hexagonal</source>
+      </trans-unit>
+      <trans-unit id="5964817756364095565" datatype="html">
+        <source>The game of Triangular Go is a triangular adaptation of the game of Go. Go is present on Everyboard, you can go learn it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. This tutorial will only review the small differences that this experimental adaptation induced.</source>
       </trans-unit>
       <trans-unit id="8074559405875826310" datatype="html">
         <source>Since the board is triangular, pieces have only one freedom in the corners.</source>
@@ -1682,6 +2084,60 @@
       </trans-unit>
       <trans-unit id="9089012671848915244" datatype="html">
         <source>Since the board is triangular, groups of two pieces have only one more freedom (making an atari a shisho by default).</source>
+      </trans-unit>
+      <trans-unit id="6552934315157659079" datatype="html">
+        <source>Zoom <x id="PH" equiv-text="z"/></source>
+      </trans-unit>
+      <trans-unit id="1733084177692338637" datatype="html">
+        <source>(medium)</source>
+      </trans-unit>
+      <trans-unit id="4707463689820472290" datatype="html">
+        <source>(small)</source>
+      </trans-unit>
+      <trans-unit id="7789802452524788997" datatype="html">
+        <source>(large)</source>
+      </trans-unit>
+      <trans-unit id="3430912882867311505" datatype="html">
+        <source>Zoomed Go is a layered version of Go that adds an extra challenge. If you&apos;re not familiar with Go, you can learn how to play it &lt;a href=&quot;/tutorial/Go&quot;&gt;here&lt;/a&gt;. Let&apos;s use an example to see how Zoomed Go differs from regular Go.</source>
+      </trans-unit>
+      <trans-unit id="2962447017140596910" datatype="html">
+        <source>The main difference is the way you can capture.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture like in a regular game of Go.</source>
+      </trans-unit>
+      <trans-unit id="4635444715757714464" datatype="html">
+        <source>Congratulations, you have captured the stone you expected, but also another one on the left. Observe how the pattern of atari is exactly the same as in regular Go, but here at a distance of two. This capture is called a capture at zoom 2, while the capture on the right is a capture at zoom 1.</source>
+      </trans-unit>
+      <trans-unit id="6779631138176400609" datatype="html">
+        <source>Simple capture, with shown zoom</source>
+      </trans-unit>
+      <trans-unit id="1581530473515108605" datatype="html">
+        <source>You can chose a configuration showing a visual aid in the form of sub-boards.&lt;br/&gt;Whether they are shown or not, the same rules are applied. The only difference of the mini boards is that they form a visual aid.&lt;br/&gt;Observe that the hovered intersection in one zoom is shown as hovered in one of the 4 other sub-boards.&lt;br/&gt;&lt;br/&gt;Do a capture like in a regular game of Go again</source>
+      </trans-unit>
+      <trans-unit id="7134632842648889058" datatype="html">
+        <source>Observe how the main board is split in 4 little boards. On the zoom 2 lower-right board, you can see the capture as in a regular Go board. Note that you can click on either a small board or the big board. The piece will be dropped in all relevant boards, since the small boards are just a visual help.</source>
+      </trans-unit>
+      <trans-unit id="5161717226000455851" datatype="html">
+        <source>What is a zoom</source>
+      </trans-unit>
+      <trans-unit id="8285899720891132557" datatype="html">
+        <source>In regular Go, a stone interacts with the intersections directly above, below, left and right.&lt;br/&gt;In Zoomed Go, the same pattern exists at larger distances.&lt;br/&gt;The four mini-boards shows the board seen at zoom 2. On it, intersections that are two spaces apart behave exactly like adjacent intersections in regular Go.</source>
+      </trans-unit>
+      <trans-unit id="6386757882103410531" datatype="html">
+        <source>Suicide with zooms</source>
+      </trans-unit>
+      <trans-unit id="2684174386875652712" datatype="html">
+        <source>Now as you can see, in 4-4 you could play in regular Go, but here, due to zoom 2, you cannot, as it is now a suicide.&lt;br/&gt;On the other hand, at 7-4 you have a legal drop at zoom 2, but it is a suicide at zoom 1. So, it is a suicide too.</source>
+      </trans-unit>
+      <trans-unit id="6006075893165138386" datatype="html">
+        <source>Fake-suicide with zooms</source>
+      </trans-unit>
+      <trans-unit id="6661043680356597257" datatype="html">
+        <source>Here, the 1-1 corner is a suicide at zoom 2, and a capture at zoom 1, which is not enough to make it legal. But since that capture at zoom 1 would capture some of the piece that make it a suicide at zoom 2, it is then a fake suicide, so it is legal.&lt;br/&gt;&lt;br/&gt;You are playing Light. Do that capture.</source>
+      </trans-unit>
+      <trans-unit id="6317794074367608738" datatype="html">
+        <source>Congratulations. What make a move legal or not is that, after playing it and applying the capture, the piece you dropped has at least one freedom in every zoom !</source>
+      </trans-unit>
+      <trans-unit id="7696235060281000608" datatype="html">
+        <source>At the end of the game, only what is marked as dead on the zoom 1 is counted.</source>
       </trans-unit>
       <trans-unit id="69616505141416052" datatype="html">
         <source>Hexodia is played on a hexagonal board, your goal is to be the first to align 6 of your pieces.</source>
@@ -1809,6 +2265,9 @@
       <trans-unit id="3226372248582035130" datatype="html">
         <source>Finally, it is possible that you are not able to do any move: when it is the case, you must pass your turn. Here, Dark must pass: the queen bee cannot move without disconnecting the hive, the beetle is stuck beneath another beetle, and a dropped piece would be in contact with an opponent&apos;s piece.</source>
       </trans-unit>
+      <trans-unit id="545011647716248042" datatype="html">
+        <source>Mobility</source>
+      </trans-unit>
       <trans-unit id="3643526530572280396" datatype="html">
         <source>This piece is not of the color you have to play.</source>
       </trans-unit>
@@ -1876,86 +2335,8 @@
          In this case, the last player to have moved a piece loses.
          Here, your opponent will have moved its green piece last, you therefore win!</source>
       </trans-unit>
-      <trans-unit id="318262165361158083" datatype="html">
-        <source>Control</source>
-      </trans-unit>
-      <trans-unit id="7668804973365582935" datatype="html">
-        <source>Control and Domination</source>
-      </trans-unit>
-      <trans-unit id="3581037377692107358" datatype="html">
-        <source>You cannot go backward with normal pieces!</source>
-      </trans-unit>
-      <trans-unit id="2164034395199252113" datatype="html">
-        <source>You cannot capture an empty square, nor jump over it!</source>
-      </trans-unit>
-      <trans-unit id="1347067654692503433" datatype="html">
-        <source>You must capture when it is possible!</source>
-      </trans-unit>
-      <trans-unit id="3183138660002989080" datatype="html">
-        <source>You must finish this capture!</source>
-      </trans-unit>
-      <trans-unit id="6689969573280113485" datatype="html">
-        <source>This piece cannot move!</source>
-      </trans-unit>
-      <trans-unit id="4481226927895530871" datatype="html">
-        <source>A capture should be a double diagonal step. Look at the green indicators to help you!</source>
-      </trans-unit>
-      <trans-unit id="924257200871471773" datatype="html">
-        <source>You must move in a single diagonal step!</source>
-      </trans-unit>
-      <trans-unit id="8938938109993892899" datatype="html">
-        <source>You cannot jump over the same square several times!</source>
-      </trans-unit>
-      <trans-unit id="8274439231274366704" datatype="html">
-        <source>Lasca: origins</source>
-      </trans-unit>
-      <trans-unit id="3954016636522783040" datatype="html">
-        <source>Lasca is a game based on draughts created in 1911 by Emanuel Lasker, chess world champion. It&apos;s played on a 7x7 board, each player has 11 pieces.</source>
-      </trans-unit>
-      <trans-unit id="4475600219932113977" datatype="html">
-        <source>The goal of Lasca is, like for draughts, to render the opponent unable to move, either by capturing all his pieces, either by blocking them.</source>
-      </trans-unit>
-      <trans-unit id="1534367694207535197" datatype="html">
-        <source>Steps</source>
-      </trans-unit>
-      <trans-unit id="5101419651122121441" datatype="html">
-        <source>A simple step is made by one diagonal move forward, left or right. Click on the chosen piece, then on its landing square.&lt;br/&gt;&lt;br/&gt;You are playing Dark, do the first move.</source>
-      </trans-unit>
-      <trans-unit id="7013110290486741787" datatype="html">
-        <source>A capture happens when you jump diagonally over an opponent piece to land right behind it. You have to capture when you can. It is the case here, so click on the piece that must capture, and then on its landing square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, go ahead.</source>
-      </trans-unit>
-      <trans-unit id="3662184238859847370" datatype="html">
-        <source>Congratulations, notice that the captured piece was not removed from the board, but put below the capturing pieces.</source>
-      </trans-unit>
-      <trans-unit id="3104604410220998192" datatype="html">
-        <source>Multiple captures</source>
-      </trans-unit>
-      <trans-unit id="8288645478824152244" datatype="html">
-        <source>If, after the beginning of your capture, the piece that you just moved can capture another piece, it has to capture until it can no longer capture. To do so, you must then click again on the next landing square. Note that, you cannot jump twice over the same stack.&lt;br/&gt;&lt;br/&gt;You are playing Dark, a double capture is possible, go ahead.</source>
-      </trans-unit>
-      <trans-unit id="6522624192206928831" datatype="html">
-        <source>Minority capture is allowed</source>
-      </trans-unit>
-      <trans-unit id="4604841825883708598" datatype="html">
-        <source>If you have several capture choices, you are allowed to choose any of them. For example if one choice is to capture one piece, and the other choice is to capture two pieces, you can choose either.</source>
-      </trans-unit>
-      <trans-unit id="2693455583384082674" datatype="html">
-        <source>Promotion</source>
-      </trans-unit>
-      <trans-unit id="2042191715997917496" datatype="html">
-        <source>When a stack reaches the last line, its commander becomes an officer, and gains the ability to go backward, which is illegal for the other pieces! One of your piece could be promoted now.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark. Do it.</source>
-      </trans-unit>
-      <trans-unit id="3052116389115675860" datatype="html">
-        <source>You did not choose the correct stack, and got no promotion.</source>
-      </trans-unit>
-      <trans-unit id="4252782057421264089" datatype="html">
-        <source>Officer move</source>
-      </trans-unit>
-      <trans-unit id="8730503950999903830" datatype="html">
-        <source>Officers can move and capture backward as well as forward.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move your officier!</source>
-      </trans-unit>
-      <trans-unit id="7994037258587314442" datatype="html">
-        <source>You did not move your officer.</source>
+      <trans-unit id="5504136696096277083" datatype="html">
+        <source>Advancement</source>
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
@@ -2020,6 +2401,9 @@
         then the game ends up with a tie.&lt;br/&gt;&lt;br/&gt;
         You&apos;re playing Dark, force the tie in one move.</source>
       </trans-unit>
+      <trans-unit id="5944812089887969249" datatype="html">
+        <source>Groups</source>
+      </trans-unit>
       <trans-unit id="7419338702295170530" datatype="html">
         <source>You must flip your lodestone before putting it back on the board.</source>
       </trans-unit>
@@ -2059,8 +2443,8 @@
       <trans-unit id="609421287344629004" datatype="html">
         <source>The attracting lodestone</source>
       </trans-unit>
-      <trans-unit id="1840990354301535750" datatype="html">
-        <source>When the lodestone is on its attracting side it will pull your pieces one square towards it. In case one of your pieces encounters a lodestone on its way or another blocked piece, it is blocked. However, if it encounter an opponent&apos;s piece, it will capture it.</source>
+      <trans-unit id="3752096879908140751" datatype="html">
+        <source>When the lodestone is on its attracting side it will pull your pieces one square toward it. In case one of your pieces encounters a lodestone on its way or another blocked piece, it is blocked. However, if it encounter an opponent&apos;s piece, it will capture it.</source>
       </trans-unit>
       <trans-unit id="5747624424535894902" datatype="html">
         <source>Flipping the lodestone</source>
@@ -2233,20 +2617,23 @@
       <trans-unit id="1086558575410854374" datatype="html">
         <source>Feed original house</source>
       </trans-unit>
-      <trans-unit id="1571603835358328677" datatype="html">
-        <source>Must feed</source>
+      <trans-unit id="5863215957559063071" datatype="html">
+        <source>You must feed</source>
       </trans-unit>
       <trans-unit id="7654623560547531779" datatype="html">
         <source>Pass by player store</source>
       </trans-unit>
-      <trans-unit id="8576122948092687879" datatype="html">
-        <source>Must continue distribution after last seed ends in store</source>
+      <trans-unit id="4475848272710836308" datatype="html">
+        <source>Continue distribution after last seed ends in store</source>
       </trans-unit>
       <trans-unit id="356626260857129297" datatype="html">
         <source>Continue distribution until capture or empty house</source>
       </trans-unit>
       <trans-unit id="7080802734755670775" datatype="html">
         <source>Seeds by house</source>
+      </trans-unit>
+      <trans-unit id="3686980350710017232" datatype="html">
+        <source>Number of rows</source>
       </trans-unit>
       <trans-unit id="4012808273739972279" datatype="html">
         <source><x id="PH" equiv-text="gameName"/> is a Mancala. Mancala is the name of a family of board games that dates back at least to the third century. Mancalas are games of distribution (sowing) and capture. Their goal is to capture the most seeds. The spaces in Mancalas are called the houses. The ones on the extreme left and right are called the stores, they contain the seeds that each player captured. As you are playing Dark, the 6 houses on the bottom are yours.</source>
@@ -2580,6 +2967,9 @@
       <trans-unit id="3455768301736755830" datatype="html">
         <source>Congratulations, you have saved up two pieces.</source>
       </trans-unit>
+      <trans-unit id="2874924373232293084" datatype="html">
+        <source>Reserve</source>
+      </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>
       </trans-unit>
@@ -2589,27 +2979,20 @@
       <trans-unit id="6246016939611902421" datatype="html">
         <source>You cannot give the piece that was in your hands.</source>
       </trans-unit>
-      <trans-unit id="5993757870187587252" datatype="html">
-        <source>Quarto is an alignment game.
-        The goal is to align four pieces that have at least one common aspect:
-        &lt;ul&gt;
-          &lt;li&gt;their color (light or dark),&lt;/li&gt;
-          &lt;li&gt;their size (big or small),&lt;/li&gt;
-          &lt;li&gt;their pattern (empty or dotted),&lt;/li&gt;
-          &lt;li&gt;their shape (round or square).&lt;/li&gt;
-        &lt;/ul&gt;
-        Here, we have a board with a victory by an alignment of dark pieces.
-        Note that the pieces are not owned by any player.</source>
+      <trans-unit id="2864332255120486791" datatype="html">
+        <source>Player One Level</source>
+      </trans-unit>
+      <trans-unit id="6804516002090214742" datatype="html">
+        <source>Player Two Level</source>
+      </trans-unit>
+      <trans-unit id="760255515343953338" datatype="html">
+        <source>Quarto is an alignment game. The goal is to align four pieces that have at least one common aspect:&lt;ul&gt;&lt;li&gt;their color (light or dark),&lt;/li&gt;&lt;li&gt;their size (big or small),&lt;/li&gt;&lt;li&gt;their pattern (empty or dotted),&lt;/li&gt;&lt;li&gt;their shape (round or square).&lt;/li&gt;&lt;/ul&gt;Here, we have a board with a victory by an alignment of dark pieces. Note that the pieces are not owned by any player.</source>
       </trans-unit>
       <trans-unit id="5869780110608474933" datatype="html">
         <source>Placement</source>
       </trans-unit>
-      <trans-unit id="6434452961453198943" datatype="html">
-        <source>Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board,
-        and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square.
-        If you prefer, the order of these two steps can be reversed.
-        Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt;
-        Make a move.</source>
+      <trans-unit id="3421981370095781630" datatype="html">
+        <source>Every placement occurs in two steps: placing the piece you have in hand (in the small square) on a square of the board, and picking a piece that the opponent will have to place, by clicking on one of the pieces inside the dotted square. If you prefer, the order of these two steps can be reversed. Keep in mind that the second click confirms the move.&lt;br/&gt;&lt;br/&gt; Make a move.</source>
       </trans-unit>
       <trans-unit id="2296943727359810458" datatype="html">
         <source>Perfect!</source>
@@ -2617,15 +3000,134 @@
       <trans-unit id="7849803408372436927" datatype="html">
         <source>Situation</source>
       </trans-unit>
-      <trans-unit id="8833867623403187066" datatype="html">
-        <source>We have here a tricky situation.&lt;br/&gt;&lt;br/&gt;
-        Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.</source>
+      <trans-unit id="4119107654622098665" datatype="html">
+        <source>We have here a tricky situation.&lt;br/&gt;&lt;br/&gt;Analyze the board and play your move, carefully paying attention not to let the opponent win on the next move.</source>
       </trans-unit>
       <trans-unit id="4715207105849605918" datatype="html">
         <source>Well done!</source>
       </trans-unit>
       <trans-unit id="8424758512320418629" datatype="html">
         <source>Failed! Your opponent can either align:&lt;ul&gt;&lt;li&gt;the squares horizontally on the third line or vertically on the third column,&lt;/li&gt;&lt;li&gt;small pieces horizontally on the first line or vertically on the second or third column,&lt;/li&gt;&lt;li&gt;empty pieces horizontally on the first line or vertically on the first column,&lt;/li&gt;&lt;li&gt;clear pieces diagonally.&lt;/li&gt;&lt;/ul&gt;</source>
+      </trans-unit>
+      <trans-unit id="5648428630068792235" datatype="html">
+        <source>A game of Quarto can be configured to make it more complicated for one or both players.&lt;br/&gt;When you create a game and you want to change the original configuration, you can add a level to one or both players. When your level increases, it becomes easier for you to win. So, if the first player is weaker at this game, make the first player play at level two and the game will be more even and interesting.&lt;br/&gt;At level two, a player can win by grouping pieces with a common criterion on a 2x2 square.&lt;br/&gt;In this board, Light can win by making a square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light, win.</source>
+      </trans-unit>
+      <trans-unit id="2467449610168621115" datatype="html">
+        <source>Wrong, you could have won by making a square.</source>
+      </trans-unit>
+      <trans-unit id="5604193951980576244" datatype="html">
+        <source>Move distance must be 2 for invader, not <x id="PH" equiv-text="distance"/></source>
+      </trans-unit>
+      <trans-unit id="4809301322027947242" datatype="html">
+        <source>Move distance must be 1 for defender, not <x id="PH" equiv-text="distance"/></source>
+      </trans-unit>
+      <trans-unit id="941976348970067109" datatype="html">
+        <source>You must drop in your own territory</source>
+      </trans-unit>
+      <trans-unit id="2561363337853886115" datatype="html">
+        <source>You cannot drop in move phase</source>
+      </trans-unit>
+      <trans-unit id="6838858844517047193" datatype="html">
+        <source>You cannot move in drop phase</source>
+      </trans-unit>
+      <trans-unit id="4933773936312573082" datatype="html">
+        <source>You must drop all your pieces</source>
+      </trans-unit>
+      <trans-unit id="1577452622903571200" datatype="html">
+        <source>You must drop all your remaining pieces, not more not less</source>
+      </trans-unit>
+      <trans-unit id="8012565028574700911" datatype="html">
+        <source>You cannot drop that many pieces</source>
+      </trans-unit>
+      <trans-unit id="8952465701867689047" datatype="html">
+        <source>You must drop pieces one by one</source>
+      </trans-unit>
+      <trans-unit id="7497498388753121757" datatype="html">
+        <source>You cannot land or drop on your castle</source>
+      </trans-unit>
+      <trans-unit id="5963846295180517656" datatype="html">
+        <source>You must only place your castle</source>
+      </trans-unit>
+      <trans-unit id="5637364645971249040" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as invader)</source>
+      </trans-unit>
+      <trans-unit id="984815225652827868" datatype="html">
+        <source>If you have <x id="PH" equiv-text="line"/> line(s), you can only have <x id="PH_1" equiv-text="max"/> pieces (as defender)</source>
+      </trans-unit>
+      <trans-unit id="2740099122933909931" datatype="html">
+        <source>Too many lines for territory, your opponent lines would merge with yours!</source>
+      </trans-unit>
+      <trans-unit id="810888510148304696" datatype="html">
+        <source>Automatic</source>
+      </trans-unit>
+      <trans-unit id="5830114547747897795" datatype="html">
+        <source>Piece by piece</source>
+      </trans-unit>
+      <trans-unit id="410841679211120323" datatype="html">
+        <source>By batch</source>
+      </trans-unit>
+      <trans-unit id="7732765787483081988" datatype="html">
+        <source>Lines for territory</source>
+      </trans-unit>
+      <trans-unit id="6952700396277252102" datatype="html">
+        <source>Number of invaders</source>
+      </trans-unit>
+      <trans-unit id="8136810909201933801" datatype="html">
+        <source>Number of defenders</source>
+      </trans-unit>
+      <trans-unit id="859693719600901508" datatype="html">
+        <source>Is Rhombic</source>
+      </trans-unit>
+      <trans-unit id="3155220222252009452" datatype="html">
+        <source>Place castle yourself</source>
+      </trans-unit>
+      <trans-unit id="5344724322380814051" datatype="html">
+        <source>Drop mode</source>
+      </trans-unit>
+      <trans-unit id="4108446576215978761" datatype="html">
+        <source>Quebec Castles is the first board game invented by the EveryBoard Team.&lt;br/&gt;The goal of the game is to capture all the pieces of the opponent, or to step on the opponent&apos;s castle. The castles are on the corners by default.</source>
+      </trans-unit>
+      <trans-unit id="5230748384162383195" datatype="html">
+        <source>Defender&apos;s move</source>
+      </trans-unit>
+      <trans-unit id="7182015855595398104" datatype="html">
+        <source>The defenders have the dark pieces, they play first by selecting one of their pieces and moving it on a neighboring square.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark, move a defender piece.</source>
+      </trans-unit>
+      <trans-unit id="2155198865476397918" datatype="html">
+        <source>Invader&apos;s move</source>
+      </trans-unit>
+      <trans-unit id="4107747706727630088" datatype="html">
+        <source>The invaders have the light pieces, they play second by selecting one of their piece and moving them two step in a straight line. A piece cannot jump over another piece.&lt;br/&gt;&lt;br/&gt;Move an invader piece.</source>
+      </trans-unit>
+      <trans-unit id="2713433806060355704" datatype="html">
+        <source>Custom config: rhombic, width, height</source>
+      </trans-unit>
+      <trans-unit id="2002655185364987666" datatype="html">
+        <source>You have the option to change the shape of the board, if it&apos;s not rhombic, it&apos;s rectangular. You also can change the size</source>
+      </trans-unit>
+      <trans-unit id="2289520460836999741" datatype="html">
+        <source>Custom config: place castle yourself</source>
+      </trans-unit>
+      <trans-unit id="7385463908675411729" datatype="html">
+        <source>You have the option to decide yourself where you place the castle. If you don&apos;t change anything else the piece placement will be automatically done right after.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place your castle.</source>
+      </trans-unit>
+      <trans-unit id="4647263668364735204" datatype="html">
+        <source>Custom config: drop mode: by batch</source>
+      </trans-unit>
+      <trans-unit id="7033117155002350193" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, place all your pieces.</source>
+      </trans-unit>
+      <trans-unit id="8905744515857698442" datatype="html">
+        <source>Custom config: drop mode: piece by piece</source>
+      </trans-unit>
+      <trans-unit id="3173152046401939537" datatype="html">
+        <source>You have the option to decide yourself where you place your pieces, one per turn. Once one player has no more piece to drop, the other player drop all its piece in one turn.&lt;br/&gt;&lt;br/&gt;You&apos;re playing Dark/Defender, drop a piece.</source>
+      </trans-unit>
+      <trans-unit id="7981767151607448456" datatype="html">
+        <source>Custom config: number of piece &amp; territory size</source>
+      </trans-unit>
+      <trans-unit id="8332720029342556814" datatype="html">
+        <source>You have the option to change territory size, which is the number of lines on which you can drop your pieces. It is indicated by a semi-transparent color. You can also change how many pieces each player control.</source>
       </trans-unit>
       <trans-unit id="8819839276456625538" datatype="html">
         <source>You must pick a space from the edge of the board.</source>
@@ -2663,20 +3165,17 @@
         You can win with this board, try it.
         You&apos;re playing Light.</source>
       </trans-unit>
+      <trans-unit id="9017523517963235509" datatype="html">
+        <source>Piece Count</source>
+      </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
       </trans-unit>
-      <trans-unit id="8006607638702407149" datatype="html">
-        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player.
-        When one piece is flipped, its owner changes.
-        The player owning the most pieces at the end of the game wins.
-        Here, Dark has 28 points and Light has 36, hence Light wins.</source>
+      <trans-unit id="4123522127538652179" datatype="html">
+        <source>At Reversi, the pieces are double sided: one dark side for the first player, one light side for the second player. When one piece is flipped, its owner changes. The player owning the most pieces at the end of the game wins. Here, Dark has 28 points and Light has 36, hence Light wins.</source>
       </trans-unit>
-      <trans-unit id="5285597397338861824" datatype="html">
-        <source>At the beginning of the game, pieces are placed as shown here.
-        For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;
-        Do any move by clicking to put your piece
-        Dark plays first.</source>
+      <trans-unit id="4322708137610040654" datatype="html">
+        <source>At the beginning of the game, pieces are placed as shown here. For a move to be legal, it must sandwich at least one piece of the opponent between the piece you&apos;re putting and another of your pieces.&lt;br/&gt;&lt;br/&gt;Do any move by clicking to put your piece. Dark plays first.</source>
       </trans-unit>
       <trans-unit id="7280078972566788741" datatype="html">
         <source>A move can also capture a bigger line, and more than one line at a time&lt;br/&gt;&lt;br/&gt;You&apos;re playing Light here. Play on the bottom left to see a capture.</source>
@@ -2687,9 +3186,44 @@
       <trans-unit id="1243885947284298199" datatype="html">
         <source>Passing a turn</source>
       </trans-unit>
-      <trans-unit id="3839030392804080169" datatype="html">
-        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass
-        Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
+      <trans-unit id="450833244866003504" datatype="html">
+        <source>If, during its turn, a player has no move that would allow that player to flip a piece, that player must pass. Moreover, if the next player could not play neither, the game ends before the board is full, and points are counted in the usual way.</source>
+      </trans-unit>
+      <trans-unit id="7531322064121954356" datatype="html">
+        <source>Toric Reversi is a variant of Reversi played on a toric board. If you are not familiar with the base rules of Reversi, check them out &lt;a href=&quot;/tutorial/Reversi&quot;&gt;here&lt;/a&gt; before continuing. This tutorial only covers what changes with the toric board.</source>
+      </trans-unit>
+      <trans-unit id="9138862778564760989" datatype="html">
+        <source>Left-right connectivity</source>
+      </trans-unit>
+      <trans-unit id="5219741148542864373" datatype="html">
+        <source>On a toric board, the left edge is connected to the right edge. This means a line of pieces can wrap around horizontally. Here, you can capture the three light pieces by playing on the leftmost column, as the board wraps around to continue the line.&lt;br/&gt;&lt;br/&gt;You are playing Dark. Do a capture.</source>
+      </trans-unit>
+      <trans-unit id="447603454412761814" datatype="html">
+        <source>Look at the fourth row: there is a line of dark pieces that wraps around the left edge.</source>
+      </trans-unit>
+      <trans-unit id="524383038680502602" datatype="html">
+        <source>Top-bottom connectivity</source>
+      </trans-unit>
+      <trans-unit id="1533479423868245608" datatype="html">
+        <source>The same applies vertically: the top edge is connected to the bottom edge. Find the move that captures by playing on the top row.</source>
+      </trans-unit>
+      <trans-unit id="905915555335437932" datatype="html">
+        <source>Look at the fourth column: the dark piece at the bottom wraps around to the top.</source>
+      </trans-unit>
+      <trans-unit id="7079964026141010612" datatype="html">
+        <source>Diagonal wrapping</source>
+      </trans-unit>
+      <trans-unit id="5238684930166477750" datatype="html">
+        <source>Wrapping also works diagonally. A diagonal can cross both the horizontal and vertical edges at the same time. Here, a diagonal of light pieces wraps around a corner of the board. Can you find the capturing move?</source>
+      </trans-unit>
+      <trans-unit id="6380656983498638368" datatype="html">
+        <source>Follow the diagonal starting from the dark piece: it wraps around the right edge and continues on the left.</source>
+      </trans-unit>
+      <trans-unit id="424008605734944795" datatype="html">
+        <source>Strategic implications</source>
+      </trans-unit>
+      <trans-unit id="8991600964307142646" datatype="html">
+        <source>On a standard Reversi board, corners and edges are powerful because pieces placed there cannot be flanked. On a toric board, there are no corners and no edges, every piece can potentially be captured from any direction. This completely changes the strategy: stability must be built differently, and no position is ever truly safe.</source>
       </trans-unit>
       <trans-unit id="1982783281923413187" datatype="html">
         <source>You can only rebound on dark spaces.</source>
@@ -2751,6 +3285,9 @@
       <trans-unit id="5302904876941698020" datatype="html">
         <source>Failed! You have made a single step.</source>
       </trans-unit>
+      <trans-unit id="3293657922924170725" datatype="html">
+        <source>Capture &gt; Captured Freedom &gt; All Freedoms</source>
+      </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
       </trans-unit>
@@ -2775,8 +3312,8 @@
       <trans-unit id="6496295523512347479" datatype="html">
         <source>Number of bonus mountains</source>
       </trans-unit>
-      <trans-unit id="5290831626966707862" datatype="html">
-        <source>Cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
+      <trans-unit id="7963871986685218015" datatype="html">
+        <source>You cannot rotate piece outside the board: <x id="PH" equiv-text="move.toString()"/></source>
       </trans-unit>
       <trans-unit id="3925814099582230333" datatype="html">
         <source>SiamMove should end or start on the board: <x id="PH" equiv-text="move.toString()"/></source>
@@ -2820,11 +3357,14 @@
       <trans-unit id="709861006710076010" datatype="html">
         <source>Congratulations! Note that this move made you lose the game, you will see why in the next step.</source>
       </trans-unit>
-      <trans-unit id="5917097999963707548" datatype="html">
-        <source>The game ends when a mountain is pushed out of the board. If you pushed it and nobody is in front of you, you&apos;re the winner. However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain. However, if that opponent is closer to the mountain but not oriented towards it, victory will be yours.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
+      <trans-unit id="7894393124871116843" datatype="html">
+        <source>The game ends when a mountain is pushed out of the board. If you pushed it and nobody is in front of you, you&apos;re the winner. However, if you were pushing an opponent oriented in the same direction as you, your opponent will win because that piece is closer to the mountain. However, if that opponent is closer to the mountain but not oriented toward it, victory will be yours.&lt;br/&gt;&lt;br/&gt;Here, playing Dark, you can push a mountain off the board and either win, or lose. Choose correctly!</source>
       </trans-unit>
       <trans-unit id="8309748811457759789" datatype="html">
         <source>Failed, you lost.</source>
+      </trans-unit>
+      <trans-unit id="1779552786277618671" datatype="html">
+        <source>Distance</source>
       </trans-unit>
       <trans-unit id="2035984245529775458" datatype="html">
         <source>You cannot move yet. Pick a space where you will put a new piece.</source>
@@ -2846,6 +3386,9 @@
       </trans-unit>
       <trans-unit id="4110234759792602964" datatype="html">
         <source>You must put this piece next to another piece.</source>
+      </trans-unit>
+      <trans-unit id="1431305578867281747" datatype="html">
+        <source>Number of pieces to drop per player</source>
       </trans-unit>
       <trans-unit id="7208567678509553256" datatype="html">
         <source>This move does not disconnect your opponent&apos;s pieces. Try again with another piece.</source>
@@ -2915,6 +3458,9 @@
       <trans-unit id="4274208426593680443" datatype="html">
         <source>Failed. You did cut the board in two but you kept the half where you&apos;re in minority. Therefore, you lost! Try again.</source>
       </trans-unit>
+      <trans-unit id="4427129289566046309" datatype="html">
+        <source>Shape</source>
+      </trans-unit>
       <trans-unit id="6387064828361949367" datatype="html">
         <source>You jumped too far! The maximum size of a jump is <x id="PH" equiv-text="n"/> step!</source>
       </trans-unit>
@@ -2948,9 +3494,6 @@
       <trans-unit id="3808135421251943457" datatype="html">
         <source>Bad choice, by making this move you allowed the opponent to win.&lt;br/&gt;&lt;br/&gt;Try again!</source>
       </trans-unit>
-      <trans-unit id="2976149661707388406" datatype="html">
-        <source>Escape &gt; Pieces &gt; Control</source>
-      </trans-unit>
       <trans-unit id="4456476499852991526" datatype="html">
         <source>You cannot land on an occupied square.</source>
       </trans-unit>
@@ -2962,15 +3505,6 @@
       </trans-unit>
       <trans-unit id="6790757046240382671" datatype="html">
         <source>Tafl moves must be orthogonal.</source>
-      </trans-unit>
-      <trans-unit id="7623537877233304257" datatype="html">
-        <source>Pieces &gt; Control</source>
-      </trans-unit>
-      <trans-unit id="1760148711911088235" datatype="html">
-        <source>Pieces &gt; Influence</source>
-      </trans-unit>
-      <trans-unit id="3372037160964274985" datatype="html">
-        <source>Pieces</source>
       </trans-unit>
       <trans-unit id="9195784792324730674" datatype="html">
         <source>Central throne is left for good</source>
@@ -3055,6 +3589,18 @@
       </trans-unit>
       <trans-unit id="4169759104868172929" datatype="html">
         <source>Tablut is the lapland version of the Tafl, Tafl being a family of viking strategy game. The object of the game is different for each player. The attacker plays first. Its pieces (dark) are close to the edges. Its goal is to capture the king, which is in the center of the board. The defender plays second. Its pieces (light) are in the middle. Its goal is to move the king on one of the 4 thrones in the corners. Note that the square in which the king starts, in the center of the board, is also a throne.</source>
+      </trans-unit>
+      <trans-unit id="3372037160964274985" datatype="html">
+        <source>Pieces</source>
+      </trans-unit>
+      <trans-unit id="1760148711911088235" datatype="html">
+        <source>Pieces &gt; Influence</source>
+      </trans-unit>
+      <trans-unit id="7623537877233304257" datatype="html">
+        <source>Pieces &gt; Control</source>
+      </trans-unit>
+      <trans-unit id="2976149661707388406" datatype="html">
+        <source>Escape &gt; Pieces &gt; Control</source>
       </trans-unit>
       <trans-unit id="1347435830524797455" datatype="html">
         <source>Standard Teeko</source>
@@ -3253,29 +3799,8 @@
       <trans-unit id="5033601776243148314" datatype="html">
         <source><x id="PH" equiv-text="first"/> and <x id="PH_1" equiv-text="second"/></source>
       </trans-unit>
-      <trans-unit id="75196759111440200" datatype="html">
-        <source>You&apos;re not allowed to send a message here.</source>
-      </trans-unit>
-      <trans-unit id="4052977957517792171" datatype="html">
-        <source>This message is forbidden.</source>
-      </trans-unit>
-      <trans-unit id="5527862698509020204" datatype="html">
-        <source>This game does not exist!</source>
-      </trans-unit>
-      <trans-unit id="2025949389316561274" datatype="html">
-        <source>You are already playing in another game.</source>
-      </trans-unit>
-      <trans-unit id="3355072499279505626" datatype="html">
-        <source>You are already the creator of another game.</source>
-      </trans-unit>
-      <trans-unit id="5005469579079717737" datatype="html">
-        <source>You are already the chosen opponent in another game.</source>
-      </trans-unit>
-      <trans-unit id="7540734974309484940" datatype="html">
-        <source>You are already candidate in another game.</source>
-      </trans-unit>
-      <trans-unit id="2152425747573072542" datatype="html">
-        <source>You are already observing another game.</source>
+      <trans-unit id="5497781928212420280" datatype="html">
+        <source>Connection to server failed or closed, trying again in <x id="PH" equiv-text="this.nextConnectionAttemptTime"/> seconds...</source>
       </trans-unit>
       <trans-unit id="7065414996126753833" datatype="html">
         <source>This username is already in use.</source>
@@ -3310,20 +3835,29 @@
       <trans-unit id="3618174181025506941" datatype="html">
         <source>This username is already in use, please select a different one.</source>
       </trans-unit>
+      <trans-unit id="2025949389316561274" datatype="html">
+        <source>You are already playing in another game.</source>
+      </trans-unit>
+      <trans-unit id="3355072499279505626" datatype="html">
+        <source>You are already the creator of another game.</source>
+      </trans-unit>
+      <trans-unit id="5005469579079717737" datatype="html">
+        <source>You are already the chosen opponent in another game.</source>
+      </trans-unit>
+      <trans-unit id="7540734974309484940" datatype="html">
+        <source>You are already candidate in another game.</source>
+      </trans-unit>
+      <trans-unit id="2152425747573072542" datatype="html">
+        <source>You are already observing another game.</source>
+      </trans-unit>
       <trans-unit id="5968000276977717351" datatype="html">
         <source>An unexpected error was encountered. We have logged it and will try to fix its cause as soon as possible.</source>
       </trans-unit>
-      <trans-unit id="3878208315329190575" datatype="html">
-        <source>This is the wrong game type!</source>
-      </trans-unit>
-      <trans-unit id="3012694567108651369" datatype="html">
-        <source>This value is mandatory</source>
-      </trans-unit>
       <trans-unit id="4408456168772857996" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too small, the minimum is <x id="PH_1" equiv-text="min"/></source>
+        <source><x id="PH" equiv-text="v"/> is too small, the minimum is <x id="PH_1" equiv-text="m"/></source>
       </trans-unit>
       <trans-unit id="701935636628882602" datatype="html">
-        <source><x id="PH" equiv-text="value"/> is too big, the maximum is <x id="PH_1" equiv-text="max"/></source>
+        <source><x id="PH" equiv-text="v"/> is too big, the maximum is <x id="PH_1" equiv-text="m"/></source>
       </trans-unit>
     </body>
   </file>

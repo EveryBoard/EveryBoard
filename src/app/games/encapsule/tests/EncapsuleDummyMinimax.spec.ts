@@ -1,17 +1,26 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
-import { EncapsuleRules } from '../EncapsuleRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { EncapsuleDummyMinimax } from '../EncapsuleDummyMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { EncapsuleMove } from '../EncapsuleMove';
+import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
+import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleLegalityInformation } from '../EncapsuleRules';
+import { EncapsuleState } from '../EncapsuleState';
+
+class EncapsuleDummyMinimax
+    extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleConfig, EncapsuleLegalityInformation> {
+    public constructor() {
+        super('Dummy', EncapsuleRules.get(), new DummyHeuristic(), new EncapsuleMoveGenerator());
+    }
+}
 
 describe('EncapsuleDummyMinimax', () => {
 
     const rules: EncapsuleRules = EncapsuleRules.get();
     const minimax: EncapsuleDummyMinimax = new EncapsuleDummyMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = EncapsuleRules.get().getDefaultRulesConfig();
+    const defaultConfig: EncapsuleConfig = EncapsuleRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +31,5 @@ describe('EncapsuleDummyMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

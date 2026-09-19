@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
+import { MGPOptional } from '@everyboard/lib';
+
+import { HeuristicUtils } from '../../../jscaip/AI/tests/HeuristicUtils.spec';
+import { Player } from '../../../jscaip/Player';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { HiveHeuristic } from '../HiveHeuristic';
+import { HivePiece } from '../HivePiece';
 import { HiveNode, HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { HeuristicUtils } from 'src/app/jscaip/AI/tests/HeuristicUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { Player } from 'src/app/jscaip/Player';
-import { HivePiece } from '../HivePiece';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('HiveHeuristic', () => {
 
     let heuristic: HiveHeuristic;
-    const defaultConfig: NoConfig = HiveRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = HiveRules.get().getDefaultRulesConfig();
 
     const Q: HivePiece = new HivePiece(Player.ZERO, 'QueenBee');
     const B: HivePiece = new HivePiece(Player.ZERO, 'Beetle');

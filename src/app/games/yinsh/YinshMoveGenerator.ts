@@ -1,17 +1,19 @@
-import { Coord } from 'src/app/jscaip/Coord';
 import { Combinatorics, MGPOptional } from '@everyboard/lib';
-import { YinshState } from './YinshState';
+
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { GipfCapture, GipfProjectHelper } from '../../jscaip/GipfProjectHelper';
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshNode, YinshRules } from './YinshRules';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { GipfCapture, GipfProjectHelper } from 'src/app/jscaip/GipfProjectHelper';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Player } from 'src/app/jscaip/Player';
+import { YinshState } from './YinshState';
 
 export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
 
-    public override getListMoves(node: YinshNode, _config: NoConfig): YinshMove[] {
+    public override getListMoves(node: YinshNode, _config: EmptyRulesConfig): YinshMove[] {
         const moves: YinshMove[] = [];
         const state: YinshState = node.gameState;
 
@@ -26,7 +28,7 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
             this.getPossibleCaptureCombinations(state)
                 .forEach((initialCaptures: ReadonlyArray<YinshCapture>): void => {
                     const stateAfterCapture: YinshState = rules.applyCaptures(initialCaptures, state);
-                    this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord, end: Coord}): void => {
+                    this.getRingMoves(stateAfterCapture).forEach((ringMove: {start: Coord; end: Coord}): void => {
                         const stateAfterRingMove: YinshState =
                             rules.applyRingMoveAndFlip(ringMove.start, ringMove.end, stateAfterCapture);
                         this.getPossibleCaptureCombinations(stateAfterRingMove)
@@ -58,9 +60,9 @@ export class YinshMoveGenerator extends MoveGenerator<YinshMove, YinshState> {
                 return accumulator.concat(captures);
             }, []);
     }
-    private getRingMoves(state: YinshState): {start: Coord, end: Coord}[] {
+    private getRingMoves(state: YinshState): {start: Coord; end: Coord}[] {
         const rules: YinshRules = YinshRules.get();
-        const moves: {start: Coord, end: Coord}[] = [];
+        const moves: {start: Coord; end: Coord}[] = [];
         for (const start of this.getRingCoords(state)) {
             for (const end of rules.getRingTargets(state, start)) {
                 moves.push({ start, end });

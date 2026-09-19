@@ -1,14 +1,15 @@
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionState } from './LinesOfActionState';
 import { LinesOfActionNode, LinesOfActionRules } from './LinesOfActionRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { LinesOfActionState } from './LinesOfActionState';
 
 export class LinesOfActionMoveGenerator extends MoveGenerator<LinesOfActionMove, LinesOfActionState> {
 
-    public override getListMoves(node: LinesOfActionNode, _config: NoConfig): LinesOfActionMove[] {
+    public override getListMoves(node: LinesOfActionNode, _config: EmptyRulesConfig): LinesOfActionMove[] {
         const state: LinesOfActionState = node.gameState;
         const moves: LinesOfActionMove[] = [];
 

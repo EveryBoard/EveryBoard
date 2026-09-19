@@ -1,10 +1,12 @@
 import { fakeAsync } from '@angular/core/testing';
-import { GameInfo } from 'src/app/components/normal-component/pick-game/pick-game.component';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { NewGameComponent } from '../new-game.component';
+
+import { GameInfo } from '../../../components/normal-component/pick-game/GameInfo';
+import { ComponentTestUtils } from '../../../utils/tests/TestUtils.spec';
 import { NewGameMove } from '../NewGameMove';
 import { NewGameRules } from '../NewGameRules';
+import { NewGameState } from '../NewGameState';
 import { NewGameTutorial } from '../NewGameTutorial';
+import { NewGameComponent } from '../new-game.component';
 
 describe('NewGameComponent', () => {
     let testUtils: ComponentTestUtils<NewGameComponent>;
@@ -39,8 +41,25 @@ describe('NewGameComponent', () => {
      */
     it('this test is only there to cover new-game remaining functions', fakeAsync(async() => {
         // Note: we do not want to use `getGameComponent` in game components tests
-        await testUtils.getGameComponent().showLastMove(new NewGameMove());
+        await testUtils.setupState(new NewGameState(0), { previousMove: new NewGameMove() });
+        await testUtils.getGameComponent().updateBoard(false);
+        testUtils.getGameComponent().hideLastMove();
         testUtils.getGameComponent().cancelMoveAttempt();
         expect(42).toBeGreaterThan(37);
     }));
+
+    it('should expose instantiable AI configs', () => {
+        // Given the new game component
+        const component: NewGameComponent = testUtils.getGameComponent();
+
+        // When instantiating its declared AI dependencies
+        const heuristic: unknown = component.aiConfig.minimax[0].heuristic!();
+        const minimaxMoveGenerator: unknown = component.aiConfig.minimax[0].moveGenerator!();
+        const mctsMoveGenerator: unknown = component.aiConfig.mcts[0].moveGenerator();
+
+        // Then they should be provided
+        expect(heuristic).toBeDefined();
+        expect(minimaxMoveGenerator).toBeDefined();
+        expect(mctsMoveGenerator).toBeDefined();
+    });
 });

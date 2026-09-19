@@ -1,6 +1,7 @@
-import { Timestamp } from 'firebase/firestore';
-import { AuthUser } from '../services/ConnectedUserService';
 import { MGPOptional } from '@everyboard/lib';
+
+import { AuthUser } from '../services/ConnectedUserService';
+
 import { MinimalUser } from './MinimalUser';
 import { User } from './User';
 
@@ -41,20 +42,14 @@ export class UserMocks {
     public static readonly CREATOR: User = {
         username: UserMocks.CREATOR_AUTH_USER.username.get(),
         verified: true,
-        lastUpdateTime: new Timestamp(123, 456000000),
-        currentGame: null,
     };
     public static readonly CONNECTED: User = {
         username: UserMocks.CONNECTED_AUTH_USER.username.get(),
         verified: true,
-        lastUpdateTime: new Timestamp(123, 456000000),
-        currentGame: null,
     };
     public static readonly OPPONENT: User = {
         username: UserMocks.OPPONENT_AUTH_USER.username.get(),
         verified: true,
-        lastUpdateTime: new Timestamp(124, 456000000),
-        currentGame: null,
     };
     public static readonly CREATOR_MINIMAL_USER: MinimalUser = UserMocks.CREATOR_AUTH_USER.toMinimalUser();
 

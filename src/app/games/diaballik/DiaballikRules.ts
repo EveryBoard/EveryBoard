@@ -1,20 +1,22 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { CoordFailure } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Orthogonal } from '../../jscaip/Orthogonal';
+import { Player } from '../../jscaip/Player';
+import { PlayerMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table } from '../../jscaip/TableUtils';
+
+import { DiaballikFailure } from './DiaballikFailure';
 import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { DiaballikFailure } from './DiaballikFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { CoordFailure } from '../../jscaip/Coord';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerMap } from 'src/app/jscaip/PlayerMap';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
 export class VictoryOrDefeatCoords {
     protected constructor(public readonly winner: Player) {}
@@ -34,9 +36,9 @@ export class DefeatCoords extends VictoryOrDefeatCoords {
 }
 
 export type DefeatCoordsIncomplete = {
-    player: Player,
-    allPieces: Coord[],
-    piecesInContact: Coord[],
+    player: Player;
+    allPieces: Coord[];
+    piecesInContact: Coord[];
 };
 
 interface ConnectionInfos {
@@ -82,11 +84,11 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         let currentState: DiaballikState = state;
         for (const subMove of move.getSubMoves()) {
             const start: Coord = subMove.getStart();
-            if (state.isOnBoard(start) === false) {
+            if (state.isNotOnBoard(start)) {
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(start));
             }
             const end: Coord = subMove.getEnd();
-            if (state.isOnBoard(end) === false) {
+            if (state.isNotOnBoard(end)) {
                 return MGPFallible.failure(CoordFailure.OUT_OF_RANGE(end));
             }
             const legality: MGPFallible<DiaballikState> = this.isLegalSubMove(currentState, subMove);
@@ -117,7 +119,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
             return MGPFallible.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         // The moved piece must not hold the ball
-        if (startPiece.holdsBall === true) {
+        if (startPiece.holdsBall) {
             return MGPFallible.failure(DiaballikFailure.CANNOT_MOVE_WITH_BALL());
         }
 
@@ -176,7 +178,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
 
     public override applyLegalMove(_move: DiaballikMove,
                                    state: DiaballikState,
-                                   _config: NoConfig,
+                                   _config: EmptyRulesConfig,
                                    stateAfterSubMoves: DiaballikState)
     : DiaballikState
     {
@@ -214,7 +216,7 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     private getBallCoordInRow(state: DiaballikState, y: number, player: Player): MGPOptional<Coord> {
         for (let x: number = 0; x < state.getHeight(); x++) {
             const piece: DiaballikPiece = state.getPieceAtXY(x, y);
-            if (piece.holdsBall === true && piece.owner === player) {
+            if (piece.holdsBall && piece.owner === player) {
                 return MGPOptional.of(new Coord(x, y));
             }
         }
@@ -300,11 +302,8 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
         }
         for (const direction of [Ordinal.LEFT, Ordinal.UP_LEFT, Ordinal.DOWN_LEFT]) {
             const neighbor: Coord = coord.getNext(direction);
-            if (state.isOnBoard(neighbor)) {
-                const piece: DiaballikPiece = state.getPieceAt(neighbor);
-                if (piece.owner === player) {
-                    return true;
-                }
+            if (state.coordIsOwnedBy(neighbor, player)) {
+                return true;
             }
         }
         return false;
@@ -318,11 +317,8 @@ export class DiaballikRules extends Rules<DiaballikMove, DiaballikState, Diaball
     {
         for (const direction of Orthogonal.factory.all) {
             const neighbor: Coord = coord.getNext(direction);
-            if (state.isOnBoard(neighbor)) {
-                const piece: DiaballikPiece = state.getPieceAt(neighbor);
-                if (piece.owner === player.getOpponent()) {
-                    opponentsConnected = opponentsConnected.addElement(neighbor);
-                }
+            if (state.coordIsOwnedBy(neighbor, player.getOpponent())) {
+                opponentsConnected = opponentsConnected.addElement(neighbor);
             }
         }
         return opponentsConnected;

@@ -1,15 +1,15 @@
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+
 import { ApagosMove } from './ApagosMove';
 import { ApagosConfig, ApagosNode } from './ApagosRules';
-import { ApagosState } from './ApagosState';
-import { MGPOptional } from '@everyboard/lib';
 import { ApagosSquare } from './ApagosSquare';
+import { ApagosState } from './ApagosState';
 
 export class ApagosRightmostHeuristic extends PlayerMetricHeuristic<ApagosMove, ApagosState, ApagosConfig> {
 
-    public override getMetrics(node: ApagosNode, _config: MGPOptional<ApagosConfig>): PlayerNumberTable {
+    public override getMetrics(node: ApagosNode, _config: ApagosConfig): PlayerNumberTable {
         const board: readonly ApagosSquare[] = node.gameState.board;
         const size: number = board.length;
         const levelThreeDominant: PlayerOrNone = board[size - 1].getDominatingPlayer();

@@ -1,9 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { EncoderTestUtils, MGPFallible } from '@everyboard/lib';
+import { MGPFallible } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
 import { Coord } from '../Coord';
-import { Ordinal } from '../Ordinal';
 import { MoveCoordToCoord } from '../MoveCoordToCoord';
 import { MoveWithTwoCoords } from '../MoveWithTwoCoords';
+import { Ordinal } from '../Ordinal';
 
 class ConcreteMoveCoordToCoord extends MoveCoordToCoord {}
 
@@ -33,8 +35,8 @@ describe('MoveCoordToCoord', () => {
     });
     describe('length', () => {
         it('should return the length of the move', () => {
-            expect(new ConcreteMoveCoordToCoord(new Coord(0, 0), new Coord(0, 5)).length()).toBe(5);
-            expect(new ConcreteMoveCoordToCoord(new Coord(0, 0), new Coord(2, 2)).length()).toBe(2);
+            expect(new ConcreteMoveCoordToCoord(new Coord(0, 0), new Coord(0, 5)).getDistance()).toBe(5);
+            expect(new ConcreteMoveCoordToCoord(new Coord(0, 0), new Coord(2, 2)).getDistance()).toBe(2);
         });
     });
     describe('encoder', () => {

@@ -1,7 +1,8 @@
 {
   "spec_dir": "src",
   "spec_files": ["**/*.spec.ts"],
-  "helpers": ["../node_modules/ts-node/register/type-check.js"],
+  "helpers": ["../node_modules/ts-node/register/type-check.js", "tests/coverage-setup.ts"],
+  "jsLoader": "require",
   "stopSpecOnExpectationFailure": false,
   "random": true
 }

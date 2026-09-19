@@ -1,15 +1,13 @@
-import { Move } from '../../../jscaip/Move';
-import { Component } from '@angular/core';
-import { GameStateWithTable } from 'src/app/jscaip/state/GameStateWithTable';
-import { GameComponent } from '../game-component/GameComponent';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { SuperRules } from 'src/app/jscaip/Rules';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { ViewBox } from '../GameComponentUtils';
+import { computed, Signal } from '@angular/core';
 
-@Component({
-    template: '',
-})
+import { Move } from '../../../jscaip/Move';
+import { SuperRules } from '../../../jscaip/Rules';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { GameStateWithTable } from '../../../jscaip/state/GameStateWithTable';
+import { ViewBox } from '../GameComponentUtils';
+import { GameComponent } from '../game-component/GameComponent';
+
 export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
                                                M extends Move,
                                                S extends GameStateWithTable<P>,
@@ -19,19 +17,23 @@ export abstract class RectangularGameComponent<R extends SuperRules<M, S, C, L>,
     extends GameComponent<R, M, S, C, L>
 {
 
+    public constructor(urlName: string) {
+        super(urlName);
+    }
+
     public board: Table<P>;
 
-    public getWidth(): number {
-        return this.getState().getWidth();
+    protected readonly width: Signal<number> = computed(() => this.state().getWidth());
+
+    protected readonly height: Signal<number> = computed(() => this.state().getHeight());
+
+    protected override computeViewBox(): ViewBox {
+        const width: number = this.width() * this.SPACE_SIZE;
+        const height: number = this.height() * this.SPACE_SIZE;
+        return this.getViewBoxFor(width, height);
     }
 
-    public getHeight(): number {
-        return this.getState().getHeight();
-    }
-
-    public getViewBox(): ViewBox {
-        const width: number = this.getWidth() * this.SPACE_SIZE;
-        const height: number = this.getHeight() * this.SPACE_SIZE;
+    public getViewBoxFor(width: number, height: number): ViewBox {
         const halfStroke: number = 0.5 * this.STROKE_WIDTH;
         return ViewBox
             .fromLimits(0, width, 0, height)

@@ -1,17 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { KalahRules } from '../KalahRules';
-import { MancalaState } from '../../common/MancalaState';
-import { KalahMoveGenerator } from '../KalahMoveGenerator';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
 import { MancalaConfig } from '../../common/MancalaConfig';
 import { MancalaMove } from '../../common/MancalaMove';
 import { MancalaNode } from '../../common/MancalaRules';
-import { MGPOptional } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaState } from '../../common/MancalaState';
+import { KalahMoveGenerator } from '../KalahMoveGenerator';
+import { KalahRules } from '../KalahRules';
 
 describe('KalahMoveGenerator', () => {
 
     let moveGenerator: KalahMoveGenerator;
-    const defaultConfig: MGPOptional<MancalaConfig> = KalahRules.get().getDefaultRulesConfig();
+    const defaultConfig: MancalaConfig = KalahRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new KalahMoveGenerator();
@@ -42,6 +41,27 @@ describe('KalahMoveGenerator', () => {
 
         // Then there should be those moves
         expect(moves.length).toBe(1);
+    });
+
+    it('should include several rows when present', () => {
+        // Given a config with several rows and a state with possible moves in each of these rows
+        const customConfig: MancalaConfig = {
+            ...defaultConfig,
+            numberOfRows: 2,
+        };
+        const state: MancalaState = new MancalaState([
+            [5, 2, 3, 2, 1, 2],
+            [5, 2, 3, 2, 1, 2],
+            [0, 1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0, 0],
+        ], 24, PlayerNumberMap.of(13, 20));
+        const node: MancalaNode = new MancalaNode(state);
+
+        // When listing the moves
+        const moves: MancalaMove[] = moveGenerator.getListMoves(node, customConfig);
+
+        // Then there should be those moves
+        expect(moves.length).toBe(2);
     });
 
 });

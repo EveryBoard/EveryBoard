@@ -1,15 +1,17 @@
-import { DvonnState } from './DvonnState';
-import { DvonnNode } from './DvonnRules';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { Player } from 'src/app/jscaip/Player';
-import { DvonnMove } from './DvonnMove';
 import { ArrayUtils, Utils } from '@everyboard/lib';
+
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
+import { DvonnMove } from './DvonnMove';
 import { DvonnMoveGenerator } from './DvonnMoveGenerator';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DvonnPieceStack } from './DvonnPieceStack';
+import { DvonnNode } from './DvonnRules';
+import { DvonnState } from './DvonnState';
 
 export class DvonnOrderedMoveGenerator extends DvonnMoveGenerator {
 
-    public override getListMoves(node: DvonnNode, config: NoConfig): DvonnMove[] {
+    public override getListMoves(node: DvonnNode, config: EmptyRulesConfig): DvonnMove[] {
         const state: DvonnState = node.gameState;
         const moves: DvonnMove[] = super.getListMoves(node, config);
 

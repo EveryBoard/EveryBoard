@@ -76,8 +76,10 @@ describe('Utils', () => {
     });
 
     describe('identity', () => {
+
         it('should return its argument', () => {
             expect(Utils.identity(5)).toBe(5);
         });
     });
+
 });

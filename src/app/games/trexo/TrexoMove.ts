@@ -1,6 +1,8 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveWithTwoCoords } from 'src/app/jscaip/MoveWithTwoCoords';
 import { Encoder, MGPFallible, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { MoveWithTwoCoords } from '../../jscaip/MoveWithTwoCoords';
+
 import { TrexoFailure } from './TrexoFailure';
 import { TrexoState } from './TrexoState';
 

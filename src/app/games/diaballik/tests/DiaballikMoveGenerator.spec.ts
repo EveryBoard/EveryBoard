@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
 import { MGPFallible, MGPOptional, Set } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
 import { DiaballikBallPass, DiaballikMove, DiaballikSubMove, DiaballikTranslation } from '../DiaballikMove';
 import { DiaballikMoveGenerator, DiaballikMoveInConstruction } from '../DiaballikMoveGenerator';
 import { DiaballikNode, DiaballikRules } from '../DiaballikRules';
 import { DiaballikPiece, DiaballikState } from '../DiaballikState';
-import { Coord } from 'src/app/jscaip/Coord';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 describe('DiaballikMoveInConstruction', () => {
 
@@ -80,7 +81,7 @@ describe('DiaballikMoveInConstruction', () => {
 function numberOfSubMovesIs(n: number): (move: DiaballikMove) => boolean {
     return (move: DiaballikMove): boolean => move.getSubMoves().length === n;
 }
-const defaultConfig: NoConfig = DiaballikRules.get().getDefaultRulesConfig();
+const defaultConfig: EmptyRulesConfig = DiaballikRules.get().getDefaultRulesConfig();
 
 describe('DiaballikMoveGenerator', () => {
 

@@ -1,11 +1,14 @@
-import { TaflState } from '../TaflState';
-import { TaflNode, TaflRules } from '../TaflRules';
-import { HnefataflMove } from './HnefataflMove';
 import { MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
+
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
+import { TaflNode, TaflRules } from '../TaflRules';
+import { TaflState } from '../TaflState';
+
+import { HnefataflMove } from './HnefataflMove';
 
 export class HnefataflNode extends TaflNode<HnefataflMove> {}
 
@@ -17,8 +20,8 @@ export class HnefataflRules extends TaflRules<HnefataflMove> {
         new RulesConfigDescription<TaflConfig>({
             name: (): string => $localize`Hnefatafl`,
             config: {
-                castleIsLeftForGood:
-                    new BooleanConfig(false, TaflRules.CASTLE_IS_LEFT_FOR_GOOD),
+                canReturnToCastle:
+                    new BooleanConfig(true, TaflRules.CAN_RETURN_TO_CASTLE),
                 edgesAreKingsEnnemy:
                     new BooleanConfig(true, TaflRules.EDGE_ARE_KING_S_ENNEMY),
                 centralThroneCanSurroundKing:
@@ -41,12 +44,12 @@ export class HnefataflRules extends TaflRules<HnefataflMove> {
         super(HnefataflMove.from);
     }
 
-    public override getInitialState(config: MGPOptional<TaflConfig>): TaflState {
+    public override getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-        if (config.get().invaderStarts === false) {
+        if (config.invaderStarts === false) {
             I = TaflPawn.PLAYER_ONE_PAWN;
             D = TaflPawn.PLAYER_ZERO_PAWN;
             K = TaflPawn.PLAYER_ZERO_KING;
@@ -67,8 +70,8 @@ export class HnefataflRules extends TaflRules<HnefataflMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
-        return MGPOptional.of(HnefataflRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
+        return HnefataflRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

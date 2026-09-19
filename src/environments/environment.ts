@@ -1,4 +1,5 @@
-import { firebaseConfig } from 'src/app/firebaseConfig';
+import { firebaseConfig } from '../app/firebaseConfig';
+
 import { Environment } from './environment-type';
 
 export const environment: Environment = {
@@ -7,5 +8,5 @@ export const environment: Environment = {
     root: '/',
     firebaseConfig: firebaseConfig,
     useEmulators: false,
-    backendURL: 'https://server-test.everyboard.org',
+    backendURL: 'http://localhost:8081',
 };

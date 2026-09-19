@@ -1,18 +1,27 @@
-import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
-import { BaseGameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { GobanUtils } from 'src/app/jscaip/GobanUtils';
+import { Component, InputSignal, OnChanges, OutputEmitterRef, input, output } from '@angular/core';
+
+import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../../jscaip/Coord';
+import { GobanUtils } from '../../../../jscaip/GobanUtils';
+import { BaseGameComponent } from '../../base-game-component/BaseGameComponent';
 
 @Component({
     selector: '[app-blank-goban]',
     templateUrl: './blank-goban.component.svg',
     styleUrls: ['../../game-component/game-component.scss'],
+    imports: [],
 })
 export class BlankGobanComponent extends BaseGameComponent implements OnChanges {
 
-    @Input() width: number;
-    @Input() height: number;
-    @Output() clickCallBack: EventEmitter<Coord> = new EventEmitter<Coord>();
+    public readonly width: InputSignal<number> = input.required<number>();
+
+    public readonly height: InputSignal<number> = input.required<number>();
+
+    public readonly clickCallBack: OutputEmitterRef<Coord> = output<Coord>();
+
+    public readonly mouseEnterCallback: OutputEmitterRef<MGPOptional<Coord>> = output<MGPOptional<Coord>>();
+
     public hoshis: Coord[] = [];
 
     public ngOnChanges(): void {
@@ -28,7 +37,14 @@ export class BlankGobanComponent extends BaseGameComponent implements OnChanges 
      * Must be called after `this.board` has been set, usually in `updateBoard`.
      */
     public createHoshis(): void {
-        this.hoshis = GobanUtils.getHoshis(this.width, this.height);
+        this.hoshis = GobanUtils.getHoshis(this.width(), this.height());
     }
 
+    public onMouseEnter(x: number, y: number): void {
+        this.mouseEnterCallback.emit(MGPOptional.of(new Coord(x, y)));
+    }
+
+    public onSVGLeave(): void {
+        this.mouseEnterCallback.emit(MGPOptional.empty());
+    }
 }

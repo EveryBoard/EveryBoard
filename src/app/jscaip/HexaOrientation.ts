@@ -1,4 +1,5 @@
 import { Comparable } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 import { HexagonalGameState } from './state/HexagonalGameState';
 

@@ -1,7 +1,8 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
-import { UserSettingsService } from './UserSettingsService';
+import { Injectable, DOCUMENT, inject } from '@angular/core';
+
 import { MGPOptional } from '@everyboard/lib';
+
+import { UserSettingsService } from './UserSettingsService';
 
 type Theme = 'dark' | 'light';
 
@@ -10,11 +11,13 @@ type Theme = 'dark' | 'light';
 })
 export class ThemeService {
 
+    private readonly document: Document = inject<Document>(DOCUMENT);
+    private readonly userSettingsService: UserSettingsService = inject(UserSettingsService);
+
     private theme: Theme;
     private readonly availableThemes: Theme[] = ['dark', 'light'];
 
-    public constructor(@Inject(DOCUMENT) private readonly document: Document,
-                       private readonly userSettingsService: UserSettingsService)
+    public constructor()
     {
         const storedTheme: MGPOptional<Theme> = this.getStoredTheme();
         if (storedTheme.isPresent()) {
@@ -38,6 +41,10 @@ export class ThemeService {
         return MGPOptional.empty();
     }
     public loadTheme(theme: Theme): void {
+        // The data-theme attribute of the <html> element governs the bulma theme
+        const htmlElement: HTMLElement = this.document.getElementsByTagName('html')[0];
+        htmlElement.setAttribute('data-theme', theme);
+        // And we also need to load our own CSS for our game colors
         this.loadStyle(theme + '.css');
         this.theme = theme;
     }

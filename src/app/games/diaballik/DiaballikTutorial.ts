@@ -1,10 +1,12 @@
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
-import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../jscaip/Coord';
+
+import { DiaballikMove, DiaballikBallPass, DiaballikTranslation } from './DiaballikMove';
 import { DiaballikRules } from './DiaballikRules';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 const O: DiaballikPiece = DiaballikPiece.ZERO;
 const Ȯ: DiaballikPiece = DiaballikPiece.ZERO_WITH_BALL;
@@ -20,7 +22,7 @@ export class DiaballikTutorial extends Tutorial {
             DiaballikRules.get().getInitialState(),
         ),
         TutorialStep.fromMove(
-            $localize`Translations`,
+            TutorialStepMessage.TRANSLATIONS(),
             $localize`During a turn, you are allowed up to three actions, including at most two translations. A translation is an orthogonal step of any piece that does not hold the ball.<br/><br/>Move your leftmost piece by one step. Once you are done, click on the green button that will appear on the bottom right of the board to indicate that you are done with your turn.`,
             DiaballikRules.get().getInitialState(),
             [new DiaballikMove(DiaballikTranslation.from(new Coord(0, 6), new Coord(0, 5)).get(),

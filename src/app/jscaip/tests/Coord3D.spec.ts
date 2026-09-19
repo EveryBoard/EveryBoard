@@ -1,5 +1,7 @@
 /* eslint-disable max-lines-per-function */
-import { Encoder, EncoderTestUtils, MGPOptional } from '@everyboard/lib';
+import { Encoder, MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
 import { Coord3D } from '../Coord3D';
 
 describe('Coord3D', () => {
@@ -40,4 +42,5 @@ describe('Coord3D', () => {
         const upperCoord: Coord3D = new Coord3D(0, 0, 1);
         expect(coord.isHigherThan(upperCoord)).toBeFalse();
     });
+
 });

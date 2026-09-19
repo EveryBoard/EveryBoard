@@ -1,17 +1,18 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
 import { MGPOptional } from '@everyboard/lib';
+
+import { Coord } from '../../../jscaip/Coord';
+import { GameStatus } from '../../../jscaip/GameStatus';
+import { Player } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
 import { YinshFailure } from '../YinshFailure';
-import { YinshState } from '../YinshState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { YinshState } from '../YinshState';
 
 describe('YinshRules', () => {
 
@@ -23,7 +24,7 @@ describe('YinshRules', () => {
     const B: YinshPiece = YinshPiece.RING_ONE;
 
     let rules: YinshRules;
-    const defaultConfig: NoConfig = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = YinshRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = YinshRules.get();
@@ -37,7 +38,7 @@ describe('YinshRules', () => {
             // When placing a ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
 
-            // Then it should succeed
+            // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -100,7 +101,7 @@ describe('YinshRules', () => {
             // When placing a marker and moving the ring
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 3)), []);
 
-            // Then it should succeed
+            // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -144,7 +145,7 @@ describe('YinshRules', () => {
             RulesUtils.expectMoveFailure(rules, state, move, reason, defaultConfig);
         });
 
-        it('should forbid a move that starts from an non-ring', () => {
+        it('should forbid a move that starts from a non-ring', () => {
             // Given a state after turn 10 with a ring on the board
             const board: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
@@ -188,7 +189,7 @@ describe('YinshRules', () => {
             // When moving a ring over markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 5)), []);
 
-            // Then it should succeed and flip all markers it went over
+            // Then the move should succeed and flip all markers it went over
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -226,7 +227,7 @@ describe('YinshRules', () => {
             // When moving the ring over the empty space and then over markers
             const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.of(new Coord(3, 6)), []);
 
-            // Then it should succeed
+            // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -373,7 +374,7 @@ describe('YinshRules', () => {
                                                   [YinshCapture.of(new Coord(3, 2),
                                                                    new Coord(3, 6),
                                                                    MGPOptional.of(new Coord(5, 3)))]);
-            // Then it should succeed
+            // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -415,7 +416,7 @@ describe('YinshRules', () => {
             ],
                                                   new Coord(5, 2), MGPOptional.of(new Coord(5, 3)),
                                                   []);
-            // Then it should succeed
+            // Then the move should succeed
             const expectedBoard: Table<YinshPiece> = [
                 [N, N, N, N, N, N, _, _, _, _, N],
                 [N, N, N, N, _, _, _, _, _, _, _],
@@ -700,6 +701,9 @@ describe('YinshRules', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(3, 0), 20);
             const node: YinshNode = new YinshNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ZERO
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
         });
 
@@ -707,6 +711,9 @@ describe('YinshRules', () => {
             const state: YinshState =
                 new YinshState(YinshRules.get().getInitialState().board, PlayerNumberMap.of(0, 3), 20);
             const node: YinshNode = new YinshNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

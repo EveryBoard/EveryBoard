@@ -1,20 +1,22 @@
 import { ArrayUtils, MGPFallible, MGPOptional, Utils } from '@everyboard/lib';
-import { GameState } from '../state/GameState';
+
+import { Debug } from '../../utils/Debug';
 import { GameStatus } from '../GameStatus';
-import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
-import { GameNode } from './GameNode';
 import { Move } from '../Move';
 import { Player } from '../Player';
-import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
 import { SuperRules } from '../Rules';
-import { Debug } from 'src/app/utils/Debug';
+import { EmptyRulesConfig, RulesConfig } from '../RulesConfigUtil';
+import { GameState } from '../state/GameState';
+
+import { AI, AITimeLimitOptions, MoveGenerator } from './AI';
+import { GameNode } from './GameNode';
 
 type NodeAndPath<M extends Move, S extends GameState> = {
-    node: GameNode<M, S>,
-    path: GameNode<M, S>[],
+    node: GameNode<M, S>;
+    path: GameNode<M, S>[];
 }
 
-/*
+/**
  * Implement Monte-Carlo Tree Search
  * Useful resources to understand MCTS:
  *   - https://www.analyticsvidhya.com/blog/2019/01/monte-carlo-tree-search-introduction-algorithm-deepmind-alphago/
@@ -27,18 +29,24 @@ export class MCTS<M extends Move,
 implements AI<M, S, AITimeLimitOptions, C>
 {
     // The exploration parameter influences the MCTS results.
-    // It is chosen "empirically" (this is the "generally recommended value" from Wikipedia)
-    public explorationParameter: number = Math.sqrt(2);
+    // It is chosen "empirically". The generally recommended value from Wikipedia is Math.sqrt(2),
+    // but in our case it seems to work much better with a higher exploration parameter.
+    // A higher exploration parameter steers MCTS towards exploring more unexplored playouts, vs. exploring its wins.
+    public explorationParameter: number = 80;
 
     // The longest a game can be before we decide to stop simulating it
-    public maxGameLength: number = 8;
+    public maxGameLength: number = 7*6; // Set to the number of moves in connect 4
 
     public readonly availableOptions: AITimeLimitOptions[] = [];
+
+    // An id unique to this MCTS, used to store/retrieve cached value in nodes without clashing with other AIs
+    private readonly uniqueId: string;
 
     public constructor(public readonly name: string,
                        private readonly moveGenerator: MoveGenerator<M, S, C>,
                        private readonly rules: SuperRules<M, S, C, L>)
     {
+        this.uniqueId = Math.random().toString(36).substring(2, 8);
         for (let i: number = 1; i < 10; i++) {
             this.availableOptions.push({ name: `${i*i} seconds`, maxSeconds: i*i });
         }
@@ -48,7 +56,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Performs the search, given a node representing a board.
      * The search is performed for at most `iterations` iterations.
      */
-    public chooseNextMove(root: GameNode<M, S>, options: AITimeLimitOptions, config: MGPOptional<C>): M {
+    public chooseNextMove(root: GameNode<M, S>, options: AITimeLimitOptions, config: C): M {
         Utils.assert(this.rules.getGameStatus(root, config).isEndGame === false, 'cannot search from a finished game');
         const player: Player = root.gameState.getCurrentPlayer();
         const startTime: number = Date.now();
@@ -56,9 +64,9 @@ implements AI<M, S, AITimeLimitOptions, C>
         let iterations: number = 0;
         while (Date.now() < endTime) {
             const expansionResult: NodeAndPath<M, S> = this.expand(
-                this.select({ node: root, path: [root] }), config);
+                this.select({ node: root, path: [root] }, player), config);
             const gameStatus: GameStatus = this.simulate(expansionResult.node, endTime, config);
-            this.backpropagate(expansionResult.path, this.winScore(gameStatus, player));
+            this.backpropagate(expansionResult.path, this.score(expansionResult.node, config, gameStatus, player));
             iterations++;
         }
         Debug.display('MCTS', 'chooseNextMove', 'root winRatio: ' + this.winRatio(root));
@@ -73,11 +81,17 @@ implements AI<M, S, AITimeLimitOptions, C>
         return bestChild.previousMove.get();
     }
 
-    private winScore(gameStatus: GameStatus, player: Player): number {
+    /**
+     * Returns 1 for win, 0 for losses. Must return a result between 0 and 1 otherwise.
+     */
+    protected score(_node: GameNode<M, S>,
+                    _config: RulesConfig,
+                    gameStatus: GameStatus,
+                    player: Player): number {
         switch (gameStatus) {
             case GameStatus.DRAW:
             case GameStatus.ONGOING:
-                return 0.5;
+                return 0.01; // Prefer ongoing/draw to loss
             default:
                 if (gameStatus.winner === player) return 1;
                 else return 0;
@@ -88,12 +102,15 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Computes the UCB value of a node.
      * The UCB (Upper-Confidence-Bound) is a value used to select nodes to explore.
      */
-    private ucb(node: GameNode<M, S>, parentSimulations: number): number {
+    private adversarialUcb(node: GameNode<M, S>, parentSimulations: number, player: Player): number {
         const simulations: number = this.simulations(node);
         if (parentSimulations === 0 || simulations === 0) {
-            return Number.MAX_SAFE_INTEGER;
+            return Number.POSITIVE_INFINITY;
         }
-        return (this.wins(node) / simulations) +
+        const winRatio: number = this.wins(node) / simulations;
+        const exploitation: number =
+            node.gameState.getPreviousPlayer() === player ? winRatio : 1 - winRatio;
+        return exploitation +
                this.explorationParameter * Math.sqrt(Math.log(parentSimulations) / simulations);
     }
 
@@ -102,7 +119,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      */
     private winRatio(node: GameNode<M, S>): number {
         const simulations: number = this.simulations(node);
-        if (this.simulations(node) === 0) {
+        if (simulations === 0) {
             return 1;
         }
         return this.wins(node) / simulations;
@@ -116,12 +133,12 @@ implements AI<M, S, AITimeLimitOptions, C>
         return this.getCounterFromCache(node, 'simulations');
     }
 
-    private getCounterFromCache(node: GameNode<M, S>, name: string): number {
-        const cachedValue: MGPOptional<number> = node.getCache(name);
+    public getCounterFromCache(node: GameNode<M, S>, name: string): number {
+        const cachedValue: MGPOptional<number> = node.getCache(this.uniqueId + name);
         if (cachedValue.isPresent()) {
             return cachedValue.get();
         } else {
-            node.setCache(name, 0);
+            node.setCache(this.uniqueId + name, 0);
             return 0;
         }
     }
@@ -131,19 +148,22 @@ implements AI<M, S, AITimeLimitOptions, C>
      * This takes the first unexplored node it finds in a BFS fashion.
      * @returns the selected node
      */
-    private select(nodeAndPath: NodeAndPath<M, S>): NodeAndPath<M, S> {
+    private select(nodeAndPath: NodeAndPath<M, S>, player: Player): NodeAndPath<M, S> {
         const node: GameNode<M, S> = nodeAndPath.node;
         Debug.display('MCTS', 'select', 'Exploring node: ' + node.id);
         if (node.hasChildren()) {
             const simulations: number = this.simulations(node);
             // Select within the child with the highest UCB value.
             Debug.display('MCTS', 'select', 'UCB values: ' +
-                (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.ucb(node, simulations))));
+                (node.getChildren().map((n: GameNode<M, S>) => n.id + ': ' + this.adversarialUcb(n, simulations, player))));
             const bestChildren: GameNode<M, S>[] =
-                ArrayUtils.maximumsBy(node.getChildren(), (n: GameNode<M, S>) => this.ucb(n, simulations));
+                ArrayUtils.maximumsBy(
+                    node.getChildren(),
+                    (n: GameNode<M, S>) => this.adversarialUcb(n, simulations, player),
+                );
             const childToVisit: GameNode<M, S> = ArrayUtils.getRandomElement(bestChildren);
             Debug.display('MCTS', 'select', 'selecting children ' + childToVisit.id);
-            return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) });
+            return this.select({ node: childToVisit, path: nodeAndPath.path.concat([childToVisit]) }, player);
         } else {
             // This is a leaf node, we select it.
             Debug.display('MCTS', 'select', 'this is a leaf node, we select it');
@@ -155,7 +175,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Expands a node, i.e., creates children to explore if needed, or returns the node directly.
      * @returns one of the created child, or the node itself if it is terminal
      */
-    private expand(nodeAndPath: NodeAndPath<M, S>, config: MGPOptional<C>): NodeAndPath<M, S> {
+    private expand(nodeAndPath: NodeAndPath<M, S>, config: C): NodeAndPath<M, S> {
         if (this.rules.getGameStatus(nodeAndPath.node, config).isEndGame) {
             // Even though we haven't explicitly explored this node (that is, selected it for expansion),
             // it is a terminal node. We won't try to calculate its child.
@@ -176,7 +196,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Simulate a game from the given node. Does not change anything in the node.
      * @returns the game status at the end of the simulation
      */
-    private simulate(node: GameNode<M, S>, endTime: number, config: MGPOptional<C>): GameStatus {
+    private simulate(node: GameNode<M, S>, endTime: number, config: C): GameStatus {
         Debug.display('MCTS', 'simulate', 'simulate from node which has a last move of ' + node.previousMove.get().toString());
         let current: GameNode<M, S> = node;
         let steps: number = 0;
@@ -197,8 +217,10 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Picks a random move and play it
      * @returns the state after the move
      */
-    private playRandomStep(node: GameNode<M, S>, config: MGPOptional<C>): GameNode<M, S> {
-        const move: M = ArrayUtils.getRandomElement(this.moveGenerator.getListMoves(node, config));
+    private playRandomStep(node: GameNode<M, S>, config: C): GameNode<M, S> {
+        const moves: M[] = this.moveGenerator.getListMoves(node, config);
+        Utils.assert(moves.length > 0, 'MoveGenerator gave empty list of moves for ongoing game to MCTS');
+        const move: M = ArrayUtils.getRandomElement(moves);
         return this.play(node, move, config);
     }
 
@@ -206,7 +228,7 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Plays a move.
      * @returns the state after the move
      */
-    private play(node: GameNode<M, S>, move: M, config: MGPOptional<C>): GameNode<M, S> {
+    private play(node: GameNode<M, S>, move: M, config: C): GameNode<M, S> {
         const legality: MGPFallible<L> = this.rules.isLegal(move, node.gameState, config);
         Utils.assert(legality.isSuccess(), 'heuristic returned illegal move', { move: move.toString() });
         const childState: S = this.rules.applyLegalMove(move, node.gameState, config, legality.get());
@@ -220,18 +242,18 @@ implements AI<M, S, AITimeLimitOptions, C>
      * Backpropagates the result of a simulation in a path from the simulated node to the root of the tree.
      * @returns nothing, as it modifies the nodes directly
      */
-    private backpropagate(path: GameNode<M, S>[], winScore: number): void {
+    private backpropagate(path: GameNode<M, S>[], score: number): void {
         for (const node of path) {
-            this.addSimulationResult(node, winScore);
+            this.addSimulationResult(node, score);
             Debug.display('MCTS', 'backpropagate', `backpropagate to node which now has ${this.wins(node)/this.simulations(node)}`);
         }
     }
 
-    private addSimulationResult(node: GameNode<M, S>, winScore: number): void {
+    private addSimulationResult(node: GameNode<M, S>, score: number): void {
         const simulations: number = this.simulations(node) + 1;
-        const wins: number = this.wins(node) + winScore;
-        node.setCache('wins', wins);
-        node.setCache('simulations', simulations);
+        const wins: number = this.wins(node) + score;
+        node.setCache(this.uniqueId + 'wins', wins);
+        node.setCache(this.uniqueId + 'simulations', simulations);
     }
 
     public getInfo(node: GameNode<M, S>): string {

@@ -1,22 +1,27 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation } from '@everyboard/lib';
-import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionRules } from './LinesOfActionRules';
+
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
 import { LinesOfActionFailure } from './LinesOfActionFailure';
-import { LinesOfActionState } from './LinesOfActionState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
+import { LinesOfActionHeuristic } from './LinesOfActionHeuristic';
+import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionMoveGenerator } from './LinesOfActionMoveGenerator';
-import { LinesOfActionMinimax } from './LinesOfActionMinimax';
+import { LinesOfActionRules } from './LinesOfActionRules';
+import { LinesOfActionState } from './LinesOfActionState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-lines-of-action',
     templateUrl: './lines-of-action.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActionRules,
                                                                      LinesOfActionMove,
@@ -30,29 +35,33 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     private lastMoved: Coord[] = [];
     private captured: MGPOptional<Coord> = MGPOptional.empty();
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('LinesOfAction');
-        this.availableAIs = [
-            new LinesOfActionMinimax(),
-            new MCTS($localize`MCTS`, new LinesOfActionMoveGenerator(), this.rules),
-        ];
+    public constructor() {
+        super('LinesOfAction');
+        this.aiConfig = {
+            minimax: [{
+                id: 'Groups',
+                name: $localize`Groups`,
+                heuristic: (): LinesOfActionHeuristic => new LinesOfActionHeuristic(),
+                moveGenerator: (): LinesOfActionMoveGenerator => new LinesOfActionMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): LinesOfActionMoveGenerator => new LinesOfActionMoveGenerator(),
+            }],
+        };
         this.encoder = LinesOfActionMove.encoder;
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const coord: Coord = new Coord(x, y);
         if (this.selected.equalsValue(coord)) {
             return this.cancelMove();
         }
-        const currentPlayer: PlayerOrNone = this.getState().getCurrentPlayer();
+        const currentPlayer: PlayerOrNone = this.state().getCurrentPlayer();
         if (this.selected.isAbsent() ||
-            this.getState().getPieceAt(coord) === currentPlayer)
+            this.state().getPieceAt(coord) === currentPlayer)
         {
             return this.select(coord);
         } else {
@@ -71,25 +80,25 @@ export class LinesOfActionComponent extends RectangularGameComponent<LinesOfActi
     }
 
     private async select(coord: Coord): Promise<MGPValidation> {
-        const piece: PlayerOrNone = this.getState().getPieceAt(coord);
+        const piece: PlayerOrNone = this.state().getPieceAt(coord);
         if (piece.isNone()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-        } else if (piece === this.getState().getCurrentOpponent()) {
+        } else if (piece === this.state().getCurrentOpponent()) {
             return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = LinesOfActionRules.possibleTargets(this.getState(), this.selected.get()).toList();
+        this.targets = LinesOfActionRules.possibleTargets(this.state(), this.selected.get()).toList();
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE());
         }
         return MGPValidation.SUCCESS;
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().board;
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        this.board = this.state().board;
     }
 
-    public override async showLastMove(move: LinesOfActionMove): Promise<void> {
+    protected override async showLastMove(move: LinesOfActionMove): Promise<void> {
         if (this.getPreviousState().getPieceAt(move.getEnd()).isPlayer()) {
             this.captured = MGPOptional.of(move.getEnd());
         }

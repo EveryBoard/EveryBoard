@@ -1,11 +1,14 @@
-import { TablutMove } from './TablutMove';
 import { MGPOptional } from '@everyboard/lib';
-import { TaflNode, TaflRules } from '../TaflRules';
+
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { Table } from '../../../jscaip/TableUtils';
 import { TaflConfig } from '../TaflConfig';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
 import { TaflPawn } from '../TaflPawn';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { TaflNode, TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
+
+import { TablutMove } from './TablutMove';
 
 export class TablutNode extends TaflNode<TablutMove> {}
 
@@ -17,8 +20,8 @@ export class TablutRules extends TaflRules<TablutMove> {
         new RulesConfigDescription<TaflConfig>({
             name: (): string => $localize`Tablut`,
             config: {
-                castleIsLeftForGood:
-                    new BooleanConfig(false, TaflRules.CASTLE_IS_LEFT_FOR_GOOD),
+                canReturnToCastle:
+                    new BooleanConfig(true, TaflRules.CAN_RETURN_TO_CASTLE),
                 edgesAreKingsEnnemy:
                     new BooleanConfig(true, TaflRules.EDGE_ARE_KING_S_ENNEMY),
                 centralThroneCanSurroundKing:
@@ -41,12 +44,12 @@ export class TablutRules extends TaflRules<TablutMove> {
         super(TablutMove.from);
     }
 
-    public override getInitialState(config: MGPOptional<TaflConfig>): TaflState {
+    public override getInitialState(config: TaflConfig): TaflState {
         const _: TaflPawn = TaflPawn.UNOCCUPIED;
         let I: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
         let D: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
         let K: TaflPawn = TaflPawn.PLAYER_ONE_KING;
-        if (config.get().invaderStarts === false) {
+        if (config.invaderStarts === false) {
             I = TaflPawn.PLAYER_ONE_PAWN;
             D = TaflPawn.PLAYER_ZERO_PAWN;
             K = TaflPawn.PLAYER_ZERO_KING;
@@ -65,8 +68,8 @@ export class TablutRules extends TaflRules<TablutMove> {
         return new TaflState(board, 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<TaflConfig>> {
-        return MGPOptional.of(TablutRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<TaflConfig> {
+        return TablutRules.RULES_CONFIG_DESCRIPTION;
     }
 
 }

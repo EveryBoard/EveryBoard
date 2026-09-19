@@ -1,21 +1,24 @@
-import { GameComponent } from 'src/app/components/game-components/game-component/GameComponent';
-import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
-import { NewGameMove } from './NewGameMove';
-import { NewGameState } from './NewGameState';
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { NewGameMoveGenerator } from './NewGameMoveGenerator';
-import { NewGameMinimax } from './NewGameMinimax';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPOptional } from '@everyboard/lib';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { GameComponent } from '../../components/game-components/game-component/GameComponent';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+
+import { NewGameHeuristic } from './NewGameHeuristic';
+import { NewGameMove } from './NewGameMove';
+import { NewGameMoveGenerator } from './NewGameMoveGenerator';
+import { NewGameLegalityInfo, NewGameRules } from './NewGameRules';
+import { NewGameState } from './NewGameState';
 
 /**
  * This is an Angular directive to specify that this is a component of the app.
  * You just have adapt the selector and template URL here.
  */
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-new-game',
     templateUrl: './new-game.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
@@ -33,16 +36,24 @@ export class NewGameComponent extends GameComponent<NewGameRules,
 {
     /**
      * The component constructor always takes the same parameters.
-     * It must set up the `rules`, `encoder`, `node`, and `availableMinimaxes` fields.
-     * The minimax list can remain empty.
+     * It must set up the `rules`, `encoder`, `node`, and `aiConfig` fields.
+     * The AI config can remain empty.
      */
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('NewGame');
-        this.availableAIs = [
-            new NewGameMinimax(),
-            new MCTS($localize`MCTS`, new NewGameMoveGenerator(), this.rules),
-        ];
+    public constructor() {
+        super('NewGame');
+        this.aiConfig = {
+            minimax: [{
+                id: 'Dummy',
+                name: 'Dummy',
+                heuristic: (): NewGameHeuristic => new NewGameHeuristic(),
+                moveGenerator: (): NewGameMoveGenerator => new NewGameMoveGenerator(),
+            }],
+            mcts: [{
+                id: 'default',
+                name: $localize`MCTS`,
+                moveGenerator: (): NewGameMoveGenerator => new NewGameMoveGenerator(),
+            }],
+        };
         this.encoder = NewGameMove.encoder;
 
         // If the board you draw must not be rotated of 180° when you play the second player, disable the following:
@@ -50,6 +61,13 @@ export class NewGameComponent extends GameComponent<NewGameRules,
 
         // If your game has no scores in-game, disable the following:
         this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+    }
+
+    /**
+     * This method defines the part of the SVG canvas displayed by the game.
+     */
+    protected override computeViewBox(): ViewBox {
+        return new ViewBox(0, 0, 100, 100);
     }
 
     /**
@@ -61,7 +79,7 @@ export class NewGameComponent extends GameComponent<NewGameRules,
     /**
      * This method should display the last move in the component
      */
-    public override async showLastMove(move: NewGameMove): Promise<void> {
+    protected override async showLastMove(move: NewGameMove): Promise<void> {
         return;
     }
 

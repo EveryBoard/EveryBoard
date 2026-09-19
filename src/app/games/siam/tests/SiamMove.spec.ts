@@ -1,19 +1,21 @@
 /* eslint-disable max-lines-per-function */
-import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { MGPOptional } from '@everyboard/lib';
+import { EncoderTestUtils } from '@everyboard/lib/testing';
+
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Table } from '../../../jscaip/TableUtils';
 import { SiamMove } from '../SiamMove';
-import { SiamState } from '../SiamState';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { SiamPiece } from '../SiamPiece';
-import { EncoderTestUtils, MGPOptional } from '@everyboard/lib';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
+import { SiamPiece } from '../SiamPiece';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 describe('SiamMove', () => {
 
     const _: SiamPiece = SiamPiece.EMPTY;
     const M: SiamPiece = SiamPiece.MOUNTAIN;
     const D: SiamPiece = SiamPiece.LIGHT_DOWN;
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     it('should have a bijective encoder', () => {
         const board: Table<SiamPiece> = [

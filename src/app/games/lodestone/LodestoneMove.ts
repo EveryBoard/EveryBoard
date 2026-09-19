@@ -1,13 +1,15 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Encoder, JSONObject, JSONValueWithoutArray, Utils } from '@everyboard/lib';
+
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoord } from '../../jscaip/MoveCoord';
+
 import { LodestoneDirection, LodestoneOrientation } from './LodestonePiece';
 
 export type LodestoneCaptures = {
-    top: number,
-    bottom: number,
-    left: number,
-    right: number,
+    top: number;
+    bottom: number;
+    left: number;
+    right: number;
 }
 
 export class LodestoneMove extends MoveCoord {

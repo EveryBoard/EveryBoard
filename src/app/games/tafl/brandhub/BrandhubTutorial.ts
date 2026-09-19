@@ -1,19 +1,19 @@
-import { BrandhubMove } from 'src/app/games/tafl/brandhub/BrandhubMove';
-import { TaflPawn } from 'src/app/games/tafl/TaflPawn';
-import { Coord } from 'src/app/jscaip/Coord';
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { BrandhubRules } from './BrandhubRules';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { Coord } from '../../../jscaip/Coord';
 import { TaflConfig } from '../TaflConfig';
+import { TaflPawn } from '../TaflPawn';
 import { TaflState } from '../TaflState';
-import { MGPOptional } from '@everyboard/lib';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+
+import { BrandhubMove } from './BrandhubMove';
+import { BrandhubRules } from './BrandhubRules';
 
 const _: TaflPawn = TaflPawn.UNOCCUPIED;
 const O: TaflPawn = TaflPawn.PLAYER_ZERO_PAWN;
 const X: TaflPawn = TaflPawn.PLAYER_ONE_PAWN;
 const A: TaflPawn = TaflPawn.PLAYER_ONE_KING;
 
-const defaultConfig: MGPOptional<TaflConfig> = BrandhubRules.get().getDefaultRulesConfig();
+const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
 export class BrandhubTutorial extends Tutorial {
     public tutorial: TutorialStep[] = [

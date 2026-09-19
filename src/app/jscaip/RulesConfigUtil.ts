@@ -1,10 +1,11 @@
 /* eslint-disable no-multi-spaces */
-import { MGPOptional } from '@everyboard/lib';
-import { GameInfo } from '../components/normal-component/pick-game/pick-game.component';
-import { ConfigLine } from '../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { GameInfo } from '../components/normal-component/pick-game/GameInfo';
+import { ConfigLine } from '../components/wrapper-components/rules-configuration/ConfigLine';
 import { Localized } from '../utils/LocaleUtils';
 
-export type ConfigDescriptionType = number | boolean;
+export type ConfigDescriptionType = number | boolean | string;
 
 export type NamedRulesConfig<R extends RulesConfig = EmptyRulesConfig> = {
     config: R;
@@ -12,8 +13,9 @@ export type NamedRulesConfig<R extends RulesConfig = EmptyRulesConfig> = {
 };
 
 export type DefaultConfigDescription<R extends RulesConfig = EmptyRulesConfig> = {
-    name: Localized,
-    config: Record<keyof R, ConfigLine>,
+    name: Localized;
+    config: Record<keyof R, ConfigLine>;
+    validators?: ((config: R) => MGPValidation)[];
 }
 
 export type RulesConfig = {
@@ -22,17 +24,16 @@ export type RulesConfig = {
 
 export type EmptyRulesConfig = Record<string, never>;
 
-export type NoConfig = MGPOptional<EmptyRulesConfig>;
-
 export class RulesConfigUtils {
 
-    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): MGPOptional<C> {
-        const gameInfos: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
-        if (gameInfos.isPresent()) {
-            return gameInfos.get().getRulesConfig() as MGPOptional<C>;
-        } else {
-            return MGPOptional.empty();
-        }
+    /**
+     * Returns the default config for that game. The game should exist.
+     * Every game has a default config (empty in case there's nothing to configure).
+     */
+    public static getGameDefaultConfig<C extends RulesConfig>(gameName: string): C {
+        const gameInfo: MGPOptional<GameInfo> = GameInfo.getByUrlName(gameName);
+        Utils.assert(gameInfo.isPresent(), `Game does not exist but it should: ${gameName}`);
+        return gameInfo.get().getRulesConfig() as C;
     }
 
 }

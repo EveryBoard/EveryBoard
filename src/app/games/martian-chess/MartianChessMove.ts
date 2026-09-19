@@ -1,10 +1,12 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
 import { Encoder, MGPFallible, MGPOptional } from '@everyboard/lib';
-import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Localized } from 'src/app/utils/LocaleUtils';
-import { Vector } from 'src/app/jscaip/Vector';
+
+import { Coord } from '../../jscaip/Coord';
+import { MoveCoordToCoord } from '../../jscaip/MoveCoordToCoord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Vector } from '../../jscaip/Vector';
+import { Localized } from '../../utils/LocaleUtils';
+
 import { MartianChessState } from './MartianChessState';
 
 export class MartianChessMoveFailure {
@@ -26,10 +28,10 @@ export class MartianChessMove extends MoveCoordToCoord {
         (f: [Coord, Coord, boolean]): MartianChessMove => MartianChessMove.from(f[0], f[1], f[2]).get(),
     );
     public static from(start: Coord, end: Coord, calledTheClock: boolean = false): MGPFallible<MartianChessMove> {
-        if (MartianChessState.isOnBoard(start) === false) {
+        if (MartianChessState.isNotOnBoard(start)) {
             return MGPFallible.failure(MartianChessMoveFailure.START_COORD_OUT_OF_RANGE());
         }
-        if (MartianChessState.isOnBoard(end) === false) {
+        if (MartianChessState.isNotOnBoard(end)) {
             return MGPFallible.failure(MartianChessMoveFailure.END_COORD_OUT_OF_RANGE());
         }
         if (end.equals(start)) {

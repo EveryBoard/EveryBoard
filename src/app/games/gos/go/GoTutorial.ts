@@ -1,11 +1,16 @@
-import { GoMove } from 'src/app/games/gos/GoMove';
-import { GoState } from 'src/app/games/gos/GoState';
-import { GoPiece } from '../GoPiece';
 import { MGPOptional } from '@everyboard/lib';
+
 import { Tutorial, TutorialStep } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
-import { GoConfig, GoRules } from './GoRules';
+import { TutorialStepMessage } from '../../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { GoMove } from '../GoMove';
+import { GoPhase } from '../GoPhase';
+import { GoPiece } from '../GoPiece';
+import { GoState } from '../GoState';
+import { RectangularGoConfig } from '../abstract-rectangular-go/AbstractRectangularGoRules';
+
+import { GoRules } from './GoRules';
+
 
 const X: GoPiece = GoPiece.LIGHT;
 const O: GoPiece = GoPiece.DARK;
@@ -14,7 +19,7 @@ const w: GoPiece = GoPiece.LIGHT_TERRITORY;
 const b: GoPiece = GoPiece.DARK_TERRITORY;
 const _: GoPiece = GoPiece.EMPTY;
 
-const defaultConfig: MGPOptional<GoConfig> = GoRules.get().getDefaultRulesConfig();
+const defaultConfig: RectangularGoConfig = GoRules.get().getDefaultRulesConfig();
 
 export class GoTutorial extends Tutorial {
 
@@ -37,36 +42,32 @@ export class GoTutorial extends Tutorial {
                 [_, _, O, X, _, _],
                 [_, _, O, X, _, _],
                 [_, _, O, X, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
         ),
         TutorialStep.fromMove(
             $localize`Simple capture`,
-            $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals).
-        It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties.
-        If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>
-        You're playing Dark. The light piece on the board only has one liberty left, play there.`,
+            $localize`An isolated stone, like the one in the middle here, has 4 neighboring intersections (not 8, because we do not count diagonals). It is said of a group which has exactly 2 free neighboring squares, that this group has two liberties. If Dark plays on the last liberty of the light stone, this stone is removed from the Goban (captured) and Dark earns one point.<br/><br/>You're playing Dark. The light piece on the board has only one liberty left, play there.`,
             new GoState([
                 [_, _, _, _, _],
                 [_, _, O, _, _],
                 [_, O, X, _, _],
                 [_, _, O, _, _],
                 [_, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(3, 2)],
             $localize`Congratulations, you have earned one point.`,
             $localize`Failed, try again by playing on one of the intersections directly next to the light stone.`,
         ),
         TutorialStep.fromMove(
             $localize`Capturing multiple stones`,
-            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and are not capturable in isolation.<br/><br/>
-        You're playing Dark. The light group here only has one liberty left, capture it.`,
+            $localize`Stones that are connected horizontally or vertically must be captured at the same time, and cannot be captured separately.<br/><br/>You're playing Dark. The light group here has only one liberty left, capture it.`,
             new GoState([
                 [_, O, _, _, _],
                 [O, X, _, _, _],
                 [O, X, X, O, _],
                 [_, O, O, _, _],
                 [_, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(2, 1)],
             $localize`Congratulations, you have earned three points and formed a territory.`,
             $localize`Failed, you have not captured the group. Play on the last liberty of that group.`,
@@ -83,23 +84,18 @@ export class GoTutorial extends Tutorial {
                 [O, _, _, _, X],
                 [X, O, _, X, _],
                 [_, X, _, X, O],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
         ),
         TutorialStep.informational(
             $localize`Life and death (death)`,
-            $localize`From the capture rule follows the life and death notion:
-        dead stones are stones that are definitely capturable (without losing anything else).
-        Alive stones are stones that can never be captured.
-        From the capture rule, Dark can play inside Light's territory and make a capture.
-        In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured).
-        At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
+            $localize`From the capture rule follows the life and death notion: dead stones are stones that can definitely be captured (without losing anything else). Alive stones are stones that can never be captured. From the capture rule, Dark can play inside Light's territory and make a capture. In this case, we say that Light has only one eye (its last liberty) and that Light is dead (even if not yet captured). At the end of the game, the dead stones will count as captures, and the intersections they occupy as territories.`,
             new GoState([
                 [_, _, _, _, _],
                 [O, O, O, _, _],
                 [X, X, O, _, _],
                 [_, X, O, _, _],
                 [X, X, O, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
         ),
         TutorialStep.informational(
             $localize`Life and death (eyes)`,
@@ -112,7 +108,7 @@ export class GoTutorial extends Tutorial {
                 [O, O, X, _, _],
                 [X, O, X, _, _],
                 [_, O, X, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
         ),
         TutorialStep.informational(
             $localize`Seki`,
@@ -128,7 +124,7 @@ export class GoTutorial extends Tutorial {
                 [_, X, O, X, X, O, _],
                 [_, X, O, X, X, O, _],
                 [_, X, O, _, X, O, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
         ),
         TutorialStep.fromMove(
             $localize`Ko`,
@@ -142,7 +138,7 @@ export class GoTutorial extends Tutorial {
                 [_, _, _, O, X, _, _],
                 [_, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'PLAYING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.PLAYING),
             [new GoMove(4, 3)],
             $localize`Now, if Light tries to recapture the stone that Dark has just put on the Goban, this one would go back to its previous state, opening the door for an endless game.
         This intersection is therefore marked with a red square, to remind the players that this intersection is forbidden.
@@ -168,7 +164,7 @@ export class GoTutorial extends Tutorial {
                 [X, X, O, O, O, X, X, O, X],
                 [O, O, O, X, X, X, w, X, X],
                 [b, b, O, O, O, X, X, w, w],
-            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), 'COUNTING'),
+            ], PlayerNumberMap.of(0, 0), 0, MGPOptional.empty(), GoPhase.COUNTING),
             [new GoMove(0, 3)],
             $localize`Congratulations, Dark has 15 territories and 3 light stones still present, called prisoners at the end of the game.
         The intersections where the prisoners are count as Dark's territory

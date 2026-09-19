@@ -1,4 +1,5 @@
 import { Utils } from '@everyboard/lib';
+
 import { Coord } from './Coord';
 import { FlatHexaOrientation, HexaOrientation } from './HexaOrientation';
 
@@ -33,6 +34,14 @@ export class HexaLayout {
 
     public getHexaPoints(): string {
         const points: string[] = this.getHexaPointsList().map((c: Coord) => c.toSVGPoint());
+        return points.join(' ');
+    }
+
+    public getHexaDiagonalPoints(): string {
+        const pointList: Coord[] = this.getHexaPointsList();
+        const upLeft: Coord = pointList[0];
+        const downRight: Coord = pointList[3];
+        const points: string[] = [upLeft, downRight].map((c: Coord) => c.toSVGPoint());
         return points.join(' ');
     }
 

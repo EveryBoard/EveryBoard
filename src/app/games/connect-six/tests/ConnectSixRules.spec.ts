@@ -1,13 +1,16 @@
 /* eslint-disable max-lines-per-function */
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { BoardValue } from '../../../jscaip/AI/BoardValue';
+import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { GobanConfig } from '../../../jscaip/GobanConfig';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { ConnectSixAlignmentHeuristic } from '../ConnectSixAlignmentHeuristic';
+import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
-import { ConnectSixDrops, ConnectSixFirstMove, ConnectSixMove } from '../ConnectSixMove';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { GobanConfig } from 'src/app/jscaip/GobanConfig';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
 
 describe('ConnectSixRules', () => {
     /**
@@ -22,10 +25,26 @@ describe('ConnectSixRules', () => {
     const X: PlayerOrNone = PlayerOrNone.ONE;
 
     let rules: ConnectSixRules;
-    const defaultConfig: MGPOptional<GobanConfig> = ConnectSixRules.get().getDefaultRulesConfig();
+    const defaultConfig: GobanConfig = ConnectSixRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         rules = ConnectSixRules.get();
+    });
+
+    it('should score occupied squares in alignment heuristic', () => {
+        // Given a state with pieces to evaluate
+        const state: ConnectSixState = new ConnectSixState([
+            [O, _, _],
+            [_, X, _],
+            [_, _, _],
+        ], 2);
+        const heuristic: ConnectSixAlignmentHeuristic = new ConnectSixAlignmentHeuristic();
+
+        // When evaluating it
+        const value: BoardValue = heuristic.getBoardValue(new ConnectSixNode(state), { width: 3, height: 3 });
+
+        // Then the heuristic should inspect occupied squares
+        expect(value.metrics.length).toBe(1);
     });
 
     describe('first turn', () => {
@@ -269,7 +288,7 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 2);
 
-            // Then it should succeed
+            // Then the move should succeed
             RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
         });
 
@@ -329,6 +348,9 @@ describe('ConnectSixRules', () => {
                 [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             ], 8);
             const node: ConnectSixNode = new ConnectSixNode(state);
+
+            // When checking the game status
+            // Then it should be a victory for Player.ONE
             RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
         });
 

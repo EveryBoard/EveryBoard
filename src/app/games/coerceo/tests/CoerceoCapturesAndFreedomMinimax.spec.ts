@@ -1,16 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { CoerceoCapturesAndFreedomHeuristic } from '../CoerceoCapturesAndFreedomHeuristic';
+import { CoerceoMove } from '../CoerceoMove';
+import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { CoerceoCapturesAndFreedomMinimax } from '../CoerceoCapturesAndFreedomMinimax';
+import { CoerceoState } from '../CoerceoState';
+
+class CoerceoCapturesAndFreedomMinimax extends Minimax<CoerceoMove, CoerceoState, CoerceoConfig> {
+    public constructor() {
+        super('Captures > Freedom', CoerceoRules.get(), new CoerceoCapturesAndFreedomHeuristic(), new CoerceoOrderedMoveGenerator());
+    }
+}
 
 describe('CoerceoCapturesAndFreedomMinimax', () => {
 
     const rules: CoerceoRules = CoerceoRules.get();
     const minimax: CoerceoCapturesAndFreedomMinimax = new CoerceoCapturesAndFreedomMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<CoerceoConfig> = CoerceoRules.get().getDefaultRulesConfig();
+    const defaultConfig: CoerceoConfig = CoerceoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -21,4 +30,5 @@ describe('CoerceoCapturesAndFreedomMinimax', () => {
             shouldFinish: false, // not a finisher
         });
     });
+
 });

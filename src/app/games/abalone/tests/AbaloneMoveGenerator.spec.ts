@@ -1,10 +1,9 @@
 /* eslint-disable max-lines-per-function */
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Table } from '../../../jscaip/TableUtils';
 import { AbaloneMoveGenerator } from '../AbaloneMoveGenerator';
-import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
+import { AbaloneConfig, AbaloneNode, AbaloneRules } from '../AbaloneRules';
 import { AbaloneState } from '../AbaloneState';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
 
 const _: FourStatePiece = FourStatePiece.EMPTY;
 const N: FourStatePiece = FourStatePiece.UNREACHABLE;
@@ -14,7 +13,7 @@ const X: FourStatePiece = FourStatePiece.ONE;
 describe('AbaloneMoveGenerator', () => {
 
     let moveGenerator: AbaloneMoveGenerator;
-    const defaultConfig: NoConfig = AbaloneRules.get().getDefaultRulesConfig();
+    const defaultConfig: AbaloneConfig = AbaloneRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new AbaloneMoveGenerator();

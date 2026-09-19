@@ -1,23 +1,29 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPMap, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { BooleanConfig } from '../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { CoordSet } from '../../jscaip/CoordSet';
+import { FourStatePiece } from '../../jscaip/FourStatePiece';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { Table } from '../../jscaip/TableUtils';
+import { Debug } from '../../utils/Debug';
+
+import { CoerceoFailure } from './CoerceoFailure';
 import { CoerceoMove, CoerceoRegularMove, CoerceoTileExchangeMove } from './CoerceoMove';
 import { CoerceoState } from './CoerceoState';
-import { CoerceoFailure } from './CoerceoFailure';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { Debug } from 'src/app/utils/Debug';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Player } from 'src/app/jscaip/Player';
-import { BooleanConfig, RulesConfigDescription } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
 
-export type CoerceoConfig = {
+export type CoerceoConfig = RulesConfig & {
+
     smallBoard: boolean;
-}
+
+};
 
 export class CoerceoNode extends GameNode<CoerceoMove, CoerceoState> {}
 
@@ -41,13 +47,13 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         return CoerceoRules.singleton.get();
     }
 
-    public override getInitialState(config: MGPOptional<CoerceoConfig>): CoerceoState {
+    public override getInitialState(config: CoerceoConfig): CoerceoState {
         const _: FourStatePiece = FourStatePiece.EMPTY;
         const N: FourStatePiece = FourStatePiece.UNREACHABLE;
         const O: FourStatePiece = FourStatePiece.ZERO;
         const X: FourStatePiece = FourStatePiece.ONE;
         let board: Table<FourStatePiece>;
-        if (config.get().smallBoard) {
+        if (config.smallBoard) {
             board = [
                 [N, N, N, N, N, N, N, N, N],
                 [N, N, N, O, _, O, N, N, N],
@@ -75,13 +81,13 @@ export class CoerceoRules extends ConfigurableRules<CoerceoMove, CoerceoState, C
         return new CoerceoState(board, 0, PlayerNumberMap.of(0, 0), PlayerNumberMap.of(0, 0));
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<CoerceoConfig>> {
-        return MGPOptional.of(CoerceoRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<CoerceoConfig> {
+        return CoerceoRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override applyLegalMove(move: CoerceoMove,
                                    state: CoerceoState,
-                                   _config: MGPOptional<CoerceoConfig>,
+                                   _config: CoerceoConfig,
                                    _info: void)
     : CoerceoState
     {

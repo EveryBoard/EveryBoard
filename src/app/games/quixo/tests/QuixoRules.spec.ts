@@ -1,21 +1,23 @@
 /* eslint-disable max-lines-per-function */
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { QuixoConfig, QuixoState } from '../QuixoState';
+import { MGPOptional } from '@everyboard/lib';
+import { TestUtils } from '@everyboard/lib/testing';
+
+import { Coord } from '../../../jscaip/Coord';
+import { CoordSet } from '../../../jscaip/CoordSet';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { RulesFailure } from '../../../jscaip/RulesFailure';
+import { Table } from '../../../jscaip/TableUtils';
+import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
+import { QuixoFailure } from '../QuixoFailure';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoNode, QuixoRules } from '../QuixoRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Table } from 'src/app/jscaip/TableUtils';
-import { RulesUtils } from 'src/app/jscaip/tests/RulesUtils.spec';
-import { MGPOptional, TestUtils } from '@everyboard/lib';
-import { QuixoFailure } from '../QuixoFailure';
-import { CoordSet } from 'src/app/jscaip/CoordSet';
+import { QuixoConfig, QuixoState } from '../QuixoState';
 
 describe('QuixoRules', () => {
 
     let rules: QuixoRules;
-    const defaultConfig: MGPOptional<QuixoConfig> = QuixoRules.get().getDefaultRulesConfig();
+    const defaultConfig: QuixoConfig = QuixoRules.get().getDefaultRulesConfig();
     const _: PlayerOrNone = PlayerOrNone.NONE;
     const O: PlayerOrNone = PlayerOrNone.ZERO;
     const X: PlayerOrNone = PlayerOrNone.ONE;
@@ -53,7 +55,7 @@ describe('QuixoRules', () => {
     });
 
     it('should throw when suggesting move for out of range', () => {
-        // Given an normal config board
+        // Given a normal config board
         const state: QuixoState = QuixoRules.get().getInitialState(defaultConfig);
 
         // When doing a move out of range
@@ -117,7 +119,7 @@ describe('QuixoRules', () => {
         RulesUtils.expectMoveSuccess(rules, state, move, expectedState, defaultConfig);
     });
 
-    it('should declare winner player zero when he create a line of his symbol', () => {
+    it('should declare winner player zero when he create a line of their symbol', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, O],
             [_, _, _, _, O],
@@ -140,7 +142,7 @@ describe('QuixoRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ZERO, defaultConfig);
     });
 
-    it('should declare winner player one when he create a line of his symbol', () => {
+    it('should declare winner player one when he create a line of their symbol', () => {
         const board: Table<PlayerOrNone> = [
             [_, _, _, _, X],
             [_, _, _, _, X],
@@ -163,7 +165,7 @@ describe('QuixoRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
-    it('should declare loser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
+    it('should declare loser player zero who create a line of their opponent symbol, even if creating a line of their symbol too', () => {
         const board: Table<PlayerOrNone> = [
             [X, _, _, _, O],
             [X, _, _, _, O],
@@ -186,7 +188,7 @@ describe('QuixoRules', () => {
         RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, defaultConfig);
     });
 
-    it('should declare loser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
+    it('should declare loser player one who create a line of their opponent symbol, even if creating a line of their symbol too', () => {
         const board: Table<PlayerOrNone> = [
             [O, _, _, _, X],
             [O, _, _, _, X],
@@ -210,6 +212,17 @@ describe('QuixoRules', () => {
     });
 
     describe('getVictoriousCoords', () => {
+
+        it('should return empty row when no victories', () => {
+            // Given a board without victories
+            const state: QuixoState = QuixoRules.get().getInitialState(defaultConfig);
+
+            // When calling getVictoriousCoords
+            const result: Coord[] = QuixoRules.getVictoriousCoords(state);
+
+            // Then result should be empty
+            expect(result).toEqual([]);
+        });
 
         it('should return victorious column', () => {
             const board: Table<PlayerOrNone> = [
@@ -287,6 +300,56 @@ describe('QuixoRules', () => {
                 new Coord(4, 2),
                 new Coord(5, 3),
                 new Coord(6, 4),
+            ]);
+            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+        });
+
+        it('should return victorious line from opponent, not yours, when creating two', () => {
+            // Given a board with two victories
+            const board: Table<PlayerOrNone> = [
+                [_, X, O, _, _],
+                [_, X, O, _, _],
+                [_, X, O, _, _],
+                [_, X, O, _, _],
+                [_, X, O, _, _],
+            ];
+            const state: QuixoState = new QuixoState(board, 1);
+
+            // When evaluating victorious coords
+            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousCoords(state));
+
+            // Then it should be only the opponent coord
+            const expectedVictoriousCoord: CoordSet = new CoordSet([
+                new Coord(1, 0),
+                new Coord(1, 1),
+                new Coord(1, 2),
+                new Coord(1, 3),
+                new Coord(1, 4),
+            ]);
+            expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
+        });
+
+        it('should return victorious line when giving opponent victory', () => {
+            // Given a board with opponent victory
+            const board: Table<PlayerOrNone> = [
+                [_, _, X, _, _],
+                [_, _, X, _, _],
+                [_, _, X, _, _],
+                [_, _, X, _, _],
+                [_, _, X, _, _],
+            ];
+            const state: QuixoState = new QuixoState(board, 1);
+
+            // When evaluating victorious coords
+            const victoriousCoord: CoordSet = new CoordSet(QuixoRules.getVictoriousCoords(state));
+
+            // Then it should be only the opponent coord
+            const expectedVictoriousCoord: CoordSet = new CoordSet([
+                new Coord(2, 0),
+                new Coord(2, 1),
+                new Coord(2, 2),
+                new Coord(2, 3),
+                new Coord(2, 4),
             ]);
             expect(victoriousCoord.equals(expectedVictoriousCoord)).toBeTrue();
         });

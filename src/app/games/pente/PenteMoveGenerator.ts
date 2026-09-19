@@ -1,15 +1,15 @@
-import { PlayerOrNone } from 'src/app/jscaip/Player';
-import { PenteState } from './PenteState';
+import { MoveGenerator } from '../../jscaip/AI/AI';
+import { Coord } from '../../jscaip/Coord';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteNode } from './PenteRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { MoveGenerator } from 'src/app/jscaip/AI/AI';
-import { MGPOptional } from '@everyboard/lib';
-import { PenteConfig } from './PenteConfig';
+import { PenteState } from './PenteState';
 
 export class PenteMoveGenerator extends MoveGenerator<PenteMove, PenteState, PenteConfig> {
 
-    public override getListMoves(node: PenteNode, _config: MGPOptional<PenteConfig>): PenteMove[] {
+    public override getListMoves(node: PenteNode, _config: PenteConfig): PenteMove[] {
         const state: PenteState = node.gameState;
         const moves: PenteMove[] = [];
         state.forEachCoord((coord: Coord, content: PlayerOrNone): void => {

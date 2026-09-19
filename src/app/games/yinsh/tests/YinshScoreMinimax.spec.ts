@@ -1,17 +1,27 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { YinshMove } from '../YinshMove';
+import { YinshMoveGenerator } from '../YinshMoveGenerator';
 import { YinshRules } from '../YinshRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { YinshScoreMinimax } from '../YinshScoreMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { YinshLegalityInformation } from '../YinshRules';
+import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
+import { YinshState } from '../YinshState';
+
+class YinshScoreMinimax extends Minimax<YinshMove, YinshState, EmptyRulesConfig, YinshLegalityInformation> {
+    public constructor() {
+        super('Score', YinshRules.get(), new YinshScoreHeuristic(), new YinshMoveGenerator());
+    }
+}
 
 describe('YinshScoreMinimax', () => {
 
     const rules: YinshRules = YinshRules.get();
     const minimax: YinshScoreMinimax = new YinshScoreMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = YinshRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = YinshRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +32,5 @@ describe('YinshScoreMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

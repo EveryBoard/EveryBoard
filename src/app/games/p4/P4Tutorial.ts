@@ -1,16 +1,16 @@
-import { P4Move } from 'src/app/games/p4/P4Move';
-import { P4State } from 'src/app/games/p4/P4State';
-import { Tutorial, TutorialStep } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { PlayerOrNone } from 'src/app/jscaip/Player';
+import { Tutorial, TutorialStep } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStep';
+import { TutorialStepMessage } from '../../components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { PlayerOrNone } from '../../jscaip/Player';
+
+import { P4Move } from './P4Move';
 import { P4Config, P4Rules } from './P4Rules';
-import { MGPOptional } from '@everyboard/lib';
-import { TutorialStepMessage } from 'src/app/components/wrapper-components/tutorial-game-wrapper/TutorialStepMessage';
+import { P4State } from './P4State';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;
 const X: PlayerOrNone = PlayerOrNone.ONE;
 
-const defaultConfig: MGPOptional<P4Config> = P4Rules.get().getDefaultRulesConfig();
+const defaultConfig: P4Config = P4Rules.get().getDefaultRulesConfig();
 
 export class P4Tutorial extends Tutorial {
 

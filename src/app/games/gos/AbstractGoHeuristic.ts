@@ -1,14 +1,16 @@
-import { GoState } from './GoState';
-import { GoPiece } from './GoPiece';
-import { GoMove } from './GoMove';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Player } from 'src/app/jscaip/Player';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
-import { GoNode, AbstractGoRules } from './AbstractGoRules';
-import { RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
 
-export abstract class AbstractGoHeuristic<C extends RulesConfig> extends PlayerMetricHeuristic<GoMove, GoState, C> {
+import { GoNode, AbstractGoConfig, AbstractGoRules } from './AbstractGoRules';
+import { GoMove } from './GoMove';
+import { GoPiece } from './GoPiece';
+import { GoState } from './GoState';
+
+export abstract class AbstractGoHeuristic<C extends AbstractGoConfig>
+    extends PlayerMetricHeuristic<GoMove, GoState, C>
+{
 
     public constructor(private readonly rules: AbstractGoRules<C>) {
         super();
@@ -16,7 +18,7 @@ export abstract class AbstractGoHeuristic<C extends RulesConfig> extends PlayerM
 
     public override getMetrics(node: GoNode): PlayerNumberTable {
         const goState: GoState = this.rules.markTerritoryAndCount(node.gameState);
-        const goScore: PlayerNumberMap = goState.getCapturedCopy();
+        const goScore: PlayerNumberMap = goState.captured;
         const goKilled: PlayerNumberMap = this.getDeadStones(goState);
         return PlayerNumberTable.ofSingle(
             goScore.get(Player.ZERO) + (2 * goKilled.get(Player.ONE)),

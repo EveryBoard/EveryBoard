@@ -1,18 +1,20 @@
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { DvonnState } from './DvonnState';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { DvonnMove } from './DvonnMove';
-import { Rules } from 'src/app/jscaip/Rules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { Player } from 'src/app/jscaip/Player';
-import { DvonnFailure } from './DvonnFailure';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { HexagonalUtils } from 'src/app/jscaip/HexagonalUtils';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
+
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { HexagonalUtils } from '../../jscaip/HexagonalUtils';
+import { Player } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { Rules } from '../../jscaip/Rules';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+
+import { DvonnFailure } from './DvonnFailure';
+import { DvonnMove } from './DvonnMove';
+import { DvonnPieceStack } from './DvonnPieceStack';
+import { DvonnState } from './DvonnState';
 
 export class DvonnNode extends GameNode<DvonnMove, DvonnState> {}
 
@@ -70,14 +72,14 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         const stackSize: number = state.getPieceAt(coord).getSize();
         const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.find((c: Coord): boolean =>
-            state.isOnBoard(c) && state.getPieceAt(c).hasPieces()) !== undefined;
+            state.coordHasPieces(c)) !== undefined;
     }
 
     public static pieceTargets(state: DvonnState, coord: Coord): Coord[] {
         const stackSize: number = state.getPieceAt(coord).getSize();
         const possibleTargets: Coord[] = HexagonalUtils.getNeighbors(coord, stackSize);
         return possibleTargets.filter((c: Coord): boolean =>
-            state.isOnBoard(c) && state.getPieceAt(c).hasPieces());
+            state.coordHasPieces(c));
     }
 
     public static getScores(state: DvonnState): PlayerNumberMap {
@@ -127,7 +129,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         // For each neighbor, mark it as connected (if it contains something),
         // and recurse from there (only if it was not already marked)
         HexagonalUtils.getNeighbors(coord, 1).forEach((c: Coord) => {
-            if (state.isOnBoard(c) && markBoard[c.y][c.x] === false && state.getPieceAt(c).hasPieces()) {
+            if (state.coordHasPieces(c) && markBoard[c.y][c.x] === false) {
                 // This piece has not been marked as connected, but it is connected, and not empty
                 markBoard[c.y][c.x] = true; // mark it as connected
                 this.markPiecesConnectedTo(state, c, markBoard); // find all pieces connected to this one
@@ -151,7 +153,12 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         return newState;
     }
 
-    public override applyLegalMove(move: DvonnMove, state: DvonnState, _config: NoConfig, _info: void): DvonnState {
+    public override applyLegalMove(
+        move: DvonnMove,
+        state: DvonnState,
+        _config: EmptyRulesConfig,
+        _info: void,
+    ): DvonnState {
         if (move === DvonnMove.PASS) {
             return new DvonnState(state.board, state.turn + 1, true);
         } else {
@@ -168,7 +175,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         }
     }
 
-    public override isLegal(move: DvonnMove, state: DvonnState, _config: NoConfig): MGPValidation {
+    public override isLegal(move: DvonnMove, state: DvonnState, _config: EmptyRulesConfig): MGPValidation {
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
@@ -187,7 +194,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnState> {
         }
 
         const stack: DvonnPieceStack = state.getPieceAt(move.getStart());
-        if (move.length() !== stack.getSize()) {
+        if (move.getDistance() !== stack.getSize()) {
             return MGPFallible.failure(DvonnFailure.INVALID_MOVE_LENGTH());
         }
 

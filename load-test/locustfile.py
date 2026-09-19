@@ -94,11 +94,11 @@ class TwoPlayers(FastHttpUser):
             self.user2.join(game_id)
             self.user1.select_opponent(game_id, self.user2)
             config = {
-                'partStatus': 2,
-                'partType': 'STANDARD',
-                'maximalMoveDuration': 42000,
-                'totalPartDuration': 42000,
-                'firstPlayer': 'RANDOM',
+                'status': 'Started',
+                'gameType': 'Standard',
+                'moveDuration': 42000,
+                'gameDuration': 42000,
+                'firstPlayer': 'Random',
                 'rulesConfig': {
                     'width': 7,
                     'height': 6,

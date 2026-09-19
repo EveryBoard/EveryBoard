@@ -1,12 +1,11 @@
 /* eslint-disable max-lines-per-function */
-import { MGPOptional } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from '../../../jscaip/Coord';
+import { FourStatePiece } from '../../../jscaip/FourStatePiece';
+import { Table } from '../../../jscaip/TableUtils';
+import { FourStatePieceGameStateWithTable } from '../../../jscaip/state/FourStatePieceGameStateWithTable';
 import { HexodiaMove } from '../HexodiaMove';
-import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
-import { HexodiaState } from '../HexodiaState';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
-import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
+import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
 
 describe('HexodiaMoveGenerator', () => {
 
@@ -15,7 +14,7 @@ describe('HexodiaMoveGenerator', () => {
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
 
-    const defaultConfig: MGPOptional<HexodiaConfig> = HexodiaRules.get().getDefaultRulesConfig();
+    const defaultConfig: HexodiaConfig = HexodiaRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new HexodiaMoveGenerator();
@@ -23,7 +22,7 @@ describe('HexodiaMoveGenerator', () => {
 
     it('should propose only one move at first turn', () => {
         // Given the initial node
-        const state: HexodiaState = HexodiaRules.get().getInitialState(defaultConfig);
+        const state: FourStatePieceGameStateWithTable = HexodiaRules.get().getInitialState(defaultConfig);
         const size: number = state.getWidth();
         const node: HexodiaNode = new HexodiaNode(state);
 
@@ -62,7 +61,7 @@ describe('HexodiaMoveGenerator', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, O, O, O, O, O, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
-        const state: HexodiaState = new HexodiaState(board, 3);
+        const state: FourStatePieceGameStateWithTable = new FourStatePieceGameStateWithTable(board, 3);
         const node: HexodiaNode = new HexodiaNode(state);
 
         // When listing the moves

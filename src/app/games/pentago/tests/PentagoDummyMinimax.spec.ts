@@ -1,17 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { PentagoMove } from '../PentagoMove';
+import { PentagoMoveGenerator } from '../PentagoMoveGenerator';
 import { PentagoRules } from '../PentagoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { PentagoDummyMinimax } from '../PentagoDummyMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PentagoState } from '../PentagoState';
+
+class PentagoDummyMinimax extends Minimax<PentagoMove, PentagoState> {
+    public constructor() {
+        super('Dummy', PentagoRules.get(), new DummyHeuristic(), new PentagoMoveGenerator());
+    }
+}
 
 describe('PentagoDummyMinimax', () => {
 
     const rules: PentagoRules = PentagoRules.get();
     const minimax: PentagoDummyMinimax = new PentagoDummyMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PentagoRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PentagoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +30,5 @@ describe('PentagoDummyMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

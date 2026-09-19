@@ -1,11 +1,10 @@
 /* eslint-disable max-lines-per-function */
-import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
-import { SiamPiece } from '../SiamPiece';
-import { SiamState } from '../SiamState';
+import { Table } from '../../../jscaip/TableUtils';
 import { SiamMove } from '../SiamMove';
-import { Table } from 'src/app/jscaip/TableUtils';
 import { SiamMoveGenerator } from '../SiamMoveGenerator';
-import { MGPOptional } from '@everyboard/lib';
+import { SiamPiece } from '../SiamPiece';
+import { SiamConfig, SiamNode, SiamRules } from '../SiamRules';
+import { SiamState } from '../SiamState';
 
 const _: SiamPiece = SiamPiece.EMPTY;
 const M: SiamPiece = SiamPiece.MOUNTAIN;
@@ -20,7 +19,7 @@ describe('SiamMoveGenerator', () => {
 
     let moveGenerator: SiamMoveGenerator;
     const rules: SiamRules = SiamRules.get();
-    const defaultConfig: MGPOptional<SiamConfig> = SiamRules.get().getDefaultRulesConfig();
+    const defaultConfig: SiamConfig = SiamRules.get().getDefaultRulesConfig();
 
     beforeEach(() => {
         moveGenerator = new SiamMoveGenerator();

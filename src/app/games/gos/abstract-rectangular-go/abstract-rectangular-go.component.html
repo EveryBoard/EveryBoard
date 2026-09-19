@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     class="board"
+     [attr.viewBox]="viewBox().toSVGString()"
+     preserveAspectRatio="xMidYMid meet">
+    @for (zoom of ArrayUtils.range(displayedZooms()); track $index) {
+        <g [id]="'zoom-' + zoom"
+           [attr.transform]="translateZoom(zoom)">
+            @for (subZoomX of ArrayUtils.range(zoom + 1); track $index) {
+                @for (subZoomY of ArrayUtils.range(zoom + 1); track $index) {
+                    <g [id]="'zoom-' + zoom + '-zx-' + subZoomX + '-zy-' + subZoomY"
+                       app-go-board
+                       [attr.transform]="translateZoomBoard(zoom, subZoomX, subZoomY)"
+                       [zoom]="zoom"
+                       [zx]="subZoomX"
+                       [zy]="subZoomY"
+                       [captures]="captures()"
+                       [ko]="ko()"
+                       [last]="last()"
+                       [state]="zooms()[zoom][subZoomY][subZoomX]"
+                       [hover]="hover()"
+                       (clicked)="onClick($event)"
+                       (takeHover)="onTakeHover(zoom, subZoomX, subZoomY, $event)"
+                    ></g>
+                }
+            }
+        </g>
+    }
+</svg>

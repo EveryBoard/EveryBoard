@@ -1,53 +1,40 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
+import {
+    ChangeDetectorRef,
+    computed,
+    inject,
+    signal,
+    Signal,
+    WritableSignal,
+} from '@angular/core';
+
 import { Encoder, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { AIConfig } from '../../../jscaip/AI/AIConfig';
+import { GameNode } from '../../../jscaip/AI/GameNode';
+import { Coord3D } from '../../../jscaip/Coord3D';
 import { Move } from '../../../jscaip/Move';
+import { Orthogonal } from '../../../jscaip/Orthogonal';
+import { Player, PlayerOrNone } from '../../../jscaip/Player';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
 import { SuperRules } from '../../../jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { GameState } from '../../../jscaip/state/GameState';
+import { MessageDisplayer } from '../../../services/MessageDisplayer';
+import { Debug } from '../../../utils/Debug';
+import { GameInfo } from '../../normal-component/pick-game/GameInfo';
 import { TutorialStep } from '../../wrapper-components/tutorial-game-wrapper/TutorialStep';
-import { GameState } from 'src/app/jscaip/state/GameState';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { AI, AIOptions } from 'src/app/jscaip/AI/AI';
-import { EmptyRulesConfig, RulesConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { Coord } from 'src/app/jscaip/Coord';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { Debug } from 'src/app/utils/Debug';
-import { GameInfo } from '../../normal-component/pick-game/pick-game.component';
-import { BaseComponent } from '../../BaseComponent';
-import { Orthogonal } from 'src/app/jscaip/Orthogonal';
+import { ViewBox } from '../GameComponentUtils';
+import { BaseGameComponent } from '../base-game-component/BaseGameComponent';
 
-/**
- * Define some methods that are useful to have in game components.
- * We can't define these in GameComponent itself, as they are required
- * by sub components which themselves are not GameComponent subclasses
- */
-export abstract class BaseGameComponent extends BaseComponent {
+import { AnyFunction, CLICK_HANDLERS, ClickNamer, MoveInterceptor } from './ClickHandler';
+import { ScoreName } from './ScoreName';
 
-    public SPACE_SIZE: number = 100;
-
-    public readonly STROKE_WIDTH: number = 8;
-
-    public readonly SMALL_STROKE_WIDTH: number = 2;
-
-    public getSVGTranslation(x: number, y: number): string {
-        return 'translate(' + x + ', ' + y + ')';
-    }
-
-    public getSVGTranslationAt(coord: Coord): string {
-        return this.getSVGTranslation(coord.x, coord.y);
-    }
-}
 
 /**
  * All method are to be implemented by the "final" GameComponent classes
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({
-    template: '',
-    styleUrls: ['./game-component.scss'],
-    changeDetection: ChangeDetectionStrategy.OnPush,
-})
 @Debug.log
 export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     M extends Move,
@@ -56,17 +43,29 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
                                     L = void>
     extends BaseGameComponent
 {
+
+    private readonly messageDisplayer: MessageDisplayer = inject(MessageDisplayer);
+
+    protected readonly cdr: ChangeDetectorRef = inject(ChangeDetectorRef);
+
     public encoder: Encoder<M>;
 
     public Player: typeof Player = Player;
 
+    public PlayerOrNone: typeof PlayerOrNone = PlayerOrNone;
+
+    public Coord3D: typeof Coord3D = Coord3D;
+
     public rules: R;
 
-    public node: GameNode<M, S>;
+    public readonly node: WritableSignal<GameNode<M, S>>;
 
-    public config: MGPOptional<C> = MGPOptional.empty();
+    public readonly config: WritableSignal<C>;
 
-    public availableAIs: AI<M, S, AIOptions, C>[];
+    public aiConfig: AIConfig<M, S, C> = {
+        minimax: [],
+        mcts: [],
+    };
 
     public canPass: boolean = false;
 
@@ -97,10 +96,61 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public animationOngoing: boolean = false;
 
-    public state: S;
+    public readonly state: Signal<S>;
 
-    public constructor(private readonly messageDisplayer: MessageDisplayer, protected readonly cdr: ChangeDetectorRef) {
+    private readonly gameViewBoxRevision: WritableSignal<number> = signal(0);
+
+    public readonly viewBox: Signal<ViewBox> = computed(() => {
+        this.gameViewBoxRevision();
+        return this.computeViewBox();
+    });
+
+    public readonly viewBoxString: Signal<string> = computed(() => this.viewBox().toSVGString());
+
+    public constructor(urlName: string) {
         super();
+        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
+        const defaultConfig: C = gameInfo.getRulesConfig() as C;
+        this.config = signal(defaultConfig);
+
+        this.rules = gameInfo.rules as R;
+        this.node = signal(this.rules.getInitialNode(defaultConfig));
+        this.state = computed(() => this.node().gameState);
+        this.tutorial = gameInfo.tutorial.tutorial;
+    }
+
+    protected abstract computeViewBox(): ViewBox;
+
+    public setClickInterceptor(interceptor: MoveInterceptor): void {
+        const proto: {
+            [key: string]: AnyFunction;
+            [key: typeof CLICK_HANDLERS]: Map<string, ClickNamer>;
+        } = Object.getPrototypeOf(this);
+        const handlers: Map<string, ClickNamer> = proto[CLICK_HANDLERS] ?? new Map();
+        const self: { [key: string]: AnyFunction } = this as unknown as { [key: string]: AnyFunction };
+        for (const [key, moveMapper] of handlers) {
+            self[key] = interceptor(
+                proto[key].bind(this),
+                moveMapper,
+            );
+        }
+    }
+
+    public hasScores(): boolean {
+        return this.scores.isPresent();
+    }
+
+    public getScore(player: Player): number {
+        return this.scores.get().get(player);
+    }
+
+    protected getScoreName(): ScoreName {
+        // This can be redefined in games where we don't talk about points
+        return ScoreName.POINTS;
+    }
+
+    public getScoreString(player: Player): string {
+        return this.getScoreName().getString(this.getScore(player));
     }
 
     public getPointOfView(): Player {
@@ -112,10 +162,12 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         if (this.hasAsymmetricBoard) {
             this.rotation = 'rotate(' + (pointOfView.getValue() * 180) + ')';
         }
+        this.cdr.markForCheck();
     }
 
     public setInteractive(interactive: boolean): void {
         this.interactive = interactive;
+        this.cdr.markForCheck();
     }
 
     public isInteractive(): boolean {
@@ -130,8 +182,8 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
-        if (this.node.previousMove.isPresent()) {
-            await this.showLastMove(this.node.previousMove.get());
+        if (this.node().previousMove.isPresent()) {
+            await this.showLastMove(this.node().previousMove.get());
         }
         if (reason == null) {
             return MGPValidation.SUCCESS;
@@ -152,13 +204,19 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
 
     public async updateBoardAndRedraw(triggerAnimation: boolean): Promise<void> {
         await this.updateBoard(triggerAnimation);
+        this.refreshViewBox();
         this.cdr.detectChanges();
     }
 
     public async showLastMoveAndRedraw(): Promise<void> {
-        const move: M = this.node.previousMove.get();
+        const move: M = this.node().previousMove.get();
         await this.showLastMove(move);
+        this.refreshViewBox();
         this.cdr.detectChanges();
+    }
+
+    protected refreshViewBox(): void {
+        this.gameViewBoxRevision.update((revision: number) => revision + 1);
     }
 
     public abstract updateBoard(triggerAnimation: boolean): Promise<void>;
@@ -170,55 +228,25 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getTurn(): number {
-        return this.node.gameState.turn;
+        return this.node().gameState.turn;
     }
 
     public getCurrentPlayer(): Player {
-        return this.node.gameState.getCurrentPlayer();
+        return this.node().gameState.getCurrentPlayer();
     }
 
     public getCurrentOpponent(): Player {
-        return this.node.gameState.getCurrentOpponent();
-    }
-
-    public getState(): S {
-        return this.node.gameState;
+        return this.node().gameState.getCurrentOpponent();
     }
 
     public getPreviousState(): S {
-        Utils.assert(this.node.parent.isPresent(), 'getPreviousState called with no previous state');
-        return this.node.parent.get().gameState;
+        Utils.assert(this.node().parent.isPresent(), 'getPreviousState called with no previous state');
+        return this.node().parent.get().gameState;
     }
 
-    public abstract showLastMove(move: M): Promise<void>;
+    protected abstract showLastMove(move: M): Promise<void>;
 
     public abstract hideLastMove(): void;
-
-    protected setRulesAndNode(urlName: string): void {
-        const gameInfo: GameInfo = GameInfo.getByUrlName(urlName).get();
-        const defaultConfig: MGPOptional<C> = gameInfo.getRulesConfig() as MGPOptional<C>;
-
-        this.rules = gameInfo.rules as R;
-        this.node = this.rules.getInitialNode(defaultConfig);
-        this.tutorial = gameInfo.tutorial.tutorial;
-    }
-
-    protected getConfig(): MGPOptional<C> {
-        return this.config;
-    }
-
-    /**
-     * Gives the translation transform for coordinate x, y, based on SPACE_SIZE
-     */
-    public getTranslationAt(coord: Coord): string {
-        return this.getTranslationAtXY(coord.x, coord.y);
-    }
-
-    public getTranslationAtXY(x: number, y: number): string {
-        const svgX: number = x * this.SPACE_SIZE;
-        const svgY: number = y * this.SPACE_SIZE;
-        return this.getSVGTranslation(svgX, svgY);
-    }
 
     public getArrowTransform(boardWidth: number, boardHeight: number, orthogonal: Orthogonal): string {
         // The triangle that forms the arrow head will be wrapped inside a square
@@ -253,15 +281,4 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
         return [scale, translation, rotation].join(' ');
     }
 
-}
-
-export abstract class AbstractGameComponent extends GameComponent<SuperRules<Move,
-                                                                             GameState,
-                                                                             RulesConfig,
-                                                                             unknown>,
-                                                                  Move,
-                                                                  GameState,
-                                                                  RulesConfig,
-                                                                  unknown>
-{
 }

@@ -1,24 +1,33 @@
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
+import { MGPOptional, MGPValidation } from '@everyboard/lib';
+
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { SquarzFailure } from './SquarzFailure';
 import { SquarzMove } from './SquarzMove';
 import { SquarzState } from './SquarzState';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { SquarzFailure } from './SquarzFailure';
-import { MGPOptional, MGPValidation } from '@everyboard/lib';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
 
 export class SquarzNode extends GameNode<SquarzMove, SquarzState> {}
 
-export type SquarzConfig = {
-    width: number,
-    height: number,
+export type SquarzConfig = RulesConfig & {
+
+    width: number;
+
+    height: number;
+
     jumpSize: number;
+
 };
 
 export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, SquarzConfig> {
@@ -42,12 +51,11 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
             },
         });
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<SquarzConfig>> {
-        return MGPOptional.of(SquarzRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<SquarzConfig> {
+        return SquarzRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<SquarzConfig>): SquarzState {
-        const config: SquarzConfig = optionalConfig.get();
+    public override getInitialState(config: SquarzConfig): SquarzState {
         const width: number = config.width;
         const height: number = config.height;
         const board: PlayerOrNone[][] = TableUtils.create(width, height, PlayerOrNone.NONE);
@@ -58,11 +66,11 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return new SquarzState(board, 0);
     }
 
-    public override isLegal(move: SquarzMove, state: SquarzState, config: MGPOptional<SquarzConfig>)
+    public override isLegal(move: SquarzMove, state: SquarzState, config: SquarzConfig)
     : MGPValidation
     {
         const distance: number = move.getDistance();
-        const jumpSize: number = config.get().jumpSize;
+        const jumpSize: number = config.jumpSize;
         if (jumpSize < distance) {
             return MGPValidation.failure(SquarzFailure.MAX_DISTANCE_IS_N(jumpSize));
         }
@@ -94,17 +102,15 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         }
         for (const direction of Ordinal.ORDINALS) {
             const neighbor: Coord = end.getNext(direction, 1);
-            if (resultingState.isOnBoard(neighbor) &&
-                resultingState.getPieceAt(neighbor) === opponent)
-            {
+            if (resultingState.hasPieceAt(neighbor, opponent)) {
                 resultingState = resultingState.setPieceAt(neighbor, player);
             }
         }
         return new SquarzState(resultingState.board, resultingState.turn + 1);
     }
 
-    public override getGameStatus(node: SquarzNode, config: MGPOptional<SquarzConfig>): GameStatus {
-        const jumpSize: number = config.get().jumpSize;
+    public override getGameStatus(node: SquarzNode, config: SquarzConfig): GameStatus {
+        const jumpSize: number = config.jumpSize;
         const state: SquarzState = node.gameState;
         const currentPlayer: Player = state.getCurrentPlayer();
         if (this.canPlayerMove(state, currentPlayer, jumpSize)) {
@@ -125,15 +131,15 @@ export class SquarzRules extends ConfigurableRules<SquarzMove, SquarzState, Squa
         return false;
     }
 
-    public getPossiblesMoves(state: SquarzState, coord: Coord, config: MGPOptional<SquarzConfig>)
+    public getPossiblesMoves(state: SquarzState, coord: Coord, config: SquarzConfig)
     : SquarzMove[]
     {
         const moves: SquarzMove[] = [];
-        const jumpSize: number = config.get().jumpSize;
+        const jumpSize: number = config.jumpSize;
         for (let y: number = -jumpSize; y <= jumpSize; y++) {
             for (let x: number = -jumpSize; x <= jumpSize; x++) {
                 const landingCoord: Coord = new Coord(coord.x + x, coord.y + y);
-                if (state.isOnBoard(landingCoord) && state.getPieceAt(landingCoord).isNone()) {
+                if (state.isEmptyAt(landingCoord)) {
                     moves.push(SquarzMove.from(coord, landingCoord).get());
                 }
             }

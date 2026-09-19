@@ -42,10 +42,15 @@ def load_coverage_data():
     return data
 
 def load_stored_coverage_from(path):
-    data = pandas.read_csv(path, header=None, encoding='utf8')
-    files = data[0]
-    values = data[1]
-    return dict(sorted(zip(files, values), key=sort_function))
+    try:
+        data = pandas.read_csv(path, header=None, encoding='utf8')
+        files = data[0]
+        values = data[1]
+        return dict(sorted(zip(files, values), key=sort_function))
+    except pandas.errors.EmptyDataError:
+        # file is empty, which means that everything is covered!
+        # the dictionary of "uncoverage" is thus empty
+        return dict()
 
 def load_stored_coverage():
     return {

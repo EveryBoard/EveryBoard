@@ -2,22 +2,21 @@
 import { DebugElement } from '@angular/core';
 import { fakeAsync, tick } from '@angular/core/testing';
 
-import { BaAwaComponent } from '../ba-awa.component';
-import { BaAwaRules } from '../BaAwaRules';
-import { MancalaState } from 'src/app/games/mancala/common/MancalaState';
-import { MancalaComponentTestUtils, doMancalaComponentTests as doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
-import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
-import { BaAwaConfig } from '../BaAwaConfig';
-import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
-import { MGPOptional } from '@everyboard/lib';
+import { PlayerNumberMap } from '../../../../jscaip/PlayerMap';
+import { ComponentTestUtils } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaComponent } from '../../common/MancalaComponent';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { MancalaDistribution, MancalaMove } from '../../common/MancalaMove';
+import { MancalaState } from '../../common/MancalaState';
+import { MancalaComponentTestUtils, doMancalaComponentTests } from '../../common/tests/GenericMancalaComponentTest.spec';
+import { BaAwaConfig } from '../BaAwaConfig';
+import { BaAwaMoveGenerator } from '../BaAwaMoveGenerator';
+import { BaAwaRules } from '../BaAwaRules';
+import { BaAwaComponent } from '../ba-awa.component';
 
 describe('BaAwaComponent', () => {
 
     let mancalaTestUtils: MancalaComponentTestUtils<BaAwaComponent, BaAwaRules>;
-    const defaultConfig: MGPOptional<BaAwaConfig> = BaAwaRules.get().getDefaultRulesConfig();
+    const defaultConfig: BaAwaConfig = BaAwaRules.get().getDefaultRulesConfig();
 
     doMancalaComponentTests({
         component: BaAwaComponent,
@@ -25,7 +24,7 @@ describe('BaAwaComponent', () => {
         moveGenerator: new BaAwaMoveGenerator(),
         distribution: {
             state: BaAwaRules.get().getInitialState(defaultConfig),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 0, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +3 ' } },
                 { x: 1, y: 0, content: { mainContent: ' 1 ', secondaryContent: ' -3 ' } },
@@ -46,7 +45,7 @@ describe('BaAwaComponent', () => {
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
             ], 1, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 0)),
             result: [
                 { x: 1, y: 0, content: { mainContent: ' 2 ', secondaryContent: ' +1 ' } },
                 { x: 2, y: 0, content: { mainContent: ' 7 ', secondaryContent: ' +1 ' } },
@@ -62,7 +61,7 @@ describe('BaAwaComponent', () => {
                 [0, 0, 0, 0, 0, 1],
                 [0, 0, 0, 5, 6, 0],
             ], 121, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(5)),
+            move: MancalaMove.of(MancalaDistribution.of(5, 0)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -5 ' } },
                 { x: 4, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -6 ' } },
@@ -74,7 +73,7 @@ describe('BaAwaComponent', () => {
                 [3, 1, 4, 4, 4, 4],
                 [3, 1, 4, 4, 4, 4],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(1)),
+            move: MancalaMove.of(MancalaDistribution.of(1, 1)),
             result: [{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }],
         },
         fillThenCapture: {
@@ -82,7 +81,7 @@ describe('BaAwaComponent', () => {
                 [7, 1, 6, 1, 6, 6],
                 [2, 6, 6, 1, 0, 6],
             ], 0, PlayerNumberMap.of(0, 0)),
-            move: MancalaMove.of(MancalaDistribution.of(0)),
+            move: MancalaMove.of(MancalaDistribution.of(0, 1)),
             result: [
                 { x: 3, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } },
             ],
@@ -116,6 +115,7 @@ describe('BaAwaComponent', () => {
                 mancalaTestUtils.expectToBeCaptured([{ x: 0, y: 1, content: { mainContent: ' 0 ', secondaryContent: ' -4 ' } }]);
                 tick(MancalaComponent.TIMEOUT_BETWEEN_SEEDS); // Dropping last seed
             }));
+
         });
     });
 
@@ -128,29 +128,47 @@ describe('BaAwaComponent', () => {
             mancalaTestUtils = new MancalaComponentTestUtils(testUtils, new BaAwaMoveGenerator());
         }));
 
+        it('should resize the board when the number of houses changes', fakeAsync(async() => {
+            // Given the board displayed with the default number of houses
+            const board: SVGSVGElement = testUtils.findElement('svg.board').nativeElement;
+            const defaultViewBoxWidth: number = board.viewBox.baseVal.width;
+
+            // When displaying a configuration with fewer houses
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
+                width: 4,
+            };
+            const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
+            await testUtils.setupState(state, { config: customConfig });
+
+            // Then the board width should match the configured number of houses
+            const removedHouses: number = defaultConfig.width - customConfig.width;
+            expect(board.viewBox.baseVal.width).toBe(defaultViewBoxWidth - (removedHouses * 100));
+        }));
+
         it('should not require additional click when ending distribution in store', fakeAsync(async() => {
             // Given a Ba-awa state with a config with passByPlayerStore set to true
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
-            });
+            };
             const state: MancalaState = BaAwaRules.get().getInitialState(customConfig);
             await testUtils.setupState(state, { config: customConfig });
 
             // When doing simple distribution ending in store
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3));
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(3, 1));
 
             // Then this should trigger a single distribution move
-            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-3-1', move, customConfig);
         }));
 
         it('should allow redistribution if allowed by config', fakeAsync(async() => {
             // Given a Ba-awa state with where multiple so would be possible, and the first sowing is done
-            const customConfig: MGPOptional<BaAwaConfig> = MGPOptional.of({
-                ...defaultConfig.get(),
+            const customConfig: BaAwaConfig = {
+                ...defaultConfig,
                 passByPlayerStore: true,
                 mustContinueDistributionAfterStore: true,
-            });
+            };
             const state: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [1, 0, 1, 1, 1, 0],
@@ -159,15 +177,15 @@ describe('BaAwaComponent', () => {
             await mancalaTestUtils.expectClickSuccess('#click-0-1');
 
             // When doing the second distribution
-            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0), [MancalaDistribution.of(2)]);
+            const move: MancalaMove = MancalaMove.of(MancalaDistribution.of(0, 1), [MancalaDistribution.of(2, 1)]);
 
             // Then this should trigger a single distribution move
-            await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig.get());
+            await mancalaTestUtils.expectMoveSuccess('#click-2-1', move, customConfig);
             const expectedState: MancalaState = new MancalaState([
                 [0, 0, 8, 0, 0, 0],
                 [0, 1, 0, 1, 1, 0],
             ], 11, PlayerNumberMap.of(1, 0));
-            const actualState: MancalaState = testUtils.getGameComponent().getState();
+            const actualState: MancalaState = testUtils.getGameComponent().state();
             expect(actualState).toEqual(expectedState);
         }));
 

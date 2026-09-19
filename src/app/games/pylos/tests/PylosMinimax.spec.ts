@@ -1,17 +1,26 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { EmptyRulesConfig } from '../../../jscaip/RulesConfigUtil';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { PylosHeuristic } from '../PylosHeuristic';
+import { PylosMove } from '../PylosMove';
+import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosRules } from '../PylosRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { PylosMinimax } from '../PylosMinimax';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { PylosState } from '../PylosState';
+
+class PylosMinimax extends Minimax<PylosMove, PylosState> {
+    public constructor() {
+        super('Minimax', PylosRules.get(), new PylosHeuristic(), new PylosOrderedMoveGenerator());
+    }
+}
 
 describe('PylosMinimax', () => {
 
     const rules: PylosRules = PylosRules.get();
     const minimax: PylosMinimax = new PylosMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<EmptyRulesConfig> = PylosRules.get().getDefaultRulesConfig();
+    const defaultConfig: EmptyRulesConfig = PylosRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -22,4 +31,5 @@ describe('PylosMinimax', () => {
             shouldFinish: true,
         });
     });
+
 });

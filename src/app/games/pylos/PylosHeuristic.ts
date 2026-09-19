@@ -1,14 +1,15 @@
+import { PlayerMetricHeuristic } from '../../jscaip/AI/PlayerMetricHeuristic';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { PlayerNumberTable } from '../../jscaip/PlayerNumberTable';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+
 import { PylosMove } from './PylosMove';
-import { PylosState } from './PylosState';
-import { PlayerMetricHeuristic } from 'src/app/jscaip/AI/Minimax';
-import { PlayerNumberTable } from 'src/app/jscaip/PlayerNumberTable';
 import { PylosNode } from './PylosRules';
-import { NoConfig } from 'src/app/jscaip/RulesConfigUtil';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
+import { PylosState } from './PylosState';
 
 export class PylosHeuristic extends PlayerMetricHeuristic<PylosMove, PylosState> {
 
-    public override getMetrics(node: PylosNode, _config: NoConfig): PlayerNumberTable {
+    public override getMetrics(node: PylosNode, _config: EmptyRulesConfig): PlayerNumberTable {
         const ownershipMap: PlayerNumberMap = node.gameState.getPiecesRepartition();
         return ownershipMap.toTable();
     }

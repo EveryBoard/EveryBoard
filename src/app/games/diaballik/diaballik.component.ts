@@ -1,26 +1,31 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
-import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
-import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
-import { DiaballikPiece, DiaballikState } from './DiaballikState';
-import { MessageDisplayer } from 'src/app/services/MessageDisplayer';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+
 import { MGPFallible, MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
-import { Coord } from 'src/app/jscaip/Coord';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { DiaballikDistanceMinimax } from './DiaballikDistanceMinimax';
-import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
-import { MCTS } from 'src/app/jscaip/AI/MCTS';
-import { RectangularGameComponent } from 'src/app/components/game-components/rectangular-game-component/RectangularGameComponent';
+
+import { ViewBox } from '../../components/game-components/GameComponentUtils';
+import { ClickHandler } from '../../components/game-components/game-component/ClickHandler';
+import { RectangularGameComponent } from '../../components/game-components/rectangular-game-component/RectangularGameComponent';
+import { Coord } from '../../jscaip/Coord';
+import { Line } from '../../jscaip/Line';
+import { Player } from '../../jscaip/Player';
+import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+
+import { DiaballikDistanceHeuristic } from './DiaballikDistanceHeuristic';
 import { DiaballikFailure } from './DiaballikFailure';
-import { Line } from 'src/app/jscaip/Line';
-import { Player } from 'src/app/jscaip/Player';
 import { DiaballikFilteredMoveGenerator } from './DiaballikFilteredMoveGenerator';
-import { ViewBox } from 'src/app/components/game-components/GameComponentUtils';
-import { EmptyRulesConfig } from 'src/app/jscaip/RulesConfigUtil';
+import { DiaballikMove, DiaballikBallPass, DiaballikSubMove, DiaballikTranslation } from './DiaballikMove';
+import { DiaballikMoveGenerator } from './DiaballikMoveGenerator';
+import { DefeatCoords, DiaballikRules, VictoryCoord, VictoryOrDefeatCoords } from './DiaballikRules';
+import { DiaballikPiece, DiaballikState } from './DiaballikState';
 
 @Component({
+    changeDetection: ChangeDetectionStrategy.OnPush,
     selector: 'app-diaballik',
     templateUrl: './diaballik.component.html',
     styleUrls: ['../../components/game-components/game-component/game-component.scss'],
+    imports: [NgClass],
 })
 
 export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
@@ -33,8 +38,6 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public stateInConstruction: DiaballikState;
 
-    public WIDTH: number;
-    public HEIGHT: number;
     public INDICATOR_SIZE: number = 20;
 
     public victoryCoord: MGPOptional<Coord> = MGPOptional.empty();
@@ -55,27 +58,64 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     private readonly moveGenerator: DiaballikMoveGenerator = new DiaballikMoveGenerator(false);
 
-    public constructor(messageDisplayer: MessageDisplayer, cdr: ChangeDetectorRef) {
-        super(messageDisplayer, cdr);
-        this.setRulesAndNode('Diaballik');
+    public constructor() {
+        super('Diaballik');
         this.hasAsymmetricBoard = true;
-        this.WIDTH = this.getState().getWidth();
-        this.HEIGHT = this.getState().getHeight();
         this.encoder = DiaballikMove.encoder;
-        this.availableAIs = [
-            new DiaballikDistanceMinimax($localize`AllMoves`, new DiaballikMoveGenerator(true)),
-            new MCTS($localize`MCTS`, this.moveGenerator, this.rules),
-            new MCTS($localize`MCTS (3 only)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
-            new MCTS($localize`MCTS (without dups)`, new DiaballikMoveGenerator(true), this.rules),
-            new MCTS($localize`MCTS (3, no dups)`, new DiaballikFilteredMoveGenerator(3, false), this.rules),
-        ];
-        for (let i: number = 1; i <= 3; i++) {
-            this.availableAIs.push(new DiaballikDistanceMinimax($localize`Distance (${i})`, new DiaballikFilteredMoveGenerator(i)));
-        }
+        this.aiConfig = {
+            minimax: [
+                {
+                    id: 'AllMoves',
+                    name: $localize`AllMoves`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikMoveGenerator => new DiaballikMoveGenerator(true),
+                },
+                {
+                    id: 'Distance (1)',
+                    name: $localize`Distance (1)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(1),
+                },
+                {
+                    id: 'Distance (2)',
+                    name: $localize`Distance (2)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(2),
+                },
+                {
+                    id: 'Distance (3)',
+                    name: $localize`Distance (3)`,
+                    heuristic: (): DiaballikDistanceHeuristic => new DiaballikDistanceHeuristic(),
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3),
+                },
+            ],
+            mcts: [
+                {
+                    id: 'default',
+                    name: $localize`MCTS`,
+                    moveGenerator: (): DiaballikMoveGenerator => this.moveGenerator,
+                },
+                {
+                    id: '3-only',
+                    name: $localize`MCTS (3 only)`,
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3, false),
+                },
+                {
+                    id: 'without-dups',
+                    name: $localize`MCTS (without dups)`,
+                    moveGenerator: (): DiaballikMoveGenerator => new DiaballikMoveGenerator(true),
+                },
+                {
+                    id: '3-no-dups',
+                    name: $localize`MCTS (3, no dups)`,
+                    moveGenerator: (): DiaballikFilteredMoveGenerator => new DiaballikFilteredMoveGenerator(3, false),
+                },
+            ],
+        };
     }
 
-    public async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: DiaballikState = this.node.gameState;
+    public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
+        const state: DiaballikState = this.node().gameState;
         this.board = state.board; // Needed by RectangularGameComponent
         this.stateInConstruction = state;
         const possibleVictory: MGPOptional<VictoryOrDefeatCoords> = this.rules.getVictoryOrDefeatCoords(state);
@@ -101,7 +141,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
-    public override async showLastMove(move: DiaballikMove): Promise<void> {
+    protected override async showLastMove(move: DiaballikMove): Promise<void> {
         for (const subMove of move.getSubMoves()) {
             if (subMove instanceof DiaballikTranslation) {
                 this.lastMovedPieces.push(subMove.getStart(), subMove.getEnd());
@@ -127,7 +167,7 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
     }
 
     public override cancelMoveAttempt(): void {
-        this.stateInConstruction = this.getState();
+        this.stateInConstruction = this.state();
         this.currentSelection = MGPOptional.empty();
         this.hasMadePass = false;
         this.translationsMade = 0;
@@ -209,58 +249,58 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         }
     }
 
+    @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#click_' + x + '_' + y);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         const clickedCoord: Coord = new Coord(x, y);
-        return this.onLegalClick(clickedCoord);
+        if (this.currentSelection.isPresent()) {
+            return this.onSecondClick(clickedCoord);
+        } else {
+            // No piece selected, select this one if it is a player piece
+            return this.onFirstClick(clickedCoord);
+        }
     }
 
-    private async onLegalClick(clickedCoord: Coord): Promise<MGPValidation> {
+    private async onFirstClick(clickedCoord: Coord): Promise<MGPValidation> {
         const clickedPiece: DiaballikPiece = this.stateInConstruction.getPieceAt(clickedCoord);
-        if (this.currentSelection.isPresent()) {
-            const selection: Coord = this.currentSelection.get();
-            if (selection.equals(clickedCoord)) {
-                // Just deselects
-                this.currentSelection = MGPOptional.empty();
-                this.indicators = [];
-                if (this.subMoves.length === 0) {
-                    // No sub moves constructed at all, cancel the move to show the last one
-                    return this.cancelMove();
+        if (clickedPiece.owner === this.getCurrentPlayer()) {
+            if (this.hasMadePass && clickedPiece.holdsBall) {
+                // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
+                return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
+            } else if (this.translationsMade === 2 && clickedPiece.holdsBall === false) {
+                // At most two translations are allowed
+                return this.cancelMove(DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
+            } else {
+                this.currentSelection = MGPOptional.of(clickedCoord);
+                if (clickedPiece.holdsBall) {
+                    this.indicators = this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord);
+                } else {
+                    this.indicators = this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord);
                 }
                 return MGPValidation.SUCCESS;
             }
-            if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
-                return this.performPass(selection, clickedCoord);
-            } else {
-                return this.performTranslation(selection, clickedCoord);
-            }
+        } else if (clickedPiece.owner.isNone()) {
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
         } else {
-            // No piece selected, select this one if it is a player piece
-            if (clickedPiece.owner === this.getCurrentPlayer()) {
-                if (this.hasMadePass && clickedPiece.holdsBall) {
-                    // Only one pass is allowed, so we don't allow to select the piece holding the ball anymore
-                    return this.cancelMove(DiaballikFailure.CAN_ONLY_DO_ONE_PASS());
-                } else if (this.translationsMade === 2 && clickedPiece.holdsBall === false) {
-                    // At most two translations are allowed
-                    return this.cancelMove(DiaballikFailure.CAN_ONLY_TRANSLATE_TWICE());
-                } else {
-                    this.currentSelection = MGPOptional.of(clickedCoord);
-                    if (clickedPiece.holdsBall) {
-                        this.indicators = this.moveGenerator.getPassEnds(this.stateInConstruction, clickedCoord);
-                    } else {
-                        this.indicators = this.moveGenerator.getTranslationEnds(this.stateInConstruction, clickedCoord);
-                    }
-                    return MGPValidation.SUCCESS;
-                }
-            } else if (clickedPiece.owner.isNone()) {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY());
-            } else {
-                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+            return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_OPPONENT());
+        }
+    }
+
+    private async onSecondClick(clickedCoord: Coord): Promise<MGPValidation> {
+        const selection: Coord = this.currentSelection.get();
+        if (selection.equals(clickedCoord)) {
+            // Just deselects
+            this.currentSelection = MGPOptional.empty();
+            this.indicators = [];
+            if (this.subMoves.length === 0) {
+                // No sub moves constructed at all, cancel the move to show the last one
+                return this.cancelMove();
             }
+            return MGPValidation.SUCCESS;
+        }
+        if (this.stateInConstruction.getPieceAt(selection).holdsBall) {
+            return this.performPass(selection, clickedCoord);
+        } else {
+            return this.performTranslation(selection, clickedCoord);
         }
     }
 
@@ -300,12 +340,8 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
         return this.interactive && this.subMoves.length >= 1;
     }
 
+    @ClickHandler(() => `#done`)
     public async done(): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = await this.canUserPlay('#done');
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-
         let second: MGPOptional<DiaballikSubMove> = MGPOptional.empty();
         if (this.subMoves.length >= 2) {
             second = MGPOptional.of(this.subMoves[1]);
@@ -319,15 +355,15 @@ export class DiaballikComponent extends RectangularGameComponent<DiaballikRules,
 
     public getBoardRotation(): string {
         const rotation: number = this.getPointOfView().getValue() * 180;
-        const boardWidth: number = this.getState().getWidth() * this.SPACE_SIZE + this.STROKE_WIDTH;
-        const boardHeight: number = this.getState().getHeight() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardWidth: number = this.width() * this.SPACE_SIZE + this.STROKE_WIDTH;
+        const boardHeight: number = this.height() * this.SPACE_SIZE + this.STROKE_WIDTH;
         const centerX: number = boardWidth / 2;
         const centerY: number = boardHeight / 2;
         return `rotate(${rotation} ${centerX} ${centerY})`;
     }
 
-    public override getViewBox(): ViewBox {
-        return super.getViewBox().expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
+    protected override computeViewBox(): ViewBox {
+        return super.computeViewBox().expand(0, 0, this.SPACE_SIZE, this.SPACE_SIZE);
     }
 
 }

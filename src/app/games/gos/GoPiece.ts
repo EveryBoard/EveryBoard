@@ -1,5 +1,6 @@
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
 import { ComparableObject, Utils } from '@everyboard/lib';
+
+import { Player, PlayerOrNone } from '../../jscaip/Player';
 
 type PieceType = 'alive' | 'dead' | 'territory' | 'empty' | 'unreachable';
 
@@ -19,13 +20,16 @@ export class GoPiece implements ComparableObject {
 
     public static LIGHT_TERRITORY: GoPiece = new GoPiece(Player.ONE, 'territory');
 
-    public static UNREACHABLE: GoPiece = new GoPiece(PlayerOrNone.NONE, 'unreachable'); // For Trigo
+    public static UNREACHABLE: GoPiece = new GoPiece(PlayerOrNone.NONE, 'unreachable'); // For Triangular Go and Hexagonal Go
 
     public static isReachable(piece: GoPiece): boolean {
         return piece.isReachable();
     }
 
-    private constructor(readonly player: PlayerOrNone, public readonly type: PieceType) { }
+    private constructor(public readonly player: PlayerOrNone,
+                        public readonly type: PieceType)
+    {
+    }
 
     public equals(other: GoPiece): boolean {
         return other === this;

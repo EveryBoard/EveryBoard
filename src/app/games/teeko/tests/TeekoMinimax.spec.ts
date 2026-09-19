@@ -1,16 +1,25 @@
 /* eslint-disable max-lines-per-function */
-import { AIDepthLimitOptions } from 'src/app/jscaip/AI/AI';
+import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
+import { Minimax } from '../../../jscaip/AI/Minimax';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
+import { TeekoHeuristic } from '../TeekoHeuristic';
+import { TeekoMove } from '../TeekoMove';
+import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from '../TeekoRules';
-import { minimaxTest, SlowTest } from 'src/app/utils/tests/TestUtils.spec';
-import { MGPOptional } from '@everyboard/lib';
-import { TeekoMinimax } from '../TeekoMinimax';
+import { TeekoState } from '../TeekoState';
+
+class TeekoMinimax extends Minimax<TeekoMove, TeekoState, TeekoConfig> {
+    public constructor() {
+        super('Minimax', TeekoRules.get(), new TeekoHeuristic(), new TeekoMoveGenerator());
+    }
+}
 
 describe('TeekoMinimax', () => {
 
     const rules: TeekoRules = TeekoRules.get();
     const minimax: TeekoMinimax = new TeekoMinimax();
     const minimaxOptions: AIDepthLimitOptions = { name: 'Level 1', maxDepth: 1 };
-    const defaultConfig: MGPOptional<TeekoConfig> = TeekoRules.get().getDefaultRulesConfig();
+    const defaultConfig: TeekoConfig = TeekoRules.get().getDefaultRulesConfig();
 
     SlowTest.it('should be able play against itself', () => {
         minimaxTest({
@@ -21,4 +30,5 @@ describe('TeekoMinimax', () => {
             shouldFinish: false, // not always a finisher
         });
     });
+
 });

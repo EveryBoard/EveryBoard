@@ -1,19 +1,23 @@
-import { Coord, CoordFailure } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { GameNode } from 'src/app/jscaip/AI/GameNode';
-import { NInARowHelper } from 'src/app/jscaip/NInARowHelper';
-import { Player, PlayerOrNone } from 'src/app/jscaip/Player';
-import { ConfigurableRules } from 'src/app/jscaip/Rules';
-import { GameStatus } from 'src/app/jscaip/GameStatus';
-import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional, MGPValidation, Utils } from '@everyboard/lib';
+
+import { NumberConfig } from '../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { GameNode } from '../../jscaip/AI/GameNode';
+import { Coord, CoordFailure } from '../../jscaip/Coord';
+import { GameStatus } from '../../jscaip/GameStatus';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player, PlayerOrNone } from '../../jscaip/Player';
+import { PlayerNumberMap } from '../../jscaip/PlayerMap';
+import { ConfigurableRules } from '../../jscaip/Rules';
+import { RulesFailure } from '../../jscaip/RulesFailure';
+import { TableUtils } from '../../jscaip/TableUtils';
+import { MGPValidators } from '../../utils/MGPValidator';
+
+import { PenteConfig } from './PenteConfig';
 import { PenteMove } from './PenteMove';
 import { PenteState } from './PenteState';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
-import { NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
-import { PenteConfig } from './PenteConfig';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
 
 export class PenteNode extends GameNode<PenteMove, PenteState> {}
 
@@ -42,8 +46,7 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return PenteRules.singleton.get();
     }
 
-    public override getInitialState(optionalConfig: MGPOptional<PenteConfig>): PenteState {
-        const config: PenteConfig = optionalConfig.get();
+    public override getInitialState(config: PenteConfig): PenteState {
         const board: PlayerOrNone[][] = TableUtils.create(config.width,
                                                           config.height,
                                                           PlayerOrNone.NONE);
@@ -53,12 +56,12 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return new PenteState(board, PlayerNumberMap.of(0, 0), 0);
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<PenteConfig>> {
-        return MGPOptional.of(PenteRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<PenteConfig> {
+        return PenteRules.RULES_CONFIG_DESCRIPTION;
     }
 
     public override isLegal(move: PenteMove, state: PenteState): MGPValidation {
-        if (state.isOnBoard(move.coord) === false) {
+        if (state.isNotOnBoard(move.coord)) {
             return MGPValidation.failure(CoordFailure.OUT_OF_RANGE(move.coord));
         } else if (state.getPieceAt(move.coord).isPlayer()) {
             return MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
@@ -67,13 +70,13 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         }
     }
 
-    public override applyLegalMove(move: PenteMove, state: PenteState, config: MGPOptional<PenteConfig>, _info: void)
+    public override applyLegalMove(move: PenteMove, state: PenteState, config: PenteConfig, _info: void)
     : PenteState
     {
         const player: Player = state.getCurrentPlayer();
         const newBoard: PlayerOrNone[][] = state.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x]= player;
-        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config.get(), player);
+        const capturedPieces: Coord[] = this.getCaptures(move.coord, state, config, player);
         for (const captured of capturedPieces) {
             newBoard[captured.y][captured.x] = PlayerOrNone.NONE;
         }
@@ -107,14 +110,14 @@ export class PenteRules extends ConfigurableRules<PenteMove, PenteState, PenteCo
         return captures;
     }
 
-    public override getGameStatus(node: PenteNode, config: MGPOptional<PenteConfig>): GameStatus {
+    public override getGameStatus(node: PenteNode, config: PenteConfig): GameStatus {
         const state: PenteState = node.gameState;
         const opponent: Player = state.getCurrentOpponent();
-        const capturesNeededToWin: number = config.get().capturesNeededToWin;
+        const capturesNeededToWin: number = config.capturesNeededToWin;
         if (capturesNeededToWin <= state.captures.get(opponent)) {
             return GameStatus.getVictory(opponent);
         }
-        const victoriousCoord: Coord[] = this.getHelper(config.get()).getVictoriousCoord(state);
+        const victoriousCoord: Coord[] = this.getHelper(config).getVictoriousCoord(state);
         if (victoriousCoord.length > 0) {
             return GameStatus.getVictory(opponent);
         }

@@ -1,12 +1,16 @@
-import { MancalaState } from './../common/MancalaState';
 import { MGPOptional } from '@everyboard/lib';
-import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
-import { Coord } from 'src/app/jscaip/Coord';
-import { TableUtils } from 'src/app/jscaip/TableUtils';
+
+import { BooleanConfig } from '../../../components/wrapper-components/rules-configuration/BooleanConfig';
+import { NumberConfig } from '../../../components/wrapper-components/rules-configuration/NumberConfig';
+import { RulesConfigDescription } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescription';
+import { RulesConfigDescriptionLocalizable } from '../../../components/wrapper-components/rules-configuration/RulesConfigDescriptionLocalizable';
+import { Coord } from '../../../jscaip/Coord';
+import { Player } from '../../../jscaip/Player';
+import { TableUtils } from '../../../jscaip/TableUtils';
+import { MGPValidators } from '../../../utils/MGPValidator';
 import { MancalaConfig } from '../common/MancalaConfig';
-import { BooleanConfig, NumberConfig, RulesConfigDescription, RulesConfigDescriptionLocalizable } from 'src/app/components/wrapper-components/rules-configuration/RulesConfigDescription';
-import { MGPValidators } from 'src/app/utils/MGPValidator';
-import { Player } from 'src/app/jscaip/Player';
+import { MancalaCaptureResult, MancalaDistributionResult, MancalaRules } from '../common/MancalaRules';
+import { MancalaState } from '../common/MancalaState';
 
 export class KalahRules extends MancalaRules {
 
@@ -23,6 +27,7 @@ export class KalahRules extends MancalaRules {
                 continueLapUntilCaptureOrEmptyHouse: new BooleanConfig(false, MancalaRules.CYCLICAL_LAP),
                 seedsByHouse: new NumberConfig(4, MancalaRules.SEEDS_BY_HOUSE, MGPValidators.range(1, 99)),
                 width: new NumberConfig(6, RulesConfigDescriptionLocalizable.WIDTH, MGPValidators.range(1, 99)),
+                numberOfRows: new NumberConfig(1, MancalaRules.NUMBER_OF_ROWS, MGPValidators.range(1, 99)),
             },
         });
 
@@ -33,35 +38,44 @@ export class KalahRules extends MancalaRules {
         return KalahRules.singleton.get();
     }
 
-    public override getRulesConfigDescription(): MGPOptional<RulesConfigDescription<MancalaConfig>> {
-        return MGPOptional.of(KalahRules.RULES_CONFIG_DESCRIPTION);
+    public override getRulesConfigDescription(): RulesConfigDescription<MancalaConfig> {
+        return KalahRules.RULES_CONFIG_DESCRIPTION;
     }
 
-    public applyCapture(distributionResult: MancalaDistributionResult): MancalaCaptureResult {
+    public applyCapture(distributionResult: MancalaDistributionResult,
+                        config: MancalaConfig,
+    ): MancalaCaptureResult {
         const distributedState: MancalaState = distributionResult.resultingState;
         const capturelessResult: MancalaCaptureResult = {
             capturedSum: 0,
-            captureMap: TableUtils.create(distributedState.getWidth(), 2, 0),
+            captureMap: TableUtils.create(
+                distributedState.getWidth(),
+                distributedState.getHeight(),
+                0,
+            ),
             resultingState: distributedState,
         };
         if (distributionResult.endsUpInStore) {
             return capturelessResult;
         } else {
             const landingSpace: Coord = distributionResult.filledCoords[distributionResult.filledCoords.length - 1];
-            const playerY: number = distributionResult.resultingState.getCurrentPlayerY();
-            const opponentY: number = distributionResult.resultingState.getOpponentY();
+            const currentPlayer: Player = distributionResult.resultingState.getCurrentPlayer();
+            const oppositeY: number = this.getOppositeY(landingSpace, config);
             const landingSeeds: number = distributionResult.resultingState.getPieceAt(landingSpace);
-            const parallelSeeds: number = distributionResult.resultingState.getPieceAtXY(landingSpace.x, opponentY);
-            if (landingSpace.y === playerY && landingSeeds === 1 && parallelSeeds > 0) {
+            const parallelSeeds: number = distributionResult.resultingState.getPieceAtXY(landingSpace.x, oppositeY);
+            if (this.getSpaceOwner(landingSpace, config) === currentPlayer && landingSeeds === 1 && parallelSeeds > 0) {
                 // We can capture
                 const board: number[][] = distributedState.getCopiedBoard();
                 const capturedSum: number = board[0][landingSpace.x] + board[1][landingSpace.x];
-                const captureMap: number[][] = TableUtils.create(distributedState.getWidth(), 2, 0);
-                captureMap[0][landingSpace.x] = board[0][landingSpace.x];
-                captureMap[1][landingSpace.x] = board[1][landingSpace.x];
+                const captureMap: number[][] = TableUtils.create(
+                    distributedState.getWidth(),
+                    distributedState.getHeight(),
+                    0,
+                );
+                captureMap[landingSpace.y][landingSpace.x] = board[landingSpace.y][landingSpace.x];
+                captureMap[oppositeY][landingSpace.x] = board[oppositeY][landingSpace.x];
                 const capturer: Player = distributedState.getCurrentPlayer();
                 let postCaptureState: MancalaState = distributedState.capture(capturer, landingSpace);
-                const oppositeY: number = (landingSpace.y + 1) % 2;
                 const oppositeSpace: Coord = new Coord(landingSpace.x, oppositeY);
                 postCaptureState = postCaptureState.capture(capturer, oppositeSpace);
                 return {

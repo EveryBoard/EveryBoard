@@ -1,8 +1,8 @@
 /* eslint-disable max-lines-per-function */
-import { Coord } from 'src/app/jscaip/Coord';
-import { Table } from 'src/app/jscaip/TableUtils';
+import { Coord } from '../../../jscaip/Coord';
+import { PlayerNumberMap } from '../../../jscaip/PlayerMap';
+import { Table } from '../../../jscaip/TableUtils';
 import { CoerceoState } from '../CoerceoState';
-import { PlayerNumberMap } from 'src/app/jscaip/PlayerMap';
 
 describe('CoerceoState', () => {
 

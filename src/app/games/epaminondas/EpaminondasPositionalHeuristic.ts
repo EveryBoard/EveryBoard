@@ -1,18 +1,18 @@
-import { Coord } from 'src/app/jscaip/Coord';
-import { Ordinal } from 'src/app/jscaip/Ordinal';
-import { Heuristic } from 'src/app/jscaip/AI/Minimax';
-import { BoardValue } from 'src/app/jscaip/AI/BoardValue';
-import { Player } from 'src/app/jscaip/Player';
+import { BoardValue } from '../../jscaip/AI/BoardValue';
+import { Heuristic } from '../../jscaip/AI/Heuristic';
+import { Coord } from '../../jscaip/Coord';
+import { Ordinal } from '../../jscaip/Ordinal';
+import { Player } from '../../jscaip/Player';
+
 import { EpaminondasMove } from './EpaminondasMove';
-import { EpaminondasState } from './EpaminondasState';
 import { EpaminondasConfig, EpaminondasNode } from './EpaminondasRules';
-import { MGPOptional } from '@everyboard/lib';
+import { EpaminondasState } from './EpaminondasState';
 
 export class EpaminondasPositionalHeuristic
     extends Heuristic<EpaminondasMove, EpaminondasState, BoardValue, EpaminondasConfig>
 {
 
-    public getBoardValue(node: EpaminondasNode, _config: MGPOptional<EpaminondasConfig>): BoardValue {
+    public getBoardValue(node: EpaminondasNode, _config: EpaminondasConfig): BoardValue {
         return BoardValue.of(this.getPieceCountThenSupportThenAdvancement(node.gameState));
     }
 
@@ -41,9 +41,7 @@ export class EpaminondasPositionalHeuristic
             total += SCORE_BY_PIECE * mod;
             for (const dir of dirs) {
                 let neighbor: Coord = coord.getNext(dir, 1);
-                while (state.isOnBoard(neighbor) &&
-                       state.getPieceAt(neighbor) === player)
-                {
+                while (state.hasPieceAt(neighbor, player)) {
                     total += mod * SCORE_BY_ALIGNMENT;
                     neighbor = neighbor.getNext(dir, 1);
                 }
