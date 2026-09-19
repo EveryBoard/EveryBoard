@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
-
 import { Utils } from '@everyboard/lib';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
@@ -9,7 +7,7 @@ import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { Table } from '../../../jscaip/TableUtils';
 import { RulesUtils } from '../../../jscaip/tests/RulesUtils.spec';
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { ErrorLoggerServiceMock } from '../../../utils/tests/ErrorLoggerServiceMock.spec';
 import { DvonnFailure } from '../DvonnFailure';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnPieceStack } from '../DvonnPieceStack';
@@ -298,12 +296,12 @@ describe('DvonnRules', () => {
 
     describe('isMovablePiece', () => {
 
-        it('should fail if the coord is not on the board', fakeAsync(() => {
+        it('should fail if the coord is not on the board', () => {
             spyOn(Utils, 'logError').and.callFake(ErrorLoggerServiceMock.logError);
             expect(() => rules.isMovablePiece(DvonnRules.get().getInitialState(), new Coord(-1, -1)))
                 .toThrowError('Assertion failure: piece is not on the board');
             expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', 'piece is not on the board', undefined);
-        }));
+        });
 
     });
 

@@ -4,7 +4,7 @@ import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { AwaleRules } from '../../awale/AwaleRules';
 import { BaAwaRules } from '../../ba-awa/BaAwaRules';
 import { KalahRules } from '../../kalah/KalahRules';
-import { minimaxTest, SlowTest } from '../../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { MancalaConfig } from '../MancalaConfig';
 import { MancalaMove } from '../MancalaMove';
 import { MancalaMoveGenerator } from '../MancalaMoveGenerator';

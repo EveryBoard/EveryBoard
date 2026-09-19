@@ -2,7 +2,7 @@
 import { P4Heuristic } from '../../../games/p4/P4Heuristic';
 import { P4Move } from '../../../games/p4/P4Move';
 import { P4MoveGenerator } from '../../../games/p4/P4MoveGenerator';
-import { P4Rules } from '../../../games/p4/P4Rules';
+import { P4Config, P4Rules } from '../../../games/p4/P4Rules';
 import { P4State } from '../../../games/p4/P4State';
 import { MCTSConfig, MinimaxConfig } from '../AIConfig';
 import { AIInstanceRegistry, createIterativeDeepeningMinimaxFromConfig, createMCTSFromConfig, createMinimaxFromConfig } from '../AIConfigUtils';

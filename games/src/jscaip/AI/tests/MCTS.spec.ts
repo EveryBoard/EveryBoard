@@ -204,20 +204,20 @@ describe('MCTS', () => {
         const p4Config: P4Config = P4Rules.get().getDefaultRulesConfig();
         const p4Mcts: MCTS<P4Move, P4State, P4Config> = new MCTS('MCTS', new P4MoveGenerator(), P4Rules.get());
         const root: P4Node = P4Rules.get().getInitialNode(p4Config);
-        const playerZeroMove: P4Node = p4Mcts.play(root, P4Move.of(0), p4Config) as P4Node;
-        const goodForPlayerZero: P4Node = p4Mcts.play(playerZeroMove, P4Move.of(0), p4Config) as P4Node;
-        const badForPlayerZero: P4Node = p4Mcts.play(playerZeroMove, P4Move.of(1), p4Config) as P4Node;
+        const playerZeroMove: P4Node = p4Mcts['play'](root, P4Move.of(0), p4Config) as P4Node;
+        const goodForPlayerZero: P4Node = p4Mcts['play'](playerZeroMove, P4Move.of(0), p4Config) as P4Node;
+        const badForPlayerZero: P4Node = p4Mcts['play'](playerZeroMove, P4Move.of(1), p4Config) as P4Node;
         playerZeroMove.addChild(goodForPlayerZero);
         playerZeroMove.addChild(badForPlayerZero);
-        p4Mcts.addSimulationResult(playerZeroMove, 0);
+        p4Mcts['addSimulationResult'](playerZeroMove, 0);
         for (let i: number = 0; i < 10; i++) {
-            p4Mcts.addSimulationResult(goodForPlayerZero, 1);
-            p4Mcts.addSimulationResult(badForPlayerZero, 0);
+            p4Mcts['addSimulationResult'](goodForPlayerZero, 1);
+            p4Mcts['addSimulationResult'](badForPlayerZero, 0);
         }
 
         // When selecting from the opponent turn
         const selected: { node: GameNode<P4Move, P4State>; path: GameNode<P4Move, P4State>[] } =
-            p4Mcts.select({ node: playerZeroMove, path: [playerZeroMove] }, Player.ZERO);
+            p4Mcts['select']({ node: playerZeroMove, path: [playerZeroMove] }, Player.ZERO);
 
         // Then the opponent should be modeled as choosing the reply that minimizes Player.ZERO's score
         expect(selected.node).toBe(badForPlayerZero);

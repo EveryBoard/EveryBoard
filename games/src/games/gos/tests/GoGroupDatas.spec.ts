@@ -1,6 +1,4 @@
 /* eslint-disable max-lines-per-function */
-import { fakeAsync } from '@angular/core/testing';
-
 import { Utils } from '@everyboard/lib';
 import { TestUtils } from '@everyboard/lib/testing';
 
@@ -30,7 +28,7 @@ describe('GoGroupData', () => {
         );
     });
 
-    it('should throw when addPawn is called two times with the same coord', fakeAsync(() => {
+    it('should throw when addPawn is called two times with the same coord', () => {
         // Given any GoGroupData containing "coord" already
         const group: GoGroupData = new GoGroupData(GoPiece.EMPTY, [], [], [], [], [], []);
         group.addPawn(coord, GoPiece.DARK);
@@ -41,7 +39,7 @@ describe('GoGroupData', () => {
         spyOn(Utils, 'logError').and.callThrough();
         expect(() => group.addPawn(coord, GoPiece.DARK)).toThrowError('Assertion failure: ' + expectedError);
         expect(Utils.logError).toHaveBeenCalledWith('Assertion failure', expectedError, undefined);
-    }));
+    });
 
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
         const group: GoGroupData = new GoGroupData(GoPiece.EMPTY,

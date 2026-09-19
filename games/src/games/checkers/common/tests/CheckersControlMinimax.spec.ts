@@ -3,7 +3,7 @@ import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { InternationalCheckersRules } from '../../international-checkers/InternationalCheckersRules';
 import { LascaRules } from '../../lasca/LascaRules';
-import { minimaxTest, SlowTest } from '../../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { AbstractCheckersRules, CheckersConfig } from '../AbstractCheckersRules';
 import { CheckersControlHeuristic } from '../CheckersControlHeuristic';
 import { CheckersMove } from '../CheckersMove';

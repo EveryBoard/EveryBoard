@@ -9,7 +9,7 @@ import { EpaminondasPhalanxSizeAndFilterMoveGenerator } from '../EpaminondasPhal
 import { EpaminondasPositionalHeuristic } from '../EpaminondasPositionalHeuristic';
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasState } from '../EpaminondasState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

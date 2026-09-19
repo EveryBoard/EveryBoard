@@ -3,7 +3,7 @@ import { TaflConfig } from '../../TaflConfig';
 import { TaflState } from '../../TaflState';
 import { TablutRules } from '../TablutRules';
 
-describe('TaflState', () => {
+describe('TablutState', () => {
 
     const defaultConfig: TaflConfig = TablutRules.get().getDefaultRulesConfig();
 

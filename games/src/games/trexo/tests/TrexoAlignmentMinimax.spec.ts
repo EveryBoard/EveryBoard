@@ -7,7 +7,7 @@ import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';
 import { TrexoRules } from '../TrexoRules';
 import { TrexoState } from '../TrexoState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class TrexoAlignmentMinimax extends Minimax<TrexoMove, TrexoState> {
     public constructor() {

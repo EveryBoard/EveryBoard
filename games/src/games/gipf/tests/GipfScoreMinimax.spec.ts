@@ -8,7 +8,7 @@ import { GipfRules } from '../GipfRules';
 import { GipfLegalityInformation } from '../GipfRules';
 import { GipfScoreHeuristic } from '../GipfScoreHeuristic';
 import { GipfState } from '../GipfState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class GipfScoreMinimax extends Minimax<GipfMove, GipfState, EmptyRulesConfig, GipfLegalityInformation> {
     public constructor() {

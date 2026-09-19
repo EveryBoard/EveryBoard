@@ -7,7 +7,7 @@ import { AbaloneConfig, AbaloneRules } from '../AbaloneRules';
 import { AbaloneLegalityInformation } from '../AbaloneRules';
 import { AbaloneScoreHeuristic } from '../AbaloneScoreHeuristic';
 import { AbaloneState } from '../AbaloneState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class AbaloneScoreMinimax extends Minimax<AbaloneMove, AbaloneState, AbaloneConfig, AbaloneLegalityInformation> {
     public constructor() {
