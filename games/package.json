@@ -31,7 +31,6 @@
   "devDependencies": {
     "@angular/localize": "^20.3.18",
     "@types/jasmine": "^6.0.0",
-    "@types/node": "^22.0.0",
     "jasmine": "^6.2.0",
     "nyc": "^18.0.0",
     "ts-node": "^10.9.2"
