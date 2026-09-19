@@ -35,7 +35,7 @@
                               [attr.y]="SPACE_SIZE * y"
                               [attr.width]="SPACE_SIZE"
                               [attr.height]="SPACE_SIZE"
-                              [ngClass]="boardPieces[y][x].coordClasses"
+                              [ngClass]="boardPieces()[y][x].coordClasses"
                               class="base"/>
                         @for (pieceData of boardPieces()[y][x].piecesData; track $index) {
                             <g app-ring

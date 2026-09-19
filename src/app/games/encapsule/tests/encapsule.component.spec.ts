@@ -21,12 +21,12 @@ describe('EncapsuleComponent', () => {
 
     const noMorePieces: EncapsuleRemainingPieces =
         PlayerMap.ofValues(new EncapsuleSizeToNumberMap(), new EncapsuleSizeToNumberMap());
+    const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
     const mediumDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ZERO);
     const bigDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ZERO);
-    const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ONE);
-    const smallDark: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ZERO);
     const smallLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(1, Player.ONE);
     const mediumLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(2, Player.ONE);
+    const bigLight: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(3, Player.ONE);
     const ___: EncapsuleSpace = EncapsuleSpace.EMPTY;
     const X__: EncapsuleSpace = ___.put(smallLight);
     const _X_: EncapsuleSpace = ___.put(mediumLight);
@@ -160,7 +160,7 @@ describe('EncapsuleComponent', () => {
         it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___],
-                [__X, ___, ___],
+                [X__, ___, ___],
                 [___, ___, ___],
             ];
             const remainingPieces: EncapsuleRemainingPieces = rules.getEncapsulePieceMapFrom([0, 1], []);
@@ -205,7 +205,7 @@ describe('EncapsuleComponent', () => {
             // Given a board with a selected piece movable on top of another one
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___],
-                [_O_, O__, ___],
+                [_O_, __O, ___],
                 [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
@@ -222,7 +222,7 @@ describe('EncapsuleComponent', () => {
             // Given a board with a selected piece movable on top of another one
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___],
-                [_O_, O__, ___],
+                [_O_, __O, ___],
                 [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
@@ -240,7 +240,7 @@ describe('EncapsuleComponent', () => {
         it('should forbid moving a piece on top of a bigger one', fakeAsync(async() => {
             const board: EncapsuleSpace[][] = [
                 [___, ___, ___],
-                [_O_, O__, ___],
+                [_O_, __O, ___],
                 [___, ___, ___],
             ];
             await testUtils.setupState(new EncapsuleState(board, P0Turn, noMorePieces, 3));
