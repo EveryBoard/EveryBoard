@@ -6,7 +6,7 @@ import { TeekoMove } from '../TeekoMove';
 import { TeekoMoveGenerator } from '../TeekoMoveGenerator';
 import { TeekoConfig, TeekoRules } from '../TeekoRules';
 import { TeekoState } from '../TeekoState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class TeekoMinimax extends Minimax<TeekoMove, TeekoState, TeekoConfig> {
     public constructor() {

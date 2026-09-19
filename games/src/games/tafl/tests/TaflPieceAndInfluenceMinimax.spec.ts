@@ -12,7 +12,7 @@ import { TaflRules } from '../TaflRules';
 import { TaflState } from '../TaflState';
 import { TablutMove } from '../tablut/TablutMove';
 import { TablutNode, TablutRules } from '../tablut/TablutRules';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class TaflPieceAndInfluenceMinimax<M extends TaflMove> extends Minimax<M, TaflState, TaflConfig> {
     public constructor(rules: TaflRules<M>) {

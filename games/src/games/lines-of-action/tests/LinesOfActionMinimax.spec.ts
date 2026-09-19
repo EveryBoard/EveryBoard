@@ -7,7 +7,7 @@ import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionMoveGenerator } from '../LinesOfActionMoveGenerator';
 import { LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
     public constructor() {

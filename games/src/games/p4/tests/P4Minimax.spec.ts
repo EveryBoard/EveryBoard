@@ -6,7 +6,7 @@ import { P4Move } from '../P4Move';
 import { P4OrderedMoveGenerator } from '../P4OrderedMoveGenerator';
 import { P4Config, P4Node, P4Rules } from '../P4Rules';
 import { P4State } from '../P4State';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class P4Minimax extends Minimax<P4Move, P4State, P4Config> {
     public constructor() {

@@ -9,7 +9,7 @@ import { SixHeuristic } from '../SixHeuristic';
 import { SixMove } from '../SixMove';
 import { SixConfig, SixLegalityInformation, SixNode, SixRules } from '../SixRules';
 import { SixState } from '../SixState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const O: PlayerOrNone = Player.ZERO;
 const X: PlayerOrNone = Player.ONE;

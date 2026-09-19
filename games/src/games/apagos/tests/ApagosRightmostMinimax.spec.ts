@@ -6,7 +6,7 @@ import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
 import { ApagosRightmostHeuristic } from '../ApagosRightmostHeuristic';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class ApagosRightmostMinimax extends Minimax<ApagosMove, ApagosState, ApagosConfig> {
     public constructor() {

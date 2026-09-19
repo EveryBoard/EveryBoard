@@ -6,7 +6,7 @@ import { ConspirateursMove } from '../ConspirateursMove';
 import { ConspirateursOrderedMoveGenerator } from '../ConspirateursOrderedMoveGenerator';
 import { ConspirateursRules } from '../ConspirateursRules';
 import { ConspirateursState } from '../ConspirateursState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class ConspirateursJumpMinimax extends Minimax<ConspirateursMove, ConspirateursState> {
     public constructor() {

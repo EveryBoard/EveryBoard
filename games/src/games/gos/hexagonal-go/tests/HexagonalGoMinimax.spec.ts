@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { AbstractGoMinimax } from '../../AbstractGoMinimax';
-import { minimaxTest, SlowTest } from '../../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { HexagonalGoHeuristic } from '../HexagonalGoHeuristic';
 import { HexagonalGoMoveGenerator } from '../HexagonalGoMoveGenerator';
 import { HexagonalGoConfig, HexagonalGoRules } from '../HexagonalGoRules';

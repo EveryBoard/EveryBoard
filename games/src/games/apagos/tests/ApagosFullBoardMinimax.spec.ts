@@ -6,7 +6,7 @@ import { ApagosMove } from '../ApagosMove';
 import { ApagosMoveGenerator } from '../ApagosMoveGenerator';
 import { ApagosConfig, ApagosRules } from '../ApagosRules';
 import { ApagosState } from '../ApagosState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class ApagosFullBoardMinimax extends Minimax<ApagosMove, ApagosState, ApagosConfig> {
     public constructor() {

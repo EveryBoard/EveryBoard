@@ -7,7 +7,7 @@ import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoMoveGenerator } from '../KamisadoMoveGenerator';
 import { KamisadoRules } from '../KamisadoRules';
 import { KamisadoState } from '../KamisadoState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoState> {
     public constructor() {

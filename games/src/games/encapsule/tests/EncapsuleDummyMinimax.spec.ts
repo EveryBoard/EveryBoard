@@ -1,12 +1,13 @@
 /* eslint-disable max-lines-per-function */
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
-import { DummyHeuristic, Minimax } from '../../../jscaip/AI/Minimax';
+import { DummyHeuristic } from '../../../jscaip/AI/DummyHeuristic';
+import { Minimax } from '../../../jscaip/AI/Minimax';
 import { EncapsuleMove } from '../EncapsuleMove';
 import { EncapsuleMoveGenerator } from '../EncapsuleMoveGenerator';
 import { EncapsuleConfig, EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleLegalityInformation } from '../EncapsuleRules';
 import { EncapsuleState } from '../EncapsuleState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class EncapsuleDummyMinimax
     extends Minimax<EncapsuleMove, EncapsuleState, EncapsuleConfig, EncapsuleLegalityInformation> {

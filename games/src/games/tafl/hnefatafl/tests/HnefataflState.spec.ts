@@ -5,7 +5,7 @@ import { HnefataflRules } from '../HnefataflRules';
 
 const defaultConfig: TaflConfig = HnefataflRules.get().getDefaultRulesConfig();
 
-describe('TaflState', () => {
+describe('HnefataflState', () => {
 
     describe('getInitialState', () => {
 

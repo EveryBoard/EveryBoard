@@ -10,7 +10,7 @@ import { ConnectSixDrops, ConnectSixMove } from '../ConnectSixMove';
 import { ConnectSixMoveGenerator } from '../ConnectSixMoveGenerator';
 import { ConnectSixNode, ConnectSixRules } from '../ConnectSixRules';
 import { ConnectSixState } from '../ConnectSixState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class ConnectSixAlignmentMinimax extends Minimax<ConnectSixMove, ConnectSixState, GobanConfig> {
     public constructor() {
