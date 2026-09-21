@@ -3,7 +3,7 @@
      [attr.viewBox]="viewBoxString()"
      preserveAspectRatio="xMidYMid meet">
 
-    @for (line of board; track $index; let y = $index) {
+    @for (line of state().board; track $index; let y = $index) {
         <g>
             @for (spaceContent of line; track $index; let x = $index) {
                 <g id="click-{{ x }}-{{ y }}"

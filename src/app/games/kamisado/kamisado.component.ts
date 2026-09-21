@@ -76,9 +76,9 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
         const state: KamisadoState = this.state();
         this.board = state.getCopiedBoard();
 
-        this.canPass = KamisadoRules.mustPass(state);
+        this.canPass.set(KamisadoRules.mustPass(state));
         const isFinished: boolean = this.rules.getGameStatus(this.node()) !== GameStatus.ONGOING;
-        if (this.canPass || state.coordToPlay.isAbsent() || isFinished) {
+        if (this.canPass() || state.coordToPlay.isAbsent() || isFinished) {
             this.chosenAutomatically = false;
             this.chosen = MGPOptional.empty();
         } else {
@@ -98,14 +98,14 @@ export class KamisadoComponent extends RectangularGameComponent<KamisadoRules,
     }
 
     public override async pass(): Promise<MGPValidation> {
-        Utils.assert(this.canPass, 'KamisadoComponent: pass() must be called only if canPass is true');
+        Utils.assert(this.canPass(), 'KamisadoComponent: pass() must be called only if canPass is true');
         return this.chooseMove(KamisadoMove.PASS);
     }
 
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
-        if (this.canPass) {
+        if (this.canPass()) {
             return this.cancelMove(RulesFailure.MUST_PASS());
         }
         if (this.chosen.isAbsent()) {

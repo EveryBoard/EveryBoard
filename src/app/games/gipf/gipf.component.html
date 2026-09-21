@@ -51,7 +51,7 @@
         </g>
     }
 
-    @for (capture of possibleCaptures; track $index; let i = $index) {
+    @for (capture of possibleCaptures(); track $index; let i = $index) {
         <g pointer-events="fill"
            class="capturable-stroke">
             @for (coord of capture.capturedSpaces; track coord.toString()) {
@@ -64,7 +64,7 @@
         </g>
     }
 
-    @for (arrow of arrows; track $index) {
+    @for (arrow of arrows(); track $index) {
         <line [attr.x1]="arrow.startCenter.x"
               [attr.y1]="arrow.startCenter.y"
               [attr.x2]="arrow.landingCenter.x"
@@ -91,11 +91,11 @@
         </g>
     }
 
-    @if (inserted.isPresent()) {
-        <line [attr.x1]="inserted.get().startCenter.x"
-              [attr.y1]="inserted.get().startCenter.y"
-              [attr.x2]="inserted.get().landingCenter.x"
-              [attr.y2]="inserted.get().landingCenter.y"
+    @if (inserted().isPresent()) {
+        <line [attr.x1]="inserted().get().startCenter.x"
+              [attr.y1]="inserted().get().startCenter.y"
+              [attr.x2]="inserted().get().landingCenter.x"
+              [attr.y2]="inserted().get().landingCenter.y"
               class="arrow moved-stroke click-delegator"
               marker-end="url(#arrowhead-moved)"/>
     }

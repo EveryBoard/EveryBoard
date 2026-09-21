@@ -349,7 +349,7 @@ export class OnlineGameWrapperComponent extends GameWrapper<MinimalUser> impleme
         Utils.assert(this.isPlaying(), 'Non playing should not call canPass');
         if (this.endGame) return false;
         if (this.currentUser?.name !== this.getPlayer().name) return false;
-        return this.gameComponent.canPass;
+        return this.gameComponent.canPass();
     }
 
     private canAskTakeBack(): boolean {

@@ -68,7 +68,9 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
             ],
         };
         this.encoder = DvonnMove.encoder;
-        this.scores = MGPOptional.of(DvonnRules.getScores(this.state()));
+        this.scores.set(MGPOptional.of(
+            DvonnRules.getScores(this.state()),
+        ));
 
         this.SPACE_SIZE = 30;
         this.hexaLayout = new HexaLayout(this.SPACE_SIZE * 1.50,
@@ -83,8 +85,12 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.canPass = this.rules.canOnlyPass(this.state());
-        this.scores = MGPOptional.of(DvonnRules.getScores(this.state()));
+        this.canPass.set(
+            this.rules.canOnlyPass(this.state()),
+        );
+        this.scores.set(MGPOptional.of(
+            DvonnRules.getScores(this.state()),
+        ));
     }
 
     protected override async showLastMove(move: DvonnMove): Promise<void> {
@@ -114,7 +120,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnRules, DvonnMove
     }
 
     public override async pass(): Promise<MGPValidation> {
-        Utils.assert(this.canPass, 'DvonnComponent: pass() can only be called if canPass is true');
+        Utils.assert(this.canPass(), 'DvonnComponent: pass() can only be called if canPass is true');
         return await this.chooseMove(DvonnMove.PASS);
     }
 

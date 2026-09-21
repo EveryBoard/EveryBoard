@@ -331,7 +331,9 @@ export class PylosComponent extends GameComponent<PylosRules, PylosMove, PylosSt
     }
 
     private updateScores(): void {
-        this.scores = MGPOptional.of(this.remainingPieces);
+        this.scores.set(
+            MGPOptional.of(this.remainingPieces),
+        );
     }
 
     protected override getScoreName(): ScoreName {
