@@ -38,7 +38,7 @@ export class TriangularGoComponent extends TriangularGameComponent<TriangularGoR
                                                                    GoLegalityInformation>
 {
 
-    private readonly ko: Signal<MGPOptional<Coord>> = computed(() => this.state().koCoord);
+    protected readonly ko: Signal<MGPOptional<Coord>> = computed(() => this.state().koCoord);
 
     protected readonly last: WritableSignal<MGPOptional<Coord>> = signal(MGPOptional.empty());
 

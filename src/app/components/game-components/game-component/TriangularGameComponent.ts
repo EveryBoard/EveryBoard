@@ -1,9 +1,7 @@
-import { WritableSignal } from '@angular/core';
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
 import { EmptyRulesConfig, RulesConfig } from '../../../jscaip/RulesConfigUtil';
-import { Table } from '../../../jscaip/TableUtils';
 import { GameState } from '../../../jscaip/state/GameState';
 
 import { GameComponent } from './GameComponent';

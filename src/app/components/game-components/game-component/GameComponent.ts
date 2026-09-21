@@ -141,7 +141,7 @@ export abstract class GameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public getScore(player: Player): number {
-        return this.scores().get().get(player); // TODO computed
+        return this.scores().get().get(player);
     }
 
     protected getScoreName(): ScoreName {

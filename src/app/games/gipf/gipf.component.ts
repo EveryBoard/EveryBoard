@@ -83,8 +83,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
         };
         this.encoder = GipfMove.encoder;
         this.hasAsymmetricBoard = true;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
-
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
         this.SPACE_SIZE = 40;
         const size: number = this.SPACE_SIZE * 1.50;
         const origineX: number = (this.hexagonWidth / 2) + (3 * this.STROKE_WIDTH/ 4);
@@ -95,7 +96,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfRules,
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.constructedState.set(this.state());
-        this.scores = MGPOptional.of(this.constructedState().getScores());
+        this.scores.set(
+            MGPOptional.of(this.constructedState().getScores()),
+        );
         this.moveToInitialCaptureOrPlacementPhase();
     }
 

@@ -41,15 +41,15 @@
 
     @if (ko().isPresent()) {
         @let koCoord = ko().get();
-        <rect id="ko-{{ ko.x }}-{{ ko.y }}"
-              [attr.transform]="getKoTranslationAt(ko)"
+        <rect id="ko-{{ koCoord.x }}-{{ koCoord.y }}"
+              [attr.transform]="getKoTranslationAt(koCoord)"
               [attr.width]="SPACE_SIZE * 0.25"
               [attr.height]="SPACE_SIZE * 0.25"
               [attr.x]="SPACE_SIZE * 0.375"
               [attr.y]="SPACE_SIZE * 0.25"
               class="captured-stroke mid-stroke no-fill"/>
     }
-    @if (last().isPresent() && state().isOnBoard(last.get())) {
+    @if (last().isPresent()) {
         @let lastCoord = last().get();
         @if (state().isOnBoard(lastCoord)) {
             <polygon id="last-{{ lastCoord.x }}-{{ lastCoord.y }}"
