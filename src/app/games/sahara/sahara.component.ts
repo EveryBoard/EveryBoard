@@ -28,8 +28,7 @@ import { SaharaState } from './SaharaState';
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              SaharaMove,
-                                                             SaharaState,
-                                                             FourStatePiece>
+                                                             SaharaState>
 {
     protected override computeViewBox(): ViewBox {
         const state: SaharaState = this.state();

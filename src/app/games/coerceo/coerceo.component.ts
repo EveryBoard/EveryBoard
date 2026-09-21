@@ -31,7 +31,6 @@ import { CoerceoState } from './CoerceoState';
 export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
                                                               CoerceoMove,
                                                               CoerceoState,
-                                                              FourStatePiece,
                                                               CoerceoConfig>
 {
 

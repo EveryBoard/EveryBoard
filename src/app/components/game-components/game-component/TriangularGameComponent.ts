@@ -9,7 +9,6 @@ import { GameComponent } from './GameComponent';
 export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
                                               M extends Move,
                                               S extends GameState,
-                                              P,
                                               C extends RulesConfig = EmptyRulesConfig,
                                               L = void>
     extends GameComponent<R, M, S, C, L>

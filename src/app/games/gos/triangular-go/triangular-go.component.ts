@@ -33,7 +33,6 @@ import { TriangularGoConfig, TriangularGoRules } from './TriangularGoRules';
 export class TriangularGoComponent extends TriangularGameComponent<TriangularGoRules,
                                                                    GoMove,
                                                                    GoState,
-                                                                   GoPiece,
                                                                    TriangularGoConfig,
                                                                    GoLegalityInformation>
 {
