@@ -152,7 +152,9 @@ export class LodestoneComponent
         this.encoder = LodestoneMove.encoder;
         this.PIECE_RADIUS = (this.SPACE_SIZE - (2 * this.STROKE_WIDTH)) * 0.5;
         this.displayedState = this.state();
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -302,7 +304,9 @@ export class LodestoneComponent
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.displayedState = this.state();
         this.removePlayerLodestoneFromDisplayedState();
-        this.scores = MGPOptional.of(this.state().getScores());
+        this.scores.set(
+            MGPOptional.of(this.state().getScores()),
+        );
         this.boardSize = this.state().board.length * this.SPACE_SIZE;
         const abstractPlateWidth: number = this.state().pressurePlates.top.plates.length;
         this.platesGroupSize = abstractPlateWidth * this.SPACE_SIZE * 1.2;

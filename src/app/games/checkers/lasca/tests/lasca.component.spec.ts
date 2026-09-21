@@ -297,7 +297,7 @@ describe('LascaComponent', () => {
             // Then the score should be displayed
             const score: PlayerNumberMap = PlayerNumberMap.of(2, 3);
             const scoreOptional: MGPOptional<PlayerMap<number>> = MGPOptional.of(score);
-            expect(testUtils.getGameComponent().scores).toEqual(scoreOptional);
+            expect(testUtils.getGameComponent().scores()).toEqual(scoreOptional);
         }));
 
     });

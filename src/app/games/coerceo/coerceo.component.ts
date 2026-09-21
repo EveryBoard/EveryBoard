@@ -76,7 +76,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
             }],
         };
         this.encoder = CoerceoMove.encoder;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(MGPOptional.of(PlayerNumberMap.of(0, 0)));
     }
 
     protected override getScoreName(): ScoreName {
@@ -84,9 +84,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.scores = MGPOptional.of(this.state().captures);
+        this.scores.set(MGPOptional.of(this.state().captures));
         this.tiles = this.state().tiles;
-        this.board = this.state().board;
     }
 
     private showHighlight(): void {

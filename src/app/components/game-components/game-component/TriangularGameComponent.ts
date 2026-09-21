@@ -1,3 +1,4 @@
+import { WritableSignal } from '@angular/core';
 import { Coord } from '../../../jscaip/Coord';
 import { Move } from '../../../jscaip/Move';
 import { SuperRules } from '../../../jscaip/Rules';
@@ -20,8 +21,6 @@ export abstract class TriangularGameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     public override SPACE_SIZE: number = 100;
-
-    public board: Table<P>;
 
     protected getTriangleCornerCoordsAtXY(x: number, y: number): Coord[] {
         if ((x + y) % 2 === 0) {

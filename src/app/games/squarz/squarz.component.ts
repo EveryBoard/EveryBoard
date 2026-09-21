@@ -57,13 +57,17 @@ export class SquarzComponent extends RectangularGameComponent<SquarzRules,
         };
         this.encoder = SquarzMove.encoder;
 
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: SquarzState = this.state();
         this.board = state.getCopiedBoard();
-        this.scores = MGPOptional.of(this.state().getScores());
+        this.scores.set(
+            MGPOptional.of(this.state().getScores()),
+        );
     }
 
     protected override async showLastMove(move: SquarzMove): Promise<void> {

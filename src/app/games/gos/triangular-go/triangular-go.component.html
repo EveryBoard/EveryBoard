@@ -39,22 +39,25 @@
         </g>
     }
 
-    @if (ko.isPresent()) {
-        <rect id="ko-{{ ko.get().x }}-{{ ko.get().y }}"
-              [attr.transform]="getKoTranslationAt(ko.get())"
+    @if (ko().isPresent()) {
+        @let koCoord = ko().get();
+        <rect id="ko-{{ ko.x }}-{{ ko.y }}"
+              [attr.transform]="getKoTranslationAt(ko)"
               [attr.width]="SPACE_SIZE * 0.25"
               [attr.height]="SPACE_SIZE * 0.25"
               [attr.x]="SPACE_SIZE * 0.375"
               [attr.y]="SPACE_SIZE * 0.25"
               class="captured-stroke mid-stroke no-fill"/>
     }
-
-    @if (last.isPresent() && state().isOnBoard(last.get())) {
-        <polygon id="last-{{ last.get().x }}-{{ last.get().y }}"
-                 [attr.transform]="getTriangleTranslationAt(last.get())"
-                 [attr.points]="getTrianglePointsAt(last.get())"
-                 [ngClass]="getPlayerClassAt(last.get())"
-                 class="last-move-stroke big-stroke no-fill"/>
+    @if (last().isPresent() && state().isOnBoard(last.get())) {
+        @let lastCoord = last().get();
+        @if (state().isOnBoard(lastCoord)) {
+            <polygon id="last-{{ lastCoord.x }}-{{ lastCoord.y }}"
+            [attr.transform]="getTriangleTranslationAt(lastCoord)"
+            [attr.points]="getTrianglePointsAt(lastCoord)"
+            [ngClass]="getPlayerClassAt(lastCoord)"
+            class="last-move-stroke big-stroke no-fill"/>
+        }
     }
 
 </svg>

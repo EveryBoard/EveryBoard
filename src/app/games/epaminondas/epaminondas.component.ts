@@ -106,7 +106,7 @@ export class EpaminondasComponent extends RectangularGameComponent<EpaminondasRu
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.board = this.state().getCopiedBoard();
-        this.scores = this.getScores();
+        this.scoresTODOthis.getScores();
     }
 
     private getScores(): MGPOptional<PlayerNumberMap> {

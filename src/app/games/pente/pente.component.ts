@@ -52,7 +52,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
             }],
         };
         this.encoder = PenteMove.encoder;
-        this.scores = MGPOptional.of(PlayerNumberMap.of(0, 0));
+        this.scores.set(
+            MGPOptional.of(PlayerNumberMap.of(0, 0)),
+        );
     }
 
     protected override getScoreName(): ScoreName {
@@ -62,7 +64,9 @@ export class PenteComponent extends GobanGameComponent<PenteRules,
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         const state: PenteState = this.state();
         this.board = state.board;
-        this.scores = MGPOptional.of(this.state().captures);
+        this.scores.set(
+            MGPOptional.of(this.state().captures),
+        );
         const config: PenteConfig = this.config();
         this.victoryCoords = this.rules.getHelper(config).getVictoriousCoord(state);
         this.createHoshis();

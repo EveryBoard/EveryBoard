@@ -636,7 +636,7 @@ describe('LodestoneComponent', () => {
             // When displaying the state
             await testUtils.setupState(state);
             // Then the score should be the number of pieces captured
-            expect(testUtils.getGameComponent().scores).toEqual(MGPOptional.of(PlayerNumberMap.of(22, 20)));
+            expect(testUtils.getGameComponent().scores()).toEqual(MGPOptional.of(PlayerNumberMap.of(22, 20)));
         }));
 
         it('should not display removed lodestone that were on crumbled square', fakeAsync(async() => {

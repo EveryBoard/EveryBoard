@@ -92,7 +92,7 @@ export class SixComponent
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
         this.resetPiecesAndNeighbors();
-        this.scores = this.getScores();
+        this.scores.set(this.getScores());
     }
 
     private getScores(): MGPOptional<PlayerNumberMap> {
