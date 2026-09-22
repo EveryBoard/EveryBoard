@@ -32,7 +32,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
                                                              FourStatePiece>
 {
     protected override computeViewBox(): ViewBox {
-        const state: SaharaState = this.getState();
+        const state: SaharaState = this.state();
         const width: number = ((state.getWidth() + 1) / 2) * this.SPACE_SIZE;
         const height: number = state.getHeight() * this.SPACE_SIZE;
         return ViewBox
@@ -95,7 +95,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     @ClickHandler((x: number, y: number) => `#click-${ x }-${ y }`)
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        const currentPlayer: Player = this.getState().getCurrentPlayer();
+        const currentPlayer: Player = this.state().getCurrentPlayer();
         const player: FourStatePiece = FourStatePiece.ofPlayer(currentPlayer);
         if (this.chosenCoord.equalsValue(new Coord(x, y))) {
             return this.cancelMove();
@@ -122,7 +122,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
 
     private selectPiece(coord: Coord): void {
         this.chosenCoord = MGPOptional.of(coord);
-        this.possibleLandings = this.rules.getLegalLandingCoords(this.getState(), coord);
+        this.possibleLandings = this.rules.getLegalLandingCoords(this.state(), coord);
     }
 
     private async chooseLandingCoord(x: number, y: number): Promise<MGPValidation> {
@@ -135,11 +135,11 @@ export class SaharaComponent extends TriangularGameComponent<SaharaRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        this.board = this.getState().board;
+        this.board = this.state().board;
     }
 
     public getPlayerClassAtXY(x: number, y: number): string {
-        const piece: FourStatePiece = this.getState().getPieceAtXY(x, y);
+        const piece: FourStatePiece = this.state().getPieceAtXY(x, y);
         return this.getPlayerClass(piece.getPlayer());
     }
 
