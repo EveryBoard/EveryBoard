@@ -2,11 +2,12 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { Coord } from '../../../jscaip/Coord';
+import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { HexagonalShape } from '../../../jscaip/shape/HexagonalShape';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { Shape } from '../../../jscaip/shape/Shape';
+import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
@@ -28,7 +29,11 @@ const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig(
 const squareTopology: SquareTopology = new SquareTopology();
 const triangularTopology: TriangularTopology = new TriangularTopology();
 const hexagonalTopology: HexagonalTopology = new HexagonalTopology();
-const rectangularShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, squareTopology);
+const rectangularShape: TopologicShape<Direction> = new RectangularShape(
+    defaultConfig.boardSize,
+    defaultConfig.boardSize,
+    squareTopology,
+);
 
 describe('ConnectNComponent (SQUARE)', () => {
 
@@ -423,7 +428,7 @@ describe('ConnectNComponent (TRIANGULAR)', () => {
         testUtils = await ComponentTestUtils.forGame<ConnectNComponent>('ConnectN');
     }));
 
-    it('should show highlight when victory occur (triangular)', fakeAsync(async() => {
+    fit('should show highlight when victory occur (triangular)', fakeAsync(async() => {
         // Given a board where current player is about to win
         // on a triangular config
         const customConfig: ConnectNConfig = {

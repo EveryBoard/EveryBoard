@@ -14,7 +14,7 @@ describe('RectangularShape', () => {
     describe('getCenters', () => {
 
         it('should return the center for side 1', () => {
-            const shape: RectangularShape = new RectangularShape(1, 1, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(1, 1, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(0, 0),
@@ -22,7 +22,7 @@ describe('RectangularShape', () => {
         });
 
         it('should return all coords center for side 2', () => {
-            const shape: RectangularShape = new RectangularShape(2, 2, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(2, 2, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -31,7 +31,7 @@ describe('RectangularShape', () => {
         });
 
         it('should return the center for side 3', () => {
-            const shape: RectangularShape = new RectangularShape(3, 3, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(3, 3, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -42,7 +42,7 @@ describe('RectangularShape', () => {
         });
 
         it('should return the 4 center for side 4', () => {
-            const shape: RectangularShape = new RectangularShape(4, 4, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(4, 4, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -58,7 +58,7 @@ describe('RectangularShape', () => {
     describe('getAllCoords', () => {
 
         it('should return the correct coordinates for side 1', () => {
-            const shape: RectangularShape = new RectangularShape(1, 1, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(1, 1, topology);
 
             expect(shape.getAllCoords()).toEqual([
                 new Coord(0, 0),
@@ -66,7 +66,7 @@ describe('RectangularShape', () => {
         });
 
         it('should return the correct coordinates for side 2', () => {
-            const shape: RectangularShape = new RectangularShape(2, 2, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(2, 2, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
 
@@ -78,7 +78,7 @@ describe('RectangularShape', () => {
         });
 
         it('should return the correct coordinates for side 3', () => {
-            const shape: RectangularShape = new RectangularShape(3, 3, topology);
+            const shape: RectangularShape<Direction> = new RectangularShape(3, 3, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([

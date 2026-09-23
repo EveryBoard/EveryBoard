@@ -15,7 +15,7 @@ describe('HexagonalShape', () => {
     describe('getCenters', () => {
 
         it('should return the center for side 1', () => {
-            const shape: HexagonalShape = new HexagonalShape(1, topology);
+            const shape: HexagonalShape<Direction> = new HexagonalShape(1, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(0, 0),
@@ -23,7 +23,7 @@ describe('HexagonalShape', () => {
         });
 
         it('should return the center for side 2', () => {
-            const shape: HexagonalShape = new HexagonalShape(2, topology);
+            const shape: HexagonalShape<Direction> = new HexagonalShape(2, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(1, 1),
@@ -31,7 +31,7 @@ describe('HexagonalShape', () => {
         });
 
         it('should return the center for side 3', () => {
-            const shape: HexagonalShape = new HexagonalShape(3, topology);
+            const shape: HexagonalShape<Direction> = new HexagonalShape(3, topology);
 
             expect(shape.getCenters()).toEqual([
                 new Coord(2, 2),
@@ -43,7 +43,7 @@ describe('HexagonalShape', () => {
     describe('getAllCoords', () => {
 
         it('should return the correct coordinates for side 1', () => {
-            const shape: HexagonalShape = new HexagonalShape(1, topology);
+            const shape: HexagonalShape<Direction> = new HexagonalShape(1, topology);
 
             expect(shape.getAllCoords()).toEqual([
                 new Coord(0, 0),
@@ -51,7 +51,7 @@ describe('HexagonalShape', () => {
         });
 
         it('should return the correct coordinates for side 2', () => {
-            const shape: HexagonalShape = new HexagonalShape(2, topology);
+            const shape: HexagonalShape<Direction> = new HexagonalShape(2, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([
@@ -63,7 +63,7 @@ describe('HexagonalShape', () => {
         });
 
         it('should return the correct coordinates for side 3', () => {
-            const shape: HexagonalShape = new HexagonalShape(3, topology);
+            const shape: HexagonalShape<Direction> = new HexagonalShape(3, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([

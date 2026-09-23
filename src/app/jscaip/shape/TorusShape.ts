@@ -6,7 +6,7 @@ import { Topology } from '../topology/Topology';
 
 import { TopologicShape } from './Shape';
 
-export class RectangularShape<D extends Direction> extends TopologicShape<D> {
+export class TorusShape<D extends Direction> extends TopologicShape<D> {
 
     public constructor(
         public readonly width: number,
@@ -17,27 +17,9 @@ export class RectangularShape<D extends Direction> extends TopologicShape<D> {
     }
 
     public getCenters(): Coord[] {
-        const cxList: number[] = this.getIntegerMidpoints(this.width - 1);
-        const cyList: number[] = this.getIntegerMidpoints(this.height - 1);
-        const centers: Coord[] = [];
-        for (const cx of cxList) {
-            for (const cy of cyList) {
-                centers.push(new Coord(cx, cy));
-            }
-        }
-        return centers;
-    }
-
-    private getIntegerMidpoints(value: number): number[] {
-        const half: number = value / 2;
-        if (value % 2 === 0) {
-            return [half];
-        } else {
-            return [
-                Math.floor(half),
-                Math.ceil(half),
-            ];
-        }
+        return [
+            new Coord(0, 0),
+        ]; // TODO FOR REVIEW: mettre ça ou getAllCoords ?
     }
 
     public getAllCoords(): Coord[] {
@@ -57,11 +39,9 @@ export class RectangularShape<D extends Direction> extends TopologicShape<D> {
 
     public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
         const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
-        if (this.isOnBoard(next)) {
-            return MGPOptional.of(next);
-        } else {
-            return MGPOptional.empty();
-        }
+        const nextX: number = ((next.x % this.width) + this.width) % this.width;
+        const nextY: number = ((next.y % this.height) + this.height) % this.height;
+        return MGPOptional.of(new Coord(nextX, nextY));
     }
 
 }

@@ -15,7 +15,7 @@ describe('TriangularShape', () => {
     describe('getCenters', () => {
 
         it('should return the center for side 1', () => {
-            const shape: TriangularShape = new TriangularShape(1, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(1, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -26,7 +26,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the center for side 2', () => {
-            const shape: TriangularShape = new TriangularShape(2, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(2, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -37,7 +37,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the 6 centers for side 3', () => {
-            const shape: TriangularShape = new TriangularShape(3, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(3, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -49,7 +49,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the center for side 4', () => {
-            const shape: TriangularShape = new TriangularShape(4, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(4, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -60,7 +60,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the center for side 5', () => {
-            const shape: TriangularShape = new TriangularShape(5, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(5, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -71,7 +71,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the 6 centers for side 6', () => {
-            const shape: TriangularShape = new TriangularShape(6, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(6, topology);
 
             const actualCenters: Set<Coord> = new Set(shape.getCenters());
 
@@ -87,7 +87,7 @@ describe('TriangularShape', () => {
     describe('getAllCoords', () => {
 
         it('should return the correct coordinates for side 1', () => {
-            const shape: TriangularShape = new TriangularShape(1, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(1, topology);
 
             expect(shape.getAllCoords()).toEqual([
                 new Coord(0, 0),
@@ -95,7 +95,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the correct coordinates for side 2', () => {
-            const shape: TriangularShape = new TriangularShape(2, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(2, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
 
@@ -107,7 +107,7 @@ describe('TriangularShape', () => {
         });
 
         it('should return the correct coordinates for side 3', () => {
-            const shape: TriangularShape = new TriangularShape(3, topology);
+            const shape: TriangularShape<Direction> = new TriangularShape(3, topology);
 
             const actualSet: Set<Coord> = new Set(shape.getAllCoords());
             const expectedSet: Set<Coord> = new Set([

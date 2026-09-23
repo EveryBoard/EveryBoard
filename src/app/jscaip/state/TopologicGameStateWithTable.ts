@@ -1,6 +1,6 @@
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
-import { Shape } from '../shape/Shape';
+import { TopologicShape } from '../shape/Shape';
 import { Topology } from '../topology/Topology';
 
 import { SimpleGameStateWithTable } from './SimpleGameStateWithTable';
@@ -12,10 +12,10 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
 
     public constructor(
         topology: Topology<Direction>,
-        private readonly shape: Shape,
+        shape: TopologicShape<Direction>,
         private readonly gameStateWithTable: SimpleGameStateWithTable<P>,
     ) {
-        super(gameStateWithTable.turn, topology);
+        super(gameStateWithTable.turn, topology, shape);
     }
 
     public override getCoordsAndContents(): { coord: Coord; content: P }[] {
@@ -41,7 +41,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
     public override incrementTurn(): this {
         return new TopologicGameStateWithTable(
             this.getTopology(),
-            this.shape,
+            this.getShape(),
             this.gameStateWithTable.incrementTurn(),
         ) as this;
     }
@@ -49,7 +49,7 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
     public withPieceAt(coord: Coord, value: P): this {
         return new TopologicGameStateWithTable(
             this.getTopology(),
-            this.shape,
+            this.getShape(),
             SimpleGameStateWithTable.withPieceAt(
                 this.gameStateWithTable,
                 coord,
@@ -60,10 +60,10 @@ export class TopologicGameStateWithTable<P extends NonNullable<unknown>>
     }
 
     public getCenters(): Coord[] {
-        return this.shape.getCenters();
+        return this.getShape().getCenters();
     }
 
     public getAllCoords(): Coord[] {
-        return this.shape.getAllCoords();
+        return this.getShape().getAllCoords();
     }
 }

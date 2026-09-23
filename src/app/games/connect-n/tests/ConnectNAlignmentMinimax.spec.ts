@@ -4,9 +4,10 @@ import { MGPOptional, Set } from '@everyboard/lib';
 import { AIDepthLimitOptions } from '../../../jscaip/AI/AI';
 import { Minimax } from '../../../jscaip/AI/Minimax';
 import { Coord } from '../../../jscaip/Coord';
+import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { Shape } from '../../../jscaip/shape/Shape';
+import { TopologicShape } from '../../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
 import { TopologicGameStateWithTable } from '../../../jscaip/state/TopologicGameStateWithTable';
@@ -38,8 +39,11 @@ describe('ConnectNAlignmentMinimax', () => {
     const level2: AIDepthLimitOptions = { name: 'Level 2', maxDepth: 2 };
     const defaultTopology: SquareTopology = new SquareTopology();
     const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
-    const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
-
+    const defaultShape: TopologicShape<Direction> = new RectangularShape(
+        defaultConfig.boardSize,
+        defaultConfig.boardSize,
+        defaultTopology,
+    );
     const _: FourStatePiece = FourStatePiece.EMPTY;
     const O: FourStatePiece = FourStatePiece.ZERO;
 

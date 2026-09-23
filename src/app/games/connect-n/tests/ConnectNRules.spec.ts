@@ -2,11 +2,13 @@
 import { MGPOptional } from '@everyboard/lib';
 
 import { Coord, CoordFailure } from '../../../jscaip/Coord';
+import { Direction } from '../../../jscaip/Direction';
 import { FourStatePiece } from '../../../jscaip/FourStatePiece';
 import { Player } from '../../../jscaip/Player';
 import { RulesFailure } from '../../../jscaip/RulesFailure';
 import { RectangularShape } from '../../../jscaip/shape/RectangularShape';
-import { Shape } from '../../../jscaip/shape/Shape';
+import { TopologicShape } from '../../../jscaip/shape/Shape';
+import { TorusShape } from '../../../jscaip/shape/TorusShape';
 import { TriangularShape } from '../../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../../jscaip/state/TopologicGameState';
@@ -38,7 +40,11 @@ describe('ConnectNRules (SQUARE)', () => {
 
     let rules: ConnectNRules;
     const defaultTopology: SquareTopology = new SquareTopology();
-    const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
+    const defaultShape: TopologicShape<Direction> = new RectangularShape(
+        defaultConfig.boardSize,
+        defaultConfig.boardSize,
+        defaultTopology,
+    );
 
     beforeEach(() => {
         rules = ConnectNRules.get();
@@ -829,5 +835,153 @@ describe('ConnectNRules (TRIANGULAR)', () => {
             gameState,
         );
         expect(actualInitialState).toEqual(expectedInitialState);
+    });
+});
+
+
+describe('ConnectNRules (TORUS)', () => {
+
+    let rules: ConnectNRules;
+    const squareTopology: SquareTopology = new SquareTopology();
+
+    beforeEach(() => {
+        rules = ConnectNRules.get();
+    });
+
+    it('should notify victory when aligning 6 stones of your color (inside)', () => {
+        // Given an  config and a board with six aligned pieces
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'SQUARE',
+            shape: 'TORUS',
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            squareTopology,
+            new TorusShape(19, 19, squareTopology),
+            gameState,
+        );
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(3, 3), new Coord(3, 4)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
+    });
+
+    it('should notify victory when aligning 6 stones of your color (cylindric-horizontal)', () => {
+        // Given an triangular config and a board with six aligned pieces
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'SQUARE',
+            shape: 'TORUS',
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, X, X, _, _, _, _, _, _, _, _, _, _, _, _, _, X, X, X],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            squareTopology,
+            new TorusShape(19, 19, squareTopology),
+            gameState,
+        );
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(0, 3), new Coord(1, 3)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
+    });
+
+    it('should notify victory when aligning 6 stones of your color (cylindric-vertical)', () => {
+        // Given an triangular config and a board with six aligned pieces
+        const customConfig: ConnectNConfig = {
+            ...defaultConfig,
+            topology: 'SQUARE',
+            shape: 'TORUS',
+        };
+
+        const gameState: SimpleGameStateWithTable<FourStatePiece> = new SimpleGameStateWithTable<FourStatePiece>([
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, X, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ], 8);
+        const state: TopologicGameState<FourStatePiece> = new TopologicGameStateWithTable<FourStatePiece>(
+            squareTopology,
+            new TorusShape(19, 19, squareTopology),
+            gameState,
+        );
+        const move: ConnectNMove =
+            ConnectNMove.of([new Coord(1, 18), new Coord(1, 17)]);
+        const previousNode: ConnectNNode = new ConnectNNode(state);
+        const node: ConnectNNode =
+            new ConnectNNode(state, MGPOptional.of(previousNode), MGPOptional.of(move));
+
+        // When checking the game status
+        // Then it should be a victory for Player.ONE
+        RulesUtils.expectToBeVictoryFor(rules, node, Player.ONE, customConfig);
     });
 });

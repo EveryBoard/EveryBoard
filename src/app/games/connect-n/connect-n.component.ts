@@ -55,7 +55,7 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     }
 
     public override async updateBoard(_triggerAnimation: boolean): Promise<void> {
-        const state: TopologicGameState<FourStatePiece> = this.getState();
+        const state: TopologicGameState<FourStatePiece> = this.state();
         this.coordsAndContents.set(state.getCoordsAndContents());
         this.victoryCoords.set(ConnectNRules.getVictoriousCoords(state, this.config()));
     }
@@ -71,8 +71,8 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
     @ClickHandler((coord: Coord) => '#click-' + coord.x + '-' + coord.y)
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const config: ConnectNConfig = this.config();
-        const awaitedClicks: number = this.getState().turn === 0 ? 1 : config.dropAfterFirstTurn;
-        if (this.getState().getPieceAt(coord).isPlayer()) {
+        const awaitedClicks: number = this.state().turn === 0 ? 1 : config.dropAfterFirstTurn;
+        if (this.state().getPieceAt(coord).isPlayer()) {
             return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_SQUARE());
         }
         if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
@@ -91,10 +91,10 @@ export class ConnectNComponent extends TopologicGameComponent<ConnectNRules,
 
     public getSpaceClass(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const owner: PlayerOrNone = this.getState().getPieceAt(coord).getPlayer();
+        const owner: PlayerOrNone = this.state().getPieceAt(coord).getPlayer();
         const classes: string[] = [];
         if (this.droppedCoords().some((c: Coord) => c.equals(coord))) {
-            classes.push(this.getPlayerClass(this.getState().getCurrentPlayer()));
+            classes.push(this.getPlayerClass(this.state().getCurrentPlayer()));
             classes.push('highlighted-stroke');
         } else {
             classes.push(this.getPlayerClass(owner));

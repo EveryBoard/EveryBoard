@@ -1,4 +1,4 @@
-import { MGPMap, Utils } from '@everyboard/lib';
+import { MGPMap, MGPOptional, Utils } from '@everyboard/lib';
 
 import { BoardValue } from './AI/BoardValue';
 import { Coord } from './Coord';
@@ -108,12 +108,13 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
         let freeSpaces: number = 0; // the number of aligned free square
         let allies: number = 0; // the number of alligned allies
         let allAlliesAreSideBySide: boolean = true;
-        let coord: Coord = this.getNextCoord(i, dir);
+        let coord: MGPOptional<Coord> = this.getNextCoord(i, dir);
+        // TODO: some place we'll check isPresnet and isOnBoard, it's double checking dude!
         let testedCoords: number = 1;
         const opponent: Player = player.getOpponent();
-        while (state.isOnBoard(coord) && testedCoords < this.N) {
+        while (coord.isPresent() && state.isOnBoard(coord.get()) && testedCoords < this.N) {
             // while we're on the board
-            const currentSpace: T = state.getPieceAt(coord);
+            const currentSpace: T = state.getPieceAt(coord.get());
             const currentOwner: PlayerOrNone = this.getOwner(currentSpace, state);
             if (currentOwner === opponent) {
                 return [freeSpaces, allies];
@@ -127,14 +128,14 @@ export abstract class NInARowHelper<T extends NonNullable<unknown>, D extends Di
             if (currentOwner !== opponent && currentOwner !== player) {
                 freeSpaces++;
             }
-            coord = this.getNextCoord(coord, dir);
+            coord = this.getNextCoord(coord.get(), dir);
             testedCoords++;
         }
         return [freeSpaces, allies];
     }
 
-    protected getNextCoord(coord: Coord, dir: Direction, distance: number = 1): Coord {
-        return coord.getNext(dir, distance);
+    protected getNextCoord(coord: Coord, dir: Direction, distance: number = 1): MGPOptional<Coord> {
+        return MGPOptional.of(coord.getNext(dir, distance));
     }
 
     public getVictoriousCoord(state: GameStateWithCoords<T>): Coord[] {

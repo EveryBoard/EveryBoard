@@ -16,7 +16,8 @@ import { TableUtils } from '../../jscaip/TableUtils';
 import { TopologicNInARowHelper } from '../../jscaip/TopologicNInARowHelper';
 import { HexagonalShape } from '../../jscaip/shape/HexagonalShape';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
-import { Shape } from '../../jscaip/shape/Shape';
+import { TopologicShape } from '../../jscaip/shape/Shape';
+import { TorusShape } from '../../jscaip/shape/TorusShape';
 import { TriangularShape } from '../../jscaip/shape/TriangularShape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameState } from '../../jscaip/state/TopologicGameState';
@@ -37,12 +38,13 @@ export const TopologyNamer: Record<TopologyID, Localized> = {
     'TRIANGULAR': () => $localize`Triangular`,
 };
 
-export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR';
+export type ShapeEnum = 'SQUARE' | 'HEXAGONAL' | 'TRIANGULAR' | 'TORUS';
 
 export const Shapes: Record<ShapeEnum, Localized> = {
     'SQUARE': () => $localize`Square`,
     'HEXAGONAL': () => $localize`Hexagonal`,
     'TRIANGULAR': () => $localize`Triangular`,
+    'TORUS': () => $localize`TORUS`,
 };
 
 export type ConnectNConfig = {
@@ -90,7 +92,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                 return piece.getPlayer();
             },
             config.n,
-            state.getTopology(),
+            state.getShape(),
         ).getVictoriousCoord(state);
     }
 
@@ -132,7 +134,7 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
 
     public override getInitialState(config: ConnectNConfig): TopologicGameState<FourStatePiece> {
         const topology: Topology<Direction> = this.getTopology(config);
-        const shape: Shape = this.getShape(config, topology);
+        const shape: TopologicShape<Direction> = this.getShape(config, topology);
         let maxX: number = 0;
         let maxY: number = 0;
         for (const coord of shape.getAllCoords()) {
@@ -153,12 +155,14 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
         return topologyMap.get(config.topology).get();
     }
 
-    private getShape(config: ConnectNConfig, topology: Topology<Direction>): Shape {
+    private getShape(config: ConnectNConfig, topology: Topology<Direction>): TopologicShape<Direction> {
         switch (config.shape) {
             case 'SQUARE': {
                 return new RectangularShape(config.boardSize, config.boardSize, topology);
             } case 'HEXAGONAL': {
                 return new HexagonalShape(config.boardSize, topology);
+            } case 'TORUS': {
+                return new TorusShape(config.boardSize, config.boardSize, topology);
             } default: {
                 Utils.expectToBe(config.shape, 'TRIANGULAR');
                 return new TriangularShape(config.boardSize, topology);
@@ -217,9 +221,9 @@ export class ConnectNRules extends ConfigurableRules<ConnectNMove,
                                 coord: Coord,
     ): number {
         let count: number = 0;
-        let testedCoord: Coord = state.getTopology().getNextCoord(coord, direction, 1);
-        while (state.hasPieceAt(testedCoord, FourStatePiece.ofPlayer(currentPlayer))) {
-            testedCoord = state.getTopology().getNextCoord(testedCoord, direction, 1);
+        let testedCoord: MGPOptional<Coord> = state.getShape().getNextCoord(coord, direction, 1);
+        while (testedCoord.isPresent() && state.hasPieceAt(testedCoord.get(), FourStatePiece.ofPlayer(currentPlayer))) {
+            testedCoord = state.getShape().getNextCoord(testedCoord.get(), direction, 1);
             count++;
         }
         return count;

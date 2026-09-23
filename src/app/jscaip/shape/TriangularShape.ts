@@ -1,14 +1,16 @@
+import { MGPOptional } from '@everyboard/lib';
+
 import { Coord } from '../Coord';
 import { Direction } from '../Direction';
 import { Topology } from '../topology/Topology';
 
-import { Shape, TopologicShape } from './Shape';
+import { TopologicShape } from './Shape';
 
-export class TriangularShape extends TopologicShape implements Shape {
+export class TriangularShape<D extends Direction> extends TopologicShape<D> {
 
     public constructor(
         public readonly side: number,
-        topology: Topology<Direction>,
+        topology: Topology<D>,
     ) {
         super(topology);
     }
@@ -45,16 +47,28 @@ export class TriangularShape extends TopologicShape implements Shape {
     public getAllCoords(): Coord[] {
         const evenOffset: number = this.side % 2 === 0 ? 1 : 0;
         const coords: Coord[] = [];
-        const minyx: number = this.side - 1;
         const maxIndex: number = (this.side - 1) * 2;
         for (let x: number = 0; x <= maxIndex; x++) {
             for (let y: number = 0; y < this.side; y++) {
-                if (minyx <= x + y && x - y < this.side) {
-                    coords.push(new Coord(evenOffset +x, y));
+                if (this.isOnBoard(new Coord(x, y))) {
+                    coords.push(new Coord(evenOffset + x, y));
                 }
             }
         }
         return coords;
     }
 
+    public isOnBoard(coord: Coord): boolean {
+        const minyx: number = this.side - 1;
+        return minyx <= coord.x + coord.y && coord.x - coord.y < this.side;
+    }
+
+    public override getNextCoord(coord: Coord, direction: D, distance: number = 1): MGPOptional<Coord> {
+        const next: Coord = this.getTopology().getNextCoord(coord, direction, distance);
+        if (this.isOnBoard(next)) {
+            return MGPOptional.of(next);
+        } else {
+            return MGPOptional.empty();
+        }
+    }
 }

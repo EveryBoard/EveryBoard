@@ -4,7 +4,7 @@ import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { RectangularShape } from '../../jscaip/shape/RectangularShape';
-import { Shape } from '../../jscaip/shape/Shape';
+import { TopologicShape } from '../../jscaip/shape/Shape';
 import { SimpleGameStateWithTable } from '../../jscaip/state/SimpleGameStateWithTable';
 import { TopologicGameStateWithTable } from '../../jscaip/state/TopologicGameStateWithTable';
 import { SquareTopology } from '../../jscaip/topology/SquareTopology';
@@ -18,7 +18,11 @@ const O: FourStatePiece = FourStatePiece.ZERO;
 const X: FourStatePiece = FourStatePiece.ONE;
 const defaultConfig: ConnectNConfig = ConnectNRules.get().getDefaultRulesConfig();
 const defaultTopology: Topology<Direction> = new SquareTopology();
-const defaultShape: Shape = new RectangularShape(defaultConfig.boardSize, defaultConfig.boardSize, defaultTopology);
+const defaultShape: TopologicShape<Direction> = new RectangularShape(
+    defaultConfig.boardSize,
+    defaultConfig.boardSize,
+    defaultTopology,
+);
 export class ConnectNTutorial extends Tutorial {
 
     public tutorial: TutorialStep[] = [

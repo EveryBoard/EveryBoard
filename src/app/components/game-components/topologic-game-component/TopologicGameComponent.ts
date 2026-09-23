@@ -38,7 +38,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
 
     public computeViewBox(): ViewBox {
         const globalViewBox: ViewBox = ViewBox.fromCoords(
-            this.getState()
+            this.state()
                 .getAllCoords()
                 .flatMap((abstractCoord: Coord) => {
                     const polygonCoords: Coord[] = this.getLayout().getPolygonCoordsAt(abstractCoord);
@@ -64,7 +64,7 @@ export abstract class TopologicGameComponent<R extends SuperRules<M, S, C, L>,
     }
 
     private getLayout(): Layout {
-        const state: TopologicGameState<P> = this.getState();
+        const state: TopologicGameState<P> = this.state();
         const topology: Topology<Direction> = state.getTopology();
         if (topology instanceof SquareTopology) {
             return this.squareLayout;
