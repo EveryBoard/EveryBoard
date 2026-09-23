@@ -2,7 +2,7 @@
   "name": "@everyboard/games",
   "version": "1.0.0",
   "description": "EveryBoard's Games",
-  "private": "true",
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
