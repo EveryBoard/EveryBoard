@@ -428,7 +428,7 @@ describe('ConnectNComponent (TRIANGULAR)', () => {
         testUtils = await ComponentTestUtils.forGame<ConnectNComponent>('ConnectN');
     }));
 
-    fit('should show highlight when victory occur (triangular)', fakeAsync(async() => {
+    it('should show highlight when victory occur (triangular)', fakeAsync(async() => {
         // Given a board where current player is about to win
         // on a triangular config
         const customConfig: ConnectNConfig = {
