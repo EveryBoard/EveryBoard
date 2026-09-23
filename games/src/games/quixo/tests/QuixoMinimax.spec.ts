@@ -7,7 +7,7 @@ import { QuixoMoveGenerator } from '../QuixoMoveGenerator';
 import { QuixoRules } from '../QuixoRules';
 import { QuixoConfig } from '../QuixoState';
 import { QuixoState } from '../QuixoState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class QuixoMinimax extends Minimax<QuixoMove, QuixoState, QuixoConfig> {
     public constructor() {

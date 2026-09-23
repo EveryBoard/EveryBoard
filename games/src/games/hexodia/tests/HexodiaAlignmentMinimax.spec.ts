@@ -9,7 +9,7 @@ import { HexodiaAlignmentHeuristic } from '../HexodiaAlignmentHeuristic';
 import { HexodiaMove } from '../HexodiaMove';
 import { HexodiaMoveGenerator } from '../HexodiaMoveGenerator';
 import { HexodiaConfig, HexodiaNode, HexodiaRules } from '../HexodiaRules';
-import { SlowTest, minimaxTest } from '../utils/tests/TestUtils.spec';
+import { SlowTest, minimaxTest } from '../../../utils/tests/TestUtils.spec';
 
 class HexodiaAlignmentMinimax extends Minimax<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {
     public constructor() {

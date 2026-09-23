@@ -8,7 +8,7 @@ import { MartianChessRules } from '../MartianChessRules';
 import { MartianChessMoveResult } from '../MartianChessRules';
 import { MartianChessScoreHeuristic } from '../MartianChessScoreHeuristic';
 import { MartianChessState } from '../MartianChessState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class MartianChessScoreMinimax
     extends Minimax<MartianChessMove, MartianChessState, EmptyRulesConfig, MartianChessMoveResult> {

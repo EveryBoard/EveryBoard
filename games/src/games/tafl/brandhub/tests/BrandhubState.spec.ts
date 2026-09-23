@@ -5,7 +5,7 @@ import { BrandhubRules } from '../BrandhubRules';
 
 const defaultConfig: TaflConfig = BrandhubRules.get().getDefaultRulesConfig();
 
-describe('TaflState', () => {
+describe('BrandhubState', () => {
 
     describe('getInitialState', () => {
 

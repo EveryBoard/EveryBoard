@@ -9,7 +9,7 @@ import { QuartoMoveGenerator } from '../QuartoMoveGenerator';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoConfig, QuartoNode, QuartoRules } from '../QuartoRules';
 import { QuartoState } from '../QuartoState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const ____: QuartoPiece = QuartoPiece.EMPTY;
 const AAAA: QuartoPiece = QuartoPiece.AAAA;

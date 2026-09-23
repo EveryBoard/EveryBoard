@@ -2,7 +2,7 @@
   "name": "@everyboard/lib",
   "version": "1.0.0",
   "description": "EveryBoard's library",
-  "private": "true",
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

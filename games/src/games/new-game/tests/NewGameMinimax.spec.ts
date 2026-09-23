@@ -6,7 +6,7 @@ import { NewGameMove } from '../NewGameMove';
 import { NewGameMoveGenerator } from '../NewGameMoveGenerator';
 import { NewGameLegalityInfo, NewGameNode, NewGameRules } from '../NewGameRules';
 import { NewGameState } from '../NewGameState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 /**
  * These are the tests for the minimax.

@@ -7,7 +7,7 @@ import { PylosMove } from '../PylosMove';
 import { PylosOrderedMoveGenerator } from '../PylosOrderedMoveGenerator';
 import { PylosRules } from '../PylosRules';
 import { PylosState } from '../PylosState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class PylosMinimax extends Minimax<PylosMove, PylosState> {
     public constructor() {

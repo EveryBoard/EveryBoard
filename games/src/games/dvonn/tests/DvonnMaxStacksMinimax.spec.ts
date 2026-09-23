@@ -7,7 +7,7 @@ import { DvonnMove } from '../DvonnMove';
 import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnRules } from '../DvonnRules';
 import { DvonnState } from '../DvonnState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class DvonnMaxStacksMinimax extends Minimax<DvonnMove, DvonnState> {
     public constructor() {

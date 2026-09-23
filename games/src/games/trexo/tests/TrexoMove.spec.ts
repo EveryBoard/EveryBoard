@@ -4,7 +4,7 @@ import { EncoderTestUtils } from '@everyboard/lib/testing';
 
 import { EmptyRulesConfig } from '../../../config/RulesConfig';
 import { Coord } from '../../../jscaip/Coord';
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { ErrorLoggerServiceMock } from '../../../utils/tests/ErrorLoggerServiceMock.spec';
 import { TrexoFailure } from '../TrexoFailure';
 import { TrexoMove } from '../TrexoMove';
 import { TrexoMoveGenerator } from '../TrexoMoveGenerator';

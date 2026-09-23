@@ -1,7 +1,7 @@
 /* eslint-disable max-lines-per-function */
 import { JSONValue, Utils } from '@everyboard/lib';
 
-import { ErrorLoggerServiceMock } from '../../../services/tests/ErrorLoggerServiceMock.spec';
+import { ErrorLoggerServiceMock } from '../../../utils/tests/ErrorLoggerServiceMock.spec';
 import { Coord } from '../../Coord';
 import { HexaLine } from '../../HexaLine';
 import { Table, TableUtils } from '../../TableUtils';

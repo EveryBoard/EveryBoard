@@ -7,7 +7,7 @@ import { DvonnMoveGenerator } from '../DvonnMoveGenerator';
 import { DvonnRules } from '../DvonnRules';
 import { DvonnScoreHeuristic } from '../DvonnScoreHeuristic';
 import { DvonnState } from '../DvonnState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class DvonnScoreMinimax extends Minimax<DvonnMove, DvonnState> {
 

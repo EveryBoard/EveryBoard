@@ -8,7 +8,7 @@ import { YinshRules } from '../YinshRules';
 import { YinshLegalityInformation } from '../YinshRules';
 import { YinshScoreHeuristic } from '../YinshScoreHeuristic';
 import { YinshState } from '../YinshState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class YinshScoreMinimax extends Minimax<YinshMove, YinshState, EmptyRulesConfig, YinshLegalityInformation> {
     public constructor() {

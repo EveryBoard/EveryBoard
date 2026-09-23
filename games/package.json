@@ -2,7 +2,7 @@
   "name": "@everyboard/games",
   "version": "1.0.0",
   "description": "EveryBoard's Games",
-  "private": "true",
+  "private": true,
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -20,20 +20,20 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc --watch",
-    "test:runner": "TS_NODE_PROJECT=tsconfig.test.json nyc -x '**/*.spec.ts' --reporter=lcov --reporter=text --reporter=text-summary jasmine",
+    "test:runner": "TS_NODE_PROJECT=tsconfig.test.json nyc -x '**/*.spec.ts' -x '**/*-setup.ts' --reporter=lcov --reporter=text --reporter=text-summary jasmine",
     "test": "npm run test:runner -- --config=jasmine.json",
     "test:ci": "npm run test:runner -- --config=jasmine.ci.json",
     "coverage": "nyc --branches 100 --lines 100 --statements 100 --functions 100 check-coverage"
   },
   "dependencies": {
-    "@everyboard/lib": "1.0.0"
+    "@everyboard/lib": "file:../lib"
   },
   "devDependencies": {
     "@angular/localize": "^20.3.18",
     "@types/jasmine": "^6.0.0",
-    "@types/node": "^22.0.0",
     "jasmine": "^6.2.0",
     "nyc": "^18.0.0",
-    "ts-node": "^10.9.2"
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^3.15.0"
   }
 }

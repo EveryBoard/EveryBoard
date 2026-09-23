@@ -1,4 +1,3 @@
 export namespace TestVars {
-    export const slowTests: boolean =
-        process.env['EVERYBOARD_RUN_SLOW_TESTS'] === 'true';
+    export let slowTests: boolean = false;
 }

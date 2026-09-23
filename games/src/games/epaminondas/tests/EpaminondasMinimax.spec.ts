@@ -10,7 +10,7 @@ import { EpaminondasPieceThenRowDominationThenAlignmentThenRowPresenceHeuristic 
 import { EpaminondasConfig, EpaminondasLegalityInformation, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasNode } from '../EpaminondasRules';
 import { EpaminondasState } from '../EpaminondasState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 const _: PlayerOrNone = PlayerOrNone.NONE;
 const O: PlayerOrNone = PlayerOrNone.ZERO;

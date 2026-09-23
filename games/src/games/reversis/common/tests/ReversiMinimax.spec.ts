@@ -2,7 +2,7 @@
 import { AIDepthLimitOptions } from '../../../../jscaip/AI/AI';
 import { Minimax } from '../../../../jscaip/AI/Minimax';
 import { ReversiRules } from '../../reversi/ReversiRules';
-import { minimaxTest, SlowTest } from '../../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../../utils/tests/TestUtils.spec';
 import { ReversiConfig, ReversiLegalityInformation, ReversiNode } from '../AbstractReversiRules';
 import { ReversiHeuristic } from '../ReversiHeuristic';
 import { ReversiMove } from '../ReversiMove';

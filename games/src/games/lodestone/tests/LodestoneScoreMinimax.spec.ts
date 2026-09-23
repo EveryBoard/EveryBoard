@@ -8,7 +8,7 @@ import { LodestoneRules } from '../LodestoneRules';
 import { LodestoneInfos } from '../LodestoneRules';
 import { LodestoneScoreHeuristic } from '../LodestoneScoreHeuristic';
 import { LodestoneState } from '../LodestoneState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class LodestoneScoreMinimax extends Minimax<LodestoneMove, LodestoneState, EmptyRulesConfig, LodestoneInfos> {
     public constructor() {

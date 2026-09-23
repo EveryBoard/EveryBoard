@@ -7,7 +7,7 @@ import { HiveMove } from '../HiveMove';
 import { HiveMoveGenerator } from '../HiveMoveGenerator';
 import { HiveRules } from '../HiveRules';
 import { HiveState } from '../HiveState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class HiveMinimax extends Minimax<HiveMove, HiveState> {
     public constructor() {

@@ -1,1 +1,3 @@
-process.env['EVERYBOARD_RUN_SLOW_TESTS'] = 'true';
+import { TestVars } from './TestVars.spec';
+
+TestVars.slowTests = true;

@@ -6,7 +6,7 @@ import { CoerceoMove } from '../CoerceoMove';
 import { CoerceoOrderedMoveGenerator } from '../CoerceoOrderedMoveGenerator';
 import { CoerceoConfig, CoerceoRules } from '../CoerceoRules';
 import { CoerceoState } from '../CoerceoState';
-import { minimaxTest, SlowTest } from '../utils/tests/TestUtils.spec';
+import { minimaxTest, SlowTest } from '../../../utils/tests/TestUtils.spec';
 
 class CoerceoCapturesAndFreedomMinimax extends Minimax<CoerceoMove, CoerceoState, CoerceoConfig> {
     public constructor() {
