@@ -6,7 +6,7 @@ import { RulesConfigDescriptionLocalizable } from '../../components/wrapper-comp
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
 import { PlayerOrNone } from '../../jscaip/Player';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
@@ -49,11 +49,11 @@ export class P4Rules extends ConfigurableRules<P4Move, P4State, P4Config> {
         return P4Rules.singleton.get();
     }
 
-    public readonly P4_HELPER: NInARowHelper<PlayerOrNone>;
+    public readonly P4_HELPER: OrdinalNInARowHelper<PlayerOrNone>;
 
     private constructor() {
         super();
-        this.P4_HELPER = new NInARowHelper(Utils.identity, 4);
+        this.P4_HELPER = new OrdinalNInARowHelper(Utils.identity, 4);
     }
 
     public override getRulesConfigDescription(): RulesConfigDescription<P4Config> {

@@ -8,7 +8,7 @@ import { GameState } from './GameState';
 
 export abstract class GameStateWithTable<P extends NonNullable<unknown>> extends GameState {
 
-    public static setPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>(
+    public static withPieceAt<Q extends NonNullable<unknown>, T extends GameStateWithTable<Q>>(
         oldState: T,
         coord: Coord,
         value: Q,

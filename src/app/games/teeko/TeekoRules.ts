@@ -5,7 +5,7 @@ import { RulesConfigDescription } from '../../components/wrapper-components/rule
 import { GameNode } from '../../jscaip/AI/GameNode';
 import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { NInARowHelper } from '../../jscaip/NInARowHelper';
+import { OrdinalNInARowHelper } from '../../jscaip/OrdinalNInARowHelper';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { ConfigurableRules } from '../../jscaip/Rules';
@@ -49,8 +49,8 @@ export class TeekoRules extends ConfigurableRules<TeekoMove, TeekoState, TeekoCo
                 },
             }]);
 
-    public static readonly TEEKO_HELPER: NInARowHelper<PlayerOrNone> =
-        new NInARowHelper(Utils.identity, 4);
+    public static readonly TEEKO_HELPER: OrdinalNInARowHelper<PlayerOrNone> =
+        new OrdinalNInARowHelper(Utils.identity, 4);
 
     public override getRulesConfigDescription(): RulesConfigDescription<TeekoConfig> {
         return TeekoRules.RULES_CONFIG_DESCRIPTION;

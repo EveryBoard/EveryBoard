@@ -8,7 +8,7 @@ import { Coord, CoordFailure } from '../../jscaip/Coord';
 import { DodecaHexaDirection } from '../../jscaip/DodecaHexaDirection';
 import { FourStatePiece } from '../../jscaip/FourStatePiece';
 import { GameStatus } from '../../jscaip/GameStatus';
-import { AbstractNInARowHelper } from '../../jscaip/NInARowHelper';
+import { NInARowHelper } from '../../jscaip/NInARowHelper';
 import { ConfigurableRules } from '../../jscaip/Rules';
 import { RulesConfig } from '../../jscaip/RulesConfigUtil';
 import { RulesFailure } from '../../jscaip/RulesFailure';
@@ -30,11 +30,18 @@ export type HexodiaConfig = RulesConfig & {
 
 export class HexodiaNode extends GameNode<HexodiaMove, FourStatePieceGameStateWithTable> {}
 
+
+class HexodiaNInARowHelper extends NInARowHelper<FourStatePiece, DodecaHexaDirection> {
+
+    protected override getDirections(): ReadonlyArray<DodecaHexaDirection> {
+        return DodecaHexaDirection.factory.all;
+    }
+}
 export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceGameStateWithTable, HexodiaConfig> {
 
     private static singleton: MGPOptional<HexodiaRules> = MGPOptional.empty();
 
-    private static readonly helpers: MGPMap<number, AbstractNInARowHelper<FourStatePiece>> = new MGPMap();
+    private static readonly helpers: MGPMap<number, HexodiaNInARowHelper> = new MGPMap();
 
     public static readonly RULES_CONFIG_DESCRIPTION: RulesConfigDescription<HexodiaConfig> =
         new RulesConfigDescription<HexodiaConfig>({
@@ -59,17 +66,16 @@ export class HexodiaRules extends ConfigurableRules<HexodiaMove, FourStatePieceG
         return HexodiaRules.singleton.get();
     }
 
-    public static getHexodiaHelper(config: HexodiaConfig): AbstractNInARowHelper<FourStatePiece> {
+    public static getHexodiaHelper(config: HexodiaConfig): HexodiaNInARowHelper {
         return HexodiaRules.getHexodiaHelperBySize(config.nInARow);
     }
 
-    public static getHexodiaHelperBySize(size: number): AbstractNInARowHelper<FourStatePiece> {
+    public static getHexodiaHelperBySize(size: number): HexodiaNInARowHelper {
         if (HexodiaRules.helpers.get(size).isAbsent()) {
-            const helper: AbstractNInARowHelper<FourStatePiece> =
-                new AbstractNInARowHelper<FourStatePiece, DodecaHexaDirection>(
+            const helper: HexodiaNInARowHelper =
+                new HexodiaNInARowHelper(
                     (piece: FourStatePiece) => piece.getPlayer(),
                     size,
-                    DodecaHexaDirection.factory.all,
                 );
             HexodiaRules.helpers.put(size, helper);
         }

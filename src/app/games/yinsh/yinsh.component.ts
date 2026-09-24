@@ -8,11 +8,11 @@ import { ClickHandler } from '../../components/game-components/game-component/Cl
 import { HexagonalGameComponent } from '../../components/game-components/game-component/HexagonalGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerMap, PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { EmptyRulesConfig } from '../../jscaip/RulesConfigUtil';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 import { RingComponent } from '../common/ring/ring.component';
 
 import { YinshFailure } from './YinshFailure';

@@ -9,11 +9,11 @@ import { HexagonalGameComponent } from '../../components/game-components/game-co
 import { ScoreName } from '../../components/game-components/game-component/ScoreName';
 import { Coord } from '../../jscaip/Coord';
 import { CoordSet } from '../../jscaip/CoordSet';
-import { HexaLayout } from '../../jscaip/HexaLayout';
 import { FlatHexaOrientation } from '../../jscaip/HexaOrientation';
 import { Player, PlayerOrNone } from '../../jscaip/Player';
 import { PlayerNumberMap } from '../../jscaip/PlayerMap';
 import { RulesFailure } from '../../jscaip/RulesFailure';
+import { HexaLayout } from '../../jscaip/layout/HexaLayout';
 
 import { SixFailure } from './SixFailure';
 import { SixFilteredMoveGenerator } from './SixFilteredMoveGenerator';
